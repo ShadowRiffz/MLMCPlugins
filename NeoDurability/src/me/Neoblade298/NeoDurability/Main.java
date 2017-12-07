@@ -49,7 +49,9 @@ public class Main
     Entity target = e.getEntity();
     
     // Damage simulator to spare armor durability
-    if ((e.getDamage() > 20.0D) && (e.getCause() != EntityDamageEvent.DamageCause.MAGIC) && ((e.getEntity() instanceof Player)))
+    if ((e.getDamage() > 20.0D) && (e.getCause() != EntityDamageEvent.DamageCause.MAGIC) &&
+    		(e.getEntity() instanceof Player) &&
+    		(!(e.getDamager() instanceof Player))) {
     {
       Player player = (Player)e.getEntity();
       double oldDamage = e.getDamage();
