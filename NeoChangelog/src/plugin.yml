@@ -1,0 +1,20 @@
+name: NeoChangelog
+author: Neoblade298
+main: me.neoblade298.neochangelog.Main
+version: 1.00
+commands:
+  changelog:
+    description: Views the changelog
+    usage: /changelog
+    permission: changelog.view
+permissions:
+  changelog.*:
+    description: Gives access to all commands
+    children:
+      changelog.view: true
+      changelog.edit: true
+      changelog.reload: true
+  changelog.view:
+    description: Allows user to view the changelog
+  changelog.edit:
+    description: Allows user to add or remove entries from changelog
