@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public class Main
   extends JavaPlugin
@@ -47,13 +48,22 @@ public class Main
   {
     Entity cause = e.getDamager();
     Entity target = e.getEntity();
+    if(target.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
+    	return;
+    }
     
     // Damage simulator to spare armor durability
-    if ((e.getDamage() > 20.0D) && (e.getCause() != EntityDamageEvent.DamageCause.MAGIC) &&
+    if ((e.getDamage() > 20.0D) &&
+    		(e.getCause() != EntityDamageEvent.DamageCause.MAGIC) &&
+    		(e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) &&
     		(e.getEntity() instanceof Player) &&
-    		(!(e.getDamager() instanceof Player))) {
+    		(!(e.getDamager() instanceof Player)) &&
+    		(!e.isCancelled()))
     {
       Player player = (Player)e.getEntity();
+      
+
+      
       double oldDamage = e.getDamage();
       e.setCancelled(true);
       player.damage(oldDamage);
@@ -63,7 +73,8 @@ public class Main
     
     // Lowers durability of damager
     if (((cause instanceof Player)) && (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) && 
-      (!e.isCancelled()))
+        (!e.isCancelled()) &&
+        (!FlagManager.hasFlag((LivingEntity)cause, "WeaponDur")))
     {
       Player player = (Player)cause;
       ItemStack item = player.getEquipment().getItemInMainHand();
@@ -89,10 +100,14 @@ public class Main
         reduceDurability(player.getInventory().getHelmet(), player, 4);
       }
       if (player.getEquipment().getItemInMainHand().getType() == Material.SHIELD) {
-      	reduceDurability(player.getInventory().getItemInMainHand(), player, 0);
+      	if(player.isBlocking()) {
+      		reduceDurability(player.getInventory().getItemInMainHand(), player, 0);
+      	}
       }
       if (player.getEquipment().getItemInOffHand().getType() == Material.SHIELD) {
-      	reduceDurability(player.getInventory().getItemInOffHand(), player, 5);
+      	if(player.isBlocking()) {
+      		reduceDurability(player.getInventory().getItemInOffHand(), player, 5);
+      	}
       }
       FlagManager.addFlag(player, "ArmorDur", 20);
     }
@@ -101,17 +116,22 @@ public class Main
   @EventHandler
   public void onShoot(EntityShootBowEvent e)
   {
-    if ((e.getEntity() instanceof Player))
+    if ((e.getEntity() instanceof Player) &&
+      (!FlagManager.hasFlag(e.getEntity(), "WeaponDur")))
     {
       Player player = (Player)e.getEntity();
+      if(player.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
+      	return;
+      }
+      
       ItemStack main = player.getEquipment().getItemInMainHand();
       ItemStack off = player.getEquipment().getItemInOffHand();
       if (main != null) {
+        FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(main, player, 0);
-        FlagManager.addFlag(player, "WeaponDur", 20);
       } else if (off != null) {
-        reduceDurability(off, player, 5);
         FlagManager.addFlag(player, "WeaponDur", 20);
+        reduceDurability(off, player, 5);
       }
     }
   }
@@ -120,17 +140,34 @@ public class Main
   public void onSkillCast(PlayerCastSkillEvent e)
   {
     Player player = e.getPlayer();
+    if(player.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
+    	return;
+    }
+  	
     ItemStack main = player.getEquipment().getItemInMainHand();
     ItemStack off = player.getEquipment().getItemInOffHand();
-    if (!e.getSkill().getData().getName().equalsIgnoreCase("levelup")) {
+    if (!e.getSkill().getData().getName().equalsIgnoreCase("levelup") &&
+    		!e.getSkill().getData().getName().equalsIgnoreCase("Attribute Checker") &&
+        (!FlagManager.hasFlag((LivingEntity)player, "WeaponDur"))) {
       if (main != null) {
+        FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(main, player, 0);
-        FlagManager.addFlag(player, "WeaponDur", 20);
       } else if (off != null) {
-        reduceDurability(off, player, 5);
         FlagManager.addFlag(player, "WeaponDur", 20);
+        reduceDurability(off, player, 5);
       }
     }
+  }
+  
+  @EventHandler
+  public void onDurabilityLoss(PlayerItemDamageEvent e) {
+  	if(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll") &&
+  			e.getDamage() > 10) {
+  		e.setCancelled(true);
+  	}
+  	else if(e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
+  		e.setCancelled(true);
+  	}
   }
   
   @EventHandler
@@ -139,6 +176,9 @@ public class Main
     if ((e.getTarget() instanceof Player) && (!FlagManager.hasFlag((LivingEntity)e.getTarget(), "ArmorDur")))
     {
       Player player = (Player)e.getTarget();
+      if(player.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
+      	return;
+      }
       if (player.getInventory().getBoots() != null) {
         reduceDurability(player.getInventory().getBoots(), player, 1);
       }
@@ -152,16 +192,21 @@ public class Main
         reduceDurability(player.getInventory().getHelmet(), player, 4);
       }
       if (player.getEquipment().getItemInMainHand().getType() == Material.SHIELD) {
-      	reduceDurability(player.getInventory().getItemInMainHand(), player, 0);
+      	if(player.isBlocking()) {
+      		reduceDurability(player.getInventory().getItemInMainHand(), player, 0);
+      	}
       }
       if (player.getEquipment().getItemInOffHand().getType() == Material.SHIELD) {
-      	reduceDurability(player.getInventory().getItemInOffHand(), player, 5);
+      	if(player.isBlocking()) {
+      		reduceDurability(player.getInventory().getItemInOffHand(), player, 5);
+      	}
       }
       FlagManager.addFlag(player, "ArmorDur", 20);
     }
   }
   
-  public void reduceDurability(ItemStack item, Player player, int i)
+  @SuppressWarnings("deprecation")
+	public void reduceDurability(ItemStack item, Player player, int i)
   {
     if ((item != null) && 
         (item.hasItemMeta()) && 
@@ -180,7 +225,7 @@ public class Main
       (item.getItemMeta().hasLore()))
     {
       ItemMeta im = item.getItemMeta();
-      List<String> newLore = new ArrayList();
+      List<String> newLore = new ArrayList<String>();
       for (String lore : item.getItemMeta().getLore())
       {
         if ((lore.contains(DURABILITYSTRING)) && 
