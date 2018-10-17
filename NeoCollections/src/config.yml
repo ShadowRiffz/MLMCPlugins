@@ -1,0 +1,46 @@
+# Write in the highest collection number here so the plugin knows where to stop
+Max_Collection: 24
+
+# List every collection that is permanent so the plugin knows what to load first
+Permanent_Collections:
+- 5
+- 14
+- 15
+- 24
+
+
+Collection_Bonuses:
+	1:
+		Strength: 0
+		Dexterity: 0
+		Intelligence: 0
+		Spirit: 0
+		Perception: 0
+		Endurance: 0
+		Vitality: 0
+	2:
+		Strength: 0
+		Dexterity: 0
+		Intelligence: 0
+		Spirit: 0
+		Perception: 0
+		Endurance: 0
+		Vitality: 0
+
+Shiny_Collection_Bonuses:
+	1:
+		Strength: 0
+		Dexterity: 0
+		Intelligence: 0
+		Spirit: 0
+		Perception: 0
+		Endurance: 0
+		Vitality: 0
+	2:
+		Strength: 0
+		Dexterity: 0
+		Intelligence: 0
+		Spirit: 0
+		Perception: 0
+		Endurance: 0
+		Vitality: 0
