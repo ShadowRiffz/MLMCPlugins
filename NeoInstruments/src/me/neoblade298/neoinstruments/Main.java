@@ -92,7 +92,7 @@ public class Main
     if (this.playing.contains(e.getPlayer()))
     {
       e.setCancelled(true);
-      e.getPlayer().getWorld().spawnParticle(Particle.NOTE, e.getPlayer().getLocation(), 1, null);
+      e.getPlayer().getWorld().spawnParticle(Particle.NOTE, e.getPlayer().getLocation().add(0, 0, 2), 1, null);
       Set<String> tags = e.getPlayer().getScoreboardTags();
       Sound sound = null;
       if (tags.contains("Piano")) {
