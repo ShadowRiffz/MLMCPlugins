@@ -40,7 +40,7 @@ public class Main
   {
     if ((e.getAction() == Action.RIGHT_CLICK_AIR) || (e.getAction() == Action.RIGHT_CLICK_BLOCK))
     {
-      if ((e.getItem().hasItemMeta()) && (e.getItem().getItemMeta().hasLore()) && (!this.playing.contains(e.getPlayer())))
+      if ((e.getItem() != null) && (e.getItem().hasItemMeta()) && (e.getItem().getItemMeta().hasLore()) && (!this.playing.contains(e.getPlayer())))
       {
         List<String> lore = e.getItem().getItemMeta().getLore();
         if (((String)lore.get(0)).contains("Instrument"))
