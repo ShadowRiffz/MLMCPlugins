@@ -4,9 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.sucy.skill.api.player.PlayerData;
 
 
 public class Commands implements CommandExecutor{
@@ -30,13 +27,23 @@ public class Commands implements CommandExecutor{
 				// neocollections reset [player]
 				// Removes player from map, used on skillAPI cleanup
 				if(args[0].equalsIgnoreCase("reset")) {
-					main.resetBonuses(Bukkit.getPlayer(args[1]));
+					if(args[1].equalsIgnoreCase("all")) {
+						main.resetAll();
+					}
+					else {
+						main.resetBonuses(Bukkit.getPlayer(args[1]));
+					}
 					return true;
 				}
 				// neocollections update [player]
 				// Re-initializes player after removing bonuses, used on collection change
 				if(args[0].equalsIgnoreCase("update")) {
-					main.updateBonuses(Bukkit.getPlayer(args[1]));
+					if(args[1].equalsIgnoreCase("all")) {
+						main.updateAll();
+					}
+					else {
+						main.updateBonuses(Bukkit.getPlayer(args[1]));
+					}
 					return true;
 				}
 			}

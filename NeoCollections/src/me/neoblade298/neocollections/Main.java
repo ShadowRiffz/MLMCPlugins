@@ -40,8 +40,8 @@ public class Main extends JavaPlugin implements Listener {
   	permCollections = getConfig().getIntegerList("Permanent_Collections");
   	attrBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
   	shinyBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
-	ConfigurationSection collection = getConfig().getConfigurationSection("Collection_Bonuses");
-	ConfigurationSection shinyCollection = getConfig().getConfigurationSection("Shiny_Collection_Bonuses");
+  	ConfigurationSection collection = getConfig().getConfigurationSection("Collection_Bonuses");
+  	ConfigurationSection shinyCollection = getConfig().getConfigurationSection("Shiny_Collection_Bonuses");
 	
 	// Initialize arrays
 	for(int i = 0; i < maxCollections + 1; i++) {
@@ -93,7 +93,7 @@ public class Main extends JavaPlugin implements Listener {
 		  int numColl = permCollections.get(i);
 		  
 		  // Add normal permanent collections
-		  if(p.hasPermission("collections.permanent." + numColl)) {
+		  if(p.hasPermission("collections.permanent." + numColl) || p.hasPermission("collections.unlock." + numColl)) {
 			  f_str += attrBonuses.get(numColl).getStrength();
 			  f_dex += attrBonuses.get(numColl).getDexterity();
 			  f_int += attrBonuses.get(numColl).getIntelligence();
@@ -104,7 +104,7 @@ public class Main extends JavaPlugin implements Listener {
 		  }
 		  
 		  // Add shiny permanent collections
-		  if(p.hasPermission("collections.sh.permanent." + numColl)) {
+		  if(p.hasPermission("collections.sh.permanent." + numColl) || p.hasPermission("collections.sh.unlock." + numColl)) {
 			  f_str += shinyBonuses.get(numColl).getStrength();
 			  f_dex += shinyBonuses.get(numColl).getDexterity();
 			  f_int += shinyBonuses.get(numColl).getIntelligence();
@@ -129,13 +129,13 @@ public class Main extends JavaPlugin implements Listener {
 			  foundColl = true;
 		  }
 		  if(p.hasPermission("collections.sh.use." + i)) {
-			  f_str += attrBonuses.get(i).getStrength();
-			  f_dex += attrBonuses.get(i).getDexterity();
-			  f_int += attrBonuses.get(i).getIntelligence();
-			  f_spr += attrBonuses.get(i).getSpirit();
-			  f_prc += attrBonuses.get(i).getPerception();
-			  f_end += attrBonuses.get(i).getEndurance();
-			  f_vit += attrBonuses.get(i).getVitality();
+			  f_str += shinyBonuses.get(i).getStrength();
+			  f_dex += shinyBonuses.get(i).getDexterity();
+			  f_int += shinyBonuses.get(i).getIntelligence();
+			  f_spr += shinyBonuses.get(i).getSpirit();
+			  f_prc += shinyBonuses.get(i).getPerception();
+			  f_end += shinyBonuses.get(i).getEndurance();
+			  f_vit += shinyBonuses.get(i).getVitality();
 			  foundShinyColl = true;
 		  }
 		  
@@ -163,5 +163,13 @@ public class Main extends JavaPlugin implements Listener {
 		  playerMap.get(p.getName()).removeAttributes(p);
 		  playerMap.remove(p.getName());
 	  }
+  }
+  
+  public void updateAll() {
+  	// TODO
+  }
+  
+  public void resetAll() {
+  	// TODO
   }
 }
