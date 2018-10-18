@@ -1,5 +1,10 @@
 package me.neoblade298.neocollections;
 
+import org.bukkit.entity.Player;
+
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.player.PlayerData;
+
 public class Attributes {
 	private int strength, dexterity, intelligence, spirit, perception, endurance, vitality;
 	
@@ -11,6 +16,28 @@ public class Attributes {
 		this.perception = perception;
 		this.endurance = endurance;
 		this.vitality = vitality;
+	}
+	
+	public void applyAttributes(Player p) {
+		PlayerData data = SkillAPI.getPlayerData(p);
+		data.addBonusAttributes("Strength", strength);
+		data.addBonusAttributes("Dexterity", dexterity);
+		data.addBonusAttributes("Intelligence", intelligence);
+		data.addBonusAttributes("Spirit", spirit);
+		data.addBonusAttributes("Perception", perception);
+		data.addBonusAttributes("Endurance", endurance);
+		data.addBonusAttributes("Vitality", vitality);
+	}
+	
+	public void removeAttributes(Player p) {
+		PlayerData data = SkillAPI.getPlayerData(p);
+		data.addBonusAttributes("Strength", -strength);
+		data.addBonusAttributes("Dexterity", -dexterity);
+		data.addBonusAttributes("Intelligence", -intelligence);
+		data.addBonusAttributes("Spirit", -spirit);
+		data.addBonusAttributes("Perception", -perception);
+		data.addBonusAttributes("Endurance", -endurance);
+		data.addBonusAttributes("Vitality", -vitality);
 	}
 	
 	public int getStrength() {

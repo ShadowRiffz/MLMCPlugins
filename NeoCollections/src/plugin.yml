@@ -1,0 +1,8 @@
+name: NeoCollections
+author: Neoblade298
+main: me.neoblade298.neocollections.Main
+version: 1.00
+commands:
+  neocollections:
+    description: Various usages of collections
+    usage: /neocollections

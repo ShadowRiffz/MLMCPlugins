@@ -4,27 +4,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener {
   File file = null;
   FileConfiguration conf = null;
-  HashMap playerMap = new HashMap();
+  HashMap<String, Attributes> playerMap = new HashMap<String, Attributes>();
   int maxCollections;
   List<Integer> permCollections;
-  List<Attributes> attrBonuses = new ArrayList();
-  List<Attributes> shinyBonuses = new ArrayList();
+  List<Attributes> attrBonuses = new ArrayList<Attributes>();
+  List<Attributes> shinyBonuses = new ArrayList<Attributes>();
   
   
   public void onEnable() {
@@ -81,15 +76,84 @@ public class Main extends JavaPlugin implements Listener {
     super.onDisable();
   }
   
-  @EventHandler
-  public void onPlayerLeave(PlayerQuitEvent e) {
-  }
-  
-  @EventHandler
-  public void onPlayerLeave(PlayerKickEvent e) {
-  }
-  
-  private void resetAttributes(Player p) {
+  private void initializeBonuses(Player p) {
+	  int f_str = 0, f_dex = 0, f_int = 0, f_spr = 0, f_prc = 0, f_end = 0, f_vit = 0;
 	  
+	  // First initialize all permanent bonuses
+	  List<Integer> permCollections = conf.getIntegerList("Permanent_Collections");
+	  for(int i = 0; i < permCollections.size(); i++) {
+		  int numColl = permCollections.get(i);
+		  
+		  // Add normal permanent collections
+		  if(p.hasPermission("collections.permanent." + numColl)) {
+			  f_str += attrBonuses.get(numColl).getStrength();
+			  f_dex += attrBonuses.get(numColl).getDexterity();
+			  f_int += attrBonuses.get(numColl).getIntelligence();
+			  f_spr += attrBonuses.get(numColl).getSpirit();
+			  f_prc += attrBonuses.get(numColl).getPerception();
+			  f_end += attrBonuses.get(numColl).getEndurance();
+			  f_vit += attrBonuses.get(numColl).getVitality();
+		  }
+		  
+		  // Add shiny permanent collections
+		  if(p.hasPermission("collections.sh.permanent." + numColl)) {
+			  f_str += shinyBonuses.get(numColl).getStrength();
+			  f_dex += shinyBonuses.get(numColl).getDexterity();
+			  f_int += shinyBonuses.get(numColl).getIntelligence();
+			  f_spr += shinyBonuses.get(numColl).getSpirit();
+			  f_prc += shinyBonuses.get(numColl).getPerception();
+			  f_end += shinyBonuses.get(numColl).getEndurance();
+			  f_vit += shinyBonuses.get(numColl).getVitality();
+		  }
+	  }
+	  
+	  // Next find which collection and shiny the user has equipped
+	  boolean foundColl = false, foundShinyColl = false;
+	  for(int i = 1; i <= maxCollections; i++) {
+		  if(p.hasPermission("collections.use." + i)) {
+			  f_str += attrBonuses.get(i).getStrength();
+			  f_dex += attrBonuses.get(i).getDexterity();
+			  f_int += attrBonuses.get(i).getIntelligence();
+			  f_spr += attrBonuses.get(i).getSpirit();
+			  f_prc += attrBonuses.get(i).getPerception();
+			  f_end += attrBonuses.get(i).getEndurance();
+			  f_vit += attrBonuses.get(i).getVitality();
+			  foundColl = true;
+		  }
+		  if(p.hasPermission("collections.sh.use." + i)) {
+			  f_str += attrBonuses.get(i).getStrength();
+			  f_dex += attrBonuses.get(i).getDexterity();
+			  f_int += attrBonuses.get(i).getIntelligence();
+			  f_spr += attrBonuses.get(i).getSpirit();
+			  f_prc += attrBonuses.get(i).getPerception();
+			  f_end += attrBonuses.get(i).getEndurance();
+			  f_vit += attrBonuses.get(i).getVitality();
+			  foundShinyColl = true;
+		  }
+		  
+		  // Break out of for loop if both collection and shiny collection has been found
+		  if(foundColl && foundShinyColl) {
+			  break;
+		  }
+	  }
+	  
+	  // Apply the bonuses and map them
+	  Attributes attrSet = new Attributes(f_str, f_dex, f_int, f_spr, f_prc, f_end, f_vit);
+	  playerMap.put(p.getName(), attrSet);
+	  attrSet.applyAttributes(p);
+  }
+  
+  private void updateBonuses(Player p) {
+	  if(playerMap.containsKey(p.getName())) {
+		  playerMap.get(p.getName()).removeAttributes(p);
+		  initializeBonuses(p);
+	  }
+  }
+  
+  private void resetBonuses(Player p) {
+	  if(playerMap.containsKey(p.getName())) {
+		  playerMap.get(p.getName()).removeAttributes(p);
+		  playerMap.remove(p.getName());
+	  }
   }
 }
