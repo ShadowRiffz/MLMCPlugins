@@ -68,4 +68,8 @@ public class Attributes {
 		return vitality;
 	}
 	
+	public String toString() {
+		return strength + " " + dexterity + " " + intelligence + " " + spirit + " " + perception + " " + endurance + " " + vitality;
+	}
+	
 }

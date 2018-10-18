@@ -20,18 +20,25 @@ public class Commands implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
 		if(sender.hasPermission("*")) {
-			// Test command, just to test adding and removing attributes
-			if(args[0].equalsIgnoreCase("setBonus")) {
-				Player p = Bukkit.getPlayer(args[1]);
-				Attributes attrs = new Attributes(24, 24, 24, 24, 24, 24, 24);
-				attrs.applyAttributes(p);
-				return true;
-			}
-			if(args[0].equalsIgnoreCase("removeBonus")) {
-				Player p = Bukkit.getPlayer(args[1]);
-				Attributes attrs = new Attributes(24, 24, 24, 24, 24, 24, 24);
-				attrs.removeAttributes(p);
-				return true;
+			if(args.length == 2) {
+				// neocollections init [player]
+				// Initializes the bonuses of any player, used on skillAPI init
+				if(args[0].equalsIgnoreCase("init")) {
+					main.initializeBonuses(Bukkit.getPlayer(args[1]));
+					return true;
+				}
+				// neocollections reset [player]
+				// Removes player from map, used on skillAPI cleanup
+				if(args[0].equalsIgnoreCase("reset")) {
+					main.resetBonuses(Bukkit.getPlayer(args[1]));
+					return true;
+				}
+				// neocollections update [player]
+				// Re-initializes player after removing bonuses, used on collection change
+				if(args[0].equalsIgnoreCase("update")) {
+					main.updateBonuses(Bukkit.getPlayer(args[1]));
+					return true;
+				}
 			}
 		}
 		// Set Command - Resets a player's attributes, then sets them

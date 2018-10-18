@@ -18,8 +18,8 @@ public class Main extends JavaPlugin implements Listener {
   HashMap<String, Attributes> playerMap = new HashMap<String, Attributes>();
   int maxCollections;
   List<Integer> permCollections;
-  List<Attributes> attrBonuses = new ArrayList<Attributes>();
-  List<Attributes> shinyBonuses = new ArrayList<Attributes>();
+  List<Attributes> attrBonuses = new ArrayList<Attributes>(maxCollections + 1);
+  List<Attributes> shinyBonuses = new ArrayList<Attributes>(maxCollections + 1);
   
   
   public void onEnable() {
@@ -29,17 +29,25 @@ public class Main extends JavaPlugin implements Listener {
     this.getCommand("neocollections").setExecutor(new Commands(this));
     
     // Save config if doesn't exist
-    file = new File(getDataFolder(), "changelog.yml");
+    file = new File(getDataFolder(), "config.yml");
     if (!file.exists()) {
       saveResource("config.yml", false);
     }
   	conf = YamlConfiguration.loadConfiguration(file);
     
     // Load values from config
-  	maxCollections = conf.getInt("Max_Collection");
-  	permCollections = conf.getIntegerList("Permanent_Collections");
-	ConfigurationSection collection = conf.getConfigurationSection("Collection_Bonuses");
-	ConfigurationSection shinyCollection = conf.getConfigurationSection("Shiny_Collection_Bonuses");
+  	maxCollections = getConfig().getInt("Max_Collection");
+  	permCollections = getConfig().getIntegerList("Permanent_Collections");
+  	attrBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
+  	shinyBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
+	ConfigurationSection collection = getConfig().getConfigurationSection("Collection_Bonuses");
+	ConfigurationSection shinyCollection = getConfig().getConfigurationSection("Shiny_Collection_Bonuses");
+	
+	// Initialize arrays
+	for(int i = 0; i < maxCollections + 1; i++) {
+		attrBonuses.add(i, new Attributes(0, 0, 0, 0, 0, 0, 0));
+		shinyBonuses.add(i, new Attributes(0, 0, 0, 0, 0, 0, 0));
+	}
   	
   	// Load in all attribute bonuses
   	for(int i = 1; i <= maxCollections; i++) {
@@ -68,6 +76,8 @@ public class Main extends JavaPlugin implements Listener {
   		
   		Attributes shiny_attrs = new Attributes(s_str, s_dex, s_int, s_spr, s_prc, s_end, s_vit);
   		shinyBonuses.set(i, shiny_attrs);
+  		Bukkit.getPlayer("Neoblade298").sendMessage(attrs.toString());
+  		Bukkit.getPlayer("Neoblade298").sendMessage(shiny_attrs.toString());
   	}
   }
   
@@ -76,8 +86,10 @@ public class Main extends JavaPlugin implements Listener {
     super.onDisable();
   }
   
-  private void initializeBonuses(Player p) {
+  public void initializeBonuses(Player p) {
 	  int f_str = 0, f_dex = 0, f_int = 0, f_spr = 0, f_prc = 0, f_end = 0, f_vit = 0;
+	  p.sendMessage("Maxcollections = " + maxCollections);
+	  p.sendMessage("permCollections = " + permCollections);
 	  
 	  // First initialize all permanent bonuses
 	  List<Integer> permCollections = conf.getIntegerList("Permanent_Collections");
@@ -110,6 +122,7 @@ public class Main extends JavaPlugin implements Listener {
 	  // Next find which collection and shiny the user has equipped
 	  boolean foundColl = false, foundShinyColl = false;
 	  for(int i = 1; i <= maxCollections; i++) {
+		  p.sendMessage("Test2");
 		  if(p.hasPermission("collections.use." + i)) {
 			  f_str += attrBonuses.get(i).getStrength();
 			  f_dex += attrBonuses.get(i).getDexterity();
@@ -119,6 +132,7 @@ public class Main extends JavaPlugin implements Listener {
 			  f_end += attrBonuses.get(i).getEndurance();
 			  f_vit += attrBonuses.get(i).getVitality();
 			  foundColl = true;
+			  p.sendMessage("You equip " + i);
 		  }
 		  if(p.hasPermission("collections.sh.use." + i)) {
 			  f_str += attrBonuses.get(i).getStrength();
@@ -129,6 +143,7 @@ public class Main extends JavaPlugin implements Listener {
 			  f_end += attrBonuses.get(i).getEndurance();
 			  f_vit += attrBonuses.get(i).getVitality();
 			  foundShinyColl = true;
+			  p.sendMessage("You equip shiny " + i);
 		  }
 		  
 		  // Break out of for loop if both collection and shiny collection has been found
@@ -139,18 +154,19 @@ public class Main extends JavaPlugin implements Listener {
 	  
 	  // Apply the bonuses and map them
 	  Attributes attrSet = new Attributes(f_str, f_dex, f_int, f_spr, f_prc, f_end, f_vit);
+	  p.sendMessage(attrSet.toString());
 	  playerMap.put(p.getName(), attrSet);
 	  attrSet.applyAttributes(p);
   }
   
-  private void updateBonuses(Player p) {
+  public void updateBonuses(Player p) {
 	  if(playerMap.containsKey(p.getName())) {
 		  playerMap.get(p.getName()).removeAttributes(p);
 		  initializeBonuses(p);
 	  }
   }
   
-  private void resetBonuses(Player p) {
+  public void resetBonuses(Player p) {
 	  if(playerMap.containsKey(p.getName())) {
 		  playerMap.get(p.getName()).removeAttributes(p);
 		  playerMap.remove(p.getName());
