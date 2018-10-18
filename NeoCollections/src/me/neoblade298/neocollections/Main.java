@@ -85,6 +85,10 @@ public class Main extends JavaPlugin implements Listener {
   }
   
   public void initializeBonuses(Player p) {
+  	// Make sure the player has no bonuses already equipped
+  	if(playerMap.containsKey(p.getName())) {
+  		resetBonuses(p);
+  	}
 	  int f_str = 0, f_dex = 0, f_int = 0, f_spr = 0, f_prc = 0, f_end = 0, f_vit = 0;
 	  
 	  // First initialize all permanent bonuses
@@ -165,6 +169,7 @@ public class Main extends JavaPlugin implements Listener {
 	  }
   }
   
+  // TODO turn init and update into a single method
   public void updateAll() {
   	// TODO
   }
