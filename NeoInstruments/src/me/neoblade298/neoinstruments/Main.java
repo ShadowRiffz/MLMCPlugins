@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main
@@ -38,6 +39,9 @@ public class Main
   @EventHandler
   public void rightClickEvent(PlayerInteractEvent e)
   {
+    if(e.getHand() == EquipmentSlot.OFF_HAND) {
+	  return;
+    }
     if ((e.getAction() == Action.RIGHT_CLICK_AIR) || (e.getAction() == Action.RIGHT_CLICK_BLOCK))
     {
       if ((e.getItem() != null) && (e.getItem().hasItemMeta()) && (e.getItem().getItemMeta().hasLore()) && (!this.playing.contains(e.getPlayer())))
@@ -62,7 +66,7 @@ public class Main
         e.getPlayer().removeScoreboardTag("Ocarina");
         e.getPlayer().removeScoreboardTag("Bell");
         e.getPlayer().removeScoreboardTag("Chime");
-        e.getPlayer().removeScoreboardTag("Bass");
+        e.getPlayer().removeScoreboardTag("Base");
         e.getPlayer().removeScoreboardTag("Guitar");
         e.getPlayer().removeScoreboardTag("Xylophone");
         e.getPlayer().removeScoreboardTag("Clicks");
