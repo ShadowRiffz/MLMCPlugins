@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -28,12 +27,14 @@ public class FileManager {
     }
   }
   
-  public String getLastUpdated() {
+  @SuppressWarnings("rawtypes")
+public String getLastUpdated() {
   	List<List> temp = getDays();
   	return (String) temp.get(0).get(0);
   }
   
-  public boolean removeLog(int day, int index) {
+  @SuppressWarnings("rawtypes")
+public boolean removeLog(int day, int index) {
   	List<List> temp = getDays();
 
   	// Check if the day and index are properly set
@@ -62,7 +63,8 @@ public class FileManager {
   	}
   }
   
-  public boolean removeDays(int days) {
+  @SuppressWarnings("rawtypes")
+public boolean removeDays(int days) {
   	List<List> temp = getDays();
   	
   	// Remove every day past the indexed day
@@ -73,7 +75,8 @@ public class FileManager {
   	return true;
   }
   
-  public boolean removeDay(int day) {
+  @SuppressWarnings("rawtypes")
+public boolean removeDay(int day) {
   	List<List> temp = getDays();
   	
   	// Make sure the day index exists
@@ -95,7 +98,8 @@ public class FileManager {
 		}
   }
   
-  public boolean addLog(String log) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public boolean addLog(String log) {
     List<List> temp = getDays();
     boolean hasDay = false;
     Date date = new Date();
@@ -123,7 +127,8 @@ public class FileManager {
     return false;
   }
   
-  public boolean addLog(String log, int dateIndex) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public boolean addLog(String log, int dateIndex) {
     List<List> temp = getDays();
     if(temp.size() > dateIndex) {
     	String date = (String) temp.get(dateIndex).remove(0);
@@ -135,7 +140,8 @@ public class FileManager {
     return false;
   }
   
-  public List<List> getDays()
+  @SuppressWarnings("rawtypes")
+public List<List> getDays()
   {  	
   	// Load the yaml config, check that it contains contents
   	logConf = YamlConfiguration.loadConfiguration(this.logFile);

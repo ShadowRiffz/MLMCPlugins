@@ -16,6 +16,7 @@ public class Commands implements CommandExecutor{
 		main = plugin;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		List<List> days = main.getFM().getDays();
