@@ -84,11 +84,11 @@ public class Main extends JavaPlugin implements Listener {
     super.onDisable();
   }
   
-  public void initializeBonuses(Player p) {
-  	// Make sure the player has no bonuses already equipped
-  	if(playerMap.containsKey(p.getName())) {
-  		resetBonuses(p);
-  	}
+  public void updateBonuses(Player p) {
+  	  // Make sure the player has no bonuses already equipped
+	  if(playerMap.containsKey(p.getName())) {
+		  resetBonuses(p);
+	  }
 	  int f_str = 0, f_dex = 0, f_int = 0, f_spr = 0, f_prc = 0, f_end = 0, f_vit = 0;
 	  
 	  // First initialize all permanent bonuses
@@ -155,13 +155,6 @@ public class Main extends JavaPlugin implements Listener {
 	  attrSet.applyAttributes(p);
   }
   
-  public void updateBonuses(Player p) {
-	  if(playerMap.containsKey(p.getName())) {
-		  playerMap.get(p.getName()).removeAttributes(p);
-		  initializeBonuses(p);
-	  }
-  }
-  
   public void resetBonuses(Player p) {
 	  if(playerMap.containsKey(p.getName())) {
 		  playerMap.get(p.getName()).removeAttributes(p);
@@ -169,12 +162,21 @@ public class Main extends JavaPlugin implements Listener {
 	  }
   }
   
-  // TODO turn init and update into a single method
   public void updateAll() {
-  	// TODO
+	  for(Player p : Bukkit.getWorld("Argyll").getPlayers()) {
+		  updateBonuses(p);
+	  }
+	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
+		  updateBonuses(p);
+	  }
   }
   
   public void resetAll() {
-  	// TODO
+	  for(Player p : Bukkit.getWorld("Argyll").getPlayers()) {
+		  resetBonuses(p);
+	  }
+	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
+		  resetBonuses(p);
+	  }
   }
 }
