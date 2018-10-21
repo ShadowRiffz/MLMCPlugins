@@ -109,7 +109,7 @@ public class Main
       		reduceDurability(player.getInventory().getItemInOffHand(), player, 5);
       	}
       }
-      FlagManager.addFlag(player, "ArmorDur", 20);
+      FlagManager.addFlag(player, "ArmorDur", 40);
     }
   }
   
