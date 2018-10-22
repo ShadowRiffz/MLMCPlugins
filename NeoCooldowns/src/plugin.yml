@@ -1,0 +1,8 @@
+name: NeoCooldowns
+author: Neoblade298
+main: me.Neoblade298.NeoCooldowns.Main
+version: 1.00
+commands:
+  cooldown:
+    description: Views cooldowns
+    usage: /cooldown
