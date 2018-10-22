@@ -36,6 +36,8 @@ public class Main
     super.onDisable();
   }
   
+  
+  // All the magic happens here
   @EventHandler
   public void rightClickEvent(PlayerInteractEvent e)
   {
