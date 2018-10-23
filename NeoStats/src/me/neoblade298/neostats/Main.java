@@ -111,7 +111,10 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onMMDamage(EntityDamageByEntityEvent e) {
 		// If the entity is a mythicmob and in the list, record damage
-		if (helper.isMythicMob(e.getEntity()) &&
+		// Also ignores "location" entities, which are for skillapi use
+		if (!e.getEntity().getName().equalsIgnoreCase("Location") &&
+				e.getEntity() instanceof Entity &&
+				helper.isMythicMob(e.getEntity()) &&
 				bosses.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
 			
 			String mob = helper.getMythicMobInstance(e.getEntity()).getType().getInternalName();
