@@ -2,3 +2,7 @@ name: NeoStats
 author: Neoblade298
 main: me.neoblade298.neostats.Main
 version: 1.00
+commands:
+  neostats:
+    description: Various usages of stats
+    usage: /neostats
