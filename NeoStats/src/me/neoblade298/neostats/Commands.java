@@ -24,6 +24,17 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 			}
+			
+			if(args.length == 1) {
+				if(args[0].equalsIgnoreCase("debug")) {
+					main.debug = !main.debug;
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("report")) {
+					main.report = !main.report;
+					return true;
+				}
+			}
 		}
 		sender.sendMessage("Something went wrong.");
 		return true;

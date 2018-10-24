@@ -2,14 +2,10 @@ package me.neoblade298.neostats;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,11 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import me.neoblade298.neostats.Commands;
 
 import org.bukkit.event.EventHandler;
@@ -29,29 +23,33 @@ import org.bukkit.event.EventHandler;
 public class Main extends JavaPlugin implements Listener{
 	
 	Map<String, Map<String, Double>> bosses = new HashMap<String, Map<String, Double>>();
-	BukkitAPIHelper helper = new BukkitAPIHelper();
-	MobManager manager = MythicMobs.inst().getMobManager();
+	BukkitAPIHelper helper;
+	MobManager manager;
 	YamlConfiguration conf;
+	boolean debug;
+	boolean report;
 	  
 	public void onEnable() {
-	  super.onEnable();
-	  Bukkit.getServer().getLogger().info("NeoStats Enabled");
-	  getServer().getPluginManager().registerEvents(this, this);
-    this.getCommand("neostats").setExecutor(new Commands(this));
-    
-    // Save config if doesn't exist
-    File file = new File(getDataFolder(), "config.yml");
-    if (!file.exists()) {
-      saveResource("config.yml", false);
-    }
-  	conf = YamlConfiguration.loadConfiguration(file);
-  	
-  	// Load in all bosses into a hashmap
-  	for (String key : conf.getKeys(false)) {
-  		for(String mob : conf.getStringList(key)) {
-  			bosses.put(mob, new HashMap<String, Double>());
-  		}
-  	}
+		super.onEnable();
+		Bukkit.getServer().getLogger().info("NeoStats Enabled");
+		getServer().getPluginManager().registerEvents(this, this);
+		this.getCommand("neostats").setExecutor(new Commands(this));
+	    
+	    // Save config if doesn't exist
+	    File file = new File(getDataFolder(), "config.yml");
+	    if (!file.exists()) {
+	      saveResource("config.yml", false);
+	    }
+	  	conf = YamlConfiguration.loadConfiguration(file);
+	  	
+	  	// Load in all bosses into a hashmap
+	  	for (String key : conf.getKeys(false)) {
+	  		for(String mob : conf.getStringList(key)) {
+	  			bosses.put(mob, new HashMap<String, Double>());
+	  		}
+	  	}
+	  	manager = MythicMobs.inst().getMobManager();
+	  	helper = new BukkitAPIHelper();
 	}
 	  
 	public void onDisable() {
@@ -100,6 +98,18 @@ public class Main extends JavaPlugin implements Listener{
 					Bukkit.getPlayer(receiver).sendMessage(stat);
 				}
 			}
+			if (report && Bukkit.getPlayer("Neoblade298") != null) {
+				Bukkit.getPlayer("Neoblade298").sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
+				Bukkit.getPlayer("Neoblade298").sendMessage("§7-----");
+				for (String player : bossMap.keySet()) {
+					double damage = Math.round((bossMap.get(player) * 100) / 100);
+					String stat = new String("§e" + player + "§7 - " + damage);
+					Bukkit.getPlayer("Neoblade298").sendMessage(stat);
+				}
+			}
+			else if (report && Bukkit.getPlayer("Neoblade298") == null) {
+				report = false;
+			}
 			
 			// Reset boss statistics
 			for (String mob : conf.getStringList(deadBoss)) {
@@ -112,11 +122,13 @@ public class Main extends JavaPlugin implements Listener{
 	public void onMMDamage(EntityDamageByEntityEvent e) {
 		// If the entity is a mythicmob and in the list, record damage
 		// Also ignores "location" entities, which are for skillapi use
+		if(this.debug) {
+			System.out.println(e.getEntity().getName());
+		}
 		if (!e.getEntity().getName().equalsIgnoreCase("Location") &&
-				e.getEntity() instanceof Entity &&
 				helper.isMythicMob(e.getEntity()) &&
 				bosses.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
-			
+
 			String mob = helper.getMythicMobInstance(e.getEntity()).getType().getInternalName();
 			
 			// Make sure the entity damaging is a player
@@ -139,5 +151,11 @@ public class Main extends JavaPlugin implements Listener{
 			double newDamage = prevDamage + e.getDamage();
 			playerMap.put(player, newDamage);
 		}
+	}
+	
+	@EventHandler
+	public void onMMReload(MythicReloadedEvent e) {
+	  	manager = MythicMobs.inst().getMobManager();
+	  	helper = new BukkitAPIHelper();
 	}
 }
