@@ -13,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import me.neoblade298.neostats.Commands;
@@ -55,13 +54,6 @@ public class Main extends JavaPlugin implements Listener{
 	public void onDisable() {
 	  Bukkit.getServer().getLogger().info("NeoStats Disabled");
 	  super.onDisable();
-	}
-	  
-	@EventHandler
-	public void onMMSpawn(MythicMobSpawnEvent e) {
-		if (e.getMobType().getInternalName().equals("Markus")) {
-			  bosses.put("Markus", new HashMap<String, Double>());
-		}
 	}
 	  
 	public void displayStats(String deadBoss, String displayName) {
@@ -113,7 +105,7 @@ public class Main extends JavaPlugin implements Listener{
 			
 			// Reset boss statistics
 			for (String mob : conf.getStringList(deadBoss)) {
-				bosses.remove(mob);
+				bosses.put(mob, new HashMap<String, Double>());
 			}
 		}
 	}

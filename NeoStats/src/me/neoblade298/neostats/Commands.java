@@ -28,10 +28,22 @@ public class Commands implements CommandExecutor {
 			if(args.length == 1) {
 				if(args[0].equalsIgnoreCase("debug")) {
 					main.debug = !main.debug;
+					if(main.debug) {
+						sender.sendMessage("§7Debug enabled");
+					}
+					else {
+						sender.sendMessage("§7Debug disabled");
+					}
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("report")) {
 					main.report = !main.report;
+					if(main.report) {
+						sender.sendMessage("§7Reports enabled");
+					}
+					else {
+						sender.sendMessage("§7Reports disabled");
+					}
 					return true;
 				}
 			}
