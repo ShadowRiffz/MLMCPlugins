@@ -6,7 +6,9 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -82,12 +84,14 @@ public class Main extends JavaPlugin implements Listener{
 			
 			// Damage is calculated, now display to all relevant players
 			for (String receiver : bossMap.keySet()) {
-				Bukkit.getPlayer(receiver).sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
-				Bukkit.getPlayer(receiver).sendMessage("§7-----");
-				for (String player : bossMap.keySet()) {
-					double damage = Math.round((bossMap.get(player) * 100) / 100);
-					String stat = new String("§e" + player + "§7 - " + damage);
-					Bukkit.getPlayer(receiver).sendMessage(stat);
+				if(Bukkit.getPlayer(receiver) != null) {
+					Bukkit.getPlayer(receiver).sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
+					Bukkit.getPlayer(receiver).sendMessage("§7-----");
+					for (String player : bossMap.keySet()) {
+						double damage = Math.round((bossMap.get(player) * 100) / 100);
+						String stat = new String("§e" + player + "§7 - " + damage);
+						Bukkit.getPlayer(receiver).sendMessage(stat);
+					}
 				}
 			}
 			if (report && Bukkit.getPlayer("Neoblade298") != null) {
@@ -108,6 +112,8 @@ public class Main extends JavaPlugin implements Listener{
 				bosses.put(mob, new HashMap<String, Double>());
 			}
 		}
+	  	manager = MythicMobs.inst().getMobManager();
+	  	helper = new BukkitAPIHelper();
 	}
 	
 	@EventHandler
@@ -118,6 +124,8 @@ public class Main extends JavaPlugin implements Listener{
 			System.out.println(e.getEntity().getName());
 		}
 		if (!e.getEntity().getName().equalsIgnoreCase("Location") &&
+				e.getEntity() != null &&
+				e.getEntity() instanceof Entity &&
 				helper.isMythicMob(e.getEntity()) &&
 				bosses.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
 
@@ -128,20 +136,25 @@ public class Main extends JavaPlugin implements Listener{
 			if(e.getDamager() instanceof Player) {
 				player = e.getDamager().getName();
 			}
-			else if(e.getDamager() instanceof Arrow) {
+			else if(e.getDamager() instanceof TippedArrow && ((TippedArrow)e.getDamager()).getShooter() instanceof Player) {
+				player = ((TippedArrow)((Arrow) e.getDamager()).getShooter()).getName();
+			}
+			else if(e.getDamager() instanceof Arrow && ((Arrow)e.getDamager()).getShooter() instanceof Player) {
 				player = ((Player)((Arrow) e.getDamager()).getShooter()).getName();
 			}
 			else {
 				return;
 			}
 			
-			double prevDamage = 0;
-			Map<String, Double> playerMap = bosses.get(mob);
-			if(playerMap.containsKey(player)) {
-				prevDamage = playerMap.get(player);
+			if (player != null) {
+				double prevDamage = 0;
+				Map<String, Double> playerMap = bosses.get(mob);
+				if(playerMap.containsKey(player)) {
+					prevDamage = playerMap.get(player);
+				}
+				double newDamage = prevDamage + e.getDamage();
+				playerMap.put(player, newDamage);
 			}
-			double newDamage = prevDamage + e.getDamage();
-			playerMap.put(player, newDamage);
 		}
 	}
 	
