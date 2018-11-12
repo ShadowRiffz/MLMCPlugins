@@ -14,18 +14,14 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ConditionAnnotation(name="hasflag", author="Neoblade298")
-public class SkillAPIFlagCondition
-extends 
-AbstractCustomCondition
-implements
-IEntityCondition {
+public class SkillAPIFlagCondition extends AbstractCustomCondition implements IEntityCondition {
     private String[] flags;
+    
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
     }
 
-    @Override
     public boolean check(AbstractEntity t) {
         Entity target = t.getBukkitEntity();
         ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
