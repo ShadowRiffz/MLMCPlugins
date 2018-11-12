@@ -51,7 +51,7 @@ public class Main extends JavaPlugin implements Listener{
 	  		}
 	  	}
 	  	manager = MythicMobs.inst().getMobManager();
-	  	helper = new BukkitAPIHelper();
+	  	helper = MythicMobs.inst().getAPIHelper();
 	}
 	  
 	public void onDisable() {
@@ -114,7 +114,7 @@ public class Main extends JavaPlugin implements Listener{
 			}
 		}
 	  	manager = MythicMobs.inst().getMobManager();
-	  	helper = new BukkitAPIHelper();
+	  	helper = MythicMobs.inst().getAPIHelper();
 	}
 	
 	@EventHandler
@@ -171,6 +171,6 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onMMReload(MythicReloadedEvent e) {
 	  	manager = MythicMobs.inst().getMobManager();
-	  	helper = new BukkitAPIHelper();
+	  	helper = MythicMobs.inst().getAPIHelper();
 	}
 }
