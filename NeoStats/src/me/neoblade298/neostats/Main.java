@@ -124,7 +124,7 @@ public class Main extends JavaPlugin implements Listener{
 		if(this.debug) {
 			System.out.println(e.getEntity().getName());
 		}
-		if (!e.getEntity().getName().equalsIgnoreCase("Location") &&
+		if (!e.getEntity().getName().contains("Location") &&
 				e.getEntity() != null &&
 				e.getEntity() instanceof Entity &&
 				helper.isMythicMob(e.getEntity()) &&
