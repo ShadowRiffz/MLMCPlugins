@@ -1,0 +1,8 @@
+name: NeoChars
+author: Neoblade298
+main: me.Neoblade298.NeoChars.Main
+version: 1.1
+commands:
+  char:
+    description: Views a player's character
+    usage: /char [player]
