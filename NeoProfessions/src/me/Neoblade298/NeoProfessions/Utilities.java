@@ -17,6 +17,25 @@ public class Utilities {
 				// Give max durability shard from mythicmobs
 				// mythicmobs items give -s item + level
 			}
+			else {
+				Utilities.sendMessage(p, "&cInsufficient permissions!");
+			}
+		}
+	}
+	
+	public static void createItem(Player p, String profession, String item, String type) {
+		int slot = p.getInventory().firstEmpty();
+		if(slot == -1) {
+			Utilities.sendMessage(p, "&cYour inventory is full!");
+		}
+		else {
+			if (p.hasPermission("neoprofessions." + profession + "." + item + "." + type)) {
+				// Give charm
+				// mythicmobs items give -s item + type
+			}
+			else {
+				Utilities.sendMessage(p, "&cInsufficient permissions!");
+			}
 		}
 	}
 }
