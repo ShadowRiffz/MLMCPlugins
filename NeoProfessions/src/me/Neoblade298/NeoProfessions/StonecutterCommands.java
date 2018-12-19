@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,8 +25,11 @@ public class StonecutterCommands implements CommandExecutor {
 				
 				// Create
 				if(args[0].equalsIgnoreCase("create")) {
-					if (args[1].equalsIgnoreCase("charm")) {
-						Utilities.createItem(p, "mason", "charm", args[2]);
+					if(StringUtils.isNumeric(args[2])) {
+						Utilities.createItem(p, "stonecutter", args[1].toLowerCase(), args[2]);
+					}
+					else {
+						Utilities.sendMessage(p, "&cInvalid level!");
 					}
 				}
 				

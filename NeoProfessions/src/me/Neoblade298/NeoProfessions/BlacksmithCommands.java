@@ -22,25 +22,15 @@ public class BlacksmithCommands implements CommandExecutor{
 			
 			Player p = (Player) sender;
 			// Actual commands
-			if(args.length == 3) {
+			if(args.length == 4) {
 				
 				// Create
 				if(args[0].equalsIgnoreCase("create")) {
-					if (args[1].equalsIgnoreCase("maxdurability")) {
-						if(StringUtils.isNumeric(args[2])) {
-							Utilities.createItem(p, "blacksmith", "maxdurability", Integer.parseInt(args[2]));
-						}
-						else {
-							Utilities.sendMessage(p, "&cInvalid level!");
-						}
+					if(StringUtils.isNumeric(args[2])) {
+						Utilities.createItem(p, "blacksmith", args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[2]));
 					}
-					if (args[1].equalsIgnoreCase("repair")) {
-						if(StringUtils.isNumeric(args[2])) {
-							Utilities.createItem(p, "blacksmith", "repair", Integer.parseInt(args[2]));
-						}
-						else {
-							Utilities.sendMessage(p, "&cInvalid level!");
-						}
+					else {
+						Utilities.sendMessage(p, "&cInvalid level!");
 					}
 				}
 				
