@@ -1,10 +1,13 @@
-package me.Neoblade298.NeoProfessions;
+package me.Neoblade298.NeoProfessions.Commands;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Utilities;
 
 public class StonecutterCommands implements CommandExecutor {
 	

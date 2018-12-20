@@ -1,8 +1,10 @@
-package me.Neoblade298.NeoProfessions;
+package me.Neoblade298.NeoProfessions.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import me.Neoblade298.NeoProfessions.Main;
 
 public class CulinarianCommands implements CommandExecutor {
 	

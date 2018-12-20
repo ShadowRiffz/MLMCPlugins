@@ -4,7 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
+import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
+import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
+import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
+
 public class Main extends JavaPlugin implements Listener {
+	public boolean debug = false;
   
   public void onEnable()
   {
