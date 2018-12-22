@@ -8,14 +8,17 @@ import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Utilities;
+import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 
 
 public class BlacksmithCommands implements CommandExecutor{
 	
 	Main main;
+	BlacksmithMethods blacksmithMethods;
 	
 	public BlacksmithCommands(Main main) {
 		this.main = main;
+		main.blacksmithMethods = this.blacksmithMethods;
 	}
 	
 	@Override
@@ -32,16 +35,17 @@ public class BlacksmithCommands implements CommandExecutor{
 					if((args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor")) &&
 							args[1].equalsIgnoreCase("durability"))
 						if(StringUtils.isNumeric(args[3])) {
-							Utilities.createItem(p, "blacksmith", args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+							blacksmithMethods.createDurabilityItem(p, "blacksmith", args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+							return true;
 						}
 						else {
 							Utilities.sendMessage(p, "&cInvalid level!");
+							return true;
 						}
 					else {
 						Utilities.sendMessage(p, "&cInvalid parameters!");
+						return true;
 					}
-					
-					
 				}
 				
 				if(args[0].equalsIgnoreCase("upgrade")) {
@@ -53,8 +57,12 @@ public class BlacksmithCommands implements CommandExecutor{
 			
 		}
 		
+		else {
+			Utilities.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
+			return true;
+		}
+		return false;
 		
-		Utilities.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
-		return true;
+		// Todo: add 0 arg command for help menu
 	}
 }

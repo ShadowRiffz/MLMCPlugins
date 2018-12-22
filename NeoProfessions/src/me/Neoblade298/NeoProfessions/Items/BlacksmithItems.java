@@ -16,7 +16,7 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.EYE_OF_ENDER);
 		ItemMeta meta = item.getItemMeta();
-		item.addEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
@@ -64,7 +64,7 @@ public class BlacksmithItems {
 		case 5:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence");
 						break;
 		}
-		item.addEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
 		lore.add("§7Level " + level);
