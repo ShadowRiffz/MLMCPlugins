@@ -7,7 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Utilities;
+import me.Neoblade298.NeoProfessions.Util;
+import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 
 
@@ -27,56 +28,81 @@ public class BlacksmithCommands implements CommandExecutor {
 		if(sender.hasPermission("neoprofessions.blacksmith") && sender instanceof Player) {
 			
 			Player p = (Player) sender;
-			// Actual commands
 			if(args.length == 4) {
-				
-				// Create
+				// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
 				if(args[0].equalsIgnoreCase("create")) {
-					
-					// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
 					if(args[1].equalsIgnoreCase("durability") &&
 						(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
 						if(StringUtils.isNumeric(args[3])) {
 							blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+							Util.sendMessage(p, "&7Successfully created a durability gem!");
 							return true;
 						}
 						else {
-							Utilities.sendMessage(p, "&cInvalid level!");
+							Util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
-					
-					// repair: args[0] = create, args[1] = repair, args[2] = level
-					else if(args[1].equalsIgnoreCase("repair")) {
-						if(StringUtils.isNumeric(args[2])) {
-							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
-							return true;
-						}
-						else {
-							Utilities.sendMessage(p, "&cInvalid level!");
-							return true;
-						}
-					}
-					
-					
 					else {
-						Utilities.sendMessage(p, "&cInvalid parameters!");
+						Util.sendMessage(p, "&cInvalid parameters!");
 						return true;
 					}
+				}
+				
+				else if(args[0].equalsIgnoreCase("upgrade")) {
 					
 				}
 				
-				if(args[0].equalsIgnoreCase("upgrade")) {
-					
+				else {
+					Util.sendMessage(p, "&cInvalid subcommand!");
 				}
 				
+			}
+			
+			else if(args.length == 3) {
+				// repair: args[0] = create, args[1] = repair, args[2] = level
+				if(args[0].equalsIgnoreCase("create")) {
+					if(args[1].equalsIgnoreCase("repair")) {
+						if(StringUtils.isNumeric(args[2])) {
+							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
+							Util.sendMessage(p, "&7Successfully created a repair kit!");
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid level!");
+							return true;
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cInvalid parameters!");
+						return true;
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cInvalid subcommand!");
+					return true;
+				}
+			}
+			
+			else if(args.length == 2) {
+				if(p.hasPermission("blacksmith.admin")) {
+					if(args[0].equalsIgnoreCase("get")) {
+						if (args[1].equalsIgnoreCase("Essence")) {
+							if(StringUtils.isNumeric(args[2])) {
+								p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
+								Util.sendMessage(p, "&7Successfully spawned Essence!");
+								return true;
+							}
+						}
+					}
+				}
 			}
 			
 			
 		}
 		
 		else {
-			Utilities.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
+			Util.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
 			return true;
 		}
 		return false;

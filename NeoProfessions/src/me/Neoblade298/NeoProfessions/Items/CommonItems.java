@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommonItems {
 	
-	public static ItemStack getEssence(int level, int amount) {
+	public static ItemStack getEssence(int level) {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
 		switch (level) {

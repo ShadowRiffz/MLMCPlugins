@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Utilities;
+import me.Neoblade298.NeoProfessions.Util;
 
 public class StonecutterCommands implements CommandExecutor {
 	
@@ -29,10 +29,10 @@ public class StonecutterCommands implements CommandExecutor {
 				// Create
 				if(args[0].equalsIgnoreCase("create")) {
 					if(StringUtils.isNumeric(args[2])) {
-						Utilities.createItem(p, "stonecutter", args[1].toLowerCase(), args[2]);
+						Util.createItem(p, "stonecutter", args[1].toLowerCase(), args[2]);
 					}
 					else {
-						Utilities.sendMessage(p, "&cInvalid level!");
+						Util.sendMessage(p, "&cInvalid level!");
 					}
 				}
 				
@@ -46,7 +46,7 @@ public class StonecutterCommands implements CommandExecutor {
 		}
 		
 		
-		Utilities.sendMessage((Player)sender, "&cYou are not a Mason!");
+		Util.sendMessage((Player)sender, "&cYou are not a Mason!");
 		return true;
 	}
 
