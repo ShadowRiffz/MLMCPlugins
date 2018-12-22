@@ -40,7 +40,6 @@ public class BlacksmithCommands implements CommandExecutor {
 						(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
 						if(StringUtils.isNumeric(args[3])) {
 							blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
-							Util.sendMessage(p, "&7Successfully created a durability gem!");
 							return true;
 						}
 						else {
@@ -52,7 +51,6 @@ public class BlacksmithCommands implements CommandExecutor {
 					else if(args[1].equalsIgnoreCase("repair")) {
 						if(StringUtils.isNumeric(args[2])) {
 							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
-							Util.sendMessage(p, "&7Successfully created a repair kit!");
 							return true;
 						}
 						else {
@@ -69,7 +67,10 @@ public class BlacksmithCommands implements CommandExecutor {
 				
 				// UPGRADE COMMAND
 				else if(args[0].equalsIgnoreCase("upgrade")) {
-					
+					if(args[1].equalsIgnoreCase("unbreaking")) {
+						blacksmithMethods.upgradeItem(p);
+						return true;
+					}
 				}
 				
 				

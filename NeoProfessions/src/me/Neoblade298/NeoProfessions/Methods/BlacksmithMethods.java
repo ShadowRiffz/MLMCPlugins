@@ -1,6 +1,9 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Util;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
@@ -17,6 +20,8 @@ public class BlacksmithMethods {
 	int DURABILITY_ESSENCE = 5;
 	int REPAIR_COST = 2000;
 	int REPAIR_ESSENCE = 3;
+	int UPGRADE_COST_PER_LVL = 5000;
+	int UPGRADE_ESSENCE_PER_LVL = 5;
 	
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -32,6 +37,7 @@ public class BlacksmithMethods {
 						p.getInventory().addItem(BlacksmithItems.getDurabilityItem(level, itemtype));
 						p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), DURABILITY_ESSENCE));
 						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * level);
+						Util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the gold to create this!");
@@ -42,7 +48,7 @@ public class BlacksmithMethods {
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cInsufficient permissions!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
@@ -55,10 +61,11 @@ public class BlacksmithMethods {
 		if(slot != -1) {
 			if (p.hasPermission("blacksmith." + item + "." + level)) {
 				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), REPAIR_ESSENCE)) {
-					if(main.getEconomy().has(p, REPAIR_COST)) {
+					if(econ.has(p, REPAIR_COST)) {
 						p.getInventory().addItem(BlacksmithItems.getRepairItem(level));
 						p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), REPAIR_ESSENCE));
 						econ.withdrawPlayer(p, REPAIR_COST);
+						Util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the gold to create this!");
@@ -69,11 +76,52 @@ public class BlacksmithMethods {
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cInsufficient permissions!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
 			Util.sendMessage(p, "&cYour inventory is full!");
+		}
+	}
+	
+	public void upgradeItem(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(item != null) {
+			int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
+			int upgradeLevel = enchLevel + 1;
+			int itemLevel = Util.getItemLevel(item);
+			if(upgradeLevel <= 6) {
+				if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
+					if(itemLevel == -1) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel)) {
+							if(econ.has(p, UPGRADE_COST_PER_LVL * enchLevel)) {
+								item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel));
+								econ.withdrawPlayer(p, UPGRADE_COST_PER_LVL * enchLevel);
+								Util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 }
