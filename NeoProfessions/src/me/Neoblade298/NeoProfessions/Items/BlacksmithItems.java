@@ -17,6 +17,7 @@ public class BlacksmithItems {
 		ItemStack item = new ItemStack(Material.EYE_OF_ENDER);
 		ItemMeta meta = item.getItemMeta();
 		item.addEnchantment(Enchantment.DURABILITY, 1);
+		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
 		
@@ -51,6 +52,18 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityReq(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
+		switch (level) {
+		case 1:	meta.setDisplayName("§4[Lv " + level + "] §cDull Essence");
+						break;
+		case 2:	meta.setDisplayName("§4[Lv " + level + "] §cMinor Essence");
+						break;
+		case 3:	meta.setDisplayName("§4[Lv " + level + "] §cPotent Essence");
+						break;
+		case 4:	meta.setDisplayName("§4[Lv " + level + "] §cSublime Essence");
+						break;
+		case 5:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence");
+						break;
+		}
 		item.addEnchantment(Enchantment.DURABILITY, 1);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();

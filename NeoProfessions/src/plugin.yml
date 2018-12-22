@@ -1,0 +1,8 @@
+name: NeoProfessions
+author: Neoblade298
+main: me.Neoblade298.NeoProfessions.Main
+version: 1.0
+commands:
+  blacksmith:
+    description: Base command for blacksmiths
+    usage: /blacksmith [args]
