@@ -20,6 +20,7 @@ public class Main extends JavaPlugin implements Listener {
   List<Integer> permCollections;
   List<Attributes> attrBonuses = new ArrayList<Attributes>(maxCollections + 1);
   List<Attributes> shinyBonuses = new ArrayList<Attributes>(maxCollections + 1);
+	public boolean debug;
   
   
   public void onEnable() {
@@ -38,15 +39,15 @@ public class Main extends JavaPlugin implements Listener {
     // Load values from config
   	maxCollections = getConfig().getInt("Max_Collection");
   	permCollections = getConfig().getIntegerList("Permanent_Collections");
-  	attrBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
-  	shinyBonuses.add(new Attributes(0, 0, 0, 0, 0, 0, 0));
+  	attrBonuses.add(new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+  	shinyBonuses.add(new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
   	ConfigurationSection collection = getConfig().getConfigurationSection("Collection_Bonuses");
   	ConfigurationSection shinyCollection = getConfig().getConfigurationSection("Shiny_Collection_Bonuses");
 	
 	// Initialize arrays
 	for(int i = 0; i < maxCollections + 1; i++) {
-		attrBonuses.add(i, new Attributes(0, 0, 0, 0, 0, 0, 0));
-		shinyBonuses.add(i, new Attributes(0, 0, 0, 0, 0, 0, 0));
+		attrBonuses.add(i, new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+		shinyBonuses.add(i, new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
 	}
   	
   	// Load in all attribute bonuses
@@ -71,10 +72,10 @@ public class Main extends JavaPlugin implements Listener {
   		int s_end = curr_shiny.getInt("Endurance");
   		int s_vit = curr_shiny.getInt("Vitality");
   		
-  		Attributes attrs = new Attributes(c_str, c_dex, c_int, c_spr, c_prc, c_end, c_vit);
+  		Attributes attrs = new Attributes(this, c_str, c_dex, c_int, c_spr, c_prc, c_end, c_vit);
   		attrBonuses.set(i, attrs);
   		
-  		Attributes shiny_attrs = new Attributes(s_str, s_dex, s_int, s_spr, s_prc, s_end, s_vit);
+  		Attributes shiny_attrs = new Attributes(this, s_str, s_dex, s_int, s_spr, s_prc, s_end, s_vit);
   		shinyBonuses.set(i, shiny_attrs);
   	}
   }
@@ -150,15 +151,23 @@ public class Main extends JavaPlugin implements Listener {
 	  }
 	  
 	  // Apply the bonuses and map them
-	  Attributes attrSet = new Attributes(f_str, f_dex, f_int, f_spr, f_prc, f_end, f_vit);
+	  Attributes attrSet = new Attributes(this, f_str, f_dex, f_int, f_spr, f_prc, f_end, f_vit);
 	  playerMap.put(p.getName(), attrSet);
 	  attrSet.applyAttributes(p);
+	  if(debug) {
+	  	Bukkit.getPlayer("Neoblade298").sendMessage(attrSet.toString());
+	  }
   }
   
   public void resetBonuses(Player p) {
 	  if(playerMap.containsKey(p.getName())) {
-		  playerMap.get(p.getName()).removeAttributes(p);
+	  	if(p != null && (p.getWorld().getName().equalsIgnoreCase("Argyll") || p.getWorld().getName().equalsIgnoreCase("ClassPVP"))) {
+	  			playerMap.get(p.getName()).removeAttributes(p);
+	  	}
 		  playerMap.remove(p.getName());
+		  if(debug) {
+		  	Bukkit.getPlayer("Neoblade298").sendMessage(p.getName() + " reset their attributes");
+		  }
 	  }
   }
   

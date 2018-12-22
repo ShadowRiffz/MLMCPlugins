@@ -5,6 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import com.sucy.skill.SkillAPI;
+
 
 public class Commands implements CommandExecutor{
 	private Main main = null;
@@ -40,7 +42,19 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		// Set Command - Resets a player's attributes, then sets them
+		
+		// Debug command
+		if(args[0].equalsIgnoreCase("debug")) {
+			main.debug = !main.debug;
+			sender.sendMessage("Debug " + main.debug);
+			return true;
+		}
+		
+		// Second debug command
+		if(args[0].equalsIgnoreCase("test")) {
+			SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).updateHealthAndMana(Bukkit.getPlayer(args[1]));
+			sender.sendMessage("Updated health and mana of " + args[1]);
+		}
 		sender.sendMessage("Something went wrong.");
 		return true;
 	}
