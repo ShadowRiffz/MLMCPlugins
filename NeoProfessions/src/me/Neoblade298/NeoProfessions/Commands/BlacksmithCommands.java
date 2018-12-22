@@ -11,7 +11,7 @@ import me.Neoblade298.NeoProfessions.Utilities;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 
 
-public class BlacksmithCommands implements CommandExecutor{
+public class BlacksmithCommands implements CommandExecutor {
 	
 	Main main;
 	BlacksmithMethods blacksmithMethods;
@@ -30,22 +30,40 @@ public class BlacksmithCommands implements CommandExecutor{
 			// Actual commands
 			if(args.length == 4) {
 				
-				// args[1] = durability, args[2] = weapon/armor, args[3] = level
+				// Create
 				if(args[0].equalsIgnoreCase("create")) {
-					if((args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor")) &&
-							args[1].equalsIgnoreCase("durability"))
+					
+					// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
+					if(args[1].equalsIgnoreCase("durability") &&
+						(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
 						if(StringUtils.isNumeric(args[3])) {
-							blacksmithMethods.createDurabilityItem(p, "blacksmith", args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+							blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
 							return true;
 						}
 						else {
 							Utilities.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
+					}
+					
+					// repair: args[0] = create, args[1] = repair, args[2] = level
+					else if(args[1].equalsIgnoreCase("repair")) {
+						if(StringUtils.isNumeric(args[2])) {
+							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
+							return true;
+						}
+						else {
+							Utilities.sendMessage(p, "&cInvalid level!");
+							return true;
+						}
+					}
+					
+					
 					else {
 						Utilities.sendMessage(p, "&cInvalid parameters!");
 						return true;
 					}
+					
 				}
 				
 				if(args[0].equalsIgnoreCase("upgrade")) {

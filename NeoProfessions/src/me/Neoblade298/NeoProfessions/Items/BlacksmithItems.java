@@ -11,8 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class BlacksmithItems {
 
-	
-	// All items go here
+	// Durability
 	public static ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.EYE_OF_ENDER);
 		ItemMeta meta = item.getItemMeta();
@@ -49,25 +48,29 @@ public class BlacksmithItems {
 		return item;
 	}
 	
-	public static ItemStack getDurabilityReq(int level, String itemtype) {
-		ItemStack item = new ItemStack(Material.QUARTZ);
+	// Repair
+	public static ItemStack getRepairItem(int level) {
+		ItemStack item = new ItemStack(Material.EYE_OF_ENDER);
 		ItemMeta meta = item.getItemMeta();
-		switch (level) {
-		case 1:	meta.setDisplayName("§4[Lv " + level + "] §cDull Essence");
-						break;
-		case 2:	meta.setDisplayName("§4[Lv " + level + "] §cMinor Essence");
-						break;
-		case 3:	meta.setDisplayName("§4[Lv " + level + "] §cPotent Essence");
-						break;
-		case 4:	meta.setDisplayName("§4[Lv " + level + "] §cSublime Essence");
-						break;
-		case 5:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence");
-						break;
-		}
+		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level);
-		lore.add("§7Item used for profession crafting");
+
+		lore.add("§6Right click to use");
+		switch(level) {
+			case 1:	lore.add("§7Compatibility: Common - §9Rare");
+						 	break;
+			case 2: lore.add("§7Compatibility: Common - §6Epic");
+							break;
+			case 3: lore.add("§7Compatibility: Common - §bAngelic");
+							break;
+			case 4: lore.add("§7Compatibility: Common - §2Mythic");
+							break;
+			case 5: lore.add("§7Compatibility: Common - §4§lLegendary");
+							break;
+		}
+		lore.add("§7Effect: Restores durability of an item");
+		lore.add("§7Potency: §e" + (20 + (level*5)) + "%");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);

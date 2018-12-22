@@ -6,9 +6,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
-import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
-import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
-import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
