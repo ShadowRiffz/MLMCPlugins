@@ -25,12 +25,17 @@ public class BlacksmithCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("neoprofessions.blacksmith") && sender instanceof Player) {
-			
+		if(sender.hasPermission("blacksmith.professed") && sender instanceof Player) {
 			Player p = (Player) sender;
-			if(args.length == 4) {
-				// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
+			
+			if (args.length == 0) {
+				// TODO: Add help message
+				return true;
+			}
+			else {
+				// CREATE COMMAND
 				if(args[0].equalsIgnoreCase("create")) {
+					// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
 					if(args[1].equalsIgnoreCase("durability") &&
 						(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
 						if(StringUtils.isNumeric(args[3])) {
@@ -43,26 +48,8 @@ public class BlacksmithCommands implements CommandExecutor {
 							return true;
 						}
 					}
-					else {
-						Util.sendMessage(p, "&cInvalid parameters!");
-						return true;
-					}
-				}
-				
-				else if(args[0].equalsIgnoreCase("upgrade")) {
-					
-				}
-				
-				else {
-					Util.sendMessage(p, "&cInvalid subcommand!");
-				}
-				
-			}
-			
-			else if(args.length == 3) {
-				// repair: args[0] = create, args[1] = repair, args[2] = level
-				if(args[0].equalsIgnoreCase("create")) {
-					if(args[1].equalsIgnoreCase("repair")) {
+					// repair: args[0] = create, args[1] = repair, args[2] = level
+					else if(args[1].equalsIgnoreCase("repair")) {
 						if(StringUtils.isNumeric(args[2])) {
 							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
 							Util.sendMessage(p, "&7Successfully created a repair kit!");
@@ -78,17 +65,19 @@ public class BlacksmithCommands implements CommandExecutor {
 						return true;
 					}
 				}
-				else {
-					Util.sendMessage(p, "&cInvalid subcommand!");
-					return true;
+				
+				
+				// UPGRADE COMMAND
+				else if(args[0].equalsIgnoreCase("upgrade")) {
+					
 				}
-			}
-			
-			else if(args.length == 2) {
-				if(p.hasPermission("blacksmith.admin")) {
-					if(args[0].equalsIgnoreCase("get")) {
-						if (args[1].equalsIgnoreCase("Essence")) {
-							if(StringUtils.isNumeric(args[2])) {
+				
+				
+				// GET COMMAND (Debug)
+				else if(args[0].equalsIgnoreCase("get")) {
+					if (args[1].equalsIgnoreCase("Essence")) {
+						if(StringUtils.isNumeric(args[2])) {
+							if(p.hasPermission("blacksmith.admin")) {
 								p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
 								Util.sendMessage(p, "&7Successfully spawned Essence!");
 								return true;
@@ -96,9 +85,12 @@ public class BlacksmithCommands implements CommandExecutor {
 						}
 					}
 				}
+				
+				else {
+					Util.sendMessage(p, "&cInvalid subcommand!");
+				}
+				
 			}
-			
-			
 		}
 		
 		else {
