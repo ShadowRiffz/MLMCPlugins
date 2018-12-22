@@ -18,7 +18,7 @@ public class BlacksmithCommands implements CommandExecutor{
 	
 	public BlacksmithCommands(Main main) {
 		this.main = main;
-		main.blacksmithMethods = this.blacksmithMethods;
+		this.blacksmithMethods = main.blacksmithMethods;
 	}
 	
 	@Override

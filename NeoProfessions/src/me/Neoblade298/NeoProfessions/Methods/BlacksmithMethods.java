@@ -1,6 +1,8 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Utilities;
@@ -27,7 +29,10 @@ public class BlacksmithMethods {
 				if(p.getInventory().containsAtLeast(BlacksmithItems.getDurabilityReq(level, itemtype), 5)) {
 					if(main.getEconomy().has(p, 4000 * level)) {
 						p.getInventory().addItem(BlacksmithItems.getDurabilityItem(level, itemtype));
-						p.getInventory().removeItem(BlacksmithItems.getDurabilityReq(level, itemtype));
+						
+						ItemStack cost = BlacksmithItems.getDurabilityReq(level, itemtype);
+						cost.setAmount(5);
+						p.getInventory().removeItem(cost);
 						econ.withdrawPlayer(p, 4000 * level);
 					}
 					else {

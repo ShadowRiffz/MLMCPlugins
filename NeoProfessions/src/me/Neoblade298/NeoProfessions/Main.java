@@ -29,23 +29,21 @@ public class Main extends JavaPlugin implements Listener {
     Bukkit.getServer().getLogger().info("NeoProfessions Enabled");
     getServer().getPluginManager().registerEvents(this, this);
     
-    // Command listeners for all classes
-    this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
-    this.getCommand("mason").setExecutor(new MasonCommands(this));
-    this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
-    this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
-    
-    // Connect method classes to main
-    blacksmithMethods = new BlacksmithMethods(this);
-    
     // Setup vault
     if (!setupEconomy()) {
       this.getLogger().severe("Disabled due to no Vault dependency found!");
       Bukkit.getPluginManager().disablePlugin(this);
       return;
-  }
-  this.setupPermissions();
-  this.setupChat();
+    }
+	  this.setupPermissions();
+	  this.setupChat();
+	  
+	  
+	  // Connect method classes to main
+	  blacksmithMethods = new BlacksmithMethods(this);
+	  
+	  // Command listeners for all classes
+	  this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
   }
   
   public void onDisable()
