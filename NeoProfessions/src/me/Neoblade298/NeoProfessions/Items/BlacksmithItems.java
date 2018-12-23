@@ -3,11 +3,16 @@ package me.Neoblade298.NeoProfessions.Items;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Damageable;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import me.Neoblade298.NeoProfessions.Util;
+import net.md_5.bungee.api.ChatColor;
 
 public class BlacksmithItems {
 
@@ -43,7 +48,7 @@ public class BlacksmithItems {
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		
 		return item;
 	}
@@ -73,8 +78,44 @@ public class BlacksmithItems {
 		lore.add("§7Potency: §e" + (20 + (level*5)) + "%");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		
 		return item;
+	}
+	
+	public static boolean isRepairItem(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		for(String line : meta.getLore()) {
+			if(line.contains("Restores durability of an item")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static int getItemLevel(ItemStack item) {
+		return item.getEnchantments().get(Enchantment.DURABILITY);
+	}
+	
+	public static int getItemPotency(ItemStack item) {
+		for(String line : item.getItemMeta().getLore()) {
+			if(line.contains("Potency")) {
+				Bukkit.getPlayer("Neoblade298").sendMessage(line.substring(9) + " - " + ChatColor.stripColor(line.substring(9)));
+				return Integer.parseInt(ChatColor.stripColor(line.substring(9)));
+			}
+		}
+		return -1;
+	}
+	
+	public static boolean canRepair(ItemStack item) {
+		// Check if the item is a quest item
+		System.out.println(item.getType().getMaxDurability());
+		if(Util.getItemLevel(item) != -1) {
+			return true;
+		}
+		if(item.getType().getMaxDurability() > 0) {
+			return true;
+		}
+		return false;
 	}
 }
