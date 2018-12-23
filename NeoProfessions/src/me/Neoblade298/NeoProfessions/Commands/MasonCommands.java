@@ -19,29 +19,16 @@ public class MasonCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("neoprofessions.mason") && sender instanceof Player) {
+		if(sender.hasPermission("mason.professed") && sender instanceof Player) {
 			
 			Player p = (Player) sender;
-			// Actual commands
-			if(args.length == 3) {
-				
-				// Create
-				if(args[0].equalsIgnoreCase("create")) {
-					if (args[1].equalsIgnoreCase("charm")) {
-						p.sendMessage("");
-					}
-				}
-				
-				if(args[0].equalsIgnoreCase("upgrade")) {
-					
-				}
+			if(args.length == 0) {
+			
+			}
+			else {
 				
 			}
-			
-			
 		}
-		
-		
 		Util.sendMessage((Player)sender, "&cYou are not a Mason!");
 		return true;
 	}

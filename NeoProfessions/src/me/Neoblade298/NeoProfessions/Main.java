@@ -6,7 +6,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
+import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
+import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -19,6 +21,7 @@ public class Main extends JavaPlugin implements Listener {
   private Chat chat;
   
   public BlacksmithMethods blacksmithMethods;
+  public MasonMethods masonMethods;
   
   public void onEnable()
   {
@@ -38,9 +41,11 @@ public class Main extends JavaPlugin implements Listener {
 	  
 	  // Connect method classes to main
 	  blacksmithMethods = new BlacksmithMethods(this);
+	  masonMethods = new MasonMethods(this);
 	  
 	  // Command listeners for all classes
 	  this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
+	  this.getCommand("mason").setExecutor(new MasonCommands(this));
   }
   
   public void onDisable()
