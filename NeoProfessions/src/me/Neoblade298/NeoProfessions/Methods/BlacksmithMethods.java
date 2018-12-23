@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +24,9 @@ public class BlacksmithMethods {
 	int REPAIR_ESSENCE = 3;
 	int UPGRADE_COST_PER_LVL = 5000;
 	int UPGRADE_ESSENCE_PER_LVL = 5;
+	int REFORGE_COST_BASE = 1000;
+	int REFORGE_COST_MULT = 2;
+	int REFORGE_ESSENCE_PER_LVL = 6;
 	
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -106,7 +111,6 @@ public class BlacksmithMethods {
 								}
 							}
 							else {
-								p.getInventory().addItem(CommonItems.getEssence(itemLevel));
 								Util.sendMessage(p, "&cYou lack the materials to create this!");
 							}
 						}
@@ -124,6 +128,47 @@ public class BlacksmithMethods {
 			}
 			else {
 				Util.sendMessage(p, "&cItem doesn't have an unbreaking enchantment to upgrade!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void reforgeItem(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(item != null) {
+			String type = Util.getItemType(item);
+			if(type != null) {
+				int itemLevel = Util.getItemLevel(item);
+				if(itemLevel != -1) {
+					if(p.hasPermission("blacksmith.reforge." + itemLevel)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel)) {
+							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel))) {
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel));
+								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel));
+								ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+								Bukkit.dispatchCommand(console, "mlmctier give " + p.getName() + " " + type);
+								Util.sendMessage(p, "&7Successfully reforged item!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
 			}
 		}
 		else {

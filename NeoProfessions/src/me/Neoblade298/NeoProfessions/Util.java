@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +51,52 @@ public class Util {
 			}
 		}
 		return -1;
+	}
+	
+	public static String getItemType(ItemStack item) {
+		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
+		String desc = null;
+		
+		// Find the tier string
+		for(String line : lore) {
+			if(line.contains("Tier:")) {
+				desc = line;
+				break;
+			}
+		}
+		if (desc != null) {
+			ChatColor.stripColor(desc);
+			desc.substring(6);
+			
+			// Edge cases
+			if(desc.equalsIgnoreCase("Common Helmet")) {
+				desc = "Common Reinforced Helmet";
+			}
+			if(desc.equalsIgnoreCase("Common Chestplate")) {
+				desc = "Common Reinforced Chestplate";
+			}
+			if(desc.equalsIgnoreCase("Common Leggings")) {
+				desc = "Common Reinforced Leggings";
+			}
+			if(desc.equalsIgnoreCase("Common Boots")) {
+				desc = "Common Reinforced Boots";
+			}
+			if(desc.equalsIgnoreCase("Uncommon Helmet")) {
+				desc = "Uncommon Reinforced Helmet";
+			}
+			if(desc.equalsIgnoreCase("Uncommon Chestplate")) {
+				desc = "Uncommon Reinforced Chestplate";
+			}
+			if(desc.equalsIgnoreCase("Uncommon Leggings")) {
+				desc = "Uncommon Reinforced Leggings";
+			}
+			if(desc.equalsIgnoreCase("Uncommon Boots")) {
+				desc = "Uncommon Reinforced Boots";
+			}
+		}
+		
+		return desc;
+		
 	}
 	
 	public static boolean isWeapon(ItemStack item) {

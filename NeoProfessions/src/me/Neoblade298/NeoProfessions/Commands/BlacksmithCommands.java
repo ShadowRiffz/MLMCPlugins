@@ -75,7 +75,8 @@ public class BlacksmithCommands implements CommandExecutor {
 				
 				// REFORGE COMMAND
 				else if(args[0].equalsIgnoreCase("reforge")) {
-					
+					blacksmithMethods.reforgeItem(p);
+					return true;
 				}
 				
 				
