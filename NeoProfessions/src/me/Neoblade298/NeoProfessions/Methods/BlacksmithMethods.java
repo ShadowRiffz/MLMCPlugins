@@ -87,37 +87,43 @@ public class BlacksmithMethods {
 	public void upgradeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(item != null) {
-			int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
-			int upgradeLevel = enchLevel + 1;
-			int itemLevel = Util.getItemLevel(item);
-			if(upgradeLevel <= 6) {
-				if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
-					if(itemLevel == -1) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel)) {
-							if(econ.has(p, UPGRADE_COST_PER_LVL * enchLevel)) {
-								item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel));
-								econ.withdrawPlayer(p, UPGRADE_COST_PER_LVL * enchLevel);
-								Util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
+			if(item.containsEnchantment(Enchantment.DURABILITY)) {
+				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
+				int upgradeLevel = enchLevel + 1;
+				int itemLevel = Util.getItemLevel(item);
+				if(upgradeLevel <= 6) {
+					if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
+						if(itemLevel != -1) {
+							if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel)) {
+								if(econ.has(p, UPGRADE_COST_PER_LVL * enchLevel)) {
+									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
+									p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(itemLevel), UPGRADE_ESSENCE_PER_LVL * enchLevel));
+									econ.withdrawPlayer(p, UPGRADE_COST_PER_LVL * enchLevel);
+									Util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
+								}
+								else {
+									Util.sendMessage(p, "&cYou lack the gold to create this!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to create this!");
+								p.getInventory().addItem(CommonItems.getEssence(itemLevel));
+								Util.sendMessage(p, "&cYou lack the materials to create this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
+				Util.sendMessage(p, "&cItem doesn't have an unbreaking enchantment to upgrade!");
 			}
 		}
 		else {

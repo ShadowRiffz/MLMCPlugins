@@ -28,7 +28,7 @@ public class MasonCommands implements CommandExecutor {
 				// Create
 				if(args[0].equalsIgnoreCase("create")) {
 					if (args[1].equalsIgnoreCase("charm")) {
-						Util.createItem(p, "mason", "charm", args[2]);
+						p.sendMessage("");
 					}
 				}
 				

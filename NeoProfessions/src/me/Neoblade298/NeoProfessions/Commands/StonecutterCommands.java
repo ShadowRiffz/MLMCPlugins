@@ -29,7 +29,6 @@ public class StonecutterCommands implements CommandExecutor {
 				// Create
 				if(args[0].equalsIgnoreCase("create")) {
 					if(StringUtils.isNumeric(args[2])) {
-						Util.createItem(p, "stonecutter", args[1].toLowerCase(), args[2]);
 					}
 					else {
 						Util.sendMessage(p, "&cInvalid level!");

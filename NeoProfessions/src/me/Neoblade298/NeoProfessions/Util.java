@@ -18,23 +18,33 @@ public class Util {
 	
 	public static int getItemLevel(ItemStack item) {
 		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
-		if (lore.contains("Tier:")) {
-			if(lore.contains("Common") ||
-					lore.contains("Uncommon") ||
-					lore.contains("Rare")) {
+		String tier = null;
+		
+		// Find the tier string
+		for(String line : lore) {
+			if(line.contains("Tier:")) {
+				tier = line;
+				break;
+			}
+		}
+		
+		if (tier != null) {
+			if(tier.contains("Common") ||
+					tier.contains("Uncommon") ||
+					tier.contains("Rare")) {
 				return 1;
 			}
-			else if(lore.contains("Unique") ||
-					lore.contains("Epic")) {
+			else if(tier.contains("Unique") ||
+					tier.contains("Epic")) {
 				return 2;
 			}
-			else if(lore.contains("Angelic")) {
+			else if(tier.contains("Angelic")) {
 				return 3;
 			}
-			else if(lore.contains("Mythic")) {
+			else if(tier.contains("Mythic")) {
 				return 4;
 			}
-			else if(lore.contains("Legendary")) {
+			else if(tier.contains("Legendary")) {
 				return 5;
 			}
 		}
