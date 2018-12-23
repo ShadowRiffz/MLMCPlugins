@@ -65,8 +65,7 @@ public class Util {
 			}
 		}
 		if (desc != null) {
-			ChatColor.stripColor(desc);
-			desc.substring(6);
+			desc = ChatColor.stripColor(desc.substring(8));
 			
 			// Edge cases
 			if(desc.equalsIgnoreCase("Common Helmet")) {

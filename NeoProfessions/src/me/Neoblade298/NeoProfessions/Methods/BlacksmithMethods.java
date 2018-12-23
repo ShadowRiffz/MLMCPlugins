@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -91,7 +92,7 @@ public class BlacksmithMethods {
 	
 	public void upgradeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item != null) {
+		if(item.equals(Material.AIR)) {
 			if(item.containsEnchantment(Enchantment.DURABILITY)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
 				int upgradeLevel = enchLevel + 1;
@@ -137,7 +138,8 @@ public class BlacksmithMethods {
 	
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item != null) {
+		if(item.equals(Material.AIR)) {
+			System.out.println(item);
 			String type = Util.getItemType(item);
 			if(type != null) {
 				int itemLevel = Util.getItemLevel(item);
@@ -146,6 +148,7 @@ public class BlacksmithMethods {
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel)) {
 							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel))) {
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel));
+								p.getInventory().removeItem(item);
 								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel));
 								ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 								Bukkit.dispatchCommand(console, "mlmctier give " + p.getName() + " " + type);
