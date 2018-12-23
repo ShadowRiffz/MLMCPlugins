@@ -73,6 +73,11 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 				}
 				
+				// REFORGE COMMAND
+				else if(args[0].equalsIgnoreCase("reforge")) {
+					
+				}
+				
 				
 				// GET COMMAND (Debug)
 				else if(args[0].equalsIgnoreCase("get")) {

@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions;
 
 import java.util.ArrayList;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,5 +50,49 @@ public class Util {
 			}
 		}
 		return -1;
+	}
+	
+	public static boolean isWeapon(ItemStack item) {
+		Material mat = item.getType();
+		return
+				mat.equals(Material.WOOD_SWORD) ||
+				mat.equals(Material.STONE_SWORD) ||
+				mat.equals(Material.GOLD_SWORD) ||
+				mat.equals(Material.IRON_SWORD) ||
+				mat.equals(Material.DIAMOND_SWORD) ||
+				mat.equals(Material.WOOD_AXE) ||
+				mat.equals(Material.STONE_AXE) ||
+				mat.equals(Material.GOLD_AXE) ||
+				mat.equals(Material.IRON_AXE) ||
+				mat.equals(Material.DIAMOND_AXE) ||
+				mat.equals(Material.WOOD_HOE) ||
+				mat.equals(Material.STONE_HOE) ||
+				mat.equals(Material.GOLD_HOE) ||
+				mat.equals(Material.IRON_HOE) ||
+				mat.equals(Material.DIAMOND_HOE) ||
+				mat.equals(Material.SHIELD) ||
+				mat.equals(Material.BOW);
+	}
+
+	
+	public static boolean isArmor(ItemStack item) {
+		Material mat = item.getType();
+		return
+				mat.equals(Material.LEATHER_HELMET) ||
+				mat.equals(Material.GOLD_HELMET) ||
+				mat.equals(Material.IRON_HELMET) ||
+				mat.equals(Material.DIAMOND_HELMET) ||
+				mat.equals(Material.LEATHER_CHESTPLATE) ||
+				mat.equals(Material.GOLD_CHESTPLATE) ||
+				mat.equals(Material.IRON_CHESTPLATE) ||
+				mat.equals(Material.DIAMOND_CHESTPLATE) ||
+				mat.equals(Material.LEATHER_LEGGINGS) ||
+				mat.equals(Material.GOLD_LEGGINGS) ||
+				mat.equals(Material.IRON_LEGGINGS) ||
+				mat.equals(Material.DIAMOND_LEGGINGS) ||
+				mat.equals(Material.LEATHER_BOOTS) ||
+				mat.equals(Material.GOLD_BOOTS) ||
+				mat.equals(Material.IRON_BOOTS) ||
+				mat.equals(Material.DIAMOND_BOOTS);
 	}
 }
