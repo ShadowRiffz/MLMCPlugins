@@ -189,6 +189,7 @@ public class BlacksmithMethods {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, SCRAP_COST);
 						p.getInventory().addItem(CommonItems.getEssenceFragment(itemLevel));
+						Util.sendMessage(p, "&cSuccessfully scrapped item!");
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the gold to create this!");

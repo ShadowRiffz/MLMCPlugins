@@ -57,7 +57,7 @@ public class CommonItems {
 						break;
 		case 4:	meta.setDisplayName("§4[Lv " + level + "] §cSublime Essence Fragment");
 						lore.add("§7Level " + level);
-						lore.add("§7Combine 9 in a workbench for §cSubline Essence");
+						lore.add("§7Combine 9 in a workbench for §cSublime Essence");
 						break;
 		case 5:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence Fragment");
 						lore.add("§7Level " + level);
