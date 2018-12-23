@@ -19,15 +19,16 @@ public class BlacksmithMethods {
 	Economy econ;
 	
 	// Constants
-	int DURABILITY_COST_PER_LVL = 4000;
-	int DURABILITY_ESSENCE = 5;
-	int REPAIR_COST = 2000;
-	int REPAIR_ESSENCE = 3;
-	int UPGRADE_COST_PER_LVL = 5000;
-	int UPGRADE_ESSENCE_PER_LVL = 5;
-	int REFORGE_COST_BASE = 1000;
-	int REFORGE_COST_MULT = 2;
-	int REFORGE_ESSENCE_PER_LVL = 6;
+	final int DURABILITY_COST_PER_LVL = 4000;
+	final int DURABILITY_ESSENCE = 5;
+	final int REPAIR_COST = 2000;
+	final int REPAIR_ESSENCE = 3;
+	final int UPGRADE_COST_PER_LVL = 5000;
+	final int UPGRADE_ESSENCE_PER_LVL = 5;
+	final int REFORGE_COST_BASE = 1000;
+	final int REFORGE_COST_MULT = 2;
+	final int REFORGE_ESSENCE_PER_LVL = 6;
+	final int SCRAP_COST = 1000;
 	
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -138,8 +139,7 @@ public class BlacksmithMethods {
 	
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item.equals(Material.AIR)) {
-			System.out.println(item);
+		if(!item.equals(Material.AIR)) {
 			String type = Util.getItemType(item);
 			if(type != null) {
 				int itemLevel = Util.getItemLevel(item);
@@ -168,6 +168,34 @@ public class BlacksmithMethods {
 				}
 				else {
 					Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void scrapItem(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(Material.AIR)) {
+			int itemLevel = Util.getItemLevel(item);
+			if(itemLevel != -1) {
+				if(p.hasPermission("blacksmith.scrap." + itemLevel)) {
+					if(econ.has(p, SCRAP_COST)) {
+						p.getInventory().removeItem(item);
+						econ.withdrawPlayer(p, SCRAP_COST);
+						p.getInventory().addItem(CommonItems.getEssenceFragment(itemLevel));
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the gold to create this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {

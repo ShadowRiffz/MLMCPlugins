@@ -79,6 +79,11 @@ public class BlacksmithCommands implements CommandExecutor {
 					return true;
 				}
 				
+				else if(args[0].equalsIgnoreCase("scrap")) {
+					blacksmithMethods.scrapItem(p);
+					return true;
+				}
+				
 				
 				// GET COMMAND (Debug)
 				else if(args[0].equalsIgnoreCase("get")) {
