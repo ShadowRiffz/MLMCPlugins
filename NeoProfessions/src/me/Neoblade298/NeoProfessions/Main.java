@@ -6,6 +6,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
+import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin implements Listener {
 	  
 	  // Command listeners for all classes
 	  this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
+	  this.getCommand("mason").setExecutor(new MasonCommands(this));
 	  
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);

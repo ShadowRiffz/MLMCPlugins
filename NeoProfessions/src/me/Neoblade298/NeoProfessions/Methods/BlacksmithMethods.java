@@ -7,9 +7,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Util;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithMethods {

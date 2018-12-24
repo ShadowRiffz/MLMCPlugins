@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions;
+package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 

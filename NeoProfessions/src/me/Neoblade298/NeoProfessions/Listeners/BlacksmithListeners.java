@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Util;
-import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class BlacksmithListeners implements Listener{
 	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
@@ -29,7 +29,7 @@ public class BlacksmithListeners implements Listener{
 		
 		// If player has not selected a repair, select it
 		if(!selectedRepair.containsKey(p)) {
-			if(BlacksmithItems.isRepairItem(p.getInventory().getItemInMainHand())) {
+			if(BlacksmithUtils.isRepairItem(p.getInventory().getItemInMainHand())) {
 				selectedRepair.put(p, p.getInventory().getItemInMainHand());
 	  		Util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
 				
@@ -49,8 +49,8 @@ public class BlacksmithListeners implements Listener{
 		else {
 			ItemStack repair = selectedRepair.get(p);
 			ItemStack item = p.getInventory().getItemInMainHand();
-			int repairLevel = BlacksmithItems.getItemLevel(repair);
-			int potency = BlacksmithItems.getItemPotency(repair);
+			int repairLevel = BlacksmithUtils.getItemLevel(repair);
+			int potency = BlacksmithUtils.getItemPotency(repair);
 			double percentage = (double) potency / 100;
 			int itemLevel = Util.getItemLevel(item);
 			if(itemLevel != -1) {
