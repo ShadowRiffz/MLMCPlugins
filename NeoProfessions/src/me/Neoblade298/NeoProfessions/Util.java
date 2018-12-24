@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Util {
 	public static void sendMessage(Player p, String m) {
@@ -140,5 +141,64 @@ public class Util {
 				mat.equals(Material.GOLD_BOOTS) ||
 				mat.equals(Material.IRON_BOOTS) ||
 				mat.equals(Material.DIAMOND_BOOTS);
+	}
+	
+	public static int getCurrentDurability(ItemStack item) {
+		for(String line : item.getItemMeta().getLore()) {
+			if(line.contains("Durability")) {
+				line = ChatColor.stripColor(line);
+				line = line.substring(line.indexOf(" ") + 1);
+				String[] numbers = line.split(" / ");
+				return Integer.parseInt(numbers[0]);
+			}
+		}
+		return -1;
+	}
+	
+	public static int getMaxDurability(ItemStack item) {
+		for(String line : item.getItemMeta().getLore()) {
+			if(line.contains("Durability")) {
+				line = ChatColor.stripColor(line);
+				line = line.substring(line.indexOf(" ") + 1);
+				String[] numbers = line.split(" / ");
+				return Integer.parseInt(numbers[1]);
+			}
+		}
+		return -1;
+	}
+	
+	public static void setCurrentDurability(ItemStack item, int durability) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		ItemMeta meta = item.getItemMeta();
+		if(durability > getMaxDurability(item)) {
+			durability = getMaxDurability(item);
+		}
+		
+		for(int i = 0; i < lore.size(); i++) {
+			if(lore.get(i).contains("Durability")) {
+				lore.set(i, "§7Durability " + durability + " / " + getMaxDurability(item));
+				meta.setLore(lore);
+				item.setItemMeta(meta);
+				double percentage = 1-((double)durability / (double)getMaxDurability(item));
+				item.setDurability((short) ((item.getType().getMaxDurability()-1) * percentage));
+				return;
+			}
+		}
+	}
+	
+	public static void setMaxDurability(ItemStack item, int durability) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		ItemMeta meta = item.getItemMeta();
+		
+		for(int i = 0; i < lore.size(); i++) {
+			if(lore.get(i).contains("Durability")) {
+				lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
+				meta.setLore(lore);
+				item.setItemMeta(meta);
+				double percentage = (double)durability / (double)getMaxDurability(item);
+				item.setDurability((short) (item.getType().getMaxDurability() * percentage));
+				return;
+			}
+		}
 	}
 }

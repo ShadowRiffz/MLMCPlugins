@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Util;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
-import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithListeners implements Listener{
 	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
@@ -42,7 +41,7 @@ public class BlacksmithListeners implements Listener{
 				  		Util.sendMessage(p, "&cRepair timed out");
 				  	}
 				  }
-				}, 60L);
+				}, 200L);
 			}
 		}
 		
@@ -52,8 +51,27 @@ public class BlacksmithListeners implements Listener{
 			ItemStack item = p.getInventory().getItemInMainHand();
 			int repairLevel = BlacksmithItems.getItemLevel(repair);
 			int potency = BlacksmithItems.getItemPotency(repair);
-			selectedRepair.remove(p);
-			Util.sendMessage(p, "&7Successfully repaired item!");
+			double percentage = (double) potency / 100;
+			int itemLevel = Util.getItemLevel(item);
+			if(itemLevel != -1) {
+				if(itemLevel <= repairLevel ){
+					if(p.getInventory().containsAtLeast(repair, 1)) {
+						p.getInventory().removeItem(repair);
+						selectedRepair.remove(p);
+						Util.setCurrentDurability(item, Util.getCurrentDurability(item) + (int)(percentage * Util.getMaxDurability(item)));
+						Util.sendMessage(p, "&7Successfully repaired item!");
+					}
+					else {
+			  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
+					}
+				}
+				else {
+		  		Util.sendMessage(p, "&cThis repair kit is incompatible with this item!");
+				}
+			}
+			else {
+	  		Util.sendMessage(p, "&cRepair kits only work on quest items!");
+			}
 		}
 	}
 }

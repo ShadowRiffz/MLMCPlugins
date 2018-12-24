@@ -6,8 +6,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Util;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;

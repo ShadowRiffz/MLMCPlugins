@@ -3,10 +3,8 @@ package me.Neoblade298.NeoProfessions.Items;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Damageable;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -62,6 +60,7 @@ public class BlacksmithItems {
 		List<String> lore = new ArrayList<String>();
 
 		lore.add("§6Right click to use");
+		lore.add("§cOnly works on quest items");
 		switch(level) {
 			case 1:	lore.add("§7Compatibility: Common - §9Rare");
 						 	break;
@@ -84,6 +83,9 @@ public class BlacksmithItems {
 	}
 	
 	public static boolean isRepairItem(ItemStack item) {
+		if(!item.hasItemMeta()) {
+			return false;
+		}
 		ItemMeta meta = item.getItemMeta();
 		for(String line : meta.getLore()) {
 			if(line.contains("Restores durability of an item")) {
@@ -100,8 +102,8 @@ public class BlacksmithItems {
 	public static int getItemPotency(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
 			if(line.contains("Potency")) {
-				Bukkit.getPlayer("Neoblade298").sendMessage(line.substring(9) + " - " + ChatColor.stripColor(line.substring(9)));
-				return Integer.parseInt(ChatColor.stripColor(line.substring(9)));
+				line = ChatColor.stripColor(line);
+				return Integer.parseInt(line.substring(line.indexOf(" ") + 1, line.indexOf("%")));
 			}
 		}
 		return -1;
