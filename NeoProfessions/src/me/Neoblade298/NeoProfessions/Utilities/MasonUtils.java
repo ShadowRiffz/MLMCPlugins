@@ -3,10 +3,38 @@ package me.Neoblade298.NeoProfessions.Utilities;
 import java.util.ArrayList;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MasonUtils {
 	
 	final static int MAX_LEVEL = 5;
+	
+	public static void createSlot(ItemStack item, int level) {
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		boolean hasBonus = false;
+		int slotLine = -1;
+		for(int i = 0; i < lore.size(); i++) {
+			if(!hasBonus) {
+				if(lore.get(i).contains("Bonus")) {
+					hasBonus = true;
+					slotLine = i + 1;
+				}
+			}
+			else {
+				if(lore.get(i).contains("Durability")) {
+					slotLine = i;
+				}
+			}
+		}
+		
+		lore.add(slotLine, "§8(Lv " + level + " Slot)");
+		if(!hasBonus) {
+			lore.add(slotLine, "§9[Bonus Attributes]");
+		}
+		
+		
+	}
 	
 	public static int countSlots(ItemStack item) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
