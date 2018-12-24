@@ -3,8 +3,6 @@ package me.Neoblade298.NeoProfessions.Methods;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
 
