@@ -33,6 +33,7 @@ public class MasonCommands implements CommandExecutor {
 				if(args[1].equalsIgnoreCase("slot")) {
 					if(StringUtils.isNumeric(args[2])) {
 						masonMethods.createSlot(p, Integer.parseInt(args[2]));
+						return true;
 					}
 					else {
 						Util.sendMessage(p, "&cInvalid level!");

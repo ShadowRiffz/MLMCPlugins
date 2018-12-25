@@ -6,3 +6,6 @@ commands:
   blacksmith:
     description: Base command for blacksmiths
     usage: /blacksmith [args]
+  mason:
+    description: Base command for masons
+    usage: /mason [args]

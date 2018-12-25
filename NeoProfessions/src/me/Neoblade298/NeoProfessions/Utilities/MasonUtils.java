@@ -15,16 +15,11 @@ public class MasonUtils {
 		boolean hasBonus = false;
 		int slotLine = -1;
 		for(int i = 0; i < lore.size(); i++) {
-			if(!hasBonus) {
-				if(lore.get(i).contains("Bonus")) {
-					hasBonus = true;
-					slotLine = i + 1;
-				}
+			if(lore.get(i).contains("Bonus")) {
+				hasBonus = true;
 			}
-			else {
-				if(lore.get(i).contains("Durability")) {
-					slotLine = i;
-				}
+			if(lore.get(i).contains("Durability")) {
+				slotLine = i;
 			}
 		}
 		
@@ -32,8 +27,8 @@ public class MasonUtils {
 		if(!hasBonus) {
 			lore.add(slotLine, "§9[Bonus Attributes]");
 		}
-		
-		
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 	}
 	
 	public static int countSlots(ItemStack item) {
