@@ -50,6 +50,7 @@ public class Main extends JavaPlugin implements Listener {
 	  // Command listeners for all classes
 	  this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
 	  this.getCommand("mason").setExecutor(new MasonCommands(this));
+	  this.getCommand("stonecutter").setExecutor(new MasonCommands(this));
 	  
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
