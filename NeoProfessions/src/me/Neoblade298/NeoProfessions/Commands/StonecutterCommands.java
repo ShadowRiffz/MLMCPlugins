@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +10,7 @@ import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import net.md_5.bungee.api.ChatColor;
 
 public class StonecutterCommands implements CommandExecutor {
 	
@@ -35,10 +37,18 @@ public class StonecutterCommands implements CommandExecutor {
 			}
 			else if(args[0].equalsIgnoreCase("get")) {
 				if(args[1].equalsIgnoreCase("ore")) {
-					switch (args[2]) {
-					case "strength":	p.getInventory().addItem(StonecutterItems.getStrengthGem(1));
-					break;
+					if(StringUtils.isNumeric(args[3])) {
+						if(p.hasPermission("stonecutter.admin")) {
+							p.getInventory().addItem(StonecutterItems.getOre(args[2], 1));
+							return true;
+						}
 					}
+					else {
+						Util.sendMessage(p, "&cInvalid level!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cInvalid subcommand!");
 					return true;
 				}
 			}
