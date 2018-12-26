@@ -11,4 +11,4 @@ commands:
     usage: /mason [args]
   stonecutter:
     description: Base command for stonecutters
-    usage: /mason [args]
+    usage: /stonecutter [args]

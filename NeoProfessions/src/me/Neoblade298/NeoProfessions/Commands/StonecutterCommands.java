@@ -1,6 +1,5 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
-import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -29,9 +27,11 @@ public class StonecutterCommands implements CommandExecutor {
 			
 			Player p = (Player) sender;
 			if(args.length == 0) {
+				return true;
 			
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
+				return true;
 			}
 			else if(args[0].equalsIgnoreCase("get")) {
 				if(args[1].equalsIgnoreCase("ore")) {
@@ -39,6 +39,7 @@ public class StonecutterCommands implements CommandExecutor {
 					case "strength":	p.getInventory().addItem(StonecutterItems.getStrengthGem(1));
 					break;
 					}
+					return true;
 				}
 			}
 			else {
@@ -47,7 +48,7 @@ public class StonecutterCommands implements CommandExecutor {
 			}
 		}
 		else {
-			Util.sendMessage((Player)sender, "&cYou are not a Mason!");
+			Util.sendMessage((Player)sender, "&cYou are not a Stonecutter!");
 			return true;
 		}
 		return false;
