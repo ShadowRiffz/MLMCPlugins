@@ -13,7 +13,7 @@ public class BlacksmithItems {
 
 	// Durability
 	public static ItemStack getDurabilityItem(int level, String itemtype) {
-		ItemStack item = new ItemStack(Material.EYE_OF_ENDER);
+		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -41,6 +41,9 @@ public class MasonCommands implements CommandExecutor {
 					}
 				}
 			}
+			else if(args[0].equalsIgnoreCase("slot")) {
+				
+			}
 			else {
 				Util.sendMessage(p, "&cInvalid parameters!");
 				return true;
