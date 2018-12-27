@@ -28,7 +28,7 @@ public class CommonItems {
 		}
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level);
+		lore.add("§7Level " + level + " Essence");
 		lore.add("§7Item used for profession crafting");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -44,23 +44,23 @@ public class CommonItems {
 		List<String> lore = new ArrayList<String>();
 		switch (level) {
 		case 1:	meta.setDisplayName("§4[Lv " + level + "] §cDull Essence Fragment");
-						lore.add("§7Level " + level);
+						lore.add("§7Level " + level + " Essence Fragment");
 						lore.add("§7Combine 9 in a workbench for §cDull Essence");
 						break;
 		case 2:	meta.setDisplayName("§4[Lv " + level + "] §cMinor Essence Fragment");
-						lore.add("§7Level " + level);
+						lore.add("§7Level " + level + " Essence Fragment");
 						lore.add("§7Combine 9 in a workbench for §cMinor Essence");
 						break;
 		case 3:	meta.setDisplayName("§4[Lv " + level + "] §cPotent Essence Fragment");
-						lore.add("§7Level " + level);
+						lore.add("§7Level " + level + " Essence Fragment");
 						lore.add("§7Combine 9 in a workbench for §cPotent Essence");
 						break;
 		case 4:	meta.setDisplayName("§4[Lv " + level + "] §cSublime Essence Fragment");
-						lore.add("§7Level " + level);
+						lore.add("§7Level " + level + " Essence Fragment");
 						lore.add("§7Combine 9 in a workbench for §cSublime Essence");
 						break;
 		case 5:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence Fragment");
-						lore.add("§7Level " + level);
+						lore.add("§7Level " + level + " Essence Fragment");
 						lore.add("§7Combine 9 in a workbench for §cPure Essence");
 						break;
 		}

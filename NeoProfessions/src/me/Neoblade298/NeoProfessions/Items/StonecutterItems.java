@@ -169,7 +169,7 @@ public class StonecutterItems {
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
-			lore.add("§7Durability Lost: &e" + duraLost);
+			lore.add("§7Durability Lost: §e" + duraLost);
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -275,7 +275,7 @@ public class StonecutterItems {
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
-			lore.add("§7Durability Lost: &e" + duraLost);
+			lore.add("§7Durability Lost: §e" + duraLost);
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);

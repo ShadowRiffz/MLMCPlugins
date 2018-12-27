@@ -50,7 +50,7 @@ public class StonecutterCommands implements CommandExecutor {
 							return true;
 						}
 					}
-					else if(args[1].equalsIgnoreCase("armor")) {
+					else if(args[2].equalsIgnoreCase("armor")) {
 						if(StonecutterUtils.isArmorAttribute(args[3])) {
 							if(StringUtils.isNumeric(args[4])) {
 								stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
@@ -88,7 +88,7 @@ public class StonecutterCommands implements CommandExecutor {
 							return true;
 						}
 					}
-					else if(args[1].equalsIgnoreCase("armor")) {
+					else if(args[2].equalsIgnoreCase("armor")) {
 						if(StonecutterUtils.isArmorAttribute(args[3])) {
 							if(StringUtils.isNumeric(args[4])) {
 								stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
@@ -117,7 +117,7 @@ public class StonecutterCommands implements CommandExecutor {
 				if(args[1].equalsIgnoreCase("ore")) {
 					if(StringUtils.isNumeric(args[3])) {
 						if(p.hasPermission("stonecutter.admin")) {
-							p.getInventory().addItem(StonecutterItems.getOre(args[2], 1));
+							p.getInventory().addItem(StonecutterItems.getOre(args[2], Integer.parseInt(args[3])));
 							return true;
 						}
 					}

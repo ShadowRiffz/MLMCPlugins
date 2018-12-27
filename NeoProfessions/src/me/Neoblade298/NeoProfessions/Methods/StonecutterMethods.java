@@ -29,7 +29,7 @@ public class StonecutterMethods {
 			if(p.hasPermission("stonecutter.attribute." + attr)) {
 				if(p.hasPermission("stonecutter.gem." + level)) {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
-						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES))
+						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES)) {
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
 								p.getInventory().removeItem(Util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
@@ -45,6 +45,10 @@ public class StonecutterMethods {
 							else {
 								Util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
+						}
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the materials to create this!");
@@ -85,6 +89,9 @@ public class StonecutterMethods {
 							else {
 								Util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
+						}
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the materials to create this!");
