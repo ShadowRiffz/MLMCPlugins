@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
+import me.Neoblade298.NeoProfessions.Utilities.StonecutterUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import net.md_5.bungee.api.ChatColor;
 
 public class StonecutterCommands implements CommandExecutor {
 	
@@ -25,7 +25,7 @@ public class StonecutterCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("mason.professed") && sender instanceof Player) {
+		if(sender.hasPermission("stonecutter.professed") && sender instanceof Player) {
 			
 			Player p = (Player) sender;
 			if(args.length == 0) {
@@ -33,7 +33,26 @@ public class StonecutterCommands implements CommandExecutor {
 			
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
-				return true;
+				if((args[1].equalsIgnoreCase("weapon") || args[1].equalsIgnoreCase("armor"))) {
+					if(StonecutterUtils.isAttribute(args[2])) {
+						if(StringUtils.isNumeric(args[3])) {
+							stonecutterMethods.createGem(p, args[2], Integer.parseInt(args[3]));
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid gem level!");
+							return true;
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cInvalid attribute!");
+						return true;
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cInvalid gem type! Argument 2 must be armor/weapon");
+					return true;
+				}
 			}
 			else if(args[0].equalsIgnoreCase("get")) {
 				if(args[1].equalsIgnoreCase("ore")) {

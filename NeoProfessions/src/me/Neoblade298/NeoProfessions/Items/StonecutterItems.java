@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions.Items;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
@@ -12,8 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class StonecutterItems {
 	
