@@ -39,9 +39,11 @@ public class MasonCommands implements CommandExecutor {
 							args[2].equalsIgnoreCase("traveler") ||
 							args[2].equalsIgnoreCase("recovery")) {
 						masonMethods.createBasicCharm(p, args[2].toLowerCase());
+						return true;
 					}
 					else {
 						Util.sendMessage(p, "&cInvalid charm!");
+						return true;
 					}
 				}
 				else if (args[1].equalsIgnoreCase("advanced")) {
@@ -51,9 +53,11 @@ public class MasonCommands implements CommandExecutor {
 							args[2].equalsIgnoreCase("secondchance") ||
 							args[2].equalsIgnoreCase("hunger")) {
 						masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
+						return true;
 					}
 					else {
 						Util.sendMessage(p, "&cInvalid charm!");
+						return true;
 					}
 				}
 				else if(args[1].equalsIgnoreCase("slot")) {

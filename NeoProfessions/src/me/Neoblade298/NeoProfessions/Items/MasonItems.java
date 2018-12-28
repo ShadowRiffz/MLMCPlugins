@@ -52,7 +52,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getDropCharms(boolean isAdvanced) {
+	public static ItemStack getDropCharm(boolean isAdvanced) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();

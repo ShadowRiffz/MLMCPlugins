@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -99,37 +100,44 @@ public class MasonMethods {
 				int gold = 0;
 				int essence = 0;
 				int level = 0;
+				ItemStack item = null;
 				switch (type) {
 				case "exp":
 					gold = BASIC_EXP_GOLD;
 					essence = BASIC_EXP_ESSENCE;
 					level = BASIC_EXP_LEVEL;
+					item = MasonItems.getExpCharm(false);
 					break;
 				case "drop":
 					gold = BASIC_DROP_GOLD;
 					essence = BASIC_DROP_ESSENCE;
 					level = BASIC_DROP_LEVEL;
+					item = MasonItems.getDropCharm(false);
 					break;
 				case "looting":
 					gold = BASIC_LOOTING_GOLD;
 					essence = BASIC_LOOTING_ESSENCE;
 					level = BASIC_LOOTING_LEVEL;
+					item = MasonItems.getLootingCharm(false);
 					break;
 				case "traveler":
 					gold = BASIC_TRAVELER_GOLD;
 					essence = BASIC_TRAVELER_ESSENCE;
 					level = BASIC_TRAVELER_LEVEL;
+					item = MasonItems.getTravelerCharm();
 					break;
 				case "recovery":
 					gold = BASIC_RECOVERY_GOLD;
 					essence = BASIC_RECOVERY_ESSENCE;
 					level = BASIC_RECOVERY_LEVEL;
+					item = MasonItems.getRecoveryCharm();
 					break;
 				}
 				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), essence)) {
 					if(econ.has(p, gold)) {
 						p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), essence));
 						econ.withdrawPlayer(p, gold);
+						p.getInventory().addItem(item);
 						Util.sendMessage(p, "&7Successfully created charm!");
 					}
 					else {
@@ -155,31 +163,37 @@ public class MasonMethods {
 				int gold = 0;
 				int essence = 0;
 				int level = 0;
+				ItemStack item = null;
 				switch (type) {
 				case "exp":
 					gold = ADVANCED_EXP_GOLD;
 					essence = ADVANCED_EXP_ESSENCE;
 					level = ADVANCED_EXP_LEVEL;
+					item = MasonItems.getExpCharm(true);
 					break;
 				case "drop":
 					gold = ADVANCED_DROP_GOLD;
 					essence = ADVANCED_DROP_ESSENCE;
 					level = ADVANCED_DROP_LEVEL;
+					item = MasonItems.getDropCharm(true);
 					break;
 				case "looting":
 					gold = ADVANCED_LOOTING_GOLD;
 					essence = ADVANCED_LOOTING_ESSENCE;
 					level = ADVANCED_LOOTING_LEVEL;
+					item = MasonItems.getLootingCharm(true);
 					break;
 				case "hunger":
 					gold = ADVANCED_HUNGER_GOLD;
 					essence = ADVANCED_HUNGER_ESSENCE;
 					level = ADVANCED_HUNGER_LEVEL;
+					item = MasonItems.getHungerCharm();
 					break;
 				case "secondchance":
 					gold = ADVANCED_SECONDCHANCE_GOLD;
 					essence = ADVANCED_SECONDCHANCE_ESSENCE;
 					level = ADVANCED_SECONDCHANCE_LEVEL;
+					item = MasonItems.getSecondChanceCharm();
 					break;
 				}
 				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), essence)) {
