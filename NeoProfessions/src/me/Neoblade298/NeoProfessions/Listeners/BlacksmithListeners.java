@@ -24,6 +24,9 @@ public class BlacksmithListeners implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
+		if(e.getPlayer() == null || !(e.getPlayer() instanceof Player)) {
+			return;
+		}
 		Player p = e.getPlayer();
 		
 		
