@@ -15,6 +15,8 @@ public class MasonCommands implements CommandExecutor {
 	Main main;
 	MasonMethods masonMethods;
 	
+	static final int MAX_SLOTS = 3;
+	
 	public MasonCommands(Main main) {
 		this.main = main;
 		this.masonMethods = main.masonMethods;
@@ -42,7 +44,20 @@ public class MasonCommands implements CommandExecutor {
 				}
 			}
 			else if(args[0].equalsIgnoreCase("slot")) {
-				
+				if(StringUtils.isNumeric(args[1])) {
+					if(Integer.parseInt(args[1]) <= MAX_SLOTS) {
+						masonMethods.slot(p, Integer.parseInt(args[1]));
+						return true;
+					}
+					else {
+						Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+						return true;
+					}
+				}
+				else {
+					Util.sendMessage((Player)sender, "&cYou must specify a slot number!");
+					return true;
+				}
 			}
 			else {
 				Util.sendMessage(p, "&cInvalid parameters!");

@@ -58,5 +58,15 @@ public class MasonMethods {
 			Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 		}
 	}
+	
+	public void slot(Player p, int slot) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(MasonUtils.isSlotAvailable(item, slot)) {
+			
+		}
+		else {
+			Util.sendMessage(p, "&cThis slot is unavailable!");
+		}
+	}
 
 }
