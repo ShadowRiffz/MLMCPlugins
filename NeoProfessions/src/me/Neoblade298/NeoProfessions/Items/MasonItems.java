@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -25,6 +26,7 @@ public class MasonItems {
 			lore.add("§7Effect: Raises EXP gained by 1.5x");
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -47,6 +49,7 @@ public class MasonItems {
 			lore.add("§7Effect: Quest mobs drop more gold");
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -69,6 +72,7 @@ public class MasonItems {
 			lore.add("§7Effect: Raises droprate by 1.2x");
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -83,6 +87,7 @@ public class MasonItems {
 		lore.add("§7Level 1 Traveler Charm");
 		lore.add("§7Effect: Move faster out of combat");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -97,6 +102,7 @@ public class MasonItems {
 		lore.add("§7Level 2 Recovery Charm");
 		lore.add("§7Effect: Recover out of combat");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -111,6 +117,7 @@ public class MasonItems {
 		lore.add("§7Level 4 Hunger Charm");
 		lore.add("§7Effect: Permanently stay at 9 hunger");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -125,6 +132,7 @@ public class MasonItems {
 		lore.add("§7Level 4 Secondary Chance Charm");
 		lore.add("§7Effect: Revives on death");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
