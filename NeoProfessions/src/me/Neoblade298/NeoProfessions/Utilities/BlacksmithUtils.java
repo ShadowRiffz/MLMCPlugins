@@ -14,6 +14,9 @@ public class BlacksmithUtils {
 			return false;
 		}
 		ItemMeta meta = item.getItemMeta();
+		if(!meta.hasLore()) {
+			return false;
+		}
 		for(String line : meta.getLore()) {
 			if(line.contains("Restores durability of an item")) {
 				return true;
