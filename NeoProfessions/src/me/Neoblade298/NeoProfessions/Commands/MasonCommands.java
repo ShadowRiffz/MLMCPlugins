@@ -75,6 +75,22 @@ public class MasonCommands implements CommandExecutor {
 					return true;
 				}
 			}
+			else if(args[0].equalsIgnoreCase("remove")) {
+				if(args[1].equalsIgnoreCase("slot")) {
+					if(StringUtils.isNumeric(args[2])) {
+						masonMethods.removeSlot(p, Integer.parseInt(args[2]));
+						return true;
+					}
+					else {
+						Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+						return true;
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cInvalid subcommand!");
+					return true;
+				}
+			}
 			else if(args[0].equalsIgnoreCase("slot")) {
 				if(StringUtils.isNumeric(args[1])) {
 					if(Integer.parseInt(args[1]) <= MAX_SLOTS) {

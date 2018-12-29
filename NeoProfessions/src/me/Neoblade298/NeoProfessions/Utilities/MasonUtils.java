@@ -75,4 +75,25 @@ public class MasonUtils {
 		}
 		return false;
 	}
+	
+	public static String getSlotLine(ItemStack item, int slot) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		int count = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				// If the matching slot is empty, return true
+				if(slot == count) {
+					return line;
+				}
+			}
+		}
+		return null;
+	}
 }

@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -200,6 +201,7 @@ public class MasonMethods {
 					if(econ.has(p, gold)) {
 						p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), essence));
 						econ.withdrawPlayer(p, gold);
+						p.getInventory().addItem(item);
 						Util.sendMessage(p, "&7Successfully created charm!");
 					}
 					else {
@@ -226,6 +228,21 @@ public class MasonMethods {
 		}
 		else {
 			Util.sendMessage(p, "&cThis slot is unavailable!");
+		}
+	}
+	
+	public void removeSlot(Player p, int slot) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(Material.AIR)) {
+			if(MasonUtils.isSlotAvailable(item, slot)) {
+				
+			}
+			else {
+				Util.sendMessage(p, "&cSlot either doesn't exist or is in use!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
