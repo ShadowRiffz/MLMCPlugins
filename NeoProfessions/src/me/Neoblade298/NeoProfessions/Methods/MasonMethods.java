@@ -21,6 +21,8 @@ public class MasonMethods {
 	static final int ENGRAVE_ESSENCE_PER_SLOT = 12;
 	static final int ENGRAVE_GOLD_BASE = -10000;
 	static final int ENGRAVE_GOLD_PER_LVL = 15000;
+	static final int UNENGRAVE_GOLD = 2000;
+	static final int UNENGRAVE_ESSENCE = 2;
 	
 	// Prices
 	static final int BASIC_EXP_GOLD = 5000;
@@ -235,7 +237,31 @@ public class MasonMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.equals(Material.AIR)) {
 			if(MasonUtils.isSlotAvailable(item, slot)) {
-				
+				int level = Util.getItemLevel(item);
+				if(level != -1) {
+					if(p.hasPermission("mason.engrave." + level)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNENGRAVE_ESSENCE)) {
+							if(econ.has(p, UNENGRAVE_GOLD)) {
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), UNENGRAVE_ESSENCE));
+								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
+								MasonUtils.removeSlotLine(item, slot);
+								Util.sendMessage(p, "&7Successfully removed slot!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou lack the gold to do this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to do this!" + level);
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cInvalid item!");
+				}
 			}
 			else {
 				Util.sendMessage(p, "&cSlot either doesn't exist or is in use!");

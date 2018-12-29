@@ -96,4 +96,29 @@ public class MasonUtils {
 		}
 		return null;
 	}
+	
+	public static void removeSlotLine(ItemStack item, int slot) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		ItemMeta meta  = item.getItemMeta();
+		int count = 0;
+		int lineNum = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				if(slot == count) {
+					lore.remove(lineNum);
+					break;
+				}
+			}
+			lineNum++;
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+	}
 }
