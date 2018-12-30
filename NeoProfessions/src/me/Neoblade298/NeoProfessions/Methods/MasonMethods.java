@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
+import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -15,6 +16,7 @@ public class MasonMethods {
 	
 	Main main;
 	Economy econ;
+	MasonListeners listeners;
 	
 	// Constants
 	static final int MAX_SLOTS = 3;
@@ -61,6 +63,7 @@ public class MasonMethods {
 	public MasonMethods(Main main) {
 		this.main = main;
 		this.econ = main.getEconomy();
+		this.listeners = main.masonListeners;
 	}
 
 	public void createSlot(Player p, int level) {

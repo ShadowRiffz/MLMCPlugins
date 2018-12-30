@@ -121,4 +121,53 @@ public class MasonUtils {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 	}
+	
+	public static String slotType(ItemStack item) {
+		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			return null;
+		}
+		
+		String line = item.getItemMeta().getLore().get(1);
+		String charmLine = item.getItemMeta().getLore().get(0);
+		if(line.contains("max durability")) {
+			return "durability";
+		}
+		else if(line.contains("Increases weapon") || line.contains("Increases armor")) {
+			return "attribute";
+		}
+		else if(line.contains("reduces durability")) {
+			return "overload";
+		}
+		else if(charmLine.contains("Advanced EXP")) {
+			return "advancedexp";
+		}
+		else if(charmLine.contains("Advanced Gold")) {
+			return "advancedgold";
+		}
+		else if(charmLine.contains("Advanced Drop")) {
+			return "advanceddrop";
+		}
+		else if(charmLine.contains("EXP")) {
+			return "exp";
+		}
+		else if(charmLine.contains("Gold")) {
+			return "gold";
+		}
+		else if(charmLine.contains("Drop")) {
+			return "drop";
+		}
+		else if(charmLine.contains("Traveler")) {
+			return "traveler";
+		}
+		else if(charmLine.contains("Recovery")) {
+			return "recovery";
+		}
+		else if(charmLine.contains("Hunger")) {
+			return "hunger";
+		}
+		else if(charmLine.contains("Second Chance")) {
+			return "secondchance";
+		}
+		return null;
+	}
 }

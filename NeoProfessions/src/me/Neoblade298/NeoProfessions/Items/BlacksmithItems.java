@@ -31,13 +31,14 @@ public class BlacksmithItems {
 			case 5: lore.add("§7Compatibility: Common - §4§lLegendary");
 							break;
 		}
-		lore.add("§7Effect: Increases max durability");
 		
 		if(itemtype.equals("armor")) {
+			lore.add("§7Effect: Increases armor max durability");
 			int offset = 5 + (25 * (level-1));
 			lore.add("§7Potency: §e" + ((int)(Math.random() * 5) * 5 + offset));
 		}
 		if(itemtype.equals("weapon")) {
+			lore.add("§7Effect: Increases weapon max durability");
 			int offset = 5 + (50 * (level-1));
 			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) * 5 + offset));
 		}
