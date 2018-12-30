@@ -225,11 +225,36 @@ public class MasonMethods {
 	
 	public void slot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(MasonUtils.isSlotAvailable(item, slot)) {
-			
+		if(!item.equals(Material.AIR)) {
+			if(MasonUtils.isSlotAvailable(item, slot)) {
+				if(Util.isArmor(item)) {
+					int level = Util.getItemLevel(item);
+					if(p.hasPermission("mason.slot.weapon." + level)) {
+						
+					}
+					else {
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+					}
+				}
+				else if(Util.isWeapon(item)) {
+					int level = Util.getItemLevel(item);
+					if(p.hasPermission("mason.slot.weapon." + level)) {
+						
+					}
+					else {
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cThis item cannot be slotted!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cThis slot is unavailable!");
+			}
 		}
 		else {
-			Util.sendMessage(p, "&cThis slot is unavailable!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	

@@ -9,6 +9,7 @@ import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
+import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
@@ -26,6 +27,8 @@ public class Main extends JavaPlugin implements Listener {
   public BlacksmithMethods blacksmithMethods;
   public MasonMethods masonMethods;
   public StonecutterMethods stonecutterMethods;
+  
+  public MasonListeners masonListeners;
   
   public void onEnable()
   {
@@ -54,7 +57,9 @@ public class Main extends JavaPlugin implements Listener {
 	  this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
 	  
     // Setup Event Listeners
+	  masonListeners = new MasonListeners(this);
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
+    getServer().getPluginManager().registerEvents(masonListeners, this);
   }
   
   public void onDisable()

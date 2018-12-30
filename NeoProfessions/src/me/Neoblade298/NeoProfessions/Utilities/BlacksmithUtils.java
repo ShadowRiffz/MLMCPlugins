@@ -41,7 +41,6 @@ public class BlacksmithUtils {
 	
 	public static boolean canRepair(ItemStack item) {
 		// Check if the item is a quest item
-		System.out.println(item.getType().getMaxDurability());
 		if(Util.getItemLevel(item) != -1) {
 			return true;
 		}
