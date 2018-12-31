@@ -233,7 +233,7 @@ public class MasonMethods {
 				if(Util.isArmor(item)) {
 					int level = Util.getItemLevel(item);
 					if(p.hasPermission("mason.slot.weapon." + level)) {
-						
+						listeners.prepItemSlot(p, item, level);
 					}
 					else {
 						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
@@ -242,7 +242,7 @@ public class MasonMethods {
 				else if(Util.isWeapon(item)) {
 					int level = Util.getItemLevel(item);
 					if(p.hasPermission("mason.slot.weapon." + level)) {
-						
+						listeners.prepItemSlot(p, item, level);
 					}
 					else {
 						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");

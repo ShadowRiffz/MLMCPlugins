@@ -76,6 +76,29 @@ public class MasonUtils {
 		return false;
 	}
 	
+	public static int getSlotNum(ItemStack item, int slot) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		int count = 0;
+		int lineNum = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			lineNum++;
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				// If the matching slot is empty, return true
+				if(slot == count) {
+					return lineNum;
+				}
+			}
+		}
+		return -1;
+	}
+	
 	public static String getSlotLine(ItemStack item, int slot) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		int count = 0;
@@ -169,5 +192,24 @@ public class MasonUtils {
 			return "secondchance";
 		}
 		return null;
+	}
+	
+	public static boolean parseDurability(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		int potency = -1;
+		for(String line : itemToSlot.getItemMeta().getLore()) {
+			if(line.contains("Potency")) {
+				potency = Integer.parseInt(line.substring(line.indexOf(":") + 2));
+			}
+		}
+		if (potency == -1) {
+			return false;
+		}
+		Util.setMaxDurability(itemWithSlot, potency + Util.getMaxDurability(itemWithSlot));
+		ItemMeta meta = itemWithSlot.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		lore.set(getSlotNum(itemWithSlot, slot), "§9Max Durability +" + potency);
+		meta.setLore(lore);
+		itemWithSlot.setItemMeta(meta);
+		return true;
 	}
 }
