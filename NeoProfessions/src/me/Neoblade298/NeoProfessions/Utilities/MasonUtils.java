@@ -119,6 +119,26 @@ public class MasonUtils {
 		}
 		return null;
 	}
+	public static int getSlotLevel(ItemStack item, int slot) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		int count = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				// If the matching slot is empty, return true
+				if(slot == count) {
+					return Integer.parseInt(line.substring(line.indexOf(" ") + 1, line.indexOf(" ") + 2));
+				}
+			}
+		}
+		return -1;
+	}
 	
 	public static void removeSlotLine(ItemStack item, int slot) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -206,8 +226,9 @@ public class MasonUtils {
 		}
 		Util.setMaxDurability(itemWithSlot, potency + Util.getMaxDurability(itemWithSlot));
 		ItemMeta meta = itemWithSlot.getItemMeta();
+		int slotLevel = getSlotLevel(itemWithSlot, slot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		lore.set(getSlotNum(itemWithSlot, slot), "§9Max Durability +" + potency);
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§0§0§0§0§9Max Durability +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
