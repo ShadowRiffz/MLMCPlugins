@@ -124,6 +124,9 @@ public class Main extends JavaPlugin implements Listener{
 		if(this.debug) {
 			System.out.println(e.getEntity().getName());
 		}
+		if (helper == null) {
+			helper = MythicMobs.inst().getAPIHelper()
+		}
 		if (!e.getEntity().getName().contains("Location") &&
 				e.getEntity() != null &&
 				e.getEntity() instanceof Entity &&
