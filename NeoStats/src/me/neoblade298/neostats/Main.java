@@ -127,6 +127,7 @@ public class Main extends JavaPlugin implements Listener{
 		if (!e.getEntity().getName().contains("Location") &&
 				e.getEntity() != null &&
 				e.getEntity() instanceof Entity &&
+				helper != null &&
 				helper.isMythicMob(e.getEntity()) &&
 				bosses.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
 
