@@ -82,7 +82,6 @@ public class MasonUtils {
 		int lineNum = 0;
 		boolean hasBonus = false;
 		for(String line : lore) {
-			lineNum++;
 			if (!hasBonus) {
 				if(line.contains("Bonus")) {
 					hasBonus = true;
@@ -95,6 +94,7 @@ public class MasonUtils {
 					return lineNum;
 				}
 			}
+			lineNum++;
 		}
 		return -1;
 	}
@@ -198,7 +198,7 @@ public class MasonUtils {
 		int potency = -1;
 		for(String line : itemToSlot.getItemMeta().getLore()) {
 			if(line.contains("Potency")) {
-				potency = Integer.parseInt(line.substring(line.indexOf(":") + 2));
+				potency = Integer.parseInt(line.substring(line.indexOf(":") + 4));
 			}
 		}
 		if (potency == -1) {

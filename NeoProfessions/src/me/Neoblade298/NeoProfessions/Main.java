@@ -44,7 +44,8 @@ public class Main extends JavaPlugin implements Listener {
     }
 	  this.setupPermissions();
 	  this.setupChat();
-	  
+
+	  masonListeners = new MasonListeners(this);
 	  
 	  // Connect method classes to main
 	  blacksmithMethods = new BlacksmithMethods(this);
@@ -57,7 +58,6 @@ public class Main extends JavaPlugin implements Listener {
 	  this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
 	  
     // Setup Event Listeners
-	  masonListeners = new MasonListeners(this);
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
     getServer().getPluginManager().registerEvents(masonListeners, this);
   }

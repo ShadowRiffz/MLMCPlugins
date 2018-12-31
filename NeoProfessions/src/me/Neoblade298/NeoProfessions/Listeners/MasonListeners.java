@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -60,6 +59,9 @@ public class MasonListeners implements Listener {
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
 			ItemStack itemToSlot = p.getInventory().getItemInMainHand();
+			slotNum.remove(p);
+			slotItem.remove(p);
+			
 			String slotType = MasonUtils.slotType(itemToSlot);
 			if(p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if(slotType != null) {
@@ -110,6 +112,9 @@ public class MasonListeners implements Listener {
 								break;*/
 							}
 							if (success) {
+								p.getInventory().removeItem(Util.setAmount(new ItemStack(itemToSlot), 1));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
+								econ.withdrawPlayer(p, SLOT_GOLD);
 								Util.sendMessage(p, "&cSuccessfully slotted item!");
 							}
 							else {
@@ -118,18 +123,26 @@ public class MasonListeners implements Listener {
 						}
 						else {
 							Util.sendMessage(p, "&cYou lack the gold to do this!");
+							slotItem.remove(p);
+							slotNum.remove(p);
 						}
 					}
 					else {
 						Util.sendMessage(p, "&cYou lack the materials to do this!");
+						slotItem.remove(p);
+						slotNum.remove(p);
 					}
 				}
 				else {
 					Util.sendMessage(p, "&cThis item cannot be slotted!");
+					slotItem.remove(p);
+					slotNum.remove(p);
 				}
 			}
 			else {
 	  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
+	  		slotItem.remove(p);
+	  		slotNum.remove(p);
 			}
 		}
 	}

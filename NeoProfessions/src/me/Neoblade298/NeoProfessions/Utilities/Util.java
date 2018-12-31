@@ -145,7 +145,7 @@ public class Util {
 	
 	public static int getCurrentDurability(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
-			if(line.contains("Durability")) {
+			if(line.contains("§7Durability")) {
 				line = ChatColor.stripColor(line);
 				line = line.substring(line.indexOf(" ") + 1);
 				String[] numbers = line.split(" / ");
@@ -157,7 +157,7 @@ public class Util {
 	
 	public static int getMaxDurability(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
-			if(line.contains("Durability")) {
+			if(line.contains("§7Durability")) {
 				line = ChatColor.stripColor(line);
 				line = line.substring(line.indexOf(" ") + 1);
 				String[] numbers = line.split(" / ");
@@ -175,7 +175,7 @@ public class Util {
 		}
 		
 		for(int i = 0; i < lore.size(); i++) {
-			if(lore.get(i).contains("Durability")) {
+			if(lore.get(i).contains("§7Durability")) {
 				lore.set(i, "§7Durability " + durability + " / " + getMaxDurability(item));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
@@ -191,12 +191,12 @@ public class Util {
 		ItemMeta meta = item.getItemMeta();
 		
 		for(int i = 0; i < lore.size(); i++) {
-			if(lore.get(i).contains("Durability")) {
+			if(lore.get(i).contains("§7Durability")) {
 				lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
-				double percentage = (double)durability / (double)getMaxDurability(item);
-				item.setDurability((short) (item.getType().getMaxDurability() * percentage));
+				double percentage = 1-((double)getCurrentDurability(item) / (double)durability);
+				item.setDurability((short) ((item.getType().getMaxDurability()-1) * percentage));
 				return;
 			}
 		}
