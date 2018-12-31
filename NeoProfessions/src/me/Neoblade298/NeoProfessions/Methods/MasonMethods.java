@@ -280,7 +280,7 @@ public class MasonMethods {
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to do this!" + level);
+							Util.sendMessage(p, "&cYou lack the materials to do this!");
 						}
 					}
 					else {
