@@ -2,8 +2,6 @@ package me.Neoblade298.NeoCooldowns;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -66,7 +64,6 @@ public class FileManager {
 		try {
 			scan = new Scanner(signfile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String toParse = null;
