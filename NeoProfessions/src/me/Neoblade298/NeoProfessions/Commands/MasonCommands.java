@@ -32,79 +32,94 @@ public class MasonCommands implements CommandExecutor {
 			
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
-				if (args[1].equalsIgnoreCase("basic")) {
-					if (args[2].equalsIgnoreCase("exp") ||
-							args[2].equalsIgnoreCase("drop") ||
-							args[2].equalsIgnoreCase("looting") ||
-							args[2].equalsIgnoreCase("traveler") ||
-							args[2].equalsIgnoreCase("recovery")) {
-						masonMethods.createBasicCharm(p, args[2].toLowerCase());
-						return true;
+				if(args.length == 3) {
+					if (args[1].equalsIgnoreCase("basic")) {
+						if (args[2].equalsIgnoreCase("exp") ||
+								args[2].equalsIgnoreCase("drop") ||
+								args[2].equalsIgnoreCase("looting") ||
+								args[2].equalsIgnoreCase("traveler") ||
+								args[2].equalsIgnoreCase("recovery")) {
+							masonMethods.createBasicCharm(p, args[2].toLowerCase());
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid charm!");
+							return true;
+						}
+					}
+					else if (args[1].equalsIgnoreCase("advanced")) {
+						if (args[2].equalsIgnoreCase("exp") ||
+								args[2].equalsIgnoreCase("drop") ||
+								args[2].equalsIgnoreCase("looting") ||
+								args[2].equalsIgnoreCase("secondchance") ||
+								args[2].equalsIgnoreCase("hunger")) {
+							masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid charm!");
+							return true;
+						}
+					}
+					else if(args[1].equalsIgnoreCase("slot")) {
+						if(StringUtils.isNumeric(args[2])) {
+							masonMethods.createSlot(p, Integer.parseInt(args[2]));
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid level!");
+							return true;
+						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid charm!");
-						return true;
-					}
-				}
-				else if (args[1].equalsIgnoreCase("advanced")) {
-					if (args[2].equalsIgnoreCase("exp") ||
-							args[2].equalsIgnoreCase("drop") ||
-							args[2].equalsIgnoreCase("looting") ||
-							args[2].equalsIgnoreCase("secondchance") ||
-							args[2].equalsIgnoreCase("hunger")) {
-						masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
-						return true;
-					}
-					else {
-						Util.sendMessage(p, "&cInvalid charm!");
-						return true;
-					}
-				}
-				else if(args[1].equalsIgnoreCase("slot")) {
-					if(StringUtils.isNumeric(args[2])) {
-						masonMethods.createSlot(p, Integer.parseInt(args[2]));
-						return true;
-					}
-					else {
-						Util.sendMessage(p, "&cInvalid level!");
+						Util.sendMessage(p, "&cInvalid item!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid item!");
-					return true;
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 				}
 			}
 			else if(args[0].equalsIgnoreCase("remove")) {
-				if(args[1].equalsIgnoreCase("slot")) {
-					if(StringUtils.isNumeric(args[2])) {
-						masonMethods.removeSlot(p, Integer.parseInt(args[2]));
-						return true;
+				if(args.length == 3) {
+					if(args[1].equalsIgnoreCase("slot")) {
+						if(StringUtils.isNumeric(args[2])) {
+							masonMethods.removeSlot(p, Integer.parseInt(args[2]));
+							return true;
+						}
+						else {
+							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							return true;
+						}
 					}
 					else {
-						Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+						Util.sendMessage(p, "&cInvalid subcommand!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid subcommand!");
-					return true;
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 				}
 			}
 			else if(args[0].equalsIgnoreCase("slot")) {
-				if(StringUtils.isNumeric(args[1])) {
-					if(Integer.parseInt(args[1]) <= MAX_SLOTS) {
-						masonMethods.slot(p, Integer.parseInt(args[1]));
-						return true;
+				if(args.length == 1) {
+					if(StringUtils.isNumeric(args[1])) {
+						if(Integer.parseInt(args[1]) <= MAX_SLOTS) {
+							masonMethods.slot(p, Integer.parseInt(args[1]));
+							return true;
+						}
+						else {
+							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							return true;
+						}
 					}
 					else {
-						Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+						Util.sendMessage((Player)sender, "&cYou must specify a slot number!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage((Player)sender, "&cYou must specify a slot number!");
-					return true;
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 				}
 			}
 			else {
