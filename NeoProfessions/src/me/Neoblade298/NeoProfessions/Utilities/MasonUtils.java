@@ -32,10 +32,10 @@ public class MasonUtils {
 		item.setItemMeta(meta);
 	}
 	
-	public static ItemStack unslot(Player p, int slot) {
+	public static ItemStack parseUnslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		String line = getSlotLine(item, slot);
-		
+		return item;
 	}
 	
 	public static int countSlots(ItemStack item) {
