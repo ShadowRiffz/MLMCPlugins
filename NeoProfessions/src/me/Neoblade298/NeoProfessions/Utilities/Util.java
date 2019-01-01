@@ -192,7 +192,12 @@ public class Util {
 		
 		for(int i = 0; i < lore.size(); i++) {
 			if(lore.get(i).contains("§7Durability")) {
-				lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
+				if(getCurrentDurability(item) > durability) {
+					lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
+				}
+				else {
+					lore.set(i, "§7Durability " + durability + " / " + durability);
+				}
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				double percentage = 1-((double)getCurrentDurability(item) / (double)durability);
