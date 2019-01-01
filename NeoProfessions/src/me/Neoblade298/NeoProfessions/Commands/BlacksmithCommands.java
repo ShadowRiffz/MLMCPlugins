@@ -37,16 +37,23 @@ public class BlacksmithCommands implements CommandExecutor {
 				if(args[0].equalsIgnoreCase("create")) {
 					if(args.length == 4) {
 						// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
-						if(args[1].equalsIgnoreCase("durability") &&
-							(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
-							if(StringUtils.isNumeric(args[3])) {
-								blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
-								return true;
+						if(args[1].equalsIgnoreCase("durability")) {
+							if (args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor")) {
+								if(StringUtils.isNumeric(args[3])) {
+									blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+									return true;
+								}
+								else {
+									Util.sendMessage(p, "&cInvalid level!");
+									return true;
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid level!");
-								return true;
+								Util.sendMessage(p, "&cInvalid item type!");
 							}
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid item!");
 						}
 					}
 					else if(args.length == 3) {
@@ -120,18 +127,25 @@ public class BlacksmithCommands implements CommandExecutor {
 									Util.sendMessage(p, "&7Successfully spawned Essence!");
 									return true;
 								}
+								else {
+									Util.sendMessage(p, "&cYou don't have permission to do that!");
+								}
 							}
+							else {
+								Util.sendMessage(p, "&cInvalid number!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid item!");
 						}
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
 					}
 				}
-				
 				else {
 					Util.sendMessage(p, "&cInvalid subcommand!");
 				}
-				
 			}
 		}
 		
