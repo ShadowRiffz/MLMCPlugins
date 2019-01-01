@@ -43,9 +43,9 @@ public class MasonUtils {
 		String line = getSlotLine(item, slot);
 		
 		// Parse the line and revert the lore
-		int slotLevel = line.charAt(1);
-		int slottedLevel = line.charAt(3);
-		int slotType = line.charAt(5);
+		int slotLevel = Character.getNumericValue(line.charAt(1));
+		int slottedLevel = Character.getNumericValue(line.charAt(3));
+		int slotType = Character.getNumericValue(line.charAt(5));
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = Util.isArmor(item);
 		int potency = -1;
@@ -253,7 +253,7 @@ public class MasonUtils {
 	public static int getSlottedLevel(ItemStack item) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		for(String line : lore) {
-			if(line.contains("Level") || line.contains("Compatiblity")) {
+			if(line.contains("Level") || line.contains("Compatibility")) {
 				if(line.contains("Level 1")) {
 					return 1;
 				} else if(line.contains("Level 2")) {

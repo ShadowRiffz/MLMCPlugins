@@ -280,13 +280,14 @@ public class MasonMethods {
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), UNSLOT_ESSENCE));
 								econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * level);
 								p.getInventory().addItem(MasonUtils.parseUnslot(p, slot));
+								Util.sendMessage(p, "&cSuccessfully unslotted item!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to create this!");
+								Util.sendMessage(p, "&cYou lack the gold to do this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou lack the materials to do this!");
 						}
 					}
 					else {
