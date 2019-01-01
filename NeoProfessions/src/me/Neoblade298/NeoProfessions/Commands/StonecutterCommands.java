@@ -33,102 +33,115 @@ public class StonecutterCommands implements CommandExecutor {
 			
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
-				if(args[1].equalsIgnoreCase("gem")) {
-					if(args[2].equalsIgnoreCase("weapon")) {
-						if(StonecutterUtils.isWeaponAttribute(args[3])) {
-							if(StringUtils.isNumeric(args[4])) {
-								stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
-								return true;
+				if(args.length == 5) {
+					if(args[1].equalsIgnoreCase("gem")) {
+						if(args[2].equalsIgnoreCase("weapon")) {
+							if(StonecutterUtils.isWeaponAttribute(args[3])) {
+								if(StringUtils.isNumeric(args[4])) {
+									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
+									return true;
+								}
+								else {
+									Util.sendMessage(p, "&cInvalid gem level!");
+									return true;
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid gem level!");
+								Util.sendMessage(p, "&cInvalid attribute for weapons!");
+								return true;
+							}
+						}
+						else if(args[2].equalsIgnoreCase("armor")) {
+							if(StonecutterUtils.isArmorAttribute(args[3])) {
+								if(StringUtils.isNumeric(args[4])) {
+									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
+									return true;
+								}
+								else {
+									Util.sendMessage(p, "&cInvalid gem level!");
+									return true;
+								}
+							}
+							else {
+								Util.sendMessage(p, "&cInvalid attribute for armor!");
 								return true;
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid attribute for weapons!");
+							Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
 							return true;
 						}
 					}
-					else if(args[2].equalsIgnoreCase("armor")) {
-						if(StonecutterUtils.isArmorAttribute(args[3])) {
-							if(StringUtils.isNumeric(args[4])) {
-								stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
-								return true;
+					else if(args[1].equalsIgnoreCase("overload")) {
+						if(args[2].equalsIgnoreCase("weapon")) {
+							if(StonecutterUtils.isWeaponAttribute(args[3])) {
+								if(StringUtils.isNumeric(args[4])) {
+									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
+									return true;
+								}
+								else {
+									Util.sendMessage(p, "&cInvalid gem level!");
+									return true;
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid gem level!");
+								Util.sendMessage(p, "&cInvalid attribute for weapons!");
+								return true;
+							}
+						}
+						else if(args[2].equalsIgnoreCase("armor")) {
+							if(StonecutterUtils.isArmorAttribute(args[3])) {
+								if(StringUtils.isNumeric(args[4])) {
+									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
+									return true;
+								}
+								else {
+									Util.sendMessage(p, "&cInvalid gem level!");
+									return true;
+								}
+							}
+							else {
+								Util.sendMessage(p, "&cInvalid attribute for armor!");
 								return true;
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid attribute for armor!");
+							Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
-						return true;
-					}
-				}
-				else if(args[1].equalsIgnoreCase("overload")) {
-					if(args[2].equalsIgnoreCase("weapon")) {
-						if(StonecutterUtils.isWeaponAttribute(args[3])) {
-							if(StringUtils.isNumeric(args[4])) {
-								stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
-								return true;
-							}
-							else {
-								Util.sendMessage(p, "&cInvalid gem level!");
-								return true;
-							}
-						}
-						else {
-							Util.sendMessage(p, "&cInvalid attribute for weapons!");
-							return true;
-						}
-					}
-					else if(args[2].equalsIgnoreCase("armor")) {
-						if(StonecutterUtils.isArmorAttribute(args[3])) {
-							if(StringUtils.isNumeric(args[4])) {
-								stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
-								return true;
-							}
-							else {
-								Util.sendMessage(p, "&cInvalid gem level!");
-								return true;
-							}
-						}
-						else {
-							Util.sendMessage(p, "&cInvalid attribute for armor!");
-							return true;
-						}
-					}
-					else {
-						Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
+						Util.sendMessage(p, "&cInvalid item!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid item!");
-					return true;
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 				}
 			}
 			else if(args[0].equalsIgnoreCase("get")) {
-				if(args[1].equalsIgnoreCase("ore")) {
-					if(StringUtils.isNumeric(args[3])) {
-						if(p.hasPermission("stonecutter.admin")) {
-							p.getInventory().addItem(StonecutterItems.getOre(args[2], Integer.parseInt(args[3])));
-							return true;
+				if(args.length == 4) {
+					if(args[1].equalsIgnoreCase("ore")) {
+						if(StringUtils.isNumeric(args[3])) {
+							if(p.hasPermission("stonecutter.admin")) {
+								p.getInventory().addItem(StonecutterItems.getOre(args[2], Integer.parseInt(args[3])));
+								return true;
+							}
+							else {
+								Util.sendMessage(p, "&cYou don't have permission to do that!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid level!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid level!");
+						Util.sendMessage(p, "&cInvalid subcommand!");
+						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid subcommand!");
-					return true;
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 				}
 			}
 			else {
