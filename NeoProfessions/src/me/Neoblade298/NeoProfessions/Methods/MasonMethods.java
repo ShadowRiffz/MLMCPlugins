@@ -277,7 +277,9 @@ public class MasonMethods {
 					if(p.getInventory().firstEmpty() != -1) {
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNSLOT_ESSENCE)) {
 							if(econ.has(p, UNSLOT_GOLD_PER_LVL * level)) {
-								ItemStack slotted = MasonUtils.parseUnslot(p, slot);
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), UNSLOT_ESSENCE));
+								econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * level);
+								p.getInventory().addItem(MasonUtils.parseUnslot(p, slot));
 							}
 							else {
 								Util.sendMessage(p, "&cYou lack the gold to create this!");

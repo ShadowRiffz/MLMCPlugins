@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Items.MasonItems;
+import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
+
 public class MasonUtils {
 	
 	final static int MAX_LEVEL = 5;
@@ -34,8 +38,82 @@ public class MasonUtils {
 	
 	public static ItemStack parseUnslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		String line = getSlotLine(item, slot);
-		return item;
+		
+		// Parse the line and revert the lore
+		int slotLevel = line.charAt(1);
+		int slottedLevel = line.charAt(3);
+		int slotType = line.charAt(5);
+		String attr = getSlotLineAttribute(line);
+		boolean isArmor = Util.isArmor(item);
+		int potency = -1;
+		int durabilityLoss = -1;
+		lore.set(getSlotNum(item, slot), "§7(Lv " + slotLevel + " Slot)");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		
+		switch (slotType) {
+		case 0:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			if(isArmor) {
+				BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
+			} else {
+				BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
+			}
+		case 1:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			if(isArmor) {
+				return StonecutterItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+			} else {
+				return StonecutterItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+			}
+		case 2:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			durabilityLoss = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
+			if(isArmor) {
+				return StonecutterItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+			} else {
+				return StonecutterItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+			}
+		case 3:
+			if(line.contains("Advanced")) {
+				if(line.contains("Exp")) {
+					return MasonItems.getExpCharm(true);
+				}
+				else if(line.contains("Drop")) {
+					return MasonItems.getDropCharm(true);
+				}
+				else if(line.contains("Looting")) {
+					return MasonItems.getLootingCharm(true);
+				}
+			}
+			else {
+				if(line.contains("Exp")) {
+					return MasonItems.getExpCharm(false);
+				}
+				else if(line.contains("Drop")) {
+					return MasonItems.getDropCharm(false);
+				}
+				else if(line.contains("Looting")) {
+					return MasonItems.getLootingCharm(false);
+				}
+				else if(line.contains("Recovery")) {
+					return MasonItems.getRecoveryCharm();
+				}
+				else if(line.contains("Traveler")) {
+					return MasonItems.getTravelerCharm();
+				}
+				else if(line.contains("Second Chance")) {
+					return MasonItems.getSecondChanceCharm();
+				}
+				else if(line.contains("Hunger")) {
+					return MasonItems.getHungerCharm();
+				}
+			}
+		}
+		return null;
 	}
 	
 	public static int countSlots(ItemStack item) {
@@ -172,6 +250,35 @@ public class MasonUtils {
 		}
 		return -1;
 	}
+	public static int getSlottedLevel(ItemStack item) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		for(String line : lore) {
+			if(line.contains("Level") || line.contains("Compatiblity")) {
+				if(line.contains("Level 1")) {
+					return 1;
+				} else if(line.contains("Level 2")) {
+					return 2;
+				} else if(line.contains("Level 3")) {
+					return 3;
+				} else if(line.contains("Level 4")) {
+					return 4;
+				} else if(line.contains("Level 5")) {
+					return 5;
+				} else if(line.contains("Rare")) {
+					return 1;
+				} else if(line.contains("Epic")) {
+					return 2;
+				} else if(line.contains("Angelic")) {
+					return 3;
+				} else if(line.contains("Mythic")) {
+					return 4;
+				} else if(line.contains("Legendary")) {
+					return 5;
+				}
+			}
+		}
+		return -1;
+	}
 	
 	public static void removeSlotLine(ItemStack item, int slot) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -213,6 +320,26 @@ public class MasonUtils {
 		return null;
 	}
 	
+	public static String getSlotLineAttribute(String line) {
+		if(line.contains("Strength")) {
+			return "strength";
+		} else if (line.contains("Dexterity")){
+			return "dexterity";
+		} else if (line.contains("Intelligence")){
+			return "intelligence";
+		} else if (line.contains("Spirit")){
+			return "spirit";
+		} else if (line.contains("Perception")){
+			return "perception";
+		} else if (line.contains("Endurance")){
+			return "endurance";
+		} else if (line.contains("Vitality")){
+			return "vitality";
+		} else {
+			return null;
+		}
+	}
+	
 	public static String slotType(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return null;
@@ -248,8 +375,9 @@ public class MasonUtils {
 		Util.setMaxDurability(itemWithSlot, potency + Util.getMaxDurability(itemWithSlot));
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		int slottedLevel = getSlottedLevel(itemToSlot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§0§0§0§0§9Max Durability +" + potency);
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§" + slottedLevel + "§0§0§0§0§9Max Durability +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -267,8 +395,9 @@ public class MasonUtils {
 		}
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		int slottedLevel = getSlottedLevel(itemToSlot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency);
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§" + slottedLevel + "§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -298,9 +427,10 @@ public class MasonUtils {
 		encodedDurabilityLoss = encodedDurabilityLoss.substring(0, durabilityLossString.length() - 1);
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		int slottedLevel = getSlottedLevel(itemToSlot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
-		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§2" + encodedDurabilityLoss + "§c" + getAttributeType(itemToSlot) + " +" + potency);
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§" + slottedLevel + "§2" + encodedDurabilityLoss + "§c" + getAttributeType(itemToSlot) + " +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -309,6 +439,7 @@ public class MasonUtils {
 	public static boolean parseCharm(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		int slottedLevel = getSlottedLevel(itemToSlot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
 		String[] charmStrings = itemToSlot.getItemMeta().getLore().get(0).split(" ");
@@ -320,7 +451,7 @@ public class MasonUtils {
 			}
 		}
 		
-		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§3§0§0§0§9" + charm);
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§" + slottedLevel + "§3§0§0§0§9" + charm);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
