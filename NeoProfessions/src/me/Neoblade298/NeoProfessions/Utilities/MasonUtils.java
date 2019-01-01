@@ -50,17 +50,24 @@ public class MasonUtils {
 		boolean isArmor = Util.isArmor(item);
 		int potency = -1;
 		int durabilityLoss = -1;
-		lore.set(getSlotNum(item, slot), "§7(Lv " + slotLevel + " Slot)");
+		lore.set(getSlotNum(item, slot), "§8(Lv " + slotLevel + " Slot)");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		
 		switch (slotType) {
 		case 0:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
-			if(isArmor) {
-				BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
-			} else {
-				BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
+			if(Util.getMaxDurability(item) > potency) {
+				Util.setMaxDurability(item, Util.getMaxDurability(item) - potency);
+				if(isArmor) {
+					return BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
+				} else {
+					return BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cThis item will break if you unslot this!");
+				return null;
 			}
 		case 1:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
@@ -71,7 +78,9 @@ public class MasonUtils {
 			}
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			System.out.println(line);
 			durabilityLoss = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
+			Util.setMaxDurability(item, Util.getMaxDurability(item) + durabilityLoss);
 			if(isArmor) {
 				return StonecutterItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
 			} else {
@@ -112,6 +121,7 @@ public class MasonUtils {
 					return MasonItems.getHungerCharm();
 				}
 			}
+			break;
 		}
 		return null;
 	}
@@ -424,7 +434,7 @@ public class MasonUtils {
 		}
 		Util.setMaxDurability(itemWithSlot, Util.getMaxDurability(itemWithSlot) - durabilityLoss);
 		String encodedDurabilityLoss = durabilityLossString.replaceAll("", "§");
-		encodedDurabilityLoss = encodedDurabilityLoss.substring(0, durabilityLossString.length() - 1);
+		encodedDurabilityLoss = encodedDurabilityLoss.substring(0, encodedDurabilityLoss.length() - 1);
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
 		int slottedLevel = getSlottedLevel(itemToSlot);
