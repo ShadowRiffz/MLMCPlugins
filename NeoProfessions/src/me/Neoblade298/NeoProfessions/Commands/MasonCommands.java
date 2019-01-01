@@ -78,6 +78,7 @@ public class MasonCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
 				}
 			}
 			else if(args[0].equalsIgnoreCase("remove")) {
@@ -99,10 +100,11 @@ public class MasonCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
 				}
 			}
 			else if(args[0].equalsIgnoreCase("slot")) {
-				if(args.length == 1) {
+				if(args.length == 2) {
 					if(StringUtils.isNumeric(args[1])) {
 						if(Integer.parseInt(args[1]) <= MAX_SLOTS) {
 							masonMethods.slot(p, Integer.parseInt(args[1]));
@@ -120,6 +122,16 @@ public class MasonCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
+				}
+			}
+			else if(args[0].equalsIgnoreCase("unslot")) {
+				if(args.length == 2) { 
+					
+				}
+				else {
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
 				}
 			}
 			else {

@@ -148,7 +148,6 @@ public class BlacksmithCommands implements CommandExecutor {
 				}
 			}
 		}
-		
 		else {
 			Util.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
 			return true;

@@ -117,6 +117,7 @@ public class StonecutterCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
 				}
 			}
 			else if(args[0].equalsIgnoreCase("get")) {
@@ -129,10 +130,12 @@ public class StonecutterCommands implements CommandExecutor {
 							}
 							else {
 								Util.sendMessage(p, "&cYou don't have permission to do that!");
+								return true;
 							}
 						}
 						else {
 							Util.sendMessage(p, "&cInvalid level!");
+							return true;
 						}
 					}
 					else {
@@ -142,6 +145,7 @@ public class StonecutterCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
 				}
 			}
 			else {
@@ -153,7 +157,6 @@ public class StonecutterCommands implements CommandExecutor {
 			Util.sendMessage((Player)sender, "&cYou are not a Stonecutter!");
 			return true;
 		}
-		return false;
 	}
 
 }
