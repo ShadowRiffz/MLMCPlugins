@@ -80,37 +80,9 @@ public class MasonListeners implements Listener {
 							case "overload":
 								success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 								break;
-								/*
-							case "advancedexp":
-								success = MasonUtils.parseAdvancedExp(itemWithSlot, itemToSlot, slot);
+							case "charm":
+								success = MasonUtils.parseCharm(itemWithSlot, itemToSlot, slot);
 								break;
-							case "advancedgold":
-								success = MasonUtils.parseAdvancedGold(itemWithSlot, itemToSlot, slot);
-								break;
-							case "advanceddrop":
-								success = MasonUtils.parseAdvancedDrop(itemWithSlot, itemToSlot, slot);
-								break;
-							case "exp":
-								success = MasonUtils.parseExp(itemWithSlot, itemToSlot, slot);
-								break;
-							case "gold":
-								success = MasonUtils.parseGold(itemWithSlot, itemToSlot, slot);
-								break;
-							case "drop":
-								success = MasonUtils.parseDrop(itemWithSlot, itemToSlot, slot);
-								break;
-							case "traveler":
-								success = MasonUtils.parseTraveler(itemWithSlot, itemToSlot, slot);
-								break;
-							case "recovery":
-								success = MasonUtils.parseRecovery(itemWithSlot, itemToSlot, slot);
-								break;
-							case "hunger":
-								success = MasonUtils.parseHunger(itemWithSlot, itemToSlot, slot);
-								break;
-							case "secondchance":
-								success = MasonUtils.parseSecondChance(itemWithSlot, itemToSlot, slot);
-								break;*/
 							}
 							if (success) {
 								p.getInventory().removeItem(Util.setAmount(new ItemStack(itemToSlot), 1));

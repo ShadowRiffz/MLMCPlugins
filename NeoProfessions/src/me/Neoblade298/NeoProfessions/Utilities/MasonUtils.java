@@ -196,35 +196,8 @@ public class MasonUtils {
 		else if(line.contains("Increases weapon") || line.contains("Increases armor")) {
 			return "attribute";
 		}
-		else if(charmLine.contains("Advanced EXP")) {
-			return "advancedexp";
-		}
-		else if(charmLine.contains("Advanced Gold")) {
-			return "advancedgold";
-		}
-		else if(charmLine.contains("Advanced Drop")) {
-			return "advanceddrop";
-		}
-		else if(charmLine.contains("EXP")) {
-			return "exp";
-		}
-		else if(charmLine.contains("Gold")) {
-			return "gold";
-		}
-		else if(charmLine.contains("Drop")) {
-			return "drop";
-		}
-		else if(charmLine.contains("Traveler")) {
-			return "traveler";
-		}
-		else if(charmLine.contains("Recovery")) {
-			return "recovery";
-		}
-		else if(charmLine.contains("Hunger")) {
-			return "hunger";
-		}
-		else if(charmLine.contains("Second Chance")) {
-			return "secondchance";
+		else if(charmLine.contains("Charm")) {
+			return "charm";
 		}
 		return null;
 	}
@@ -295,6 +268,26 @@ public class MasonUtils {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
 		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§2" + encodedDurabilityLoss + "§c" + getAttributeType(itemToSlot) + " +" + potency);
+		meta.setLore(lore);
+		itemWithSlot.setItemMeta(meta);
+		return true;
+	}
+	
+	public static boolean parseCharm(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		ItemMeta meta = itemWithSlot.getItemMeta();
+		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		
+		String[] charmStrings = itemToSlot.getItemMeta().getLore().get(0).split(" ");
+		String charm = "";
+		for(int i = 2; i < charmStrings.length; i++) {
+			charm += charmStrings[i];
+			if(i < charmStrings.length - 1) {
+				charm += " ";
+			}
+		}
+		
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§3§0§0§0§9" + charm);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
