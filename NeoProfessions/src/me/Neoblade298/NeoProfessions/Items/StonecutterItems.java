@@ -177,6 +177,62 @@ public class StonecutterItems {
 		return item;
 	}
 	
+	public static ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+		ItemStack item = new ItemStack(Material.ENDER_PEARL);
+		if(isOverloaded) {
+			item = new ItemStack(Material.EYE_OF_ENDER);
+		}
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		switch (attr) {
+		case "strength":
+			meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
+			break;
+		case "dexterity":
+			meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
+			break;
+		case "intelligence":	
+			meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
+			break;
+		case "spirit":
+			meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
+			break;
+		case "perception":
+			meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
+			break;
+		}
+		switch (level) {
+		case 1:
+			lore.add("§7Compatibility: Common - §9Rare");
+			break;
+		case 2:
+			lore.add("§7Compatibility: Common - §6Epic");
+			break;
+		case 3:
+			lore.add("§7Compatibility: Common - §bAngelic");
+			break;
+		case 4:
+			lore.add("§7Compatibility: Common - §2Mythic");
+			break;
+		case 5:
+			lore.add("§7Compatibility: Common - §4§lLegendary");
+			break;
+		}
+		String effect = "§7Effect: Increases weapon " + attr;
+		if(isOverloaded) {
+			effect += ", reduces durability";
+		}
+		lore.add(effect);
+		lore.add("§7Potency: §e" + potency);
+		if(isOverloaded) {
+			lore.add("§7Durability Lost: §e" + durabilityLoss);
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
+		return item;
+	}
+	
 	public static ItemStack getArmorGem(String attr, int level, boolean isOverloaded) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
@@ -276,6 +332,95 @@ public class StonecutterItems {
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
 			lore.add("§7Durability Lost: §e" + duraLost);
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
+		return item;
+	}
+	
+	public static ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+		ItemStack item = new ItemStack(Material.ENDER_PEARL);
+		if(isOverloaded) {
+			item = new ItemStack(Material.EYE_OF_ENDER);
+		}
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		if(isOverloaded) {
+			switch (attr) {
+			case "strength":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
+				break;
+			case "dexterity":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
+				break;
+			case "intelligence":	
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
+				break;
+			case "spirit":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
+				break;
+			case "perception":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
+				break;
+			case "vitality":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Garnet");
+				break;
+			case "endurance":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Adamantium");
+				break;
+			}
+		}
+		else {
+			switch (attr) {
+			case "strength":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
+				break;
+			case "dexterity":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
+				break;
+			case "intelligence":	
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
+				break;
+			case "spirit":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
+				break;
+			case "perception":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
+				break;
+			case "vitality":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Garnet");
+				break;
+			case "endurance":
+				meta.setDisplayName("§4[Lv " + level + "] §cRefined Adamantium");
+				break;
+			}
+		}
+		switch (level) {
+		case 1:
+			lore.add("§7Compatibility: Common - §9Rare");
+			break;
+		case 2:
+			lore.add("§7Compatibility: Common - §6Epic");
+			break;
+		case 3:
+			lore.add("§7Compatibility: Common - §bAngelic");
+			break;
+		case 4:
+			lore.add("§7Compatibility: Common - §2Mythic");
+			break;
+		case 5:
+			lore.add("§7Compatibility: Common - §4§lLegendary");
+			break;
+		}
+		String effect = "§7Effect: Increases armor " + attr;
+		if(isOverloaded) {
+			effect += ", reduces durability";
+		}
+		lore.add(effect);
+		lore.add("§7Potency: §e" + potency);
+		if(isOverloaded) {
+			lore.add("§7Durability Lost: §e" + durabilityLoss);
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
