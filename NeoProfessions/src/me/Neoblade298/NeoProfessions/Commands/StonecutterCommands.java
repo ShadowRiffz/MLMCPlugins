@@ -111,6 +111,7 @@ public class StonecutterCommands implements CommandExecutor {
 				}
 				else {
 					Util.sendMessage(p, "&cInvalid item!");
+					return true;
 				}
 			}
 			else if(args[0].equalsIgnoreCase("get")) {

@@ -171,7 +171,7 @@ public class MasonUtils {
 		for(int i = 0; i < lore.size(); i++) {
 			if(lore.get(i).contains("Effect: Increases")) {
 				String[] temp = lore.get(i).split(" ");
-				return temp[3];
+				return temp[3].substring(0, 1).toUpperCase() + temp[3].substring(1, temp[3].length());
 			}
 		}
 		return null;

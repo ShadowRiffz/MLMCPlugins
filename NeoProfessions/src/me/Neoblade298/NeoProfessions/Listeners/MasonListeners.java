@@ -56,6 +56,7 @@ public class MasonListeners implements Listener {
 		
 		if(slotItem.containsKey(p)) {
 			
+			e.setCancelled(true);
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
 			ItemStack itemToSlot = p.getInventory().getItemInMainHand();
