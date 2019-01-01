@@ -35,66 +35,96 @@ public class BlacksmithCommands implements CommandExecutor {
 			else {
 				// CREATE COMMAND
 				if(args[0].equalsIgnoreCase("create")) {
-					// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
-					if(args[1].equalsIgnoreCase("durability") &&
-						(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
-						if(StringUtils.isNumeric(args[3])) {
-							blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
-							return true;
-						}
-						else {
-							Util.sendMessage(p, "&cInvalid level!");
-							return true;
+					if(args.length == 4) {
+						// durability: args[0] = create, args[1] = durability, args[2] = weapon/armor, args[3] = level
+						if(args[1].equalsIgnoreCase("durability") &&
+							(args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor"))) {
+							if(StringUtils.isNumeric(args[3])) {
+								blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+								return true;
+							}
+							else {
+								Util.sendMessage(p, "&cInvalid level!");
+								return true;
+							}
 						}
 					}
-					// repair: args[0] = create, args[1] = repair, args[2] = level
-					else if(args[1].equalsIgnoreCase("repair")) {
-						if(StringUtils.isNumeric(args[2])) {
-							blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
-							return true;
+					else if(args.length == 3) {
+						// repair: args[0] = create, args[1] = repair, args[2] = level
+						if(args[1].equalsIgnoreCase("repair")) {
+							if(StringUtils.isNumeric(args[2])) {
+								blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
+								return true;
+							}
+							else {
+								Util.sendMessage(p, "&cInvalid level!");
+								return true;
+							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid level!");
+							Util.sendMessage(p, "&cInvalid parameters!");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid parameters!");
-						return true;
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 					}
 				}
 				
 				
 				// UPGRADE COMMAND
 				else if(args[0].equalsIgnoreCase("upgrade")) {
-					if(args[1].equalsIgnoreCase("unbreaking")) {
-						blacksmithMethods.upgradeItem(p);
-						return true;
+					if(args.length == 2) {
+						if(args[1].equalsIgnoreCase("unbreaking")) {
+							blacksmithMethods.upgradeItem(p);
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid upgrade parameter!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 					}
 				}
 				
 				// REFORGE COMMAND
 				else if(args[0].equalsIgnoreCase("reforge")) {
-					blacksmithMethods.reforgeItem(p);
-					return true;
+					if(args.length == 1) {
+						blacksmithMethods.reforgeItem(p);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+					}
 				}
 				
 				else if(args[0].equalsIgnoreCase("scrap")) {
-					blacksmithMethods.scrapItem(p);
-					return true;
+					if(args.length == 1) {
+						blacksmithMethods.scrapItem(p);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+					}
 				}
 				
 				
 				// GET COMMAND (Debug)
 				else if(args[0].equalsIgnoreCase("get")) {
-					if (args[1].equalsIgnoreCase("Essence")) {
-						if(StringUtils.isNumeric(args[2])) {
-							if(p.hasPermission("blacksmith.admin")) {
-								p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
-								Util.sendMessage(p, "&7Successfully spawned Essence!");
-								return true;
+					if(args.length == 3) {
+						if (args[1].equalsIgnoreCase("Essence")) {
+							if(StringUtils.isNumeric(args[2])) {
+								if(p.hasPermission("blacksmith.admin")) {
+									p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
+									Util.sendMessage(p, "&7Successfully spawned Essence!");
+									return true;
+								}
 							}
 						}
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 					}
 				}
 				
