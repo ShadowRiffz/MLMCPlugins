@@ -165,6 +165,18 @@ public class MasonUtils {
 		item.setItemMeta(meta);
 	}
 	
+	public static String getAttributeType(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		for(int i = 0; i < lore.size(); i++) {
+			if(lore.get(i).contains("Effect: Increases")) {
+				String[] temp = lore.get(i).split(" ");
+				return temp[3];
+			}
+		}
+		return null;
+	}
+	
 	public static String slotType(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return null;
@@ -229,6 +241,25 @@ public class MasonUtils {
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§0§0§0§0§9Max Durability +" + potency);
+		meta.setLore(lore);
+		itemWithSlot.setItemMeta(meta);
+		return true;
+	}
+	
+	public static boolean parseAttribute(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		int potency = -1;
+		for(String line : itemToSlot.getItemMeta().getLore()) {
+			if(line.contains("Potency")) {
+				potency = Integer.parseInt(line.substring(line.indexOf(":") + 4));
+			}
+		}
+		if (potency == -1) {
+			return false;
+		}
+		ItemMeta meta = itemWithSlot.getItemMeta();
+		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
