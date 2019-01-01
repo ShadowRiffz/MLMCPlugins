@@ -77,10 +77,10 @@ public class MasonListeners implements Listener {
 							case "attribute":
 								success = MasonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 								break;
-								/*
 							case "overload":
 								success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 								break;
+								/*
 							case "advancedexp":
 								success = MasonUtils.parseAdvancedExp(itemWithSlot, itemToSlot, slot);
 								break;

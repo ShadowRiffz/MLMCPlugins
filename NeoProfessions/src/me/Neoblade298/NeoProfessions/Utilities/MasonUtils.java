@@ -171,6 +171,9 @@ public class MasonUtils {
 		for(int i = 0; i < lore.size(); i++) {
 			if(lore.get(i).contains("Effect: Increases")) {
 				String[] temp = lore.get(i).split(" ");
+				if(temp[3].charAt(temp[3].length() - 1) == ',') {
+					temp[3] = temp[3].substring(0, temp[3].length() - 1);
+				}
 				return temp[3].substring(0, 1).toUpperCase() + temp[3].substring(1, temp[3].length());
 			}
 		}
@@ -187,11 +190,11 @@ public class MasonUtils {
 		if(line.contains("max durability")) {
 			return "durability";
 		}
-		else if(line.contains("Increases weapon") || line.contains("Increases armor")) {
-			return "attribute";
-		}
 		else if(line.contains("reduces durability")) {
 			return "overload";
+		}
+		else if(line.contains("Increases weapon") || line.contains("Increases armor")) {
+			return "attribute";
 		}
 		else if(charmLine.contains("Advanced EXP")) {
 			return "advancedexp";
@@ -260,6 +263,38 @@ public class MasonUtils {
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency);
+		meta.setLore(lore);
+		itemWithSlot.setItemMeta(meta);
+		return true;
+	}
+	
+	public static boolean parseOverload(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		int potency = -1;
+		int durabilityLoss = -1;
+		String durabilityLossString = null;
+		for(String line : itemToSlot.getItemMeta().getLore()) {
+			if(line.contains("Potency")) {
+				potency = Integer.parseInt(line.substring(line.indexOf(":") + 4));
+			}
+			if(line.contains("Durability Lost")) {
+				durabilityLossString = line.substring(line.indexOf(":") + 4);
+				durabilityLoss = Integer.parseInt(durabilityLossString);
+			}
+		}
+		if (potency == -1) {
+			return false;
+		}
+		if(Util.getMaxDurability(itemWithSlot) - durabilityLoss <= 0) {
+			return false;
+		}
+		Util.setMaxDurability(itemWithSlot, Util.getMaxDurability(itemWithSlot) - durabilityLoss);
+		String encodedDurabilityLoss = durabilityLossString.replaceAll("", "§");
+		encodedDurabilityLoss = encodedDurabilityLoss.substring(0, durabilityLossString.length() - 1);
+		ItemMeta meta = itemWithSlot.getItemMeta();
+		int slotLevel = getSlotLevel(itemWithSlot, slot);
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		
+		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§0§2" + encodedDurabilityLoss + "§c" + getAttributeType(itemToSlot) + " +" + potency);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
