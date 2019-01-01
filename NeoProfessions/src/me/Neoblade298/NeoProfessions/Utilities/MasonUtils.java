@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,6 +30,12 @@ public class MasonUtils {
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+	}
+	
+	public static ItemStack unslot(Player p, int slot) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		String line = getSlotLine(item, slot);
+		
 	}
 	
 	public static int countSlots(ItemStack item) {
@@ -65,6 +72,32 @@ public class MasonUtils {
 				// If the matching slot is empty, return true
 				if(slot == count) {
 					if(line.contains("Slot")) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isSlotUsed(ItemStack item, int slot) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		int count = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				// If the matching slot is empty, return true
+				if(slot == count) {
+					if(!line.contains("Slot") && !line.contains("/")) {
 						return true;
 					}
 					else {

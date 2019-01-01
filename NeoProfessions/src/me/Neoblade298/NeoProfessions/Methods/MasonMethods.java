@@ -25,6 +25,8 @@ public class MasonMethods {
 	static final int ENGRAVE_GOLD_PER_LVL = 15000;
 	static final int UNENGRAVE_GOLD = 2000;
 	static final int UNENGRAVE_ESSENCE = 2;
+	static final int UNSLOT_ESSENCE = 4;
+	static final int UNSLOT_GOLD_PER_LVL = 5000;
 	
 	// Prices
 	static final int BASIC_EXP_GOLD = 5000;
@@ -237,7 +239,7 @@ public class MasonMethods {
 			if(MasonUtils.isSlotAvailable(item, slot)) {
 				if(Util.isArmor(item)) {
 					int level = Util.getItemLevel(item);
-					if(p.hasPermission("mason.slot.weapon." + level)) {
+					if(p.hasPermission("mason.slot.armor." + level)) {
 						listeners.prepItemSlot(p, item, slot);
 					}
 					else {
@@ -259,6 +261,42 @@ public class MasonMethods {
 			}
 			else {
 				Util.sendMessage(p, "&cThis slot is unavailable!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void unslot(Player p, int slot) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(Material.AIR)) {
+			if(MasonUtils.isSlotUsed(item, slot)) {
+				int level = Util.getItemLevel(item);
+				if(p.hasPermission("mason.unslot." + level)) {
+					if(p.getInventory().firstEmpty() != -1) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNSLOT_ESSENCE)) {
+							if(econ.has(p, UNSLOT_GOLD_PER_LVL * level)) {
+								ItemStack slotted = MasonUtils.parseUnslot(p, slot);
+							}
+							else {
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYour inventory is full!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cThis slot is unused or does not exist!!");
 			}
 		}
 		else {

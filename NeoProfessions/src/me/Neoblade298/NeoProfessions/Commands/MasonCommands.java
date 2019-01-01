@@ -127,7 +127,16 @@ public class MasonCommands implements CommandExecutor {
 			}
 			else if(args[0].equalsIgnoreCase("unslot")) {
 				if(args.length == 2) { 
-					
+					if(StringUtils.isNumeric(args[1])) {
+						if(Integer.parseInt(args[1]) <= MAX_SLOTS) {
+							masonMethods.unslot(p, Integer.parseInt(args[1]));
+							return true;
+						}
+						else {
+							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							return true;
+						}
+					}
 				}
 				else {
 					Util.sendMessage(p, "&cIncorrect number of arguments!");
