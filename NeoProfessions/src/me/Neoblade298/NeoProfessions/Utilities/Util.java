@@ -193,10 +193,10 @@ public class Util {
 		for(int i = 0; i < lore.size(); i++) {
 			if(lore.get(i).contains("§7Durability")) {
 				if(getCurrentDurability(item) > durability) {
-					lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
+					lore.set(i, "§7Durability " + durability + " / " + durability);
 				}
 				else {
-					lore.set(i, "§7Durability " + durability + " / " + durability);
+					lore.set(i, "§7Durability " + getCurrentDurability(item) + " / " + durability);
 				}
 				meta.setLore(lore);
 				item.setItemMeta(meta);
