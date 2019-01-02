@@ -1,0 +1,34 @@
+# This first part named "item1" does not matter, because it can be named anything
+# Hunger is an integer of how many points of hunger it should restore
+# Saturation is a double of how much saturation it can restore. It works like default minecraft.
+# Find more info about the hunger here: https://minecraft.gamepedia.com/Food
+# Attributes and Effects are named like "<name>,<amp>,<duration>" and separated by commas
+
+item1:
+    name: "&aSpinach"
+    hunger: 20
+    saturation: 20
+    edible-when-not-hungry: false
+    cooldown: 5000
+    health:
+        amount: 1
+        delay: 20
+        repetitions: 5
+    mana:
+        amount: 1
+        delay: 20
+        repetitions: 5
+    lore:
+    - "&eGives you super strength"
+    effects:
+    - "STRENGTH,120,60"
+    attributes: []
+    sound-effects:
+    - "ENTITY_PLAYER_BURP"
+    commands:
+    - "give %p potato 64"
+    - "tell %p POOOTAAATOOO"
+    worlds:
+    - Argyll
+    - Other
+    
