@@ -130,7 +130,11 @@ public class MLMCCustomFoodsMain
     if (!food.getWorlds().contains(p.getWorld().getName())) {
       return;
     }
+    
+    // Food can be eaten
     food.eat(p);
+    
+    // Do not add cooldowns for chests
     if (!food.getName().contains("Chest")) {
       this.playerCooldowns.put(p.getUniqueId(), Long.valueOf(System.currentTimeMillis()));
     }
@@ -139,6 +143,9 @@ public class MLMCCustomFoodsMain
     for (PotionEffect effect : food.getEffect()) {
       p.addPotionEffect(effect);
     }
+    
+    
+    // Work on skillapi attributes
     HashMap<String, int[]> playerAttribs;
     if (!this.effects.containsKey(p.getUniqueId()))
     {
@@ -160,6 +167,8 @@ public class MLMCCustomFoodsMain
       data.addBonusAttributes(attrib.getName(), attrib.getAmp());
       playerAttribs.put(attrib.getName(), new int[] { attrib.getDuration(), attrib.getAmp() });
     }
+    
+    // Work on health and mana regen
     final Food foodItem = food;
     if (food.getHealthTime() == 0)
     {

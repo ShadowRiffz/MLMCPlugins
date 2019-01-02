@@ -26,16 +26,16 @@ public class FileManager
     this.save.mkdirs();
     
     FileConfiguration foodConfig = YamlConfiguration.loadConfiguration(this.save);
-    HashMap<String, Food> foods = new HashMap();
+    HashMap<String, Food> foods = new HashMap<String, Food>();
     for (String s : foodConfig.getKeys(false)) {
       if (!s.equalsIgnoreCase("valid-worlds"))
       {
         String name = foodConfig.getString(s + ".name").replaceAll("&", "§");
-        ArrayList<String> lore = new ArrayList();
+        ArrayList<String> lore = new ArrayList<String>();
         for (String loreLine : foodConfig.getStringList(s + ".lore")) {
           lore.add(loreLine.replaceAll("&", "§"));
         }
-        ArrayList<PotionEffect> effects = new ArrayList();
+        ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
         PotionEffectType type;
         for (String potion : foodConfig.getStringList(s + ".effects"))
         {
@@ -46,7 +46,7 @@ public class FileManager
           PotionEffect effect = new PotionEffect(type, duration, amp);
           effects.add(effect);
         }
-        Object attribs = new ArrayList();
+        Object attribs = new ArrayList<Object>();
         String attribName;
         for (String potion : foodConfig.getStringList(s + ".attributes"))
         {
@@ -55,19 +55,19 @@ public class FileManager
           int amp = Integer.parseInt(split[1]);
           int duration = Integer.parseInt(split[2]) * 20;
           AttributeEffect attrib = new AttributeEffect(attribName, amp, duration);
-          ((ArrayList)attribs).add(attrib);
+          ((ArrayList<AttributeEffect>)attribs).add(attrib);
         }
-        Object sounds = new ArrayList();
+        Object sounds = new ArrayList<Object>();
         for (String sname : foodConfig.getStringList(s + ".sound-effects"))
         {
           Sound sound = Sound.valueOf(sname.toUpperCase());
           if (sound != null) {
-            ((ArrayList)sounds).add(sound);
+            ((ArrayList<Sound>)sounds).add(sound);
           }
         }
         double sat = foodConfig.getDouble(s + ".saturation");
         int hung = foodConfig.getInt(s + ".hunger");
-        Food food = new Food(name, hung, sat, lore, effects, (ArrayList)attribs, (ArrayList)sounds);
+        Food food = new Food(name, hung, sat, lore, effects, (ArrayList<AttributeEffect>)attribs, (ArrayList<Sound>)sounds);
         food.setHealth(foodConfig.getInt(s + ".health.amount"));
         food.setHealthDelay(foodConfig.getInt(s + ".health.delay"));
         food.setHealthTime(foodConfig.getInt(s + ".health.repetitions"));
