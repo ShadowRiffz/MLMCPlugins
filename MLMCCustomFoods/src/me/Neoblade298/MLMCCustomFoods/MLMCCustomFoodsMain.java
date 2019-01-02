@@ -159,21 +159,42 @@ public class MLMCCustomFoodsMain
     PlayerData data = SkillAPI.getPlayerData(p);
     for (AttributeEffect attrib : food.getAttributes())
     {
+    	// If an attribute currently exists, remove it
+    	int duration = attrib.getDuration();
+    	int amp = attrib.getAmp();
+    	for(String line : meta.getLore()) {
+    		if(line.contains("Garnished")) {
+    			amp *= 1.3;
+    		}
+    		if(line.contains("Preserved")) {
+    			duration *= 1.3;
+    		}
+    	}
       if (playerAttribs.containsKey(attrib.getName()))
       {
         int[] oldData = (int[])playerAttribs.get(attrib.getName());
         data.addBonusAttributes(attrib.getName(), -oldData[1]);
       }
-      data.addBonusAttributes(attrib.getName(), attrib.getAmp());
-      playerAttribs.put(attrib.getName(), new int[] { attrib.getDuration(), attrib.getAmp() });
+      data.addBonusAttributes(attrib.getName(), amp);
+      playerAttribs.put(attrib.getName(), new int[] { duration, amp });
     }
     
     // Work on health and mana regen
     final Food foodItem = food;
+    int health = foodItem.getHealth();
+    int mana = foodItem.getMana();
+  	for(String line : meta.getLore()) {
+  		if(line.contains("Spiced")) {
+  			health *= 1.3;
+  			mana *= 1.3;
+  		}
+  	}
+  	final int finalHealth = health;
+  	final int finalMana = mana;
     if (food.getHealthTime() == 0)
     {
       if (p.isValid()) {
-        p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + foodItem.getHealth()));
+        p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
       }
     }
     else {
@@ -186,7 +207,7 @@ public class MLMCCustomFoodsMain
           if (p.isValid())
           {
             this.rep -= 1;
-            p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + foodItem.getHealth()));
+            p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
             if (this.rep > 0) {
               Bukkit.getScheduler().scheduleSyncDelayedTask(MLMCCustomFoodsMain.getMain(), this, foodItem.getHealthDelay());
             }
@@ -199,7 +220,7 @@ public class MLMCCustomFoodsMain
       if (food.getManaTime() == 0)
       {
         if (p.isValid()) {
-          fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + foodItem.getMana()));
+          fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + finalMana));
         }
       }
       else {
@@ -212,7 +233,7 @@ public class MLMCCustomFoodsMain
             if (p.isValid())
             {
               this.rep -= 1;
-              fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + foodItem.getMana()));
+              fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + finalMana));
               if (this.rep > 0) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(MLMCCustomFoodsMain.getMain(), this, foodItem.getManaDelay());
               }
