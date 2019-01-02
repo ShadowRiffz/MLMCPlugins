@@ -81,7 +81,7 @@ public class MasonListeners implements Listener {
 								success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 								break;
 							case "charm":
-								success = MasonUtils.parseCharm(itemWithSlot, itemToSlot, slot);
+								success = MasonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
 								break;
 							}
 							if (success) {

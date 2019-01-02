@@ -446,7 +446,11 @@ public class MasonUtils {
 		return true;
 	}
 	
-	public static boolean parseCharm(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+	public static boolean parseCharm(Player p, ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		if(Util.isArmor(itemWithSlot)) {
+			Util.sendMessage(p, "&cCharms can only be slotted on weapons!");
+			return false;
+		}
 		ItemMeta meta = itemWithSlot.getItemMeta();
 		int slotLevel = getSlotLevel(itemWithSlot, slot);
 		int slottedLevel = getSlottedLevel(itemToSlot);
