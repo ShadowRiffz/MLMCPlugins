@@ -32,7 +32,6 @@ public class BlacksmithListeners implements Listener{
 		
 		// If player has not selected a repair, select it
 		if(!selectedRepair.containsKey(p)) {
-			e.setCancelled(true);
 			if(BlacksmithUtils.isRepairItem(p.getInventory().getItemInMainHand())) {
 				selectedRepair.put(p, p.getInventory().getItemInMainHand());
 	  		Util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
@@ -51,6 +50,7 @@ public class BlacksmithListeners implements Listener{
 		
 		// If a repair is selected, then complete the repair
 		else {
+			e.setCancelled(true);
 			ItemStack repair = selectedRepair.get(p);
 			ItemStack item = p.getInventory().getItemInMainHand();
 			int repairLevel = BlacksmithUtils.getItemLevel(repair);
