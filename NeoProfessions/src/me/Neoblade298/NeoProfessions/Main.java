@@ -6,11 +6,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
+import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
+import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import net.milkbowl.vault.chat.Chat;
@@ -27,6 +29,7 @@ public class Main extends JavaPlugin implements Listener {
   public BlacksmithMethods blacksmithMethods;
   public MasonMethods masonMethods;
   public StonecutterMethods stonecutterMethods;
+  public CulinarianMethods culinarianMethods;
   
   public MasonListeners masonListeners;
   
@@ -51,11 +54,13 @@ public class Main extends JavaPlugin implements Listener {
 	  blacksmithMethods = new BlacksmithMethods(this);
 	  masonMethods = new MasonMethods(this);
 	  stonecutterMethods = new StonecutterMethods(this);
+	  culinarianMethods = new CulinarianMethods(this);
 	  
 	  // Command listeners for all classes
 	  this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
 	  this.getCommand("mason").setExecutor(new MasonCommands(this));
 	  this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
+	  this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
 	  
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
