@@ -29,18 +29,26 @@ public class CulinarianCommands implements CommandExecutor {
 				//TODO help command
 			}
 			else {
-				if(args[0].equalsIgnoreCase("garnish")) {
-					if(args.length == 1) {
+				if(args.length == 1) {
+					if(args[0].equalsIgnoreCase("garnish")) {
 						culinarianMethods.garnish(p);
 						return true;
 					}
+					else if(args[0].equalsIgnoreCase("preserve")) {
+						culinarianMethods.preserve(p);
+						return true;
+					}
+					else if(args[0].equalsIgnoreCase("spice")) {
+						culinarianMethods.spice(p);
+						return true;
+					}
 					else {
-						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cInvalid sub-command!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid sub-command!");
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}

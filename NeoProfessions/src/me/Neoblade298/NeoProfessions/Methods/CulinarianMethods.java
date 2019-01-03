@@ -89,5 +89,123 @@ public class CulinarianMethods {
 			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
+	
+	public void preserve(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(Material.AIR)) {
+			int level = CulinarianUtils.getFoodLevel(item);
+			if(p.hasPermission("culinarian.preserve." + level)) {
+				boolean isFood = false;
+				boolean isBoosted = false;
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Recipe")) {
+						isFood = true;
+					}
+					if(line.contains("Garnished")) {
+						isBoosted = true;
+					}
+					if(line.contains("Spiced")) {
+						isBoosted = true;
+					}
+					if(line.contains("Preserved")) {
+						isBoosted = true;
+					}
+				}
+				if(isFood) {
+					if(!isBoosted) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), PRESERVE_ESSENCE)) {
+							if(econ.has(p, PRESERVE_COST)) {
+								ItemMeta meta = item.getItemMeta();
+								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+								lore.add("§9Preserved (1.3x Duration Boost)");
+								meta.setLore(lore);
+								item.setItemMeta(meta);
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), PRESERVE_ESSENCE));
+								econ.withdrawPlayer(p, PRESERVE_COST);
+								Util.sendMessage(p, "&7Successfully preserved dish!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to preserve this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cThis food cannot be boosted any further!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cCannot preserve this item!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void spice(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(Material.AIR)) {
+			int level = CulinarianUtils.getFoodLevel(item);
+			if(p.hasPermission("culinarian.spice." + level)) {
+				boolean isFood = false;
+				boolean isBoosted = false;
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Recipe")) {
+						isFood = true;
+					}
+					if(line.contains("Garnished")) {
+						isBoosted = true;
+					}
+					if(line.contains("Spiced")) {
+						isBoosted = true;
+					}
+					if(line.contains("Preserved")) {
+						isBoosted = true;
+					}
+				}
+				if(isFood) {
+					if(!isBoosted) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SPICE_ESSENCE)) {
+							if(econ.has(p, SPICE_COST)) {
+								ItemMeta meta = item.getItemMeta();
+								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+								lore.add("§9Spiced (1.3x Restoration Boost)");
+								meta.setLore(lore);
+								item.setItemMeta(meta);
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SPICE_ESSENCE));
+								econ.withdrawPlayer(p, SPICE_COST);
+								Util.sendMessage(p, "&7Successfully spiced dish!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou gold the materials to spice  this!");
+							}
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the materials to spice this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cThis food cannot be boosted any further!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cCannot spice this item!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
 
 }
