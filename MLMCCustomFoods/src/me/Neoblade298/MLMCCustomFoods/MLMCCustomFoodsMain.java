@@ -133,6 +133,19 @@ public class MLMCCustomFoodsMain
     
     // Food can be eaten
     food.eat(p);
+    boolean isGarnished = false, isPreserved = false, isSpiced = false;
+  	for(String line : meta.getLore()) {
+  		if(line.contains("Garnished")) {
+  			isGarnished = true;
+  		}
+  		if(line.contains("Preserved")) {
+  			isPreserved = true;
+  		}
+  		if(line.contains("Spiced")) {
+  			isSpiced = true;
+  		}
+  	}
+    
     
     // Do not add cooldowns for chests
     if (!food.getName().contains("Chest")) {
@@ -141,6 +154,9 @@ public class MLMCCustomFoodsMain
     p.setFoodLevel(Math.min(20, p.getFoodLevel() + food.getHunger()));
     p.setSaturation((float)Math.min(p.getFoodLevel(), food.getSaturation() + p.getSaturation()));
     for (PotionEffect effect : food.getEffect()) {
+    	if(isPreserved) {
+    		effect = new PotionEffect(effect.getType(), (int) ((double)effect.getDuration() * 1.3), effect.getAmplifier());
+    	}
       p.addPotionEffect(effect);
     }
     
@@ -162,13 +178,11 @@ public class MLMCCustomFoodsMain
     	// If an attribute currently exists, remove it
     	int duration = attrib.getDuration();
     	int amp = attrib.getAmp();
-    	for(String line : meta.getLore()) {
-    		if(line.contains("Garnished")) {
-    			amp *= 1.3;
-    		}
-    		if(line.contains("Preserved")) {
-    			duration *= 1.3;
-    		}
+    	if(isGarnished) {
+    		amp *= 1.3;
+    	}
+    	if(isPreserved) {
+    		duration *= 1.3;
     	}
       if (playerAttribs.containsKey(attrib.getName()))
       {
@@ -183,12 +197,10 @@ public class MLMCCustomFoodsMain
     final Food foodItem = food;
     int health = foodItem.getHealth();
     int mana = foodItem.getMana();
-  	for(String line : meta.getLore()) {
-  		if(line.contains("Spiced")) {
-  			health *= 1.3;
-  			mana *= 1.3;
-  		}
-  	}
+		if(isSpiced) {
+			health *= 1.3;
+			mana *= 1.3;
+		}
   	final int finalHealth = health;
   	final int finalMana = mana;
     if (food.getHealthTime() == 0)
