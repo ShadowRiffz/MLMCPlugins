@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -55,8 +56,11 @@ public class CulinarianMethods {
 					if(!isBoosted) {
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GARNISH_ESSENCE)) {
 							if(econ.has(p, GARNISH_COST)) {
+								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								lore.add("§9Garnished (1.3x Attribute Boost");
+								lore.add("§9Garnished (1.3x Attribute Boost)");
+								meta.setLore(lore);
+								item.setItemMeta(meta);
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GARNISH_ESSENCE));
 								econ.withdrawPlayer(p, GARNISH_COST);
 								Util.sendMessage(p, "&7Successfully garnished dish!");
