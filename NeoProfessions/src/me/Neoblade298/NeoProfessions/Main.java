@@ -10,6 +10,7 @@ import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
+import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
@@ -65,6 +66,7 @@ public class Main extends JavaPlugin implements Listener {
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
     getServer().getPluginManager().registerEvents(masonListeners, this);
+    getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
   }
   
   public void onDisable()
