@@ -60,6 +60,9 @@ public class MasonMethods {
 	static final int ADVANCED_SECONDCHANCE_GOLD = 25000;
 	static final int ADVANCED_SECONDCHANCE_ESSENCE = 24;
 	static final int ADVANCED_SECONDCHANCE_LEVEL = 4;
+	static final int ADVANCED_QUICKEAT_GOLD = 18000;
+	static final int ADVANCED_QUICKEAT_ESSENCE = 18;
+	static final int ADVANCED_QUICKEAT_LEVEL = 3;
 	
 	
 	public MasonMethods(Main main) {
@@ -206,6 +209,12 @@ public class MasonMethods {
 					gold = ADVANCED_SECONDCHANCE_GOLD;
 					essence = ADVANCED_SECONDCHANCE_ESSENCE;
 					level = ADVANCED_SECONDCHANCE_LEVEL;
+					item = MasonItems.getSecondChanceCharm();
+					break;
+				case "quickeat":
+					gold = ADVANCED_QUICKEAT_GOLD;
+					essence = ADVANCED_QUICKEAT_ESSENCE;
+					level = ADVANCED_QUICKEAT_LEVEL;
 					item = MasonItems.getSecondChanceCharm();
 					break;
 				}

@@ -137,4 +137,19 @@ public class MasonItems {
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
 	}
+	
+	public static ItemStack getQuickEatCharm() {
+		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		int level = 3;
+		meta.setDisplayName("§4[Lv 3] §cQuick Eat Charm");
+		lore.add("§7Level 3 Quick Eat Charm");
+		lore.add("§7Effect: Eat recipes without holding them");
+		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		item.setItemMeta(meta);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
+		return item;
+	}
 }

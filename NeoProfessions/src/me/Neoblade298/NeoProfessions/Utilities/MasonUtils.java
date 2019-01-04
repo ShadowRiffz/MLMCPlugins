@@ -120,6 +120,9 @@ public class MasonUtils {
 				else if(line.contains("Hunger")) {
 					return MasonItems.getHungerCharm();
 				}
+				else if(line.contains("Quick Eat")) {
+					return MasonItems.getQuickEatCharm();
+				}
 			}
 			break;
 		}
