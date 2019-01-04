@@ -77,6 +77,18 @@ public class MLMCCustomFoodsMain
     if (!e.getHand().equals(EquipmentSlot.HAND)) {
       return;
     }
+    
+    // Check both main and offhand for quick eat charm
+    ItemStack mainItem = p.getInventory().getItemInMainHand();
+    ItemStack offItem = p.getInventory().getItemInOffHand();
+    if(mainItem.hasItemMeta() && mainItem.getItemMeta().hasLore()) {
+    	for(String line : mainItem.getItemMeta().getLore()) {
+    		
+    	}
+    }
+    
+    
+    
     ItemStack item = p.getInventory().getItemInMainHand();
     if ((!item.hasItemMeta()) || (!item.getItemMeta().hasDisplayName())) {
       return;
