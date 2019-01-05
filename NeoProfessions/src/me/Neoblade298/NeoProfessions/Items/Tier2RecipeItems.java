@@ -87,7 +87,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public static ItemStack getBeefStew() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
+		ItemStack item = new ItemStack(Material.RABBIT_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Beef Stew");
 		ArrayList<String> lore = new ArrayList<String>();
