@@ -29,7 +29,6 @@ public class CulinarianListeners implements Listener {
 		Bukkit.getScheduler().runTask(main, new Runnable() {
 			public void run() {
 				if(inv.contains(new ItemStack(Material.APPLE))) {
-					System.out.println("Test");
 					inv.setResult(new ItemStack(Material.STONE));
 					p.updateInventory();
 				}

@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class IngredientItems {
+public class IngredientRecipeItems {
 
 	// Ingredients
 	public static ItemStack getSalt() {

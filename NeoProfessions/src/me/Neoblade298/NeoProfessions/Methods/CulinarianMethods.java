@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Items.IngredientItems;
+import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -213,67 +213,67 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getSaltRecipe(), IngredientItems.getSalt(), true, "Salt");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getSaltRecipe(), IngredientRecipeItems.getSalt(), true, "Salt");
 			}
 			else if(recipe.equalsIgnoreCase("spices")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getSpicesRecipe(), IngredientItems.getSpices(), false, "Spices");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getSpicesRecipe(), IngredientRecipeItems.getSpices(), false, "Spices");
 			}
 			else if(recipe.equalsIgnoreCase("greens")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getGreensRecipe(), IngredientItems.getGreens(), false, "Greens");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getGreensRecipe(), IngredientRecipeItems.getGreens(), false, "Greens");
 			}
 			else if(recipe.equalsIgnoreCase("toast")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getToastRecipe(), IngredientItems.getToast(), true, "Toast");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getToastRecipe(), IngredientRecipeItems.getToast(), true, "Toast");
 			}
 			else if(recipe.equalsIgnoreCase("oil")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getOilRecipe(), IngredientItems.getOil(), true, "Oil");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getOilRecipe(), IngredientRecipeItems.getOil(), true, "Oil");
 			}
 			else if(recipe.equalsIgnoreCase("tomato")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getTomatoRecipe(), IngredientItems.getTomato(), false, "Tomato");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTomatoRecipe(), IngredientRecipeItems.getTomato(), false, "Tomato");
 			}
 			else if(recipe.equalsIgnoreCase("butter")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getButterRecipe(), IngredientItems.getButter(), false, "Butter");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getButterRecipe(), IngredientRecipeItems.getButter(), false, "Butter");
 			}
 			else if(recipe.equalsIgnoreCase("lemon")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getLemonRecipe(), IngredientItems.getLemon(), false, "Lemon");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getLemonRecipe(), IngredientRecipeItems.getLemon(), false, "Lemon");
 			}
 			else if(recipe.equalsIgnoreCase("corn")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getCornRecipe(), IngredientItems.getCorn(), false, "Corn");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getCornRecipe(), IngredientRecipeItems.getCorn(), false, "Corn");
 			}
 			else if(recipe.equalsIgnoreCase("honey")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getHoneyRecipe(), IngredientItems.getHoney(), false, "Honey");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getHoneyRecipe(), IngredientRecipeItems.getHoney(), false, "Honey");
 			}
 			else if(recipe.equalsIgnoreCase("yeast")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getYeastRecipe(), IngredientItems.getYeast(), false, "Yeast");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getYeastRecipe(), IngredientRecipeItems.getYeast(), false, "Yeast");
 			}
 			else if(recipe.equalsIgnoreCase("beetroot sauce")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getBeetrootSauceRecipe(), IngredientItems.getBeetrootSauce(), false, "Beetroot Sauce");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getBeetrootSauceRecipe(), IngredientRecipeItems.getBeetrootSauce(), false, "Beetroot Sauce");
 			}
 			else if(recipe.equalsIgnoreCase("pasta")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getPastaRecipe(), IngredientItems.getPasta(), false, "Pasta");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPastaRecipe(), IngredientRecipeItems.getPasta(), false, "Pasta");
 			}
 			else if(recipe.equalsIgnoreCase("onion")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getOnionRecipe(), IngredientItems.getOnion(), false, "Onion");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getOnionRecipe(), IngredientRecipeItems.getOnion(), false, "Onion");
 			}
 			else if(recipe.equalsIgnoreCase("hops")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getHopsRecipe(), IngredientItems.getHops(), false, "Hops");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getHopsRecipe(), IngredientRecipeItems.getHops(), false, "Hops");
 			}
 			else if(recipe.equalsIgnoreCase("cheese")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getCheeseRecipe(), IngredientItems.getCheese(), true, "Cheese");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getCheeseRecipe(), IngredientRecipeItems.getCheese(), true, "Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("tortilla")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getTortillaRecipe(), IngredientItems.getTortilla(), false, "Tortilla");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTortillaRecipe(), IngredientRecipeItems.getTortilla(), false, "Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("exotic greens")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getExoticGreensRecipe(), IngredientItems.getExoticGreens(), false, "Exotic Greens");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getExoticGreensRecipe(), IngredientRecipeItems.getExoticGreens(), false, "Exotic Greens");
 			}
 			else if(recipe.equalsIgnoreCase("rice")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getRiceRecipe(), IngredientItems.getRice(), true, "Rice");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getRiceRecipe(), IngredientRecipeItems.getRice(), true, "Rice");
 			}
 			else if(recipe.equalsIgnoreCase("popcorn")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getPopcornRecipe(), IngredientItems.getPopcorn(), true, "Popcorn");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPopcornRecipe(), IngredientRecipeItems.getPopcorn(), true, "Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
-				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getPepperRecipe(), IngredientItems.getPepper(), false, "Pepper");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
 			}
 		}
 		else {
@@ -284,67 +284,67 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getSaltRecipe(), IngredientItems.getSalt(), true, "Salt");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getSaltRecipe(), IngredientRecipeItems.getSalt(), true, "Salt");
 			}
 			else if(recipe.equalsIgnoreCase("spices")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getSpicesRecipe(), IngredientItems.getSpices(), false, "Spices");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getSpicesRecipe(), IngredientRecipeItems.getSpices(), false, "Spices");
 			}
 			else if(recipe.equalsIgnoreCase("greens")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getGreensRecipe(), IngredientItems.getGreens(), false, "Greens");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getGreensRecipe(), IngredientRecipeItems.getGreens(), false, "Greens");
 			}
 			else if(recipe.equalsIgnoreCase("toast")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getToastRecipe(), IngredientItems.getToast(), true, "Toast");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getToastRecipe(), IngredientRecipeItems.getToast(), true, "Toast");
 			}
 			else if(recipe.equalsIgnoreCase("oil")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getOilRecipe(), IngredientItems.getOil(), true, "Oil");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getOilRecipe(), IngredientRecipeItems.getOil(), true, "Oil");
 			}
 			else if(recipe.equalsIgnoreCase("tomato")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getTomatoRecipe(), IngredientItems.getTomato(), false, "Tomato");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTomatoRecipe(), IngredientRecipeItems.getTomato(), false, "Tomato");
 			}
 			else if(recipe.equalsIgnoreCase("butter")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getButterRecipe(), IngredientItems.getButter(), false, "Butter");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getButterRecipe(), IngredientRecipeItems.getButter(), false, "Butter");
 			}
 			else if(recipe.equalsIgnoreCase("lemon")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getLemonRecipe(), IngredientItems.getLemon(), false, "Lemon");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getLemonRecipe(), IngredientRecipeItems.getLemon(), false, "Lemon");
 			}
 			else if(recipe.equalsIgnoreCase("corn")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getCornRecipe(), IngredientItems.getCorn(), false, "Corn");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getCornRecipe(), IngredientRecipeItems.getCorn(), false, "Corn");
 			}
 			else if(recipe.equalsIgnoreCase("honey")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getHoneyRecipe(), IngredientItems.getHoney(), false, "Honey");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getHoneyRecipe(), IngredientRecipeItems.getHoney(), false, "Honey");
 			}
 			else if(recipe.equalsIgnoreCase("yeast")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getYeastRecipe(), IngredientItems.getYeast(), false, "Yeast");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getYeastRecipe(), IngredientRecipeItems.getYeast(), false, "Yeast");
 			}
 			else if(recipe.equalsIgnoreCase("beetroot sauce")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getBeetrootSauceRecipe(), IngredientItems.getBeetrootSauce(), false, "Beetroot Sauce");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getBeetrootSauceRecipe(), IngredientRecipeItems.getBeetrootSauce(), false, "Beetroot Sauce");
 			}
 			else if(recipe.equalsIgnoreCase("pasta")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getPastaRecipe(), IngredientItems.getPasta(), false, "Pasta");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPastaRecipe(), IngredientRecipeItems.getPasta(), false, "Pasta");
 			}
 			else if(recipe.equalsIgnoreCase("onion")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getOnionRecipe(), IngredientItems.getOnion(), false, "Onion");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getOnionRecipe(), IngredientRecipeItems.getOnion(), false, "Onion");
 			}
 			else if(recipe.equalsIgnoreCase("hops")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getHopsRecipe(), IngredientItems.getHops(), false, "Hops");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getHopsRecipe(), IngredientRecipeItems.getHops(), false, "Hops");
 			}
 			else if(recipe.equalsIgnoreCase("cheese")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getCheeseRecipe(), IngredientItems.getCheese(), true, "Cheese");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getCheeseRecipe(), IngredientRecipeItems.getCheese(), true, "Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("tortilla")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getTortillaRecipe(), IngredientItems.getTortilla(), false, "Tortilla");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTortillaRecipe(), IngredientRecipeItems.getTortilla(), false, "Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("exotic greens")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getExoticGreensRecipe(), IngredientItems.getExoticGreens(), false, "Exotic Greens");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getExoticGreensRecipe(), IngredientRecipeItems.getExoticGreens(), false, "Exotic Greens");
 			}
 			else if(recipe.equalsIgnoreCase("rice")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getRiceRecipe(), IngredientItems.getRice(), true, "Rice");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getRiceRecipe(), IngredientRecipeItems.getRice(), true, "Rice");
 			}
 			else if(recipe.equalsIgnoreCase("popcorn")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getPopcornRecipe(), IngredientItems.getPopcorn(), true, "Popcorn");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPopcornRecipe(), IngredientRecipeItems.getPopcorn(), true, "Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getPepperRecipe(), IngredientItems.getPepper(), false, "Pepper");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
 			}
 		}
 		else {
