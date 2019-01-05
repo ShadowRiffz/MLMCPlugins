@@ -221,7 +221,7 @@ public class Tier1RecipeItems {
 	public static ItemStack getGruel() {
 		ItemStack item = new ItemStack(Material.MILK_BUCKET);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("9Gruel");
+		meta.setDisplayName("§9Gruel");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 20");
 		meta.setLore(lore);
