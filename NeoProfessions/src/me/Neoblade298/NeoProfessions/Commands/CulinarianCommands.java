@@ -209,6 +209,7 @@ public class CulinarianCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				else {

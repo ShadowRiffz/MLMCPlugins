@@ -19,6 +19,11 @@ public class Util {
 		return item;
 	}
 	
+	public static ItemStack setData(ItemStack item, int data) {
+		item.setDurability((short) data);
+		return item;
+	}
+	
 	public static int getItemLevel(ItemStack item) {
 		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
 		String tier = null;

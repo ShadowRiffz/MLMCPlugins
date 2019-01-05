@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
@@ -27,6 +26,7 @@ public class CulinarianMethods {
 	final static int PRESERVE_ESSENCE = 1;
 	final static int SPICE_COST = 500;
 	final static int SPICE_ESSENCE = 1;
+	final static int CRAFT_COST = 50;
 	
 	public CulinarianMethods(Main main) {
 		this.main = main;
@@ -186,7 +186,7 @@ public class CulinarianMethods {
 								Util.sendMessage(p, "&7Successfully spiced dish!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou gold the materials to spice  this!");
+								Util.sendMessage(p, "&cYou lack the gold to spice this!");
 							}
 						}
 						else {
@@ -211,18 +211,27 @@ public class CulinarianMethods {
 	}
 	
 	public void parseIngredient(Player p, String recipe) {
-		int count = 0;
-		int fuel = 0;
-		PlayerInventory inv = p.getInventory();
-		ArrayList<ItemStack> items;
-		if(recipe.equalsIgnoreCase("salt")) {
+		if(p.hasPermission("culinarian.craft.1")) {
+			if(recipe.equalsIgnoreCase("salt")) {
+				CulinarianUtils.craftRecipeMax(p, econ, RecipeItems.getSaltRecipe(), RecipeItems.getSalt(), true, "Salt");
+			}
+			else if(recipe.equalsIgnoreCase("spices")) {
+				CulinarianUtils.craftRecipeMax(p, econ, RecipeItems.getSpicesRecipe(), RecipeItems.getSpices(), false, "Spices");
+			}
 		}
-			
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
 	}
 	
 	public void parseIngredient(Player p, String recipe, int amount) {
-		if(recipe.equalsIgnoreCase("salt")) {
-			new ItemStack(Material.STONE, 10);
+		if(p.hasPermission("culinarian.craft.1")) {
+			if(recipe.equalsIgnoreCase("salt")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, RecipeItems.getSaltRecipe(), RecipeItems.getSalt(), true, "Salt");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 

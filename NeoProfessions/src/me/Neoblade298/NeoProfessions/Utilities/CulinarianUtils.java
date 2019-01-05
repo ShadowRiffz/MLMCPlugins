@@ -8,7 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import net.milkbowl.vault.economy.Economy;
+
 public class CulinarianUtils {
+	
+	static final int CRAFT_COST = 50;
 
 	public static int getFoodLevel(ItemStack item) {
 		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
@@ -36,6 +40,7 @@ public class CulinarianUtils {
 		if(isSmelted) {
 			int fuel = 0;
 			HashMap<Material, Integer> fuels = new HashMap<Material, Integer>();
+			fuels.put(Material.COAL, 0);
 			while(canCraft) {
 				for(ItemStack item : items) {
 					if(!(inv.containsAtLeast(item, item.getAmount() * count))) {
@@ -43,7 +48,7 @@ public class CulinarianUtils {
 						break;
 					}
 				}
-				if(fuel < count + 1) {
+				if(canCraft && fuel < count + 1) {
 					if(inv.containsAtLeast(new ItemStack(Material.COAL), fuels.get(Material.COAL) + 1)) {
 						fuels.put(Material.COAL, fuels.get(Material.COAL) + 1);
 						fuel += 8;
@@ -53,7 +58,12 @@ public class CulinarianUtils {
 						break;
 					}
 				}
-				count++;
+				if(canCraft) {
+					count++;
+				}
+				else {
+					count--;
+				}
 			}
 		}
 		else {
@@ -64,7 +74,12 @@ public class CulinarianUtils {
 						break;
 					}
 				}
-				count++;
+				if(canCraft) {
+					count++;
+				}
+				else {
+					count--;
+				}
 			}
 		}
 		return count;
@@ -83,5 +98,52 @@ public class CulinarianUtils {
 			}
 		}
 		return true;
+	}
+	
+	public static void craftRecipeMax(Player p, Economy econ, ArrayList<ItemStack> recipe, ItemStack result, boolean isSmelted, String name) {
+		PlayerInventory inv = p.getInventory();
+		int amount = CulinarianUtils.getMaxCraftable(p, recipe, true);
+		if(econ.has(p, CRAFT_COST * amount)) {
+			if(amount > 0) {
+				for(ItemStack item : recipe) {
+					inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
+				}
+				if(isSmelted) {
+					inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil(amount / 8)));
+				}
+				econ.withdrawPlayer(p, CRAFT_COST * amount);
+				inv.addItem(Util.setAmount(result, amount));
+				Util.sendMessage(p, "&7Successfully crafted &e" + amount + " " + name);
+			}
+			else {
+				Util.sendMessage(p, "&cYou lack the ingredients to craft any of this recipe!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
+		}
+	}
+	
+	public static void craftRecipe(Player p, Economy econ, int amount, ArrayList<ItemStack> recipe, ItemStack result, boolean isSmelted, String name) {
+		PlayerInventory inv = p.getInventory();
+		if(CulinarianUtils.canCraft(p, recipe, true, amount)) {
+			if(econ.has(p, CRAFT_COST * amount)) {
+				for(ItemStack item : recipe) {
+					inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
+				}
+				if(isSmelted) {
+					inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil(amount)));
+				}
+				econ.withdrawPlayer(p, CRAFT_COST * amount);
+				inv.addItem(Util.setAmount(result, amount));
+				Util.sendMessage(p, "&7Successfully crafted &e" + amount + " " + name);
+			}
+			else {
+				Util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou lack the materials to craft " + amount + " of this recipe!");
+		}
 	}
 }
