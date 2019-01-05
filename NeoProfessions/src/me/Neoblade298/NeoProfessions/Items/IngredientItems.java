@@ -263,4 +263,128 @@ public class IngredientItems {
 		recipe.add(new ItemStack(Material.LEAVES, 3));
 		return recipe;
 	}
+	
+	public static ArrayList<ItemStack> getToastRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.BREAD));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getOilRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.COOKED_FISH));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getTomatoRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.BEETROOT));
+		recipe.add(new ItemStack(Material.RED_ROSE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getButterRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.MILK_BUCKET));
+		recipe.add(new ItemStack(Material.STICK));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getLemonRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.GOLD_NUGGET, 2));
+		recipe.add(new ItemStack(Material.APPLE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getCornRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.GOLDEN_CARROT));
+		recipe.add(new ItemStack(Material.BLAZE_ROD));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getHoneyRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.DOUBLE_PLANT));
+		recipe.add(new ItemStack(Material.SUGAR));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getYeastRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.WHEAT));
+		recipe.add(new ItemStack(Material.BLAZE_POWDER));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getBeetrootSauceRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.BEETROOT, 6));
+		recipe.add(new ItemStack(Material.BOWL));
+		recipe.add(Util.setAmount(getSpices(), 2));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getPastaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.WHEAT));
+		recipe.add(new ItemStack(Material.EGG));
+		recipe.add(getSalt());
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getOnionRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.BEETROOT));
+		recipe.add(new ItemStack(Material.FERMENTED_SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getHopsRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.VINE, 3));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getCheeseRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.MILK_BUCKET));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getTortillaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.WHEAT, 3));
+		recipe.add(Util.setAmount(getCorn(), 3));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getExoticGreensRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.CACTUS));
+		recipe.add(new ItemStack(Material.VINE));
+		recipe.add(new ItemStack(Material.LEAVES));
+		recipe.add(new ItemStack(Material.CHORUS_FRUIT));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getRiceRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.SEEDS));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getPopcornRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(getCorn());
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getPepperRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.CACTUS));
+		recipe.add(new ItemStack(Material.LAVA_BUCKET));
+		return recipe;
+	}
 }
