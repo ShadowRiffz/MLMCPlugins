@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Items.Tier1RecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -345,6 +346,142 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseTier1(Player p, String recipe) {
+		if(p.hasPermission("culinarian.craft.1")) {
+			if(recipe.equalsIgnoreCase("cured flesh")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
+			}
+			else if(recipe.equalsIgnoreCase("sunflower seeds")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSunflowerSeedsRecipe(), Tier1RecipeItems.getSunflowerSeeds(), false, "Sunflower Seeds");
+			}
+			else if(recipe.equalsIgnoreCase("boiled egg")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getBoiledEggRecipe(), Tier1RecipeItems.getBoiledEgg(), true, "Boiled Egg");
+			}
+			else if(recipe.equalsIgnoreCase("ice cream")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getIceCreamRecipe(), Tier1RecipeItems.getIceCream(), false, "Ice Cream");
+			}
+			else if(recipe.equalsIgnoreCase("hot chocolate")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getHotChocolateRecipe(), Tier1RecipeItems.getHotChocolate(), true, "Hot Chocolate");
+			}
+			else if(recipe.equalsIgnoreCase("green tea")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getGreenTeaRecipe(), Tier1RecipeItems.getGreenTea(), false, "Green Tea");
+			}
+			else if(recipe.equalsIgnoreCase("barley tea")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getBarleyTeaRecipe(), Tier1RecipeItems.getBarleyTea(), false, "Barley Tea");
+			}
+			else if(recipe.equalsIgnoreCase("mashed potatoes")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMashedPotatoesRecipe(), Tier1RecipeItems.getMashedPotatoes(), false, "Mashed Potatoes");
+			}
+			else if(recipe.equalsIgnoreCase("spinach")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSpinachRecipe(), Tier1RecipeItems.getSpinach(), false, "Spinach");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate truffle")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChocolateTruffleRecipe(), Tier1RecipeItems.getChocolateTruffle(), false, "Chocolate Truffle");
+			}
+			else if(recipe.equalsIgnoreCase("musli")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMusliRecipe(), Tier1RecipeItems.getMusli(), false, "Musli");
+			}
+			else if(recipe.equalsIgnoreCase("candied apple")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCandiedAppleRecipe(), Tier1RecipeItems.getCandiedApple(), false, "Candied Apple");
+			}
+			else if(recipe.equalsIgnoreCase("mac and cheese")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMacAndCheeseRecipe(), Tier1RecipeItems.getMacAndCheese(), false, "Mac and Cheese");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate milk")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChocolateMilkRecipe(), Tier1RecipeItems.getChocolateMilk(), false, "Chocolate Milk");
+			}
+			else if(recipe.equalsIgnoreCase("cheese tortilla")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCheeseTortillaRecipe(), Tier1RecipeItems.getCheeseTortilla(), false, "Cheese Tortilla");
+			}
+			else if(recipe.equalsIgnoreCase("sushi")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSushiRecipe(), Tier1RecipeItems.getSushi(), false, "Sushi");
+			}
+			else if(recipe.equalsIgnoreCase("pottage")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getPottageRecipe(), Tier1RecipeItems.getPottage(), false, "Pottage");
+			}
+			else if(recipe.equalsIgnoreCase("buttered popcorn")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getButteredPopcornRecipe(), Tier1RecipeItems.getButteredPopcorn(), false, "Buttered Popcorn");
+			}
+			else if(recipe.equalsIgnoreCase("chips and salsa")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChipsAndSalsaRecipe(), Tier1RecipeItems.getChipsAndSalsa(), false, "Chips and Salsa");
+			}
+			else if(recipe.equalsIgnoreCase("gruel")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getGruelRecipe(), Tier1RecipeItems.getGruel(), false, "Gruel");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseTier1(Player p, String recipe, int amount) {
+		if(p.hasPermission("culinarian.craft.1")) {
+			if(recipe.equalsIgnoreCase("cured flesh")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
+			}
+			else if(recipe.equalsIgnoreCase("sunflower seeds")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSunflowerSeedsRecipe(), Tier1RecipeItems.getSunflowerSeeds(), false, "Sunflower Seeds");
+			}
+			else if(recipe.equalsIgnoreCase("boiled egg")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getBoiledEggRecipe(), Tier1RecipeItems.getBoiledEgg(), true, "Boiled Egg");
+			}
+			else if(recipe.equalsIgnoreCase("ice cream")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getIceCreamRecipe(), Tier1RecipeItems.getIceCream(), false, "Ice Cream");
+			}
+			else if(recipe.equalsIgnoreCase("hot chocolate")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getHotChocolateRecipe(), Tier1RecipeItems.getHotChocolate(), true, "Hot Chocolate");
+			}
+			else if(recipe.equalsIgnoreCase("green tea")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getGreenTeaRecipe(), Tier1RecipeItems.getGreenTea(), false, "Green Tea");
+			}
+			else if(recipe.equalsIgnoreCase("barley tea")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getBarleyTeaRecipe(), Tier1RecipeItems.getBarleyTea(), false, "Barley Tea");
+			}
+			else if(recipe.equalsIgnoreCase("mashed potatoes")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMashedPotatoesRecipe(), Tier1RecipeItems.getMashedPotatoes(), false, "Mashed Potatoes");
+			}
+			else if(recipe.equalsIgnoreCase("spinach")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSpinachRecipe(), Tier1RecipeItems.getSpinach(), false, "Spinach");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate truffle")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChocolateTruffleRecipe(), Tier1RecipeItems.getChocolateTruffle(), false, "Chocolate Truffle");
+			}
+			else if(recipe.equalsIgnoreCase("musli")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMusliRecipe(), Tier1RecipeItems.getMusli(), false, "Musli");
+			}
+			else if(recipe.equalsIgnoreCase("candied apple")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCandiedAppleRecipe(), Tier1RecipeItems.getCandiedApple(), false, "Candied Apple");
+			}
+			else if(recipe.equalsIgnoreCase("mac and cheese")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMacAndCheeseRecipe(), Tier1RecipeItems.getMacAndCheese(), false, "Mac and Cheese");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate milk")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChocolateMilkRecipe(), Tier1RecipeItems.getChocolateMilk(), false, "Chocolate Milk");
+			}
+			else if(recipe.equalsIgnoreCase("cheese tortilla")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCheeseTortillaRecipe(), Tier1RecipeItems.getCheeseTortilla(), false, "Cheese Tortilla");
+			}
+			else if(recipe.equalsIgnoreCase("sushi")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSushiRecipe(), Tier1RecipeItems.getSushi(), false, "Sushi");
+			}
+			else if(recipe.equalsIgnoreCase("pottage")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getPottageRecipe(), Tier1RecipeItems.getPottage(), false, "Pottage");
+			}
+			else if(recipe.equalsIgnoreCase("buttered popcorn")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getButteredPopcornRecipe(), Tier1RecipeItems.getButteredPopcorn(), false, "Buttered Popcorn");
+			}
+			else if(recipe.equalsIgnoreCase("chips and salsa")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChipsAndSalsaRecipe(), Tier1RecipeItems.getChipsAndSalsa(), false, "Chips and Salsa");
+			}
+			else if(recipe.equalsIgnoreCase("gruel")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getGruelRecipe(), Tier1RecipeItems.getGruel(), false, "Gruel");
 			}
 		}
 		else {
