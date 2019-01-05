@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Items.RecipeItems;
+import me.Neoblade298.NeoProfessions.Items.IngredientItems;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -213,10 +213,10 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				CulinarianUtils.craftRecipeMax(p, econ, RecipeItems.getSaltRecipe(), RecipeItems.getSalt(), true, "Salt");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getSaltRecipe(), IngredientItems.getSalt(), true, "Salt");
 			}
 			else if(recipe.equalsIgnoreCase("spices")) {
-				CulinarianUtils.craftRecipeMax(p, econ, RecipeItems.getSpicesRecipe(), RecipeItems.getSpices(), false, "Spices");
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientItems.getSpicesRecipe(), IngredientItems.getSpices(), false, "Spices");
 			}
 		}
 		else {
@@ -227,7 +227,7 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				CulinarianUtils.craftRecipe(p, econ, amount, RecipeItems.getSaltRecipe(), RecipeItems.getSalt(), true, "Salt");
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientItems.getSaltRecipe(), IngredientItems.getSalt(), true, "Salt");
 			}
 		}
 		else {
