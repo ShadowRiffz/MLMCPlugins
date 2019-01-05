@@ -11,6 +11,7 @@ import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier1RecipeItems;
+import me.Neoblade298.NeoProfessions.Items.Tier2RecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -482,6 +483,148 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("gruel")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getGruelRecipe(), Tier1RecipeItems.getGruel(), false, "Gruel");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseTier2(Player p, String recipe) {
+		if(p.hasPermission("culinarian.craft.2")) {
+			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
+			}
+			else if(recipe.equalsIgnoreCase("buttered toast")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getButteredToastRecipe(), Tier2RecipeItems.getButteredToast(), false, "Buttered Toast");
+			}
+			else if(recipe.equalsIgnoreCase("lemonade")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getLemonadeRecipe(), Tier2RecipeItems.getLemonade(), false, "Lemonade");
+			}
+			else if(recipe.equalsIgnoreCase("honeyed ham")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getHoneyedHamRecipe(), Tier2RecipeItems.getHoneyedHam(), false, "Honeyed Ham");
+			}
+			else if(recipe.equalsIgnoreCase("candy bar")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getCandyBarRecipe(), Tier2RecipeItems.getCandyBar(), false, "Candy Bar");
+			}
+			else if(recipe.equalsIgnoreCase("ale")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getAleRecipe(), Tier2RecipeItems.getAle(), false, "Ale");
+			}
+			else if(recipe.equalsIgnoreCase("sandwich")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSandwichRecipe(), Tier2RecipeItems.getSandwich(), false, "Sandwich");
+			}
+			else if(recipe.equalsIgnoreCase("beef stew")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBeefStewRecipe(), Tier2RecipeItems.getBeefStew(), false, "Beef Stew");
+			}
+			else if(recipe.equalsIgnoreCase("exotic tea")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getExoticTeaRecipe(), Tier2RecipeItems.getExoticTea(), false, "Exotic Tea");
+			}
+			else if(recipe.equalsIgnoreCase("bartrand's cornbread")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBartrandCornbreadRecipe(), Tier2RecipeItems.getBartrandCornbread(), false, "Bartrand's Cornbread");
+			}
+			else if(recipe.equalsIgnoreCase("tuna sandwich")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getTunaSandwichRecipe(), Tier2RecipeItems.getTunaSandwich(), false, "Tuna Sandwich");
+			}
+			else if(recipe.equalsIgnoreCase("apple pie")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getApplePieRecipe(), Tier2RecipeItems.getApplePie(), false, "Apple Pie");
+			}
+			else if(recipe.equalsIgnoreCase("beer")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBeerRecipe(), Tier2RecipeItems.getBeer(), false, "Beer");
+			}
+			else if(recipe.equalsIgnoreCase("hash browns")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getHashBrownsRecipe(), Tier2RecipeItems.getHashBrowns(), false, "Hash Browns");
+			}
+			else if(recipe.equalsIgnoreCase("lemon tart")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getLemonTartRecipe(), Tier2RecipeItems.getLemonTart(), false, "Lemon Tart");
+			}
+			else if(recipe.equalsIgnoreCase("wrapped chicken")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getWrappedChickenRecipe(), Tier2RecipeItems.getWrappedChicken(), false, "Wrapped Chicken");
+			}
+			else if(recipe.equalsIgnoreCase("mystery meat")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getMysteryMeatRecipe(), Tier2RecipeItems.getMysteryMeat(), false, "Mystery Meat");
+			}
+			else if(recipe.equalsIgnoreCase("tomato soup")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getTomatoSoupRecipe(), Tier2RecipeItems.getTomatoSoup(), false, "Tomato Soup");
+			}
+			else if(recipe.equalsIgnoreCase("corn on the cob")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getCornOnTheCobRecipe(), Tier2RecipeItems.getCornOnTheCob(), false, "Corn on the Cob");
+			}
+			else if(recipe.equalsIgnoreCase("bread pudding")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBreadPuddingRecipe(), Tier2RecipeItems.getBreadPudding(), false, "Bread Pudding");
+			}
+			else if(recipe.equalsIgnoreCase("chicken pasta")) {
+				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getChickenPastaRecipe(), Tier2RecipeItems.getChickenPasta(), false, "Chicken Pasta");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseTier2(Player p, String recipe, int amount) {
+		if(p.hasPermission("culinarian.craft.2")) {
+			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
+			}
+			else if(recipe.equalsIgnoreCase("buttered toast")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getButteredToastRecipe(), Tier2RecipeItems.getButteredToast(), false, "Buttered Toast");
+			}
+			else if(recipe.equalsIgnoreCase("lemonade")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getLemonadeRecipe(), Tier2RecipeItems.getLemonade(), false, "Lemonade");
+			}
+			else if(recipe.equalsIgnoreCase("honeyed ham")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getHoneyedHamRecipe(), Tier2RecipeItems.getHoneyedHam(), false, "Honeyed Ham");
+			}
+			else if(recipe.equalsIgnoreCase("candy bar")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getCandyBarRecipe(), Tier2RecipeItems.getCandyBar(), false, "Candy Bar");
+			}
+			else if(recipe.equalsIgnoreCase("ale")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getAleRecipe(), Tier2RecipeItems.getAle(), false, "Ale");
+			}
+			else if(recipe.equalsIgnoreCase("sandwich")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSandwichRecipe(), Tier2RecipeItems.getSandwich(), false, "Sandwich");
+			}
+			else if(recipe.equalsIgnoreCase("beef stew")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBeefStewRecipe(), Tier2RecipeItems.getBeefStew(), false, "Beef Stew");
+			}
+			else if(recipe.equalsIgnoreCase("exotic tea")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getExoticTeaRecipe(), Tier2RecipeItems.getExoticTea(), false, "Exotic Tea");
+			}
+			else if(recipe.equalsIgnoreCase("bartrand's cornbread")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBartrandCornbreadRecipe(), Tier2RecipeItems.getBartrandCornbread(), false, "Bartrand's Cornbread");
+			}
+			else if(recipe.equalsIgnoreCase("tuna sandwich")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getTunaSandwichRecipe(), Tier2RecipeItems.getTunaSandwich(), false, "Tuna Sandwich");
+			}
+			else if(recipe.equalsIgnoreCase("apple pie")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getApplePieRecipe(), Tier2RecipeItems.getApplePie(), false, "Apple Pie");
+			}
+			else if(recipe.equalsIgnoreCase("beer")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBeerRecipe(), Tier2RecipeItems.getBeer(), false, "Beer");
+			}
+			else if(recipe.equalsIgnoreCase("hash browns")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getHashBrownsRecipe(), Tier2RecipeItems.getHashBrowns(), false, "Hash Browns");
+			}
+			else if(recipe.equalsIgnoreCase("lemon tart")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getLemonTartRecipe(), Tier2RecipeItems.getLemonTart(), false, "Lemon Tart");
+			}
+			else if(recipe.equalsIgnoreCase("wrapped chicken")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getWrappedChickenRecipe(), Tier2RecipeItems.getWrappedChicken(), false, "Wrapped Chicken");
+			}
+			else if(recipe.equalsIgnoreCase("mystery meat")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getMysteryMeatRecipe(), Tier2RecipeItems.getMysteryMeat(), false, "Mystery Meat");
+			}
+			else if(recipe.equalsIgnoreCase("tomato soup")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getTomatoSoupRecipe(), Tier2RecipeItems.getTomatoSoup(), false, "Tomato Soup");
+			}
+			else if(recipe.equalsIgnoreCase("corn on the cob")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getCornOnTheCobRecipe(), Tier2RecipeItems.getCornOnTheCob(), false, "Corn on the Cob");
+			}
+			else if(recipe.equalsIgnoreCase("bread pudding")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBreadPuddingRecipe(), Tier2RecipeItems.getBreadPudding(), false, "Bread Pudding");
+			}
+			else if(recipe.equalsIgnoreCase("chicken pasta")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getChickenPastaRecipe(), Tier2RecipeItems.getChickenPasta(), false, "Chicken Pasta");
 			}
 		}
 		else {

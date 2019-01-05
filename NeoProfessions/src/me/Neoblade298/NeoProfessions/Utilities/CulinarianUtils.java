@@ -107,6 +107,12 @@ public class CulinarianUtils {
 			if(amount > 0) {
 				for(ItemStack item : recipe) {
 					inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
+					if(item.equals(new ItemStack(Material.WATER_BUCKET))) {
+						inv.addItem(new ItemStack(Material.BUCKET, amount));
+					}
+					if(item.equals(new ItemStack(Material.MILK_BUCKET))) {
+						inv.addItem(new ItemStack(Material.BUCKET, amount));
+					}
 				}
 				if(isSmelted) {
 					inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil(amount / 8)));
@@ -130,6 +136,12 @@ public class CulinarianUtils {
 			if(econ.has(p, CRAFT_COST * amount)) {
 				for(ItemStack item : recipe) {
 					inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
+					if(item.equals(new ItemStack(Material.WATER_BUCKET))) {
+						inv.addItem(new ItemStack(Material.BUCKET, amount));
+					}
+					if(item.equals(new ItemStack(Material.MILK_BUCKET))) {
+						inv.addItem(new ItemStack(Material.BUCKET, amount));
+					}
 				}
 				if(isSmelted) {
 					inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil(amount)));
