@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Items.RecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -205,6 +207,22 @@ public class CulinarianMethods {
 		}
 		else {
 			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void parseIngredient(Player p, String recipe) {
+		int count = 0;
+		int fuel = 0;
+		PlayerInventory inv = p.getInventory();
+		ArrayList<ItemStack> items;
+		if(recipe.equalsIgnoreCase("salt")) {
+		}
+			
+	}
+	
+	public void parseIngredient(Player p, String recipe, int amount) {
+		if(recipe.equalsIgnoreCase("salt")) {
+			new ItemStack(Material.STONE, 10);
 		}
 	}
 
