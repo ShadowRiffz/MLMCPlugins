@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Items.LimitedEditionRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier1RecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier2RecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier3RecipeItems;
@@ -768,6 +769,118 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("chicken parmesan")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getChickenParmesanRecipe(), Tier3RecipeItems.getChickenParmesan(), false, "Chicken Parmesan");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseLimitedEdition(Player p, String recipe) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("candy corn")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
+			}
+			else if(recipe.equalsIgnoreCase("witch's brew")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getWitchBrewRecipe(), LimitedEditionRecipeItems.getWitchBrew(), false, "Witch's Brew");
+			}
+			else if(recipe.equalsIgnoreCase("baked eyeball")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getBakedEyeballRecipe(), LimitedEditionRecipeItems.getBakedEyeball(), true, "Baked Eyeball");
+			}
+			else if(recipe.equalsIgnoreCase("candy cane")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCaneRecipe(), LimitedEditionRecipeItems.getCandyCane(), false, "Candy Cane");
+			}
+			else if(recipe.equalsIgnoreCase("gingerbread")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getGingerbreadRecipe(), LimitedEditionRecipeItems.getGingerbread(), false, "Gingerbread");
+			}
+			else if(recipe.equalsIgnoreCase("smoked ham")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getSmokedHamRecipe(), LimitedEditionRecipeItems.getSmokedHam(), true, "Smoked Ham");
+			}
+			else if(recipe.equalsIgnoreCase("eggnog")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getEggnogRecipe(), LimitedEditionRecipeItems.getEggnog(), false, "Eggnog");
+			}
+			else if(recipe.equalsIgnoreCase("lasagna")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getLasagnaRecipe(), LimitedEditionRecipeItems.getLasagna(), false, "Lasagna");
+			}
+			else if(recipe.equalsIgnoreCase("lemon soda")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getLemonSodaRecipe(), LimitedEditionRecipeItems.getLemonSoda(), false, "Lemon Soda");
+			}
+			else if(recipe.equalsIgnoreCase("olympian gyro")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getOlympianGyroRecipe(), LimitedEditionRecipeItems.getOlympianGyro(), false, "Olympian Gyro");
+			}
+			else if(recipe.equalsIgnoreCase("cupcake")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCupcakeRecipe(), LimitedEditionRecipeItems.getCupcake(), false, "Cupcake");
+			}
+			else if(recipe.equalsIgnoreCase("fish and chips")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getFishAndChipsRecipe(), LimitedEditionRecipeItems.getFishAndChips(), false, "Fish and Chips");
+			}
+			else if(recipe.equalsIgnoreCase("escargot")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getEscargotRecipe(), LimitedEditionRecipeItems.getEscargot(), false, "Escargot");
+			}
+			else if(recipe.equalsIgnoreCase("vitalac")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getVitalacRecipe(), LimitedEditionRecipeItems.getVitalac(), false, "Vitalac");
+			}
+			else if(recipe.equalsIgnoreCase("belgian waffle")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getBelgianWaffleRecipe(), LimitedEditionRecipeItems.getBelgianWaffle(), false, "Belgian Waffle");
+			}
+			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getVioletDirtPieRecipe(), LimitedEditionRecipeItems.getVioletDirtPie(), false, "Violet's Dirt Pie");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseLimitedEdition(Player p, String recipe, int amount) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("candy corn")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
+			}
+			else if(recipe.equalsIgnoreCase("witch's brew")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getWitchBrewRecipe(), LimitedEditionRecipeItems.getWitchBrew(), false, "Witch's Brew");
+			}
+			else if(recipe.equalsIgnoreCase("baked eyeball")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getBakedEyeballRecipe(), LimitedEditionRecipeItems.getBakedEyeball(), true, "Baked Eyeball");
+			}
+			else if(recipe.equalsIgnoreCase("candy cane")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCaneRecipe(), LimitedEditionRecipeItems.getCandyCane(), false, "Candy Cane");
+			}
+			else if(recipe.equalsIgnoreCase("gingerbread")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getGingerbreadRecipe(), LimitedEditionRecipeItems.getGingerbread(), false, "Gingerbread");
+			}
+			else if(recipe.equalsIgnoreCase("smoked ham")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getSmokedHamRecipe(), LimitedEditionRecipeItems.getSmokedHam(), true, "Smoked Ham");
+			}
+			else if(recipe.equalsIgnoreCase("eggnog")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getEggnogRecipe(), LimitedEditionRecipeItems.getEggnog(), false, "Eggnog");
+			}
+			else if(recipe.equalsIgnoreCase("lasagna")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getLasagnaRecipe(), LimitedEditionRecipeItems.getLasagna(), false, "Lasagna");
+			}
+			else if(recipe.equalsIgnoreCase("lemon soda")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getLemonSodaRecipe(), LimitedEditionRecipeItems.getLemonSoda(), false, "Lemon Soda");
+			}
+			else if(recipe.equalsIgnoreCase("olympian gyro")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getOlympianGyroRecipe(), LimitedEditionRecipeItems.getOlympianGyro(), false, "Olympian Gyro");
+			}
+			else if(recipe.equalsIgnoreCase("cupcake")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCupcakeRecipe(), LimitedEditionRecipeItems.getCupcake(), false, "Cupcake");
+			}
+			else if(recipe.equalsIgnoreCase("fish and chips")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getFishAndChipsRecipe(), LimitedEditionRecipeItems.getFishAndChips(), false, "Fish and Chips");
+			}
+			else if(recipe.equalsIgnoreCase("escargot")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getEscargotRecipe(), LimitedEditionRecipeItems.getEscargot(), false, "Escargot");
+			}
+			else if(recipe.equalsIgnoreCase("vitalac")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getVitalacRecipe(), LimitedEditionRecipeItems.getVitalac(), false, "Vitalac");
+			}
+			else if(recipe.equalsIgnoreCase("belgian waffle")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getBelgianWaffleRecipe(), LimitedEditionRecipeItems.getBelgianWaffle(), false, "Belgian Waffle");
+			}
+			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getVioletDirtPieRecipe(), LimitedEditionRecipeItems.getVioletDirtPie(), false, "Violet's Dirt Pie");
 			}
 		}
 		else {
