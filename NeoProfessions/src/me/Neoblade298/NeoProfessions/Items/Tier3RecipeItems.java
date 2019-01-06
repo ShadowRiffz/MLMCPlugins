@@ -267,7 +267,7 @@ public class Tier3RecipeItems {
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getScrrambledEggsRecipe() {
+	public static ArrayList<ItemStack> getScrambledEggsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.EGG, 3));
 		recipe.add(Util.setAmount(IngredientRecipeItems.getSalt(), 2));
@@ -285,7 +285,7 @@ public class Tier3RecipeItems {
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getZestySteakReipe() {
+	public static ArrayList<ItemStack> getZestySteakRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
 		recipe.add(IngredientRecipeItems.getBeetrootSauce());
@@ -319,7 +319,7 @@ public class Tier3RecipeItems {
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getFiletedSalmonRecipe() {
+	public static ArrayList<ItemStack> getFilletedSalmonRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(Util.setData(new ItemStack(Material.COOKED_FISH), 1));
 		recipe.add(IngredientRecipeItems.getSalt());
