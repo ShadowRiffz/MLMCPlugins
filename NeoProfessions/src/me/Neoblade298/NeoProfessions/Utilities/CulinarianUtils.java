@@ -36,9 +36,6 @@ public class CulinarianUtils {
 	public static int getMaxCraftable(Player p, ArrayList<ItemStack> items, boolean isSmelted) {
 		int count = 0;
 		PlayerInventory inv = p.getInventory();
-		int fuel = 0;
-		HashMap<Material, Integer> fuels = new HashMap<Material, Integer>();
-		fuels.put(Material.COAL, 0);
 		for(ItemStack item : items) {
 			int total = 0;
 			HashMap<Integer, ? extends ItemStack> all = inv.all(item);
@@ -50,6 +47,19 @@ public class CulinarianUtils {
 				count = canCraft;
 			}
 		}
+		
+		if(isSmelted) {
+			int total = 0;
+			HashMap<Integer, ? extends ItemStack> all = inv.all(Material.COAL);
+			for(Integer i : all.keySet()) {
+				total += all.get(i).getAmount();
+			}
+			int canCraft = total * 8;
+			if(canCraft < count || count == 0) {
+				count = canCraft;
+			}
+		}
+		
 		return count;
 	}
 	
