@@ -36,7 +36,7 @@ public class IngredientRecipeItems {
 	public static ItemStack getGreens() {
 		ItemStack item = new ItemStack(Material.INK_SACK);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§eSpices");
+		meta.setDisplayName("§eGreens");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 3");
 		meta.setLore(lore);

@@ -33,7 +33,7 @@ public class CulinarianUtils {
 		return -1;
 	}
 	
-	public static int checkMaxLeaves(ItemStack[] contents) {
+	public static int getTotalLeaves(ItemStack[] contents) {
 		int total = 0;
 		for(ItemStack content : contents) {
 			if(content != null) {
@@ -41,7 +41,7 @@ public class CulinarianUtils {
 						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 1)) ||
 						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 2)) ||
 						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 3)) ||
-						content.isSimilar(new ItemStack(Material.LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.LEAVES_2)) ||
 						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES_2), 1))) {
 					total += content.getAmount();
 				}
@@ -50,7 +50,60 @@ public class CulinarianUtils {
 		return total;
 	}
 	
-	public static int checkMaxMushrooms(ItemStack[] contents) {
+	public static void removeLeaves(PlayerInventory inv, int amount) {
+		ItemStack[] contents = inv.getStorageContents();
+		int slotNum = 0;
+		for(ItemStack content : contents) {
+			if(amount <= 0) {
+				return;
+			}
+			if(content != null) {
+				if(content.isSimilar(new ItemStack(Material.LEAVES)) ||
+						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 1)) ||
+						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 2)) ||
+						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES), 3)) ||
+						content.isSimilar(new ItemStack(Material.LEAVES_2)) ||
+						content.isSimilar(Util.setData(new ItemStack(Material.LEAVES_2), 1))) {
+					if(content.getAmount() > amount) {
+						content.setAmount(content.getAmount() - amount);
+						inv.setItem(slotNum, content);
+						amount = 0;
+					}
+					else {
+						amount -= content.getAmount();
+						inv.setItem(slotNum, null);
+					}
+				}
+			}
+			slotNum++;
+		}
+	}
+	
+	public static void removeMushrooms(PlayerInventory inv, int amount) {
+		ItemStack[] contents = inv.getStorageContents();
+		int slotNum = 0;
+		for(ItemStack content : contents) {
+			if(amount <= 0) {
+				return;
+			}
+			if(content != null) {
+				if(content.isSimilar(new ItemStack(Material.RED_MUSHROOM)) ||
+						content.isSimilar(new ItemStack(Material.BROWN_MUSHROOM))) {
+					if(content.getAmount() > amount) {
+						amount = 0;
+						content.setAmount(content.getAmount() - amount);
+					}
+					else {
+						amount -= content.getAmount();
+						inv.setItem(slotNum, null);
+					}
+				}
+			}
+			slotNum++;
+		}
+	}
+	
+	public static int getTotalMushrooms(ItemStack[] contents) {
 		int total = 0;
 		for(ItemStack content : contents) {
 			if(content != null) {
@@ -70,10 +123,10 @@ public class CulinarianUtils {
 		for(ItemStack item : items) {
 			int total = 0;
 			if(item.isSimilar(new ItemStack(Material.LEAVES))) {
-				total = checkMaxLeaves(contents);
+				total = getTotalLeaves(contents);
 			}
 			else if(item.isSimilar(new ItemStack(Material.RED_MUSHROOM))) {
-				total = checkMaxMushrooms(contents);
+				total = getTotalMushrooms(contents);
 			}
 			else {
 				for(ItemStack content : contents) {
@@ -106,25 +159,16 @@ public class CulinarianUtils {
 	public static boolean canCraft(Player p, ArrayList<ItemStack> items, boolean isSmelted, int amount) {
 		PlayerInventory inv = p.getInventory();
 		for(ItemStack item : items) {
-			// Edge case for leaf blocks having all leaf types usable
 			if(item.isSimilar(new ItemStack(Material.LEAVES))) {
-				if(!(inv.containsAtLeast(item, item.getAmount() * amount)) &&
-					!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount)) &&
-						!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * amount)) &&
-						!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * amount)) &&
-						!(inv.containsAtLeast(new ItemStack(Material.LEAVES_2), item.getAmount() * amount)) &&
-						!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES_2), 1), item.getAmount() * amount))) {
+				if(getTotalLeaves(inv.getStorageContents()) < item.getAmount() * amount) {
 					return false;
 				}
 			}
-			// Edge case for mushrooms having all types usable
 			else if(item.isSimilar(new ItemStack(Material.RED_MUSHROOM))) {
-				if(!(inv.containsAtLeast(item, item.getAmount() * amount)) &&
-				!(inv.containsAtLeast(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * amount))) {
+				if(getTotalMushrooms(inv.getStorageContents()) < item.getAmount() * amount) {
 					return false;
 				}
 			}
-			// Normal case
 			else {
 				if(!(inv.containsAtLeast(item, item.getAmount() * amount))) {
 					return false;
@@ -156,39 +200,17 @@ public class CulinarianUtils {
 		}
 		if(p.hasPermission(perm)) {
 			PlayerInventory inv = p.getInventory();
-			int amount = CulinarianUtils.getMaxCraftable(p, recipe, true);
+			int amount = CulinarianUtils.getMaxCraftable(p, recipe, isSmelted);
 			if(econ.has(p, CRAFT_COST * amount)) {
 				if(amount > 0) {
 					for(ItemStack item : recipe) {
 						// Edge case for leaves
-						if(item.equals(new ItemStack(Material.LEAVES, item.getAmount()))) {
-							if(inv.contains(Util.setAmount(item, item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(new ItemStack(Material.LEAVES_2), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(new ItemStack(Material.LEAVES_2), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount));
-							}
+						if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+							removeLeaves(inv, item.getAmount() * amount);
 						}
 						// Edge case for mushrooms
-						else if(item.equals(new ItemStack(Material.RED_MUSHROOM, item.getAmount()))) {
-							if(inv.contains(Util.setAmount(item, item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * amount));
-							}
+						else if(item.isSimilar(new ItemStack(Material.RED_MUSHROOM))) {
+							removeMushrooms(inv, item.getAmount() * amount);
 						}
 						// Normal case
 						else {
@@ -204,7 +226,7 @@ public class CulinarianUtils {
 						}
 					}
 					if(isSmelted) {
-						inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (amount / 8) + 1));
+						inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(Util.setAmount(result, amount));
@@ -240,38 +262,16 @@ public class CulinarianUtils {
 		}
 		if(p.hasPermission(perm)) {
 			PlayerInventory inv = p.getInventory();
-			if(CulinarianUtils.canCraft(p, recipe, true, amount)) {
+			if(CulinarianUtils.canCraft(p, recipe, isSmelted, amount)) {
 				if(econ.has(p, CRAFT_COST * amount)) {
 					for(ItemStack item : recipe) {
 						// Edge case for leaves
-						if(item.equals(new ItemStack(Material.LEAVES, item.getAmount()))) {
-							if(inv.contains(Util.setAmount(item, item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(new ItemStack(Material.LEAVES_2), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(new ItemStack(Material.LEAVES_2), item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * amount));
-							}
+						if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+							removeLeaves(inv, item.getAmount() * amount);
 						}
 						// Edge case for mushrooms
-						else if(item.equals(new ItemStack(Material.RED_MUSHROOM, item.getAmount()))) {
-							if(inv.contains(Util.setAmount(item, item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(item, item.getAmount() * amount));
-							}
-							else if(inv.contains(Util.setAmount(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * amount))) {
-								inv.removeItem(Util.setAmount(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * amount));
-							}
+						else if(item.isSimilar(new ItemStack(Material.RED_MUSHROOM))) {
+							removeMushrooms(inv, item.getAmount() * amount);
 						}
 						// Normal case
 						else {
@@ -287,7 +287,7 @@ public class CulinarianUtils {
 						}
 					}
 					if(isSmelted) {
-						inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (amount / 8) + 1));
+						inv.removeItem(Util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(Util.setAmount(result, amount));
