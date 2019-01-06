@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Items.LegendaryRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.LimitedEditionRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier1RecipeItems;
 import me.Neoblade298.NeoProfessions.Items.Tier2RecipeItems;
@@ -881,6 +882,64 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getVioletDirtPieRecipe(), LimitedEditionRecipeItems.getVioletDirtPie(), false, "Violet's Dirt Pie");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseLegendary(Player p, String recipe) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
+			}
+			else if(recipe.equalsIgnoreCase("neo's full course special")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getNeoFullCourseSpecialRecipe(), LegendaryRecipeItems.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
+			}
+			else if(recipe.equalsIgnoreCase("tobias' famous cake")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getTobiasFamousCakeRecipe(), LegendaryRecipeItems.getTobiasFamousCake(), false, "Tobias' Famous Cake");
+			}
+			else if(recipe.equalsIgnoreCase("low district cheese steak")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getLowDistrictCheeseSteakRecipe(), LegendaryRecipeItems.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
+			}
+			else if(recipe.equalsIgnoreCase("mattifornia roll")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getMattiforniaRollRecipe(), LegendaryRecipeItems.getMattiforniaRoll(), false, "Mattifornia Roll");
+			}
+			else if(recipe.equalsIgnoreCase("tilan's salad")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getTilanSaladRecipe(), LegendaryRecipeItems.getTilanSalad(), false, "Tilan's Salad");
+			}
+			else if(recipe.equalsIgnoreCase("super's sundae")) {
+				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getSuperSundaeRecipe(), LegendaryRecipeItems.getSuperSundae(), false, "Super's Sundae");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseLegendary(Player p, String recipe, int amount) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
+			}
+			else if(recipe.equalsIgnoreCase("neo's full course special")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getNeoFullCourseSpecialRecipe(), LegendaryRecipeItems.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
+			}
+			else if(recipe.equalsIgnoreCase("tobias' famous cake")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getTobiasFamousCakeRecipe(), LegendaryRecipeItems.getTobiasFamousCake(), false, "Tobias' Famous Cake");
+			}
+			else if(recipe.equalsIgnoreCase("low district cheese steak")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getLowDistrictCheeseSteakRecipe(), LegendaryRecipeItems.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
+			}
+			else if(recipe.equalsIgnoreCase("mattifornia roll")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getMattiforniaRollRecipe(), LegendaryRecipeItems.getMattiforniaRoll(), false, "Mattifornia Roll");
+			}
+			else if(recipe.equalsIgnoreCase("tilan's salad")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getTilanSaladRecipe(), LegendaryRecipeItems.getTilanSalad(), false, "Tilan's Salad");
+			}
+			else if(recipe.equalsIgnoreCase("super's sundae")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getSuperSundaeRecipe(), LegendaryRecipeItems.getSuperSundae(), false, "Super's Sundae");
 			}
 		}
 		else {

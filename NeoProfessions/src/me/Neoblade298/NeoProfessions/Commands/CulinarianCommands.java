@@ -95,7 +95,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe, Integer.parseInt(args[args.length - 1]));
+								culinarianMethods.parseTier1(p, recipe, Integer.parseInt(args[args.length - 1]));
 								return true;
 							}
 							else {
@@ -106,7 +106,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe);
+								culinarianMethods.parseTier1(p, recipe);
 								return true;
 							}
 						}
@@ -119,7 +119,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe, Integer.parseInt(args[args.length - 1]));
+								culinarianMethods.parseTier2(p, recipe, Integer.parseInt(args[args.length - 1]));
 								return true;
 							}
 							else {
@@ -130,7 +130,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe);
+								culinarianMethods.parseTier2(p, recipe);
 								return true;
 							}
 						}
@@ -143,7 +143,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe, Integer.parseInt(args[args.length - 1]));
+								culinarianMethods.parseTier3(p, recipe, Integer.parseInt(args[args.length - 1]));
 								return true;
 							}
 							else {
@@ -154,7 +154,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe);
+								culinarianMethods.parseTier3(p, recipe);
 								return true;
 							}
 						}
@@ -167,7 +167,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe, Integer.parseInt(args[args.length - 1]));
+								culinarianMethods.parseLimitedEdition(p, recipe, Integer.parseInt(args[args.length - 1]));
 								return true;
 							}
 							else {
@@ -178,7 +178,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe);
+								culinarianMethods.parseLimitedEdition(p, recipe);
 								return true;
 							}
 						}
@@ -191,7 +191,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe, Integer.parseInt(args[args.length - 1]));
+								culinarianMethods.parseLegendary(p, recipe, Integer.parseInt(args[args.length - 1]));
 								return true;
 							}
 							else {
@@ -202,7 +202,7 @@ public class CulinarianCommands implements CommandExecutor {
 										recipe += " ";
 									}
 								}
-								culinarianMethods.parseIngredient(p, recipe);
+								culinarianMethods.parseLegendary(p, recipe);
 								return true;
 							}
 						}
