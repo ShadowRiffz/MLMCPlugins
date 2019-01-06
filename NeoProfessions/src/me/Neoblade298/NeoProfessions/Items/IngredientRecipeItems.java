@@ -2,9 +2,11 @@ package me.Neoblade298.NeoProfessions.Items;
 
 import java.util.ArrayList;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -242,6 +244,42 @@ public class IngredientRecipeItems {
 		return item;
 	}
 	
+	public static ItemStack getVodka() {
+		ItemStack item = new ItemStack(Material.POTION);
+		PotionMeta meta = (PotionMeta) item.getItemMeta();
+		meta.setColor(Color.fromRGB(255, 255, 255));
+		meta.setDisplayName("§eVodka");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Ingredient 22");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static ItemStack getRum() {
+		ItemStack item = new ItemStack(Material.POTION);
+		PotionMeta meta = (PotionMeta) item.getItemMeta();
+		meta.setColor(Color.fromRGB(153, 51, 0));
+		meta.setDisplayName("§eRum");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Ingredient 23");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static ItemStack getTequila() {
+		ItemStack item = new ItemStack(Material.POTION);
+		PotionMeta meta = (PotionMeta) item.getItemMeta();
+		meta.setColor(Color.fromRGB(255, 204, 102));
+		meta.setDisplayName("§eTequila");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Ingredient 24");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	public static ArrayList<ItemStack> getSaltRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
@@ -385,6 +423,30 @@ public class IngredientRecipeItems {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.CACTUS));
 		recipe.add(new ItemStack(Material.LAVA_BUCKET));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.WATER_BUCKET));
+		recipe.add(getYeast());
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getRumRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.SUGAR));
+		recipe.add(new ItemStack(Material.WATER_BUCKET));
+		recipe.add(getYeast());
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getTequilaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.CACTUS));
+		recipe.add(new ItemStack(Material.WATER_BUCKET));
+		recipe.add(getYeast());
 		return recipe;
 	}
 }
