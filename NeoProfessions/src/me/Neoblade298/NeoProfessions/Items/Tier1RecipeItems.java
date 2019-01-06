@@ -277,7 +277,7 @@ public class Tier1RecipeItems {
 	
 	public static ArrayList<ItemStack> getMashedPotatoesRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		return recipe;
 	}

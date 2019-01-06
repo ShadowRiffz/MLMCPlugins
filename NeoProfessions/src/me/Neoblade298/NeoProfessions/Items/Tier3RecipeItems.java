@@ -354,7 +354,7 @@ public class Tier3RecipeItems {
 	public static ArrayList<ItemStack> getHeartyBurritoRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(IngredientRecipeItems.getGreens());
 		recipe.add(IngredientRecipeItems.getBeetrootSauce());
 		recipe.add(IngredientRecipeItems.getCheese());
@@ -375,7 +375,7 @@ public class Tier3RecipeItems {
 	
 	public static ArrayList<ItemStack> getLambStewRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(new ItemStack(Material.BOWL));
 		recipe.add(new ItemStack(Material.COOKED_MUTTON));
 		recipe.add(IngredientRecipeItems.getSalt());

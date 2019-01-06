@@ -281,7 +281,7 @@ public class LimitedEditionRecipeItems {
 	public static ArrayList<ItemStack> getFishAndChipsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_FISH));
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(IngredientRecipeItems.getSalt());
 		recipe.add(IngredientRecipeItems.getOil());

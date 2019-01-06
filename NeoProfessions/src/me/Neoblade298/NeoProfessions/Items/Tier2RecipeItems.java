@@ -347,7 +347,7 @@ public class Tier2RecipeItems {
 	
 	public static ArrayList<ItemStack> getHashBrownsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(IngredientRecipeItems.getBeetrootSauce());
 		recipe.add(Util.setAmount(IngredientRecipeItems.getSpices(), 2));
 		return recipe;

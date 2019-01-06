@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -28,12 +29,13 @@ public class CulinarianListeners implements Listener {
 		CraftingInventory inv = (CraftingInventory) e.getView().getTopInventory();
 		Bukkit.getScheduler().runTask(main, new Runnable() {
 			public void run() {
+				System.out.println(inv.getRecipe());
 				if(inv.contains(new ItemStack(Material.APPLE))) {
 					inv.setResult(new ItemStack(Material.STONE));
 					p.updateInventory();
 				}
 				else {
-					System.out.println("Nothing found");
+					System.out.println("Nothing");
 				}
 			}
 		});
@@ -50,6 +52,11 @@ public class CulinarianListeners implements Listener {
 			inv.setResult(new ItemStack(Material.WOOD));
 			p.updateInventory();
 		}
+	}
+	
+	@EventHandler
+	public void onItemCraft(CraftItemEvent e) {
+		System.out.println(e.getInventory().getContents());
 	}
 
 	

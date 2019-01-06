@@ -428,7 +428,7 @@ public class IngredientRecipeItems {
 	
 	public static ArrayList<ItemStack> getVodkaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO));
+		recipe.add(new ItemStack(Material.POTATO_ITEM));
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(getYeast());
 		return recipe;

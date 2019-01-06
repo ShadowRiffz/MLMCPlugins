@@ -1,7 +1,10 @@
 package me.Neoblade298.NeoProfessions;
 
+import java.util.Iterator;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +19,7 @@ import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
+import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -31,6 +35,8 @@ public class Main extends JavaPlugin implements Listener {
   public MasonMethods masonMethods;
   public StonecutterMethods stonecutterMethods;
   public CulinarianMethods culinarianMethods;
+  
+  public CulinarianRecipes culinarianRecipes;
   
   public MasonListeners masonListeners;
   
@@ -67,12 +73,30 @@ public class Main extends JavaPlugin implements Listener {
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
     getServer().getPluginManager().registerEvents(masonListeners, this);
     getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
+    
+    // Setup recipes
+    culinarianRecipes = new CulinarianRecipes(this);
+    for(Recipe recipe : culinarianRecipes.getRecipes()) {
+    	System.out.println(recipe.getResult());
+      Bukkit.addRecipe(recipe);
+    }
   }
   
   public void onDisable()
   {
     Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
     super.onDisable();
+    for(Recipe recipe : culinarianRecipes.getRecipes()) {
+	    Iterator<Recipe> iter = getServer().recipeIterator();
+	    while (iter.hasNext()) {
+	      Recipe r = iter.next();
+	      // May not be safe to depend on == here for recipe comparison
+	      // Probably safer to compare the recipe result (an ItemStack)
+	      if (r.equals(recipe)) {
+	        iter.remove();
+	      }
+	    }
+    }
   }
 
   private boolean setupEconomy() {
