@@ -246,7 +246,7 @@ public class Tier3RecipeItems {
 		recipe.add(new ItemStack(Material.APPLE));
 		recipe.add(Util.setAmount(IngredientRecipeItems.getGreens(), 3));
 		recipe.add(Util.setAmount(IngredientRecipeItems.getTomato(), 2));
-		recipe.add(IngredientRecipeItems.getTomato());
+		recipe.add(IngredientRecipeItems.getCorn());
 		return recipe;
 	}
 	
