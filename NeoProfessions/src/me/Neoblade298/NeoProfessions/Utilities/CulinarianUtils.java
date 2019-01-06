@@ -36,74 +36,18 @@ public class CulinarianUtils {
 	public static int getMaxCraftable(Player p, ArrayList<ItemStack> items, boolean isSmelted) {
 		int count = 0;
 		PlayerInventory inv = p.getInventory();
-		boolean canCraft = true;
-		if(isSmelted) {
-			int fuel = 0;
-			HashMap<Material, Integer> fuels = new HashMap<Material, Integer>();
-			fuels.put(Material.COAL, 0);
-			while(canCraft) {
-				for(ItemStack item : items) {
-					
-					// Edge case for leaf blocks having all leaf types usable
-					if(item.equals(new ItemStack(Material.LEAVES, item.getAmount()))) {
-						if(!(inv.containsAtLeast(item, item.getAmount() * count)) &&
-							!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 1), item.getAmount() * count)) &&
-								!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 2), item.getAmount() * count)) &&
-								!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES), 3), item.getAmount() * count)) &&
-								!(inv.containsAtLeast(new ItemStack(Material.LEAVES_2), item.getAmount() * count)) &&
-								!(inv.containsAtLeast(Util.setData(new ItemStack(Material.LEAVES_2), 1), item.getAmount() * count))) {
-							canCraft = false;
-							break;
-						}
-					}
-					// Edge case for mushrooms having all types usable
-					else if(item.equals(new ItemStack(Material.RED_MUSHROOM, item.getAmount()))) {
-						if(!(inv.containsAtLeast(item, item.getAmount() * count)) &&
-						!(inv.containsAtLeast(new ItemStack(Material.BROWN_MUSHROOM), item.getAmount() * count))) {
-							canCraft = false;
-							break;
-						}
-					}
-					// Normal case
-					else {
-						if(!(inv.containsAtLeast(item, item.getAmount() * count))) {
-							canCraft = false;
-							break;
-						}
-					}
-				}
-				if(canCraft && fuel < count + 1) {
-					if(inv.containsAtLeast(new ItemStack(Material.COAL), fuels.get(Material.COAL) + 1)) {
-						fuels.put(Material.COAL, fuels.get(Material.COAL) + 1);
-						fuel += 8;
-					}
-					else {
-						canCraft = false;
-						break;
-					}
-				}
-				if(canCraft) {
-					count++;
-				}
-				else {
-					count--;
-				}
+		int fuel = 0;
+		HashMap<Material, Integer> fuels = new HashMap<Material, Integer>();
+		fuels.put(Material.COAL, 0);
+		for(ItemStack item : items) {
+			int total = 0;
+			HashMap<Integer, ? extends ItemStack> all = inv.all(item);
+			for(Integer i : all.keySet()) {
+				total += all.get(i).getAmount();
 			}
-		}
-		else {
-			while(canCraft) {
-				for(ItemStack item : items) {
-					if(!(inv.containsAtLeast(item, item.getAmount() * count))) {
-						canCraft = false;
-						break;
-					}
-				}
-				if(canCraft) {
-					count++;
-				}
-				else {
-					count--;
-				}
+			int canCraft = total / item.getAmount();
+			if(canCraft < count || count == 0) {
+				count = canCraft;
 			}
 		}
 		return count;
