@@ -12,6 +12,7 @@ public class CulinarianRecipeChecks {
 		if(p.hasPermission("recipes.Ingr22")) {
 			for(ItemStack i : IngredientRecipeItems.getVodkaRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
+					System.out.println(i);
 					inv.setResult(null);
 				}
 			}
@@ -20,7 +21,7 @@ public class CulinarianRecipeChecks {
 	
 	public static void checkRum(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.Ingr23")) {
-			for(ItemStack i : IngredientRecipeItems.getTequilaRecipe()) {
+			for(ItemStack i : IngredientRecipeItems.getRumRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
 				}

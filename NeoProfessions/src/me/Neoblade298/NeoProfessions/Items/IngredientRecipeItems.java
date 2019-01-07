@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -253,6 +254,7 @@ public class IngredientRecipeItems {
 		lore.add("§6Ingredient 22");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		return item;
 	}
 	
@@ -264,6 +266,7 @@ public class IngredientRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 23");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -276,6 +279,7 @@ public class IngredientRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 24");
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
 		return item;
 	}
