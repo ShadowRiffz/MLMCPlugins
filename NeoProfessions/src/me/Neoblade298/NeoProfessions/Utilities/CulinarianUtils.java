@@ -7,12 +7,39 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.player.PlayerData;
 
 import net.milkbowl.vault.economy.Economy;
 
 public class CulinarianUtils {
 	
 	static final int CRAFT_COST = 50;
+	
+	public static void checkAlcohol(Player p, int amount) {
+		if(amount >= 40 && amount < 60) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0));
+		}
+		else if(amount >= 60 && amount < 80) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+		}
+		else if(amount >= 80) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+		}
+	}
+	
+	public static void addStat(Player p, double percent, String attr) {
+		PlayerData data = SkillAPI.getPlayerData(p);
+		int oldAttr = data.getAttribute(attr);
+		int newAttr = (int) (oldAttr * percent);
+		data.addBonusAttributes(attr, newAttr);
+	}
 
 	public static int getFoodLevel(ItemStack item) {
 		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
