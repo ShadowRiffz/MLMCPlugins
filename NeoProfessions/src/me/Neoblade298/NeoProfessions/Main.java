@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.Bukkit;
@@ -77,26 +78,34 @@ public class Main extends JavaPlugin implements Listener {
     // Setup recipes
     culinarianRecipes = new CulinarianRecipes(this);
     for(Recipe recipe : culinarianRecipes.getRecipes()) {
-    	System.out.println(recipe.getResult());
       Bukkit.addRecipe(recipe);
     }
   }
   
   public void onDisable()
   {
-    Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
     super.onDisable();
-    for(Recipe recipe : culinarianRecipes.getRecipes()) {
-	    Iterator<Recipe> iter = getServer().recipeIterator();
-	    while (iter.hasNext()) {
-	      Recipe r = iter.next();
-	      // May not be safe to depend on == here for recipe comparison
-	      // Probably safer to compare the recipe result (an ItemStack)
-	      if (r.equals(recipe)) {
-	        iter.remove();
-	      }
-	    }
+    ArrayList<Recipe> backup = new ArrayList<Recipe>();
+    Iterator<Recipe> iter = getServer().recipeIterator();
+    while (iter.hasNext()) {
+      Recipe r = iter.next();
+      boolean add = true;
+      if (r.getResult().hasItemMeta()) {
+      	for(Recipe recipe : culinarianRecipes.getRecipes()) {
+      		if(r.getResult().getItemMeta().hasDisplayName() && r.getResult().getItemMeta().getDisplayName().equals(recipe.getResult().getItemMeta().getDisplayName())) {
+      			add = false;
+      		}
+      	}
+      }
+      if(add) {
+      	backup.add(r);
+      }
     }
+   Bukkit.clearRecipes();
+   for(Recipe recipe : backup) {
+  	 Bukkit.addRecipe(recipe);
+   }
+   Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
   }
 
   private boolean setupEconomy() {
