@@ -8,9 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipeChecks;
@@ -22,6 +27,7 @@ public class CulinarianListeners implements Listener {
 	Main main;
 	CulinarianRecipes culinarianRecipes;
 	HashMap<Player, Integer> drunkness = new HashMap<Player, Integer>();
+	HashMap<Player, Integer> numBonuses = new HashMap<Player, Integer>();
 	Random gen;
 	
 	public CulinarianListeners(Main main) {
@@ -31,6 +37,7 @@ public class CulinarianListeners implements Listener {
 			public void run() {
 				for(Player p : drunkness.keySet()) {
 					drunkness.put(p, drunkness.get(p) - 1);
+					CulinarianUtils.checkAlcoholDown(p, drunkness.get(p));
 				}
 			}
 		});
@@ -53,59 +60,179 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					
+					addStat(p, 0.02, "Dexterity", 600);
 				}
 			} else {
 				drunkness.put(p, drunk);
 			}
 		}
 		else if(id.contains("Drink 2")) {
-			
+			int drunk = 22 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Spirit", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 3")) {
-			
+			int drunk = 17 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.01, "Endurance", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 4")) {
-			
+			int drunk = 17 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 5")) {
-			
+			int drunk = 27 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 6")) {
-			
+			int drunk = 17 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 7")) {
-			
+			int drunk = 30 + gen.nextInt(31);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 8")) {
-			
+			int drunk = 12 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 9")) {
-			
+			int drunk = 35 + gen.nextInt(10);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 10")) {
-			
+			int drunk = 35 + gen.nextInt(10);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 11")) {
-			
+			int drunk = 27 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 12")) {
-			
+			int drunk = 12 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 13")) {
-			
+			int drunk = 27 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 14")) {
-			
+			int drunk = 40 + gen.nextInt(9);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 15")) {
-			
+			int drunk = 35 + gen.nextInt(10);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		else if(id.contains("Drink 16")) {
-			
+			int drunk = 27 + gen.nextInt(7);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+				if(canGetAttrs) {
+					addStat(p, 0.02, "Dexterity", 600);
+				}
+			} else {
+				drunkness.put(p, drunk);
+			}
 		}
 		if(drunkness.containsKey(p)) {
-			CulinarianUtils.checkAlcohol(p, drunkness.get(p));
+			CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 		}
 	}
 	
@@ -175,6 +302,46 @@ public class CulinarianListeners implements Listener {
 				CulinarianRecipeChecks.checkBloodyMary(p, inv);
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onChangeWorld(PlayerChangedWorldEvent e) {
+		Player p = e.getPlayer();
+		if(!p.getWorld().getName().equalsIgnoreCase("Argyll") &&
+				!p.getWorld().getName().equalsIgnoreCase("ClassPVP")) {
+			if(numBonuses.containsKey(p)) {
+				numBonuses.remove(p);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onLogout(PlayerQuitEvent e) {
+		Player p = e.getPlayer();
+		if(numBonuses.containsKey(p)) {
+			numBonuses.remove(p);
+		}
+	}
+
+	
+	public void addStat(Player p, double percent, String attr, int ticks) {
+		PlayerData data = SkillAPI.getPlayerData(p);
+		int oldAttr = data.getAttribute(attr);
+		int newAttr = (int) (oldAttr * percent);
+		data.addBonusAttributes(attr, newAttr);
+		if(numBonuses.containsKey(p)) {
+			numBonuses.put(p, numBonuses.get(p) + 1);
+		}
+		else {
+			numBonuses.put(p, 1);
+		}
+		Bukkit.getScheduler().runTaskLater(main, new Runnable() {
+			public void run() {
+				if(numBonuses.containsKey(p) && numBonuses.get(p) > 0) {
+					data.addBonusAttributes(attr, -newAttr);
+				}
+			}
+		}, ticks);
 	}
 
 	

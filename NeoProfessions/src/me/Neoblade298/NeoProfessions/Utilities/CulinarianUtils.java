@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,37 +11,61 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
-
 import net.milkbowl.vault.economy.Economy;
 
 public class CulinarianUtils {
 	
 	static final int CRAFT_COST = 50;
+	static Random gen = new Random();
 	
-	public static void checkAlcohol(Player p, int amount) {
-		if(amount >= 40 && amount < 60) {
+	public static void checkAlcoholUp(Player p, int amount, HashMap<Player, Integer> drunkness) {
+		if(amount >= 30 && amount < 50) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0));
+			Util.sendMessage(p, "&7You are now &esomewhat drunk&7.");
 		}
-		else if(amount >= 60 && amount < 80) {
+		else if(amount >= 50 && amount < 70) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+			Util.sendMessage(p, "&7You are now &6very drunk&7.");
 		}
-		else if(amount >= 80) {
+		else if(amount >= 70 && amount < 100) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10*20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+			Util.sendMessage(p, "&7You are now &4dangerously drunk&7.");
+		}
+		else if(amount > 100) {
+			double chance = gen.nextDouble();
+			if(chance >= 0.5) {
+				Util.sendMessage(p, "&7You throw up from being too drunk. Your drunkness is reduced to &6very drunk&7.");
+				drunkness.put(p, 50);
+			}
+			else {
+				Util.sendMessage(p, "&7You become too drunk and lose 80% of your current health.");
+				p.damage(1);
+				p.setHealth(p.getHealth() * 0.2);
+			}
 		}
 	}
 	
-	public static void addStat(Player p, double percent, String attr) {
-		PlayerData data = SkillAPI.getPlayerData(p);
-		int oldAttr = data.getAttribute(attr);
-		int newAttr = (int) (oldAttr * percent);
-		data.addBonusAttributes(attr, newAttr);
+	public static void checkAlcoholDown(Player p, int amount) {
+		if(amount < 30) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0));
+			Util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7.");
+		}
+		else if(amount < 50) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+			Util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7.");
+		}
+		else if(amount < 70) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+			Util.sendMessage(p, "&7Your drunkness is reduced to &4dangerously drunk&7.");
+		}
 	}
-
+	
 	public static int getFoodLevel(ItemStack item) {
 		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			String line = item.getItemMeta().getLore().get(0);
