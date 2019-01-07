@@ -1,17 +1,11 @@
 package me.Neoblade298.NeoProfessions.Listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemStack;
-
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipeChecks;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 
