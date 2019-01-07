@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
+import me.Neoblade298.NeoProfessions.Utilities.Util;
+
 public class DrinksRecipeItems {
 	
 	public static ItemStack getBlackWidow() {
@@ -216,5 +218,163 @@ public class DrinksRecipeItems {
 		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		return item;
+	}
+	
+	public static ArrayList<ItemStack> getBlackWidowRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getPinkPantherRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 9));
+		recipe.add(new ItemStack(Material.APPLE));
+		recipe.add(new ItemStack(Material.ICE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getMidnightKissRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(IngredientRecipeItems.getLemon());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 6));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getMidnightBlueRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getTequila());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 4));
+		recipe.add(new ItemStack(Material.SUGAR));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getGoodAndEvilRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(IngredientRecipeItems.getLemon());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 11));
+		recipe.add(new ItemStack(Material.APPLE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getThorHammerRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 5));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.LAVA_BUCKET));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getJackFrostRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 12));
+		recipe.add(new ItemStack(Material.ICE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getWhiteRussianRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 15));
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 3));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getSwampWaterRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(IngredientRecipeItems.getLemon());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 10));
+		recipe.add(new ItemStack(Material.APPLE));
+		recipe.add(new ItemStack(Material.WATERMELON_SLICE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
+	}
+	
+	public static ArrayList<ItemStack> getVodkaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(CommonItems.getEssence(3));
+		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
+		recipe.add(new ItemStack(Material.ICE));
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		return recipe;
 	}
 }
