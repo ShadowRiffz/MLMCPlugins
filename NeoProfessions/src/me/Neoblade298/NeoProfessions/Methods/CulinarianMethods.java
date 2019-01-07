@@ -40,7 +40,7 @@ public class CulinarianMethods {
 	
 	public void garnish(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(Material.AIR)) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			int level = CulinarianUtils.getFoodLevel(item);
 			if(p.hasPermission("culinarian.garnish." + level)) {
 				boolean isFood = false;
@@ -99,7 +99,7 @@ public class CulinarianMethods {
 	
 	public void preserve(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(Material.AIR)) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			int level = CulinarianUtils.getFoodLevel(item);
 			if(p.hasPermission("culinarian.preserve." + level)) {
 				boolean isFood = false;
@@ -158,7 +158,7 @@ public class CulinarianMethods {
 	
 	public void spice(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(Material.AIR)) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			int level = CulinarianUtils.getFoodLevel(item);
 			if(p.hasPermission("culinarian.spice." + level)) {
 				boolean isFood = false;

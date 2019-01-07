@@ -92,7 +92,7 @@ public class BlacksmithMethods {
 	
 	public void upgradeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item.equals(Material.AIR)) {
+		if(item.equals(new ItemStack(Material.AIR))) {
 			if(item.containsEnchantment(Enchantment.DURABILITY)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
 				int upgradeLevel = enchLevel + 1;
@@ -138,7 +138,7 @@ public class BlacksmithMethods {
 	
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(Material.AIR)) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			String type = Util.getItemType(item);
 			if(type != null) {
 				int itemLevel = Util.getItemLevel(item);
@@ -180,7 +180,7 @@ public class BlacksmithMethods {
 	
 	public void scrapItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(Material.AIR)) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			int itemLevel = Util.getItemLevel(item);
 			if(itemLevel != -1) {
 				if(p.hasPermission("blacksmith.scrap." + itemLevel)) {
