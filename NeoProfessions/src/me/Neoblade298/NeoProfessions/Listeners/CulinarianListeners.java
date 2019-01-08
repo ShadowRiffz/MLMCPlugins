@@ -60,7 +60,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Dexterity", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -71,7 +71,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Spirit", 600);
+					addStat(p, 0.02, "Spirit", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -82,7 +82,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.01, "Endurance", 600);
+					addStat(p, 0.005, "Endurance", 60);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -93,7 +93,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.01, "Vitality", 50);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -104,7 +104,8 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.03, "Spirit", 40);
+					addStat(p, -0.03, "Strength", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -115,7 +116,8 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.05, "Strength", 30);
+					addStat(p, -0.02, "Endurance", 30);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -126,7 +128,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Intelligence", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -137,7 +139,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Perception", 35);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -148,7 +150,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.03, "Dexterity", 30);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -159,7 +161,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Strength", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -170,7 +172,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Intelligence", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -181,7 +183,8 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Vitality", 40);
+					addStat(p, -0.02, "Spirit", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -192,7 +195,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.02, "Spirit", 40);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -203,7 +206,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.04, "Endurance", 20);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -214,7 +217,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.04, "Intelligence", 20);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -225,7 +228,7 @@ public class CulinarianListeners implements Listener {
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
 				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 600);
+					addStat(p, 0.03, "Strength", 30);
 				}
 			} else {
 				drunkness.put(p, drunk);
@@ -324,7 +327,7 @@ public class CulinarianListeners implements Listener {
 	}
 
 	
-	public void addStat(Player p, double percent, String attr, int ticks) {
+	public void addStat(Player p, double percent, String attr, int seconds) {
 		PlayerData data = SkillAPI.getPlayerData(p);
 		int oldAttr = data.getAttribute(attr);
 		int newAttr = (int) (oldAttr * percent);
@@ -341,7 +344,7 @@ public class CulinarianListeners implements Listener {
 					data.addBonusAttributes(attr, -newAttr);
 				}
 			}
-		}, ticks);
+		}, seconds * 20);
 	}
 
 	
