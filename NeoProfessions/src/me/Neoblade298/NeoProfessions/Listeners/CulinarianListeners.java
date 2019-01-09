@@ -245,6 +245,7 @@ public class CulinarianListeners implements Listener {
 			Player p = (Player) e.getInventory().getHolder();
 			CraftingInventory inv = e.getInventory();
 			if(inv.getResult() == null) {
+				System.out.println("No result");
 				return;
 			}
 			else if(inv.getResult().getItemMeta().getDisplayName().contains("Vodka")) {
@@ -303,6 +304,9 @@ public class CulinarianListeners implements Listener {
 			}
 			else if(inv.getResult().getItemMeta().getDisplayName().contains("Bloody Mary")) {
 				CulinarianRecipeChecks.checkBloodyMary(p, inv);
+			}
+			else {
+				System.out.println(inv.getResult().getItemMeta().getDisplayName());
 			}
 		}
 	}

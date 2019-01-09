@@ -14,4 +14,4 @@ commands:
     usage: /stonecutter [args]
   culinarian:
     description: Base command for culinarians
-    usage: /stonecutter [args]
+    usage: /culinarian [args]
