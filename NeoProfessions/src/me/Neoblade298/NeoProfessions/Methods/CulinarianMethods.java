@@ -280,6 +280,15 @@ public class CulinarianMethods {
 			else if(recipe.equalsIgnoreCase("pepper")) {
 				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
 			}
+			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+			}
+			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+			}
+			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
+			}
 		}
 		else {
 			Util.sendMessage(p, "&cYou do not yet have the required skill!");
@@ -350,6 +359,15 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
+			}
+			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+			}
+			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+			}
+			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
 			}
 		}
 		else {
