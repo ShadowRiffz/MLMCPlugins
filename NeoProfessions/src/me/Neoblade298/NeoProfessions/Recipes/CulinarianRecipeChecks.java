@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
@@ -13,8 +14,8 @@ public class CulinarianRecipeChecks {
 		if(p.hasPermission("recipes.Ingr22")) {
 			for(ItemStack i : IngredientRecipeItems.getVodkaRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
-					System.out.println(i);
 					inv.setResult(null);
+					break;
 				}
 			}
 		}
@@ -25,6 +26,7 @@ public class CulinarianRecipeChecks {
 			for(ItemStack i : IngredientRecipeItems.getRumRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
+					break;
 				}
 			}
 		}
@@ -35,6 +37,7 @@ public class CulinarianRecipeChecks {
 			for(ItemStack i : IngredientRecipeItems.getTequilaRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
+					break;
 				}
 			}
 		}
@@ -43,8 +46,14 @@ public class CulinarianRecipeChecks {
 	public static void checkBlackWidow(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.1")) {
 			for(ItemStack i : DrinksRecipeItems.getBlackWidowRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -53,8 +62,14 @@ public class CulinarianRecipeChecks {
 	public static void checkPinkPanther(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.2")) {
 			for(ItemStack i : DrinksRecipeItems.getPinkPantherRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -63,8 +78,14 @@ public class CulinarianRecipeChecks {
 	public static void checkMidnightKiss(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.3")) {
 			for(ItemStack i : DrinksRecipeItems.getMidnightKissRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -73,8 +94,14 @@ public class CulinarianRecipeChecks {
 	public static void checkMidnightBlue(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.4")) {
 			for(ItemStack i : DrinksRecipeItems.getMidnightBlueRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 24);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -83,8 +110,14 @@ public class CulinarianRecipeChecks {
 	public static void checkGoodAndEvil(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.5")) {
 			for(ItemStack i : DrinksRecipeItems.getGoodAndEvilRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -93,8 +126,14 @@ public class CulinarianRecipeChecks {
 	public static void checkThorHammer(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.6")) {
 			for(ItemStack i : DrinksRecipeItems.getThorHammerRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -103,8 +142,14 @@ public class CulinarianRecipeChecks {
 	public static void checkJackFrost(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.7")) {
 			for(ItemStack i : DrinksRecipeItems.getJackFrostRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -113,8 +158,14 @@ public class CulinarianRecipeChecks {
 	public static void checkWhiteRussian(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.8")) {
 			for(ItemStack i : DrinksRecipeItems.getWhiteRussianRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -123,8 +174,14 @@ public class CulinarianRecipeChecks {
 	public static void checkSwampWater(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.9")) {
 			for(ItemStack i : DrinksRecipeItems.getSwampWaterRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -133,8 +190,14 @@ public class CulinarianRecipeChecks {
 	public static void checkBlueMotorcycle(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.10")) {
 			for(ItemStack i : DrinksRecipeItems.getBlueMotorcycleRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -143,8 +206,14 @@ public class CulinarianRecipeChecks {
 	public static void checkRedDeath(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.11")) {
 			for(ItemStack i : DrinksRecipeItems.getRedDeathRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 23);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -153,8 +222,14 @@ public class CulinarianRecipeChecks {
 	public static void checkBombsicle(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.12")) {
 			for(ItemStack i : DrinksRecipeItems.getBombsicleRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -163,8 +238,14 @@ public class CulinarianRecipeChecks {
 	public static void checkSweetTart(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.13")) {
 			for(ItemStack i : DrinksRecipeItems.getSweetTartRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -173,8 +254,14 @@ public class CulinarianRecipeChecks {
 	public static void checkPinaColada(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.14")) {
 			for(ItemStack i : DrinksRecipeItems.getPinaColadaRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 23);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -183,8 +270,14 @@ public class CulinarianRecipeChecks {
 	public static void checkMargaritaOnTheRocks(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.15")) {
 			for(ItemStack i : DrinksRecipeItems.getMargaritaOnTheRocksRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 24);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
 				}
 			}
 		}
@@ -193,8 +286,31 @@ public class CulinarianRecipeChecks {
 	public static void checkBloodyMary(Player p, CraftingInventory inv) {
 		if(p.hasPermission("recipes.drinks.16")) {
 			for(ItemStack i : DrinksRecipeItems.getBloodyMaryRecipe()) {
-				if(!inv.containsAtLeast(i, 1)) {
-					inv.setResult(null);
+				if(i.getType().equals(Material.POTION)) {
+					checkAlcoholBase(inv, 22);
+				}
+				else {
+					if(!inv.containsAtLeast(i, 1)) {
+						inv.setResult(null);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	private static void checkAlcoholBase(CraftingInventory inv, int ingredient) {
+		if(!inv.contains(Material.POTION, 1)) {
+			inv.setResult(null);
+		}
+		else {
+			for(int j = 1; j < inv.getContents().length; j++) {
+				if(inv.getContents()[j] != null && inv.getContents()[j].getType().equals(Material.POTION)) {
+					System.out.println(inv.getContents()[j] + " , " + j);
+					ItemStack pot = inv.getContents()[j];
+					if(!pot.hasItemMeta() || !pot.getItemMeta().hasLore() || !pot.getItemMeta().getLore().get(0).contains("Ingredient " + ingredient)) {
+						inv.setResult(null);
+					}
 				}
 			}
 		}

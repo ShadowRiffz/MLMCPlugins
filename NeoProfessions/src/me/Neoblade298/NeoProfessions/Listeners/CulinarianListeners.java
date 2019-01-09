@@ -258,6 +258,8 @@ public class CulinarianListeners implements Listener {
 				CulinarianRecipeChecks.checkTequila(p, inv);
 			}
 			else if(inv.getResult().getItemMeta().getDisplayName().contains("Black Widow")) {
+				System.out.println("Black Widow Check");
+				
 				CulinarianRecipeChecks.checkBlackWidow(p, inv);
 			}
 			else if(inv.getResult().getItemMeta().getDisplayName().contains("Pink Panther")) {
