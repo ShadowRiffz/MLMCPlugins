@@ -67,6 +67,7 @@ public class CulinarianRecipeChecks {
 				}
 				else {
 					if(!inv.containsAtLeast(i, 1)) {
+						System.out.println(i);
 						inv.setResult(null);
 						break;
 					}
@@ -306,9 +307,9 @@ public class CulinarianRecipeChecks {
 		else {
 			for(int j = 1; j < inv.getContents().length; j++) {
 				if(inv.getContents()[j] != null && inv.getContents()[j].getType().equals(Material.POTION)) {
-					System.out.println(inv.getContents()[j] + " , " + j);
 					ItemStack pot = inv.getContents()[j];
 					if(!pot.hasItemMeta() || !pot.getItemMeta().hasLore() || !pot.getItemMeta().getLore().get(0).contains("Ingredient " + ingredient)) {
+						System.out.println(inv.getContents()[j] + " , " + j + " , " + ingredient);
 						inv.setResult(null);
 					}
 				}

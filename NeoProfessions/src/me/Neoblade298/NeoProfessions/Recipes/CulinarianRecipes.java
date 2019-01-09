@@ -2,11 +2,13 @@ package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.ArrayList;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.material.Dye;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
@@ -89,7 +91,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getPinkPanther());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.PINK));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
@@ -100,7 +102,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMidnightKiss());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.CYAN));
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		return recipe;
 	}
@@ -110,7 +112,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMidnightBlue());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.BLUE));
 		recipe.addIngredient(Material.SUGAR);
 		return recipe;
 	}
@@ -120,7 +122,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getGoodAndEvil());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.YELLOW));
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
@@ -131,7 +133,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getThorHammer());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.PURPLE));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.LAVA_BUCKET);
 		return recipe;
@@ -142,7 +144,8 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getJackFrost());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(2, Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.LIGHT_BLUE));
+		recipe.addIngredient(new Dye(DyeColor.YELLOW));
 		recipe.addIngredient(Material.ICE);
 		return recipe;
 	}
@@ -152,7 +155,8 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getWhiteRussian());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(2, Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.WHITE));
+		recipe.addIngredient(new Dye(DyeColor.BROWN));
 		return recipe;
 	}
 	
@@ -161,7 +165,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getSwampWater());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.LIME));
 		recipe.addIngredient(Material.APPLE);
 		recipe.addIngredient(Material.MELON);
 		recipe.addIngredient(Material.SPECKLED_MELON);
@@ -173,7 +177,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBlueMotorcycle());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.BLUE));
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		return recipe;
 	}
@@ -183,7 +187,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getRedDeath());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.ORANGE));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		return recipe;
@@ -194,7 +198,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBombsicle());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.LIGHT_BLUE));
 		recipe.addIngredient(Material.WATER_BUCKET);
 		return recipe;
 	}
@@ -204,7 +208,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getSweetTart());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.PINK));
 		recipe.addIngredient(Material.MELON);
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		return recipe;
@@ -215,7 +219,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getPinaColada());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.WHITE));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
@@ -226,7 +230,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMargaritaOnTheRocks());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.GREEN));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SUGAR);
 		recipe.addIngredient(Material.SPECKLED_MELON);
@@ -238,7 +242,8 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBloodyMary());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(2, Material.INK_SACK);
+		recipe.addIngredient(new Dye(DyeColor.RED));
+		recipe.addIngredient(new Dye(DyeColor.GREEN));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
