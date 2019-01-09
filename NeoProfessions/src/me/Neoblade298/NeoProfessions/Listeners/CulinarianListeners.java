@@ -59,179 +59,179 @@ public class CulinarianListeners implements Listener {
 			int drunk = 27 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Dexterity", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Spirit", 40);
 			}
 		}
 		else if(id.contains("Drink 2")) {
 			int drunk = 22 + gen.nextInt(6);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Spirit", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Spirit", 40);
 			}
 		}
 		else if(id.contains("Drink 3")) {
 			int drunk = 17 + gen.nextInt(6);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.005, "Endurance", 60);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.005, "Endurance", 60);
 			}
 		}
 		else if(id.contains("Drink 4")) {
 			int drunk = 17 + gen.nextInt(6);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.01, "Vitality", 50);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.01, "Vitality", 50);
 			}
 		}
 		else if(id.contains("Drink 5")) {
 			int drunk = 27 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.03, "Spirit", 40);
-					addStat(p, -0.03, "Strength", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.03, "Spirit", 40);
+				addStat(p, -0.03, "Strength", 40);
 			}
 		}
 		else if(id.contains("Drink 6")) {
 			int drunk = 17 + gen.nextInt(6);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.05, "Strength", 30);
-					addStat(p, -0.02, "Endurance", 30);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.05, "Strength", 30);
+				addStat(p, -0.02, "Endurance", 30);
 			}
 		}
 		else if(id.contains("Drink 7")) {
 			int drunk = 30 + gen.nextInt(31);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Intelligence", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Intelligence", 40);
 			}
 		}
 		else if(id.contains("Drink 8")) {
 			int drunk = 12 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Perception", 35);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Perception", 35);
 			}
 		}
 		else if(id.contains("Drink 9")) {
 			int drunk = 35 + gen.nextInt(10);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.03, "Dexterity", 30);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.03, "Dexterity", 30);
 			}
 		}
 		else if(id.contains("Drink 10")) {
 			int drunk = 35 + gen.nextInt(10);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Strength", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Strength", 40);
 			}
 		}
 		else if(id.contains("Drink 11")) {
 			int drunk = 27 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Intelligence", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Intelligence", 40);
 			}
 		}
 		else if(id.contains("Drink 12")) {
 			int drunk = 12 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Vitality", 40);
-					addStat(p, -0.02, "Spirit", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Vitality", 40);
+				addStat(p, -0.02, "Spirit", 40);
 			}
 		}
 		else if(id.contains("Drink 13")) {
 			int drunk = 27 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.02, "Spirit", 40);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.02, "Spirit", 40);
 			}
 		}
 		else if(id.contains("Drink 14")) {
 			int drunk = 40 + gen.nextInt(9);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.04, "Endurance", 20);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.04, "Endurance", 20);
 			}
 		}
 		else if(id.contains("Drink 15")) {
 			int drunk = 35 + gen.nextInt(10);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.04, "Intelligence", 20);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.04, "Intelligence", 20);
 			}
 		}
 		else if(id.contains("Drink 16")) {
 			int drunk = 27 + gen.nextInt(7);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
-				if(canGetAttrs) {
-					addStat(p, 0.03, "Strength", 30);
-				}
 			} else {
 				drunkness.put(p, drunk);
+			}
+			if(canGetAttrs) {
+				addStat(p, 0.03, "Strength", 30);
 			}
 		}
 		if(drunkness.containsKey(p)) {
