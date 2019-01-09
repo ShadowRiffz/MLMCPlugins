@@ -253,8 +253,8 @@ public class IngredientRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 22");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
