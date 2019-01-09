@@ -25,7 +25,7 @@ public class CulinarianMethods {
 	Main main;
 	Economy econ;
 	
-	// Constants !
+	// Constants
 	final static int GARNISH_COST = 500;
 	final static int GARNISH_ESSENCE = 1;
 	final static int PRESERVE_COST = 500;
