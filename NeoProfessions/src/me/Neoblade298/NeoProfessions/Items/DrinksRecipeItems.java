@@ -20,8 +20,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 1");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -33,8 +33,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 2");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -46,8 +46,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 3");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -59,8 +59,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 4");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -72,8 +72,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 5");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -85,8 +85,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 6");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -98,8 +98,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 7");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -111,8 +111,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 8");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -124,8 +124,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 9");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -137,8 +137,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 10");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -150,8 +150,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 11");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -163,8 +163,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 12");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -176,8 +176,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 13");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -189,8 +189,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 14");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -202,8 +202,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 15");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
@@ -215,8 +215,8 @@ public class DrinksRecipeItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 16");
 		meta.setLore(lore);
-		item.setItemMeta(meta);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
 		return item;
 	}
 	

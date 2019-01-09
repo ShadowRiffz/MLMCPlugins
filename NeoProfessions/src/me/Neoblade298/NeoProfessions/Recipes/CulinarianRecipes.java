@@ -174,7 +174,6 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(Material.INK_SACK);
-		recipe.addIngredient(Material.MELON);
 		recipe.addIngredient(Material.SPECKLED_MELON);
 		return recipe;
 	}
