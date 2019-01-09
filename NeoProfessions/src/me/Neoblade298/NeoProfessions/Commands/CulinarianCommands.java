@@ -206,6 +206,30 @@ public class CulinarianCommands implements CommandExecutor {
 								return true;
 							}
 						}
+						else if(args[1].equalsIgnoreCase("drink")) {
+							if(StringUtils.isNumeric(args[args.length - 1])) {
+								String recipe = "";
+								for(int i = 2; i < args.length - 1; i++) {
+									recipe += args[i];
+									if(i < args.length - 2) {
+										recipe += " ";
+									}
+								}
+								culinarianMethods.parseDrink(p, recipe, Integer.parseInt(args[args.length - 1]));
+								return true;
+							}
+							else {
+								String recipe = "";
+								for(int i = 2; i < args.length; i++) {
+									recipe += args[i];
+									if(i < args.length - 1) {
+										recipe += " ";
+									}
+								}
+								culinarianMethods.parseDrink(p, recipe);
+								return true;
+							}
+						}
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
