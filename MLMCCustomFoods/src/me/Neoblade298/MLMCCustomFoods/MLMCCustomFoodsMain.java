@@ -77,31 +77,42 @@ public class MLMCCustomFoodsMain
     if (!e.getHand().equals(EquipmentSlot.HAND)) {
       return;
     }
-    
-    // Check both main and offhand for quick eat charm
-    ItemStack mainItem = p.getInventory().getItemInMainHand();
-    ItemStack offItem = p.getInventory().getItemInOffHand();
-    if(mainItem.hasItemMeta() && mainItem.getItemMeta().hasLore()) {
-    	for(String line : mainItem.getItemMeta().getLore()) {
-    		
-    	}
-    }
-    
-    
-    
     ItemStack item = p.getInventory().getItemInMainHand();
     if ((!item.hasItemMeta()) || (!item.getItemMeta().hasDisplayName())) {
       return;
     }
     ItemMeta meta = item.getItemMeta();
-    Food food = null;
-    for (String name : this.foods.keySet()) {
-      if (name.equalsIgnoreCase(meta.getDisplayName()))
-      {
-        food = (Food)this.foods.get(name);
-        break;
-      }
+    boolean quickEat = false;
+    for(String line : meta.getLore()) {
+    	if(line.contains("Quick Eat")) {
+    		quickEat = true;
+    	}
     }
+    
+    // Find the food in the inv
+    Food food = null;
+    if(quickEat) {
+    	for(int i = 9; i < 36; i++) {
+    		ItemStack invItem = p.getInventory().getItem(i);
+    		for (String name : this.foods.keySet()) {
+    		      if (name.equalsIgnoreCase(meta.getDisplayName())) {
+    		    	  food = (Food)this.foods.get(name);
+    		    	  break;
+    		      }
+    		}
+    	}
+    }
+    else {
+	    for (String name : this.foods.keySet()) {
+	      if (name.equalsIgnoreCase(meta.getDisplayName()))
+	      {
+	        food = (Food)this.foods.get(name);
+	        break;
+	      }
+	    }
+    }
+    
+    
     if (food == null) {
       return;
     }
