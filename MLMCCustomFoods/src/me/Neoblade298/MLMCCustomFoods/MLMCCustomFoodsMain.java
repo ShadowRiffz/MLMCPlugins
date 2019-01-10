@@ -93,7 +93,7 @@ public class MLMCCustomFoodsMain
     Food food = null;
     if(quickEat) {
     	ItemStack[] contents = p.getInventory().getContents();
-    	for(int i = 9; i < 36; i++) {
+    	for(int i = 9; i < 36 && food == null; i++) {
     		ItemStack invItem = contents[i];
     		if(invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 	    		ItemMeta invMeta = invItem.getItemMeta();
@@ -162,6 +162,7 @@ public class MLMCCustomFoodsMain
     
     // Food can be eaten
     food.eat(p);
+    p.sendMessage(food.getName() + " §7was eaten");
     boolean isGarnished = false, isPreserved = false, isSpiced = false;
   	for(String line : meta.getLore()) {
   		if(line.contains("Garnished")) {
