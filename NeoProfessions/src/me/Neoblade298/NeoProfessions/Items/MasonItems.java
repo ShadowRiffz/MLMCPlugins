@@ -129,7 +129,7 @@ public class MasonItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int level = 4;
 		meta.setDisplayName("§4[Lv 4] §cSecond Chance Charm");
-		lore.add("§7Level 4 Secondary Chance Charm");
+		lore.add("§7Level 4 Second Chance Charm");
 		lore.add("§7Effect: Revives on death");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
