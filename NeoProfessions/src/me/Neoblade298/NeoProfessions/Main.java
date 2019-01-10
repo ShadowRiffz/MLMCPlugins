@@ -23,7 +23,6 @@ import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
-import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
