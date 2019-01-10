@@ -230,6 +230,10 @@ public class CulinarianCommands implements CommandExecutor {
 								return true;
 							}
 						}
+						else {
+							Util.sendMessage(p, "&cInvalid crafting argument!");
+							return true;
+						}
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
