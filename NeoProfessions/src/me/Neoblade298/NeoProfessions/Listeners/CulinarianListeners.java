@@ -34,14 +34,14 @@ public class CulinarianListeners implements Listener {
 	public CulinarianListeners(Main main) {
 		this.main = main;
 		this.culinarianRecipes = main.culinarianRecipes;
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+		Bukkit.getScheduler().runTaskTimer(main, new Runnable() {
 			public void run() {
 				for(Player p : drunkness.keySet()) {
 					drunkness.put(p, drunkness.get(p) - 1);
 					CulinarianUtils.checkAlcoholDown(p, drunkness.get(p));
 				}
 			}
-		});
+		}, 0, 100L);
 		gen = new Random();
 	}
 	

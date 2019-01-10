@@ -2,9 +2,10 @@ package me.Neoblade298.NeoProfessions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,6 +81,26 @@ public class Main extends JavaPlugin implements Listener {
     for(Recipe recipe : culinarianRecipes.getRecipes()) {
       Bukkit.addRecipe(recipe);
     }
+    
+    // Setup charm timer
+	Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+		public void run() {
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				if(p.getWorld().getName().equalsIgnoreCase("Argyll") ||
+						p.getWorld().getName().equalsIgnoreCase("ClassPVP")) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+						ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+						for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
+							if(lore.get(i).contains("Hunger Charm")) {
+								p.setFoodLevel(18);
+							}
+						}
+					}
+				}
+			}
+		}
+	}, 0, 20L);
   }
   
   public void onDisable()
