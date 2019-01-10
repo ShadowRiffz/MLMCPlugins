@@ -12,6 +12,27 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class DrinksRecipeItems {
 	
+	public static ArrayList<ItemStack> getDrinks() {
+		ArrayList<ItemStack> recipes = new ArrayList<ItemStack>();
+		recipes.add(getBlackWidow());
+		recipes.add(getPinkPanther());
+		recipes.add(getMidnightKiss());
+		recipes.add(getMidnightBlue());
+		recipes.add(getGoodAndEvil());
+		recipes.add(getThorHammer());
+		recipes.add(getSwampWater());
+		recipes.add(getRedDeath());
+		recipes.add(getBlueMotorcycle());
+		recipes.add(getPinaColada());
+		recipes.add(getMargaritaOnTheRocks());
+		recipes.add(getJackFrost());
+		recipes.add(getSweetTart());
+		recipes.add(getBombsicle());
+		recipes.add(getBloodyMary());
+		recipes.add(getWhiteRussian());
+		return recipes;
+	}
+	
 	public static ItemStack getBlackWidow() {
 		ItemStack item = new ItemStack(Material.POTION);
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
