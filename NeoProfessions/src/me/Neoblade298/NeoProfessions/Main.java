@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -84,15 +86,18 @@ public class Main extends JavaPlugin implements Listener {
     // Setup charm timer
 	Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 		public void run() {
-			for(Player p : Bukkit.getOnlinePlayers()) {
-				if(p.getWorld().getName().equalsIgnoreCase("Argyll") ||
-						p.getWorld().getName().equalsIgnoreCase("ClassPVP")) {
-					ItemStack item = p.getInventory().getItemInMainHand();
-					if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
-						ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-						for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
-							if(lore.get(i).contains("Hunger Charm")) {
-								p.setFoodLevel(18);
+			for(World w : Bukkit.getWorlds()) {
+				if(w.getName().equalsIgnoreCase("Argyll") ||
+					w.getName().equalsIgnoreCase("ClassPVP")) {
+					for (Player p : w.getPlayers()) {
+						ItemStack item = p.getInventory().getItemInMainHand();
+						if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+							for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
+								if(lore.get(i).contains("Hunger Charm")) {
+									Util.sendMessage(p, "Set your food to 18");
+									p.setFoodLevel(18);
+								}
 							}
 						}
 					}
