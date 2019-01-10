@@ -92,13 +92,19 @@ public class MLMCCustomFoodsMain
     // Find the food in the inv
     Food food = null;
     if(quickEat) {
+    	ItemStack[] contents = p.getInventory().getContents();
     	for(int i = 9; i < 36; i++) {
-    		ItemStack invItem = p.getInventory().getItem(i);
-    		for (String name : this.foods.keySet()) {
-    		      if (name.equalsIgnoreCase(meta.getDisplayName())) {
-    		    	  food = (Food)this.foods.get(name);
-    		    	  break;
-    		      }
+    		ItemStack invItem = contents[i];
+    		if(invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
+	    		ItemMeta invMeta = invItem.getItemMeta();
+	    		for (String name : this.foods.keySet()) {
+	    		      if (name.equalsIgnoreCase(invMeta.getDisplayName())) {
+	    		    	  food = (Food)this.foods.get(name);
+	    		    	  item = invItem;
+	    		    	  meta = invItem.getItemMeta();
+	    		    	  break;
+	    		      }
+	    		}
     		}
     	}
     }
