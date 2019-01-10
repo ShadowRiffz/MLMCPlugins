@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.LegendaryRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.LimitedEditionRecipeItems;
@@ -280,6 +281,15 @@ public class CulinarianMethods {
 			else if(recipe.equalsIgnoreCase("pepper")) {
 				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
 			}
+			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+			}
+			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+			}
+			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
+			}
 		}
 		else {
 			Util.sendMessage(p, "&cYou do not yet have the required skill!");
@@ -350,6 +360,15 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
+			}
+			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+			}
+			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+			}
+			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
 			}
 		}
 		else {
@@ -940,6 +959,118 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("super's sundae")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getSuperSundaeRecipe(), LegendaryRecipeItems.getSuperSundae(), false, "Super's Sundae");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseDrink(Player p, String recipe) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("black widow")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
+			}
+			else if(recipe.equalsIgnoreCase("pink panther")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getPinkPantherRecipe(), DrinksRecipeItems.getPinkPanther(), false, "Pink Panther");
+			}
+			else if(recipe.equalsIgnoreCase("midnight kiss")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMidnightKissRecipe(), DrinksRecipeItems.getMidnightKiss(), false, "Midnight Kiss");
+			}
+			else if(recipe.equalsIgnoreCase("midnight blue")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMidnightBlueRecipe(), DrinksRecipeItems.getMidnightBlue(), false, "Midnight Blue");
+			}
+			else if(recipe.equalsIgnoreCase("good and evil")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getGoodAndEvilRecipe(), DrinksRecipeItems.getGoodAndEvil(), false, "Good and Evil");
+			}
+			else if(recipe.equalsIgnoreCase("thor's hammer")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getThorHammerRecipe(), DrinksRecipeItems.getThorHammer(), false, "Thor's Hammer");
+			}
+			else if(recipe.equalsIgnoreCase("jack frost")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getJackFrostRecipe(), DrinksRecipeItems.getJackFrost(), false, "Jack Frost");
+			}
+			else if(recipe.equalsIgnoreCase("white russian")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getWhiteRussianRecipe(), DrinksRecipeItems.getWhiteRussian(), false, "White Russian");
+			}
+			else if(recipe.equalsIgnoreCase("swamp water")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getSwampWaterRecipe(), DrinksRecipeItems.getSwampWater(), false, "Swamp Water");
+			}
+			else if(recipe.equalsIgnoreCase("blue motorcycle")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlueMotorcycleRecipe(), DrinksRecipeItems.getBlueMotorcycle(), false, "Blue Motorcycle");
+			}
+			else if(recipe.equalsIgnoreCase("red death")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getRedDeathRecipe(), DrinksRecipeItems.getRedDeath(), false, "Red Death");
+			}
+			else if(recipe.equalsIgnoreCase("bombsicle")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBombsicleRecipe(), DrinksRecipeItems.getBombsicle(), false, "Bombsicle");
+			}
+			else if(recipe.equalsIgnoreCase("sweet tart")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getSweetTartRecipe(), DrinksRecipeItems.getSweetTart(), false, "Sweet Tart");
+			}
+			else if(recipe.equalsIgnoreCase("pina colada")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getPinaColadaRecipe(), DrinksRecipeItems.getPinaColada(), false, "Pina Colada");
+			}
+			else if(recipe.equalsIgnoreCase("margarita on the rocks")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMargaritaOnTheRocksRecipe(), DrinksRecipeItems.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
+			}
+			else if(recipe.equalsIgnoreCase("bloody mary")) {
+				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBloodyMaryRecipe(), DrinksRecipeItems.getBloodyMary(), false, "Bloody Marry");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
+		}
+	}
+	
+	public void parseDrink(Player p, String recipe, int amount) {
+		if(p.hasPermission("culinarian.craft.3")) {
+			if(recipe.equalsIgnoreCase("black widow")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
+			}
+			else if(recipe.equalsIgnoreCase("pink panther")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getPinkPantherRecipe(), DrinksRecipeItems.getPinkPanther(), false, "Pink Panther");
+			}
+			else if(recipe.equalsIgnoreCase("midnight kiss")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMidnightKissRecipe(), DrinksRecipeItems.getMidnightKiss(), false, "Midnight Kiss");
+			}
+			else if(recipe.equalsIgnoreCase("midnight blue")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMidnightBlueRecipe(), DrinksRecipeItems.getMidnightBlue(), false, "Midnight Blue");
+			}
+			else if(recipe.equalsIgnoreCase("good and evil")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getGoodAndEvilRecipe(), DrinksRecipeItems.getGoodAndEvil(), false, "Good and Evil");
+			}
+			else if(recipe.equalsIgnoreCase("thor's hammer")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getThorHammerRecipe(), DrinksRecipeItems.getThorHammer(), false, "Thor's Hammer");
+			}
+			else if(recipe.equalsIgnoreCase("jack frost")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getJackFrostRecipe(), DrinksRecipeItems.getJackFrost(), false, "Jack Frost");
+			}
+			else if(recipe.equalsIgnoreCase("white russian")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getWhiteRussianRecipe(), DrinksRecipeItems.getWhiteRussian(), false, "White Russian");
+			}
+			else if(recipe.equalsIgnoreCase("swamp water")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getSwampWaterRecipe(), DrinksRecipeItems.getSwampWater(), false, "Swamp Water");
+			}
+			else if(recipe.equalsIgnoreCase("blue motorcycle")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlueMotorcycleRecipe(), DrinksRecipeItems.getBlueMotorcycle(), false, "Blue Motorcycle");
+			}
+			else if(recipe.equalsIgnoreCase("red death")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getRedDeathRecipe(), DrinksRecipeItems.getRedDeath(), false, "Red Death");
+			}
+			else if(recipe.equalsIgnoreCase("bombsicle")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBombsicleRecipe(), DrinksRecipeItems.getBombsicle(), false, "Bombsicle");
+			}
+			else if(recipe.equalsIgnoreCase("sweet tart")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getSweetTartRecipe(), DrinksRecipeItems.getSweetTart(), false, "Sweet Tart");
+			}
+			else if(recipe.equalsIgnoreCase("pina colada")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getPinaColadaRecipe(), DrinksRecipeItems.getPinaColada(), false, "Pina Colada");
+			}
+			else if(recipe.equalsIgnoreCase("margarita on the rocks")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMargaritaOnTheRocksRecipe(), DrinksRecipeItems.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
+			}
+			else if(recipe.equalsIgnoreCase("bloody mary")) {
+				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBloodyMaryRecipe(), DrinksRecipeItems.getBloodyMary(), false, "Bloody Marry");
 			}
 		}
 		else {
