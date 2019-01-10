@@ -235,6 +235,30 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.03, "Strength", 30);
 			}
 		}
+		else if(id.contains("Ingredient 22")) {
+			int drunk = 22 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+			} else {
+				drunkness.put(p, drunk);
+			}
+		}
+		else if(id.contains("Ingredient 23")) {
+			int drunk = 22 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+			} else {
+				drunkness.put(p, drunk);
+			}
+		}
+		else if(id.contains("Ingredient 24")) {
+			int drunk = 22 + gen.nextInt(6);
+			if(drunkness.containsKey(p)) {
+				drunkness.put(p, drunkness.get(p) + drunk);
+			} else {
+				drunkness.put(p, drunk);
+			}
+		}
 		if(drunkness.containsKey(p)) {
 			CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 		}
