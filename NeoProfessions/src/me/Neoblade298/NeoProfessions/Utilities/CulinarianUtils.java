@@ -54,17 +54,14 @@ public class CulinarianUtils {
 	
 	public static void checkAlcoholDown(Player p, int amount) {
 		if(amount == 29) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0));
 			Util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
 		}
 		else if(amount == 49) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0));
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0));
 			Util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7 (49/100).");
 		}
 		else if(amount == 69) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10*20, 0));
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0));
 			Util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7 (69/100).");
 		}
