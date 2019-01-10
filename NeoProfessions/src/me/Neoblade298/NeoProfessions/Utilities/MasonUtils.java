@@ -78,7 +78,6 @@ public class MasonUtils {
 			}
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
-			System.out.println(line);
 			durabilityLoss = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
 			Util.setMaxDurability(item, Util.getMaxDurability(item) + durabilityLoss);
 			if(isArmor) {
@@ -127,6 +126,21 @@ public class MasonUtils {
 			break;
 		}
 		return null;
+	}
+	
+	public static void breakSecondChance(ItemStack item) {
+		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			ItemMeta meta = item.getItemMeta();
+			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+			for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
+				if(lore.get(i).contains("Second Chance")) {
+					int slotLevel = Character.getNumericValue(lore.get(i).charAt(1));
+					lore.set(i, "§8(Lv " + slotLevel + " Slot)");
+					meta.setLore(lore);
+					item.setItemMeta(meta);
+				}
+			}
+		}
 	}
 	
 	public static int countSlots(ItemStack item) {

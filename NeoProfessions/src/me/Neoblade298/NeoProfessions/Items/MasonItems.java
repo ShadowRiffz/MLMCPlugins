@@ -15,15 +15,15 @@ public class MasonItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int level = 2;
 		if(isAdvanced) {
-			meta.setDisplayName("&4[Lv 3] §cAdvanced EXP Charm");
-			lore.add("§7Level 3 Advanced EXP Charm");
-			lore.add("§7Effect: Raises EXP gained by 2x");
+			meta.setDisplayName("&4[Lv 3] §cAdvanced Exp Charm");
+			lore.add("§7Level 3 Advanced Exp Charm");
+			lore.add("§7Effect: Raises Exp gained by 2x");
 			level = 3;
 		}
 		else {
-			meta.setDisplayName("§4[Lv 2] §cEXP Charm");
-			lore.add("§7Level 2 EXP Charm");
-			lore.add("§7Effect: Raises EXP gained by 1.5x");
+			meta.setDisplayName("§4[Lv 2] §cExp Charm");
+			lore.add("§7Level 2 Exp Charm");
+			lore.add("§7Effect: Raises Exp gained by 1.5x");
 		}
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,6 +27,8 @@ import net.milkbowl.vault.economy.Economy;
 public class MasonListeners implements Listener {
 	HashMap<Player, ItemStack> slotItem = new HashMap<Player, ItemStack>();
 	HashMap<Player, Integer> slotNum = new HashMap<Player, Integer>();
+	HashMap<Player, Long> secondChanceCooldown = new HashMap<Player, Long>();
+	final static long SECOND_CHANCE_COOLDOWN = 900000;
 	Random gen = new Random();
 	
 	// Constants
@@ -58,6 +62,7 @@ public class MasonListeners implements Listener {
 	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
 		for(Drop d : e.getDrops().getDrops()) {
+			System.out.println(d);
 			if(d instanceof SkillAPIDrop) {
 				double amount = d.getAmount();
 				if(e.getKiller() instanceof Player) {
@@ -65,10 +70,30 @@ public class MasonListeners implements Listener {
 					ItemStack item = p.getInventory().getItemInMainHand();
 					String charmline = MasonUtils.charmLine(item, "Exp");
 					if(charmline != null && charmline.contains("Advanced")) {
-						SkillAPI.getPlayerData(p).giveExp(amount, ExpSource.MOB);
+						d.setAmount(amount * 2);
 					}
 					else if(charmline != null) {
-						SkillAPI.getPlayerData(p).giveExp(amount * 0.5, ExpSource.MOB);
+						d.setAmount(amount * 1.5);
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if(e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			if(e.getDamage() > p.getHealth()) {
+				if((secondChanceCooldown.containsKey(p) && secondChanceCooldown.get(p) > System.currentTimeMillis()) ||
+						!secondChanceCooldown.containsKey(p)) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					String line = MasonUtils.charmLine(item, "Second Chance");
+					if(line != null) {
+						MasonUtils.breakSecondChance(item);
+						Util.sendMessage(p, "&7Your second chance charm was broken");
+						secondChanceCooldown.put(p, System.currentTimeMillis() + SECOND_CHANCE_COOLDOWN);
+						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
 					}
 				}
 			}
