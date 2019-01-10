@@ -50,10 +50,12 @@ public class BlacksmithCommands implements CommandExecutor {
 							}
 							else {
 								Util.sendMessage(p, "&cInvalid item type!");
+								return true;
 							}
 						}
 						else {
 							Util.sendMessage(p, "&cInvalid item!");
+							return true;
 						}
 					}
 					else if(args.length == 3) {
@@ -75,6 +77,7 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				
@@ -88,10 +91,12 @@ public class BlacksmithCommands implements CommandExecutor {
 						}
 						else {
 							Util.sendMessage(p, "&cInvalid upgrade parameter!");
+							return true;
 						}
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				
@@ -103,6 +108,7 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				
@@ -113,6 +119,7 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				
@@ -129,22 +136,27 @@ public class BlacksmithCommands implements CommandExecutor {
 								}
 								else {
 									Util.sendMessage(p, "&cYou don't have permission to do that!");
+									return true;
 								}
 							}
 							else {
 								Util.sendMessage(p, "&cInvalid number!");
+								return true;
 							}
 						}
 						else {
 							Util.sendMessage(p, "&cInvalid item!");
+							return true;
 						}
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
 					}
 				}
 				else {
 					Util.sendMessage(p, "&cInvalid subcommand!");
+					return true;
 				}
 			}
 		}
@@ -152,7 +164,6 @@ public class BlacksmithCommands implements CommandExecutor {
 			Util.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
 			return true;
 		}
-		return false;
 		
 		// Todo: add 0 arg command for help menu
 	}
