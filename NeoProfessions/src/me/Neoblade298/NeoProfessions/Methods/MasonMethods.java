@@ -215,7 +215,7 @@ public class MasonMethods {
 					gold = ADVANCED_QUICKEAT_GOLD;
 					essence = ADVANCED_QUICKEAT_ESSENCE;
 					level = ADVANCED_QUICKEAT_LEVEL;
-					item = MasonItems.getSecondChanceCharm();
+					item = MasonItems.getQuickEatCharm();
 					break;
 				}
 				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), essence)) {

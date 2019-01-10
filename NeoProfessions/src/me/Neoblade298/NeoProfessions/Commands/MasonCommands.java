@@ -52,7 +52,8 @@ public class MasonCommands implements CommandExecutor {
 								args[2].equalsIgnoreCase("drop") ||
 								args[2].equalsIgnoreCase("looting") ||
 								args[2].equalsIgnoreCase("secondchance") ||
-								args[2].equalsIgnoreCase("hunger")) {
+								args[2].equalsIgnoreCase("hunger") ||
+								args[2].equalsIgnoreCase("quickeat")) {
 							masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
 							return true;
 						}
