@@ -81,7 +81,6 @@ public class Main extends JavaPlugin implements Listener {
     for(Recipe recipe : culinarianRecipes.getRecipes()) {
       Bukkit.addRecipe(recipe);
     }
-    
     // Setup charm timer
 	Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 		public void run() {
