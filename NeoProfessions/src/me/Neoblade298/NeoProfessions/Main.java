@@ -23,6 +23,7 @@ import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
+import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -90,13 +91,8 @@ public class Main extends JavaPlugin implements Listener {
 					w.getName().equalsIgnoreCase("ClassPVP")) {
 					for (Player p : w.getPlayers()) {
 						ItemStack item = p.getInventory().getItemInMainHand();
-						if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
-							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-							for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
-								if(lore.get(i).contains("Hunger Charm")) {
-									p.setFoodLevel(18);
-								}
-							}
+						if(MasonUtils.charmLine(item, "Hunger") != null) {
+							p.setFoodLevel(18);
 						}
 					}
 				}

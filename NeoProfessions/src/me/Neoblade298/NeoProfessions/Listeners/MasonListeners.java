@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Listeners;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,6 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.enums.ExpSource;
+
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
+import io.lumine.xikage.mythicmobs.drops.Drop;
+import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -18,6 +25,7 @@ import net.milkbowl.vault.economy.Economy;
 public class MasonListeners implements Listener {
 	HashMap<Player, ItemStack> slotItem = new HashMap<Player, ItemStack>();
 	HashMap<Player, Integer> slotNum = new HashMap<Player, Integer>();
+	Random gen = new Random();
 	
 	// Constants
 	static final int SLOT_ESSENCE = 3;
@@ -45,6 +53,26 @@ public class MasonListeners implements Listener {
 		  	}
 		  }
 		}, 200L);
+	}
+	
+	@EventHandler
+	public void onLoot(MythicMobLootDropEvent e) {
+		for(Drop d : e.getDrops().getDrops()) {
+			if(d instanceof SkillAPIDrop) {
+				double amount = d.getAmount();
+				if(e.getKiller() instanceof Player) {
+					Player p = (Player) e.getKiller();
+					ItemStack item = p.getInventory().getItemInMainHand();
+					String charmline = MasonUtils.charmLine(item, "Exp");
+					if(charmline != null && charmline.contains("Advanced")) {
+						SkillAPI.getPlayerData(p).giveExp(amount, ExpSource.MOB);
+					}
+					else if(charmline != null) {
+						SkillAPI.getPlayerData(p).giveExp(amount * 0.5, ExpSource.MOB);
+					}
+				}
+			}
+		}
 	}
 	
 	@EventHandler

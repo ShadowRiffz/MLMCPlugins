@@ -73,8 +73,8 @@ public class MasonMethods {
 
 	public void createSlot(Player p, int level) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if (p.hasPermission("mason.engrave.tier." + level)) {
-			if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			if(p.hasPermission("mason.engrave.tier." + level)) {
 				int numSlots = MasonUtils.countSlots(item);
 				if(numSlots < MAX_SLOTS) {
 					if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {

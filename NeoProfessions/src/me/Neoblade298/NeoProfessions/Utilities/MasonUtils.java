@@ -333,6 +333,18 @@ public class MasonUtils {
 		return null;
 	}
 	
+	public static String charmLine(ItemStack item, String charm) {
+		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+			for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
+				if(lore.get(i).contains(charm)) {
+					return lore.get(i);
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static String getSlotLineAttribute(String line) {
 		if(line.contains("Strength")) {
 			return "strength";
