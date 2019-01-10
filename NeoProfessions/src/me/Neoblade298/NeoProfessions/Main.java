@@ -95,7 +95,6 @@ public class Main extends JavaPlugin implements Listener {
 							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 							for(int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
 								if(lore.get(i).contains("Hunger Charm")) {
-									Util.sendMessage(p, "Set your food to 18");
 									p.setFoodLevel(18);
 								}
 							}
