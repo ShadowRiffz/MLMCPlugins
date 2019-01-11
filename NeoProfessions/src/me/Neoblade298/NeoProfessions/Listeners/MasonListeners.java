@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
@@ -57,19 +58,57 @@ public class MasonListeners implements Listener {
 	}
 	
 	@EventHandler
+	public void onMobDeath(MythicMobDeathEvent e) {
+		if(e.getKiller() instanceof Player) {
+			Player p = (Player) e.getKiller();
+			ItemStack item = p.getInventory().getItemInMainHand();
+			if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+				String lootLine = null;
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Looting")) {
+						lootLine = line;
+						break;
+					}
+				}
+				if(lootLine != null) {
+					if(lootLine.contains("Advanced")) {
+						String[] name = e.getMobType().getDisplayName().split(" ");
+						if(name.length > 2) {
+							if(name[2].contains("]")) {
+								double amount = Double.parseDouble(name[2].substring(0, name[2].length() - 1));
+								amount = amount * (1.5 + gen.nextDouble());
+								econ.depositPlayer(p, amount);
+							}
+						}
+					}
+					else {
+						String[] name = e.getMobType().getDisplayName().split(" ");
+						if(name.length > 2) {
+							if(name[2].contains("]")) {
+								double amount = Double.parseDouble(name[2].substring(0, name[2].length() - 1));
+								amount = amount * (0.5 + gen.nextDouble());
+								econ.depositPlayer(p, amount);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
 		for(Drop d : e.getDrops().getDrops()) {
-			System.out.println(d);
 			if(d instanceof SkillAPIDrop) {
 				double amount = d.getAmount();
 				if(e.getKiller() instanceof Player) {
 					Player p = (Player) e.getKiller();
 					ItemStack item = p.getInventory().getItemInMainHand();
-					String charmline = MasonUtils.charmLine(item, "Exp");
-					if(charmline != null && charmline.contains("Advanced")) {
+					String expLine = MasonUtils.charmLine(item, "Exp");
+					if(expLine != null && expLine.contains("Advanced")) {
 						d.setAmount(amount * 2);
 					}
-					else if(charmline != null) {
+					else if(expLine != null) {
 						d.setAmount(amount * 1.5);
 					}
 				}
