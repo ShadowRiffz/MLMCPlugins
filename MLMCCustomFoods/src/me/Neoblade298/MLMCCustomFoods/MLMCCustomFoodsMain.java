@@ -83,10 +83,12 @@ public class MLMCCustomFoodsMain
     }
     ItemMeta meta = item.getItemMeta();
     boolean quickEat = false;
-    for(String line : meta.getLore()) {
-    	if(line.contains("Quick Eat")) {
-    		quickEat = true;
-    	}
+    if(meta.hasLore()) {
+	    for(String line : meta.getLore()) {
+	    	if(line.contains("Quick Eat")) {
+	    		quickEat = true;
+	    	}
+	    }
     }
     
     // Find the food in the inv
