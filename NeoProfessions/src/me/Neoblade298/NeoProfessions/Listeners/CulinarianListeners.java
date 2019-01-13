@@ -57,10 +57,12 @@ public class CulinarianListeners implements Listener {
 		ItemStack item = p.getInventory().getItemInMainHand();
 
 		boolean quickEat = false;
-		for(String line : item.getItemMeta().getLore()) {
-			if(line.contains("Quick Eat")) {
-				quickEat = true;
-				break;
+		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			for(String line : item.getItemMeta().getLore()) {
+				if(line.contains("Quick Eat")) {
+					quickEat = true;
+					break;
+				}
 			}
 		}
 		if(quickEat) {
