@@ -134,7 +134,7 @@ public class MLMCCustomFoodsMain
         }
       }
     }
-    if (!isOffCooldown(p))
+    if (!isOffCooldown(p) && !food.getName().contains("Chest"))
     {
       long remainingCooldown = 20000L;
       remainingCooldown -= System.currentTimeMillis() - ((Long)this.playerCooldowns.get(p.getUniqueId())).longValue();
@@ -242,7 +242,7 @@ public class MLMCCustomFoodsMain
       }
     }
     else {
-      Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable()
+      Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
       {
         int rep;
         
@@ -257,7 +257,7 @@ public class MLMCCustomFoodsMain
             }
           }
         }
-      }, food.getHealthDelay());
+      }, food.getHealthDelay(), food.getHealthTime());
     }
     final PlayerData fdata = data;
     if (data.getMainClass().getData().getManaName().contains("MP")) {
@@ -268,7 +268,7 @@ public class MLMCCustomFoodsMain
         }
       }
       else {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable()
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
         {
           int rep;
           
@@ -283,7 +283,7 @@ public class MLMCCustomFoodsMain
               }
             }
           }
-        }, food.getManaDelay());
+        }, food.getManaDelay(), food.getManaTime());
       }
     }
     for (Sound sound : food.getSounds()) {
