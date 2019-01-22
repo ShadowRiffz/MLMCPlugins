@@ -200,13 +200,15 @@ public class Main
   
   @EventHandler
   public void onDurabilityLoss(PlayerItemDamageEvent e) {
-  	if(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll") &&
-  			e.getDamage() > 10) {
-  		e.setCancelled(true);
-  	}
-  	else if(e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
-  		e.setCancelled(true);
-  	}
+	  if(e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore() && e.getItem().getItemMeta().getLore().get(0).contains("Tier")) {
+	  	if(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll") &&
+	  			e.getDamage() > 10) {
+	  		e.setCancelled(true);
+	  	}
+	  	else if(e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
+	  		e.setCancelled(true);
+	  	}
+	  }
   }
   
   @EventHandler
