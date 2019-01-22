@@ -78,26 +78,27 @@ public class Main
         (!FlagManager.hasFlag((LivingEntity)cause, "WeaponDur")))
     {
       Player player = (Player)cause;
+      
       ItemStack main = player.getEquipment().getItemInMainHand();
       ItemStack off = player.getEquipment().getItemInOffHand();
       double random = gen.nextDouble();
       if(random <= 0.5) {
-	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(main, player, 0);
-	      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(off, player, 5);
-	      }
+  	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().hasLore() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(main, player, 0);
+  	      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(off, player, 5);
+  	      }
       }
       else {
-	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(off, player, 0);
-	      } else if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(main, player, 5);
-	      }
+  	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().hasLore() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(off, player, 0);
+  	      } else if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(main, player, 5);
+  	      }
       }
     }
     
@@ -147,22 +148,22 @@ public class Main
       ItemStack off = player.getEquipment().getItemInOffHand();
       double random = gen.nextDouble();
       if(random <= 0.5) {
-	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(main, player, 0);
-	      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(off, player, 5);
-	      }
+  	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().hasLore() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(main, player, 0);
+  	      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(off, player, 5);
+  	      }
       }
       else {
-	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(off, player, 0);
-	      } else if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
-	        FlagManager.addFlag(player, "WeaponDur", 20);
-	        reduceDurability(main, player, 5);
-	      }
+  	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().hasLore() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(off, player, 0);
+  	      } else if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+  	        FlagManager.addFlag(player, "WeaponDur", 20);
+  	        reduceDurability(main, player, 5);
+  	      }
       }
     }
   }
@@ -179,7 +180,7 @@ public class Main
     ItemStack off = player.getEquipment().getItemInOffHand();
     double random = gen.nextDouble();
     if(random <= 0.5) {
-	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+	      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().hasLore() && main.getItemMeta().getLore().get(0).contains("Tier")) {
 	        FlagManager.addFlag(player, "WeaponDur", 20);
 	        reduceDurability(main, player, 0);
 	      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
@@ -188,7 +189,7 @@ public class Main
 	      }
     }
     else {
-	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+	      if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().hasLore() && off.getItemMeta().getLore().get(0).contains("Tier")) {
 	        FlagManager.addFlag(player, "WeaponDur", 20);
 	        reduceDurability(off, player, 0);
 	      } else if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
