@@ -77,9 +77,15 @@ public class Main
         (!FlagManager.hasFlag((LivingEntity)cause, "WeaponDur")))
     {
       Player player = (Player)cause;
-      ItemStack item = player.getEquipment().getItemInMainHand();
-      reduceDurability(item, player, 0);
-      FlagManager.addFlag(player, "WeaponDur", 20);
+      ItemStack main = player.getEquipment().getItemInMainHand();
+      ItemStack off = player.getEquipment().getItemInOffHand();
+      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
+        FlagManager.addFlag(player, "WeaponDur", 20);
+        reduceDurability(main, player, 0);
+      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+        FlagManager.addFlag(player, "WeaponDur", 20);
+        reduceDurability(off, player, 5);
+      }
     }
     
     // Lowers durability of damagee
@@ -126,10 +132,10 @@ public class Main
       
       ItemStack main = player.getEquipment().getItemInMainHand();
       ItemStack off = player.getEquipment().getItemInOffHand();
-      if (main != null) {
+      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
         FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(main, player, 0);
-      } else if (off != null) {
+      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
         FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(off, player, 5);
       }
@@ -149,10 +155,10 @@ public class Main
     if (!e.getSkill().getData().getName().equalsIgnoreCase("levelup") &&
     		!e.getSkill().getData().getName().equalsIgnoreCase("Attribute Checker") &&
         (!FlagManager.hasFlag((LivingEntity)player, "WeaponDur"))) {
-      if (main != null) {
+      if (!main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().getLore().get(0).contains("Tier")) {
         FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(main, player, 0);
-      } else if (off != null) {
+      } else if (!off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
         FlagManager.addFlag(player, "WeaponDur", 20);
         reduceDurability(off, player, 5);
       }
