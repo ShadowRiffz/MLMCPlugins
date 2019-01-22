@@ -164,7 +164,6 @@ public class MLMCCustomFoodsMain
     
     // Food can be eaten
     food.eat(p);
-    p.sendMessage(food.getName() + " §7was eaten");
     boolean isGarnished = false, isPreserved = false, isSpiced = false;
   	for(String line : meta.getLore()) {
   		if(line.contains("Garnished")) {
@@ -182,6 +181,7 @@ public class MLMCCustomFoodsMain
     // Do not add cooldowns for chests
     if (!food.getName().contains("Chest")) {
       this.playerCooldowns.put(p.getUniqueId(), Long.valueOf(System.currentTimeMillis()));
+      p.sendMessage(food.getName() + " §7was eaten");
     }
     p.setFoodLevel(Math.min(20, p.getFoodLevel() + food.getHunger()));
     p.setSaturation((float)Math.min(p.getFoodLevel(), food.getSaturation() + p.getSaturation()));
