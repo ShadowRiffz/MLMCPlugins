@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MLMCCustomFoodsMain
   extends JavaPlugin
@@ -242,22 +243,20 @@ public class MLMCCustomFoodsMain
       }
     }
     else {
-      Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
-      {
-        int rep;
-        
-        public void run()
-        {
-          if (p.isValid())
-          {
-            this.rep -= 1;
-            p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
-            if (this.rep > 0) {
-              Bukkit.getScheduler().scheduleSyncDelayedTask(MLMCCustomFoodsMain.getMain(), this, foodItem.getHealthDelay());
-            }
-          }
-        }
-      }, food.getHealthDelay(), food.getHealthTime());
+    	BukkitRunnable healthTask = new BukkitRunnable() {
+    		int rep = foodItem.getHealthTime();
+			public void run() {
+	          if (p.isValid())
+	          {
+	            this.rep -= 1;
+	            p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
+	            if (this.rep > 0) {
+	            	this.cancel();
+	            }
+	          }
+			}
+		};
+		healthTask.run();
     }
     final PlayerData fdata = data;
     if (data.getMainClass().getData().getManaName().contains("MP")) {
@@ -268,22 +267,20 @@ public class MLMCCustomFoodsMain
         }
       }
       else {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
-        {
-          int rep;
-          
-          public void run()
-          {
-            if (p.isValid())
-            {
-              this.rep -= 1;
-              fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + finalMana));
-              if (this.rep > 0) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(MLMCCustomFoodsMain.getMain(), this, foodItem.getManaDelay());
-              }
-            }
-          }
-        }, food.getManaDelay(), food.getManaTime());
+    	BukkitRunnable manaTask = new BukkitRunnable() {
+    		int rep = foodItem.getManaTime();
+			public void run() {
+	          if (p.isValid())
+	          {
+	            this.rep -= 1;
+	              fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + finalMana));
+	            if (this.rep > 0) {
+	            	this.cancel();
+	            }
+	          }
+			}
+		};
+		manaTask.run();
       }
     }
     for (Sound sound : food.getSounds()) {
