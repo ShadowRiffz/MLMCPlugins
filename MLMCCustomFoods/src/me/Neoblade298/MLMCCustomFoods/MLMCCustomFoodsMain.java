@@ -250,13 +250,13 @@ public class MLMCCustomFoodsMain
 	          {
 	            this.rep -= 1;
 	            p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
-	            if (this.rep > 0) {
+	            if (this.rep <= 0) {
 	            	this.cancel();
 	            }
 	          }
 			}
 		};
-		healthTask.run();
+		healthTask.runTaskTimer(this, 0, foodItem.getHealthDelay());
     }
     final PlayerData fdata = data;
     if (data.getMainClass().getData().getManaName().contains("MP")) {
@@ -274,13 +274,13 @@ public class MLMCCustomFoodsMain
 	          {
 	            this.rep -= 1;
 	              fdata.setMana(Math.min(fdata.getMaxMana(), fdata.getMana() + finalMana));
-	            if (this.rep > 0) {
+	            if (this.rep <= 0) {
 	            	this.cancel();
 	            }
 	          }
 			}
 		};
-		manaTask.run();
+		manaTask.runTaskTimer(this, 0, foodItem.getManaDelay());
       }
     }
     for (Sound sound : food.getSounds()) {
