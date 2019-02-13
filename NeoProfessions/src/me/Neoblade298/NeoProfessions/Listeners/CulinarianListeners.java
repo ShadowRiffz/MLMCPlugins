@@ -51,11 +51,13 @@ public class CulinarianListeners implements Listener {
 	
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent e) {
+		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
+			!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
 		if(e.getPlayer() == null ||
 			!(e.getPlayer() instanceof Player) ||
-			e.getHand().equals(EquipmentSlot.OFF_HAND) ||
-			!e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
-			!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			e.getHand().equals(EquipmentSlot.OFF_HAND)) {
 			return;
 		}
 		Player p = e.getPlayer();

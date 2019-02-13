@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Main;
@@ -25,7 +26,13 @@ public class BlacksmithListeners implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getPlayer() == null || !(e.getPlayer() instanceof Player) || !e.getAction().equals(Action.RIGHT_CLICK_AIR) || !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
+			!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+		if(e.getPlayer() == null ||
+			!(e.getPlayer() instanceof Player) ||
+			e.getHand().equals(EquipmentSlot.OFF_HAND)) {
 			return;
 		}
 		Player p = e.getPlayer();
