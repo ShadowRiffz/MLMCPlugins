@@ -13,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sucy.skill.api.event.SkillHealEvent;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
@@ -26,8 +28,9 @@ public class Main extends JavaPlugin implements Listener{
 	
 	Map<String, Map<String, Double>> damageDealt = new HashMap<String, Map<String, Double>>();
 	Map<String, Map<String, Double>> damageTaken = new HashMap<String, Map<String, Double>>();
-	Map<String, Map<String, Double>> selfHealed = new HashMap<String, Map<String, Double>>();
-	Map<String, Map<String, Double>> allyHealed = new HashMap<String, Map<String, Double>>();
+	Map<String, Double> selfHealed = new HashMap<String, Double>();
+	Map<String, Double> allyHealed = new HashMap<String, Double>();
+	Map<String, String> inBoss = new HashMap<String, String>();
 	BukkitAPIHelper helper;
 	MobManager manager;
 	YamlConfiguration conf;
@@ -102,23 +105,24 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			
 			// Damage is calculated, now display to all relevant players
-			for (String receiver : damageDealtMap.keySet()) {
+			for (String receiver : inBoss.keySet()) {
 				if(Bukkit.getPlayer(receiver) != null) {
 					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7)");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
-					Bukkit.getPlayer(receiver).sendMessage("§7[Damage Dealt / Damage Taken]");
-					for (String player : damageDealtMap.keySet()) {
-						double damageDealt = Math.round((damageDealtMap.get(player) * 100) / 100);
-						double damageTaken = 0;
-						if(damageTakenMap.containsKey(player)) {
-							damageTaken = Math.round((damageTakenMap.get(player) * 100) / 100);
-						}
+					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+					for (String player : inBoss.keySet()) {
+						int damageDealt = (int) Math.round((damageDealtMap.get(player) * 100) / 100);
+						int damageTaken = (int) Math.round((damageTakenMap.get(player) * 100) / 100);
+						int selfHeal = (int) Math.round((selfHealed.get(player) * 100) / 100);
+						int allyHeal = (int) Math.round((allyHealed.get(player) * 100) / 100);
 						
-						String stat = new String("§e" + player + "§7 - [" + (int) damageDealt + " / " + (int) damageTaken + "]");
+						String stat = new String("§e" + player + "§7 - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
 						Bukkit.getPlayer(receiver).sendMessage(stat);
 					}
 				}
 			}
+			
+			// Deprecated! Update if you need again
 			if (report && Bukkit.getPlayer("Neoblade298") != null) {
 				Bukkit.getPlayer("Neoblade298").sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
 				Bukkit.getPlayer("Neoblade298").sendMessage("§7-----");
@@ -220,6 +224,20 @@ public class Main extends JavaPlugin implements Listener{
 		if(damageDealt.containsKey(e.getMobType().getInternalName())) {
 			for (String mob : conf.getStringList(e.getMobType().getInternalName())) {
 				damageDealt.put(mob, new HashMap<String, Double>());
+				damageTaken.put(mob, new HashMap<String, Double>());
+			}
+		}
+		
+		// If a player is within 40 of a spawned boss, track their stats
+		if(conf.getKeys(false).contains(e.getMobType().getInternalName())) {
+			for(Entity entity : e.getEntity().getNearbyEntities(40, 100, 40)) {
+				if(entity instanceof Player) {
+					selfHealed.put(entity.getName(), 0.0);
+					allyHealed.put(entity.getName(), 0.0);
+					damageDealt.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
+					damageTaken.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
+					inBoss.put(entity.getName(), e.getMobType().getInternalName());
+				}
 			}
 		}
 	}
@@ -228,5 +246,20 @@ public class Main extends JavaPlugin implements Listener{
 	public void onMMReload(MythicReloadedEvent e) {
 	  	manager = MythicMobs.inst().getMobManager();
 	  	helper = MythicMobs.inst().getAPIHelper();
+	}
+	
+	@EventHandler
+	public void onSkillHeal(SkillHealEvent e) {
+		if(inBoss.containsKey(e.getHealer().getName())) {
+			// Self healing
+			if(e.getHealer().getName().equalsIgnoreCase(e.getTarget().getName())) {
+				double prevHeal = selfHealed.get(e.getHealer().getName());
+				selfHealed.put(e.getHealer().getName(), prevHeal + e.getAmount());
+			}
+			else {
+				double prevHeal = allyHealed.get(e.getHealer().getName());
+				allyHealed.put(e.getHealer().getName(), prevHeal + e.getAmount());
+			}
+		}
 	}
 }

@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.12.2-R0.1-SNAPSHOT-shaded-b1648.jar"/>
 	<classpathentry kind="lib" path="src/MythicMobs-4.4.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="SkillAPI.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
