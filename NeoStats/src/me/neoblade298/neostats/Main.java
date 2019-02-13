@@ -109,7 +109,10 @@ public class Main extends JavaPlugin implements Listener{
 					Bukkit.getPlayer(receiver).sendMessage("§7[Damage Dealt / Damage Taken]");
 					for (String player : damageDealtMap.keySet()) {
 						double damageDealt = Math.round((damageDealtMap.get(player) * 100) / 100);
-						double damageTaken = Math.round((damageTakenMap.get(player) * 100) / 100);
+						double damageTaken = 0;
+						if(damageTakenMap.containsKey(player)) {
+							damageTaken = Math.round((damageTakenMap.get(player) * 100) / 100);
+						}
 						
 						String stat = new String("§e" + player + "§7 - [" + (int) damageDealt + " / " + (int) damageTaken + "]");
 						Bukkit.getPlayer(receiver).sendMessage(stat);
@@ -194,7 +197,7 @@ public class Main extends JavaPlugin implements Listener{
 				// Make sure the entity damaging is a player
 				String player = null;
 				if(e.getEntity() instanceof Player) {
-					player = e.getDamager().getName();
+					player = e.getEntity().getName();
 				}
 
 				
@@ -204,7 +207,9 @@ public class Main extends JavaPlugin implements Listener{
 					if(playerMap.containsKey(player)) {
 						prevDamage = playerMap.get(player);
 					}
-					double newDamage = prevDamage + e.getDamage();
+					
+					// Mythicmobs always deals double damage for some reason
+					double newDamage = prevDamage + (e.getDamage() / 2);
 					playerMap.put(player, newDamage);
 				}
 			}
