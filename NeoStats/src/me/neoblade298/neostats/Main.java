@@ -26,6 +26,8 @@ public class Main extends JavaPlugin implements Listener{
 	
 	Map<String, Map<String, Double>> damageDealt = new HashMap<String, Map<String, Double>>();
 	Map<String, Map<String, Double>> damageTaken = new HashMap<String, Map<String, Double>>();
+	Map<String, Map<String, Double>> selfHealed = new HashMap<String, Map<String, Double>>();
+	Map<String, Map<String, Double>> allyHealed = new HashMap<String, Map<String, Double>>();
 	BukkitAPIHelper helper;
 	MobManager manager;
 	YamlConfiguration conf;
@@ -64,35 +66,52 @@ public class Main extends JavaPlugin implements Listener{
 	public void displayStats(String deadBoss, String displayName) {
 		// Check if the death was a boss mob
 		if (damageDealt.containsKey(deadBoss)) {
-			Map<String, Double> bossMap = damageDealt.get(deadBoss);
+			Map<String, Double> damageDealtMap = damageDealt.get(deadBoss);
+			Map<String, Double> damageTakenMap = damageTaken.get(deadBoss);
 			for (String mob : conf.getStringList(deadBoss)) {
 				
 				// Only add up damage that isn't the boss mob that died
 				if (!mob.equals(deadBoss)) {
-					Map<String, Double> mobMap = damageDealt.get(mob);
+					Map<String, Double> mobDamageDealt = damageDealt.get(mob);
+					Map<String, Double> mobDamageTaken = damageTaken.get(mob);
 
 					// Iterate through every player that damaged non-boss mobs and add them
-					if (mobMap != null) {
-						for (String player : mobMap.keySet()) {
+					if (mobDamageDealt != null) {
+						for (String player : mobDamageDealt.keySet()) {
 							double prevDamage = 0;
 							if (damageDealt.get(deadBoss).containsKey(player)) {
 								prevDamage = damageDealt.get(deadBoss).get(player);
 							}
 							prevDamage += damageDealt.get(mob).get(player);
-							bossMap.put(player, prevDamage);
+							damageDealtMap.put(player, prevDamage);
+						}
+					}
+					
+					// Iterate through players that took damage from non-boss mobs and add them
+					if (mobDamageTaken != null) {
+						for (String player : mobDamageTaken.keySet()) {
+							double prevDamage = 0;
+							if (damageTaken.get(deadBoss).containsKey(player)) {
+								prevDamage = damageTaken.get(deadBoss).get(player);
+							}
+							prevDamage += damageTaken.get(mob).get(player);
+							damageTakenMap.put(player, prevDamage);
 						}
 					}
 				}
 			}
 			
 			// Damage is calculated, now display to all relevant players
-			for (String receiver : bossMap.keySet()) {
+			for (String receiver : damageDealtMap.keySet()) {
 				if(Bukkit.getPlayer(receiver) != null) {
-					Bukkit.getPlayer(receiver).sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
+					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7)");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
-					for (String player : bossMap.keySet()) {
-						double damage = Math.round((bossMap.get(player) * 100) / 100);
-						String stat = new String("§e" + player + "§7 - " + damage);
+					Bukkit.getPlayer(receiver).sendMessage("§7[Damage Dealt / Damage Taken]");
+					for (String player : damageDealtMap.keySet()) {
+						double damageDealt = Math.round((damageDealtMap.get(player) * 100) / 100);
+						double damageTaken = Math.round((damageTakenMap.get(player) * 100) / 100);
+						
+						String stat = new String("§e" + player + "§7 - [" + (int) damageDealt + " / " + (int) damageTaken + "]");
 						Bukkit.getPlayer(receiver).sendMessage(stat);
 					}
 				}
@@ -100,8 +119,8 @@ public class Main extends JavaPlugin implements Listener{
 			if (report && Bukkit.getPlayer("Neoblade298") != null) {
 				Bukkit.getPlayer("Neoblade298").sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
 				Bukkit.getPlayer("Neoblade298").sendMessage("§7-----");
-				for (String player : bossMap.keySet()) {
-					double damage = Math.round((bossMap.get(player) * 100) / 100);
+				for (String player : damageDealtMap.keySet()) {
+					double damage = Math.round((damageDealtMap.get(player) * 100) / 100);
 					String stat = new String("§e" + player + "§7 - " + damage);
 					Bukkit.getPlayer("Neoblade298").sendMessage(stat);
 				}
