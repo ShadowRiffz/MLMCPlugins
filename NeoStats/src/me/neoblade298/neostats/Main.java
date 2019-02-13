@@ -24,7 +24,8 @@ import org.bukkit.event.EventHandler;
 
 public class Main extends JavaPlugin implements Listener{
 	
-	Map<String, Map<String, Double>> bosses = new HashMap<String, Map<String, Double>>();
+	Map<String, Map<String, Double>> damageDealt = new HashMap<String, Map<String, Double>>();
+	Map<String, Map<String, Double>> damageTaken = new HashMap<String, Map<String, Double>>();
 	BukkitAPIHelper helper;
 	MobManager manager;
 	YamlConfiguration conf;
@@ -44,10 +45,11 @@ public class Main extends JavaPlugin implements Listener{
 	    }
 	  	conf = YamlConfiguration.loadConfiguration(file);
 	  	
-	  	// Load in all bosses into a hashmap
+	  	// Load in all damageDealt into a hashmap
 	  	for (String key : conf.getKeys(false)) {
 	  		for(String mob : conf.getStringList(key)) {
-	  			bosses.put(mob, new HashMap<String, Double>());
+	  			damageDealt.put(mob, new HashMap<String, Double>());
+	  			damageTaken.put(mob, new HashMap<String, Double>());
 	  		}
 	  	}
 	  	manager = MythicMobs.inst().getMobManager();
@@ -61,22 +63,22 @@ public class Main extends JavaPlugin implements Listener{
 	  
 	public void displayStats(String deadBoss, String displayName) {
 		// Check if the death was a boss mob
-		if (bosses.containsKey(deadBoss)) {
-			Map<String, Double> bossMap = bosses.get(deadBoss);
+		if (damageDealt.containsKey(deadBoss)) {
+			Map<String, Double> bossMap = damageDealt.get(deadBoss);
 			for (String mob : conf.getStringList(deadBoss)) {
 				
 				// Only add up damage that isn't the boss mob that died
 				if (!mob.equals(deadBoss)) {
-					Map<String, Double> mobMap = bosses.get(mob);
+					Map<String, Double> mobMap = damageDealt.get(mob);
 
 					// Iterate through every player that damaged non-boss mobs and add them
 					if (mobMap != null) {
 						for (String player : mobMap.keySet()) {
 							double prevDamage = 0;
-							if (bosses.get(deadBoss).containsKey(player)) {
-								prevDamage = bosses.get(deadBoss).get(player);
+							if (damageDealt.get(deadBoss).containsKey(player)) {
+								prevDamage = damageDealt.get(deadBoss).get(player);
 							}
-							prevDamage += bosses.get(mob).get(player);
+							prevDamage += damageDealt.get(mob).get(player);
 							bossMap.put(player, prevDamage);
 						}
 					}
@@ -110,7 +112,7 @@ public class Main extends JavaPlugin implements Listener{
 			
 			// Reset boss statistics
 			for (String mob : conf.getStringList(deadBoss)) {
-				bosses.put(mob, new HashMap<String, Double>());
+				damageDealt.put(mob, new HashMap<String, Double>());
 			}
 		}
 	  	manager = MythicMobs.inst().getMobManager();
@@ -128,46 +130,73 @@ public class Main extends JavaPlugin implements Listener{
 			helper = MythicMobs.inst().getAPIHelper();
 		}
 		if (!e.getEntity().getName().contains("Location") &&
-				e.getEntity() != null &&
-				e.getEntity() instanceof Entity &&
-				helper != null &&
-				helper.isMythicMob(e.getEntity()) &&
-				bosses.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
+			e.getEntity() != null &&
+			e.getEntity() instanceof Entity &&
+			helper != null) {
+			
+			// For damage dealt to bosses
+			if (helper.isMythicMob(e.getEntity()) &&
+			damageDealt.containsKey(helper.getMythicMobInstance(e.getEntity()).getType().getInternalName())) {
+	
+					String mob = helper.getMythicMobInstance(e.getEntity()).getType().getInternalName();
+					
+					// Make sure the entity damaging is a player
+					String player = null;
+					if(e.getDamager() instanceof Player) {
+						player = e.getDamager().getName();
+					}
+					else if(e.getDamager() instanceof TippedArrow && ((TippedArrow)e.getDamager()).getShooter() instanceof Player) {
+						player = ((TippedArrow)((Arrow) e.getDamager()).getShooter()).getName();
+					}
+					else if(e.getDamager() instanceof Arrow && ((Arrow)e.getDamager()).getShooter() instanceof Player) {
+						player = ((Player)((Arrow) e.getDamager()).getShooter()).getName();
+					}
+					else {
+						return;
+					}
+					
+					if (player != null) {
+						double prevDamage = 0;
+						Map<String, Double> playerMap = damageDealt.get(mob);
+						if(playerMap.containsKey(player)) {
+							prevDamage = playerMap.get(player);
+						}
+						double newDamage = prevDamage + e.getDamage();
+						playerMap.put(player, newDamage);
+					}
+			}
+			
+			// For damage taken from bosses
+			else if (helper.isMythicMob(e.getDamager()) &&
+					damageTaken.containsKey(helper.getMythicMobInstance(e.getDamager()).getType().getInternalName())) {
 
-			String mob = helper.getMythicMobInstance(e.getEntity()).getType().getInternalName();
-			
-			// Make sure the entity damaging is a player
-			String player = null;
-			if(e.getDamager() instanceof Player) {
-				player = e.getDamager().getName();
-			}
-			else if(e.getDamager() instanceof TippedArrow && ((TippedArrow)e.getDamager()).getShooter() instanceof Player) {
-				player = ((TippedArrow)((Arrow) e.getDamager()).getShooter()).getName();
-			}
-			else if(e.getDamager() instanceof Arrow && ((Arrow)e.getDamager()).getShooter() instanceof Player) {
-				player = ((Player)((Arrow) e.getDamager()).getShooter()).getName();
-			}
-			else {
-				return;
-			}
-			
-			if (player != null) {
-				double prevDamage = 0;
-				Map<String, Double> playerMap = bosses.get(mob);
-				if(playerMap.containsKey(player)) {
-					prevDamage = playerMap.get(player);
+				String mob = helper.getMythicMobInstance(e.getDamager()).getType().getInternalName();
+				
+				// Make sure the entity damaging is a player
+				String player = null;
+				if(e.getEntity() instanceof Player) {
+					player = e.getDamager().getName();
 				}
-				double newDamage = prevDamage + e.getDamage();
-				playerMap.put(player, newDamage);
+
+				
+				if (player != null) {
+					double prevDamage = 0;
+					Map<String, Double> playerMap = damageTaken.get(mob);
+					if(playerMap.containsKey(player)) {
+						prevDamage = playerMap.get(player);
+					}
+					double newDamage = prevDamage + e.getDamage();
+					playerMap.put(player, newDamage);
+				}
 			}
 		}
 	}
 	
 	@EventHandler
 	public void onMMSpawn(MythicMobSpawnEvent e) {
-		if(bosses.containsKey(e.getMobType().getInternalName())) {
+		if(damageDealt.containsKey(e.getMobType().getInternalName())) {
 			for (String mob : conf.getStringList(e.getMobType().getInternalName())) {
-				bosses.put(mob, new HashMap<String, Double>());
+				damageDealt.put(mob, new HashMap<String, Double>());
 			}
 		}
 	}
