@@ -40,7 +40,7 @@ public class Main extends JavaPlugin implements Listener
   	int reqxp = SkillAPI.getPlayerData(viewed).getClass("class").getRequiredExp();
   	PlayerData pData = SkillAPI.getPlayerData(viewed);
   	
-  	Utilities.sendMessage(recipient, "&7-- &e" + viewed.getName() + " &6[Lv " + pLvl + " " + pClass + "] &7(" + xp + " / " + reqxp + " XP)--");
+  	Utilities.sendMessage(recipient, "&7-- &e" + viewed.getName() + " &6[Lv " + pLvl + " " + pClass + "] &7(" + xp + " / " + reqxp + " XP) --");
   	Utilities.sendMessage(recipient, "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e" + pData.getAttribute("Dexterity") + " &cDEX&7 | &e" +
   			pData.getAttribute("Intelligence") + " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Perception") + " &cPRC&7 | &e" +
   			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT");
