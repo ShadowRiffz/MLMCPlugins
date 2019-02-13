@@ -229,8 +229,9 @@ public class Main extends JavaPlugin implements Listener{
 		}
 		
 		// If a player is within 40 of a spawned boss, track their stats
+		System.out.println(e.getMobType().getInternalName());
 		if(conf.getKeys(false).contains(e.getMobType().getInternalName())) {
-			for(Entity entity : e.getEntity().getNearbyEntities(40, 100, 40)) {
+			for(Entity entity : e.getEntity().getNearbyEntities(30, 100, 30)) {
 				if(entity instanceof Player) {
 					selfHealed.put(entity.getName(), 0.0);
 					allyHealed.put(entity.getName(), 0.0);
