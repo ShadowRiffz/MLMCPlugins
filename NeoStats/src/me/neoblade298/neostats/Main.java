@@ -141,7 +141,7 @@ public class Main extends JavaPlugin implements Listener{
 	  	helper = MythicMobs.inst().getAPIHelper();
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onMMDamage(EntityDamageByEntityEvent e) {
 		// If the entity is a mythicmob and in the list, record damage
 		// Also ignores "location" entities, which are for skillapi use
@@ -183,7 +183,7 @@ public class Main extends JavaPlugin implements Listener{
 						if(playerMap.containsKey(player)) {
 							prevDamage = playerMap.get(player);
 						}
-						double newDamage = prevDamage + e.getDamage();
+						double newDamage = prevDamage + e.getFinalDamage();
 						playerMap.put(player, newDamage);
 					}
 			}
@@ -208,8 +208,7 @@ public class Main extends JavaPlugin implements Listener{
 						prevDamage = playerMap.get(player);
 					}
 					
-					// Mythicmobs always deals double damage for some reason
-					double newDamage = prevDamage + (e.getDamage() / 2);
+					double newDamage = prevDamage + (e.getFinalDamage());
 					playerMap.put(player, newDamage);
 				}
 			}
