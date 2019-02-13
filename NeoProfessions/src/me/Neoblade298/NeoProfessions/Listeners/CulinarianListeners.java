@@ -546,7 +546,7 @@ public class CulinarianListeners implements Listener {
 		if(e.getInventory().getHolder() instanceof Player) {
 			Player p = (Player) e.getInventory().getHolder();
 			CraftingInventory inv = e.getInventory();
-			if(inv.getResult() == null) {
+			if(inv.getResult() == null || !inv.getResult().hasItemMeta() || !inv.getResult().getItemMeta().hasDisplayName()) {
 				return;
 			}
 			else if(inv.getResult().getItemMeta().getDisplayName().contains("Vodka")) {
