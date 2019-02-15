@@ -122,6 +122,12 @@ public class Main extends JavaPlugin implements Listener{
 				}
 			}
 			
+			for (String receiver : inBoss.keySet()) {
+				selfHealed.remove(receiver);
+				allyHealed.remove(receiver);
+				inBoss.remove(receiver);
+			}
+			
 			// Deprecated! Update if you need again
 			if (report && Bukkit.getPlayer("Neoblade298") != null) {
 				Bukkit.getPlayer("Neoblade298").sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
@@ -139,6 +145,7 @@ public class Main extends JavaPlugin implements Listener{
 			// Reset boss statistics
 			for (String mob : conf.getStringList(deadBoss)) {
 				damageDealt.put(mob, new HashMap<String, Double>());
+				damageTaken.put(mob, new HashMap<String, Double>());
 			}
 		}
 	  	manager = MythicMobs.inst().getMobManager();
@@ -229,7 +236,6 @@ public class Main extends JavaPlugin implements Listener{
 		}
 		
 		// If a player is within 40 of a spawned boss, track their stats
-		System.out.println(e.getMobType().getInternalName());
 		if(conf.getKeys(false).contains(e.getMobType().getInternalName())) {
 			for(Entity entity : e.getEntity().getNearbyEntities(30, 100, 30)) {
 				if(entity instanceof Player) {
@@ -238,8 +244,10 @@ public class Main extends JavaPlugin implements Listener{
 					damageDealt.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
 					damageTaken.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
 					inBoss.put(entity.getName(), e.getMobType().getInternalName());
+					System.out.println(entity.getName());
 				}
 			}
+			System.out.println(inBoss);
 		}
 	}
 	
