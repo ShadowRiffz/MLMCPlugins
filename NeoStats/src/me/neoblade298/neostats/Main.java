@@ -58,7 +58,7 @@ public class Main extends JavaPlugin implements Listener{
 	  		}
 	  	}
 	  	manager = MythicMobs.inst().getMobManager();
-	  	helper = MythicMobs.inst().getAPIHelper();
+	  	helper = MythicMobs.inst().getAPIHelper();//
 	}
 	  
 	public void onDisable() {
@@ -106,7 +106,7 @@ public class Main extends JavaPlugin implements Listener{
 			
 			// Damage is calculated, now display to all relevant players
 			for (String receiver : inBoss.keySet()) {
-				if(Bukkit.getPlayer(receiver) != null) {
+				if(Bukkit.getPlayer(receiver) != null && inBoss.get(receiver).equals(deadBoss)) {
 					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7)");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
 					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
