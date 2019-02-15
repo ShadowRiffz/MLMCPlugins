@@ -247,10 +247,8 @@ public class Main extends JavaPlugin implements Listener{
 					damageDealt.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
 					damageTaken.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
 					inBoss.put(entity.getName(), e.getMobType().getInternalName());
-					System.out.println(entity.getName());
 				}
 			}
-			System.out.println(inBoss);
 		}
 	}
 	
