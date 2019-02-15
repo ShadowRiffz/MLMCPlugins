@@ -1,6 +1,7 @@
 package me.neoblade298.neostats;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Bukkit;
@@ -38,10 +39,10 @@ public class Main extends JavaPlugin implements Listener{
 	boolean report;
 	  
 	public void onEnable() {
-		super.onEnable();
-		Bukkit.getServer().getLogger().info("NeoStats Enabled");
-		getServer().getPluginManager().registerEvents(this, this);
-		this.getCommand("neostats").setExecutor(new Commands(this));
+			super.onEnable();
+			Bukkit.getServer().getLogger().info("NeoStats Enabled");
+			getServer().getPluginManager().registerEvents(this, this);
+			this.getCommand("neostats").setExecutor(new Commands(this));
 	    
 	    // Save config if doesn't exist
 	    File file = new File(getDataFolder(), "config.yml");
@@ -105,8 +106,9 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			
 			// Damage is calculated, now display to all relevant players
+			ArrayList<String> toRemove = new ArrayList<String>();
 			for (String receiver : inBoss.keySet()) {
-				if(Bukkit.getPlayer(receiver) != null) {
+				if(Bukkit.getPlayer(receiver) != null && inBoss.get(receiver).equals(deadBoss)) {
 					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7)");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
 					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
@@ -118,14 +120,15 @@ public class Main extends JavaPlugin implements Listener{
 						
 						String stat = new String("§e" + player + "§7 - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
 						Bukkit.getPlayer(receiver).sendMessage(stat);
+						toRemove.add(receiver);
 					}
 				}
 			}
 			
-			for (String receiver : inBoss.keySet()) {
-				selfHealed.remove(receiver);
-				allyHealed.remove(receiver);
-				inBoss.remove(receiver);
+			for (String player : toRemove) {
+				selfHealed.remove(player);
+				allyHealed.remove(player);
+				inBoss.remove(player);
 			}
 			
 			// Deprecated! Update if you need again
