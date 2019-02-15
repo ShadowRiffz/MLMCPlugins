@@ -113,15 +113,22 @@ public class Main extends JavaPlugin implements Listener{
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
 					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 					for (String player : inBoss.keySet()) {
-						int damageDealt = (int) Math.round((damageDealtMap.get(player) * 100) / 100);
-						int damageTaken = (int) Math.round((damageTakenMap.get(player) * 100) / 100);
-						int selfHeal = (int) Math.round((selfHealed.get(player) * 100) / 100);
-						int allyHeal = (int) Math.round((allyHealed.get(player) * 100) / 100);
+						if(Bukkit.getPlayer(player) != null && inBoss.get(player).equals(deadBoss)) {
+							int damageDealt = (int) Math.round((damageDealtMap.get(player) * 100) / 100);
+							int damageTaken = (int) Math.round((damageTakenMap.get(player) * 100) / 100);
+							int selfHeal = (int) Math.round((selfHealed.get(player) * 100) / 100);
+							int allyHeal = (int) Math.round((allyHealed.get(player) * 100) / 100);
 						
-						String stat = new String("§e" + player + "§7 - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
-						Bukkit.getPlayer(receiver).sendMessage(stat);
-						toRemove.add(receiver);
+							String stat = new String("§e" + player + "§7 - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+							Bukkit.getPlayer(receiver).sendMessage(stat);
+							toRemove.add(receiver);
+						}
 					}
+				}
+				
+				// Remove offline players
+				else if(Bukkit.getPlayer(receiver) == null) {
+					toRemove.add(receiver);
 				}
 			}
 			
