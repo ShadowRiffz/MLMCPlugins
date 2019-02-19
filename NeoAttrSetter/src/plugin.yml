@@ -1,0 +1,8 @@
+name: NeoAttrSetter
+author: Neoblade298
+main: me.neoblade298.neoattrsetter.Main
+version: 1.0
+commands:
+  attrs:
+    description: Opens a help menu
+    usage: /attrs
