@@ -52,15 +52,36 @@ public class Commands implements CommandExecutor{
 					// attrs set [attr] [amt]
 					else if(args.length == 3 && args[0].equalsIgnoreCase("set")) {
 						if(validAttrs.contains(args[1].toLowerCase())) {
+							// fix shortened attrs
+							String attr = args[1].toLowerCase();
+							if(args[1].equalsIgnoreCase("str")) {
+								attr = "strength";
+							}
+							if(args[1].equalsIgnoreCase("dex")) {
+								attr = "dexterity";
+							}
+							if(args[1].equalsIgnoreCase("int")) {
+								attr = "intelligence";
+							}
+							if(args[1].equalsIgnoreCase("spr")) {
+								attr = "spirit";
+							}
+							if(args[1].equalsIgnoreCase("prc")) {
+								attr = "perception";
+							}
+							if(args[1].equalsIgnoreCase("end")) {
+								attr = "endurance";
+							}
+							
 							if(StringUtils.isNumeric(args[2])) {
 								int newNum = Integer.parseInt(args[2]);
-								if(newNum < 0) {
-									int oldNum = data.getInvestedAttribute(args[1]);
+								if(newNum > 0) {
+									int oldNum = data.getInvestedAttribute(attr);
 									int diff = newNum - oldNum;
 									if(diff > 0) {
 										if(data.getAttributePoints() >= diff) {
 											for(int i = diff; i > 0; i--) {
-												data.upAttribute(args[1]);
+												data.upAttribute(attr);
 											}
 											msgP(p, "&7Success! Attribute set.");
 											return true;
@@ -72,7 +93,7 @@ public class Commands implements CommandExecutor{
 									}
 									else if(diff < 0) {
 										for(int i = diff; i > 0; i--) {
-											data.refundAttribute(args[1]);
+											data.refundAttribute(attr);
 										}
 										msgP(p, "&7Success! Attribute set.");
 										return true;
