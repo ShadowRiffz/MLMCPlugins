@@ -75,7 +75,7 @@ public class Commands implements CommandExecutor{
 							
 							if(StringUtils.isNumeric(args[2])) {
 								int newNum = Integer.parseInt(args[2]);
-								if(newNum > 0) {
+								if(newNum >= 0) {
 									int oldNum = data.getInvestedAttribute(attr);
 									int diff = newNum - oldNum;
 									if(diff > 0) {
@@ -100,7 +100,7 @@ public class Commands implements CommandExecutor{
 									}
 								}
 								else {
-									msgP(p, "&cThe number you specify must be positive!");
+									msgP(p, "&cThe number you specify must be greater than or equal to 0!");
 									return true;
 								}
 							}
