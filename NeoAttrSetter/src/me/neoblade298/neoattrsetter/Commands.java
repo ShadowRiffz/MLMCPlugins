@@ -37,7 +37,7 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(args.length > 1) {
+		if(args.length > 0) {
 			if(sender instanceof Player) {
 				Player p = (Player) sender;
 				if(p.getWorld().getName().equals("Argyll") ||
@@ -47,6 +47,7 @@ public class Commands implements CommandExecutor{
 					// attrs reset
 					if(args.length == 1 && args[0].equalsIgnoreCase("reset")) {
 						data.refundAttributes();
+						msgP(p, "&7Success! All attributes refunded.");
 						return true;
 					}
 					// attrs set [attr] [amt]
@@ -92,7 +93,7 @@ public class Commands implements CommandExecutor{
 										}
 									}
 									else if(diff < 0) {
-										for(int i = diff; i > 0; i--) {
+										for(int i = diff; i < 0; i++) {
 											data.refundAttribute(attr);
 										}
 										msgP(p, "&7Success! Attribute set.");
