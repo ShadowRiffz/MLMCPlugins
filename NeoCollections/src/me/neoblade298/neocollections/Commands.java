@@ -52,6 +52,8 @@ public class Commands implements CommandExecutor{
 				}
 				return true;
 			}
+			sender.sendMessage("Something went wrong.");
+			return true;
 		}
 		
 		// Debug command
