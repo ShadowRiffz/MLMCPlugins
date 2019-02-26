@@ -88,6 +88,7 @@ public class Main extends JavaPlugin implements Listener {
   public void updateBonuses(Player p) {
   	  // Make sure the player has no bonuses already equipped
 	  if(playerMap.containsKey(p.getName())) {
+		  removeBonuses(p);
 		  resetBonuses(p);
 	  }
 	  int f_str = 0, f_dex = 0, f_int = 0, f_spr = 0, f_prc = 0, f_end = 0, f_vit = 0;
@@ -99,7 +100,6 @@ public class Main extends JavaPlugin implements Listener {
 		  
 		  // Add normal permanent collections
 		  if(p.hasPermission("collections.permanent." + numColl) || p.hasPermission("collections.unlock." + numColl)) {
-			  System.out.println("collections.permanent." + numColl);
 			  f_str += attrBonuses.get(numColl).getStrength();
 			  f_dex += attrBonuses.get(numColl).getDexterity();
 			  f_int += attrBonuses.get(numColl).getIntelligence();
@@ -111,7 +111,6 @@ public class Main extends JavaPlugin implements Listener {
 		  
 		  // Add shiny permanent collections
 		  if(p.hasPermission("collections.sh.permanent." + numColl) || p.hasPermission("collections.sh.unlock." + numColl)) {
-			  System.out.println("collections.sh.permanent." + numColl);
 			  f_str += shinyBonuses.get(numColl).getStrength();
 			  f_dex += shinyBonuses.get(numColl).getDexterity();
 			  f_int += shinyBonuses.get(numColl).getIntelligence();
@@ -126,7 +125,6 @@ public class Main extends JavaPlugin implements Listener {
 	  boolean foundColl = false, foundShinyColl = false;
 	  for(int i = 1; i <= maxCollections; i++) {
 		  if(p.hasPermission("collections.use." + i)) {
-			  System.out.println("collections.use." + i);
 			  f_str += attrBonuses.get(i).getStrength();
 			  f_dex += attrBonuses.get(i).getDexterity();
 			  f_int += attrBonuses.get(i).getIntelligence();
@@ -137,7 +135,6 @@ public class Main extends JavaPlugin implements Listener {
 			  foundColl = true;
 		  }
 		  if(p.hasPermission("collections.sh.use." + i)) {
-			  System.out.println("collections.sh.use." + i);
 			  f_str += shinyBonuses.get(i).getStrength();
 			  f_dex += shinyBonuses.get(i).getDexterity();
 			  f_int += shinyBonuses.get(i).getIntelligence();
@@ -165,16 +162,20 @@ public class Main extends JavaPlugin implements Listener {
   
   public void resetBonuses(Player p) {
 	  if(playerMap.containsKey(p.getName())) {
-		  /* This stuff might be causing unnecessary bugs
-	  	if(p != null && (p.getWorld().getName().equalsIgnoreCase("Argyll") || p.getWorld().getName().equalsIgnoreCase("ClassPVP"))) {
-	  			playerMap.get(p.getName()).removeAttributes(p);
-	  	}
-	  	*/
 		  playerMap.remove(p.getName());
 		  if(debug) {
 		  	Bukkit.getPlayer("Neoblade298").sendMessage(p.getName() + " reset their attributes");
 		  }
 	  }
+  }
+  
+  public void removeBonuses(Player p) {
+  	  if(p != null && (p.getWorld().getName().equalsIgnoreCase("Argyll") || p.getWorld().getName().equalsIgnoreCase("ClassPVP"))) {
+		  playerMap.get(p.getName()).removeAttributes(p);
+		  if(debug) {
+			  Bukkit.getPlayer("Neoblade298").sendMessage(p.getName() + " removed their attributes");
+		  }
+  	  }
   }
   
   public void updateAll() {
@@ -192,6 +193,15 @@ public class Main extends JavaPlugin implements Listener {
 	  }
 	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
 		  resetBonuses(p);
+	  }
+  }
+  
+  public void removeAll() {
+	  for(Player p : Bukkit.getWorld("Argyll").getPlayers()) {
+		  removeBonuses(p);
+	  }
+	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
+		  removeBonuses(p);
 	  }
   }
 }

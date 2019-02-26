@@ -41,6 +41,17 @@ public class Commands implements CommandExecutor{
 				}
 				return true;
 			}
+			// neocollections remove [player]
+			// Forcibly takes away collections from player
+			if(args[0].equalsIgnoreCase("remove")) {
+				if(args[1].equalsIgnoreCase("all")) {
+					main.removeAll();
+				}
+				else {
+					main.removeBonuses(Bukkit.getPlayer(args[1]));
+				}
+				return true;
+			}
 		}
 		
 		// Debug command
