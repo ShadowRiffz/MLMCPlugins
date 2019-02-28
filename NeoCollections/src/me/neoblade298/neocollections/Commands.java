@@ -18,7 +18,7 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("*")) {
+		if(sender.isOp()) {
 			// neocollections reset [player]
 			// Removes player from map, used on skillAPI cleanup
 			if(args[0].equalsIgnoreCase("reset")) {
@@ -52,21 +52,14 @@ public class Commands implements CommandExecutor{
 				}
 				return true;
 			}
+			// Debug command
+			if(args[0].equalsIgnoreCase("debug")) {
+				main.debug = !main.debug;
+				sender.sendMessage("Debug " + main.debug);
+				return true;
+			}
 			sender.sendMessage("Something went wrong.");
 			return true;
-		}
-		
-		// Debug command
-		if(args[0].equalsIgnoreCase("debug")) {
-			main.debug = !main.debug;
-			sender.sendMessage("Debug " + main.debug);
-			return true;
-		}
-		
-		// Second debug command
-		if(args[0].equalsIgnoreCase("test")) {
-			SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).updateHealthAndMana(Bukkit.getPlayer(args[1]));
-			sender.sendMessage("Updated health and mana of " + args[1]);
 		}
 		sender.sendMessage("Something went wrong.");
 		return true;
