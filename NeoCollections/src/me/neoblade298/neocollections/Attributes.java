@@ -1,17 +1,14 @@
 package me.neoblade298.neocollections;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 
 public class Attributes {
-	private Main main = null;
 	private int strength, dexterity, intelligence, spirit, perception, endurance, vitality;
 	
-	public Attributes (Main main, int strength, int dexterity, int intelligence, int spirit, int perception, int endurance, int vitality) {
-		this.main = main;
+	public Attributes (int strength, int dexterity, int intelligence, int spirit, int perception, int endurance, int vitality) {
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.intelligence = intelligence;
