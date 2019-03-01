@@ -5,8 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.sucy.skill.SkillAPI;
-
 
 public class Commands implements CommandExecutor{
 	private Main main = null;
@@ -58,7 +56,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("Debug " + main.debug);
 				return true;
 			}
-			sender.sendMessage("Something went wrong.");
+			sender.sendMessage("Something went wrong even though you're op.");
 			return true;
 		}
 		sender.sendMessage("Something went wrong.");

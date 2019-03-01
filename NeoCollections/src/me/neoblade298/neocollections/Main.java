@@ -14,8 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 public class Main extends JavaPlugin implements Listener {
   File file = null;
@@ -208,5 +207,15 @@ public class Main extends JavaPlugin implements Listener {
 	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
 		  removeBonuses(p);
 	  }
+  }
+  
+  @EventHandler
+  public void onPlayerQuit(PlayerQuitEvent e) {
+	  Player p = e.getPlayer();
+	  // If class has a perma-attribute buff, also remove collections attribute (fixes health bug)
+	  if(FlagManager.hasFlag(p, "fl_neocollections")) {
+		  removeBonuses(p);
+	  }
+	  
   }
 }
