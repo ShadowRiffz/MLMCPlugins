@@ -12,13 +12,13 @@ public class Main extends JavaPlugin implements Listener {
 
 	  public void onEnable()
 	  {
-	    Bukkit.getServer().getLogger().info("NeoChars Enabled");
+	    Bukkit.getServer().getLogger().info("NeoCreativeTP Enabled");
 	    getServer().getPluginManager().registerEvents(this, this);
 	  }
 	  
 	  public void onDisable()
 	  {
-	    Bukkit.getServer().getLogger().info("NeoChars Disabled");
+	    Bukkit.getServer().getLogger().info("NeoCreativeTP Disabled");
 	  }
 	  
 	  @EventHandler
@@ -26,8 +26,10 @@ public class Main extends JavaPlugin implements Listener {
 		  Player p = e.getPlayer();
 		  String cmd = e.getMessage();
 		  if(p.getWorld().getName().equalsIgnoreCase(("Creative"))) {
-			  System.out.println(cmd);
-			  if(cmd.equalsIgnoreCase("spawn")) {
+			  if(cmd.equalsIgnoreCase("/spawn") ||
+					  cmd.equalsIgnoreCase("/t spawn") ||
+					  cmd.equalsIgnoreCase("/town spawn")) {
+				  System.out.println("Success");
 				  p.setGameMode(GameMode.SURVIVAL);
 			  }
 		  }
