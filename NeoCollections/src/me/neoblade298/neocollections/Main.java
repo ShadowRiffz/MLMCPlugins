@@ -160,7 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 	  playerMap.put(p.getName(), attrSet);
 	  attrSet.applyAttributes(p);
 	  if(debug) {
-	  	Bukkit.getPlayer("Neoblade298").sendMessage(attrSet.toString());
+	  	Bukkit.getPlayer("Neoblade298").sendMessage("Update " + p.getName() + ": " + attrSet.toString());
 	  }
   }
   
@@ -207,6 +207,57 @@ public class Main extends JavaPlugin implements Listener {
 	  for(Player p : Bukkit.getWorld("ClassPVP").getPlayers()) {
 		  removeBonuses(p);
 	  }
+  }
+  
+  public void reload() {
+
+	    // Load values from config
+	  	maxCollections = getConfig().getInt("Max_Collection");
+	  	permCollections = getConfig().getIntegerList("Permanent_Collections");
+	  	
+	  	// Reset the array lists
+	    attrBonuses = new ArrayList<Attributes>(maxCollections + 1);
+	    shinyBonuses = new ArrayList<Attributes>(maxCollections + 1);
+	    
+	  	attrBonuses.add(new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+	  	shinyBonuses.add(new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+	  	ConfigurationSection collection = getConfig().getConfigurationSection("Collection_Bonuses");
+	  	ConfigurationSection shinyCollection = getConfig().getConfigurationSection("Shiny_Collection_Bonuses");
+		
+		// Initialize arrays
+		for(int i = 0; i < maxCollections + 1; i++) {
+			attrBonuses.add(i, new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+			shinyBonuses.add(i, new Attributes(this, 0, 0, 0, 0, 0, 0, 0));
+		}
+	  	
+	  	// Load in all attribute bonuses
+	  	for(int i = 1; i <= maxCollections; i++) {
+	  		ConfigurationSection curr_collection = collection.getConfigurationSection(Integer.toString(i));
+	  		ConfigurationSection curr_shiny = shinyCollection.getConfigurationSection(Integer.toString(i));
+	  		
+	  		int c_str = curr_collection.getInt("Strength");
+	  		int c_dex = curr_collection.getInt("Dexterity");
+	  		int c_int = curr_collection.getInt("Intelligence");
+	  		int c_spr = curr_collection.getInt("Spirit");
+	  		int c_prc = curr_collection.getInt("Perception");
+	  		int c_end = curr_collection.getInt("Endurance");
+	  		int c_vit = curr_collection.getInt("Vitality");
+	  		
+
+	  		int s_str = curr_shiny.getInt("Strength");
+	  		int s_dex = curr_shiny.getInt("Dexterity");
+	  		int s_int = curr_shiny.getInt("Intelligence");
+	  		int s_spr = curr_shiny.getInt("Spirit");
+	  		int s_prc = curr_shiny.getInt("Perception");
+	  		int s_end = curr_shiny.getInt("Endurance");
+	  		int s_vit = curr_shiny.getInt("Vitality");
+	  		
+	  		Attributes attrs = new Attributes(this, c_str, c_dex, c_int, c_spr, c_prc, c_end, c_vit);
+	  		attrBonuses.set(i, attrs);
+	  		
+	  		Attributes shiny_attrs = new Attributes(this, s_str, s_dex, s_int, s_spr, s_prc, s_end, s_vit);
+	  		shinyBonuses.set(i, shiny_attrs);
+	  	}
   }
   
   @EventHandler

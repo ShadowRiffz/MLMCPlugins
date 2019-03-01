@@ -23,9 +23,6 @@ public class Attributes {
 	
 	public void applyAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
-		if(main.debug) {
-			Bukkit.getPlayer("Neoblade298").sendMessage("Loading: " + strength + " " + dexterity + " " + intelligence + " " + endurance + " " + vitality);
-		}
 		data.addBonusAttributes("Strength", strength);
 		data.addBonusAttributes("Dexterity", dexterity);
 		data.addBonusAttributes("Intelligence", intelligence);
@@ -33,16 +30,10 @@ public class Attributes {
 		data.addBonusAttributes("Perception", perception);
 		data.addBonusAttributes("Endurance", endurance);
 		data.addBonusAttributes("Vitality", vitality);
-		if(main.debug) {
-			Bukkit.getPlayer("Neoblade298").sendMessage(data.getAttributes().toString());
-		}
 	}
 	
 	public void removeAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
-		if(main.debug) {
-			Bukkit.getPlayer("Neoblade298").sendMessage("Removing: " + strength + " " + dexterity + " " + intelligence + " " + endurance + " " + vitality);
-		}
 		data.addBonusAttributes("Strength", -strength);
 		data.addBonusAttributes("Dexterity", -dexterity);
 		data.addBonusAttributes("Intelligence", -intelligence);
@@ -50,9 +41,6 @@ public class Attributes {
 		data.addBonusAttributes("Perception", -perception);
 		data.addBonusAttributes("Endurance", -endurance);
 		data.addBonusAttributes("Vitality", -vitality);
-		if(main.debug) {
-			Bukkit.getPlayer("Neoblade298").sendMessage(data.getAttributes().toString());
-		}
 	}
 	
 	public int getStrength() {
