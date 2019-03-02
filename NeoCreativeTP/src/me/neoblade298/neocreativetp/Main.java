@@ -25,12 +25,13 @@ public class Main extends JavaPlugin implements Listener {
 	  public void onPlayerCommand(PlayerCommandPreprocessEvent e) {
 		  Player p = e.getPlayer();
 		  String cmd = e.getMessage();
+		  cmd = cmd.toLowerCase();
 		  if(p.getWorld().getName().equalsIgnoreCase(("Creative"))) {
-			  if(cmd.equalsIgnoreCase("/spawn") ||
-					  cmd.equalsIgnoreCase("/t spawn") ||
-					  cmd.equalsIgnoreCase("/town spawn")) {
-				  System.out.println("Success");
-				  p.setGameMode(GameMode.SURVIVAL);
+			  if(cmd.equals("/spawn") ||
+					  cmd.equals("/town spawn") ||
+					  (cmd.contains("/warp") && !cmd.equals("/warp creative"))) {
+				  cmd = "/spawn";
+				  p.setGameMode(GameMode.SPECTATOR);
 			  }
 		  }
 	  }
