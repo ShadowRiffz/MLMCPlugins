@@ -60,23 +60,25 @@ public class Main extends JavaPlugin implements Listener {
 		  PlayerData data = SkillAPI.getPlayerData(p);
 		  data.resetAttribs();
 		  data.reset("class");
-		  data.setClass(SkillAPI.getClass(rclass));
-		  data.setAttribPoints(0);
+		  data.profess(SkillAPI.getClass(rclass));
 		  PlayerClass pclass = data.getClass("class");
 		  pclass.setLevel(10);
 		  pclass.setPoints(20);
-		  data.updateHealthAndMana(p);
+		  data.init(p);
 	  }
 	  
 	  public void resetTier2(Player p, String rclass) {
 		  PlayerData data = SkillAPI.getPlayerData(p);
 		  data.resetAttribs();
 		  data.reset("class");
-		  data.setClass(SkillAPI.getClass(rclass));
-		  data.setAttribPoints(60);
+		  data.profess(SkillAPI.getClass("Beginner"));
 		  PlayerClass pclass = data.getClass("class");
+		  pclass.setLevel(10);
+		  data.profess(SkillAPI.getClass(rclass));
+		  pclass = data.getClass("class");
+		  data.setAttribPoints(60);
 		  pclass.setLevel(30);
 		  pclass.setPoints(60);
-		  data.updateHealthAndMana(p);
+		  data.init(p);
 	  }
 }
