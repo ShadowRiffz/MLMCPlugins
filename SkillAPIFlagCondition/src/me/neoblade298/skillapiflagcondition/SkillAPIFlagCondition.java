@@ -1,7 +1,11 @@
 package me.neoblade298.skillapiflagcondition;
 
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
@@ -17,14 +21,14 @@ import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 public class SkillAPIFlagCondition extends AbstractCustomCondition implements IEntityCondition {
     private String[] flags;
     private boolean castinstead = false;
+    private String msg;
+    private boolean cooldown = true;
     
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
-        if(this.flags[1].equals("castinstead")) {
-        	castinstead = true;
-        	this.flags = new String[] {this.flags[0]};
-        }
+        castinstead = mlc.getString("castinstead").equals("true");
+        msg = mlc.getString("msg");
     }
 
     public boolean check(AbstractEntity t) {
@@ -36,6 +40,28 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         	for (String flag : flags) {
         		if (FlagManager.hasFlag(ent, flag)) {
         	    	if (castinstead) {
+            	    	if(msg != null) {
+            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getLivingEntity().getNearbyEntities(40, 40, 40);
+            	    		msg = msg.replace("<mob.name>", am.getEntity().getName());
+            	    		msg = msg.replace("&", "§");
+            	    		msg = msg.replace("_", " ");
+    	    				if(cooldown && !am.getEntity().hasScoreboardTag("StunTag")) {
+        	    				cooldown = false;
+    	        	    		for(Entity e : near) {
+    	        	    			if (e instanceof Player) {
+    	        	    				Player p = (Player) e;
+    	        	    				p.sendMessage(msg);
+    	        	    			}
+    	        	    		}
+        	    				try {
+    								TimeUnit.MILLISECONDS.sleep(500);
+        						    cooldown = true;
+    							} catch (InterruptedException e1) {
+    								// TODO Auto-generated catch block
+    								e1.printStackTrace();
+    							}
+            	    		}
+            	    	}
         	    		am.getEntity().addScoreboardTag("StunTag");
         	    	}
         			result = true;
