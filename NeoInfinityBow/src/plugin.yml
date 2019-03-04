@@ -3,6 +3,6 @@ author: Neoblade298
 main: me.neoblade298.neoinfinitybow.Main
 version: 1.00
 commands:
-  cooldown:
+  neoinfinitybow:
     description: Does its job
     usage: /neoinfinitybow
