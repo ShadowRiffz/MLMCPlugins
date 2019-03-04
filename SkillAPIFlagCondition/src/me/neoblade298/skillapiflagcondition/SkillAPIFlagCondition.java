@@ -1,8 +1,6 @@
 package me.neoblade298.skillapiflagcondition;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +20,6 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
     private String[] flags;
     private boolean castinstead = false;
     private String msg;
-    private boolean cooldown = true;
     
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
@@ -45,24 +42,16 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
             	    		msg = msg.replace("<mob.name>", am.getEntity().getName());
             	    		msg = msg.replace("&", "§");
             	    		msg = msg.replace("_", " ");
-    	    				if(cooldown && !am.getEntity().hasScoreboardTag("StunTag")) {
-        	    				cooldown = false;
+    	    				if(!am.getEntity().hasScoreboardTag("StunTag")) {
+    	        	    		am.getEntity().addScoreboardTag("StunTag");
     	        	    		for(Entity e : near) {
     	        	    			if (e instanceof Player) {
     	        	    				Player p = (Player) e;
     	        	    				p.sendMessage(msg);
     	        	    			}
     	        	    		}
-        	    				try {
-    								TimeUnit.MILLISECONDS.sleep(500);
-        						    cooldown = true;
-    							} catch (InterruptedException e1) {
-    								// TODO Auto-generated catch block
-    								e1.printStackTrace();
-    							}
             	    		}
             	    	}
-        	    		am.getEntity().addScoreboardTag("StunTag");
         	    	}
         			result = true;
         		}
