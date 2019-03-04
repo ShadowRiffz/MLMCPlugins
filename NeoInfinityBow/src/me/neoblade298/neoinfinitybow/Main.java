@@ -12,7 +12,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener
     org.bukkit.Bukkit.getServer().getLogger().info("NeoInfinityBow Enabled");
     getServer().getPluginManager().registerEvents(this, this);
     
-
     getCommand("neoinfinitybow").setExecutor(new Commands());
   }
   
