@@ -16,10 +16,15 @@ import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 @ConditionAnnotation(name="hasflag", author="Neoblade298")
 public class SkillAPIFlagCondition extends AbstractCustomCondition implements IEntityCondition {
     private String[] flags;
+    private boolean castinstead = false;
     
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
+        if(this.flags[1].equals("castinstead")) {
+        	castinstead = true;
+        	this.flags = new String[] {this.flags[0]};
+        }
     }
 
     public boolean check(AbstractEntity t) {
@@ -30,6 +35,9 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         	LivingEntity ent = am.getLivingEntity();
         	for (String flag : flags) {
         		if (FlagManager.hasFlag(ent, flag)) {
+        	    	if (castinstead) {
+        	    		am.getEntity().addScoreboardTag("StunTag");
+        	    	}
         			result = true;
         		}
         		else {
@@ -37,6 +45,9 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         			break;
         		}
         	}
+        }
+        if(castinstead) {
+        	result = !result;
         }
         return result;
     }
