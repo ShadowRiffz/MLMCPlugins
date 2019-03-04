@@ -16,7 +16,7 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.isOp() && args.length > 0) {
+		if((sender.isOp() || sender.hasPermission("*")) && args.length > 0) {
 			// neocollections reset [player]
 			// Removes player from map, used on skillAPI cleanup
 			if(args[0].equalsIgnoreCase("reset")) {
@@ -54,6 +54,11 @@ public class Commands implements CommandExecutor{
 			if(args[0].equalsIgnoreCase("debug")) {
 				main.debug = !main.debug;
 				sender.sendMessage("Debug " + main.debug);
+				return true;
+			}
+			// Reload all collections
+			if(args[0].equalsIgnoreCase("reload")) {
+				main.reload();
 				return true;
 			}
 			sender.sendMessage("Something went wrong even though you're op.");

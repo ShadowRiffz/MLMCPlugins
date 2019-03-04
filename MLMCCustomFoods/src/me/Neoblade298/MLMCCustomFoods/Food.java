@@ -9,16 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class Food
 {
-  ArrayList<PotionEffect> effects = new ArrayList();
-  ArrayList<AttributeEffect> attributes = new ArrayList();
-  ArrayList<Sound> sounds = new ArrayList();
-  ArrayList<String> commands = new ArrayList();
-  ArrayList<String> worlds = new ArrayList();
-  HashMap<UUID, Long> lastEaten = new HashMap();
+  ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
+  ArrayList<AttributeEffect> attributes = new ArrayList<AttributeEffect>();
+  ArrayList<Sound> sounds = new ArrayList<Sound>();
+  ArrayList<String> commands = new ArrayList<String>();
+  ArrayList<String> worlds = new ArrayList<String>();
+  HashMap<UUID, Long> lastEaten = new HashMap<UUID, Long>();
   String name;
   ArrayList<String> lore;
   double saturation;
@@ -34,7 +33,7 @@ public class Food
   
   public void setCommands(List<String> commands)
   {
-    this.commands = new ArrayList(commands);
+    this.commands = new ArrayList<String>(commands);
   }
   
   public void executeCommands(Player player)
@@ -91,7 +90,7 @@ public class Food
   
   public void setWorlds(List<String> worlds)
   {
-    this.worlds = new ArrayList(worlds);
+    this.worlds = new ArrayList<String>(worlds);
   }
   
   public int getHealth()
@@ -134,7 +133,7 @@ public class Food
     this.name = name;
     this.hunger = hunger;
     this.saturation = saturation;
-    this.lore = new ArrayList(Arrays.asList(lore));
+    this.lore = new ArrayList<String>(Arrays.asList(lore));
   }
   
   public Food(String name, int hunger, double saturation, ArrayList<String> lore, ArrayList<PotionEffect> effects, ArrayList<AttributeEffect> attributes, ArrayList<Sound> sounds)
