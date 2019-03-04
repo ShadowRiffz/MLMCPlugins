@@ -19,10 +19,7 @@ public class Commands implements CommandExecutor
       PlayerInventory inv = org.bukkit.Bukkit.getPlayer(args[0]).getInventory();
       ItemStack item = inv.getItemInMainHand();
       ItemStack offItem = inv.getItemInOffHand();
-      if (item.getEnchantmentLevel(Enchantment.ARROW_INFINITE) == 0) {
-    	  inv.removeItem(new ItemStack(Material.ARROW));
-      }
-      else if (offItem.getEnchantmentLevel(Enchantment.ARROW_INFINITE) == 0) {
+      if (item.getEnchantmentLevel(Enchantment.ARROW_INFINITE) == 0 && offItem.getEnchantmentLevel(Enchantment.ARROW_INFINITE) == 0) {
     	  inv.removeItem(new ItemStack(Material.ARROW));
       }
     }
