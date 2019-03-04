@@ -31,6 +31,11 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
     public boolean check(AbstractEntity t) {
         Entity target = t.getBukkitEntity();
         ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
+        if(msg != null) {
+			msg = msg.replace("<mob.name>", am.getEntity().getName());
+			msg = msg.replace("&", "§");
+			msg = msg.replace("_", " ");
+        }
         boolean result = false;
         if (am != null) {
         	LivingEntity ent = am.getLivingEntity();
@@ -39,9 +44,6 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         	    	if (castinstead) {
             	    	if(msg != null) {
             	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getLivingEntity().getNearbyEntities(40, 40, 40);
-            	    		msg = msg.replace("<mob.name>", am.getEntity().getName());
-            	    		msg = msg.replace("&", "§");
-            	    		msg = msg.replace("_", " ");
     	    				if(!am.getEntity().hasScoreboardTag("StunTag")) {
     	        	    		am.getEntity().addScoreboardTag("StunTag");
     	        	    		for(Entity e : near) {
