@@ -38,7 +38,9 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         Entity target = t.getBukkitEntity();
         ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
         if(msg != null) {
-			msg = msg.replace("<mob.name>", am.getEntity().getName());
+        	if(am.getEntity().getName() != null) {
+        		msg = msg.replace("<mob.name>", am.getEntity().getName());
+        	}
 			msg = msg.replace("&", "§");
 			msg = msg.replace("_", " ");
         }
