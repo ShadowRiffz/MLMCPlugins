@@ -25,8 +25,12 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
-        castinstead = mlc.getString("castinstead").equals("true");
-        stunchildren = mlc.getString("stunchildren").equals("true");
+        if(mlc.getString("castinstead") != null) {
+        	castinstead = mlc.getString("castinstead").equals("true");
+        }
+        if(mlc.getString("stunchildren") != null) {
+        	stunchildren = mlc.getString("stunchildren").equals("true");
+        }
         msg = mlc.getString("msg");
     }
 
@@ -81,6 +85,7 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         if(castinstead) {
         	result = !result;
         }
+        System.out.println(result);
         return result;
     }
 }
