@@ -18,6 +18,7 @@ public class Commands
       Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "class forcecast " + sender.getName() + " " + args[0] + " " + args[1].substring(0, args[1].length() - 2));
       return true;
     }
-    return false;
+    System.out.println("Neoskills something went wrong.");
+    return true;
   }
 }
