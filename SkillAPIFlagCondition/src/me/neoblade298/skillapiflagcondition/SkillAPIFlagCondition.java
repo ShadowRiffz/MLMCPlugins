@@ -19,12 +19,14 @@ import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 public class SkillAPIFlagCondition extends AbstractCustomCondition implements IEntityCondition {
     private String[] flags;
     private boolean castinstead = false;
+    private boolean stunchildren = false;
     private String msg;
     
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
         castinstead = mlc.getString("castinstead").equals("true");
+        stunchildren = mlc.getString("stunchildren").equals("true");
         msg = mlc.getString("msg");
     }
 
@@ -41,11 +43,16 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         	LivingEntity ent = am.getLivingEntity();
         	for (String flag : flags) {
         		if (FlagManager.hasFlag(ent, flag)) {
+        			
+        			// Very specific behavior for stun rework, only use this when castinstead is enabled
         	    	if (castinstead) {
-            	    	if(msg != null) {
-            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getLivingEntity().getNearbyEntities(40, 40, 40);
-    	    				if(!am.getEntity().hasScoreboardTag("StunTag")) {
-    	        	    		am.getEntity().addScoreboardTag("StunTag");
+        	    		// Give the entity a stun tag
+	    				if(!am.getEntity().hasScoreboardTag("StunTag")) {
+	        	    		am.getEntity().addScoreboardTag("StunTag");
+	        	    		
+	        	    		// If a message was specified, show players in radius the message
+	            	    	if(msg != null) {
+	            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getLivingEntity().getNearbyEntities(40, 40, 40);
     	        	    		for(Entity e : near) {
     	        	    			if (e instanceof Player) {
     	        	    				Player p = (Player) e;
@@ -54,6 +61,14 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
     	        	    		}
             	    		}
             	    	}
+	    				
+	    				// If stun children, iterate through each child and also give them a stun tag
+	    				if(stunchildren) {
+	    					for (AbstractEntity e : am.getChildren()) {
+	    						e.getBukkitEntity().addScoreboardTag("StunTag");
+	    					}
+	    				}
+	    				
         	    	}
         			result = true;
         		}
