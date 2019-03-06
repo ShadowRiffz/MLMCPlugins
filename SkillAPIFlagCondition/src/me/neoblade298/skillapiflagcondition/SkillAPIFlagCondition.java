@@ -87,7 +87,6 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         if(castinstead) {
         	result = !result;
         }
-        System.out.println(result);
         return result;
     }
 }
