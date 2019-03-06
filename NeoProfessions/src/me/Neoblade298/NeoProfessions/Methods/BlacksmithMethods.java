@@ -145,7 +145,7 @@ public class BlacksmithMethods {
 				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
 				int upgradeLevel = enchLevel + 1;
 				int itemLevel = Util.getItemLevel(item);
-				if(upgradeLevel <= 5) {
+				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
 						if(itemLevel != -1) {
 							if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel)) {
