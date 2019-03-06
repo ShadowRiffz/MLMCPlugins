@@ -60,6 +60,16 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 				}
+				else if(args[0].equalsIgnoreCase("assimilate")) {
+					if(args.length == 1) {
+						culinarianMethods.assimilate(p);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
 				else if (args[0].equalsIgnoreCase("craft")) {
 					if (args.length > 2) {
 						if(args[1].equalsIgnoreCase("ingredient")) {

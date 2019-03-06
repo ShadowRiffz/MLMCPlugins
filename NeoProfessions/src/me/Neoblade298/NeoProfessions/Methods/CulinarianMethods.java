@@ -33,6 +33,7 @@ public class CulinarianMethods {
 	final static int SPICE_COST = 500;
 	final static int SPICE_ESSENCE = 1;
 	final static int CRAFT_COST = 50;
+	final static int ASSIMILATE_COST = 250;
 	
 	public CulinarianMethods(Main main) {
 		this.main = main;
@@ -209,6 +210,36 @@ public class CulinarianMethods {
 			}
 			else {
 				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void assimilate(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			int slot = p.getInventory().firstEmpty();
+			if(slot != -1) {
+				int level = CulinarianUtils.getRecipeLevel(item);
+				if(p.hasPermission("culinarian.assimilate." + level)) {
+					if(econ.has(p, ASSIMILATE_COST)) {
+						p.getInventory().removeItem(Util.setAmount(item, 1));
+						p.getInventory().addItem(CommonItems.getEssence(level));
+						econ.withdrawPlayer(p, ASSIMILATE_COST);
+						Util.sendMessage(p, "&7Successfully assimilated recipe!");
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the gold to assimilate this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
