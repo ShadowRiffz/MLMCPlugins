@@ -86,7 +86,11 @@ public class BlacksmithCommands implements CommandExecutor {
 				else if(args[0].equalsIgnoreCase("upgrade")) {
 					if(args.length == 2) {
 						if(args[1].equalsIgnoreCase("unbreaking")) {
-							blacksmithMethods.upgradeItem(p);
+							blacksmithMethods.upgradeUnbreaking(p);
+							return true;
+						}
+						else if(args[1].equalsIgnoreCase("protection")) {
+							blacksmithMethods.upgradeProtection(p);
 							return true;
 						}
 						else {
