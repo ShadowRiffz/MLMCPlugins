@@ -6,6 +6,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import com.sucy.skill.SkillAPI;
+
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -253,5 +255,47 @@ public class BlacksmithMethods {
 		else {
 			Util.sendMessage(p, "&cMain hand is empty!");
 		}
+	}
+	
+	public void resetPlayer(Player p) {
+		String name = p.getName();
+		
+		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.armor.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.armor.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.armor.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.armor.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.armor.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.repair.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.repair.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.repair.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.repair.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.repair.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.unbreaking.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.unbreaking.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.unbreaking.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.unbreaking.6");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.protection.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.protection.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.protection.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.upgrade.protection.6");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.reforge.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.reforge.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.reforge.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.reforge.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.reforge.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.5");
+		
+		// Reset profession
+		SkillAPI.getPlayerData(p).reset("profession");
 	}
 }

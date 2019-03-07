@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,8 +26,11 @@ public class BlacksmithCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("blacksmith.professed") && sender instanceof Player) {
-			Player p = (Player) sender;
+		if(sender.hasPermission("blacksmith.professed")) {
+			Player p = null;
+			if(sender instanceof Player) {
+				p = (Player) sender;
+			}
 			
 			if (args.length == 0) {
 				// TODO: Add help message
@@ -127,8 +131,7 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 				}
 				
-				
-				// GET COMMAND (Debug)
+				// GET (Debug command)
 				else if(args[0].equalsIgnoreCase("get")) {
 					if(args.length == 3) {
 						if (args[1].equalsIgnoreCase("Essence")) {
@@ -155,6 +158,25 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
+				
+				// RESET COMMAND
+				else if(args[0].equalsIgnoreCase("reset")) {
+					if(args.length == 2) {
+						Player toReset = Bukkit.getPlayer(args[1]);
+						if(toReset != null) {
+							blacksmithMethods.resetPlayer(toReset);
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cPlayer not found!");
+							return true;
+						}
+					}
+					else {
+						sender.sendMessage("§cIncorrect number of arguments!");
 						return true;
 					}
 				}

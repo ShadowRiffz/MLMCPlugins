@@ -2,10 +2,13 @@ package me.Neoblade298.NeoProfessions.Methods;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -1107,6 +1110,46 @@ public class CulinarianMethods {
 		else {
 			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
+	}
+	
+	public void resetPlayer(Player p) {
+		String name = p.getName();
+		
+		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr22");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr23");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr24");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.6");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.7");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.8");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.9");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.10");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.11");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.12");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.13");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.14");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.15");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.16");
+		
+		// Reset profession
+		SkillAPI.getPlayerData(p).reset("profession");
 	}
 
 }
