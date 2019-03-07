@@ -23,7 +23,6 @@ public class Main
     super.onDisable();
   }
   
-  // Implement curse status properly
   @EventHandler
   public void onDeath(PlayerDeathEvent e) {
 	  e.getEntity().removeScoreboardTag("KaravRaidTag");
