@@ -20,13 +20,15 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
     private String[] flags;
     private boolean castinstead = false;
     private boolean stunchildren = false;
+    private boolean action = true;
     private String msg;
     
     public SkillAPIFlagCondition(String line, MythicLineConfig mlc) {
         super(line,mlc);
         this.flags = mlc.getString("flag").trim().split(",");
-        if(mlc.getString("castinstead") != null) {
-        	castinstead = mlc.getString("castinstead").equals("true");
+        if(mlc.getString("action") != null) {
+        	castinstead = mlc.getString("action").equals("castinstead");
+        	action = mlc.getString("action").equals("true");
         }
         if(mlc.getString("stunchildren") != null) {
         	stunchildren = mlc.getString("stunchildren").equals("true");
@@ -84,7 +86,7 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         		}
         	}
         }
-        if(castinstead) {
+        if(!action || castinstead) {
         	result = !result;
         }
         return result;
