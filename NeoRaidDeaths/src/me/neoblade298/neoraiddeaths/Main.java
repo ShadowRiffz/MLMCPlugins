@@ -25,6 +25,6 @@ public class Main
   
   @EventHandler
   public void onDeath(PlayerDeathEvent e) {
-	  e.getEntity().removeScoreboardTag("KaravRaidTag");
+	  e.getEntity().removeScoreboardTag("KaravRaidTPTag");
   }
 }
