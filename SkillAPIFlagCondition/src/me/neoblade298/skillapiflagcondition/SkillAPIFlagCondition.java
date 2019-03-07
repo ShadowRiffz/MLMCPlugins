@@ -86,7 +86,7 @@ public class SkillAPIFlagCondition extends AbstractCustomCondition implements IE
         		}
         	}
         }
-        if(!action || castinstead) {
+        if(!action && !castinstead) {
         	result = !result;
         }
         return result;
