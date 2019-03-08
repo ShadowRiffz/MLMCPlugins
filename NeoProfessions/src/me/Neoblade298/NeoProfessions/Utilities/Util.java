@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,7 +25,21 @@ public class Util {
 		return item;
 	}
 	
+	public static int getEssenceLevel(ItemStack item) {
+		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			return -1;
+		}
+		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
+		if(lore.contains("Essence")) {
+			return item.getEnchantmentLevel(Enchantment.DURABILITY);
+		}
+		return -1;
+	}
+	
 	public static int getItemLevel(ItemStack item) {
+		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			return -1;
+		}
 		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
 		String tier = null;
 		

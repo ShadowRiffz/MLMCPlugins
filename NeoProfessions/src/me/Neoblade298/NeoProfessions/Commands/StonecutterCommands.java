@@ -121,6 +121,16 @@ public class StonecutterCommands implements CommandExecutor {
 					return true;
 				}
 			}
+			else if(args[0].equalsIgnoreCase("refine")) {
+				if(args.length == 1) {
+					stonecutterMethods.refine(p);
+					return true;
+				}
+				else {
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
+				}
+			}
 			else if(args[0].equalsIgnoreCase("get")) {
 				if(args.length == 4) {
 					if(args[1].equalsIgnoreCase("ore")) {
