@@ -32,7 +32,7 @@ public class CommonItems {
 		lore.add("§7Item used for profession crafting");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		
 		return item;
 	}
