@@ -9,6 +9,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Tier2RecipeItems {
+	public static ArrayList<ItemStack> getTier2Recipes() {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(getSteakWithGreenBeans());
+		list.add(getLemonade());
+		list.add(getHoneyedHam());
+		list.add(getCandyBar());
+		list.add(getAle());
+		list.add(getSandwich());
+		list.add(getBeefStew());
+		list.add(getExoticTea());
+		list.add(getBartrandCornbread());
+		list.add(getTunaSandwich());
+		list.add(getApplePie());
+		list.add(getBeer());
+		list.add(getHashBrowns());
+		list.add(getLemonTart());
+		list.add(getWrappedChicken());
+		list.add(getMysteryMeat());
+		list.add(getTomatoSoup());
+		list.add(getCornOnTheCob());
+		list.add(getBreadPudding());
+		list.add(getChickenPasta());
+		return list;
+	}
+	
 	public static ItemStack getSteakWithGreenBeans() {
 		ItemStack item = new ItemStack(Material.COOKED_BEEF);
 		ItemMeta meta = item.getItemMeta();
