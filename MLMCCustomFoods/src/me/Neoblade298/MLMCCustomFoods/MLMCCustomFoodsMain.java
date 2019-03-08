@@ -2,6 +2,8 @@ package me.Neoblade298.MLMCCustomFoods;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -181,8 +183,23 @@ public class MLMCCustomFoodsMain
   			String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
   			spiceMultiplier = Double.parseDouble(toParse);
   		}
+  		if(line.contains("Remedies")) {
+  	  		if(line.contains("Remedies Stun")) {
+  	  			FlagManager.removeFlag(p, "stun");
+  	  		}
+  	  		else if(line.contains("Remedies Curse")) {
+  	  			FlagManager.removeFlag(p, "curse");
+  	  		}
+  	  		else if(line.contains("Remedies Root")) {
+  	  			FlagManager.removeFlag(p, "root");
+  	  		}
+  	  		else if(line.contains("Remedies Silence")) {
+  	  			FlagManager.removeFlag(p, "silence");
+  	  		}
+  		}
   	}
     food.eat(p, preserveMultiplier);
+    
     
     
     // Do not add cooldowns for chests
