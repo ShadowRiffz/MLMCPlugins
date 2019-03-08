@@ -33,7 +33,16 @@ public class BlacksmithCommands implements CommandExecutor {
 			}
 			
 			if (args.length == 0) {
-				// TODO: Add help message
+				Util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
+				Util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith create repair [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith unbreaking");
+				Util.sendMessage(p, "&7- &c/blacksmith protection");
+				Util.sendMessage(p, "&7- &c/blacksmith reforge");
+				Util.sendMessage(p, "&7- &c/blacksmith scrap");
+				if(sender.hasPermission("blacksmith.admin")) {
+					Util.sendMessage(p, "&7- &c/blacksmith get ");
+				}
 				return true;
 			}
 			else {
@@ -123,6 +132,16 @@ public class BlacksmithCommands implements CommandExecutor {
 				else if(args[0].equalsIgnoreCase("scrap")) {
 					if(args.length == 1) {
 						blacksmithMethods.scrapItem(p);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
+				else if(args[0].equalsIgnoreCase("deconstruct")) {
+					if(args.length == 1) {
+						blacksmithMethods.deconstructItem(p);
 						return true;
 					}
 					else {

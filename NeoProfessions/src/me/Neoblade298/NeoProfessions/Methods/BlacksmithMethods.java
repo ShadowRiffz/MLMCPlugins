@@ -32,6 +32,8 @@ public class BlacksmithMethods {
 	final int REFORGE_COST_MULT = 2;
 	final int REFORGE_ESSENCE_PER_LVL = 6;
 	final int SCRAP_COST = 250;
+	final int DECONSTRUCT_COST = 250;
+	final int DECONSTRUCT_AMOUNT = 4;
 	
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -241,7 +243,7 @@ public class BlacksmithMethods {
 						Util.sendMessage(p, "&cSuccessfully scrapped item!");
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the gold to create this!");
+						Util.sendMessage(p, "&cYou lack the gold to scrap this!");
 					}
 				}
 				else {
@@ -249,7 +251,37 @@ public class BlacksmithMethods {
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+				Util.sendMessage(p, "&cYou cannot scrap non-quest items!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void deconstructItem(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			item.setAmount(1);
+			int itemLevel = Util.getEssenceLevel(item);
+			if(itemLevel >= 2) {
+				if(p.hasPermission("blacksmith.deconstruct")) {
+					if(econ.has(p, DECONSTRUCT_COST)) {
+						p.getInventory().removeItem(item);
+						econ.withdrawPlayer(p, DECONSTRUCT_COST);
+						p.getInventory().addItem(Util.setAmount(CommonItems.getEssenceFragment(itemLevel), DECONSTRUCT_AMOUNT));
+						Util.sendMessage(p, "&cSuccessfully deconstructed item!");
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 2!");
 			}
 		}
 		else {
@@ -295,6 +327,7 @@ public class BlacksmithMethods {
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.scrap.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.deconstruct");
 		
 		// Reset profession
 		SkillAPI.getPlayerData(p).reset("profession");
