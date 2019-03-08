@@ -76,8 +76,11 @@ public class CulinarianUtils {
 			else if(line.contains("Tier 2")) {
 				return 2;
 			}
-			else if(line.contains("Tier 3") || line.contains("Limited Edition") || line.contains("Legendary")) {
+			else if(line.contains("Tier 3")) {
 				return 3;
+			}
+			else if(line.contains("Limited Edition") || line.contains("Legendary")) {
+				return 4;
 			}
 		}
 		return -1;

@@ -81,6 +81,22 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 				}
+				else if(args[0].equalsIgnoreCase("remedy")) {
+					if(args.length == 2) {
+						if(args[2].equalsIgnoreCase("stun") || args[2].equalsIgnoreCase("silence") || args[2].equalsIgnoreCase("curse") || args[2].equalsIgnoreCase("root")) {
+							culinarianMethods.remedy(p, args[2]);
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cInvalid parameters!");
+							return true;
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
 				else if (args[0].equalsIgnoreCase("craft")) {
 					if (args.length > 2) {
 						if(args[1].equalsIgnoreCase("ingredient")) {

@@ -46,6 +46,8 @@ public class CulinarianMethods {
 	final static int ASSIMILATE_COST = 250;
 	final static int SPECIAL_COST = 5000;
 	final static int SPECIAL_AMOUNT = 16;
+	final static int REMEDY_COST = 1000;
+	final static int REMEDY_ESSENCE = 1;
 	
 	public CulinarianMethods(Main main) {
 		this.main = main;
@@ -84,8 +86,9 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GARNISH_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
 							if(econ.has(p, GARNISH_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -93,7 +96,7 @@ public class CulinarianMethods {
 								lore.add("§9Garnished (" + multiplier + "x Attribute Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GARNISH_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
 								econ.withdrawPlayer(p, GARNISH_COST);
 								Util.sendMessage(p, "&7Successfully garnished dish!");
 							}
@@ -154,8 +157,9 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), PRESERVE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE)) {
 							if(econ.has(p, PRESERVE_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -163,7 +167,7 @@ public class CulinarianMethods {
 								lore.add("§9Preserved (" + multiplier + "x Duration Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), PRESERVE_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE));
 								econ.withdrawPlayer(p, PRESERVE_COST);
 								Util.sendMessage(p, "&7Successfully preserved dish!");
 							}
@@ -224,8 +228,9 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SPICE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), SPICE_ESSENCE)) {
 							if(econ.has(p, SPICE_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -233,7 +238,7 @@ public class CulinarianMethods {
 								lore.add("§9Spiced (" + multiplier + "x Restoration Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SPICE_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), SPICE_ESSENCE));
 								econ.withdrawPlayer(p, SPICE_COST);
 								Util.sendMessage(p, "&7Successfully spiced dish!");
 							}
@@ -251,6 +256,51 @@ public class CulinarianMethods {
 				}
 				else {
 					Util.sendMessage(p, "&cCannot spice this item!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void remedy(Player p, String status) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			if(p.hasPermission("culinarian.remedy." + status)) {
+				boolean isFood = false;
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Recipe")) {
+						isFood = true;
+						break;
+					}
+				}
+				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
+					if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+						if(econ.has(p, GARNISH_COST)) {
+							ItemMeta meta = item.getItemMeta();
+							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+							lore.add("§9Remedies " + status);
+							meta.setLore(lore);
+							item.setItemMeta(meta);
+							p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
+							econ.withdrawPlayer(p, GARNISH_COST);
+							Util.sendMessage(p, "&7Successfully remedied dish!");
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the gold to remedy this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the materials to remedy this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cCannot remedy this item!");
 				}
 			}
 			else {
