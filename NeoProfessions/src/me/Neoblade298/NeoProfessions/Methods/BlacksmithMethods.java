@@ -261,6 +261,7 @@ public class BlacksmithMethods {
 		String name = p.getName();
 		
 		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.professed");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove blacksmith.durability.weapon.3");
