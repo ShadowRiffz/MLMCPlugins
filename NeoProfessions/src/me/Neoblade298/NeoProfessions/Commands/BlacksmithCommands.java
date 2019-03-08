@@ -40,8 +40,9 @@ public class BlacksmithCommands implements CommandExecutor {
 				Util.sendMessage(p, "&7- &c/blacksmith protection");
 				Util.sendMessage(p, "&7- &c/blacksmith reforge");
 				Util.sendMessage(p, "&7- &c/blacksmith scrap");
+				Util.sendMessage(p, "&7- &c/blacksmith deconstruct");
 				if(sender.hasPermission("blacksmith.admin")) {
-					Util.sendMessage(p, "&7- &c/blacksmith get ");
+					Util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
 				}
 				return true;
 			}
