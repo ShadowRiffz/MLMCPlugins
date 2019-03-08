@@ -23,7 +23,7 @@ public class BlacksmithMethods {
 	final int DURABILITY_COST_PER_LVL = 4000;
 	final int DURABILITY_ESSENCE = 5;
 	final int REPAIR_COST = 2000;
-	final int REPAIR_ESSENCE = 3;
+	final int REPAIR_ESSENCE = 1;
 	final int UNBREAKING_COST_PER_LVL = 5000;
 	final int PROTECTION_COST_PER_LVL = 5000;
 	final int UNBREAKING_ESSENCE_PER_LVL = 5;
