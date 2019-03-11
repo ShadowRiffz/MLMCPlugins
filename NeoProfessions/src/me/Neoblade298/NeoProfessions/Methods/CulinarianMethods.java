@@ -563,7 +563,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier1(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.1")) {
+		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
 			}
@@ -631,7 +631,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier1(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.1")) {
+		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
 			}
@@ -699,7 +699,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier2(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
@@ -770,7 +770,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier2(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
@@ -841,7 +841,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier3(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
 			}
@@ -912,7 +912,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier3(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
 			}
@@ -983,7 +983,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLimitedEdition(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
 				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
 			}
@@ -1039,7 +1039,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLimitedEdition(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
 			}
@@ -1095,7 +1095,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLegendary(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
 				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
@@ -1124,7 +1124,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLegendary(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
@@ -1153,7 +1153,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseDrink(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
 				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
 			}
@@ -1209,7 +1209,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseDrink(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
 			}
@@ -1284,26 +1284,12 @@ public class CulinarianMethods {
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr22");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr23");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr24");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.unlock");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.6");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.7");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.8");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.9");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.10");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.11");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.12");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.13");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.14");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.15");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.16");
 		
 		// Reset profession
 		SkillAPI.getPlayerData(p).reset("profession");
