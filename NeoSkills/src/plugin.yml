@@ -1,0 +1,8 @@
+name: NeoSkills
+author: NeoSkills
+main: me.neoblade298.neoskills.Main
+version: 1.00
+commands:
+  neoskills:
+    description: Does its job
+    usage: /neoskills

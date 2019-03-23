@@ -9,6 +9,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class LimitedEditionRecipeItems {
+	public static ArrayList<ItemStack> getLimitedEditionRecipes() {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(getCandyCorn());
+		list.add(getWitchBrew());
+		list.add(getBakedEyeball());
+		list.add(getCandyCane());
+		list.add(getGingerbread());
+		list.add(getEggnog());
+		list.add(getSmokedHam());
+		list.add(getLasagna());
+		list.add(getLemonSoda());
+		list.add(getOlympianGyro());
+		list.add(getCupcake());
+		list.add(getFishAndChips());
+		list.add(getEscargot());
+		list.add(getVitalac());
+		list.add(getBelgianWaffle());
+		list.add(getVioletDirtPie());
+		return list;
+	}
 	public static ItemStack getCandyCorn() {
 		ItemStack item = new ItemStack(Material.GOLD_NUGGET);
 		ItemMeta meta = item.getItemMeta();

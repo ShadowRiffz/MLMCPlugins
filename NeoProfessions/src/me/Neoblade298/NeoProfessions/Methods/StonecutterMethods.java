@@ -1,6 +1,12 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.sucy.skill.SkillAPI;
+
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
@@ -17,6 +23,11 @@ public class StonecutterMethods {
 	static final int GEM_COST_PER_LVL = 1500;
 	static final int GEM_ESSENCE = 8;
 	static final int GEM_ORES = 2;
+	static final int REFINE_COST_PER_LVL = 5000;
+	static final int REFINE_ESSENCE_0 = 10;
+	static final int REFINE_ESSENCE_1 = 9;
+	static final int REFINE_ESSENCE_2 = 7;
+	static final int REFINE_ESSENCE_3 = 4;
 	
 	public StonecutterMethods(Main main) {
 		this.main = main;
@@ -108,5 +119,88 @@ public class StonecutterMethods {
 		else {
 			Util.sendMessage(p, "&cYour inventory is full!");
 		}
+	}
+	
+	public void refine(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			int slot = p.getInventory().firstEmpty();
+			if(slot != -1) {
+				int oldLevel = Util.getEssenceLevel(item);
+				int level = oldLevel + 1;
+				if(p.hasPermission("stonecutter.refine." + oldLevel)) {
+					if(econ.has(p, REFINE_COST_PER_LVL * oldLevel)) {
+						// Find essence cost via perms
+						int cost = REFINE_ESSENCE_0;
+						if(p.hasPermission("stonecutter.refine.finesse.3")) {
+							cost = REFINE_ESSENCE_3;
+						}
+						else if(p.hasPermission("stonecutter.refine.finesse.2")) {
+							cost = REFINE_ESSENCE_2;
+						}
+						else if(p.hasPermission("stonecutter.refine.finesse.1")) {
+							cost = REFINE_ESSENCE_1;
+						}
+						
+						// Check if enough essence
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), cost)) {
+							p.getInventory().removeItem(Util.setAmount(item, cost));
+							p.getInventory().addItem(CommonItems.getEssence(level));
+							econ.withdrawPlayer(p, REFINE_COST_PER_LVL * oldLevel);
+							Util.sendMessage(p, "&7Successfully refined essence!");
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the essence to refine this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the gold to refine this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYour inventory is full!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void resetPlayer(Player p) {
+		String name = p.getName();
+		
+		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.professed");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.strength");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.dexterity");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.intelligence");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.spirit");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.perception");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.endurance");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.vitality");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.tier.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.tier.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.tier.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.tier.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.finesse.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.finesse.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.refine.finesse.3");
+		
+		// Reset profession
+		SkillAPI.getPlayerData(p).reset("profession");
 	}
 }

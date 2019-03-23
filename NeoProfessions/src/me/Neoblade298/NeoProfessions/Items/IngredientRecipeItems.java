@@ -14,6 +14,32 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 public class IngredientRecipeItems {
 
 	// Ingredients
+	public static ArrayList<ItemStack> getIngredients() {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(getSalt());
+		list.add(getSpices());
+		list.add(getGreens());
+		list.add(getToast());
+		list.add(getOil());
+		list.add(getTomato());
+		list.add(getButter());
+		list.add(getLemon());
+		list.add(getCorn());
+		list.add(getHoney());
+		list.add(getYeast());
+		list.add(getBeetrootSauce());
+		list.add(getPasta());
+		list.add(getOnion());
+		list.add(getHops());
+		list.add(getCheese());
+		list.add(getTortilla());
+		list.add(getExoticGreens());
+		list.add(getRice());
+		list.add(getPopcorn());
+		list.add(getPepper());
+		return list;
+	}
+	
 	public static ItemStack getSalt() {
 		ItemStack item = new ItemStack(Material.SUGAR);
 		ItemMeta meta = item.getItemMeta();

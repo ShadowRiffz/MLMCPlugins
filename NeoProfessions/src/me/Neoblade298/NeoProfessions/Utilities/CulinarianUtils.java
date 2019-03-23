@@ -67,6 +67,25 @@ public class CulinarianUtils {
 		}
 	}
 	
+	public static int getRecipeLevel(ItemStack item) {
+		if(item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().size() > 1) {
+			String line = item.getItemMeta().getLore().get(1);
+			if(line.contains("Tier 1") || line.contains("Ingredient")) {
+				return 1;
+			}
+			else if(line.contains("Tier 2")) {
+				return 2;
+			}
+			else if(line.contains("Tier 3") || line.contains("Drink")) {
+				return 3;
+			}
+			else if(line.contains("Limited Edition") || line.contains("Legendary")) {
+				return 4;
+			}
+		}
+		return -1;
+	}
+	
 	public static int getFoodLevel(ItemStack item) {
 		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			String line = item.getItemMeta().getLore().get(0);

@@ -2,6 +2,8 @@ package me.Neoblade298.MLMCCustomFoods;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -164,19 +166,40 @@ public class MLMCCustomFoodsMain
     }
     
     // Food can be eaten
-    food.eat(p);
-    boolean isGarnished = false, isPreserved = false, isSpiced = false;
+    boolean isGarnished = false, isSpiced = false;
+    double garnishMultiplier = 1, preserveMultiplier = 1, spiceMultiplier = 1;
   	for(String line : meta.getLore()) {
   		if(line.contains("Garnished")) {
   			isGarnished = true;
+  			String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+  			garnishMultiplier = Double.parseDouble(toParse);
   		}
   		if(line.contains("Preserved")) {
-  			isPreserved = true;
+  			String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+  			preserveMultiplier = Double.parseDouble(toParse);
   		}
   		if(line.contains("Spiced")) {
   			isSpiced = true;
+  			String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+  			spiceMultiplier = Double.parseDouble(toParse);
+  		}
+  		if(line.contains("Remedies")) {
+  	  		if(line.contains("Remedies Stun")) {
+  	  			FlagManager.removeFlag(p, "stun");
+  	  		}
+  	  		else if(line.contains("Remedies Curse")) {
+  	  			FlagManager.removeFlag(p, "curse");
+  	  		}
+  	  		else if(line.contains("Remedies Root")) {
+  	  			FlagManager.removeFlag(p, "root");
+  	  		}
+  	  		else if(line.contains("Remedies Silence")) {
+  	  			FlagManager.removeFlag(p, "silence");
+  	  		}
   		}
   	}
+    food.eat(p, preserveMultiplier);
+    
     
     
     // Do not add cooldowns for chests
@@ -187,9 +210,6 @@ public class MLMCCustomFoodsMain
     p.setFoodLevel(Math.min(20, p.getFoodLevel() + food.getHunger()));
     p.setSaturation((float)Math.min(p.getFoodLevel(), food.getSaturation() + p.getSaturation()));
     for (PotionEffect effect : food.getEffect()) {
-    	if(isPreserved) {
-    		effect = new PotionEffect(effect.getType(), (int) ((double)effect.getDuration() * 1.3), effect.getAmplifier());
-    	}
       p.addPotionEffect(effect);
     }
     
@@ -212,10 +232,7 @@ public class MLMCCustomFoodsMain
     	int duration = attrib.getDuration();
     	int amp = attrib.getAmp();
     	if(isGarnished) {
-    		amp *= 1.3;
-    	}
-    	if(isPreserved) {
-    		duration *= 1.3;
+    		amp *= garnishMultiplier;
     	}
       if (playerAttribs.containsKey(attrib.getName()))
       {
@@ -231,8 +248,8 @@ public class MLMCCustomFoodsMain
     int health = foodItem.getHealth();
     int mana = foodItem.getMana();
 		if(isSpiced) {
-			health *= 1.3;
-			mana *= 1.3;
+			health *= spiceMultiplier;
+			mana *= spiceMultiplier;
 		}
   	final int finalHealth = health;
   	final int finalMana = mana;

@@ -1,5 +1,6 @@
 package me.neoblade298.neoinfinitybow;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener
@@ -8,17 +9,16 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener
   
   public void onEnable()
   {
-    super.onEnable();
-    org.bukkit.Bukkit.getServer().getLogger().info("NeoInfinityBow Enabled");
+    Bukkit.getServer().getLogger().info("NeoInfinityBow Enabled");
     getServer().getPluginManager().registerEvents(this, this);
     
-
-    getCommand("neoinfinitybow").setExecutor(new Commands());
+    // Get command listener
+    this.getCommand("neoinfinitybow").setExecutor(new Commands());
   }
   
   public void onDisable()
   {
-    org.bukkit.Bukkit.getServer().getLogger().info("NeoChangelog Disabled");
+    org.bukkit.Bukkit.getServer().getLogger().info("NeoInfinityBow Disabled");
     super.onDisable();
   }
 }

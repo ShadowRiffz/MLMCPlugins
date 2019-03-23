@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,11 +26,24 @@ public class BlacksmithCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("blacksmith.professed") && sender instanceof Player) {
-			Player p = (Player) sender;
+		if(sender.hasPermission("blacksmith.professed")) {
+			Player p = null;
+			if(sender instanceof Player) {
+				p = (Player) sender;
+			}
 			
 			if (args.length == 0) {
-				// TODO: Add help message
+				Util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
+				Util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith create repair [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith unbreaking");
+				Util.sendMessage(p, "&7- &c/blacksmith protection");
+				Util.sendMessage(p, "&7- &c/blacksmith reforge");
+				Util.sendMessage(p, "&7- &c/blacksmith scrap");
+				Util.sendMessage(p, "&7- &c/blacksmith deconstruct");
+				if(sender.hasPermission("blacksmith.admin")) {
+					Util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
+				}
 				return true;
 			}
 			else {
@@ -86,7 +100,11 @@ public class BlacksmithCommands implements CommandExecutor {
 				else if(args[0].equalsIgnoreCase("upgrade")) {
 					if(args.length == 2) {
 						if(args[1].equalsIgnoreCase("unbreaking")) {
-							blacksmithMethods.upgradeItem(p);
+							blacksmithMethods.upgradeUnbreaking(p);
+							return true;
+						}
+						else if(args[1].equalsIgnoreCase("protection")) {
+							blacksmithMethods.upgradeProtection(p);
 							return true;
 						}
 						else {
@@ -122,9 +140,18 @@ public class BlacksmithCommands implements CommandExecutor {
 						return true;
 					}
 				}
+				else if(args[0].equalsIgnoreCase("deconstruct")) {
+					if(args.length == 1) {
+						blacksmithMethods.deconstructItem(p);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
 				
-				
-				// GET COMMAND (Debug)
+				// GET (Debug command)
 				else if(args[0].equalsIgnoreCase("get")) {
 					if(args.length == 3) {
 						if (args[1].equalsIgnoreCase("Essence")) {
@@ -151,6 +178,25 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 					else {
 						Util.sendMessage(p, "&cIncorrect number of arguments!");
+						return true;
+					}
+				}
+				
+				// RESET COMMAND
+				else if(args[0].equalsIgnoreCase("reset")) {
+					if(args.length == 2) {
+						Player toReset = Bukkit.getPlayer(args[1]);
+						if(toReset != null) {
+							blacksmithMethods.resetPlayer(toReset);
+							return true;
+						}
+						else {
+							Util.sendMessage(p, "&cPlayer not found!");
+							return true;
+						}
+					}
+					else {
+						sender.sendMessage("§cIncorrect number of arguments!");
 						return true;
 					}
 				}

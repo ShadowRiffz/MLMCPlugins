@@ -9,6 +9,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Tier3RecipeItems {
+	public static ArrayList<ItemStack> getTier3Recipes() {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(getGardenSalad());
+		list.add(getChickenLeg());
+		list.add(getApplePorkchops());
+		list.add(getScrambledEggs());
+		list.add(getLambKabob());
+		list.add(getZestySteak());
+		list.add(getLoadedBakedPotato());
+		list.add(getSweetBuns());
+		list.add(getSpaghettiBolognese());
+		list.add(getFilletedSalmon());
+		list.add(getRoastBream());
+		list.add(getSmoothie());
+		list.add(getHeartyBurrito());
+		list.add(getHeroSandwich());
+		list.add(getLambStew());
+		list.add(getHoneyGlazedChicken());
+		list.add(getAppleCider());
+		list.add(getMushroomPasty());
+		list.add(getButteredWortes());
+		list.add(getSpongeCake());
+		list.add(getChickenParmesan());
+		return list;
+	}
 	
 	public static ItemStack getGardenSalad() {
 		ItemStack item = new ItemStack(Material.RABBIT_STEW);

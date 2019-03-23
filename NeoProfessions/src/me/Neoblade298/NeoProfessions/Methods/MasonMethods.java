@@ -1,8 +1,11 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -325,7 +328,7 @@ public class MasonMethods {
 			if(MasonUtils.isSlotAvailable(item, slot)) {
 				int level = Util.getItemLevel(item);
 				if(level != -1) {
-					if(p.hasPermission("mason.engrave." + level)) {
+					if(p.hasPermission("mason.engrave.tier." + level)) {
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNENGRAVE_ESSENCE)) {
 							if(econ.has(p, UNENGRAVE_GOLD)) {
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), UNENGRAVE_ESSENCE));
@@ -356,6 +359,43 @@ public class MasonMethods {
 		else {
 			Util.sendMessage(p, "&cMain hand is empty!");
 		}
+	}
+	
+	public void resetPlayer(Player p) {
+		String name = p.getName();
+		
+		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.professed");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.tier.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.tier.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.tier.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.tier.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.tier.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.max.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.max.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.max.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.max.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.engrave.max.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.armor.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.armor.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.armor.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.armor.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.armor.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.weapon.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.weapon.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.weapon.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.weapon.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.slot.weapon.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.unslot.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.unslot.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.unslot.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.unslot.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.unslot.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.charm.basic");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove mason.charm.advanced");
+		
+		// Reset profession
+		SkillAPI.getPlayerData(p).reset("profession");
 	}
 
 }

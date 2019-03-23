@@ -9,6 +9,30 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Tier1RecipeItems {
+	public static ArrayList<ItemStack> getTier1Recipes() {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(getCuredFlesh());
+		list.add(getSunflowerSeeds());
+		list.add(getBoiledEgg());
+		list.add(getIceCream());
+		list.add(getHotChocolate());
+		list.add(getGreenTea());
+		list.add(getMashedPotatoes());
+		list.add(getSpinach());
+		list.add(getChocolateTruffle());
+		list.add(getMusli());
+		list.add(getCandiedApple());
+		list.add(getMacAndCheese());
+		list.add(getChocolateMilk());
+		list.add(getCheeseTortilla());
+		list.add(getSushi());
+		list.add(getPottage());
+		list.add(getButteredPopcorn());
+		list.add(getChipsAndSalsa());
+		list.add(getGruel());
+		return list;
+	}
+	
 	public static ItemStack getCuredFlesh() {
 		ItemStack item = new ItemStack(Material.COOKED_MUTTON);
 		ItemMeta meta = item.getItemMeta();

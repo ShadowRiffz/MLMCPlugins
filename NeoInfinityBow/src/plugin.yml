@@ -1,0 +1,8 @@
+name: NeoInfinityBow
+author: Neoblade298
+main: me.neoblade298.neoinfinitybow.Main
+version: 1.00
+commands:
+  neoinfinitybow:
+    description: Does its job
+    usage: /neoinfinitybow

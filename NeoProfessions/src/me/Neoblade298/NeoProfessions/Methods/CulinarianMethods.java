@@ -1,11 +1,15 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -26,6 +30,12 @@ public class CulinarianMethods {
 	Economy econ;
 	
 	// Constants
+	final static double GARNISH_BOOST_BASE = 1.1;
+	final static double GARNISH_BOOST_PER_LVL = 0.1;
+	final static double PRESERVE_BOOST_BASE = 0.9;
+	final static double PRESERVE_BOOST_PER_LVL = -0.1;
+	final static double SPICE_BOOST_BASE = 1.1;
+	final static double SPICE_BOOST_PER_LVL = 0.1;
 	final static int GARNISH_COST = 500;
 	final static int GARNISH_ESSENCE = 1;
 	final static int PRESERVE_COST = 500;
@@ -33,6 +43,11 @@ public class CulinarianMethods {
 	final static int SPICE_COST = 500;
 	final static int SPICE_ESSENCE = 1;
 	final static int CRAFT_COST = 50;
+	final static int ASSIMILATE_COST = 250;
+	final static int SPECIAL_COST = 5000;
+	final static int SPECIAL_AMOUNT = 16;
+	final static int REMEDY_COST = 1000;
+	final static int REMEDY_ESSENCE = 1;
 	
 	public CulinarianMethods(Main main) {
 		this.main = main;
@@ -42,8 +57,18 @@ public class CulinarianMethods {
 	public void garnish(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.equals(new ItemStack(Material.AIR))) {
-			int level = CulinarianUtils.getFoodLevel(item);
-			if(p.hasPermission("culinarian.garnish." + level)) {
+			int level = 0;
+			if(p.hasPermission("culinarian.garnish.3")) {
+				level = 3;
+			}
+			else if(p.hasPermission("culinarian.garnish.2")) {
+				level = 2;
+			}
+			else if(p.hasPermission("culinarian.garnish.1")) {
+				level = 1;
+			}
+			
+			if(level != 0) {
 				boolean isFood = false;
 				boolean isBoosted = false;
 				for(String line : item.getItemMeta().getLore()) {
@@ -61,20 +86,22 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GARNISH_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
 							if(econ.has(p, GARNISH_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								lore.add("§9Garnished (1.3x Attribute Boost)");
+								double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
+								lore.add("§9Garnished (" + multiplier + "x Attribute Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GARNISH_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
 								econ.withdrawPlayer(p, GARNISH_COST);
 								Util.sendMessage(p, "&7Successfully garnished dish!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou gold the materials to garnish this!");
+								Util.sendMessage(p, "&cYou lack the gold to garnish this!");
 							}
 						}
 						else {
@@ -101,8 +128,18 @@ public class CulinarianMethods {
 	public void preserve(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.equals(new ItemStack(Material.AIR))) {
-			int level = CulinarianUtils.getFoodLevel(item);
-			if(p.hasPermission("culinarian.preserve." + level)) {
+			int level = 0;
+			if(p.hasPermission("culinarian.garnish.3")) {
+				level = 3;
+			}
+			else if(p.hasPermission("culinarian.garnish.2")) {
+				level = 2;
+			}
+			else if(p.hasPermission("culinarian.garnish.1")) {
+				level = 1;
+			}
+			
+			if(level != 0) {
 				boolean isFood = false;
 				boolean isBoosted = false;
 				for(String line : item.getItemMeta().getLore()) {
@@ -120,15 +157,17 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), PRESERVE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE)) {
 							if(econ.has(p, PRESERVE_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								lore.add("§9Preserved (1.3x Duration Boost)");
+								double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
+								lore.add("§9Preserved (" + multiplier + "x Duration Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), PRESERVE_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE));
 								econ.withdrawPlayer(p, PRESERVE_COST);
 								Util.sendMessage(p, "&7Successfully preserved dish!");
 							}
@@ -160,8 +199,18 @@ public class CulinarianMethods {
 	public void spice(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.equals(new ItemStack(Material.AIR))) {
-			int level = CulinarianUtils.getFoodLevel(item);
-			if(p.hasPermission("culinarian.spice." + level)) {
+			int level = 0;
+			if(p.hasPermission("culinarian.garnish.3")) {
+				level = 3;
+			}
+			else if(p.hasPermission("culinarian.garnish.2")) {
+				level = 2;
+			}
+			else if(p.hasPermission("culinarian.garnish.1")) {
+				level = 1;
+			}
+			
+			if(level != 0) {
 				boolean isFood = false;
 				boolean isBoosted = false;
 				for(String line : item.getItemMeta().getLore()) {
@@ -179,15 +228,17 @@ public class CulinarianMethods {
 					}
 				}
 				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
 					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SPICE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), SPICE_ESSENCE)) {
 							if(econ.has(p, SPICE_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								lore.add("§9Spiced (1.3x Restoration Boost)");
+								double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
+								lore.add("§9Spiced (" + multiplier + "x Restoration Boost)");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SPICE_ESSENCE));
+								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), SPICE_ESSENCE));
 								econ.withdrawPlayer(p, SPICE_COST);
 								Util.sendMessage(p, "&7Successfully spiced dish!");
 							}
@@ -213,6 +264,141 @@ public class CulinarianMethods {
 		}
 		else {
 			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void remedy(Player p, String status) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			if(p.hasPermission("culinarian.remedy." + status)) {
+				boolean isFood = false;
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Recipe")) {
+						isFood = true;
+						break;
+					}
+				}
+				if(isFood) {
+					int foodLevel = CulinarianUtils.getRecipeLevel(item);
+					if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+						if(econ.has(p, GARNISH_COST)) {
+							ItemMeta meta = item.getItemMeta();
+							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+							lore.add("§9Remedies " + status);
+							meta.setLore(lore);
+							item.setItemMeta(meta);
+							p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
+							econ.withdrawPlayer(p, GARNISH_COST);
+							Util.sendMessage(p, "&7Successfully remedied dish!");
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the gold to remedy this!");
+						}
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the materials to remedy this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cCannot remedy this item!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void assimilate(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if(!item.equals(new ItemStack(Material.AIR))) {
+			int slot = p.getInventory().firstEmpty();
+			if(slot != -1) {
+				int level = CulinarianUtils.getRecipeLevel(item);
+				if(p.hasPermission("culinarian.assimilate." + level)) {
+					if(econ.has(p, ASSIMILATE_COST)) {
+						p.getInventory().removeItem(Util.setAmount(item, 1));
+						p.getInventory().addItem(CommonItems.getEssence(level));
+						econ.withdrawPlayer(p, ASSIMILATE_COST);
+						Util.sendMessage(p, "&7Successfully assimilated recipe!");
+					}
+					else {
+						Util.sendMessage(p, "&cYou lack the gold to assimilate this!");
+					}
+				}
+				else {
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYour inventory is full!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cMain hand is empty!");
+		}
+	}
+	
+	public void giveSpecial(Player p) {
+		int level = 0;
+		if(p.hasPermission("culinarian.special.5")) {
+			level = 5;
+		}
+		else if(p.hasPermission("culinarian.special.4")) {
+			level = 4;
+		}
+		else if(p.hasPermission("culinarian.special.3")) {
+			level = 3;
+		}
+		else if(p.hasPermission("culinarian.special.2")) {
+			level = 2;
+		}
+		else if(p.hasPermission("culinarian.special.1")) {
+			level = 1;
+		}
+		
+		if(level != 0) {
+			int slot = p.getInventory().firstEmpty();
+			if(slot != -1) {
+				if(econ.has(p, SPECIAL_COST)) {
+					// Randomize the tier to be received, 0 = ingr, 1-3 = tier 1-3, 4 = limited edition
+					Random gen = new Random();
+					int tier = gen.nextInt(level);
+					ArrayList<ItemStack> recipes = null;
+					if(tier == 0) {
+						recipes = IngredientRecipeItems.getIngredients();
+					}
+					else if(tier == 1) {
+						recipes = Tier1RecipeItems.getTier1Recipes();
+					}
+					else if(tier == 2) {
+						recipes = Tier2RecipeItems.getTier2Recipes();
+					}
+					else if(tier == 3) {
+						recipes = Tier3RecipeItems.getTier3Recipes();
+					}
+					else if(tier == 4) {
+						recipes = LimitedEditionRecipeItems.getLimitedEditionRecipes();
+					}
+					ItemStack item = recipes.get(gen.nextInt(recipes.size()));
+					item.setAmount(SPECIAL_AMOUNT);
+					p.getInventory().addItem(item);
+					econ.withdrawPlayer(p, SPECIAL_COST);
+					Util.sendMessage(p, "&7Successfully received daily special!");
+				}
+				else {
+					Util.sendMessage(p, "&cYou lack the gold to do this!");
+				}
+			}
+			else {
+				Util.sendMessage(p, "&cYour inventory is full!");
+			}
+		}
+		else {
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -377,7 +563,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier1(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.1")) {
+		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
 			}
@@ -445,7 +631,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier1(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.1")) {
+		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
 			}
@@ -513,7 +699,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier2(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
@@ -584,7 +770,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier2(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
@@ -655,7 +841,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier3(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
 				CulinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
 			}
@@ -726,7 +912,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseTier3(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.2")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
 			}
@@ -797,7 +983,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLimitedEdition(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
 				CulinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
 			}
@@ -853,7 +1039,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLimitedEdition(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
 			}
@@ -909,7 +1095,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLegendary(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
 				CulinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
@@ -938,7 +1124,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseLegendary(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
@@ -967,7 +1153,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseDrink(Player p, String recipe) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
 				CulinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
 			}
@@ -1023,7 +1209,7 @@ public class CulinarianMethods {
 	}
 	
 	public void parseDrink(Player p, String recipe, int amount) {
-		if(p.hasPermission("culinarian.craft.3")) {
+		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
 				CulinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
 			}
@@ -1076,6 +1262,37 @@ public class CulinarianMethods {
 		else {
 			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
+	}
+	
+	public void resetPlayer(Player p) {
+		String name = p.getName();
+		
+		// Clean out perms
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.professed");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.spice.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.garnish.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.preserve.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.assimilate.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove culinarian.craft.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr22");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr23");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.Ingr24");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove recipes.drinks.unlock");
+		
+		// Reset profession
+		SkillAPI.getPlayerData(p).reset("profession");
 	}
 
 }

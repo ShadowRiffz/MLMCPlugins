@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -120,6 +121,16 @@ public class StonecutterCommands implements CommandExecutor {
 					return true;
 				}
 			}
+			else if(args[0].equalsIgnoreCase("refine")) {
+				if(args.length == 1) {
+					stonecutterMethods.refine(p);
+					return true;
+				}
+				else {
+					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					return true;
+				}
+			}
 			else if(args[0].equalsIgnoreCase("get")) {
 				if(args.length == 4) {
 					if(args[1].equalsIgnoreCase("ore")) {
@@ -139,7 +150,7 @@ public class StonecutterCommands implements CommandExecutor {
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid subcommand!");
+						Util.sendMessage(p, "&cInvalid parameters!");
 						return true;
 					}
 				}
@@ -148,8 +159,26 @@ public class StonecutterCommands implements CommandExecutor {
 					return true;
 				}
 			}
+			// RESET COMMAND
+			else if(args[0].equalsIgnoreCase("reset")) {
+				if(args.length == 2) {
+					Player toReset = Bukkit.getPlayer(args[1]);
+					if(toReset != null) {
+						stonecutterMethods.resetPlayer(toReset);
+						return true;
+					}
+					else {
+						Util.sendMessage(p, "&cPlayer not found!");
+						return true;
+					}
+				}
+				else {
+					sender.sendMessage("§cIncorrect number of arguments!");
+					return true;
+				}
+			}
 			else {
-				Util.sendMessage(p, "&cInvalid parameters!");
+				Util.sendMessage(p, "&cInvalid subcommand!");
 				return true;
 			}
 		}

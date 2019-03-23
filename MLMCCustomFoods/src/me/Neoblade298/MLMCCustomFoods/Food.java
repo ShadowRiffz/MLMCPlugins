@@ -200,9 +200,11 @@ public class Food
     return true;
   }
   
-  public void eat(final Player player)
+  public void eat(final Player player, double multiplier)
   {
-    this.lastEaten.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis()));
+	long toSubtract = (long) (this.cooldown * (1 - multiplier));
+	long ticks = (long) (((double)this.cooldown) * multiplier);
+    this.lastEaten.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() - toSubtract));
     if (this.cooldown > 0) {
       Bukkit.getScheduler().scheduleSyncDelayedTask(MLMCCustomFoodsMain.getMain(), new Runnable()
       {
@@ -212,7 +214,7 @@ public class Food
           message = message.replaceAll("&", "§");
           player.sendMessage(message);
         }
-      }, this.cooldown / 50);
+      }, (ticks) / 50);
     }
   }
 }
