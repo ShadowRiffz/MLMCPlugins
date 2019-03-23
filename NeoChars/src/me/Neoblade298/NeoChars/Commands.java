@@ -20,7 +20,7 @@ public class Commands implements CommandExecutor{
 		
 		if(args.length == 1) {
 			if(Bukkit.getPlayer(args[0]) != null) {
-				main.sendPlayerCard((Player) sender, Bukkit.getPlayer(args[0]));
+				main.sendPlayerCard((Player) sender, Bukkit.getOfflinePlayer(args[0]));
 				return true;
 			}
 		}

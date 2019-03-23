@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoChars;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +29,7 @@ public class Main extends JavaPlugin implements Listener
     Bukkit.getServer().getLogger().info("NeoChars Disabled");
   }
   
-  public void sendPlayerCard(Player recipient, Player viewed) {
+  public void sendPlayerCard(Player recipient, OfflinePlayer viewed) {
   	if (SkillAPI.getPlayerData(viewed) == null) {
   		Utilities.sendMessage(recipient, "&cThis player has no class");
   		return;
