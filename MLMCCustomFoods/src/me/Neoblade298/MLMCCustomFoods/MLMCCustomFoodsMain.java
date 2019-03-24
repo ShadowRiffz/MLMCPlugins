@@ -103,12 +103,14 @@ public class MLMCCustomFoodsMain
     		if(invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 	    		ItemMeta invMeta = invItem.getItemMeta();
 	    		for (String name : this.foods.keySet()) {
+  		    	  food = (Food)this.foods.get(name);
+	    			if (food.canEat(p)) {
 	    		      if (name.equalsIgnoreCase(invMeta.getDisplayName())) {
-	    		    	  food = (Food)this.foods.get(name);
 	    		    	  item = invItem;
 	    		    	  meta = invItem.getItemMeta();
 	    		    	  break;
 	    		      }
+	    			}
 	    		}
     		}
     	}
