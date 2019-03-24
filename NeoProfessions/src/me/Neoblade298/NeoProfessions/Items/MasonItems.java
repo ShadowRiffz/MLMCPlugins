@@ -40,13 +40,13 @@ public class MasonItems {
 		if(isAdvanced) {
 			meta.setDisplayName("&4[Lv 3] §cAdvanced Looting Charm");
 			lore.add("§7Level 3 Advanced Looting Charm");
-			lore.add("§7Effect: Quest mobs drop some gold");
+			lore.add("§7Effect: Quest mobs drop more gold");
 			level = 3;
 		}
 		else {
 			meta.setDisplayName("§4[Lv 2] §cLooting Charm");
 			lore.add("§7Level 2 Looting Charm");
-			lore.add("§7Effect: Quest mobs drop more gold");
+			lore.add("§7Effect: Quest mobs drop some gold");
 		}
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
