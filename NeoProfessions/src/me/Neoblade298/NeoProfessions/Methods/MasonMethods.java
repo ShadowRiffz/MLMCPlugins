@@ -78,30 +78,35 @@ public class MasonMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if(p.hasPermission("mason.engrave.tier." + level)) {
-				int numSlots = MasonUtils.countSlots(item);
-				if(numSlots < MAX_SLOTS) {
-					if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1))) {
-							if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level))) {
-								MasonUtils.createSlot(item, level);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1)));
-								econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level));
-								Util.sendMessage(p, "&7Successfully created slot!");
+				if(Util.getItemLevel(item) <= level) {
+					int numSlots = MasonUtils.countSlots(item);
+					if(numSlots < MAX_SLOTS) {
+						if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
+							if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1))) {
+								if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level))) {
+									MasonUtils.createSlot(item, level);
+									p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1)));
+									econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level));
+									Util.sendMessage(p, "&7Successfully created slot!");
+								}
+								else {
+									Util.sendMessage(p, "&cYou lack the gold to create this!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to create this!");
+								Util.sendMessage(p, "&cYou lack the materials to create this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
+						Util.sendMessage(p, "&cThis item cannot have any more slots!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cThis item cannot have any more slots!");
+					Util.sendMessage(p, "&cThis item is not capable of holding a slot of this level!");
 				}
 			}
 			else {
