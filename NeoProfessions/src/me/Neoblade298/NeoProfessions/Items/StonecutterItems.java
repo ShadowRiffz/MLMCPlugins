@@ -172,6 +172,7 @@ public class StonecutterItems {
 			lore.add("§7Durability Lost: §e" + duraLost);
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -228,6 +229,7 @@ public class StonecutterItems {
 			lore.add("§7Durability Lost: §e" + durabilityLoss);
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -334,6 +336,7 @@ public class StonecutterItems {
 			lore.add("§7Durability Lost: §e" + duraLost);
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -423,6 +426,7 @@ public class StonecutterItems {
 			lore.add("§7Durability Lost: §e" + durabilityLoss);
 		}
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
