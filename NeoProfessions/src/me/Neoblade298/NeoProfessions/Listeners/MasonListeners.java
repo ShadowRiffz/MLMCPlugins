@@ -150,48 +150,56 @@ public class MasonListeners implements Listener {
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
 			ItemStack itemToSlot = p.getInventory().getItemInMainHand();
+			int slotLevel = MasonUtils.getSlotLevel(itemWithSlot, slot);
 			slotNum.remove(p);
 			slotItem.remove(p);
 			
 			String slotType = MasonUtils.slotType(itemToSlot);
 			if(p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if(slotType != null) {
-					int level = Util.getItemLevel(itemWithSlot);
-					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SLOT_ESSENCE)) {
-						if(econ.has(p, SLOT_GOLD)) {
-							boolean success = false;
-							switch (slotType) {
-							case "durability":
-								success = MasonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-								break;
-							case "attribute":
-								success = MasonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-								break;
-							case "overload":
-								success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-								break;
-							case "charm":
-								success = MasonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-								break;
-							}
-							if (success) {
-								p.getInventory().removeItem(Util.setAmount(new ItemStack(itemToSlot), 1));
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
-								econ.withdrawPlayer(p, SLOT_GOLD);
-								Util.sendMessage(p, "&cSuccessfully slotted item!");
+					if(MasonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
+						int level = Util.getItemLevel(itemWithSlot);
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SLOT_ESSENCE)) {
+							if(econ.has(p, SLOT_GOLD)) {
+								boolean success = false;
+								switch (slotType) {
+								case "durability":
+									success = MasonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+									break;
+								case "attribute":
+									success = MasonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+									break;
+								case "overload":
+									success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+									break;
+								case "charm":
+									success = MasonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+									break;
+								}
+								if (success) {
+									p.getInventory().removeItem(Util.setAmount(new ItemStack(itemToSlot), 1));
+									p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
+									econ.withdrawPlayer(p, SLOT_GOLD);
+									Util.sendMessage(p, "&cSuccessfully slotted item!");
+								}
+								else {
+									Util.sendMessage(p, "&cFailed to slot item!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cFailed to slot item!");
+								Util.sendMessage(p, "&cYou lack the gold to do this!");
+								slotItem.remove(p);
+								slotNum.remove(p);
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the gold to do this!");
+							Util.sendMessage(p, "&cYou lack the materials to do this!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the materials to do this!");
+						Util.sendMessage(p, "&cThis item is too high level for this slot!");
 						slotItem.remove(p);
 						slotNum.remove(p);
 					}
@@ -203,9 +211,9 @@ public class MasonListeners implements Listener {
 				}
 			}
 			else {
-	  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
-	  		slotItem.remove(p);
-	  		slotNum.remove(p);
+		  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
+		  		slotItem.remove(p);
+		  		slotNum.remove(p);
 			}
 		}
 	}

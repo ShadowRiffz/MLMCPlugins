@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,6 +14,10 @@ import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 public class MasonUtils {
 	
 	final static int MAX_LEVEL = 5;
+	
+	public static int getAugmentLevel(ItemStack item) {
+		return item.getEnchantmentLevel(Enchantment.DURABILITY);
+	}
 	
 	public static void createSlot(ItemStack item, int level) {
 		ItemMeta meta = item.getItemMeta();
