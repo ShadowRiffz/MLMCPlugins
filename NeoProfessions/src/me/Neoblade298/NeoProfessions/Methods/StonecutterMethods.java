@@ -22,7 +22,7 @@ public class StonecutterMethods {
 	// Constants
 	static final int GEM_COST_PER_LVL = 1500;
 	static final int GEM_ESSENCE = 8;
-	static final int GEM_ORES = 2;
+	static final int GEM_ORES = 8;
 	static final int REFINE_COST_PER_LVL = 5000;
 	static final int REFINE_ESSENCE_0 = 10;
 	static final int REFINE_ESSENCE_1 = 9;
@@ -40,7 +40,7 @@ public class StonecutterMethods {
 			if(p.hasPermission("stonecutter.attribute." + attr)) {
 				if(p.hasPermission("stonecutter.gem." + type + "." + level)) {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
-						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), (int) Math.pow(GEM_ORES, level))) {
+						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES)) {
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
 								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
 								p.getInventory().removeItem(Util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
