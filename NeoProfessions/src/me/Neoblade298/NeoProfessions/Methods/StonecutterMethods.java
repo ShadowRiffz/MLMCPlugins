@@ -38,7 +38,7 @@ public class StonecutterMethods {
 		attr = attr.toLowerCase();
 		if(p.getInventory().firstEmpty() != -1) {
 			if(p.hasPermission("stonecutter.attribute." + attr)) {
-				if(p.hasPermission("stonecutter.gem." + level)) {
+				if(p.hasPermission("stonecutter.gem." + type + "." + level)) {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), (int) Math.pow(GEM_ORES, level))) {
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
@@ -81,7 +81,7 @@ public class StonecutterMethods {
 	public void createOverloadedGem(Player p, String attr, String type, int level) {
 		attr = attr.toLowerCase();
 		if(p.getInventory().firstEmpty() != -1) {
-			if(p.hasPermission("stonecutter.attribute." + attr)) {
+			if(p.hasPermission("stonecutter.attribute." + type + "." + attr)) {
 				if(p.hasPermission("stonecutter.overload." + level)) {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES))
@@ -175,16 +175,26 @@ public class StonecutterMethods {
 		
 		// Clean out perms
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.professed");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.weapon.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.weapon.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.weapon.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.weapon.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.weapon.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.armor.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.armor.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.armor.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.armor.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.gem.armor.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.weapon.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.weapon.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.weapon.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.weapon.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.weapon.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.armor.1");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.armor.2");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.armor.3");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.armor.4");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.overload.armor.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.strength");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.dexterity");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + name + " remove stonecutter.attribute.intelligence");
