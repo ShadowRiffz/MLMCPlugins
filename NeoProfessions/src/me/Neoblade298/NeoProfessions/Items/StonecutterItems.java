@@ -81,23 +81,23 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		switch (level) {
-			case 1:	meta.setDisplayName("§4[Lv " + level + "] §c " + oreName + " Fragment");
+			case 1:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 2:	meta.setDisplayName("§4[Lv " + level + "] §c " + oreName + " Shard");
+			case 2:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 3:	meta.setDisplayName("§4[Lv " + level + "] §c " + oreName + " Ore");
+			case 3:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 4:	meta.setDisplayName("§4[Lv " + level + "] §c " + oreName + " Cluster");
+			case 4:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 5:	meta.setDisplayName("§4[Lv " + level + "] §c " + oreName + " Gem");
+			case 5:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
