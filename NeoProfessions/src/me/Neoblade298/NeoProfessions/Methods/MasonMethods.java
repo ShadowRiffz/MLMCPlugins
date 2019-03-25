@@ -78,7 +78,7 @@ public class MasonMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if(p.hasPermission("mason.engrave.tier." + level)) {
-				if(Util.getItemLevel(item) <= level) {
+				if(Util.getItemLevel(item) >= level) {
 					int numSlots = MasonUtils.countSlots(item);
 					if(numSlots < MAX_SLOTS) {
 						if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
