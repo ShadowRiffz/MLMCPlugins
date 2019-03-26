@@ -68,7 +68,7 @@ public class BlacksmithListeners implements Listener{
 			if(itemLevel != -1) {
 				if(itemLevel <= repairLevel ){
 					if(p.getInventory().containsAtLeast(repair, 1)) {
-						p.getInventory().removeItem(Util.setAmount(repair, 1));
+						p.getInventory().removeItem(Util.setAmount(repair.clone(), 1));
 						selectedRepair.remove(p);
 						Util.setCurrentDurability(item, Util.getCurrentDurability(item) + (int)(percentage * Util.getMaxDurability(item)));
 						Util.sendMessage(p, "&7Successfully repaired item!");
