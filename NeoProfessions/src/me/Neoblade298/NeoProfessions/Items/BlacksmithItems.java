@@ -15,22 +15,10 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
+		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		
-		switch(level) {
-			case 1:	lore.add("§7Compatibility: Common - §9Rare");
-						 	break;
-			case 2: lore.add("§7Compatibility: Common - §6Epic");
-							break;
-			case 3: lore.add("§7Compatibility: Common - §bAngelic");
-							break;
-			case 4: lore.add("§7Compatibility: Common - §2Mythic");
-							break;
-			case 5: lore.add("§7Compatibility: Common - §4§lLegendary");
-							break;
-		}
+		lore.add("§7Level " + level + " Durability Augment");
 		
 		if(itemtype.equals("armor")) {
 			lore.add("§7Effect: Increases armor max durability");
@@ -53,22 +41,10 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityItem(int level, String itemtype, int potency) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§4[Lv " + level + "] §cDurability Gem");
+		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		
-		switch(level) {
-			case 1:	lore.add("§7Compatibility: Common - §9Rare");
-						 	break;
-			case 2: lore.add("§7Compatibility: Common - §6Epic");
-							break;
-			case 3: lore.add("§7Compatibility: Common - §bAngelic");
-							break;
-			case 4: lore.add("§7Compatibility: Common - §2Mythic");
-							break;
-			case 5: lore.add("§7Compatibility: Common - §4§lLegendary");
-							break;
-		}
+		lore.add("§7Level " + level + " Durability Augment");
 		
 		if(itemtype.equals("armor")) {
 			lore.add("§7Effect: Increases armor max durability");

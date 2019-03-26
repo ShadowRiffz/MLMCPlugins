@@ -145,23 +145,7 @@ public class StonecutterItems {
 			meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
 			break;
 		}
-		switch (level) {
-		case 1:
-			lore.add("§7Compatibility: Common - §9Rare");
-			break;
-		case 2:
-			lore.add("§7Compatibility: Common - §6Epic");
-			break;
-		case 3:
-			lore.add("§7Compatibility: Common - §bAngelic");
-			break;
-		case 4:
-			lore.add("§7Compatibility: Common - §2Mythic");
-			break;
-		case 5:
-			lore.add("§7Compatibility: Common - §4§lLegendary");
-			break;
-		}
+		lore.add("§7Level " + level + " Gem Augment");
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -202,23 +186,7 @@ public class StonecutterItems {
 			meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
 			break;
 		}
-		switch (level) {
-		case 1:
-			lore.add("§7Compatibility: Common - §9Rare");
-			break;
-		case 2:
-			lore.add("§7Compatibility: Common - §6Epic");
-			break;
-		case 3:
-			lore.add("§7Compatibility: Common - §bAngelic");
-			break;
-		case 4:
-			lore.add("§7Compatibility: Common - §2Mythic");
-			break;
-		case 5:
-			lore.add("§7Compatibility: Common - §4§lLegendary");
-			break;
-		}
+		lore.add("§7Level " + level + " Gem Augment");
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -309,23 +277,7 @@ public class StonecutterItems {
 				break;
 			}
 		}
-		switch (level) {
-		case 1:
-			lore.add("§7Compatibility: Common - §9Rare");
-			break;
-		case 2:
-			lore.add("§7Compatibility: Common - §6Epic");
-			break;
-		case 3:
-			lore.add("§7Compatibility: Common - §bAngelic");
-			break;
-		case 4:
-			lore.add("§7Compatibility: Common - §2Mythic");
-			break;
-		case 5:
-			lore.add("§7Compatibility: Common - §4§lLegendary");
-			break;
-		}
+		lore.add("§7Level " + level + " Overloaded Gem Augment");
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -399,23 +351,7 @@ public class StonecutterItems {
 				break;
 			}
 		}
-		switch (level) {
-		case 1:
-			lore.add("§7Compatibility: Common - §9Rare");
-			break;
-		case 2:
-			lore.add("§7Compatibility: Common - §6Epic");
-			break;
-		case 3:
-			lore.add("§7Compatibility: Common - §bAngelic");
-			break;
-		case 4:
-			lore.add("§7Compatibility: Common - §2Mythic");
-			break;
-		case 5:
-			lore.add("§7Compatibility: Common - §4§lLegendary");
-			break;
-		}
+		lore.add("§7Level " + level + " Overloaded Gem Augment");
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
