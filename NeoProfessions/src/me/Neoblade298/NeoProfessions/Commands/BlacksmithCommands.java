@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -43,6 +44,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				Util.sendMessage(p, "&7- &c/blacksmith deconstruct");
 				if(sender.hasPermission("blacksmith.admin")) {
 					Util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
+					Util.sendMessage(p, "&7- &4/blacksmith get durability [weapon/armor] [level]");
 				}
 				return true;
 			}
@@ -154,7 +156,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				// GET (Debug command)
 				else if(args[0].equalsIgnoreCase("get")) {
 					if(args.length == 3) {
-						if (args[1].equalsIgnoreCase("Essence")) {
+						if (args[1].equalsIgnoreCase("essence")) {
 							if(StringUtils.isNumeric(args[2])) {
 								if(p.hasPermission("blacksmith.admin")) {
 									p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
@@ -168,6 +170,17 @@ public class BlacksmithCommands implements CommandExecutor {
 							}
 							else {
 								Util.sendMessage(p, "&cInvalid number!");
+								return true;
+							}
+						}
+						else if (args[1].equalsIgnoreCase("durability")) {
+							if(p.hasPermission("blacksmith.admin")) {
+								p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
+								Util.sendMessage(p, "&7Successfully spawned durability augment!");
+								return true;
+							}
+							else {
+								Util.sendMessage(p, "&cYou don't have permission to do that!");
 								return true;
 							}
 						}
