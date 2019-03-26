@@ -56,7 +56,7 @@ public class CulinarianMethods {
 	
 	public void garnish(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int level = 0;
 			if(p.hasPermission("culinarian.garnish.3")) {
 				level = 3;
@@ -127,7 +127,7 @@ public class CulinarianMethods {
 	
 	public void preserve(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int level = 0;
 			if(p.hasPermission("culinarian.garnish.3")) {
 				level = 3;
@@ -198,7 +198,7 @@ public class CulinarianMethods {
 	
 	public void spice(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int level = 0;
 			if(p.hasPermission("culinarian.garnish.3")) {
 				level = 3;
@@ -269,7 +269,7 @@ public class CulinarianMethods {
 	
 	public void remedy(Player p, String status) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			if(p.hasPermission("culinarian.remedy." + status)) {
 				boolean isFood = false;
 				for(String line : item.getItemMeta().getLore()) {
@@ -314,7 +314,7 @@ public class CulinarianMethods {
 	
 	public void assimilate(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
 				int level = CulinarianUtils.getRecipeLevel(item);
