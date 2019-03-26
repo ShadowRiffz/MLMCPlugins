@@ -270,7 +270,7 @@ public class BlacksmithMethods {
 					if(econ.has(p, DECONSTRUCT_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, DECONSTRUCT_COST);
-						p.getInventory().addItem(Util.setAmount(CommonItems.getEssenceFragment(itemLevel), DECONSTRUCT_AMOUNT));
+						p.getInventory().addItem(Util.setAmount(CommonItems.getEssence(itemLevel - 1), DECONSTRUCT_AMOUNT));
 						Util.sendMessage(p, "&cSuccessfully deconstructed item!");
 					}
 					else {
