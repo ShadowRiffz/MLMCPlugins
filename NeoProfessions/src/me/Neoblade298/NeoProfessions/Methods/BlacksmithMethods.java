@@ -98,7 +98,7 @@ public class BlacksmithMethods {
 	
 	public void upgradeUnbreaking(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item.equals(new ItemStack(Material.AIR))) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			if(item.containsEnchantment(Enchantment.DURABILITY)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
 				int upgradeLevel = enchLevel + 1;
@@ -144,7 +144,7 @@ public class BlacksmithMethods {
 	
 	public void upgradeProtection(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(item.equals(new ItemStack(Material.AIR))) {
+		if(!item.equals(new ItemStack(Material.AIR))) {
 			if(item.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
 				int upgradeLevel = enchLevel + 1;
