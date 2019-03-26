@@ -123,7 +123,7 @@ public class StonecutterMethods {
 	
 	public void refine(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
 				int oldLevel = Util.getEssenceLevel(item);

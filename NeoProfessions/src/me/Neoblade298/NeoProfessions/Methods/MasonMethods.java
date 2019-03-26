@@ -252,7 +252,7 @@ public class MasonMethods {
 	
 	public void slot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			if(MasonUtils.isSlotAvailable(item, slot)) {
 				if(Util.isArmor(item)) {
 					int level = Util.getItemLevel(item);
@@ -287,7 +287,7 @@ public class MasonMethods {
 	
 	public void unslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			if(MasonUtils.isSlotUsed(item, slot)) {
 				int level = Util.getItemLevel(item);
 				if(p.hasPermission("mason.unslot." + level)) {
@@ -329,7 +329,7 @@ public class MasonMethods {
 	
 	public void removeSlot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			if(MasonUtils.isSlotAvailable(item, slot)) {
 				int level = Util.getItemLevel(item);
 				if(level != -1) {
