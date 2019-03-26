@@ -261,7 +261,7 @@ public class BlacksmithMethods {
 	}
 	
 	public void deconstructItem(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
 			item.setAmount(1);
 			int itemLevel = Util.getEssenceLevel(item);

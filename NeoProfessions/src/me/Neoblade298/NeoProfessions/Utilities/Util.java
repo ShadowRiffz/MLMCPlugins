@@ -29,7 +29,7 @@ public class Util {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return -1;
 		}
-		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
+		String lore  = item.getItemMeta().getLore().get(0);
 		if(lore.contains("Essence")) {
 			return item.getEnchantmentLevel(Enchantment.DURABILITY);
 		}
