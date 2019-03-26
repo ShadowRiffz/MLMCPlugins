@@ -285,7 +285,7 @@ public class MasonUtils {
 	public static int getSlottedLevel(ItemStack item) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		for(String line : lore) {
-			if(line.contains("Level") || line.contains("Compatibility")) {
+			if(line.contains("Level")) {
 				if(line.contains("Level 1")) {
 					return 1;
 				} else if(line.contains("Level 2")) {
@@ -295,16 +295,6 @@ public class MasonUtils {
 				} else if(line.contains("Level 4")) {
 					return 4;
 				} else if(line.contains("Level 5")) {
-					return 5;
-				} else if(line.contains("Rare")) {
-					return 1;
-				} else if(line.contains("Epic")) {
-					return 2;
-				} else if(line.contains("Angelic")) {
-					return 3;
-				} else if(line.contains("Mythic")) {
-					return 4;
-				} else if(line.contains("Legendary")) {
 					return 5;
 				}
 			}
