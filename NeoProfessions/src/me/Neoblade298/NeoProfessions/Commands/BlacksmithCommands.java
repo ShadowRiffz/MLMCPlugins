@@ -44,6 +44,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				Util.sendMessage(p, "&7- &c/blacksmith deconstruct");
 				if(sender.hasPermission("blacksmith.admin")) {
 					Util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
+					Util.sendMessage(p, "&7- &4/blacksmith get repair [level]");
 					Util.sendMessage(p, "&7- &4/blacksmith get durability [weapon/armor] [level]");
 				}
 				return true;
@@ -177,6 +178,17 @@ public class BlacksmithCommands implements CommandExecutor {
 							if(p.hasPermission("blacksmith.admin")) {
 								p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 								Util.sendMessage(p, "&7Successfully spawned durability augment!");
+								return true;
+							}
+							else {
+								Util.sendMessage(p, "&cYou don't have permission to do that!");
+								return true;
+							}
+						}
+						else if (args[1].equalsIgnoreCase("repair")) {
+							if(p.hasPermission("blacksmith.admin")) {
+								p.getInventory().addItem(BlacksmithItems.getRepairItem(Integer.parseInt(args[2])));
+								Util.sendMessage(p, "&7Successfully spawned repair kit!");
 								return true;
 							}
 							else {
