@@ -37,8 +37,8 @@ public class BlacksmithCommands implements CommandExecutor {
 				Util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
 				Util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
 				Util.sendMessage(p, "&7- &c/blacksmith create repair [level]");
-				Util.sendMessage(p, "&7- &c/blacksmith unbreaking");
-				Util.sendMessage(p, "&7- &c/blacksmith protection");
+				Util.sendMessage(p, "&7- &c/blacksmith upgrade unbreaking");
+				Util.sendMessage(p, "&7- &c/blacksmith upgrade protection");
 				Util.sendMessage(p, "&7- &c/blacksmith reforge");
 				Util.sendMessage(p, "&7- &c/blacksmith scrap");
 				Util.sendMessage(p, "&7- &c/blacksmith deconstruct");
