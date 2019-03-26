@@ -98,7 +98,7 @@ public class BlacksmithMethods {
 	
 	public void upgradeUnbreaking(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			if(item.containsEnchantment(Enchantment.DURABILITY)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
 				int upgradeLevel = enchLevel + 1;
@@ -144,7 +144,8 @@ public class BlacksmithMethods {
 	
 	public void upgradeProtection(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
+			System.out.println(item);
 			if(item.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
 				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
 				int upgradeLevel = enchLevel + 1;
@@ -190,7 +191,7 @@ public class BlacksmithMethods {
 	
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			String type = Util.getItemType(item);
 			if(type != null) {
 				int itemLevel = Util.getItemLevel(item);
@@ -232,7 +233,7 @@ public class BlacksmithMethods {
 	
 	public void scrapItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			int itemLevel = Util.getItemLevel(item);
 			if(itemLevel != -1) {
 				if(p.hasPermission("blacksmith.scrap." + itemLevel)) {
@@ -261,7 +262,7 @@ public class BlacksmithMethods {
 	
 	public void deconstructItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.equals(new ItemStack(Material.AIR))) {
+		if(!item.getType().equals(Material.AIR)) {
 			item.setAmount(1);
 			int itemLevel = Util.getEssenceLevel(item);
 			if(itemLevel >= 2) {
