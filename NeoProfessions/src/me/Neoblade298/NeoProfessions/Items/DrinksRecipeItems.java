@@ -373,7 +373,6 @@ public class DrinksRecipeItems {
 		recipe.add(CommonItems.getEssence(3));
 		recipe.add(IngredientRecipeItems.getRum());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 15));
-		recipe.add(new ItemStack(Material.ICE));
 		recipe.add(new ItemStack(Material.APPLE));
 		return recipe;
 	}

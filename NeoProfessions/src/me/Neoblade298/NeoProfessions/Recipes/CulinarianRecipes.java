@@ -221,7 +221,6 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.WHITE));
-		recipe.addIngredient(Material.SAPLING);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
 	}
