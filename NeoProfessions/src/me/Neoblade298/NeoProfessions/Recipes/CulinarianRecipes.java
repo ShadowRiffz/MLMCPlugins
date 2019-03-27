@@ -179,6 +179,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.BLUE));
 		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.ICE);
 		return recipe;
 	}
 	
