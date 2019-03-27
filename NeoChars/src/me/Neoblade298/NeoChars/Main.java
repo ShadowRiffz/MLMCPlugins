@@ -30,18 +30,27 @@ public class Main extends JavaPlugin implements Listener
   }
   
   public void sendPlayerCard(Player recipient, OfflinePlayer viewed) {
-  	if (SkillAPI.getPlayerData(viewed) == null) {
+  	if (!SkillAPI.hasPlayerData(viewed) || SkillAPI.getPlayerData(viewed).getClass() == null) {
   		Utilities.sendMessage(recipient, "&cThis player has no class");
   		return;
   	}
   	
   	int pLvl = SkillAPI.getPlayerData(viewed).getClass("class").getLevel();
   	String pClass = SkillAPI.getPlayerData(viewed).getClass("class").getData().getName();
+  	int profLvl = 0;
+  	String profClass = null;
+  	if(SkillAPI.getPlayerData(viewed).getClass("profession") != null) {
+	  	profLvl = SkillAPI.getPlayerData(viewed).getClass("profession").getLevel();
+	  	profClass = SkillAPI.getPlayerData(viewed).getClass("profession").getData().getName();
+  	}
   	int xp = (int) SkillAPI.getPlayerData(viewed).getClass("class").getExp();
   	int reqxp = SkillAPI.getPlayerData(viewed).getClass("class").getRequiredExp();
   	PlayerData pData = SkillAPI.getPlayerData(viewed);
-  	
+
   	Utilities.sendMessage(recipient, "&7-- &e" + viewed.getName() + " &6[Lv " + pLvl + " " + pClass + "] &7(" + xp + " / " + reqxp + " XP) --");
+  	if(SkillAPI.getPlayerData(viewed).getClass("profession") != null) {
+  		Utilities.sendMessage(recipient, "&7-- &e" + "&6[Lv " + profLvl + " " + profClass + "] &7--");
+  	}
   	Utilities.sendMessage(recipient, "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e" + pData.getAttribute("Dexterity") + " &cDEX&7 | &e" +
   			pData.getAttribute("Intelligence") + " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Perception") + " &cPRC&7 | &e" +
   			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT");

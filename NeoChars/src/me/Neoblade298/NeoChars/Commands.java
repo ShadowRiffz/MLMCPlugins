@@ -15,6 +15,7 @@ public class Commands implements CommandExecutor{
 		this.main = main;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
