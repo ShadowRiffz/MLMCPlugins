@@ -30,7 +30,7 @@ public class Main extends JavaPlugin implements Listener
   }
   
   public void sendPlayerCard(Player recipient, OfflinePlayer viewed) {
-  	if (!SkillAPI.hasPlayerData(viewed) || SkillAPI.getPlayerData(viewed).getClass() == null) {
+  	if (!SkillAPI.hasPlayerData(viewed) || SkillAPI.getPlayerData(viewed).getClass("class") == null) {
   		Utilities.sendMessage(recipient, "&cThis player has no class");
   		return;
   	}
