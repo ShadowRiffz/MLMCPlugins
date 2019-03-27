@@ -321,7 +321,7 @@ public class DrinksRecipeItems {
 	public static ArrayList<ItemStack> getSwampWaterRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(CommonItems.getEssence(3));
-		recipe.add(IngredientRecipeItems.getVodka());
+		recipe.add(IngredientRecipeItems.getRum());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 10));
 		recipe.add(new ItemStack(Material.APPLE));
