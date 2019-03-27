@@ -3,6 +3,9 @@ author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Main
 version: 1.0
 commands:
+  neoprofessions:
+    description: Admin commands
+    usage: /neoprofessions [args]
   blacksmith:
     description: Base command for blacksmiths
     usage: /blacksmith [args]
