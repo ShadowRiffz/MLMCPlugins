@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
 import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
+import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
@@ -73,6 +74,7 @@ public class Main extends JavaPlugin implements Listener {
 	  this.getCommand("mason").setExecutor(new MasonCommands(this));
 	  this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
 	  this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
+	  this.getCommand("neoprofessions").setExecutor(new NeoprofessionsCommands(this));
 	  
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
