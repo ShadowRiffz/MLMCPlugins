@@ -55,69 +55,77 @@ public class CulinarianMethods {
 	}
 	
 	public void garnish(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
-			int level = 0;
-			if(p.hasPermission("culinarian.garnish.3")) {
-				level = 3;
-			}
-			else if(p.hasPermission("culinarian.garnish.2")) {
-				level = 2;
-			}
-			else if(p.hasPermission("culinarian.garnish.1")) {
-				level = 1;
-			}
-			
-			if(level != 0) {
-				boolean isFood = false;
-				boolean isBoosted = false;
-				for(String line : item.getItemMeta().getLore()) {
-					if(line.contains("Recipe")) {
-						isFood = true;
-					}
-					if(line.contains("Garnished")) {
-						isBoosted = true;
-					}
-					if(line.contains("Spiced")) {
-						isBoosted = true;
-					}
-					if(line.contains("Preserved")) {
-						isBoosted = true;
-					}
+			int invSpace = p.getInventory().firstEmpty();
+			if(invSpace != -1) {
+				int level = 0;
+				if(p.hasPermission("culinarian.garnish.3")) {
+					level = 3;
 				}
-				if(isFood) {
-					int foodLevel = CulinarianUtils.getRecipeLevel(item);
-					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
-							if(econ.has(p, GARNISH_COST)) {
-								ItemMeta meta = item.getItemMeta();
-								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
-								lore.add("§9Garnished (" + multiplier + "x Attribute Boost)");
-								meta.setLore(lore);
-								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
-								econ.withdrawPlayer(p, GARNISH_COST);
-								Util.sendMessage(p, "&7Successfully garnished dish!");
+				else if(p.hasPermission("culinarian.garnish.2")) {
+					level = 2;
+				}
+				else if(p.hasPermission("culinarian.garnish.1")) {
+					level = 1;
+				}
+				
+				if(level != 0) {
+					boolean isFood = false;
+					boolean isBoosted = false;
+					for(String line : item.getItemMeta().getLore()) {
+						if(line.contains("Recipe")) {
+							isFood = true;
+						}
+						if(line.contains("Garnished")) {
+							isBoosted = true;
+						}
+						if(line.contains("Spiced")) {
+							isBoosted = true;
+						}
+						if(line.contains("Preserved")) {
+							isBoosted = true;
+						}
+					}
+					if(isFood) {
+						int foodLevel = CulinarianUtils.getRecipeLevel(item);
+						if(!isBoosted) {
+							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+								if(econ.has(p, GARNISH_COST)) {
+									ItemMeta meta = item.getItemMeta();
+									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+									double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
+									lore.add("§9Garnished (" + multiplier + "x Attribute Boost)");
+									meta.setLore(lore);
+									item.setItemMeta(meta);
+									p.getInventory().addItem(Util.setAmount(item, 1));
+									p.getInventory().removeItem(Util.setAmount(oldItem, 1));
+									econ.withdrawPlayer(p, GARNISH_COST);
+									Util.sendMessage(p, "&7Successfully garnished dish!");
+								}
+								else {
+									Util.sendMessage(p, "&cYou lack the gold to garnish this!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to garnish this!");
+								Util.sendMessage(p, "&cYou lack the materials to garnish this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to garnish this!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cThis food cannot be boosted any further!");
+						Util.sendMessage(p, "&cCannot garnish this item!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cCannot garnish this item!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
@@ -126,69 +134,77 @@ public class CulinarianMethods {
 	}
 	
 	public void preserve(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
-			int level = 0;
-			if(p.hasPermission("culinarian.garnish.3")) {
-				level = 3;
-			}
-			else if(p.hasPermission("culinarian.garnish.2")) {
-				level = 2;
-			}
-			else if(p.hasPermission("culinarian.garnish.1")) {
-				level = 1;
-			}
-			
-			if(level != 0) {
-				boolean isFood = false;
-				boolean isBoosted = false;
-				for(String line : item.getItemMeta().getLore()) {
-					if(line.contains("Recipe")) {
-						isFood = true;
-					}
-					if(line.contains("Garnished")) {
-						isBoosted = true;
-					}
-					if(line.contains("Spiced")) {
-						isBoosted = true;
-					}
-					if(line.contains("Preserved")) {
-						isBoosted = true;
-					}
+			int invSpace = p.getInventory().firstEmpty();
+			if(invSpace != -1) {
+				int level = 0;
+				if(p.hasPermission("culinarian.garnish.3")) {
+					level = 3;
 				}
-				if(isFood) {
-					int foodLevel = CulinarianUtils.getRecipeLevel(item);
-					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE)) {
-							if(econ.has(p, PRESERVE_COST)) {
-								ItemMeta meta = item.getItemMeta();
-								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
-								lore.add("§9Preserved (" + multiplier + "x Duration Boost)");
-								meta.setLore(lore);
-								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE));
-								econ.withdrawPlayer(p, PRESERVE_COST);
-								Util.sendMessage(p, "&7Successfully preserved dish!");
+				else if(p.hasPermission("culinarian.garnish.2")) {
+					level = 2;
+				}
+				else if(p.hasPermission("culinarian.garnish.1")) {
+					level = 1;
+				}
+				
+				if(level != 0) {
+					boolean isFood = false;
+					boolean isBoosted = false;
+					for(String line : item.getItemMeta().getLore()) {
+						if(line.contains("Recipe")) {
+							isFood = true;
+						}
+						if(line.contains("Garnished")) {
+							isBoosted = true;
+						}
+						if(line.contains("Spiced")) {
+							isBoosted = true;
+						}
+						if(line.contains("Preserved")) {
+							isBoosted = true;
+						}
+					}
+					if(isFood) {
+						int foodLevel = CulinarianUtils.getRecipeLevel(item);
+						if(!isBoosted) {
+							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE)) {
+								if(econ.has(p, PRESERVE_COST)) {
+									ItemMeta meta = item.getItemMeta();
+									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+									double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
+									lore.add("§9Preserved (" + multiplier + "x Duration Boost)");
+									meta.setLore(lore);
+									item.setItemMeta(meta);
+									p.getInventory().addItem(Util.setAmount(item, 1));
+									p.getInventory().removeItem(Util.setAmount(oldItem, 1));
+									econ.withdrawPlayer(p, PRESERVE_COST);
+									Util.sendMessage(p, "&7Successfully preserved dish!");
+								}
+								else {
+									Util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+								Util.sendMessage(p, "&cYou lack the materials to preserve this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to preserve this!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cThis food cannot be boosted any further!");
+						Util.sendMessage(p, "&cCannot preserve this item!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cCannot preserve this item!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
@@ -197,69 +213,77 @@ public class CulinarianMethods {
 	}
 	
 	public void spice(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
-			int level = 0;
-			if(p.hasPermission("culinarian.garnish.3")) {
-				level = 3;
-			}
-			else if(p.hasPermission("culinarian.garnish.2")) {
-				level = 2;
-			}
-			else if(p.hasPermission("culinarian.garnish.1")) {
-				level = 1;
-			}
-			
-			if(level != 0) {
-				boolean isFood = false;
-				boolean isBoosted = false;
-				for(String line : item.getItemMeta().getLore()) {
-					if(line.contains("Recipe")) {
-						isFood = true;
-					}
-					if(line.contains("Garnished")) {
-						isBoosted = true;
-					}
-					if(line.contains("Spiced")) {
-						isBoosted = true;
-					}
-					if(line.contains("Preserved")) {
-						isBoosted = true;
-					}
+			int invSpace = p.getInventory().firstEmpty();
+			if(invSpace != -1) {
+				int level = 0;
+				if(p.hasPermission("culinarian.garnish.3")) {
+					level = 3;
 				}
-				if(isFood) {
-					int foodLevel = CulinarianUtils.getRecipeLevel(item);
-					if(!isBoosted) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), SPICE_ESSENCE)) {
-							if(econ.has(p, SPICE_COST)) {
-								ItemMeta meta = item.getItemMeta();
-								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
-								lore.add("§9Spiced (" + multiplier + "x Restoration Boost)");
-								meta.setLore(lore);
-								item.setItemMeta(meta);
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), SPICE_ESSENCE));
-								econ.withdrawPlayer(p, SPICE_COST);
-								Util.sendMessage(p, "&7Successfully spiced dish!");
+				else if(p.hasPermission("culinarian.garnish.2")) {
+					level = 2;
+				}
+				else if(p.hasPermission("culinarian.garnish.1")) {
+					level = 1;
+				}
+				
+				if(level != 0) {
+					boolean isFood = false;
+					boolean isBoosted = false;
+					for(String line : item.getItemMeta().getLore()) {
+						if(line.contains("Recipe")) {
+							isFood = true;
+						}
+						if(line.contains("Garnished")) {
+							isBoosted = true;
+						}
+						if(line.contains("Spiced")) {
+							isBoosted = true;
+						}
+						if(line.contains("Preserved")) {
+							isBoosted = true;
+						}
+					}
+					if(isFood) {
+						int foodLevel = CulinarianUtils.getRecipeLevel(item);
+						if(!isBoosted) {
+							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), SPICE_ESSENCE)) {
+								if(econ.has(p, SPICE_COST)) {
+									ItemMeta meta = item.getItemMeta();
+									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+									double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
+									lore.add("§9Spiced (" + multiplier + "x Restoration Boost)");
+									meta.setLore(lore);
+									item.setItemMeta(meta);
+									p.getInventory().addItem(Util.setAmount(item, 1));
+									p.getInventory().removeItem(Util.setAmount(oldItem, 1));
+									econ.withdrawPlayer(p, SPICE_COST);
+									Util.sendMessage(p, "&7Successfully spiced dish!");
+								}
+								else {
+									Util.sendMessage(p, "&cYou lack the gold to spice this!");
+								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to spice this!");
+								Util.sendMessage(p, "&cYou lack the materials to spice this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to spice this!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cThis food cannot be boosted any further!");
+						Util.sendMessage(p, "&cCannot spice this item!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cCannot spice this item!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
@@ -268,43 +292,51 @@ public class CulinarianMethods {
 	}
 	
 	public void remedy(Player p, String status) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
-			if(p.hasPermission("culinarian.remedy." + status)) {
-				boolean isFood = false;
-				for(String line : item.getItemMeta().getLore()) {
-					if(line.contains("Recipe")) {
-						isFood = true;
-						break;
+			int invSpace = p.getInventory().firstEmpty();
+			if(invSpace != -1) {
+				if(p.hasPermission("culinarian.remedy." + status)) {
+					boolean isFood = false;
+					for(String line : item.getItemMeta().getLore()) {
+						if(line.contains("Recipe")) {
+							isFood = true;
+							break;
+						}
 					}
-				}
-				if(isFood) {
-					int foodLevel = CulinarianUtils.getRecipeLevel(item);
-					if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
-						if(econ.has(p, GARNISH_COST)) {
-							ItemMeta meta = item.getItemMeta();
-							ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-							lore.add("§9Remedies " + status);
-							meta.setLore(lore);
-							item.setItemMeta(meta);
-							p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE));
-							econ.withdrawPlayer(p, GARNISH_COST);
-							Util.sendMessage(p, "&7Successfully remedied dish!");
+					if(isFood) {
+						int foodLevel = CulinarianUtils.getRecipeLevel(item);
+						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+							if(econ.has(p, GARNISH_COST)) {
+								ItemMeta meta = item.getItemMeta();
+								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+								lore.add("§9Remedies " + status);
+								meta.setLore(lore);
+								item.setItemMeta(meta);
+								p.getInventory().addItem(Util.setAmount(item, 1));
+								p.getInventory().removeItem(Util.setAmount(oldItem, 1));
+								econ.withdrawPlayer(p, GARNISH_COST);
+								Util.sendMessage(p, "&7Successfully remedied dish!");
+							}
+							else {
+								Util.sendMessage(p, "&cYou lack the gold to remedy this!");
+							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the gold to remedy this!");
+							Util.sendMessage(p, "&cYou lack the materials to remedy this!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the materials to remedy this!");
+						Util.sendMessage(p, "&cCannot remedy this item!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cCannot remedy this item!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {

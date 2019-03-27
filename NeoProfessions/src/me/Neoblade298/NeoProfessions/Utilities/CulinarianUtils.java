@@ -68,7 +68,7 @@ public class CulinarianUtils {
 	}
 	
 	public static int getRecipeLevel(ItemStack item) {
-		if(item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().size() > 1) {
+		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			String line = item.getItemMeta().getLore().get(0);
 			if(line.contains("Tier 1") || line.contains("Ingredient")) {
 				return 1;
