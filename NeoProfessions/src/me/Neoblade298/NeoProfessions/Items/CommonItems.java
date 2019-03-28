@@ -66,7 +66,7 @@ public class CommonItems {
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
 	}
 }
