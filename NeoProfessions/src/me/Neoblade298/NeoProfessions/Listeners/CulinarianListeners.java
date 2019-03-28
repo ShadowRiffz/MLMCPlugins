@@ -89,7 +89,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Spirit", 40);
+							addStat(p, 0.03, "Dexterity", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -103,7 +103,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Spirit", 40);
+							addStat(p, 0.03, "Spirit", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -117,7 +117,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.005, "Endurance", 60);
+							addStat(p, 0.015, "Endurance", 60);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -131,7 +131,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.01, "Vitality", 50);
+							addStat(p, 0.02, "Vitality", 50);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -145,8 +145,8 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.03, "Spirit", 40);
-							addStat(p, -0.03, "Strength", 40);
+							addStat(p, 0.04, "Spirit", 40);
+							addStat(p, -0.02, "Strength", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -175,7 +175,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Intelligence", 40);
+							addStat(p, 0.03, "Intelligence", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -203,7 +203,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.03, "Dexterity", 30);
+							addStat(p, 0.04, "Dexterity", 30);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -217,7 +217,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Strength", 40);
+							addStat(p, 0.03, "Strength", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -231,7 +231,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Intelligence", 40);
+							addStat(p, 0.03, "Intelligence", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -245,7 +245,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Vitality", 40);
+							addStat(p, 0.04, "Vitality", 40);
 							addStat(p, -0.02, "Spirit", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
@@ -260,7 +260,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.02, "Spirit", 40);
+							addStat(p, 0.035, "Spirit", 40);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -274,7 +274,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.04, "Endurance", 20);
+							addStat(p, 0.03, "Endurance", 20);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
@@ -302,7 +302,7 @@ public class CulinarianListeners implements Listener {
 						}
 						CulinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 						if(canGetAttrs) {
-							addStat(p, 0.03, "Strength", 30);
+							addStat(p, 0.04, "Strength", 30);
 						}
 				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
 						break;
