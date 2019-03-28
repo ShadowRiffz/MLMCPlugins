@@ -37,14 +37,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			
 			if (args.length == 0) {
 				if(sender.hasPermission("blacksmith.admin")) {
-					Util.sendMessage(p, "&7- &4/neoprofessions get essence [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get fragment [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get repair [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get durability [weapon/armor] [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get ore [attribute] [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get gem [weapon/armor] [attribute] [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get overload [weapon/armor] [attribute] [level]");
-					Util.sendMessage(p, "&7- &4/neoprofessions get [basic/advanced] [charm]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get essence [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get fragment [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get repair [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get durability [weapon/armor] [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get ore [attribute] [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get gem [weapon/armor] [attribute] [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get overload [weapon/armor] [attribute] [level]");
+					Util.sendMessage(p, "&7- &4/neoprofessions <playername> get [basic/advanced] [charm]");
 				}
 				return true;
 			}
