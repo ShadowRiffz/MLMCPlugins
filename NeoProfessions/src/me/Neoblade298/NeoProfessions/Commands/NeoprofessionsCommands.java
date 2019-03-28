@@ -125,6 +125,79 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						}
 					}
 				}
+				else {
+					p = Bukkit.getPlayer(args[0]);
+					if (args[1].equalsIgnoreCase("get")) {
+						if(args[2].equalsIgnoreCase("essence")) {
+							p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[3])));
+						}
+						else if(args[2].equalsIgnoreCase("fragment")) {
+							p.getInventory().addItem(CommonItems.getEssenceFragment(Integer.parseInt(args[3])));
+						}
+						else if(args[2].equalsIgnoreCase("repair")) {
+							p.getInventory().addItem(BlacksmithItems.getRepairItem(Integer.parseInt(args[3])));
+						}
+						else if(args[2].equalsIgnoreCase("durability")) {
+							p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
+						}
+						else if(args[2].equalsIgnoreCase("ore")) {
+							p.getInventory().addItem(StonecutterItems.getOre(args[3], Integer.parseInt(args[4])));
+						}
+						else if(args[2].equalsIgnoreCase("gem")) {
+							if(args[3].equalsIgnoreCase("weapon")) {
+								p.getInventory().addItem(StonecutterItems.getWeaponGem(args[4], Integer.parseInt(args[5]), false));
+							}
+							else if(args[3].equalsIgnoreCase("armor")) {
+								p.getInventory().addItem(StonecutterItems.getArmorGem(args[4], Integer.parseInt(args[5]), false));
+							}
+						}
+						else if(args[2].equalsIgnoreCase("overload")) {
+							if(args[3].equalsIgnoreCase("weapon")) {
+								p.getInventory().addItem(StonecutterItems.getWeaponGem(args[4], Integer.parseInt(args[5]), true));
+							}
+							else if(args[3].equalsIgnoreCase("armor")) {
+								p.getInventory().addItem(StonecutterItems.getArmorGem(args[4], Integer.parseInt(args[5]), true));
+							}
+						}
+						else if(args[2].equalsIgnoreCase("basic")) {
+							if(args[3].equalsIgnoreCase("exp")) {
+								p.getInventory().addItem(MasonItems.getExpCharm(false));
+							}
+							else if(args[3].equalsIgnoreCase("drop")) {
+								p.getInventory().addItem(MasonItems.getDropCharm(false));
+							}
+							else if(args[3].equalsIgnoreCase("looting")) {
+								p.getInventory().addItem(MasonItems.getLootingCharm(false));
+							}
+							else if(args[3].equalsIgnoreCase("traveler")) {
+								p.getInventory().addItem(MasonItems.getTravelerCharm());
+							}
+							else if(args[3].equalsIgnoreCase("recovery")) {
+								p.getInventory().addItem(MasonItems.getRecoveryCharm());
+							}
+						}
+						else if(args[2].equalsIgnoreCase("advanced")) {
+							if(args[3].equalsIgnoreCase("exp")) {
+								p.getInventory().addItem(MasonItems.getExpCharm(true));
+							}
+							else if(args[3].equalsIgnoreCase("drop")) {
+								p.getInventory().addItem(MasonItems.getDropCharm(true));
+							}
+							else if(args[3].equalsIgnoreCase("looting")) {
+								p.getInventory().addItem(MasonItems.getLootingCharm(true));
+							}
+							else if(args[3].equalsIgnoreCase("hunger")) {
+								p.getInventory().addItem(MasonItems.getHungerCharm());
+							}
+							else if(args[3].equalsIgnoreCase("secondchance")) {
+								p.getInventory().addItem(MasonItems.getSecondChanceCharm());
+							}
+							else if(args[3].equalsIgnoreCase("quickeat")) {
+								p.getInventory().addItem(MasonItems.getQuickEatCharm());
+							}
+						}
+					}
+				}
 				return true;
 			}
 		}
