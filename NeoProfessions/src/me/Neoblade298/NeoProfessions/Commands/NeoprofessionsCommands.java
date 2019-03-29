@@ -36,6 +36,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			
 			if (args.length == 0) {
+				sender.sendMessage("§7- §4/neoprofessions level <playername>");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
@@ -53,6 +54,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (pClass != null) {
 						pClass.setLevel(pClass.getLevel() + 1);
 						pClass.setPoints(pClass.getPoints() + 2);
+						Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
 					}
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
