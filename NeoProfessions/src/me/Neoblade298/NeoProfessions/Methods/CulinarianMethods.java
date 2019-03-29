@@ -346,10 +346,10 @@ public class CulinarianMethods {
 	
 	public void assimilate(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if(item.getType().equals(Material.PAPER)) {
+		if(!item.getType().equals(Material.AIR)) {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
-				if(item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
+				if(item.getType().equals(Material.PAPER) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
 					int level = CulinarianUtils.getRecipeLevel(item);
 					if(p.hasPermission("culinarian.assimilate." + level)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
