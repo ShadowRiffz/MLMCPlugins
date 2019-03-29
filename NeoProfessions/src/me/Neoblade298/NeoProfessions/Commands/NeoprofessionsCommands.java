@@ -36,7 +36,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/neoprofessions level <playername>");
+				sender.sendMessage("§7- §4/neoprofessions level [playername] <amount>");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
@@ -50,11 +50,26 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				// /neoprofessions level playername
 				if (args[0].equalsIgnoreCase("level")) {
-					PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
-					if (pClass != null) {
-						pClass.setLevel(pClass.getLevel() + 1);
-						pClass.setPoints(pClass.getPoints() + 2);
-						Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+					if (args.length == 1) {
+						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
+						if (pClass != null) {
+							if (pClass.getLevel() <= 60) {
+								pClass.setLevel(pClass.getLevel() + 1);
+								pClass.setPoints(pClass.getPoints() + 2);
+								Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+							}
+						}
+					}
+					else if (args.length == 2) {
+						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
+						int levels = Integer.parseInt(args[2]);
+						if (pClass != null) {
+							if (pClass.getLevel() + levels <= 60) {
+								pClass.setLevel(pClass.getLevel() + levels);
+								pClass.setPoints(pClass.getPoints() + (2 * levels));
+								Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+							}
+						}
 					}
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
