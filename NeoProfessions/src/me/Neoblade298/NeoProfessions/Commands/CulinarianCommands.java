@@ -26,9 +26,17 @@ public class CulinarianCommands implements CommandExecutor {
 		
 		if(sender.hasPermission("culinarian.professed") && sender instanceof Player) {
 			Player p = (Player) sender;
-			
-			if(args.length == 0) {
-				//TODO help command
+
+			if (args.length == 0) {
+				Util.sendMessage(p, "&8&l[&cCulinarian&8&l]");
+				Util.sendMessage(p, "&7- &c/culinarian garnish");
+				Util.sendMessage(p, "&7- &c/culinarian spice");
+				Util.sendMessage(p, "&7- &c/culinarian preserve");
+				Util.sendMessage(p, "&7- &c/culinarian special");
+				Util.sendMessage(p, "&7- &c/culinarian assimilate");
+				Util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence]");
+				Util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limitededition/drink/legendary] <amount>");
+				return true;
 			}
 			else {
 				if(args[0].equalsIgnoreCase("garnish")) {
@@ -306,7 +314,6 @@ public class CulinarianCommands implements CommandExecutor {
 			Util.sendMessage((Player) sender, "&cYou are not a culinarian!");
 			return true;
 		}
-		return false;
 	}
 
 }
