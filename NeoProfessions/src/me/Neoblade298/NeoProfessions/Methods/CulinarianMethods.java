@@ -345,24 +345,29 @@ public class CulinarianMethods {
 	}
 	
 	public void assimilate(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.getType().equals(Material.AIR)) {
+		ItemStack item = p.getInventory().getItemInMainHand().clone();
+		if(item.getType().equals(Material.PAPER)) {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
-				int level = CulinarianUtils.getRecipeLevel(item);
-				if(p.hasPermission("culinarian.assimilate." + level)) {
-					if(econ.has(p, ASSIMILATE_COST)) {
-						p.getInventory().removeItem(Util.setAmount(item, 1));
-						p.getInventory().addItem(CommonItems.getEssence(level));
-						econ.withdrawPlayer(p, ASSIMILATE_COST);
-						Util.sendMessage(p, "&7Successfully assimilated recipe!");
+				if(item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
+					int level = CulinarianUtils.getRecipeLevel(item);
+					if(p.hasPermission("culinarian.assimilate." + level)) {
+						if(econ.has(p, ASSIMILATE_COST)) {
+							p.getInventory().removeItem(Util.setAmount(item, 1));
+							p.getInventory().addItem(CommonItems.getEssence(level));
+							econ.withdrawPlayer(p, ASSIMILATE_COST);
+							Util.sendMessage(p, "&7Successfully assimilated recipe!");
+						}
+						else {
+							Util.sendMessage(p, "&cYou lack the gold to assimilate this!");
+						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the gold to assimilate this!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou may only assimilate recipe papers!");
 				}
 			}
 			else {
