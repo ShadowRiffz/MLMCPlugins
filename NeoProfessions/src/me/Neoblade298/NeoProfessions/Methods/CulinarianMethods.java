@@ -354,7 +354,7 @@ public class CulinarianMethods {
 					if(p.hasPermission("culinarian.assimilate." + level)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
 							p.getInventory().removeItem(Util.setAmount(item, 1));
-							p.getInventory().addItem(CommonItems.getEssence(level));
+							p.getInventory().addItem(CommonItems.getEssenceFragment(level));
 							econ.withdrawPlayer(p, ASSIMILATE_COST);
 							Util.sendMessage(p, "&7Successfully assimilated recipe!");
 						}
