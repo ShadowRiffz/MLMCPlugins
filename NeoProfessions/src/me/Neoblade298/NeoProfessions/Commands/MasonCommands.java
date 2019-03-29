@@ -29,8 +29,14 @@ public class MasonCommands implements CommandExecutor {
 		if(sender.hasPermission("mason.professed") && sender instanceof Player) {
 			
 			Player p = (Player) sender;
-			if(args.length == 0) {
-			
+			if (args.length == 0) {
+				Util.sendMessage(p, "&8&l[&cMason&8&l]");
+				Util.sendMessage(p, "&7- &c/mason create [basic/advanced] [charm]");
+				Util.sendMessage(p, "&7- &c/mason create slot [level]");
+				Util.sendMessage(p, "&7- &c/mason slot [slot #]");
+				Util.sendMessage(p, "&7- &c/mason unslot [slot #]");
+				Util.sendMessage(p, "&7- &c/mason remove [slot #]");
+				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
 				if(args.length == 3) {
