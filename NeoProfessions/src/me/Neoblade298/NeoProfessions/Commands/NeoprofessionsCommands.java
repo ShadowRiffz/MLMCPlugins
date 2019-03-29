@@ -14,6 +14,9 @@ import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
+import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
+import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
+import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 
@@ -21,9 +24,16 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	
 	Main main;
 	BlacksmithMethods blacksmithMethods;
+	StonecutterMethods stonecutterMethods;
+	CulinarianMethods culinarianMethods;
+	MasonMethods masonMethods;
 	
-	public NeoprofessionsCommands(Main main) {
+	public NeoprofessionsCommands(Main main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c, MasonMethods m) {
 		this.main = main;
+		this.blacksmithMethods = b;
+		this.stonecutterMethods = s;
+		this.culinarianMethods = c;
+		this.masonMethods = m;
 	}
 	
 	@Override
@@ -37,6 +47,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/neoprofessions level [playername] <amount>");
+				sender.sendMessage("§7- §4/neoprofessions reset [playername]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
@@ -69,6 +80,23 @@ public class NeoprofessionsCommands implements CommandExecutor {
 								pClass.setPoints(pClass.getPoints() + (2 * levels));
 								Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
+						}
+					}
+				}
+				else if (args[0].equalsIgnoreCase("reset")) {
+					PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
+					if (pClass != null) {
+						if (pClass.getData().getName().equalsIgnoreCase("Blacksmith")) {
+							blacksmithMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+						}
+						else if (pClass.getData().getName().equalsIgnoreCase("Stonecutter")) {
+							stonecutterMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+						}
+						else if (pClass.getData().getName().equalsIgnoreCase("Culinarian")) {
+							culinarianMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+						}
+						else if (pClass.getData().getName().equalsIgnoreCase("Mason")) {
+							masonMethods.resetPlayer(Bukkit.getPlayer(args[1]));
 						}
 					}
 				}

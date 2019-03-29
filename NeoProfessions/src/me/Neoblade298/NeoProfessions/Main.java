@@ -74,7 +74,7 @@ public class Main extends JavaPlugin implements Listener {
 	  this.getCommand("mason").setExecutor(new MasonCommands(this));
 	  this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
 	  this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
-	  this.getCommand("neoprofessions").setExecutor(new NeoprofessionsCommands(this));
+	  this.getCommand("neoprofessions").setExecutor(new NeoprofessionsCommands(this, blacksmithMethods, stonecutterMethods, culinarianMethods, masonMethods));
 	  
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
