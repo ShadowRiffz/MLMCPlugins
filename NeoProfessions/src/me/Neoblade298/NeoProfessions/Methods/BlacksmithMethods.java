@@ -74,7 +74,7 @@ public class BlacksmithMethods {
 			if (p.hasPermission("blacksmith." + item + "." + level)) {
 				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), REPAIR_ESSENCE)) {
 					if(econ.has(p, REPAIR_COST)) {
-						p.getInventory().addItem(BlacksmithItems.getRepairItem(level));
+						p.getInventory().addItem(Util.setAmount(BlacksmithItems.getRepairItem(level), 2));
 						p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), REPAIR_ESSENCE));
 						econ.withdrawPlayer(p, REPAIR_COST);
 						Util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
