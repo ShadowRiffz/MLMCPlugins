@@ -23,7 +23,7 @@ public class StonecutterMethods {
 	static final int GEM_COST_PER_LVL = 1500;
 	static final int GEM_ESSENCE = 8;
 	static final int GEM_ORES = 8;
-	static final int REFINE_COST_PER_LVL = 5000;
+	static final int REFINE_COST = 1000;
 	static final int REFINE_ESSENCE_0 = 10;
 	static final int REFINE_ESSENCE_1 = 9;
 	static final int REFINE_ESSENCE_2 = 7;
@@ -129,7 +129,7 @@ public class StonecutterMethods {
 				int oldLevel = Util.getEssenceLevel(item);
 				int level = oldLevel + 1;
 				if(p.hasPermission("stonecutter.refine." + oldLevel)) {
-					if(econ.has(p, REFINE_COST_PER_LVL * oldLevel)) {
+					if(econ.has(p, REFINE_COST)) {
 						// Find essence cost via perms
 						int cost = REFINE_ESSENCE_0;
 						if(p.hasPermission("stonecutter.refine.finesse.3")) {
@@ -146,7 +146,7 @@ public class StonecutterMethods {
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), cost)) {
 							p.getInventory().removeItem(Util.setAmount(item, cost));
 							p.getInventory().addItem(CommonItems.getEssence(level));
-							econ.withdrawPlayer(p, REFINE_COST_PER_LVL * oldLevel);
+							econ.withdrawPlayer(p, REFINE_COST);
 							Util.sendMessage(p, "&7Successfully refined essence!");
 						}
 						else {
