@@ -27,6 +27,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	StonecutterMethods stonecutterMethods;
 	CulinarianMethods culinarianMethods;
 	MasonMethods masonMethods;
+	Util util;
 	
 	public NeoprofessionsCommands(Main main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c, MasonMethods m) {
 		this.main = main;
@@ -34,6 +35,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		this.stonecutterMethods = s;
 		this.culinarianMethods = c;
 		this.masonMethods = m;
+		util = new Util();
 	}
 	
 	@Override
@@ -67,7 +69,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (pClass.getLevel() <= 60) {
 								pClass.setLevel(pClass.getLevel() + 1);
 								pClass.setPoints(pClass.getPoints() + 2);
-								Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+								util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
 					}
@@ -78,7 +80,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (pClass.getLevel() + levels <= 60) {
 								pClass.setLevel(pClass.getLevel() + levels);
 								pClass.setPoints(pClass.getPoints() + (2 * levels));
-								Util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+								util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
 					}
@@ -247,7 +249,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 		}
 		else {
-			Util.sendMessage((Player)sender, "&cYou are not an admin!");
+			util.sendMessage((Player)sender, "&cYou are not an admin!");
 			return true;
 		}
 	}

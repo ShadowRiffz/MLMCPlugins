@@ -18,9 +18,11 @@ public class MasonCommands implements CommandExecutor {
 	
 	static final int MAX_SLOTS = 3;
 	
+	Util util;
 	public MasonCommands(Main main) {
 		this.main = main;
 		this.masonMethods = main.masonMethods;
+		util = new Util();
 	}
 
 	@Override
@@ -30,12 +32,12 @@ public class MasonCommands implements CommandExecutor {
 			
 			Player p = (Player) sender;
 			if (args.length == 0) {
-				Util.sendMessage(p, "&8&l[&cMason&8&l]");
-				Util.sendMessage(p, "&7- &c/mason create [basic/advanced] [charm]");
-				Util.sendMessage(p, "&7- &c/mason create slot [level]");
-				Util.sendMessage(p, "&7- &c/mason slot [slot #]");
-				Util.sendMessage(p, "&7- &c/mason unslot [slot #]");
-				Util.sendMessage(p, "&7- &c/mason remove [slot #]");
+				util.sendMessage(p, "&8&l[&cMason&8&l]");
+				util.sendMessage(p, "&7- &c/mason create [basic/advanced] [charm]");
+				util.sendMessage(p, "&7- &c/mason create slot [level]");
+				util.sendMessage(p, "&7- &c/mason slot [slot #]");
+				util.sendMessage(p, "&7- &c/mason unslot [slot #]");
+				util.sendMessage(p, "&7- &c/mason remove [slot #]");
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
@@ -50,7 +52,7 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid charm!");
+							util.sendMessage(p, "&cInvalid charm!");
 							return true;
 						}
 					}
@@ -65,7 +67,7 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid charm!");
+							util.sendMessage(p, "&cInvalid charm!");
 							return true;
 						}
 					}
@@ -75,17 +77,17 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid level!");
+							util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid item!");
+						util.sendMessage(p, "&cInvalid item!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -97,17 +99,17 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid parameters!");
+						util.sendMessage(p, "&cInvalid parameters!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -119,17 +121,17 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage((Player)sender, "&cYou must specify a slot number!");
+						util.sendMessage((Player)sender, "&cYou must specify a slot number!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -141,13 +143,13 @@ public class MasonCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							Util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
+							util.sendMessage((Player)sender, "&cYou must specify a valid slot number!");
 							return true;
 						}
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -160,7 +162,7 @@ public class MasonCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						Util.sendMessage(p, "&cPlayer not found!");
+						util.sendMessage(p, "&cPlayer not found!");
 						return true;
 					}
 				}
@@ -170,12 +172,12 @@ public class MasonCommands implements CommandExecutor {
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cInvalid subcommand!");
+				util.sendMessage(p, "&cInvalid subcommand!");
 				return true;
 			}
 		}
 		else {
-			Util.sendMessage((Player)sender, "&cYou are not a Mason!");
+			util.sendMessage((Player)sender, "&cYou are not a Mason!");
 			return true;
 		}
 		return false;

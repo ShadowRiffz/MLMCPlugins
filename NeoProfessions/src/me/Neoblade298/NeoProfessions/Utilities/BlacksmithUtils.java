@@ -8,8 +8,12 @@ import net.md_5.bungee.api.ChatColor;
 
 public class BlacksmithUtils {
 
+	Util util;
+	public BlacksmithUtils() {
+		util = new Util();
+	}
 	
-	public static boolean isRepairItem(ItemStack item) {
+	public boolean isRepairItem(ItemStack item) {
 		if(!item.hasItemMeta()) {
 			return false;
 		}
@@ -25,11 +29,11 @@ public class BlacksmithUtils {
 		return false;
 	}
 	
-	public static int getItemLevel(ItemStack item) {
+	public int getItemLevel(ItemStack item) {
 		return item.getEnchantments().get(Enchantment.DURABILITY);
 	}
 	
-	public static int getItemPotency(ItemStack item) {
+	public int getItemPotency(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
 			if(line.contains("Potency")) {
 				line = ChatColor.stripColor(line);
@@ -39,9 +43,9 @@ public class BlacksmithUtils {
 		return -1;
 	}
 	
-	public static boolean canRepair(ItemStack item) {
+	public boolean canRepair(ItemStack item) {
 		// Check if the item is a quest item
-		if(Util.getItemLevel(item) != -1) {
+		if(util.getItemLevel(item) != -1) {
 			return true;
 		}
 		if(item.getType().getMaxDurability() > 0) {

@@ -20,6 +20,8 @@ public class StonecutterMethods {
 	
 	Main main;
 	Economy econ;
+	StonecutterUtils stonecutterUtils;
+	Util util;
 	
 	// Constants
 	static final int GEM_COST_PER_LVL = 1500;
@@ -35,6 +37,8 @@ public class StonecutterMethods {
 	public StonecutterMethods(Main main) {
 		this.main = main;
 		this.econ = main.getEconomy();
+		stonecutterUtils = new StonecutterUtils();
+		util = new Util();
 	}
 	
 	public void createGem(Player p, String attr, String type, int level) {
@@ -45,8 +49,8 @@ public class StonecutterMethods {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES)) {
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
-								p.getInventory().removeItem(Util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
+								p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
 								if(type.equalsIgnoreCase("weapon")) {
 									p.getInventory().addItem(StonecutterItems.getWeaponGem(attr, level, false));
 								}
@@ -54,30 +58,30 @@ public class StonecutterMethods {
 									p.getInventory().addItem(StonecutterItems.getArmorGem(attr, level, false));
 								}
 								econ.withdrawPlayer(p, GEM_COST_PER_LVL * level);
-								Util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
+								util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to create this!");
+								util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to create this!");
+							util.sendMessage(p, "&cYou lack the materials to create this!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the materials to create this!");
+						util.sendMessage(p, "&cYou lack the materials to create this!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
-			Util.sendMessage(p, "&cYour inventory is full!");
+			util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 	
@@ -89,8 +93,8 @@ public class StonecutterMethods {
 					if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(StonecutterItems.getOre(attr, level), GEM_ORES))
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
-								p.getInventory().removeItem(Util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
+								p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), GEM_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(StonecutterItems.getOre(attr, level), GEM_ORES));
 								if(type.equalsIgnoreCase("weapon")) {
 									p.getInventory().addItem(StonecutterItems.getWeaponGem(attr, level, true));
 								}
@@ -98,29 +102,29 @@ public class StonecutterMethods {
 									p.getInventory().addItem(StonecutterItems.getArmorGem(attr, level, true));
 								}
 								econ.withdrawPlayer(p, GEM_COST_PER_LVL * level);
-								Util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
+								util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to create this!");
+								util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to create this!");
+							util.sendMessage(p, "&cYou lack the materials to create this!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou lack the materials to create this!");
+						util.sendMessage(p, "&cYou lack the materials to create this!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYou do not yet have the required skill!");
+				util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
-			Util.sendMessage(p, "&cYour inventory is full!");
+			util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 	
@@ -129,8 +133,8 @@ public class StonecutterMethods {
 		if(!item.getType().equals(Material.AIR)) {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
-				if(StonecutterUtils.isEssence(item)) {
-					int oldLevel = Util.getEssenceLevel(item);
+				if(stonecutterUtils.isEssence(item)) {
+					int oldLevel = util.getEssenceLevel(item);
 					int level = oldLevel + 1;
 					if(p.hasPermission("stonecutter.refine." + oldLevel)) {
 						if(econ.has(p, REFINE_COST)) {
@@ -148,25 +152,25 @@ public class StonecutterMethods {
 							
 							// Check if enough essence
 							if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), cost)) {
-								p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), cost));
+								p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), cost));
 								p.getInventory().addItem(CommonItems.getEssence(level));
 								econ.withdrawPlayer(p, REFINE_COST);
-								Util.sendMessage(p, "&7Successfully refined essence!");
+								util.sendMessage(p, "&7Successfully refined essence!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the essence to refine this!");
+								util.sendMessage(p, "&cYou lack the essence to refine this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the gold to refine this!");
+							util.sendMessage(p, "&cYou lack the gold to refine this!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
-				else if(StonecutterUtils.isOre(item)) {
-					String oreType = StonecutterUtils.getOreType(item);
+				else if(stonecutterUtils.isOre(item)) {
+					String oreType = stonecutterUtils.getOreType(item);
 					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 					int level = oldLevel + 1;
 					if(p.hasPermission("stonecutter.refine." + oldLevel)) {
@@ -175,33 +179,33 @@ public class StonecutterMethods {
 							int cost = REFINE_ORE;
 							// Check if enough essence
 							if(p.getInventory().containsAtLeast(StonecutterItems.getOre(oreType, oldLevel), cost)) {
-								p.getInventory().removeItem(Util.setAmount(StonecutterItems.getOre(oreType, oldLevel), cost));
+								p.getInventory().removeItem(util.setAmount(StonecutterItems.getOre(oreType, oldLevel), cost));
 								p.getInventory().addItem(StonecutterItems.getOre(oreType, level));
 								econ.withdrawPlayer(p, REFINE_COST);
-								Util.sendMessage(p, "&7Successfully refined essence!");
+								util.sendMessage(p, "&7Successfully refined essence!");
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the essence to refine this!");
+								util.sendMessage(p, "&cYou lack the essence to refine this!");
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the gold to refine this!");
+							util.sendMessage(p, "&cYou lack the gold to refine this!");
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cYou can only refine essences or ores!");
+					util.sendMessage(p, "&cYou can only refine essences or ores!");
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cYour inventory is full!");
+				util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			Util.sendMessage(p, "&cMain hand is empty!");
+			util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	

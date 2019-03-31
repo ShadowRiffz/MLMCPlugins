@@ -36,15 +36,19 @@ public class MasonListeners implements Listener {
 
 	Main main;
 	Economy econ;
+	MasonUtils masonUtils;
+	Util util;
 	public MasonListeners(Main main) {
 		this.main = main;
 		econ = main.getEconomy();
+		masonUtils = new MasonUtils();
+		util = new Util();
 	}
 	
 	public void prepItemSlot(Player p, ItemStack item, int slot) {
 		slotItem.put(p, item);
 		slotNum.put(p, slot);
-		Util.sendMessage(p, "&7Hold the item you wish to slot and right click!");
+		util.sendMessage(p, "&7Hold the item you wish to slot and right click!");
 		
 		// Time out the repair in 10 seconds
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
@@ -52,7 +56,7 @@ public class MasonListeners implements Listener {
 		  	if(slotItem.containsKey(p)) {
 		  		slotItem.remove(p);
 		  		slotNum.remove(p);
-		  		Util.sendMessage(p, "&cSlot command timed out");
+		  		util.sendMessage(p, "&cSlot command timed out");
 		  	}
 		  }
 		}, 200L);
@@ -105,7 +109,7 @@ public class MasonListeners implements Listener {
 				if(e.getKiller() instanceof Player) {
 					Player p = (Player) e.getKiller();
 					ItemStack item = p.getInventory().getItemInMainHand();
-					String expLine = MasonUtils.charmLine(item, "Exp");
+					String expLine = masonUtils.charmLine(item, "Exp");
 					if(expLine != null && expLine.contains("Advanced")) {
 						d.setAmount(amount * 2);
 					}
@@ -125,10 +129,10 @@ public class MasonListeners implements Listener {
 				if((secondChanceCooldown.containsKey(p) && secondChanceCooldown.get(p) > System.currentTimeMillis()) ||
 						!secondChanceCooldown.containsKey(p)) {
 					ItemStack item = p.getInventory().getItemInMainHand();
-					String line = MasonUtils.charmLine(item, "Second Chance");
+					String line = masonUtils.charmLine(item, "Second Chance");
 					if(line != null) {
-						MasonUtils.breakSecondChance(item);
-						Util.sendMessage(p, "&7Your second chance charm was broken");
+						masonUtils.breakSecondChance(item);
+						util.sendMessage(p, "&7Your second chance charm was broken");
 						secondChanceCooldown.put(p, System.currentTimeMillis() + SECOND_CHANCE_COOLDOWN);
 						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
 					}
@@ -150,68 +154,68 @@ public class MasonListeners implements Listener {
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
 			ItemStack itemToSlot = p.getInventory().getItemInMainHand();
-			int slotLevel = MasonUtils.getSlotLevel(itemWithSlot, slot);
+			int slotLevel = masonUtils.getSlotLevel(itemWithSlot, slot);
 			slotNum.remove(p);
 			slotItem.remove(p);
 			
-			String slotType = MasonUtils.slotType(itemToSlot);
+			String slotType = masonUtils.slotType(itemToSlot);
 			if(p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if(slotType != null) {
-					if(MasonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
-						int level = Util.getItemLevel(itemWithSlot);
+					if(masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
+						int level = util.getItemLevel(itemWithSlot);
 						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SLOT_ESSENCE)) {
 							if(econ.has(p, SLOT_GOLD)) {
 								boolean success = false;
 								switch (slotType) {
 								case "durability":
-									success = MasonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+									success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
 									break;
 								case "attribute":
-									success = MasonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+									success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 									break;
 								case "overload":
-									success = MasonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+									success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 									break;
 								case "charm":
-									success = MasonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+									success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
 									break;
 								}
 								if (success) {
-									p.getInventory().removeItem(Util.setAmount(new ItemStack(itemToSlot), 1));
-									p.getInventory().removeItem(Util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
+									p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
 									econ.withdrawPlayer(p, SLOT_GOLD);
-									Util.sendMessage(p, "&cSuccessfully slotted item!");
+									util.sendMessage(p, "&cSuccessfully slotted item!");
 								}
 								else {
-									Util.sendMessage(p, "&cFailed to slot item!");
+									util.sendMessage(p, "&cFailed to slot item!");
 								}
 							}
 							else {
-								Util.sendMessage(p, "&cYou lack the gold to do this!");
+								util.sendMessage(p, "&cYou lack the gold to do this!");
 								slotItem.remove(p);
 								slotNum.remove(p);
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cYou lack the materials to do this!");
+							util.sendMessage(p, "&cYou lack the materials to do this!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cThis item is too high level for this slot!");
+						util.sendMessage(p, "&cThis item is too high level for this slot!");
 						slotItem.remove(p);
 						slotNum.remove(p);
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cThis item cannot be slotted!");
+					util.sendMessage(p, "&cThis item cannot be slotted!");
 					slotItem.remove(p);
 					slotNum.remove(p);
 				}
 			}
 			else {
-		  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
+		  		util.sendMessage(p, "&cSomething went wrong! Please try again.");
 		  		slotItem.remove(p);
 		  		slotNum.remove(p);
 			}

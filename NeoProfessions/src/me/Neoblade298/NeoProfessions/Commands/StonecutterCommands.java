@@ -17,10 +17,14 @@ public class StonecutterCommands implements CommandExecutor {
 	
 	Main main;
 	StonecutterMethods stonecutterMethods;
+	StonecutterUtils stonecutterUtils;
+	Util util;
 	
 	public StonecutterCommands(Main main) {
 		this.main = main;
 		this.stonecutterMethods = main.stonecutterMethods;
+		stonecutterUtils = new StonecutterUtils();
+		util = new Util();
 	}
 
 	@Override
@@ -30,97 +34,97 @@ public class StonecutterCommands implements CommandExecutor {
 			
 			Player p = (Player) sender;
 			if(args.length == 0) {
-				Util.sendMessage(p, "&8&l[&cStonecutter&8&l]");
-				Util.sendMessage(p, "&7- &c/stonecutter create gem [weapon/armor] [attribute] [level]");
-				Util.sendMessage(p, "&7- &c/stonecutter create overload [weapon/armor] [attribute] [level]");
-				Util.sendMessage(p, "&7- &c/stonecutter refine");
+				util.sendMessage(p, "&8&l[&cStonecutter&8&l]");
+				util.sendMessage(p, "&7- &c/stonecutter create gem [weapon/armor] [attribute] [level]");
+				util.sendMessage(p, "&7- &c/stonecutter create overload [weapon/armor] [attribute] [level]");
+				util.sendMessage(p, "&7- &c/stonecutter refine");
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
 				if(args.length == 5) {
 					if(args[1].equalsIgnoreCase("gem")) {
 						if(args[2].equalsIgnoreCase("weapon")) {
-							if(StonecutterUtils.isWeaponAttribute(args[3])) {
+							if(stonecutterUtils.isWeaponAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
 									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
 									return true;
 								}
 								else {
-									Util.sendMessage(p, "&cInvalid gem level!");
+									util.sendMessage(p, "&cInvalid gem level!");
 									return true;
 								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid attribute for weapons!");
+								util.sendMessage(p, "&cInvalid attribute for weapons!");
 								return true;
 							}
 						}
 						else if(args[2].equalsIgnoreCase("armor")) {
-							if(StonecutterUtils.isArmorAttribute(args[3])) {
+							if(stonecutterUtils.isArmorAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
 									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
 									return true;
 								}
 								else {
-									Util.sendMessage(p, "&cInvalid gem level!");
+									util.sendMessage(p, "&cInvalid gem level!");
 									return true;
 								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid attribute for armor!");
+								util.sendMessage(p, "&cInvalid attribute for armor!");
 								return true;
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
+							util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
 							return true;
 						}
 					}
 					else if(args[1].equalsIgnoreCase("overload")) {
 						if(args[2].equalsIgnoreCase("weapon")) {
-							if(StonecutterUtils.isWeaponAttribute(args[3])) {
+							if(stonecutterUtils.isWeaponAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
 									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
 									return true;
 								}
 								else {
-									Util.sendMessage(p, "&cInvalid gem level!");
+									util.sendMessage(p, "&cInvalid gem level!");
 									return true;
 								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid attribute for weapons!");
+								util.sendMessage(p, "&cInvalid attribute for weapons!");
 								return true;
 							}
 						}
 						else if(args[2].equalsIgnoreCase("armor")) {
-							if(StonecutterUtils.isArmorAttribute(args[3])) {
+							if(stonecutterUtils.isArmorAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
 									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
 									return true;
 								}
 								else {
-									Util.sendMessage(p, "&cInvalid gem level!");
+									util.sendMessage(p, "&cInvalid gem level!");
 									return true;
 								}
 							}
 							else {
-								Util.sendMessage(p, "&cInvalid attribute for armor!");
+								util.sendMessage(p, "&cInvalid attribute for armor!");
 								return true;
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
+							util.sendMessage(p, "&cInvalid gem type! Must be armor/weapon");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid item!");
+						util.sendMessage(p, "&cInvalid item!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -130,7 +134,7 @@ public class StonecutterCommands implements CommandExecutor {
 					return true;
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -143,22 +147,22 @@ public class StonecutterCommands implements CommandExecutor {
 								return true;
 							}
 							else {
-								Util.sendMessage(p, "&cYou don't have permission to do that!");
+								util.sendMessage(p, "&cYou don't have permission to do that!");
 								return true;
 							}
 						}
 						else {
-							Util.sendMessage(p, "&cInvalid level!");
+							util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
 					else {
-						Util.sendMessage(p, "&cInvalid parameters!");
+						util.sendMessage(p, "&cInvalid parameters!");
 						return true;
 					}
 				}
 				else {
-					Util.sendMessage(p, "&cIncorrect number of arguments!");
+					util.sendMessage(p, "&cIncorrect number of arguments!");
 					return true;
 				}
 			}
@@ -171,7 +175,7 @@ public class StonecutterCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						Util.sendMessage(p, "&cPlayer not found!");
+						util.sendMessage(p, "&cPlayer not found!");
 						return true;
 					}
 				}
@@ -181,12 +185,12 @@ public class StonecutterCommands implements CommandExecutor {
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cInvalid subcommand!");
+				util.sendMessage(p, "&cInvalid subcommand!");
 				return true;
 			}
 		}
 		else {
-			Util.sendMessage((Player)sender, "&cYou are not a Stonecutter!");
+			util.sendMessage((Player)sender, "&cYou are not a Stonecutter!");
 			return true;
 		}
 	}

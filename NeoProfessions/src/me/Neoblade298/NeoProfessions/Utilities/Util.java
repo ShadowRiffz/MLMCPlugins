@@ -10,22 +10,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Util {
-	public static void sendMessage(Player p, String m) {
+	public void sendMessage(Player p, String m) {
 		String message = "&4[&c&lMLMC&4] " + m;
 		p.sendMessage(message.replaceAll("&", "§"));
 	}
 
-	public static ItemStack setAmount(ItemStack item, int amount) {
+	public ItemStack setAmount(ItemStack item, int amount) {
 		item.setAmount(amount);
 		return item;
 	}
 	
-	public static ItemStack setData(ItemStack item, int data) {
+	public ItemStack setData(ItemStack item, int data) {
 		item.setDurability((short) data);
 		return item;
 	}
 	
-	public static int getEssenceLevel(ItemStack item) {
+	public int getEssenceLevel(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return -1;
 		}
@@ -36,7 +36,7 @@ public class Util {
 		return -1;
 	}
 	
-	public static int getItemLevel(ItemStack item) {
+	public int getItemLevel(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return -1;
 		}
@@ -74,7 +74,7 @@ public class Util {
 		return -1;
 	}
 	
-	public static String getItemType(ItemStack item) {
+	public String getItemType(ItemStack item) {
 		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
 		String desc = null;
 		
@@ -119,7 +119,7 @@ public class Util {
 		
 	}
 	
-	public static boolean isWeapon(ItemStack item) {
+	public boolean isWeapon(ItemStack item) {
 		Material mat = item.getType();
 		return
 				mat.equals(Material.WOOD_SWORD) ||
@@ -142,7 +142,7 @@ public class Util {
 	}
 
 	
-	public static boolean isArmor(ItemStack item) {
+	public boolean isArmor(ItemStack item) {
 		Material mat = item.getType();
 		return
 				mat.equals(Material.LEATHER_HELMET) ||
@@ -163,7 +163,7 @@ public class Util {
 				mat.equals(Material.DIAMOND_BOOTS);
 	}
 	
-	public static int getCurrentDurability(ItemStack item) {
+	public int getCurrentDurability(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
 			if(line.contains("§7Durability")) {
 				line = ChatColor.stripColor(line);
@@ -175,7 +175,7 @@ public class Util {
 		return -1;
 	}
 	
-	public static int getMaxDurability(ItemStack item) {
+	public int getMaxDurability(ItemStack item) {
 		for(String line : item.getItemMeta().getLore()) {
 			if(line.contains("§7Durability")) {
 				line = ChatColor.stripColor(line);
@@ -187,7 +187,7 @@ public class Util {
 		return -1;
 	}
 	
-	public static void setCurrentDurability(ItemStack item, int durability) {
+	public void setCurrentDurability(ItemStack item, int durability) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		ItemMeta meta = item.getItemMeta();
 		if(durability > getMaxDurability(item)) {
@@ -206,7 +206,7 @@ public class Util {
 		}
 	}
 	
-	public static void setMaxDurability(ItemStack item, int durability) {
+	public void setMaxDurability(ItemStack item, int durability) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		ItemMeta meta = item.getItemMeta();
 		

@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import com.sucy.skill.api.event.PlayerSkillDowngradeEvent;
 
 import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class SkillapiListeners implements Listener {
 	
@@ -26,7 +25,7 @@ public class SkillapiListeners implements Listener {
 			rpgClass.equalsIgnoreCase("Culinarian") ||
 			rpgClass.equalsIgnoreCase("Blacksmith") ||
 			rpgClass.equalsIgnoreCase("Stonecutter")) {
-			Util.sendMessage(p, "&cYou cannot downgrade profession skills!");
+			p.sendMessage("§cYou cannot downgrade profession skills!");
 			e.setCancelled(true);
 		}
 	}

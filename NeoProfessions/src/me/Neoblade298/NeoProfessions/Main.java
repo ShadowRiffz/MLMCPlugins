@@ -45,6 +45,7 @@ public class Main extends JavaPlugin implements Listener {
   public CulinarianRecipes culinarianRecipes;
   
   public MasonListeners masonListeners;
+  public MasonUtils masonUtils;
   
   public void onEnable()
   {
@@ -62,6 +63,7 @@ public class Main extends JavaPlugin implements Listener {
 	  this.setupChat();
 
 	  masonListeners = new MasonListeners(this);
+	  masonUtils = new MasonUtils();
 	  
 	  // Connect method classes to main
 	  blacksmithMethods = new BlacksmithMethods(this);
@@ -106,7 +108,7 @@ public class Main extends JavaPlugin implements Listener {
 					w.getName().equalsIgnoreCase("ClassPVP")) {
 					for (Player p : w.getPlayers()) {
 						ItemStack item = p.getInventory().getItemInMainHand();
-						if(MasonUtils.charmLine(item, "Hunger") != null) {
+						if(masonUtils.charmLine(item, "Hunger") != null) {
 							p.setFoodLevel(18);
 						}
 					}

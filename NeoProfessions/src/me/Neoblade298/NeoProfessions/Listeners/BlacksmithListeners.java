@@ -19,8 +19,12 @@ public class BlacksmithListeners implements Listener{
 	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
 	
 	Main main;
+	BlacksmithUtils blacksmithUtils;
+	Util util;
 	public BlacksmithListeners(Main main) {
 		this.main = main;
+		blacksmithUtils = new BlacksmithUtils();
+		util = new Util();
 	}
 	
 	
@@ -40,16 +44,16 @@ public class BlacksmithListeners implements Listener{
 		
 		// If player has not selected a repair, select it
 		if(!selectedRepair.containsKey(p)) {
-			if(BlacksmithUtils.isRepairItem(p.getInventory().getItemInMainHand())) {
+			if(blacksmithUtils.isRepairItem(p.getInventory().getItemInMainHand())) {
 				selectedRepair.put(p, p.getInventory().getItemInMainHand());
-	  		Util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
+	  		util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
 				
 				// Time out the repair in 10 seconds
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				  public void run() {
 				  	if(selectedRepair.containsKey(p)) {
 				  		selectedRepair.remove(p);
-				  		Util.sendMessage(p, "&cRepair timed out");
+				  		util.sendMessage(p, "&cRepair timed out");
 				  	}
 				  }
 				}, 200L);
@@ -61,28 +65,28 @@ public class BlacksmithListeners implements Listener{
 			e.setCancelled(true);
 			ItemStack repair = selectedRepair.get(p);
 			ItemStack item = p.getInventory().getItemInMainHand();
-			int repairLevel = BlacksmithUtils.getItemLevel(repair);
-			int potency = BlacksmithUtils.getItemPotency(repair);
+			int repairLevel = blacksmithUtils.getItemLevel(repair);
+			int potency = blacksmithUtils.getItemPotency(repair);
 			double percentage = (double) potency / 100;
-			int itemLevel = Util.getItemLevel(item);
+			int itemLevel = util.getItemLevel(item);
 			if(itemLevel != -1) {
 				if(itemLevel <= repairLevel ){
 					if(p.getInventory().containsAtLeast(repair, 1)) {
-						p.getInventory().removeItem(Util.setAmount(repair.clone(), 1));
+						p.getInventory().removeItem(util.setAmount(repair.clone(), 1));
 						selectedRepair.remove(p);
-						Util.setCurrentDurability(item, Util.getCurrentDurability(item) + (int)(percentage * Util.getMaxDurability(item)));
-						Util.sendMessage(p, "&7Successfully repaired item!");
+						util.setCurrentDurability(item, util.getCurrentDurability(item) + (int)(percentage * util.getMaxDurability(item)));
+						util.sendMessage(p, "&7Successfully repaired item!");
 					}
 					else {
-			  		Util.sendMessage(p, "&cSomething went wrong! Please try again.");
+			  		util.sendMessage(p, "&cSomething went wrong! Please try again.");
 					}
 				}
 				else {
-		  		Util.sendMessage(p, "&cThis repair kit is incompatible with this item!");
+		  		util.sendMessage(p, "&cThis repair kit is incompatible with this item!");
 				}
 			}
 			else {
-	  		Util.sendMessage(p, "&cRepair kits only work on quest items!");
+	  		util.sendMessage(p, "&cRepair kits only work on quest items!");
 			}
 		}
 	}

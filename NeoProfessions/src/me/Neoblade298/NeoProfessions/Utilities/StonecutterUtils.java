@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class StonecutterUtils {
 	
-	public static boolean isWeaponAttribute(String attr) {
+	public boolean isWeaponAttribute(String attr) {
 		return (attr.equalsIgnoreCase("Strength") ||
 				attr.equalsIgnoreCase("Dexterity") ||
 				attr.equalsIgnoreCase("Intelligence") ||
@@ -12,7 +12,7 @@ public class StonecutterUtils {
 				attr.equalsIgnoreCase("Perception"));
 	}
 
-	public static boolean isArmorAttribute(String attr) {
+	public boolean isArmorAttribute(String attr) {
 		return (attr.equalsIgnoreCase("Strength") ||
 				attr.equalsIgnoreCase("Dexterity") ||
 				attr.equalsIgnoreCase("Intelligence") ||
@@ -23,15 +23,15 @@ public class StonecutterUtils {
 	}
 	
 	// r
-	public static boolean isEssence(ItemStack item) {
+	public boolean isEssence(ItemStack item) {
 		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Essence"));
 	}
 	
-	public static boolean isOre(ItemStack item) {
+	public boolean isOre(ItemStack item) {
 		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Ore"));
 	}
 	
-	public static String getOreType(ItemStack item) {
+	public String getOreType(ItemStack item) {
 		String ore = item.getItemMeta().getLore().get(0).split(" ")[2];
 		switch (ore) {
 		case "Ruby":
