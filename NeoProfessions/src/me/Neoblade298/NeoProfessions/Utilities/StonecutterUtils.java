@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoProfessions.Utilities;
 
+import org.bukkit.inventory.ItemStack;
+
 public class StonecutterUtils {
 	
 	public static boolean isWeaponAttribute(String attr) {
@@ -18,5 +20,35 @@ public class StonecutterUtils {
 				attr.equalsIgnoreCase("Perception") ||
 				attr.equalsIgnoreCase("Endurance") ||
 				attr.equalsIgnoreCase("Vitality"));
+	}
+	
+	// r
+	public static boolean isEssence(ItemStack item) {
+		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Essence"));
+	}
+	
+	public static boolean isOre(ItemStack item) {
+		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Ore"));
+	}
+	
+	public static String getOreType(ItemStack item) {
+		String ore = item.getItemMeta().getLore().get(0).split(" ")[2];
+		switch (ore) {
+		case "Ruby":
+			return "strength";
+		case "Amethyst":
+			return "dexterity";
+		case "Sapphire":
+			return "intelligence";
+		case "Emerald":
+			return "spirit";
+		case "Topaz":
+			return "perception";
+		case "Adamantium":
+			return "endurance";
+		case "Garnet":
+			return "vitality";
+		}
+		return null;
 	}
 }
