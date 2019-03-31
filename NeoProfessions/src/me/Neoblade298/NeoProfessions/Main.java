@@ -1,6 +1,5 @@
 package me.Neoblade298.NeoProfessions;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -8,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -82,11 +82,22 @@ public class Main extends JavaPlugin implements Listener {
     getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
     getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
     
-    // Setup recipes
+    // Setup recipes (make sure the recipes haven't been added before)
     culinarianRecipes = new CulinarianRecipes(this);
-    for(Recipe recipe : culinarianRecipes.getRecipes()) {
-      Bukkit.addRecipe(recipe);
+    Iterator<Recipe> iter = getServer().recipeIterator();
+    boolean canAdd = true;
+    while (iter.hasNext()) {
+	    Recipe r = iter.next();
+	    if (r instanceof ShapedRecipe && ((ShapedRecipe) r).getKey().getKey().equalsIgnoreCase("Vodka")) {
+  			canAdd = false;
+	    }
     }
+    if (canAdd) {
+	    for(Recipe recipe : culinarianRecipes.getRecipes()) {
+		      Bukkit.addRecipe(recipe);
+	    }
+    }
+    
     // Setup charm timer
 	Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 		public void run() {
