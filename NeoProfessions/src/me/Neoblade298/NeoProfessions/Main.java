@@ -107,27 +107,7 @@ public class Main extends JavaPlugin implements Listener {
   
   public void onDisable()
   {
-    super.onDisable();
-    ArrayList<Recipe> backup = new ArrayList<Recipe>();
-    Iterator<Recipe> iter = getServer().recipeIterator();
-    while (iter.hasNext()) {
-      Recipe r = iter.next();
-      boolean add = true;
-      if (r.getResult().hasItemMeta()) {
-      	for(Recipe recipe : culinarianRecipes.getRecipes()) {
-      		if(r.getResult().getItemMeta().hasDisplayName() && r.getResult().getItemMeta().getDisplayName().equals(recipe.getResult().getItemMeta().getDisplayName())) {
-      			add = false;
-      		}
-      	}
-      }
-      if(add) {
-      	backup.add(r);
-      }
-    }
-   Bukkit.clearRecipes();
-   for(Recipe recipe : backup) {
-  	 Bukkit.addRecipe(recipe);
-   }
+   super.onDisable();
    Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
   }
 
