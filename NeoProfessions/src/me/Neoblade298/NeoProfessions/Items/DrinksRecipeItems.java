@@ -243,7 +243,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getBlackWidowRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 0));
 		recipe.add(new ItemStack(Material.ICE));
@@ -253,7 +253,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getPinkPantherRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 9));
 		recipe.add(new ItemStack(Material.APPLE));
@@ -263,7 +263,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getMidnightKissRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 6));
@@ -272,7 +272,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getMidnightBlueRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getTequila());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 4));
 		recipe.add(new ItemStack(Material.SUGAR));
@@ -281,7 +281,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getGoodAndEvilRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 11));
@@ -291,7 +291,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getThorHammerRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 5));
 		recipe.add(new ItemStack(Material.ICE));
@@ -301,7 +301,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getJackFrostRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getHoney());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 12));
@@ -311,7 +311,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getWhiteRussianRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 15));
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 3));
@@ -320,7 +320,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getSwampWaterRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getRum());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 10));
@@ -331,7 +331,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getBlueMotorcycleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 4));
@@ -341,7 +341,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getRedDeathRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getRum());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 14));
@@ -351,7 +351,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getBombsicleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(Tier2RecipeItems.getLemonade());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 12));
@@ -360,7 +360,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getSweetTartRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getLemon());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 9));
@@ -370,7 +370,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getPinaColadaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getRum());
 		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 15));
 		recipe.add(new ItemStack(Material.APPLE));
@@ -379,7 +379,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getMargaritaOnTheRocksRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getTequila());
 		recipe.add(IngredientRecipeItems.getSalt());
 		recipe.add(IngredientRecipeItems.getLemon());
@@ -390,7 +390,7 @@ public class DrinksRecipeItems {
 	
 	public static ArrayList<ItemStack> getBloodyMaryRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(CommonItems.getEssence(3));
+		recipe.add(CommonItems.getEssence(2));
 		recipe.add(IngredientRecipeItems.getVodka());
 		recipe.add(IngredientRecipeItems.getTomato());
 		recipe.add(IngredientRecipeItems.getGreens());
