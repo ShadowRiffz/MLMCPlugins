@@ -9,7 +9,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class LimitedEditionRecipeItems {
-	public static ArrayList<ItemStack> getLimitedEditionRecipes() {
+	Util util;
+	IngredientRecipeItems ingr;
+	public LimitedEditionRecipeItems() {
+		util = new Util();
+		ingr = new IngredientRecipeItems();
+	}
+	
+	public ArrayList<ItemStack> getLimitedEditionRecipes() {
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 		list.add(getCandyCorn());
 		list.add(getWitchBrew());
@@ -29,7 +36,7 @@ public class LimitedEditionRecipeItems {
 		list.add(getVioletDirtPie());
 		return list;
 	}
-	public static ItemStack getCandyCorn() {
+	public ItemStack getCandyCorn() {
 		ItemStack item = new ItemStack(Material.GOLD_NUGGET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Candy Corn");
@@ -40,7 +47,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getWitchBrew() {
+	public ItemStack getWitchBrew() {
 		ItemStack item = new ItemStack(Material.BEETROOT_SOUP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Witch's Brew");
@@ -51,7 +58,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getBakedEyeball() {
+	public ItemStack getBakedEyeball() {
 		ItemStack item = new ItemStack(Material.SPIDER_EYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Baked Eyeball");
@@ -62,7 +69,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getCandyCane() {
+	public ItemStack getCandyCane() {
 		ItemStack item = new ItemStack(Material.INK_SACK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Candy Cane");
@@ -70,10 +77,10 @@ public class LimitedEditionRecipeItems {
 		lore.add("§6Limited Edition Recipe 4");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return Util.setData(item, 1);
+		return util.setData(item, 1);
 	}
 
-	public static ItemStack getGingerbread() {
+	public ItemStack getGingerbread() {
 		ItemStack item = new ItemStack(Material.COOKIE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Gingerbread");
@@ -84,7 +91,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getEggnog() {
+	public ItemStack getEggnog() {
 		ItemStack item = new ItemStack(Material.MILK_BUCKET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Eggnog");
@@ -95,7 +102,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getSmokedHam() {
+	public ItemStack getSmokedHam() {
 		ItemStack item = new ItemStack(Material.GRILLED_PORK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Smoked Ham");
@@ -106,7 +113,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getLasagna() {
+	public ItemStack getLasagna() {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lasagna");
@@ -117,7 +124,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getLemonSoda() {
+	public ItemStack getLemonSoda() {
 		ItemStack item = new ItemStack(Material.WATER_BUCKET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lemon Soda");
@@ -128,7 +135,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getOlympianGyro() {
+	public ItemStack getOlympianGyro() {
 		ItemStack item = new ItemStack(Material.COOKED_MUTTON);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Olympian Gyro");
@@ -139,7 +146,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getCupcake() {
+	public ItemStack getCupcake() {
 		ItemStack item = new ItemStack(Material.CHORUS_FRUIT_POPPED);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Cupcake");
@@ -150,7 +157,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getFishAndChips() {
+	public ItemStack getFishAndChips() {
 		ItemStack item = new ItemStack(Material.COOKED_FISH);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Fish And Chips");
@@ -161,7 +168,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getEscargot() {
+	public ItemStack getEscargot() {
 		ItemStack item = new ItemStack(Material.COOKED_CHICKEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Escargot");
@@ -172,7 +179,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getVitalac() {
+	public ItemStack getVitalac() {
 		ItemStack item = new ItemStack(Material.COOKED_MUTTON);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Vitalac");
@@ -183,7 +190,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getBelgianWaffle() {
+	public ItemStack getBelgianWaffle() {
 		ItemStack item = new ItemStack(Material.BREAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Belgian Waffle");
@@ -194,7 +201,7 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public static ItemStack getVioletDirtPie() {
+	public ItemStack getVioletDirtPie() {
 		ItemStack item = new ItemStack(Material.PUMPKIN_PIE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Violet's Dirt Pie");
@@ -205,143 +212,143 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 	
-	public static ArrayList<ItemStack> getCandyCornRecipe() {
+	public ArrayList<ItemStack> getCandyCornRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SUGAR, 5));
-		recipe.add(IngredientRecipeItems.getCorn());
+		recipe.add(ingr.getCorn());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getWitchBrewRecipe() {
+	public ArrayList<ItemStack> getWitchBrewRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SPIDER_EYE));
 		recipe.add(new ItemStack(Material.BONE));
 		recipe.add(new ItemStack(Material.BOWL));
 		recipe.add(new ItemStack(Material.GLOWSTONE_DUST));
 		recipe.add(new ItemStack(Material.REDSTONE));
-		recipe.add(IngredientRecipeItems.getSalt());
+		recipe.add(ingr.getSalt());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBakedEyeballRecipe() {
+	public ArrayList<ItemStack> getBakedEyeballRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.EYE_OF_ENDER));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getCandyCaneRecipe() {
+	public ArrayList<ItemStack> getCandyCaneRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(Util.setData(new ItemStack(Material.INK_SACK, 4), 1));
-		recipe.add(Util.setData(new ItemStack(Material.INK_SACK, 2), 15));
+		recipe.add(util.setData(new ItemStack(Material.INK_SACK, 4), 1));
+		recipe.add(util.setData(new ItemStack(Material.INK_SACK, 2), 15));
 		recipe.add(new ItemStack(Material.SUGAR, 3));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getGingerbreadRecipe() {
+	public ArrayList<ItemStack> getGingerbreadRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(new ItemStack(Material.WHEAT));
 		recipe.add(new ItemStack(Material.EGG));
-		recipe.add(IngredientRecipeItems.getSpices());
-		recipe.add(IngredientRecipeItems.getGreens());
+		recipe.add(ingr.getSpices());
+		recipe.add(ingr.getGreens());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getSmokedHamRecipe() {
+	public ArrayList<ItemStack> getSmokedHamRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.GRILLED_PORK));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getEggnogRecipe() {
+	public ArrayList<ItemStack> getEggnogRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(new ItemStack(Material.EGG));
-		recipe.add(IngredientRecipeItems.getSpices());
+		recipe.add(ingr.getSpices());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getLasagnaRecipe() {
+	public ArrayList<ItemStack> getLasagnaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getPasta(), 4));
-		recipe.add(IngredientRecipeItems.getTomato());
+		recipe.add(util.setAmount(ingr.getPasta(), 4));
+		recipe.add(ingr.getTomato());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getLemonSodaRecipe() {
+	public ArrayList<ItemStack> getLemonSodaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SUGAR, 2));
 		recipe.add(new ItemStack(Material.IRON_INGOT, 4));
 		recipe.add(new ItemStack(Material.PACKED_ICE));
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
-		recipe.add(IngredientRecipeItems.getLemon());
+		recipe.add(ingr.getLemon());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getOlympianGyroRecipe() {
+	public ArrayList<ItemStack> getOlympianGyroRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD));
-		recipe.add(IngredientRecipeItems.getBeetrootSauce());
-		recipe.add(IngredientRecipeItems.getOnion());
-		recipe.add(IngredientRecipeItems.getTomato());
+		recipe.add(ingr.getBeetrootSauce());
+		recipe.add(ingr.getOnion());
+		recipe.add(ingr.getTomato());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getCupcakeRecipe() {
+	public ArrayList<ItemStack> getCupcakeRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(new ItemStack(Material.WHEAT, 2));
 		recipe.add(new ItemStack(Material.SUGAR));
-		recipe.add(IngredientRecipeItems.getOil());
-		recipe.add(IngredientRecipeItems.getButter());
+		recipe.add(ingr.getOil());
+		recipe.add(ingr.getButter());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getFishAndChipsRecipe() {
+	public ArrayList<ItemStack> getFishAndChipsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_FISH));
 		recipe.add(new ItemStack(Material.POTATO_ITEM));
-		recipe.add(IngredientRecipeItems.getLemon());
-		recipe.add(IngredientRecipeItems.getSalt());
-		recipe.add(IngredientRecipeItems.getOil());
+		recipe.add(ingr.getLemon());
+		recipe.add(ingr.getSalt());
+		recipe.add(ingr.getOil());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getEscargotRecipe() {
+	public ArrayList<ItemStack> getEscargotRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_CHICKEN));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSalt(), 4));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getButter(), 2));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getGreens(), 2));
+		recipe.add(util.setAmount(ingr.getSalt(), 4));
+		recipe.add(util.setAmount(ingr.getButter(), 2));
+		recipe.add(util.setAmount(ingr.getGreens(), 2));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getVitalacRecipe() {
+	public ArrayList<ItemStack> getVitalacRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_MUTTON, 3));
 		recipe.add(new ItemStack(Material.PORK, 2));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSpices(), 3));
-		recipe.add(IngredientRecipeItems.getPepper());
+		recipe.add(util.setAmount(ingr.getSpices(), 3));
+		recipe.add(ingr.getPepper());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBelgianWaffleRecipe() {
+	public ArrayList<ItemStack> getBelgianWaffleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WHEAT));
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
-		recipe.add(IngredientRecipeItems.getYeast());
-		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(ingr.getYeast());
+		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getVioletDirtPieRecipe() {
+	public ArrayList<ItemStack> getVioletDirtPieRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.DIRT, 3));
 		recipe.add(new ItemStack(Material.PUMPKIN_PIE, 2));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getHoney(), 3));
+		recipe.add(util.setAmount(ingr.getHoney(), 3));
 		return recipe;
 	}
 }

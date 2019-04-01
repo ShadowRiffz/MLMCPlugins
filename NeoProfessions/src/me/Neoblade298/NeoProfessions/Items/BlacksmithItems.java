@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class BlacksmithItems {
 
 	// Durability
-	public static ItemStack getDurabilityItem(int level, String itemtype) {
+	public ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
@@ -38,7 +38,7 @@ public class BlacksmithItems {
 	}
 
 	// Durability
-	public static ItemStack getDurabilityItem(int level, String itemtype, int potency) {
+	public ItemStack getDurabilityItem(int level, String itemtype, int potency) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
@@ -62,7 +62,7 @@ public class BlacksmithItems {
 	}
 	
 	// Repair
-	public static ItemStack getRepairItem(int level) {
+	public ItemStack getRepairItem(int level) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cRepair Kit");

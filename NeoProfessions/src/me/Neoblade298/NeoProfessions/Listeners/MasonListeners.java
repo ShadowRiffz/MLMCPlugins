@@ -38,11 +38,13 @@ public class MasonListeners implements Listener {
 	Economy econ;
 	MasonUtils masonUtils;
 	Util util;
+	CommonItems common;
 	public MasonListeners(Main main) {
 		this.main = main;
 		econ = main.getEconomy();
 		masonUtils = new MasonUtils();
 		util = new Util();
+		common = new CommonItems();
 	}
 	
 	public void prepItemSlot(Player p, ItemStack item, int slot) {
@@ -163,7 +165,7 @@ public class MasonListeners implements Listener {
 				if(slotType != null) {
 					if(masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 						int level = util.getItemLevel(itemWithSlot);
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), SLOT_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(level), SLOT_ESSENCE)) {
 							if(econ.has(p, SLOT_GOLD)) {
 								boolean success = false;
 								switch (slotType) {
@@ -182,7 +184,7 @@ public class MasonListeners implements Listener {
 								}
 								if (success) {
 									p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
-									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), SLOT_ESSENCE));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(level), SLOT_ESSENCE));
 									econ.withdrawPlayer(p, SLOT_GOLD);
 									util.sendMessage(p, "&cSuccessfully slotted item!");
 								}

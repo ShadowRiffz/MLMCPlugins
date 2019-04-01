@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommonItems {
 	
-	public static ItemStack getEssence(int level) {
+	public ItemStack getEssence(int level) {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
 		switch (level) {
@@ -37,7 +37,7 @@ public class CommonItems {
 		return item;
 	}
 	
-	public static ItemStack getEssenceFragment(int level) {
+	public ItemStack getEssenceFragment(int level) {
 		ItemStack item = new ItemStack(Material.IRON_NUGGET);
 		ItemMeta meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

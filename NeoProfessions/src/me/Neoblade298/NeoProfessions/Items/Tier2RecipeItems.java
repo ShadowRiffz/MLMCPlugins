@@ -9,7 +9,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Tier2RecipeItems {
-	public static ArrayList<ItemStack> getTier2Recipes() {
+	Util util;
+	IngredientRecipeItems ingr;
+	public Tier2RecipeItems() {
+		util = new Util();
+		ingr = new IngredientRecipeItems();
+	}
+	
+	public ArrayList<ItemStack> getTier2Recipes() {
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 		list.add(getSteakWithGreenBeans());
 		list.add(getLemonade());
@@ -34,7 +41,7 @@ public class Tier2RecipeItems {
 		return list;
 	}
 	
-	public static ItemStack getSteakWithGreenBeans() {
+	public ItemStack getSteakWithGreenBeans() {
 		ItemStack item = new ItemStack(Material.COOKED_BEEF);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Steak w/ Green Beans");
@@ -45,7 +52,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getButteredToast() {
+	public ItemStack getButteredToast() {
 		ItemStack item = new ItemStack(Material.BREAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Buttered Toast");
@@ -56,7 +63,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getLemonade() {
+	public ItemStack getLemonade() {
 		ItemStack item = new ItemStack(Material.WATER_BUCKET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lemonade");
@@ -67,7 +74,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getHoneyedHam() {
+	public ItemStack getHoneyedHam() {
 		ItemStack item = new ItemStack(Material.GRILLED_PORK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Honeyed Ham");
@@ -78,7 +85,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getCandyBar() {
+	public ItemStack getCandyBar() {
 		ItemStack item = new ItemStack(Material.COOKIE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Candy Bar");
@@ -89,7 +96,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getAle() {
+	public ItemStack getAle() {
 		ItemStack item = new ItemStack(Material.WATER_BUCKET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Ale");
@@ -100,7 +107,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getSandwich() {
+	public ItemStack getSandwich() {
 		ItemStack item = new ItemStack(Material.BREAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Sandwich");
@@ -111,7 +118,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getBeefStew() {
+	public ItemStack getBeefStew() {
 		ItemStack item = new ItemStack(Material.RABBIT_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Beef Stew");
@@ -122,7 +129,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getExoticTea() {
+	public ItemStack getExoticTea() {
 		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Exotic Tea");
@@ -133,7 +140,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getBartrandCornbread() {
+	public ItemStack getBartrandCornbread() {
 		ItemStack item = new ItemStack(Material.BREAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Bartrand's Cornbread");
@@ -144,7 +151,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getTunaSandwich() {
+	public ItemStack getTunaSandwich() {
 		ItemStack item = new ItemStack(Material.RAW_FISH);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Tuna Sandwich");
@@ -155,7 +162,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getApplePie() {
+	public ItemStack getApplePie() {
 		ItemStack item = new ItemStack(Material.PUMPKIN_PIE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Apple Pie");
@@ -166,7 +173,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getBeer() {
+	public ItemStack getBeer() {
 		ItemStack item = new ItemStack(Material.WATER_BUCKET);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Beer");
@@ -177,7 +184,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getHashBrowns() {
+	public ItemStack getHashBrowns() {
 		ItemStack item = new ItemStack(Material.BAKED_POTATO);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Hash Browns");
@@ -188,7 +195,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getLemonTart() {
+	public ItemStack getLemonTart() {
 		ItemStack item = new ItemStack(Material.INK_SACK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lemon Tart");
@@ -196,10 +203,10 @@ public class Tier2RecipeItems {
 		lore.add("§6Tier 2 Recipe 15");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return Util.setData(item, 11);
+		return util.setData(item, 11);
 	}
 	
-	public static ItemStack getWrappedChicken() {
+	public ItemStack getWrappedChicken() {
 		ItemStack item = new ItemStack(Material.GRILLED_PORK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Wrapped Chicken");
@@ -210,7 +217,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getMysteryMeat() {
+	public ItemStack getMysteryMeat() {
 		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Mystery Meat");
@@ -221,7 +228,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getTomatoSoup() {
+	public ItemStack getTomatoSoup() {
 		ItemStack item = new ItemStack(Material.BEETROOT_SOUP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Tomato Soup");
@@ -232,7 +239,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getCornOnTheCob() {
+	public ItemStack getCornOnTheCob() {
 		ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Corn on the Cob");
@@ -243,7 +250,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getBreadPudding() {
+	public ItemStack getBreadPudding() {
 		ItemStack item = new ItemStack(Material.BREAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Bread Pudding");
@@ -254,7 +261,7 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ItemStack getChickenPasta() {
+	public ItemStack getChickenPasta() {
 		ItemStack item = new ItemStack(Material.COOKED_CHICKEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chicken Pasta");
@@ -265,95 +272,95 @@ public class Tier2RecipeItems {
 		return item;
 	}
 	
-	public static ArrayList<ItemStack> getSteakWithGreenBeansRecipe() {
+	public ArrayList<ItemStack> getSteakWithGreenBeansRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
-		recipe.add(IngredientRecipeItems.getGreens());
+		recipe.add(ingr.getGreens());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getButteredToastRecipe() {
+	public ArrayList<ItemStack> getButteredToastRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(IngredientRecipeItems.getGreens());
-		recipe.add(IngredientRecipeItems.getToast());
+		recipe.add(ingr.getGreens());
+		recipe.add(ingr.getToast());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getLemonadeRecipe() {
+	public ArrayList<ItemStack> getLemonadeRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(new ItemStack(Material.SUGAR));
-		recipe.add(IngredientRecipeItems.getLemon());
+		recipe.add(ingr.getLemon());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getHoneyedHamRecipe() {
+	public ArrayList<ItemStack> getHoneyedHamRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.GRILLED_PORK));
-		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getCandyBarRecipe() {
+	public ArrayList<ItemStack> getCandyBarRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(Util.setData(new ItemStack(Material.INK_SACK), 3));
+		recipe.add(util.setData(new ItemStack(Material.INK_SACK), 3));
 		recipe.add(new ItemStack(Material.SUGAR));
-		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getAleRecipe() {
+	public ArrayList<ItemStack> getAleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(new ItemStack(Material.RED_MUSHROOM));
-		recipe.add(IngredientRecipeItems.getSpices());
+		recipe.add(ingr.getSpices());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getSandwichRecipe() {
+	public ArrayList<ItemStack> getSandwichRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD, 2));
 		recipe.add(new ItemStack(Material.GRILLED_PORK));
-		recipe.add(IngredientRecipeItems.getGreens());
-		recipe.add(IngredientRecipeItems.getTomato());
+		recipe.add(ingr.getGreens());
+		recipe.add(ingr.getTomato());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBeefStewRecipe() {
+	public ArrayList<ItemStack> getBeefStewRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BOWL));
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
-		recipe.add(IngredientRecipeItems.getSalt());
-		recipe.add(IngredientRecipeItems.getSpices());
+		recipe.add(ingr.getSalt());
+		recipe.add(ingr.getSpices());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getExoticTeaRecipe() {
+	public ArrayList<ItemStack> getExoticTeaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(new ItemStack(Material.RED_MUSHROOM));
-		recipe.add(IngredientRecipeItems.getSpices());
+		recipe.add(ingr.getSpices());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBartrandCornbreadRecipe() {
+	public ArrayList<ItemStack> getBartrandCornbreadRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(IngredientRecipeItems.getToast());
-		recipe.add(IngredientRecipeItems.getCorn());
-		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(ingr.getToast());
+		recipe.add(ingr.getCorn());
+		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getTunaSandwichRecipe() {
+	public ArrayList<ItemStack> getTunaSandwichRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD, 2));
 		recipe.add(new ItemStack(Material.COOKED_FISH));
-		recipe.add(IngredientRecipeItems.getBeetrootSauce());
-		recipe.add(IngredientRecipeItems.getGreens());
+		recipe.add(ingr.getBeetrootSauce());
+		recipe.add(ingr.getGreens());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getApplePieRecipe() {
+	public ArrayList<ItemStack> getApplePieRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.APPLE, 3));
 		recipe.add(new ItemStack(Material.EGG));
@@ -361,87 +368,87 @@ public class Tier2RecipeItems {
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBeerRecipe() {
+	public ArrayList<ItemStack> getBeerRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(new ItemStack(Material.WHEAT));
-		recipe.add(IngredientRecipeItems.getYeast());
-		recipe.add(IngredientRecipeItems.getHops());
+		recipe.add(ingr.getYeast());
+		recipe.add(ingr.getHops());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getHashBrownsRecipe() {
+	public ArrayList<ItemStack> getHashBrownsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.POTATO_ITEM));
-		recipe.add(IngredientRecipeItems.getBeetrootSauce());
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSpices(), 2));
+		recipe.add(ingr.getBeetrootSauce());
+		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getLemonTartRecipe() {
+	public ArrayList<ItemStack> getLemonTartRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
-		recipe.add(IngredientRecipeItems.getYeast());
-		recipe.add(IngredientRecipeItems.getLemon());
-		recipe.add(IngredientRecipeItems.getHoney());
+		recipe.add(ingr.getYeast());
+		recipe.add(ingr.getLemon());
+		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getWrappedChickenRecipe() {
+	public ArrayList<ItemStack> getWrappedChickenRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_CHICKEN));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getCheese(), 2));
-		recipe.add(IngredientRecipeItems.getPepper());
-		recipe.add(IngredientRecipeItems.getTortilla());
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSpices(), 2));
+		recipe.add(util.setAmount(ingr.getCheese(), 2));
+		recipe.add(ingr.getPepper());
+		recipe.add(ingr.getTortilla());
+		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getMysteryMeatRecipe() {
+	public ArrayList<ItemStack> getMysteryMeatRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SPIDER_EYE));
 		recipe.add(new ItemStack(Material.ROTTEN_FLESH));
 		recipe.add(new ItemStack(Material.BONE));
 		recipe.add(new ItemStack(Material.BOWL));
-		recipe.add(IngredientRecipeItems.getSpices());
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSalt(), 2));
+		recipe.add(ingr.getSpices());
+		recipe.add(util.setAmount(ingr.getSalt(), 2));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getTomatoSoupRecipe() {
+	public ArrayList<ItemStack> getTomatoSoupRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BOWL));
-		recipe.add(IngredientRecipeItems.getSpices());
-		recipe.add(IngredientRecipeItems.getGreens());
-		recipe.add(IngredientRecipeItems.getTomato());
+		recipe.add(ingr.getSpices());
+		recipe.add(ingr.getGreens());
+		recipe.add(ingr.getTomato());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getCornOnTheCobRecipe() {
+	public ArrayList<ItemStack> getCornOnTheCobRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.STICK));
-		recipe.add(IngredientRecipeItems.getButter());
-		recipe.add(IngredientRecipeItems.getCorn());
+		recipe.add(ingr.getButter());
+		recipe.add(ingr.getCorn());
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getBreadPuddingRecipe() {
+	public ArrayList<ItemStack> getBreadPuddingRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.BREAD));
-		recipe.add(IngredientRecipeItems.getHoney());
-		recipe.add(Util.setAmount(IngredientRecipeItems.getSpices(), 3));
+		recipe.add(ingr.getHoney());
+		recipe.add(util.setAmount(ingr.getSpices(), 3));
 		return recipe;
 	}
 	
-	public static ArrayList<ItemStack> getChickenPastaRecipe() {
+	public ArrayList<ItemStack> getChickenPastaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_CHICKEN));
-		recipe.add(IngredientRecipeItems.getButter());
-		recipe.add(Util.setAmount(IngredientRecipeItems.getPasta(), 2));
-		recipe.add(Util.setAmount(IngredientRecipeItems.getGreens(), 3));
+		recipe.add(ingr.getButter());
+		recipe.add(util.setAmount(ingr.getPasta(), 2));
+		recipe.add(util.setAmount(ingr.getGreens(), 3));
 		return recipe;
 	}
 }

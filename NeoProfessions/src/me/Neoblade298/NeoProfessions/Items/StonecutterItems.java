@@ -17,34 +17,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class StonecutterItems {
 	
 	// Constants
-	static final int WEAPON_GEM_STR_RANGE = 4;
-	static final int ARMOR_GEM_STR_RANGE = 2;
-	static final int ARMOR_GEM_END_RANGE = 3;
-	static final int ARMOR_GEM_VIT_RANGE = 6;
-	static final int OL_WEAPON_GEM_STR_RANGE = 7;
-	static final int OL_WEAPON_GEM_STR_BASE = 4;
-	static final int OL_WEAPON_GEM_STR_PER_LVL = 10;
-	static final int OL_ARMOR_GEM_STR_RANGE = 4;
-	static final int OL_ARMOR_GEM_STR_BASE = 2;
-	static final int OL_ARMOR_GEM_STR_PER_LVL = 5;
-	static final int OL_ARMOR_GEM_VIT_RANGE = 11;
-	static final int OL_ARMOR_GEM_VIT_BASE = 15;
-	static final int OL_ARMOR_GEM_VIT_PER_LVL = 13;
-	static final int OL_ARMOR_GEM_END_RANGE = 6;
-	static final int OL_ARMOR_GEM_END_BASE = 2;
-	static final int OL_ARMOR_GEM_END_PER_LVL = 7;
-	static final int OL_WEAPON_DURABILITY_BASE = 155;
-	static final int OL_WEAPON_DURABILITY_PER_LVL = 50;
-	static final int OL_WEAPON_DURABILITY_RANGE = 10;
-	static final int OL_WEAPON_DURABILITY_MULTIPLIER = 5;
-	static final int OL_ARMOR_DURABILITY_BASE = 55;
-	static final int OL_ARMOR_DURABILITY_PER_LVL = 25;
-	static final int OL_ARMOR_DURABILITY_RANGE = 5;
-	static final int OL_ARMOR_DURABILITY_MULTIPLIER = 5;
+	final int WEAPON_GEM_STR_RANGE = 4;
+	final int ARMOR_GEM_STR_RANGE = 2;
+	final int ARMOR_GEM_END_RANGE = 3;
+	final int ARMOR_GEM_VIT_RANGE = 6;
+	final int OL_WEAPON_GEM_STR_RANGE = 7;
+	final int OL_WEAPON_GEM_STR_BASE = 4;
+	final int OL_WEAPON_GEM_STR_PER_LVL = 10;
+	final int OL_ARMOR_GEM_STR_RANGE = 4;
+	final int OL_ARMOR_GEM_STR_BASE = 2;
+	final int OL_ARMOR_GEM_STR_PER_LVL = 5;
+	final int OL_ARMOR_GEM_VIT_RANGE = 11;
+	final int OL_ARMOR_GEM_VIT_BASE = 15;
+	final int OL_ARMOR_GEM_VIT_PER_LVL = 13;
+	final int OL_ARMOR_GEM_END_RANGE = 6;
+	final int OL_ARMOR_GEM_END_BASE = 2;
+	final int OL_ARMOR_GEM_END_PER_LVL = 7;
+	final int OL_WEAPON_DURABILITY_BASE = 155;
+	final int OL_WEAPON_DURABILITY_PER_LVL = 50;
+	final int OL_WEAPON_DURABILITY_RANGE = 10;
+	final int OL_WEAPON_DURABILITY_MULTIPLIER = 5;
+	final int OL_ARMOR_DURABILITY_BASE = 55;
+	final int OL_ARMOR_DURABILITY_PER_LVL = 25;
+	final int OL_ARMOR_DURABILITY_RANGE = 5;
+	final int OL_ARMOR_DURABILITY_MULTIPLIER = 5;
 	
-	static Random gen = new Random();
+	Random gen = new Random();
 	
-	public static ItemStack getOre(String type, int level) {
+	public ItemStack getOre(String type, int level) {
 		ItemStack item = new ItemStack(Material.FIREWORK_CHARGE);
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
 		Builder fe = FireworkEffect.builder();
@@ -112,7 +112,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public static ItemStack getWeaponGem(String attr, int level, boolean isOverloaded) {
+	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.EYE_OF_ENDER);
@@ -162,7 +162,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public static ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.EYE_OF_ENDER);
@@ -203,7 +203,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public static ItemStack getArmorGem(String attr, int level, boolean isOverloaded) {
+	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.EYE_OF_ENDER);
@@ -294,7 +294,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public static ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.EYE_OF_ENDER);

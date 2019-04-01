@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class MasonItems {
-	public static ItemStack getExpCharm(boolean isAdvanced) {
+	public ItemStack getExpCharm(boolean isAdvanced) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -32,7 +32,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getLootingCharm(boolean isAdvanced) {
+	public ItemStack getLootingCharm(boolean isAdvanced) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -55,7 +55,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getDropCharm(boolean isAdvanced) {
+	public ItemStack getDropCharm(boolean isAdvanced) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -78,7 +78,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getTravelerCharm() {
+	public ItemStack getTravelerCharm() {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -93,7 +93,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getRecoveryCharm() {
+	public ItemStack getRecoveryCharm() {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -108,7 +108,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getHungerCharm() {
+	public ItemStack getHungerCharm() {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -123,7 +123,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getSecondChanceCharm() {
+	public ItemStack getSecondChanceCharm() {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -138,7 +138,7 @@ public class MasonItems {
 		return item;
 	}
 	
-	public static ItemStack getQuickEatCharm() {
+	public ItemStack getQuickEatCharm() {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();

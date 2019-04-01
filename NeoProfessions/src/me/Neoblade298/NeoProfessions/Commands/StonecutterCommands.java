@@ -18,12 +18,14 @@ public class StonecutterCommands implements CommandExecutor {
 	Main main;
 	StonecutterMethods stonecutterMethods;
 	StonecutterUtils stonecutterUtils;
+	StonecutterItems sItems;
 	Util util;
 	
 	public StonecutterCommands(Main main) {
 		this.main = main;
 		this.stonecutterMethods = main.stonecutterMethods;
 		stonecutterUtils = new StonecutterUtils();
+		sItems = new StonecutterItems();
 		util = new Util();
 	}
 
@@ -143,7 +145,7 @@ public class StonecutterCommands implements CommandExecutor {
 					if(args[1].equalsIgnoreCase("ore")) {
 						if(StringUtils.isNumeric(args[3])) {
 							if(p.hasPermission("stonecutter.admin")) {
-								p.getInventory().addItem(StonecutterItems.getOre(args[2], Integer.parseInt(args[3])));
+								p.getInventory().addItem(sItems.getOre(args[2], Integer.parseInt(args[3])));
 								return true;
 							}
 							else {

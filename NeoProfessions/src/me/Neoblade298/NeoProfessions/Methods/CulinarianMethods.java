@@ -30,6 +30,14 @@ public class CulinarianMethods {
 	Economy econ;
 	CulinarianUtils culinarianUtils;
 	Util util;
+	IngredientRecipeItems ingr;
+	Tier1RecipeItems t1;
+	Tier2RecipeItems t2;
+	Tier3RecipeItems t3;
+	LimitedEditionRecipeItems ler;
+	LegendaryRecipeItems legend;
+	DrinksRecipeItems drink;
+	CommonItems common;
 	
 	// Constants
 	final static double GARNISH_BOOST_BASE = 1.1;
@@ -54,8 +62,16 @@ public class CulinarianMethods {
 	public CulinarianMethods(Main main) {
 		this.main = main;
 		this.econ = main.getEconomy();
+		common = new CommonItems();
 		culinarianUtils = new CulinarianUtils();
 		util = new Util();
+		ingr = new IngredientRecipeItems();
+		t1 = new Tier1RecipeItems();
+		t2 = new Tier2RecipeItems();
+		t3 = new Tier3RecipeItems();
+		ler = new LimitedEditionRecipeItems();
+		legend = new LegendaryRecipeItems();
+		drink = new DrinksRecipeItems();
 	}
 	
 	public void garnish(Player p) {
@@ -95,7 +111,7 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
 								if(econ.has(p, GARNISH_COST)) {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -174,7 +190,7 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), PRESERVE_ESSENCE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), PRESERVE_ESSENCE)) {
 								if(econ.has(p, PRESERVE_COST)) {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -253,7 +269,7 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), SPICE_ESSENCE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), SPICE_ESSENCE)) {
 								if(econ.has(p, SPICE_COST)) {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -311,7 +327,7 @@ public class CulinarianMethods {
 					}
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(foodLevel), GARNISH_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
 							if(econ.has(p, GARNISH_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -358,7 +374,7 @@ public class CulinarianMethods {
 					if(p.hasPermission("culinarian.assimilate." + level)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
 							p.getInventory().removeItem(util.setAmount(item, 1));
-							p.getInventory().addItem(CommonItems.getEssenceFragment(level));
+							p.getInventory().addItem(common.getEssenceFragment(level));
 							econ.withdrawPlayer(p, ASSIMILATE_COST);
 							util.sendMessage(p, "&7Successfully assimilated recipe!");
 						}
@@ -410,19 +426,19 @@ public class CulinarianMethods {
 					int tier = gen.nextInt(level);
 					ArrayList<ItemStack> recipes = null;
 					if(tier == 0) {
-						recipes = IngredientRecipeItems.getIngredients();
+						recipes = ingr.getIngredients();
 					}
 					else if(tier == 1) {
-						recipes = Tier1RecipeItems.getTier1Recipes();
+						recipes = t1.getTier1Recipes();
 					}
 					else if(tier == 2) {
-						recipes = Tier2RecipeItems.getTier2Recipes();
+						recipes = t2.getTier2Recipes();
 					}
 					else if(tier == 3) {
-						recipes = Tier3RecipeItems.getTier3Recipes();
+						recipes = t3.getTier3Recipes();
 					}
 					else if(tier == 4) {
-						recipes = LimitedEditionRecipeItems.getLimitedEditionRecipes();
+						recipes = ler.getLimitedEditionRecipes();
 					}
 					ItemStack item = recipes.get(gen.nextInt(recipes.size()));
 					item.setAmount(SPECIAL_AMOUNT);
@@ -446,76 +462,76 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getSaltRecipe(), IngredientRecipeItems.getSalt(), true, "Salt");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getSaltRecipe(), ingr.getSalt(), true, "Salt");
 			}
 			else if(recipe.equalsIgnoreCase("spices")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getSpicesRecipe(), IngredientRecipeItems.getSpices(), false, "Spices");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getSpicesRecipe(), ingr.getSpices(), false, "Spices");
 			}
 			else if(recipe.equalsIgnoreCase("greens")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getGreensRecipe(), IngredientRecipeItems.getGreens(), false, "Greens");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getGreensRecipe(), ingr.getGreens(), false, "Greens");
 			}
 			else if(recipe.equalsIgnoreCase("toast")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getToastRecipe(), IngredientRecipeItems.getToast(), true, "Toast");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getToastRecipe(), ingr.getToast(), true, "Toast");
 			}
 			else if(recipe.equalsIgnoreCase("oil")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getOilRecipe(), IngredientRecipeItems.getOil(), true, "Oil");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getOilRecipe(), ingr.getOil(), true, "Oil");
 			}
 			else if(recipe.equalsIgnoreCase("tomato")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTomatoRecipe(), IngredientRecipeItems.getTomato(), false, "Tomato");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getTomatoRecipe(), ingr.getTomato(), false, "Tomato");
 			}
 			else if(recipe.equalsIgnoreCase("butter")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getButterRecipe(), IngredientRecipeItems.getButter(), false, "Butter");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getButterRecipe(), ingr.getButter(), false, "Butter");
 			}
 			else if(recipe.equalsIgnoreCase("lemon")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getLemonRecipe(), IngredientRecipeItems.getLemon(), false, "Lemon");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getLemonRecipe(), ingr.getLemon(), false, "Lemon");
 			}
 			else if(recipe.equalsIgnoreCase("corn")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getCornRecipe(), IngredientRecipeItems.getCorn(), false, "Corn");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getCornRecipe(), ingr.getCorn(), false, "Corn");
 			}
 			else if(recipe.equalsIgnoreCase("honey")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getHoneyRecipe(), IngredientRecipeItems.getHoney(), false, "Honey");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getHoneyRecipe(), ingr.getHoney(), false, "Honey");
 			}
 			else if(recipe.equalsIgnoreCase("yeast")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getYeastRecipe(), IngredientRecipeItems.getYeast(), false, "Yeast");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getYeastRecipe(), ingr.getYeast(), false, "Yeast");
 			}
 			else if(recipe.equalsIgnoreCase("beetroot sauce")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getBeetrootSauceRecipe(), IngredientRecipeItems.getBeetrootSauce(), false, "Beetroot Sauce");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getBeetrootSauceRecipe(), ingr.getBeetrootSauce(), false, "Beetroot Sauce");
 			}
 			else if(recipe.equalsIgnoreCase("pasta")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPastaRecipe(), IngredientRecipeItems.getPasta(), false, "Pasta");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getPastaRecipe(), ingr.getPasta(), false, "Pasta");
 			}
 			else if(recipe.equalsIgnoreCase("onion")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getOnionRecipe(), IngredientRecipeItems.getOnion(), false, "Onion");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getOnionRecipe(), ingr.getOnion(), false, "Onion");
 			}
 			else if(recipe.equalsIgnoreCase("hops")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getHopsRecipe(), IngredientRecipeItems.getHops(), false, "Hops");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getHopsRecipe(), ingr.getHops(), false, "Hops");
 			}
 			else if(recipe.equalsIgnoreCase("cheese")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getCheeseRecipe(), IngredientRecipeItems.getCheese(), true, "Cheese");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getCheeseRecipe(), ingr.getCheese(), true, "Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("tortilla")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTortillaRecipe(), IngredientRecipeItems.getTortilla(), false, "Tortilla");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getTortillaRecipe(), ingr.getTortilla(), false, "Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("exotic greens")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getExoticGreensRecipe(), IngredientRecipeItems.getExoticGreens(), false, "Exotic Greens");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getExoticGreensRecipe(), ingr.getExoticGreens(), false, "Exotic Greens");
 			}
 			else if(recipe.equalsIgnoreCase("rice")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getRiceRecipe(), IngredientRecipeItems.getRice(), true, "Rice");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getRiceRecipe(), ingr.getRice(), true, "Rice");
 			}
 			else if(recipe.equalsIgnoreCase("popcorn")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPopcornRecipe(), IngredientRecipeItems.getPopcorn(), true, "Popcorn");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getPopcornRecipe(), ingr.getPopcorn(), true, "Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getPepperRecipe(), ingr.getPepper(), false, "Pepper");
 			}
 			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getVodkaRecipe(), ingr.getVodka(), false, "Vodka");
 			}
 			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getRumRecipe(), ingr.getRum(), false, "Rum");
 			}
 			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipeMax(p, econ, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getTequilaRecipe(), ingr.getTequila(), false, "Tequila");
 			}
 		}
 		else {
@@ -526,76 +542,76 @@ public class CulinarianMethods {
 	public void parseIngredient(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.1")) {
 			if(recipe.equalsIgnoreCase("salt")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getSaltRecipe(), IngredientRecipeItems.getSalt(), true, "Salt");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getSaltRecipe(), ingr.getSalt(), true, "Salt");
 			}
 			else if(recipe.equalsIgnoreCase("spices")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getSpicesRecipe(), IngredientRecipeItems.getSpices(), false, "Spices");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getSpicesRecipe(), ingr.getSpices(), false, "Spices");
 			}
 			else if(recipe.equalsIgnoreCase("greens")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getGreensRecipe(), IngredientRecipeItems.getGreens(), false, "Greens");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getGreensRecipe(), ingr.getGreens(), false, "Greens");
 			}
 			else if(recipe.equalsIgnoreCase("toast")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getToastRecipe(), IngredientRecipeItems.getToast(), true, "Toast");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getToastRecipe(), ingr.getToast(), true, "Toast");
 			}
 			else if(recipe.equalsIgnoreCase("oil")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getOilRecipe(), IngredientRecipeItems.getOil(), true, "Oil");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getOilRecipe(), ingr.getOil(), true, "Oil");
 			}
 			else if(recipe.equalsIgnoreCase("tomato")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTomatoRecipe(), IngredientRecipeItems.getTomato(), false, "Tomato");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getTomatoRecipe(), ingr.getTomato(), false, "Tomato");
 			}
 			else if(recipe.equalsIgnoreCase("butter")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getButterRecipe(), IngredientRecipeItems.getButter(), false, "Butter");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getButterRecipe(), ingr.getButter(), false, "Butter");
 			}
 			else if(recipe.equalsIgnoreCase("lemon")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getLemonRecipe(), IngredientRecipeItems.getLemon(), false, "Lemon");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getLemonRecipe(), ingr.getLemon(), false, "Lemon");
 			}
 			else if(recipe.equalsIgnoreCase("corn")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getCornRecipe(), IngredientRecipeItems.getCorn(), false, "Corn");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getCornRecipe(), ingr.getCorn(), false, "Corn");
 			}
 			else if(recipe.equalsIgnoreCase("honey")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getHoneyRecipe(), IngredientRecipeItems.getHoney(), false, "Honey");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getHoneyRecipe(), ingr.getHoney(), false, "Honey");
 			}
 			else if(recipe.equalsIgnoreCase("yeast")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getYeastRecipe(), IngredientRecipeItems.getYeast(), false, "Yeast");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getYeastRecipe(), ingr.getYeast(), false, "Yeast");
 			}
 			else if(recipe.equalsIgnoreCase("beetroot sauce")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getBeetrootSauceRecipe(), IngredientRecipeItems.getBeetrootSauce(), false, "Beetroot Sauce");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getBeetrootSauceRecipe(), ingr.getBeetrootSauce(), false, "Beetroot Sauce");
 			}
 			else if(recipe.equalsIgnoreCase("pasta")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPastaRecipe(), IngredientRecipeItems.getPasta(), false, "Pasta");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getPastaRecipe(), ingr.getPasta(), false, "Pasta");
 			}
 			else if(recipe.equalsIgnoreCase("onion")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getOnionRecipe(), IngredientRecipeItems.getOnion(), false, "Onion");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getOnionRecipe(), ingr.getOnion(), false, "Onion");
 			}
 			else if(recipe.equalsIgnoreCase("hops")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getHopsRecipe(), IngredientRecipeItems.getHops(), false, "Hops");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getHopsRecipe(), ingr.getHops(), false, "Hops");
 			}
 			else if(recipe.equalsIgnoreCase("cheese")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getCheeseRecipe(), IngredientRecipeItems.getCheese(), true, "Cheese");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getCheeseRecipe(), ingr.getCheese(), true, "Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("tortilla")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTortillaRecipe(), IngredientRecipeItems.getTortilla(), false, "Tortilla");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getTortillaRecipe(), ingr.getTortilla(), false, "Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("exotic greens")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getExoticGreensRecipe(), IngredientRecipeItems.getExoticGreens(), false, "Exotic Greens");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getExoticGreensRecipe(), ingr.getExoticGreens(), false, "Exotic Greens");
 			}
 			else if(recipe.equalsIgnoreCase("rice")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getRiceRecipe(), IngredientRecipeItems.getRice(), true, "Rice");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getRiceRecipe(), ingr.getRice(), true, "Rice");
 			}
 			else if(recipe.equalsIgnoreCase("popcorn")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPopcornRecipe(), IngredientRecipeItems.getPopcorn(), true, "Popcorn");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getPopcornRecipe(), ingr.getPopcorn(), true, "Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("pepper")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getPepperRecipe(), IngredientRecipeItems.getPepper(), false, "Pepper");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getPepperRecipe(), ingr.getPepper(), false, "Pepper");
 			}
 			else if(recipe.equalsIgnoreCase("vodka") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getVodkaRecipe(), IngredientRecipeItems.getVodka(), false, "Vodka");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getVodkaRecipe(), ingr.getVodka(), false, "Vodka");
 			}
 			else if(recipe.equalsIgnoreCase("rum") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getRumRecipe(), IngredientRecipeItems.getRum(), false, "Rum");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getRumRecipe(), ingr.getRum(), false, "Rum");
 			}
 			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
-				culinarianUtils.craftRecipe(p, econ, amount, IngredientRecipeItems.getTequilaRecipe(), IngredientRecipeItems.getTequila(), false, "Tequila");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getTequilaRecipe(), ingr.getTequila(), false, "Tequila");
 			}
 		}
 		else {
@@ -606,64 +622,64 @@ public class CulinarianMethods {
 	public void parseTier1(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getCuredFleshRecipe(), t1.getCuredFlesh(), true, "Cured Flesh");
 			}
 			else if(recipe.equalsIgnoreCase("sunflower seeds")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSunflowerSeedsRecipe(), Tier1RecipeItems.getSunflowerSeeds(), false, "Sunflower Seeds");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getSunflowerSeedsRecipe(), t1.getSunflowerSeeds(), false, "Sunflower Seeds");
 			}
 			else if(recipe.equalsIgnoreCase("boiled egg")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getBoiledEggRecipe(), Tier1RecipeItems.getBoiledEgg(), true, "Boiled Egg");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getBoiledEggRecipe(), t1.getBoiledEgg(), true, "Boiled Egg");
 			}
 			else if(recipe.equalsIgnoreCase("ice cream")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getIceCreamRecipe(), Tier1RecipeItems.getIceCream(), false, "Ice Cream");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getIceCreamRecipe(), t1.getIceCream(), false, "Ice Cream");
 			}
 			else if(recipe.equalsIgnoreCase("hot chocolate")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getHotChocolateRecipe(), Tier1RecipeItems.getHotChocolate(), true, "Hot Chocolate");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getHotChocolateRecipe(), t1.getHotChocolate(), true, "Hot Chocolate");
 			}
 			else if(recipe.equalsIgnoreCase("green tea")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getGreenTeaRecipe(), Tier1RecipeItems.getGreenTea(), false, "Green Tea");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getGreenTeaRecipe(), t1.getGreenTea(), false, "Green Tea");
 			}
 			else if(recipe.equalsIgnoreCase("barley tea")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getBarleyTeaRecipe(), Tier1RecipeItems.getBarleyTea(), false, "Barley Tea");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getBarleyTeaRecipe(), t1.getBarleyTea(), false, "Barley Tea");
 			}
 			else if(recipe.equalsIgnoreCase("mashed potatoes")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMashedPotatoesRecipe(), Tier1RecipeItems.getMashedPotatoes(), false, "Mashed Potatoes");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getMashedPotatoesRecipe(), t1.getMashedPotatoes(), false, "Mashed Potatoes");
 			}
 			else if(recipe.equalsIgnoreCase("spinach")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSpinachRecipe(), Tier1RecipeItems.getSpinach(), false, "Spinach");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getSpinachRecipe(), t1.getSpinach(), false, "Spinach");
 			}
 			else if(recipe.equalsIgnoreCase("chocolate truffle")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChocolateTruffleRecipe(), Tier1RecipeItems.getChocolateTruffle(), false, "Chocolate Truffle");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getChocolateTruffleRecipe(), t1.getChocolateTruffle(), false, "Chocolate Truffle");
 			}
 			else if(recipe.equalsIgnoreCase("musli")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMusliRecipe(), Tier1RecipeItems.getMusli(), false, "Musli");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getMusliRecipe(), t1.getMusli(), false, "Musli");
 			}
 			else if(recipe.equalsIgnoreCase("candied apple")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCandiedAppleRecipe(), Tier1RecipeItems.getCandiedApple(), false, "Candied Apple");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getCandiedAppleRecipe(), t1.getCandiedApple(), false, "Candied Apple");
 			}
 			else if(recipe.equalsIgnoreCase("mac and cheese")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getMacAndCheeseRecipe(), Tier1RecipeItems.getMacAndCheese(), false, "Mac and Cheese");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getMacAndCheeseRecipe(), t1.getMacAndCheese(), false, "Mac and Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("chocolate milk")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChocolateMilkRecipe(), Tier1RecipeItems.getChocolateMilk(), false, "Chocolate Milk");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getChocolateMilkRecipe(), t1.getChocolateMilk(), false, "Chocolate Milk");
 			}
 			else if(recipe.equalsIgnoreCase("cheese tortilla")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getCheeseTortillaRecipe(), Tier1RecipeItems.getCheeseTortilla(), false, "Cheese Tortilla");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getCheeseTortillaRecipe(), t1.getCheeseTortilla(), false, "Cheese Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("sushi")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getSushiRecipe(), Tier1RecipeItems.getSushi(), false, "Sushi");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getSushiRecipe(), t1.getSushi(), false, "Sushi");
 			}
 			else if(recipe.equalsIgnoreCase("pottage")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getPottageRecipe(), Tier1RecipeItems.getPottage(), false, "Pottage");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getPottageRecipe(), t1.getPottage(), false, "Pottage");
 			}
 			else if(recipe.equalsIgnoreCase("buttered popcorn")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getButteredPopcornRecipe(), Tier1RecipeItems.getButteredPopcorn(), false, "Buttered Popcorn");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getButteredPopcornRecipe(), t1.getButteredPopcorn(), false, "Buttered Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("chips and salsa")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getChipsAndSalsaRecipe(), Tier1RecipeItems.getChipsAndSalsa(), false, "Chips and Salsa");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getChipsAndSalsaRecipe(), t1.getChipsAndSalsa(), false, "Chips and Salsa");
 			}
 			else if(recipe.equalsIgnoreCase("gruel")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier1RecipeItems.getGruelRecipe(), Tier1RecipeItems.getGruel(), false, "Gruel");
+				culinarianUtils.craftRecipeMax(p, econ, t1.getGruelRecipe(), t1.getGruel(), false, "Gruel");
 			}
 		}
 		else {
@@ -674,64 +690,64 @@ public class CulinarianMethods {
 	public void parseTier1(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.2")) {
 			if(recipe.equalsIgnoreCase("cured flesh")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCuredFleshRecipe(), Tier1RecipeItems.getCuredFlesh(), true, "Cured Flesh");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getCuredFleshRecipe(), t1.getCuredFlesh(), true, "Cured Flesh");
 			}
 			else if(recipe.equalsIgnoreCase("sunflower seeds")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSunflowerSeedsRecipe(), Tier1RecipeItems.getSunflowerSeeds(), false, "Sunflower Seeds");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getSunflowerSeedsRecipe(), t1.getSunflowerSeeds(), false, "Sunflower Seeds");
 			}
 			else if(recipe.equalsIgnoreCase("boiled egg")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getBoiledEggRecipe(), Tier1RecipeItems.getBoiledEgg(), true, "Boiled Egg");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getBoiledEggRecipe(), t1.getBoiledEgg(), true, "Boiled Egg");
 			}
 			else if(recipe.equalsIgnoreCase("ice cream")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getIceCreamRecipe(), Tier1RecipeItems.getIceCream(), false, "Ice Cream");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getIceCreamRecipe(), t1.getIceCream(), false, "Ice Cream");
 			}
 			else if(recipe.equalsIgnoreCase("hot chocolate")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getHotChocolateRecipe(), Tier1RecipeItems.getHotChocolate(), true, "Hot Chocolate");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getHotChocolateRecipe(), t1.getHotChocolate(), true, "Hot Chocolate");
 			}
 			else if(recipe.equalsIgnoreCase("green tea")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getGreenTeaRecipe(), Tier1RecipeItems.getGreenTea(), false, "Green Tea");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getGreenTeaRecipe(), t1.getGreenTea(), false, "Green Tea");
 			}
 			else if(recipe.equalsIgnoreCase("barley tea")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getBarleyTeaRecipe(), Tier1RecipeItems.getBarleyTea(), false, "Barley Tea");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getBarleyTeaRecipe(), t1.getBarleyTea(), false, "Barley Tea");
 			}
 			else if(recipe.equalsIgnoreCase("mashed potatoes")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMashedPotatoesRecipe(), Tier1RecipeItems.getMashedPotatoes(), false, "Mashed Potatoes");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getMashedPotatoesRecipe(), t1.getMashedPotatoes(), false, "Mashed Potatoes");
 			}
 			else if(recipe.equalsIgnoreCase("spinach")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSpinachRecipe(), Tier1RecipeItems.getSpinach(), false, "Spinach");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getSpinachRecipe(), t1.getSpinach(), false, "Spinach");
 			}
 			else if(recipe.equalsIgnoreCase("chocolate truffle")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChocolateTruffleRecipe(), Tier1RecipeItems.getChocolateTruffle(), false, "Chocolate Truffle");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getChocolateTruffleRecipe(), t1.getChocolateTruffle(), false, "Chocolate Truffle");
 			}
 			else if(recipe.equalsIgnoreCase("musli")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMusliRecipe(), Tier1RecipeItems.getMusli(), false, "Musli");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getMusliRecipe(), t1.getMusli(), false, "Musli");
 			}
 			else if(recipe.equalsIgnoreCase("candied apple")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCandiedAppleRecipe(), Tier1RecipeItems.getCandiedApple(), false, "Candied Apple");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getCandiedAppleRecipe(), t1.getCandiedApple(), false, "Candied Apple");
 			}
 			else if(recipe.equalsIgnoreCase("mac and cheese")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getMacAndCheeseRecipe(), Tier1RecipeItems.getMacAndCheese(), false, "Mac and Cheese");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getMacAndCheeseRecipe(), t1.getMacAndCheese(), false, "Mac and Cheese");
 			}
 			else if(recipe.equalsIgnoreCase("chocolate milk")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChocolateMilkRecipe(), Tier1RecipeItems.getChocolateMilk(), false, "Chocolate Milk");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getChocolateMilkRecipe(), t1.getChocolateMilk(), false, "Chocolate Milk");
 			}
 			else if(recipe.equalsIgnoreCase("cheese tortilla")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getCheeseTortillaRecipe(), Tier1RecipeItems.getCheeseTortilla(), false, "Cheese Tortilla");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getCheeseTortillaRecipe(), t1.getCheeseTortilla(), false, "Cheese Tortilla");
 			}
 			else if(recipe.equalsIgnoreCase("sushi")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getSushiRecipe(), Tier1RecipeItems.getSushi(), false, "Sushi");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getSushiRecipe(), t1.getSushi(), false, "Sushi");
 			}
 			else if(recipe.equalsIgnoreCase("pottage")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getPottageRecipe(), Tier1RecipeItems.getPottage(), false, "Pottage");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getPottageRecipe(), t1.getPottage(), false, "Pottage");
 			}
 			else if(recipe.equalsIgnoreCase("buttered popcorn")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getButteredPopcornRecipe(), Tier1RecipeItems.getButteredPopcorn(), false, "Buttered Popcorn");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getButteredPopcornRecipe(), t1.getButteredPopcorn(), false, "Buttered Popcorn");
 			}
 			else if(recipe.equalsIgnoreCase("chips and salsa")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getChipsAndSalsaRecipe(), Tier1RecipeItems.getChipsAndSalsa(), false, "Chips and Salsa");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getChipsAndSalsaRecipe(), t1.getChipsAndSalsa(), false, "Chips and Salsa");
 			}
 			else if(recipe.equalsIgnoreCase("gruel")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier1RecipeItems.getGruelRecipe(), Tier1RecipeItems.getGruel(), false, "Gruel");
+				culinarianUtils.craftRecipe(p, econ, amount, t1.getGruelRecipe(), t1.getGruel(), false, "Gruel");
 			}
 		}
 		else {
@@ -742,67 +758,67 @@ public class CulinarianMethods {
 	public void parseTier2(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getSteakWithGreenBeansRecipe(), t2.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
 			else if(recipe.equalsIgnoreCase("buttered toast")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getButteredToastRecipe(), Tier2RecipeItems.getButteredToast(), false, "Buttered Toast");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getButteredToastRecipe(), t2.getButteredToast(), false, "Buttered Toast");
 			}
 			else if(recipe.equalsIgnoreCase("lemonade")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getLemonadeRecipe(), Tier2RecipeItems.getLemonade(), false, "Lemonade");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getLemonadeRecipe(), t2.getLemonade(), false, "Lemonade");
 			}
 			else if(recipe.equalsIgnoreCase("honeyed ham")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getHoneyedHamRecipe(), Tier2RecipeItems.getHoneyedHam(), false, "Honeyed Ham");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getHoneyedHamRecipe(), t2.getHoneyedHam(), false, "Honeyed Ham");
 			}
 			else if(recipe.equalsIgnoreCase("candy bar")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getCandyBarRecipe(), Tier2RecipeItems.getCandyBar(), false, "Candy Bar");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getCandyBarRecipe(), t2.getCandyBar(), false, "Candy Bar");
 			}
 			else if(recipe.equalsIgnoreCase("ale")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getAleRecipe(), Tier2RecipeItems.getAle(), false, "Ale");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getAleRecipe(), t2.getAle(), false, "Ale");
 			}
 			else if(recipe.equalsIgnoreCase("sandwich")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getSandwichRecipe(), Tier2RecipeItems.getSandwich(), false, "Sandwich");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getSandwichRecipe(), t2.getSandwich(), false, "Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("beef stew")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBeefStewRecipe(), Tier2RecipeItems.getBeefStew(), false, "Beef Stew");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getBeefStewRecipe(), t2.getBeefStew(), false, "Beef Stew");
 			}
 			else if(recipe.equalsIgnoreCase("exotic tea")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getExoticTeaRecipe(), Tier2RecipeItems.getExoticTea(), false, "Exotic Tea");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getExoticTeaRecipe(), t2.getExoticTea(), false, "Exotic Tea");
 			}
 			else if(recipe.equalsIgnoreCase("bartrand's cornbread")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBartrandCornbreadRecipe(), Tier2RecipeItems.getBartrandCornbread(), false, "Bartrand's Cornbread");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getBartrandCornbreadRecipe(), t2.getBartrandCornbread(), false, "Bartrand's Cornbread");
 			}
 			else if(recipe.equalsIgnoreCase("tuna sandwich")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getTunaSandwichRecipe(), Tier2RecipeItems.getTunaSandwich(), false, "Tuna Sandwich");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getTunaSandwichRecipe(), t2.getTunaSandwich(), false, "Tuna Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("apple pie")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getApplePieRecipe(), Tier2RecipeItems.getApplePie(), false, "Apple Pie");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getApplePieRecipe(), t2.getApplePie(), false, "Apple Pie");
 			}
 			else if(recipe.equalsIgnoreCase("beer")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBeerRecipe(), Tier2RecipeItems.getBeer(), false, "Beer");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getBeerRecipe(), t2.getBeer(), false, "Beer");
 			}
 			else if(recipe.equalsIgnoreCase("hash browns")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getHashBrownsRecipe(), Tier2RecipeItems.getHashBrowns(), false, "Hash Browns");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getHashBrownsRecipe(), t2.getHashBrowns(), false, "Hash Browns");
 			}
 			else if(recipe.equalsIgnoreCase("lemon tart")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getLemonTartRecipe(), Tier2RecipeItems.getLemonTart(), false, "Lemon Tart");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getLemonTartRecipe(), t2.getLemonTart(), false, "Lemon Tart");
 			}
 			else if(recipe.equalsIgnoreCase("wrapped chicken")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getWrappedChickenRecipe(), Tier2RecipeItems.getWrappedChicken(), false, "Wrapped Chicken");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getWrappedChickenRecipe(), t2.getWrappedChicken(), false, "Wrapped Chicken");
 			}
 			else if(recipe.equalsIgnoreCase("mystery meat")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getMysteryMeatRecipe(), Tier2RecipeItems.getMysteryMeat(), false, "Mystery Meat");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getMysteryMeatRecipe(), t2.getMysteryMeat(), false, "Mystery Meat");
 			}
 			else if(recipe.equalsIgnoreCase("tomato soup")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getTomatoSoupRecipe(), Tier2RecipeItems.getTomatoSoup(), false, "Tomato Soup");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getTomatoSoupRecipe(), t2.getTomatoSoup(), false, "Tomato Soup");
 			}
 			else if(recipe.equalsIgnoreCase("corn on the cob")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getCornOnTheCobRecipe(), Tier2RecipeItems.getCornOnTheCob(), false, "Corn on the Cob");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getCornOnTheCobRecipe(), t2.getCornOnTheCob(), false, "Corn on the Cob");
 			}
 			else if(recipe.equalsIgnoreCase("bread pudding")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getBreadPuddingRecipe(), Tier2RecipeItems.getBreadPudding(), false, "Bread Pudding");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getBreadPuddingRecipe(), t2.getBreadPudding(), false, "Bread Pudding");
 			}
 			else if(recipe.equalsIgnoreCase("chicken pasta")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier2RecipeItems.getChickenPastaRecipe(), Tier2RecipeItems.getChickenPasta(), false, "Chicken Pasta");
+				culinarianUtils.craftRecipeMax(p, econ, t2.getChickenPastaRecipe(), t2.getChickenPasta(), false, "Chicken Pasta");
 			}
 		}
 		else {
@@ -813,67 +829,67 @@ public class CulinarianMethods {
 	public void parseTier2(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.3")) {
 			if(recipe.equalsIgnoreCase("steak w/ green beans")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSteakWithGreenBeansRecipe(), Tier2RecipeItems.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getSteakWithGreenBeansRecipe(), t2.getSteakWithGreenBeans(), false, "Steak w/ Green Beans");
 			}
 			else if(recipe.equalsIgnoreCase("buttered toast")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getButteredToastRecipe(), Tier2RecipeItems.getButteredToast(), false, "Buttered Toast");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getButteredToastRecipe(), t2.getButteredToast(), false, "Buttered Toast");
 			}
 			else if(recipe.equalsIgnoreCase("lemonade")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getLemonadeRecipe(), Tier2RecipeItems.getLemonade(), false, "Lemonade");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getLemonadeRecipe(), t2.getLemonade(), false, "Lemonade");
 			}
 			else if(recipe.equalsIgnoreCase("honeyed ham")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getHoneyedHamRecipe(), Tier2RecipeItems.getHoneyedHam(), false, "Honeyed Ham");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getHoneyedHamRecipe(), t2.getHoneyedHam(), false, "Honeyed Ham");
 			}
 			else if(recipe.equalsIgnoreCase("candy bar")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getCandyBarRecipe(), Tier2RecipeItems.getCandyBar(), false, "Candy Bar");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getCandyBarRecipe(), t2.getCandyBar(), false, "Candy Bar");
 			}
 			else if(recipe.equalsIgnoreCase("ale")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getAleRecipe(), Tier2RecipeItems.getAle(), false, "Ale");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getAleRecipe(), t2.getAle(), false, "Ale");
 			}
 			else if(recipe.equalsIgnoreCase("sandwich")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getSandwichRecipe(), Tier2RecipeItems.getSandwich(), false, "Sandwich");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getSandwichRecipe(), t2.getSandwich(), false, "Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("beef stew")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBeefStewRecipe(), Tier2RecipeItems.getBeefStew(), false, "Beef Stew");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getBeefStewRecipe(), t2.getBeefStew(), false, "Beef Stew");
 			}
 			else if(recipe.equalsIgnoreCase("exotic tea")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getExoticTeaRecipe(), Tier2RecipeItems.getExoticTea(), false, "Exotic Tea");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getExoticTeaRecipe(), t2.getExoticTea(), false, "Exotic Tea");
 			}
 			else if(recipe.equalsIgnoreCase("bartrand's cornbread")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBartrandCornbreadRecipe(), Tier2RecipeItems.getBartrandCornbread(), false, "Bartrand's Cornbread");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getBartrandCornbreadRecipe(), t2.getBartrandCornbread(), false, "Bartrand's Cornbread");
 			}
 			else if(recipe.equalsIgnoreCase("tuna sandwich")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getTunaSandwichRecipe(), Tier2RecipeItems.getTunaSandwich(), false, "Tuna Sandwich");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getTunaSandwichRecipe(), t2.getTunaSandwich(), false, "Tuna Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("apple pie")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getApplePieRecipe(), Tier2RecipeItems.getApplePie(), false, "Apple Pie");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getApplePieRecipe(), t2.getApplePie(), false, "Apple Pie");
 			}
 			else if(recipe.equalsIgnoreCase("beer")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBeerRecipe(), Tier2RecipeItems.getBeer(), false, "Beer");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getBeerRecipe(), t2.getBeer(), false, "Beer");
 			}
 			else if(recipe.equalsIgnoreCase("hash browns")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getHashBrownsRecipe(), Tier2RecipeItems.getHashBrowns(), false, "Hash Browns");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getHashBrownsRecipe(), t2.getHashBrowns(), false, "Hash Browns");
 			}
 			else if(recipe.equalsIgnoreCase("lemon tart")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getLemonTartRecipe(), Tier2RecipeItems.getLemonTart(), false, "Lemon Tart");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getLemonTartRecipe(), t2.getLemonTart(), false, "Lemon Tart");
 			}
 			else if(recipe.equalsIgnoreCase("wrapped chicken")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getWrappedChickenRecipe(), Tier2RecipeItems.getWrappedChicken(), false, "Wrapped Chicken");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getWrappedChickenRecipe(), t2.getWrappedChicken(), false, "Wrapped Chicken");
 			}
 			else if(recipe.equalsIgnoreCase("mystery meat")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getMysteryMeatRecipe(), Tier2RecipeItems.getMysteryMeat(), false, "Mystery Meat");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getMysteryMeatRecipe(), t2.getMysteryMeat(), false, "Mystery Meat");
 			}
 			else if(recipe.equalsIgnoreCase("tomato soup")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getTomatoSoupRecipe(), Tier2RecipeItems.getTomatoSoup(), false, "Tomato Soup");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getTomatoSoupRecipe(), t2.getTomatoSoup(), false, "Tomato Soup");
 			}
 			else if(recipe.equalsIgnoreCase("corn on the cob")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getCornOnTheCobRecipe(), Tier2RecipeItems.getCornOnTheCob(), false, "Corn on the Cob");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getCornOnTheCobRecipe(), t2.getCornOnTheCob(), false, "Corn on the Cob");
 			}
 			else if(recipe.equalsIgnoreCase("bread pudding")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getBreadPuddingRecipe(), Tier2RecipeItems.getBreadPudding(), false, "Bread Pudding");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getBreadPuddingRecipe(), t2.getBreadPudding(), false, "Bread Pudding");
 			}
 			else if(recipe.equalsIgnoreCase("chicken pasta")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier2RecipeItems.getChickenPastaRecipe(), Tier2RecipeItems.getChickenPasta(), false, "Chicken Pasta");
+				culinarianUtils.craftRecipe(p, econ, amount, t2.getChickenPastaRecipe(), t2.getChickenPasta(), false, "Chicken Pasta");
 			}
 		}
 		else {
@@ -884,67 +900,67 @@ public class CulinarianMethods {
 	public void parseTier3(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getGardenSaladRecipe(), t3.getGardenSalad(), false, "Garden Salad");
 			}
 			else if(recipe.equalsIgnoreCase("chicken leg")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getChickenLegRecipe(), Tier3RecipeItems.getChickenLeg(), false, "Chicken Leg");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getChickenLegRecipe(), t3.getChickenLeg(), false, "Chicken Leg");
 			}
 			else if(recipe.equalsIgnoreCase("apple porkchops")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getApplePorkchopsRecipe(), Tier3RecipeItems.getApplePorkchops(), false, "Apple Porkchops");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getApplePorkchopsRecipe(), t3.getApplePorkchops(), false, "Apple Porkchops");
 			}
 			else if(recipe.equalsIgnoreCase("scrambled eggs")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getScrambledEggsRecipe(), Tier3RecipeItems.getScrambledEggs(), false, "Scrambled Eggs");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getScrambledEggsRecipe(), t3.getScrambledEggs(), false, "Scrambled Eggs");
 			}
 			else if(recipe.equalsIgnoreCase("lamb kabob")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getLambKabobRecipe(), Tier3RecipeItems.getLambKabob(), false, "Lamb Kabob");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getLambKabobRecipe(), t3.getLambKabob(), false, "Lamb Kabob");
 			}
 			else if(recipe.equalsIgnoreCase("zesty steak")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getZestySteakRecipe(), Tier3RecipeItems.getZestySteak(), false, "Zesty Steak");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getZestySteakRecipe(), t3.getZestySteak(), false, "Zesty Steak");
 			}
 			else if(recipe.equalsIgnoreCase("loaded baked potato")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getLoadedBakedPotatoRecipe(), Tier3RecipeItems.getLoadedBakedPotato(), false, "Loaded Baked Potato");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getLoadedBakedPotatoRecipe(), t3.getLoadedBakedPotato(), false, "Loaded Baked Potato");
 			}
 			else if(recipe.equalsIgnoreCase("sweet buns")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getSweetBunsRecipe(), Tier3RecipeItems.getSweetBuns(), false, "Sweet Buns");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getSweetBunsRecipe(), t3.getSweetBuns(), false, "Sweet Buns");
 			}
 			else if(recipe.equalsIgnoreCase("spaghetti bolognese")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getSpaghettiBologneseRecipe(), Tier3RecipeItems.getSpaghettiBolognese(), false, "Spaghetti Bolognese");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getSpaghettiBologneseRecipe(), t3.getSpaghettiBolognese(), false, "Spaghetti Bolognese");
 			}
 			else if(recipe.equalsIgnoreCase("filleted salmon")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getFilletedSalmonRecipe(), Tier3RecipeItems.getFilletedSalmon(), false, "Filleted Salmon");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getFilletedSalmonRecipe(), t3.getFilletedSalmon(), false, "Filleted Salmon");
 			}
 			else if(recipe.equalsIgnoreCase("roast bream")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getRoastBreamRecipe(), Tier3RecipeItems.getRoastBream(), false, "Roast Bream");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getRoastBreamRecipe(), t3.getRoastBream(), false, "Roast Bream");
 			}
 			else if(recipe.equalsIgnoreCase("smoothie")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getSmoothieRecipe(), Tier3RecipeItems.getSmoothie(), false, "Smoothie");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getSmoothieRecipe(), t3.getSmoothie(), false, "Smoothie");
 			}
 			else if(recipe.equalsIgnoreCase("hearty burrito")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getHeartyBurritoRecipe(), Tier3RecipeItems.getHeartyBurrito(), false, "Hearty Burrito");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getHeartyBurritoRecipe(), t3.getHeartyBurrito(), false, "Hearty Burrito");
 			}
 			else if(recipe.equalsIgnoreCase("hero sandwich")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getHeroSandwichRecipe(), Tier3RecipeItems.getHeroSandwich(), false, "Hero Sandwich");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getHeroSandwichRecipe(), t3.getHeroSandwich(), false, "Hero Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("lamb stew")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getLambStewRecipe(), Tier3RecipeItems.getLambStew(), false, "Lamb Stew");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getLambStewRecipe(), t3.getLambStew(), false, "Lamb Stew");
 			}
 			else if(recipe.equalsIgnoreCase("honey glazed chicken")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getHoneyGlazedChickenRecipe(), Tier3RecipeItems.getHoneyGlazedChicken(), false, "Honey Glazed Chicken");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getHoneyGlazedChickenRecipe(), t3.getHoneyGlazedChicken(), false, "Honey Glazed Chicken");
 			}
 			else if(recipe.equalsIgnoreCase("apple cider")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getAppleCiderRecipe(), Tier3RecipeItems.getAppleCider(), false, "Apple Cider");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getAppleCiderRecipe(), t3.getAppleCider(), false, "Apple Cider");
 			}
 			else if(recipe.equalsIgnoreCase("mushroom pasty")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getMushroomPastyRecipe(), Tier3RecipeItems.getMushroomPasty(), false, "Mushroom Pasty");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getMushroomPastyRecipe(), t3.getMushroomPasty(), false, "Mushroom Pasty");
 			}
 			else if(recipe.equalsIgnoreCase("buttered wortes")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getButteredWortesRecipe(), Tier3RecipeItems.getButteredWortes(), false, "Buttered Wortes");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getButteredWortesRecipe(), t3.getButteredWortes(), false, "Buttered Wortes");
 			}
 			else if(recipe.equalsIgnoreCase("sponge cake")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getSpongeCakeRecipe(), Tier3RecipeItems.getSpongeCake(), false, "Sponge Cake");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getSpongeCakeRecipe(), t3.getSpongeCake(), false, "Sponge Cake");
 			}
 			else if(recipe.equalsIgnoreCase("chicken parmesan")) {
-				culinarianUtils.craftRecipeMax(p, econ, Tier3RecipeItems.getChickenParmesanRecipe(), Tier3RecipeItems.getChickenParmesan(), false, "Chicken Parmesan");
+				culinarianUtils.craftRecipeMax(p, econ, t3.getChickenParmesanRecipe(), t3.getChickenParmesan(), false, "Chicken Parmesan");
 			}
 		}
 		else {
@@ -955,67 +971,67 @@ public class CulinarianMethods {
 	public void parseTier3(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("garden salad")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getGardenSaladRecipe(), Tier3RecipeItems.getGardenSalad(), false, "Garden Salad");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getGardenSaladRecipe(), t3.getGardenSalad(), false, "Garden Salad");
 			}
 			else if(recipe.equalsIgnoreCase("chicken leg")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getChickenLegRecipe(), Tier3RecipeItems.getChickenLeg(), false, "Chicken Leg");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getChickenLegRecipe(), t3.getChickenLeg(), false, "Chicken Leg");
 			}
 			else if(recipe.equalsIgnoreCase("apple porkchops")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getApplePorkchopsRecipe(), Tier3RecipeItems.getApplePorkchops(), false, "Apple Porkchops");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getApplePorkchopsRecipe(), t3.getApplePorkchops(), false, "Apple Porkchops");
 			}
 			else if(recipe.equalsIgnoreCase("scrambled eggs")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getScrambledEggsRecipe(), Tier3RecipeItems.getScrambledEggs(), false, "Scrambled Eggs");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getScrambledEggsRecipe(), t3.getScrambledEggs(), false, "Scrambled Eggs");
 			}
 			else if(recipe.equalsIgnoreCase("lamb kabob")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getLambKabobRecipe(), Tier3RecipeItems.getLambKabob(), false, "Lamb Kabob");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getLambKabobRecipe(), t3.getLambKabob(), false, "Lamb Kabob");
 			}
 			else if(recipe.equalsIgnoreCase("zesty steak")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getZestySteakRecipe(), Tier3RecipeItems.getZestySteak(), false, "Zesty Steak");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getZestySteakRecipe(), t3.getZestySteak(), false, "Zesty Steak");
 			}
 			else if(recipe.equalsIgnoreCase("loaded baked potato")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getLoadedBakedPotatoRecipe(), Tier3RecipeItems.getLoadedBakedPotato(), false, "Loaded Baked Potato");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getLoadedBakedPotatoRecipe(), t3.getLoadedBakedPotato(), false, "Loaded Baked Potato");
 			}
 			else if(recipe.equalsIgnoreCase("sweet buns")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getSweetBunsRecipe(), Tier3RecipeItems.getSweetBuns(), false, "Sweet Buns");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getSweetBunsRecipe(), t3.getSweetBuns(), false, "Sweet Buns");
 			}
 			else if(recipe.equalsIgnoreCase("spaghetti bolognese")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getSpaghettiBologneseRecipe(), Tier3RecipeItems.getSpaghettiBolognese(), false, "Spaghetti Bolognese");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getSpaghettiBologneseRecipe(), t3.getSpaghettiBolognese(), false, "Spaghetti Bolognese");
 			}
 			else if(recipe.equalsIgnoreCase("filleted salmon")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getFilletedSalmonRecipe(), Tier3RecipeItems.getFilletedSalmon(), false, "Filleted Salmon");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getFilletedSalmonRecipe(), t3.getFilletedSalmon(), false, "Filleted Salmon");
 			}
 			else if(recipe.equalsIgnoreCase("roast bream")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getRoastBreamRecipe(), Tier3RecipeItems.getRoastBream(), false, "Roast Bream");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getRoastBreamRecipe(), t3.getRoastBream(), false, "Roast Bream");
 			}
 			else if(recipe.equalsIgnoreCase("smoothie")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getSmoothieRecipe(), Tier3RecipeItems.getSmoothie(), false, "Smoothie");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getSmoothieRecipe(), t3.getSmoothie(), false, "Smoothie");
 			}
 			else if(recipe.equalsIgnoreCase("hearty burrito")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getHeartyBurritoRecipe(), Tier3RecipeItems.getHeartyBurrito(), false, "Hearty Burrito");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getHeartyBurritoRecipe(), t3.getHeartyBurrito(), false, "Hearty Burrito");
 			}
 			else if(recipe.equalsIgnoreCase("hero sandwich")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getHeroSandwichRecipe(), Tier3RecipeItems.getHeroSandwich(), false, "Hero Sandwich");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getHeroSandwichRecipe(), t3.getHeroSandwich(), false, "Hero Sandwich");
 			}
 			else if(recipe.equalsIgnoreCase("lamb stew")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getLambStewRecipe(), Tier3RecipeItems.getLambStew(), false, "Lamb Stew");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getLambStewRecipe(), t3.getLambStew(), false, "Lamb Stew");
 			}
 			else if(recipe.equalsIgnoreCase("honey glazed chicken")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getHoneyGlazedChickenRecipe(), Tier3RecipeItems.getHoneyGlazedChicken(), false, "Honey Glazed Chicken");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getHoneyGlazedChickenRecipe(), t3.getHoneyGlazedChicken(), false, "Honey Glazed Chicken");
 			}
 			else if(recipe.equalsIgnoreCase("apple cider")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getAppleCiderRecipe(), Tier3RecipeItems.getAppleCider(), false, "Apple Cider");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getAppleCiderRecipe(), t3.getAppleCider(), false, "Apple Cider");
 			}
 			else if(recipe.equalsIgnoreCase("mushroom pasty")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getMushroomPastyRecipe(), Tier3RecipeItems.getMushroomPasty(), false, "Mushroom Pasty");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getMushroomPastyRecipe(), t3.getMushroomPasty(), false, "Mushroom Pasty");
 			}
 			else if(recipe.equalsIgnoreCase("buttered wortes")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getButteredWortesRecipe(), Tier3RecipeItems.getButteredWortes(), false, "Buttered Wortes");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getButteredWortesRecipe(), t3.getButteredWortes(), false, "Buttered Wortes");
 			}
 			else if(recipe.equalsIgnoreCase("sponge cake")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getSpongeCakeRecipe(), Tier3RecipeItems.getSpongeCake(), false, "Sponge Cake");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getSpongeCakeRecipe(), t3.getSpongeCake(), false, "Sponge Cake");
 			}
 			else if(recipe.equalsIgnoreCase("chicken parmesan")) {
-				culinarianUtils.craftRecipe(p, econ, amount, Tier3RecipeItems.getChickenParmesanRecipe(), Tier3RecipeItems.getChickenParmesan(), false, "Chicken Parmesan");
+				culinarianUtils.craftRecipe(p, econ, amount, t3.getChickenParmesanRecipe(), t3.getChickenParmesan(), false, "Chicken Parmesan");
 			}
 		}
 		else {
@@ -1026,52 +1042,52 @@ public class CulinarianMethods {
 	public void parseLimitedEdition(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getCandyCornRecipe(), ler.getCandyCorn(), false, "Candy Corn");
 			}
 			else if(recipe.equalsIgnoreCase("witch's brew")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getWitchBrewRecipe(), LimitedEditionRecipeItems.getWitchBrew(), false, "Witch's Brew");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getWitchBrewRecipe(), ler.getWitchBrew(), false, "Witch's Brew");
 			}
 			else if(recipe.equalsIgnoreCase("baked eyeball")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getBakedEyeballRecipe(), LimitedEditionRecipeItems.getBakedEyeball(), true, "Baked Eyeball");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getBakedEyeballRecipe(), ler.getBakedEyeball(), true, "Baked Eyeball");
 			}
 			else if(recipe.equalsIgnoreCase("candy cane")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCandyCaneRecipe(), LimitedEditionRecipeItems.getCandyCane(), false, "Candy Cane");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getCandyCaneRecipe(), ler.getCandyCane(), false, "Candy Cane");
 			}
 			else if(recipe.equalsIgnoreCase("gingerbread")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getGingerbreadRecipe(), LimitedEditionRecipeItems.getGingerbread(), false, "Gingerbread");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getGingerbreadRecipe(), ler.getGingerbread(), false, "Gingerbread");
 			}
 			else if(recipe.equalsIgnoreCase("smoked ham")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getSmokedHamRecipe(), LimitedEditionRecipeItems.getSmokedHam(), true, "Smoked Ham");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getSmokedHamRecipe(), ler.getSmokedHam(), true, "Smoked Ham");
 			}
 			else if(recipe.equalsIgnoreCase("eggnog")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getEggnogRecipe(), LimitedEditionRecipeItems.getEggnog(), false, "Eggnog");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getEggnogRecipe(), ler.getEggnog(), false, "Eggnog");
 			}
 			else if(recipe.equalsIgnoreCase("lasagna")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getLasagnaRecipe(), LimitedEditionRecipeItems.getLasagna(), false, "Lasagna");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getLasagnaRecipe(), ler.getLasagna(), false, "Lasagna");
 			}
 			else if(recipe.equalsIgnoreCase("lemon soda")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getLemonSodaRecipe(), LimitedEditionRecipeItems.getLemonSoda(), false, "Lemon Soda");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getLemonSodaRecipe(), ler.getLemonSoda(), false, "Lemon Soda");
 			}
 			else if(recipe.equalsIgnoreCase("olympian gyro")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getOlympianGyroRecipe(), LimitedEditionRecipeItems.getOlympianGyro(), false, "Olympian Gyro");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getOlympianGyroRecipe(), ler.getOlympianGyro(), false, "Olympian Gyro");
 			}
 			else if(recipe.equalsIgnoreCase("cupcake")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getCupcakeRecipe(), LimitedEditionRecipeItems.getCupcake(), false, "Cupcake");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getCupcakeRecipe(), ler.getCupcake(), false, "Cupcake");
 			}
 			else if(recipe.equalsIgnoreCase("fish and chips")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getFishAndChipsRecipe(), LimitedEditionRecipeItems.getFishAndChips(), false, "Fish and Chips");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getFishAndChipsRecipe(), ler.getFishAndChips(), false, "Fish and Chips");
 			}
 			else if(recipe.equalsIgnoreCase("escargot")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getEscargotRecipe(), LimitedEditionRecipeItems.getEscargot(), false, "Escargot");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getEscargotRecipe(), ler.getEscargot(), false, "Escargot");
 			}
 			else if(recipe.equalsIgnoreCase("vitalac")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getVitalacRecipe(), LimitedEditionRecipeItems.getVitalac(), false, "Vitalac");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getVitalacRecipe(), ler.getVitalac(), false, "Vitalac");
 			}
 			else if(recipe.equalsIgnoreCase("belgian waffle")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getBelgianWaffleRecipe(), LimitedEditionRecipeItems.getBelgianWaffle(), false, "Belgian Waffle");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getBelgianWaffleRecipe(), ler.getBelgianWaffle(), false, "Belgian Waffle");
 			}
 			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
-				culinarianUtils.craftRecipeMax(p, econ, LimitedEditionRecipeItems.getVioletDirtPieRecipe(), LimitedEditionRecipeItems.getVioletDirtPie(), false, "Violet's Dirt Pie");
+				culinarianUtils.craftRecipeMax(p, econ, ler.getVioletDirtPieRecipe(), ler.getVioletDirtPie(), false, "Violet's Dirt Pie");
 			}
 		}
 		else {
@@ -1082,52 +1098,52 @@ public class CulinarianMethods {
 	public void parseLimitedEdition(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("candy corn")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCornRecipe(), LimitedEditionRecipeItems.getCandyCorn(), false, "Candy Corn");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getCandyCornRecipe(), ler.getCandyCorn(), false, "Candy Corn");
 			}
 			else if(recipe.equalsIgnoreCase("witch's brew")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getWitchBrewRecipe(), LimitedEditionRecipeItems.getWitchBrew(), false, "Witch's Brew");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getWitchBrewRecipe(), ler.getWitchBrew(), false, "Witch's Brew");
 			}
 			else if(recipe.equalsIgnoreCase("baked eyeball")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getBakedEyeballRecipe(), LimitedEditionRecipeItems.getBakedEyeball(), true, "Baked Eyeball");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getBakedEyeballRecipe(), ler.getBakedEyeball(), true, "Baked Eyeball");
 			}
 			else if(recipe.equalsIgnoreCase("candy cane")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCandyCaneRecipe(), LimitedEditionRecipeItems.getCandyCane(), false, "Candy Cane");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getCandyCaneRecipe(), ler.getCandyCane(), false, "Candy Cane");
 			}
 			else if(recipe.equalsIgnoreCase("gingerbread")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getGingerbreadRecipe(), LimitedEditionRecipeItems.getGingerbread(), false, "Gingerbread");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getGingerbreadRecipe(), ler.getGingerbread(), false, "Gingerbread");
 			}
 			else if(recipe.equalsIgnoreCase("smoked ham")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getSmokedHamRecipe(), LimitedEditionRecipeItems.getSmokedHam(), true, "Smoked Ham");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getSmokedHamRecipe(), ler.getSmokedHam(), true, "Smoked Ham");
 			}
 			else if(recipe.equalsIgnoreCase("eggnog")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getEggnogRecipe(), LimitedEditionRecipeItems.getEggnog(), false, "Eggnog");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getEggnogRecipe(), ler.getEggnog(), false, "Eggnog");
 			}
 			else if(recipe.equalsIgnoreCase("lasagna")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getLasagnaRecipe(), LimitedEditionRecipeItems.getLasagna(), false, "Lasagna");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getLasagnaRecipe(), ler.getLasagna(), false, "Lasagna");
 			}
 			else if(recipe.equalsIgnoreCase("lemon soda")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getLemonSodaRecipe(), LimitedEditionRecipeItems.getLemonSoda(), false, "Lemon Soda");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getLemonSodaRecipe(), ler.getLemonSoda(), false, "Lemon Soda");
 			}
 			else if(recipe.equalsIgnoreCase("olympian gyro")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getOlympianGyroRecipe(), LimitedEditionRecipeItems.getOlympianGyro(), false, "Olympian Gyro");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getOlympianGyroRecipe(), ler.getOlympianGyro(), false, "Olympian Gyro");
 			}
 			else if(recipe.equalsIgnoreCase("cupcake")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getCupcakeRecipe(), LimitedEditionRecipeItems.getCupcake(), false, "Cupcake");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getCupcakeRecipe(), ler.getCupcake(), false, "Cupcake");
 			}
 			else if(recipe.equalsIgnoreCase("fish and chips")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getFishAndChipsRecipe(), LimitedEditionRecipeItems.getFishAndChips(), false, "Fish and Chips");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getFishAndChipsRecipe(), ler.getFishAndChips(), false, "Fish and Chips");
 			}
 			else if(recipe.equalsIgnoreCase("escargot")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getEscargotRecipe(), LimitedEditionRecipeItems.getEscargot(), false, "Escargot");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getEscargotRecipe(), ler.getEscargot(), false, "Escargot");
 			}
 			else if(recipe.equalsIgnoreCase("vitalac")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getVitalacRecipe(), LimitedEditionRecipeItems.getVitalac(), false, "Vitalac");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getVitalacRecipe(), ler.getVitalac(), false, "Vitalac");
 			}
 			else if(recipe.equalsIgnoreCase("belgian waffle")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getBelgianWaffleRecipe(), LimitedEditionRecipeItems.getBelgianWaffle(), false, "Belgian Waffle");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getBelgianWaffleRecipe(), ler.getBelgianWaffle(), false, "Belgian Waffle");
 			}
 			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LimitedEditionRecipeItems.getVioletDirtPieRecipe(), LimitedEditionRecipeItems.getVioletDirtPie(), false, "Violet's Dirt Pie");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getVioletDirtPieRecipe(), ler.getVioletDirtPie(), false, "Violet's Dirt Pie");
 			}
 		}
 		else {
@@ -1138,25 +1154,25 @@ public class CulinarianMethods {
 	public void parseLegendary(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getDragonScrambledEggsRecipe(), legend.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
 			else if(recipe.equalsIgnoreCase("neo's full course special")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getNeoFullCourseSpecialRecipe(), LegendaryRecipeItems.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getNeoFullCourseSpecialRecipe(), legend.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
 			}
 			else if(recipe.equalsIgnoreCase("tobias' famous cake")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getTobiasFamousCakeRecipe(), LegendaryRecipeItems.getTobiasFamousCake(), false, "Tobias' Famous Cake");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getTobiasFamousCakeRecipe(), legend.getTobiasFamousCake(), false, "Tobias' Famous Cake");
 			}
 			else if(recipe.equalsIgnoreCase("low district cheese steak")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getLowDistrictCheeseSteakRecipe(), LegendaryRecipeItems.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getLowDistrictCheeseSteakRecipe(), legend.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
 			}
 			else if(recipe.equalsIgnoreCase("mattifornia roll")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getMattiforniaRollRecipe(), LegendaryRecipeItems.getMattiforniaRoll(), false, "Mattifornia Roll");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getMattiforniaRollRecipe(), legend.getMattiforniaRoll(), false, "Mattifornia Roll");
 			}
 			else if(recipe.equalsIgnoreCase("tilan's salad")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getTilanSaladRecipe(), LegendaryRecipeItems.getTilanSalad(), false, "Tilan's Salad");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getTilanSaladRecipe(), legend.getTilanSalad(), false, "Tilan's Salad");
 			}
 			else if(recipe.equalsIgnoreCase("super's sundae")) {
-				culinarianUtils.craftRecipeMax(p, econ, LegendaryRecipeItems.getSuperSundaeRecipe(), LegendaryRecipeItems.getSuperSundae(), false, "Super's Sundae");
+				culinarianUtils.craftRecipeMax(p, econ, legend.getSuperSundaeRecipe(), legend.getSuperSundae(), false, "Super's Sundae");
 			}
 		}
 		else {
@@ -1167,25 +1183,25 @@ public class CulinarianMethods {
 	public void parseLegendary(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.5")) {
 			if(recipe.equalsIgnoreCase("dragon scrambled eggs")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getDragonScrambledEggsRecipe(), LegendaryRecipeItems.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getDragonScrambledEggsRecipe(), legend.getDragonScrambledEggs(), false, "Dragon Scrambled Eggs");
 			}
 			else if(recipe.equalsIgnoreCase("neo's full course special")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getNeoFullCourseSpecialRecipe(), LegendaryRecipeItems.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getNeoFullCourseSpecialRecipe(), legend.getNeoFullCourseSpecial(), false, "Neo's Full Course Special");
 			}
 			else if(recipe.equalsIgnoreCase("tobias' famous cake")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getTobiasFamousCakeRecipe(), LegendaryRecipeItems.getTobiasFamousCake(), false, "Tobias' Famous Cake");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getTobiasFamousCakeRecipe(), legend.getTobiasFamousCake(), false, "Tobias' Famous Cake");
 			}
 			else if(recipe.equalsIgnoreCase("low district cheese steak")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getLowDistrictCheeseSteakRecipe(), LegendaryRecipeItems.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getLowDistrictCheeseSteakRecipe(), legend.getLowDistrictCheeseSteak(), false, "Low District Cheese Steak");
 			}
 			else if(recipe.equalsIgnoreCase("mattifornia roll")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getMattiforniaRollRecipe(), LegendaryRecipeItems.getMattiforniaRoll(), false, "Mattifornia Roll");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getMattiforniaRollRecipe(), legend.getMattiforniaRoll(), false, "Mattifornia Roll");
 			}
 			else if(recipe.equalsIgnoreCase("tilan's salad")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getTilanSaladRecipe(), LegendaryRecipeItems.getTilanSalad(), false, "Tilan's Salad");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getTilanSaladRecipe(), legend.getTilanSalad(), false, "Tilan's Salad");
 			}
 			else if(recipe.equalsIgnoreCase("super's sundae")) {
-				culinarianUtils.craftRecipe(p, econ, amount, LegendaryRecipeItems.getSuperSundaeRecipe(), LegendaryRecipeItems.getSuperSundae(), false, "Super's Sundae");
+				culinarianUtils.craftRecipe(p, econ, amount, legend.getSuperSundaeRecipe(), legend.getSuperSundae(), false, "Super's Sundae");
 			}
 		}
 		else {
@@ -1196,52 +1212,52 @@ public class CulinarianMethods {
 	public void parseDrink(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getBlackWidowRecipe(), drink.getBlackWidow(), true, "Black Widow");
 			}
 			else if(recipe.equalsIgnoreCase("pink panther")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getPinkPantherRecipe(), DrinksRecipeItems.getPinkPanther(), false, "Pink Panther");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getPinkPantherRecipe(), drink.getPinkPanther(), false, "Pink Panther");
 			}
 			else if(recipe.equalsIgnoreCase("midnight kiss")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMidnightKissRecipe(), DrinksRecipeItems.getMidnightKiss(), false, "Midnight Kiss");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getMidnightKissRecipe(), drink.getMidnightKiss(), false, "Midnight Kiss");
 			}
 			else if(recipe.equalsIgnoreCase("midnight blue")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMidnightBlueRecipe(), DrinksRecipeItems.getMidnightBlue(), false, "Midnight Blue");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getMidnightBlueRecipe(), drink.getMidnightBlue(), false, "Midnight Blue");
 			}
 			else if(recipe.equalsIgnoreCase("good and evil")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getGoodAndEvilRecipe(), DrinksRecipeItems.getGoodAndEvil(), false, "Good and Evil");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getGoodAndEvilRecipe(), drink.getGoodAndEvil(), false, "Good and Evil");
 			}
 			else if(recipe.equalsIgnoreCase("thor's hammer")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getThorHammerRecipe(), DrinksRecipeItems.getThorHammer(), false, "Thor's Hammer");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getThorHammerRecipe(), drink.getThorHammer(), false, "Thor's Hammer");
 			}
 			else if(recipe.equalsIgnoreCase("jack frost")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getJackFrostRecipe(), DrinksRecipeItems.getJackFrost(), false, "Jack Frost");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getJackFrostRecipe(), drink.getJackFrost(), false, "Jack Frost");
 			}
 			else if(recipe.equalsIgnoreCase("white russian")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getWhiteRussianRecipe(), DrinksRecipeItems.getWhiteRussian(), false, "White Russian");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getWhiteRussianRecipe(), drink.getWhiteRussian(), false, "White Russian");
 			}
 			else if(recipe.equalsIgnoreCase("swamp water")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getSwampWaterRecipe(), DrinksRecipeItems.getSwampWater(), false, "Swamp Water");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getSwampWaterRecipe(), drink.getSwampWater(), false, "Swamp Water");
 			}
 			else if(recipe.equalsIgnoreCase("blue motorcycle")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBlueMotorcycleRecipe(), DrinksRecipeItems.getBlueMotorcycle(), false, "Blue Motorcycle");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getBlueMotorcycleRecipe(), drink.getBlueMotorcycle(), false, "Blue Motorcycle");
 			}
 			else if(recipe.equalsIgnoreCase("red death")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getRedDeathRecipe(), DrinksRecipeItems.getRedDeath(), false, "Red Death");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getRedDeathRecipe(), drink.getRedDeath(), false, "Red Death");
 			}
 			else if(recipe.equalsIgnoreCase("bombsicle")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBombsicleRecipe(), DrinksRecipeItems.getBombsicle(), false, "Bombsicle");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getBombsicleRecipe(), drink.getBombsicle(), false, "Bombsicle");
 			}
 			else if(recipe.equalsIgnoreCase("sweet tart")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getSweetTartRecipe(), DrinksRecipeItems.getSweetTart(), false, "Sweet Tart");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getSweetTartRecipe(), drink.getSweetTart(), false, "Sweet Tart");
 			}
 			else if(recipe.equalsIgnoreCase("pina colada")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getPinaColadaRecipe(), DrinksRecipeItems.getPinaColada(), false, "Pina Colada");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getPinaColadaRecipe(), drink.getPinaColada(), false, "Pina Colada");
 			}
 			else if(recipe.equalsIgnoreCase("margarita on the rocks")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getMargaritaOnTheRocksRecipe(), DrinksRecipeItems.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getMargaritaOnTheRocksRecipe(), drink.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
 			}
 			else if(recipe.equalsIgnoreCase("bloody mary")) {
-				culinarianUtils.craftRecipeMax(p, econ, DrinksRecipeItems.getBloodyMaryRecipe(), DrinksRecipeItems.getBloodyMary(), false, "Bloody Marry");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getBloodyMaryRecipe(), drink.getBloodyMary(), false, "Bloody Marry");
 			}
 		}
 		else {
@@ -1252,52 +1268,52 @@ public class CulinarianMethods {
 	public void parseDrink(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlackWidowRecipe(), DrinksRecipeItems.getBlackWidow(), true, "Black Widow");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getBlackWidowRecipe(), drink.getBlackWidow(), true, "Black Widow");
 			}
 			else if(recipe.equalsIgnoreCase("pink panther")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getPinkPantherRecipe(), DrinksRecipeItems.getPinkPanther(), false, "Pink Panther");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getPinkPantherRecipe(), drink.getPinkPanther(), false, "Pink Panther");
 			}
 			else if(recipe.equalsIgnoreCase("midnight kiss")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMidnightKissRecipe(), DrinksRecipeItems.getMidnightKiss(), false, "Midnight Kiss");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getMidnightKissRecipe(), drink.getMidnightKiss(), false, "Midnight Kiss");
 			}
 			else if(recipe.equalsIgnoreCase("midnight blue")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMidnightBlueRecipe(), DrinksRecipeItems.getMidnightBlue(), false, "Midnight Blue");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getMidnightBlueRecipe(), drink.getMidnightBlue(), false, "Midnight Blue");
 			}
 			else if(recipe.equalsIgnoreCase("good and evil")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getGoodAndEvilRecipe(), DrinksRecipeItems.getGoodAndEvil(), false, "Good and Evil");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getGoodAndEvilRecipe(), drink.getGoodAndEvil(), false, "Good and Evil");
 			}
 			else if(recipe.equalsIgnoreCase("thor's hammer")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getThorHammerRecipe(), DrinksRecipeItems.getThorHammer(), false, "Thor's Hammer");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getThorHammerRecipe(), drink.getThorHammer(), false, "Thor's Hammer");
 			}
 			else if(recipe.equalsIgnoreCase("jack frost")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getJackFrostRecipe(), DrinksRecipeItems.getJackFrost(), false, "Jack Frost");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getJackFrostRecipe(), drink.getJackFrost(), false, "Jack Frost");
 			}
 			else if(recipe.equalsIgnoreCase("white russian")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getWhiteRussianRecipe(), DrinksRecipeItems.getWhiteRussian(), false, "White Russian");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getWhiteRussianRecipe(), drink.getWhiteRussian(), false, "White Russian");
 			}
 			else if(recipe.equalsIgnoreCase("swamp water")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getSwampWaterRecipe(), DrinksRecipeItems.getSwampWater(), false, "Swamp Water");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getSwampWaterRecipe(), drink.getSwampWater(), false, "Swamp Water");
 			}
 			else if(recipe.equalsIgnoreCase("blue motorcycle")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBlueMotorcycleRecipe(), DrinksRecipeItems.getBlueMotorcycle(), false, "Blue Motorcycle");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getBlueMotorcycleRecipe(), drink.getBlueMotorcycle(), false, "Blue Motorcycle");
 			}
 			else if(recipe.equalsIgnoreCase("red death")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getRedDeathRecipe(), DrinksRecipeItems.getRedDeath(), false, "Red Death");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getRedDeathRecipe(), drink.getRedDeath(), false, "Red Death");
 			}
 			else if(recipe.equalsIgnoreCase("bombsicle")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBombsicleRecipe(), DrinksRecipeItems.getBombsicle(), false, "Bombsicle");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getBombsicleRecipe(), drink.getBombsicle(), false, "Bombsicle");
 			}
 			else if(recipe.equalsIgnoreCase("sweet tart")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getSweetTartRecipe(), DrinksRecipeItems.getSweetTart(), false, "Sweet Tart");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getSweetTartRecipe(), drink.getSweetTart(), false, "Sweet Tart");
 			}
 			else if(recipe.equalsIgnoreCase("pina colada")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getPinaColadaRecipe(), DrinksRecipeItems.getPinaColada(), false, "Pina Colada");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getPinaColadaRecipe(), drink.getPinaColada(), false, "Pina Colada");
 			}
 			else if(recipe.equalsIgnoreCase("margarita on the rocks")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getMargaritaOnTheRocksRecipe(), DrinksRecipeItems.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getMargaritaOnTheRocksRecipe(), drink.getMargaritaOnTheRocks(), false, "Margarita on the Rocks");
 			}
 			else if(recipe.equalsIgnoreCase("bloody mary")) {
-				culinarianUtils.craftRecipe(p, econ, amount, DrinksRecipeItems.getBloodyMaryRecipe(), DrinksRecipeItems.getBloodyMary(), false, "Bloody Marry");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getBloodyMaryRecipe(), drink.getBloodyMary(), false, "Bloody Marry");
 			}
 		}
 		else {

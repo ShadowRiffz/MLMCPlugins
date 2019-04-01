@@ -28,6 +28,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	CulinarianMethods culinarianMethods;
 	MasonMethods masonMethods;
 	Util util;
+	CommonItems common;
+	BlacksmithItems bItems;
+	StonecutterItems sItems;
+	MasonItems mItems;
 	
 	public NeoprofessionsCommands(Main main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c, MasonMethods m) {
 		this.main = main;
@@ -36,6 +40,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		this.culinarianMethods = c;
 		this.masonMethods = m;
 		util = new Util();
+		common = new CommonItems();
+		bItems = new BlacksmithItems();
+		sItems = new StonecutterItems();
+		mItems = new MasonItems();
 	}
 	
 	@Override
@@ -104,71 +112,71 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
 					if(args[1].equalsIgnoreCase("essence")) {
-						p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
+						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2])));
 					}
 					else if(args[1].equalsIgnoreCase("fragment")) {
-						p.getInventory().addItem(CommonItems.getEssenceFragment(Integer.parseInt(args[2])));
+						p.getInventory().addItem(common.getEssenceFragment(Integer.parseInt(args[2])));
 					}
 					else if(args[1].equalsIgnoreCase("repair")) {
-						p.getInventory().addItem(BlacksmithItems.getRepairItem(Integer.parseInt(args[2])));
+						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
 					}
 					else if(args[1].equalsIgnoreCase("durability")) {
-						p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
+						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 					}
 					else if(args[1].equalsIgnoreCase("ore")) {
-						p.getInventory().addItem(StonecutterItems.getOre(args[2], Integer.parseInt(args[3])));
+						p.getInventory().addItem(sItems.getOre(args[2], Integer.parseInt(args[3])));
 					}
 					else if(args[1].equalsIgnoreCase("gem")) {
 						if(args[2].equalsIgnoreCase("weapon")) {
-							p.getInventory().addItem(StonecutterItems.getWeaponGem(args[3], Integer.parseInt(args[4]), false));
+							p.getInventory().addItem(sItems.getWeaponGem(args[3], Integer.parseInt(args[4]), false));
 						}
 						else if(args[2].equalsIgnoreCase("armor")) {
-							p.getInventory().addItem(StonecutterItems.getArmorGem(args[3], Integer.parseInt(args[4]), false));
+							p.getInventory().addItem(sItems.getArmorGem(args[3], Integer.parseInt(args[4]), false));
 						}
 					}
 					else if(args[1].equalsIgnoreCase("overload")) {
 						if(args[2].equalsIgnoreCase("weapon")) {
-							p.getInventory().addItem(StonecutterItems.getWeaponGem(args[3], Integer.parseInt(args[4]), true));
+							p.getInventory().addItem(sItems.getWeaponGem(args[3], Integer.parseInt(args[4]), true));
 						}
 						else if(args[2].equalsIgnoreCase("armor")) {
-							p.getInventory().addItem(StonecutterItems.getArmorGem(args[3], Integer.parseInt(args[4]), true));
+							p.getInventory().addItem(sItems.getArmorGem(args[3], Integer.parseInt(args[4]), true));
 						}
 					}
 					else if(args[1].equalsIgnoreCase("basic")) {
 						if(args[2].equalsIgnoreCase("exp")) {
-							p.getInventory().addItem(MasonItems.getExpCharm(false));
+							p.getInventory().addItem(mItems.getExpCharm(false));
 						}
 						else if(args[2].equalsIgnoreCase("drop")) {
-							p.getInventory().addItem(MasonItems.getDropCharm(false));
+							p.getInventory().addItem(mItems.getDropCharm(false));
 						}
 						else if(args[2].equalsIgnoreCase("looting")) {
-							p.getInventory().addItem(MasonItems.getLootingCharm(false));
+							p.getInventory().addItem(mItems.getLootingCharm(false));
 						}
 						else if(args[2].equalsIgnoreCase("traveler")) {
-							p.getInventory().addItem(MasonItems.getTravelerCharm());
+							p.getInventory().addItem(mItems.getTravelerCharm());
 						}
 						else if(args[2].equalsIgnoreCase("recovery")) {
-							p.getInventory().addItem(MasonItems.getRecoveryCharm());
+							p.getInventory().addItem(mItems.getRecoveryCharm());
 						}
 					}
 					else if(args[1].equalsIgnoreCase("advanced")) {
 						if(args[2].equalsIgnoreCase("exp")) {
-							p.getInventory().addItem(MasonItems.getExpCharm(true));
+							p.getInventory().addItem(mItems.getExpCharm(true));
 						}
 						else if(args[2].equalsIgnoreCase("drop")) {
-							p.getInventory().addItem(MasonItems.getDropCharm(true));
+							p.getInventory().addItem(mItems.getDropCharm(true));
 						}
 						else if(args[2].equalsIgnoreCase("looting")) {
-							p.getInventory().addItem(MasonItems.getLootingCharm(true));
+							p.getInventory().addItem(mItems.getLootingCharm(true));
 						}
 						else if(args[2].equalsIgnoreCase("hunger")) {
-							p.getInventory().addItem(MasonItems.getHungerCharm());
+							p.getInventory().addItem(mItems.getHungerCharm());
 						}
 						else if(args[2].equalsIgnoreCase("secondchance")) {
-							p.getInventory().addItem(MasonItems.getSecondChanceCharm());
+							p.getInventory().addItem(mItems.getSecondChanceCharm());
 						}
 						else if(args[2].equalsIgnoreCase("quickeat")) {
-							p.getInventory().addItem(MasonItems.getQuickEatCharm());
+							p.getInventory().addItem(mItems.getQuickEatCharm());
 						}
 					}
 				}
@@ -176,71 +184,71 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					p = Bukkit.getPlayer(args[0]);
 					if (args[1].equalsIgnoreCase("get")) {
 						if(args[2].equalsIgnoreCase("essence")) {
-							p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[3])));
+							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3])));
 						}
 						else if(args[2].equalsIgnoreCase("fragment")) {
-							p.getInventory().addItem(CommonItems.getEssenceFragment(Integer.parseInt(args[3])));
+							p.getInventory().addItem(common.getEssenceFragment(Integer.parseInt(args[3])));
 						}
 						else if(args[2].equalsIgnoreCase("repair")) {
-							p.getInventory().addItem(BlacksmithItems.getRepairItem(Integer.parseInt(args[3])));
+							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));
 						}
 						else if(args[2].equalsIgnoreCase("durability")) {
-							p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
+							p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
 						}
 						else if(args[2].equalsIgnoreCase("ore")) {
-							p.getInventory().addItem(StonecutterItems.getOre(args[3], Integer.parseInt(args[4])));
+							p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
 						}
 						else if(args[2].equalsIgnoreCase("gem")) {
 							if(args[3].equalsIgnoreCase("weapon")) {
-								p.getInventory().addItem(StonecutterItems.getWeaponGem(args[4], Integer.parseInt(args[5]), false));
+								p.getInventory().addItem(sItems.getWeaponGem(args[4], Integer.parseInt(args[5]), false));
 							}
 							else if(args[3].equalsIgnoreCase("armor")) {
-								p.getInventory().addItem(StonecutterItems.getArmorGem(args[4], Integer.parseInt(args[5]), false));
+								p.getInventory().addItem(sItems.getArmorGem(args[4], Integer.parseInt(args[5]), false));
 							}
 						}
 						else if(args[2].equalsIgnoreCase("overload")) {
 							if(args[3].equalsIgnoreCase("weapon")) {
-								p.getInventory().addItem(StonecutterItems.getWeaponGem(args[4], Integer.parseInt(args[5]), true));
+								p.getInventory().addItem(sItems.getWeaponGem(args[4], Integer.parseInt(args[5]), true));
 							}
 							else if(args[3].equalsIgnoreCase("armor")) {
-								p.getInventory().addItem(StonecutterItems.getArmorGem(args[4], Integer.parseInt(args[5]), true));
+								p.getInventory().addItem(sItems.getArmorGem(args[4], Integer.parseInt(args[5]), true));
 							}
 						}
 						else if(args[2].equalsIgnoreCase("basic")) {
 							if(args[3].equalsIgnoreCase("exp")) {
-								p.getInventory().addItem(MasonItems.getExpCharm(false));
+								p.getInventory().addItem(mItems.getExpCharm(false));
 							}
 							else if(args[3].equalsIgnoreCase("drop")) {
-								p.getInventory().addItem(MasonItems.getDropCharm(false));
+								p.getInventory().addItem(mItems.getDropCharm(false));
 							}
 							else if(args[3].equalsIgnoreCase("looting")) {
-								p.getInventory().addItem(MasonItems.getLootingCharm(false));
+								p.getInventory().addItem(mItems.getLootingCharm(false));
 							}
 							else if(args[3].equalsIgnoreCase("traveler")) {
-								p.getInventory().addItem(MasonItems.getTravelerCharm());
+								p.getInventory().addItem(mItems.getTravelerCharm());
 							}
 							else if(args[3].equalsIgnoreCase("recovery")) {
-								p.getInventory().addItem(MasonItems.getRecoveryCharm());
+								p.getInventory().addItem(mItems.getRecoveryCharm());
 							}
 						}
 						else if(args[2].equalsIgnoreCase("advanced")) {
 							if(args[3].equalsIgnoreCase("exp")) {
-								p.getInventory().addItem(MasonItems.getExpCharm(true));
+								p.getInventory().addItem(mItems.getExpCharm(true));
 							}
 							else if(args[3].equalsIgnoreCase("drop")) {
-								p.getInventory().addItem(MasonItems.getDropCharm(true));
+								p.getInventory().addItem(mItems.getDropCharm(true));
 							}
 							else if(args[3].equalsIgnoreCase("looting")) {
-								p.getInventory().addItem(MasonItems.getLootingCharm(true));
+								p.getInventory().addItem(mItems.getLootingCharm(true));
 							}
 							else if(args[3].equalsIgnoreCase("hunger")) {
-								p.getInventory().addItem(MasonItems.getHungerCharm());
+								p.getInventory().addItem(mItems.getHungerCharm());
 							}
 							else if(args[3].equalsIgnoreCase("secondchance")) {
-								p.getInventory().addItem(MasonItems.getSecondChanceCharm());
+								p.getInventory().addItem(mItems.getSecondChanceCharm());
 							}
 							else if(args[3].equalsIgnoreCase("quickeat")) {
-								p.getInventory().addItem(MasonItems.getQuickEatCharm());
+								p.getInventory().addItem(mItems.getQuickEatCharm());
 							}
 						}
 					}

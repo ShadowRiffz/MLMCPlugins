@@ -19,11 +19,15 @@ public class BlacksmithCommands implements CommandExecutor {
 	Main main;
 	Util util;
 	BlacksmithMethods blacksmithMethods;
+	BlacksmithItems bItems;
+	CommonItems common;
 	
 	public BlacksmithCommands(Main main) {
 		this.main = main;
 		this.blacksmithMethods = main.blacksmithMethods;
 		util = new Util();
+		bItems = new BlacksmithItems();
+		common = new CommonItems();
 	}
 	
 	@Override
@@ -162,7 +166,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						if (args[1].equalsIgnoreCase("essence")) {
 							if(StringUtils.isNumeric(args[2])) {
 								if(p.hasPermission("blacksmith.admin")) {
-									p.getInventory().addItem(CommonItems.getEssence(Integer.parseInt(args[2])));
+									p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2])));
 									util.sendMessage(p, "&7Successfully spawned Essence!");
 									return true;
 								}
@@ -178,7 +182,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						}
 						else if (args[1].equalsIgnoreCase("durability")) {
 							if(p.hasPermission("blacksmith.admin")) {
-								p.getInventory().addItem(BlacksmithItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
+								p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 								util.sendMessage(p, "&7Successfully spawned durability augment!");
 								return true;
 							}
@@ -189,7 +193,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						}
 						else if (args[1].equalsIgnoreCase("repair")) {
 							if(p.hasPermission("blacksmith.admin")) {
-								p.getInventory().addItem(BlacksmithItems.getRepairItem(Integer.parseInt(args[2])));
+								p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
 								util.sendMessage(p, "&7Successfully spawned repair kit!");
 								return true;
 							}

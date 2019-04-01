@@ -19,6 +19,8 @@ public class BlacksmithMethods {
 	Main main;
 	Economy econ;
 	Util util;
+	CommonItems common;
+	BlacksmithItems bItems;
 	
 	// Constants
 	final int DURABILITY_COST_PER_LVL = 4000;
@@ -40,16 +42,18 @@ public class BlacksmithMethods {
 		this.main = main;
 		this.econ = main.getEconomy();
 		util = new Util();
+		common = new CommonItems();
+		bItems = new BlacksmithItems();
 	}
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
 		if(slot != -1) {
 			if (p.hasPermission("blacksmith." + item + "." + itemtype + "." + level)) {
-				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), DURABILITY_ESSENCE)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level), DURABILITY_ESSENCE)) {
 					if(main.getEconomy().has(p, DURABILITY_COST_PER_LVL * level)) {
-						p.getInventory().addItem(BlacksmithItems.getDurabilityItem(level, itemtype));
-						p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), DURABILITY_ESSENCE));
+						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level), DURABILITY_ESSENCE));
 						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * level);
 						util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
 					}
@@ -74,10 +78,10 @@ public class BlacksmithMethods {
 		int slot = p.getInventory().firstEmpty();
 		if(slot != -1) {
 			if (p.hasPermission("blacksmith." + item + "." + level)) {
-				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), REPAIR_ESSENCE)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level), REPAIR_ESSENCE)) {
 					if(econ.has(p, REPAIR_COST)) {
-						p.getInventory().addItem(util.setAmount(BlacksmithItems.getRepairItem(level), 2));
-						p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), REPAIR_ESSENCE));
+						p.getInventory().addItem(util.setAmount(bItems.getRepairItem(level), 2));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level), REPAIR_ESSENCE));
 						econ.withdrawPlayer(p, REPAIR_COST);
 						util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
 					}
@@ -108,10 +112,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel)) {
 								if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel));
 									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
@@ -155,10 +159,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel)) {
 								if(econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel));
 									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
@@ -199,9 +203,9 @@ public class BlacksmithMethods {
 				int itemLevel = util.getItemLevel(item);
 				if(itemLevel != -1) {
 					if(p.hasPermission("blacksmith.reforge." + itemLevel)) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel)) {
 							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel))) {
-								p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel));
+								p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel));
 								p.getInventory().removeItem(item);
 								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel));
 								ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
@@ -242,7 +246,7 @@ public class BlacksmithMethods {
 					if(econ.has(p, SCRAP_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, SCRAP_COST);
-						p.getInventory().addItem(CommonItems.getEssenceFragment(itemLevel));
+						p.getInventory().addItem(common.getEssenceFragment(itemLevel));
 						util.sendMessage(p, "&cSuccessfully scrapped item!");
 					}
 					else {
@@ -272,7 +276,7 @@ public class BlacksmithMethods {
 					if(econ.has(p, DECONSTRUCT_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, DECONSTRUCT_COST);
-						p.getInventory().addItem(util.setAmount(CommonItems.getEssence(itemLevel - 1), DECONSTRUCT_AMOUNT));
+						p.getInventory().addItem(util.setAmount(common.getEssence(itemLevel - 1), DECONSTRUCT_AMOUNT));
 						util.sendMessage(p, "&cSuccessfully deconstructed item!");
 					}
 					else {

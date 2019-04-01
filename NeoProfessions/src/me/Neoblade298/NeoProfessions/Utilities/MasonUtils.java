@@ -15,9 +15,15 @@ public class MasonUtils {
 	
 	final int MAX_LEVEL = 5;
 	Util util;
+	BlacksmithItems bItems;
+	StonecutterItems sItems;
+	MasonItems mItems;
 	
 	public MasonUtils() {
 		util = new Util();
+		bItems = new BlacksmithItems();
+		sItems = new StonecutterItems();
+		mItems = new MasonItems();
 	}
 	
 	public int getAugmentLevel(ItemStack item) {
@@ -70,9 +76,9 @@ public class MasonUtils {
 			if(util.getMaxDurability(item) > potency) {
 				util.setMaxDurability(item, util.getMaxDurability(item) - potency);
 				if(isArmor) {
-					return BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
+					return bItems.getDurabilityItem(slottedLevel, "armor", potency);
 				} else {
-					return BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
+					return bItems.getDurabilityItem(slottedLevel, "weapon", potency);
 				}
 			}
 			else {
@@ -82,55 +88,55 @@ public class MasonUtils {
 		case 1:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if(isArmor) {
-				return StonecutterItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getArmorGem(attr, slottedLevel, false, potency, 0);
 			} else {
-				return StonecutterItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
 			}
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			durabilityLoss = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
 			util.setMaxDurability(item, util.getMaxDurability(item) + durabilityLoss);
 			if(isArmor) {
-				return StonecutterItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
 			} else {
-				return StonecutterItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
 			}
 		case 3:
 			if(line.contains("Advanced")) {
 				if(line.contains("Exp")) {
-					return MasonItems.getExpCharm(true);
+					return mItems.getExpCharm(true);
 				}
 				else if(line.contains("Drop")) {
-					return MasonItems.getDropCharm(true);
+					return mItems.getDropCharm(true);
 				}
 				else if(line.contains("Looting")) {
-					return MasonItems.getLootingCharm(true);
+					return mItems.getLootingCharm(true);
 				}
 			}
 			else {
 				if(line.contains("Exp")) {
-					return MasonItems.getExpCharm(false);
+					return mItems.getExpCharm(false);
 				}
 				else if(line.contains("Drop")) {
-					return MasonItems.getDropCharm(false);
+					return mItems.getDropCharm(false);
 				}
 				else if(line.contains("Looting")) {
-					return MasonItems.getLootingCharm(false);
+					return mItems.getLootingCharm(false);
 				}
 				else if(line.contains("Recovery")) {
-					return MasonItems.getRecoveryCharm();
+					return mItems.getRecoveryCharm();
 				}
 				else if(line.contains("Traveler")) {
-					return MasonItems.getTravelerCharm();
+					return mItems.getTravelerCharm();
 				}
 				else if(line.contains("Second Chance")) {
-					return MasonItems.getSecondChanceCharm();
+					return mItems.getSecondChanceCharm();
 				}
 				else if(line.contains("Hunger")) {
-					return MasonItems.getHungerCharm();
+					return mItems.getHungerCharm();
 				}
 				else if(line.contains("Quick Eat")) {
-					return MasonItems.getQuickEatCharm();
+					return mItems.getQuickEatCharm();
 				}
 			}
 			break;

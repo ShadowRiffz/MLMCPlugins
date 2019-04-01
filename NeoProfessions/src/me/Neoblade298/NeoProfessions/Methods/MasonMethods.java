@@ -22,6 +22,8 @@ public class MasonMethods {
 	MasonListeners listeners;
 	MasonUtils masonUtils;
 	Util util;
+	CommonItems common;
+	MasonItems mItems;
 	
 	// Constants
 	static final int MAX_SLOTS = 3;
@@ -75,6 +77,7 @@ public class MasonMethods {
 		this.econ = main.getEconomy();
 		this.listeners = main.masonListeners;
 		masonUtils = new MasonUtils();
+		mItems = new MasonItems();
 		util = new Util();
 	}
 
@@ -86,10 +89,10 @@ public class MasonMethods {
 					int numSlots = masonUtils.countSlots(item);
 					if(numSlots < MAX_SLOTS) {
 						if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
-							if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1))) {
+							if(p.getInventory().containsAtLeast(common.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1))) {
 								if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level))) {
 									masonUtils.createSlot(item, level);
-									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1)));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(level), ENGRAVE_ESSENCE_PER_SLOT * (numSlots + 1)));
 									econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * level));
 									util.sendMessage(p, "&7Successfully created slot!");
 								}
@@ -134,36 +137,36 @@ public class MasonMethods {
 					gold = BASIC_EXP_GOLD;
 					essence = BASIC_EXP_ESSENCE;
 					level = BASIC_EXP_LEVEL;
-					item = MasonItems.getExpCharm(false);
+					item = mItems.getExpCharm(false);
 					break;
 				case "drop":
 					gold = BASIC_DROP_GOLD;
 					essence = BASIC_DROP_ESSENCE;
 					level = BASIC_DROP_LEVEL;
-					item = MasonItems.getDropCharm(false);
+					item = mItems.getDropCharm(false);
 					break;
 				case "looting":
 					gold = BASIC_LOOTING_GOLD;
 					essence = BASIC_LOOTING_ESSENCE;
 					level = BASIC_LOOTING_LEVEL;
-					item = MasonItems.getLootingCharm(false);
+					item = mItems.getLootingCharm(false);
 					break;
 				case "traveler":
 					gold = BASIC_TRAVELER_GOLD;
 					essence = BASIC_TRAVELER_ESSENCE;
 					level = BASIC_TRAVELER_LEVEL;
-					item = MasonItems.getTravelerCharm();
+					item = mItems.getTravelerCharm();
 					break;
 				case "recovery":
 					gold = BASIC_RECOVERY_GOLD;
 					essence = BASIC_RECOVERY_ESSENCE;
 					level = BASIC_RECOVERY_LEVEL;
-					item = MasonItems.getRecoveryCharm();
+					item = mItems.getRecoveryCharm();
 					break;
 				}
-				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), essence)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level), essence)) {
 					if(econ.has(p, gold)) {
-						p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), essence));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level), essence));
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
 						util.sendMessage(p, "&7Successfully created charm!");
@@ -197,42 +200,42 @@ public class MasonMethods {
 					gold = ADVANCED_EXP_GOLD;
 					essence = ADVANCED_EXP_ESSENCE;
 					level = ADVANCED_EXP_LEVEL;
-					item = MasonItems.getExpCharm(true);
+					item = mItems.getExpCharm(true);
 					break;
 				case "drop":
 					gold = ADVANCED_DROP_GOLD;
 					essence = ADVANCED_DROP_ESSENCE;
 					level = ADVANCED_DROP_LEVEL;
-					item = MasonItems.getDropCharm(true);
+					item = mItems.getDropCharm(true);
 					break;
 				case "looting":
 					gold = ADVANCED_LOOTING_GOLD;
 					essence = ADVANCED_LOOTING_ESSENCE;
 					level = ADVANCED_LOOTING_LEVEL;
-					item = MasonItems.getLootingCharm(true);
+					item = mItems.getLootingCharm(true);
 					break;
 				case "hunger":
 					gold = ADVANCED_HUNGER_GOLD;
 					essence = ADVANCED_HUNGER_ESSENCE;
 					level = ADVANCED_HUNGER_LEVEL;
-					item = MasonItems.getHungerCharm();
+					item = mItems.getHungerCharm();
 					break;
 				case "secondchance":
 					gold = ADVANCED_SECONDCHANCE_GOLD;
 					essence = ADVANCED_SECONDCHANCE_ESSENCE;
 					level = ADVANCED_SECONDCHANCE_LEVEL;
-					item = MasonItems.getSecondChanceCharm();
+					item = mItems.getSecondChanceCharm();
 					break;
 				case "quickeat":
 					gold = ADVANCED_QUICKEAT_GOLD;
 					essence = ADVANCED_QUICKEAT_ESSENCE;
 					level = ADVANCED_QUICKEAT_LEVEL;
-					item = MasonItems.getQuickEatCharm();
+					item = mItems.getQuickEatCharm();
 					break;
 				}
-				if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), essence)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level), essence)) {
 					if(econ.has(p, gold)) {
-						p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), essence));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level), essence));
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
 						util.sendMessage(p, "&7Successfully created charm!");
@@ -296,11 +299,11 @@ public class MasonMethods {
 				int level = util.getItemLevel(item);
 				if(p.hasPermission("mason.unslot." + level)) {
 					if(p.getInventory().firstEmpty() != -1) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNSLOT_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(level), UNSLOT_ESSENCE)) {
 							if(econ.has(p, UNSLOT_GOLD_PER_LVL * level)) {
 								ItemStack returned = masonUtils.parseUnslot(p, slot);
 								if(returned != null) {
-									p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), UNSLOT_ESSENCE));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNSLOT_ESSENCE));
 									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * level);
 									p.getInventory().addItem(returned);
 									util.sendMessage(p, "&cSuccessfully unslotted item!");
@@ -338,9 +341,9 @@ public class MasonMethods {
 				int level = util.getItemLevel(item);
 				if(level != -1) {
 					if(p.hasPermission("mason.engrave.tier." + level)) {
-						if(p.getInventory().containsAtLeast(CommonItems.getEssence(level), UNENGRAVE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(level), UNENGRAVE_ESSENCE)) {
 							if(econ.has(p, UNENGRAVE_GOLD)) {
-								p.getInventory().removeItem(util.setAmount(CommonItems.getEssence(level), UNENGRAVE_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNENGRAVE_ESSENCE));
 								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
 								masonUtils.removeSlotLine(item, slot);
 								util.sendMessage(p, "&7Successfully removed slot!");
