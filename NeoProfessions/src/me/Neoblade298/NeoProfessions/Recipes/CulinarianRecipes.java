@@ -17,8 +17,12 @@ import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 public class CulinarianRecipes {
 	
 	Main main;
+	IngredientRecipeItems ingr;
+	DrinksRecipeItems drink;
 	public CulinarianRecipes(Main main) {
 		this.main = main;
+		ingr = new IngredientRecipeItems();
+		drink = new DrinksRecipeItems();
 	}
 
 	public ArrayList<Recipe> getRecipes() {
@@ -47,7 +51,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getVodkaRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Vodka");
-		ShapedRecipe recipe = new ShapedRecipe(key, IngredientRecipeItems.getVodka());
+		ShapedRecipe recipe = new ShapedRecipe(key, ingr.getVodka());
 		recipe.shape("Y", "P", "W");
 		recipe.setIngredient('Y', Material.MELON_SEEDS);
 		recipe.setIngredient('P', Material.POTATO_ITEM);
@@ -57,7 +61,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getRumRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Rum");
-		ShapedRecipe recipe = new ShapedRecipe(key, IngredientRecipeItems.getRum());
+		ShapedRecipe recipe = new ShapedRecipe(key, ingr.getRum());
 		recipe.shape("Y", "S", "W");
 		recipe.setIngredient('Y', Material.MELON_SEEDS);
 		recipe.setIngredient('S', Material.SUGAR);
@@ -67,7 +71,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getTequilaRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Tequila");
-		ShapedRecipe recipe = new ShapedRecipe(key, IngredientRecipeItems.getTequila());
+		ShapedRecipe recipe = new ShapedRecipe(key, ingr.getTequila());
 		recipe.shape("Y", "C", "W");
 		recipe.setIngredient('Y', Material.MELON_SEEDS);
 		recipe.setIngredient('C', Material.CACTUS);
@@ -77,7 +81,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getBlackWidowRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Black_Widow");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBlackWidow());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBlackWidow());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(Material.INK_SACK);
@@ -88,7 +92,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getPinkPantherRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Pink_Panther");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getPinkPanther());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getPinkPanther());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.PINK));
@@ -99,7 +103,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getMidnightKissRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Midnight_Kiss");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMidnightKiss());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getMidnightKiss());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.CYAN));
@@ -109,7 +113,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getMidnightBlueRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Midnight_Blue");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMidnightBlue());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getMidnightBlue());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.BLUE));
@@ -119,7 +123,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getGoodAndEvilRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Good_and_Evil");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getGoodAndEvil());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getGoodAndEvil());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.YELLOW));
@@ -130,7 +134,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getThorHammerRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Thor_Hammer");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getThorHammer());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getThorHammer());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.PURPLE));
@@ -141,7 +145,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getJackFrostRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Jack_Frost");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getJackFrost());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getJackFrost());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.LIGHT_BLUE));
@@ -152,7 +156,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getWhiteRussianRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "White_Russian");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getWhiteRussian());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getWhiteRussian());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.WHITE));
@@ -162,7 +166,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getSwampWaterRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Swamp_Water");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getSwampWater());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getSwampWater());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.LIME));
@@ -174,7 +178,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getBlueMotorcycleRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Blue_Motorcycle");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBlueMotorcycle());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBlueMotorcycle());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.BLUE));
@@ -185,7 +189,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getRedDeathRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Red_Death");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getRedDeath());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getRedDeath());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.ORANGE));
@@ -196,7 +200,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getBombsicleRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Bombsicle");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBombsicle());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBombsicle());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.LIGHT_BLUE));
@@ -206,7 +210,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getSweetTartRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Sweet_Tart");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getSweetTart());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getSweetTart());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.PINK));
@@ -217,7 +221,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getPinaColadaRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Pina_Colada");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getPinaColada());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getPinaColada());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.WHITE));
@@ -227,7 +231,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getMargaritaOnTheRocksRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Margarita_on_the_Rocks");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getMargaritaOnTheRocks());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getMargaritaOnTheRocks());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.GREEN));
@@ -239,7 +243,7 @@ public class CulinarianRecipes {
 	
 	private Recipe getBloodyMaryRecipe() {
 		NamespacedKey key = new NamespacedKey(main, "Bloody_Mary");
-		ShapelessRecipe recipe = new ShapelessRecipe(key, DrinksRecipeItems.getBloodyMary());
+		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBloodyMary());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.RED));
