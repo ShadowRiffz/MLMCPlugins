@@ -78,6 +78,7 @@ public class MasonMethods {
 		this.listeners = main.masonListeners;
 		masonUtils = new MasonUtils();
 		mItems = new MasonItems();
+		common = new CommonItems();
 		util = new Util();
 	}
 
