@@ -13,12 +13,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.LootBag;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
-import io.lumine.xikage.mythicmobs.drops.droppables.VaultDrop;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -67,15 +65,10 @@ public class MasonListeners implements Listener {
 	}
 	
 	@EventHandler
-	public void onMobDeath(MythicMobDeathEvent e) {
-	}
-	
-	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
 		if(e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			ItemStack item = p.getInventory().getItemInMainHand();
-			LootBag drops = e.getDrops();
 			String lootLine = null;
 			String expLine = null;
 			
