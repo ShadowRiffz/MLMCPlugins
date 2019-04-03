@@ -15,7 +15,7 @@ public class MasonItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int level = 2;
 		if(isAdvanced) {
-			meta.setDisplayName("&4[Lv 3] §cAdvanced Exp Charm");
+			meta.setDisplayName("§4[Lv 3] §cAdvanced Exp Charm");
 			lore.add("§7Level 3 Advanced Exp Charm");
 			lore.add("§7Effect: Raises Exp gained by 2x");
 			level = 3;
@@ -38,7 +38,7 @@ public class MasonItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int level = 2;
 		if(isAdvanced) {
-			meta.setDisplayName("&4[Lv 3] §cAdvanced Looting Charm");
+			meta.setDisplayName("§4[Lv 3] §cAdvanced Looting Charm");
 			lore.add("§7Level 3 Advanced Looting Charm");
 			lore.add("§7Effect: Quest mobs drop more gold");
 			level = 3;
@@ -61,7 +61,7 @@ public class MasonItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int level = 3;
 		if(isAdvanced) {
-			meta.setDisplayName("&4[Lv 4] §cAdvanced Drop Charm");
+			meta.setDisplayName("§4[Lv 4] §cAdvanced Drop Charm");
 			lore.add("§7Level 3 Advanced Drop Charm");
 			lore.add("§7Effect: Raises droprate by 1.5x");
 			level = 4;
