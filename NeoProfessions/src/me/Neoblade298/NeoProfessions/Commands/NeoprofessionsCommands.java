@@ -77,7 +77,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (pClass.getLevel() <= 60) {
 								pClass.setLevel(pClass.getLevel() + 1);
 								pClass.setPoints(pClass.getPoints() + 2);
-								util.sendMessage(Bukkit.getPlayer(args[1]), "&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+								util.sendMessage(Bukkit.getPlayer(args[1]), "&7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
 					}
