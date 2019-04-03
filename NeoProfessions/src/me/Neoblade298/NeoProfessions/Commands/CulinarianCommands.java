@@ -37,7 +37,7 @@ public class CulinarianCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/culinarian special");
 				util.sendMessage(p, "&7- &c/culinarian assimilate");
 				util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence]");
-				util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limitededition/drink/legendary] <amount>");
+				util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limited/drink/legendary] [itemname] <amount>");
 				return true;
 			}
 			else {

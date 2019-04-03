@@ -245,16 +245,16 @@ public class CulinarianUtils {
 		String[] id = result.getItemMeta().getLore().get(0).split(" ");
 		String perm = "";
 		if(id[0].contains("Ingredient")) {
-			perm = "recipe.Ingr" + id[1];
+			perm = "recipes.Ingr" + id[1];
 		}
 		else if(id[0].contains("Tier")) {
-			perm = "recipe.t" + id[1] + "r" + id[3];
+			perm = "recipes.t" + id[1] + "r" + id[3];
 		}
 		else if(id[0].contains("Limited")) {
-			perm = "recipe.tler" + id[3];
+			perm = "recipes.tler" + id[3];
 		}
 		else if(id[0].contains("Legendary")) {
-			perm = "recipe.tlegend" + id[2];
+			perm = "recipes.tlegend" + id[2];
 		}
 		if(p.hasPermission(perm)) {
 			PlayerInventory inv = p.getInventory();
@@ -307,16 +307,16 @@ public class CulinarianUtils {
 		String[] id = result.getItemMeta().getLore().get(0).split(" ");
 		String perm = "";
 		if(id[0].contains("Ingredient")) {
-			perm = "recipe.Ingr" + id[1];
+			perm = "recipes.Ingr" + id[1];
 		}
 		else if(id[0].contains("Tier")) {
-			perm = "recipe.t" + id[1] + "r" + id[3];
+			perm = "recipes.t" + id[1] + "r" + id[3];
 		}
 		else if(id[0].contains("Limited")) {
-			perm = "recipe.tler" + id[3];
+			perm = "recipes.tler" + id[3];
 		}
 		else if(id[0].contains("Legendary")) {
-			perm = "recipe.tlegend" + id[2];
+			perm = "recipes.tlegend" + id[2];
 		}
 		if(p.hasPermission(perm)) {
 			PlayerInventory inv = p.getInventory();
