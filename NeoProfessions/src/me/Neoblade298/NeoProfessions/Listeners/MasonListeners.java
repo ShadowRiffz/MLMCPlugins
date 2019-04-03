@@ -16,7 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
+import io.lumine.xikage.mythicmobs.drops.LootBag;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
+import io.lumine.xikage.mythicmobs.drops.droppables.VaultDrop;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -66,57 +68,65 @@ public class MasonListeners implements Listener {
 	
 	@EventHandler
 	public void onMobDeath(MythicMobDeathEvent e) {
-		if(e.getKiller() instanceof Player) {
-			Player p = (Player) e.getKiller();
-			ItemStack item = p.getInventory().getItemInMainHand();
-			if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
-				String lootLine = null;
-				for(String line : item.getItemMeta().getLore()) {
-					if(line.contains("Looting")) {
-						lootLine = line;
-						break;
-					}
-				}
-				if(lootLine != null) {
-					if(lootLine.contains("Advanced")) {
-						String[] name = e.getMobType().getDisplayName().split(" ");
-						if(name.length > 2) {
-							if(name[2].contains("]")) {
-								double amount = Double.parseDouble(name[2].substring(0, name[2].length() - 1));
-								amount = amount * (1.5 + gen.nextDouble());
-								econ.depositPlayer(p, amount);
-							}
-						}
-					}
-					else {
-						String[] name = e.getMobType().getDisplayName().split(" ");
-						if(name.length > 2) {
-							if(name[2].contains("]")) {
-								double amount = Double.parseDouble(name[2].substring(0, name[2].length() - 1));
-								amount = amount * (0.5 + gen.nextDouble());
-								econ.depositPlayer(p, amount);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 	
 	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
-		for(Drop d : e.getDrops().getDrops()) {
-			if(d instanceof SkillAPIDrop) {
-				double amount = d.getAmount();
-				if(e.getKiller() instanceof Player) {
-					Player p = (Player) e.getKiller();
-					ItemStack item = p.getInventory().getItemInMainHand();
-					String expLine = masonUtils.charmLine(item, "Exp");
-					if(expLine != null && expLine.contains("Advanced")) {
-						d.setAmount(amount * 2);
+		if(e.getKiller() instanceof Player) {
+			Player p = (Player) e.getKiller();
+			ItemStack item = p.getInventory().getItemInMainHand();
+			LootBag drops = e.getDrops();
+			String lootLine = null;
+			String expLine = null;
+			
+			// First check what charms the player has
+			if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Looting")) {
+						lootLine = line;
 					}
-					else if(expLine != null) {
-						d.setAmount(amount * 1.5);
+					else if(line.contains("Exp")) {
+						expLine = line;
+					}
+				}
+			}
+			
+			// Looting charm
+			if(lootLine != null) {
+				if(lootLine.contains("Advanced")) {
+					String[] name = e.getMobType().getDisplayName().split(" ");
+					if(name.length > 2) {
+						if(name[1].contains("]")) {
+							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
+							amount = amount * (1.5 + gen.nextDouble());
+							econ.depositPlayer(p, amount);
+						}
+					}
+				}
+				else {
+					String[] name = e.getMobType().getDisplayName().split(" ");
+					if(name.length > 2) {
+						if(name[1].contains("]")) {
+							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
+							amount = amount * (0.5 + gen.nextDouble());
+							econ.depositPlayer(p, amount);
+						}
+					}
+				}
+			}
+			
+			// Exp charm
+			if (expLine != null) {
+				for(Drop d : e.getDrops().getDrops()) {
+					if(d instanceof SkillAPIDrop) {
+						double amount = d.getAmount();
+						if(expLine.contains("Advanced")) {
+							d.setAmount(amount * 2);
+						}
+						else {
+							d.setAmount(amount * 1.5);
+						}
+						break;
 					}
 				}
 			}
