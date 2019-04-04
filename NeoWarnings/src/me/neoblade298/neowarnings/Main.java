@@ -37,9 +37,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		BukkitRunnable warning = new BukkitRunnable() {
 			public void run() {
 				if (Bukkit.getPlayer(p.getName()) != null && understood.containsKey(p.getName())) {
-					p.sendMessage("§4[§c§lMLMC§4] §c§lWARNING§c: Your town has no money in its bank and will fall to upkeep! You must deposit money with " + 
-							"§e/t deposit [amount]§c! The daily 24hr upkeep for a 1 person town is 50 gold. You can see your daily upkeep with §e/t§c!");
-					p.sendMessage("§4[§c§lMLMC§4] §Please type §e/warning understood §cto stop getting this message!");
+					p.sendMessage("§4[§c§lMLMC§4] §c§lWARNING§c: Your town has no money in its bank and will fall to upkeep! You must deposit gold with " + 
+							"§e/t deposit [amount]§c!");
+					p.sendMessage("§4[§c§lMLMC§4] §cThe daily 24hr upkeep for a 1 person town is 50g. You can see daily upkeep with §e/t§c!");
+					p.sendMessage("§4[§c§lMLMC§4] §cPlease type §e/warning understood §cto stop getting this message!");
 				}
 				else {
 					if(understood.containsKey(p.getName())) {
