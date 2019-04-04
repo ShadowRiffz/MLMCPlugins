@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -38,14 +39,15 @@ public class CulinarianMethods {
 	LegendaryRecipeItems legend;
 	DrinksRecipeItems drink;
 	CommonItems common;
+	DecimalFormat format;
 	
 	// Constants
 	final static double GARNISH_BOOST_BASE = 1.1;
-	final static double GARNISH_BOOST_PER_LVL = 0.1;
+	final static double GARNISH_BOOST_PER_LVL = 0.15;
 	final static double PRESERVE_BOOST_BASE = 0.9;
 	final static double PRESERVE_BOOST_PER_LVL = -0.1;
 	final static double SPICE_BOOST_BASE = 1.1;
-	final static double SPICE_BOOST_PER_LVL = 0.1;
+	final static double SPICE_BOOST_PER_LVL = 0.15;
 	final static int GARNISH_COST = 500;
 	final static int GARNISH_ESSENCE = 1;
 	final static int PRESERVE_COST = 500;
@@ -72,6 +74,7 @@ public class CulinarianMethods {
 		ler = new LimitedEditionRecipeItems();
 		legend = new LegendaryRecipeItems();
 		drink = new DrinksRecipeItems();
+		format = new DecimalFormat("###.##");
 	}
 	
 	public void garnish(Player p) {
@@ -116,7 +119,7 @@ public class CulinarianMethods {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 									double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Garnished (" + multiplier + "x Attribute Boost)");
+									lore.add("§9Garnished (" + format.format(multiplier) + "x Attribute Boost)");
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
@@ -196,7 +199,7 @@ public class CulinarianMethods {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 									double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Preserved (" + multiplier + "x Duration Boost)");
+									lore.add("§9Preserved (" + format.format(multiplier) + "x Duration Boost)");
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
@@ -276,7 +279,7 @@ public class CulinarianMethods {
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 									double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Spiced (" + multiplier + "x Restoration Boost)");
+									lore.add("§9Spiced (" + format.format(multiplier) + "x Restoration Boost)");
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
