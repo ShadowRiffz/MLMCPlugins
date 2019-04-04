@@ -120,6 +120,7 @@ public class CulinarianMethods {
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
+									p.getInventory().removeItem(common.getEssence(foodLevel));
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, GARNISH_COST);
 									util.sendMessage(p, "&7Successfully garnished dish!");
@@ -199,6 +200,7 @@ public class CulinarianMethods {
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
+									p.getInventory().removeItem(common.getEssence(foodLevel));
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, PRESERVE_COST);
 									util.sendMessage(p, "&7Successfully preserved dish!");
@@ -278,6 +280,7 @@ public class CulinarianMethods {
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
+									p.getInventory().removeItem(common.getEssence(foodLevel));
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, SPICE_COST);
 									util.sendMessage(p, "&7Successfully spiced dish!");
