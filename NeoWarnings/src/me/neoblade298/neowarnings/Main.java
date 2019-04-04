@@ -50,7 +50,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		};
-		warning.runTaskTimer(this, 0, 200L);
+		warning.runTaskTimer(this, 200L, 200L);
 		
 	}
 }
