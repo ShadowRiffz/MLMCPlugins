@@ -62,13 +62,13 @@ public class MasonItems {
 		int level = 3;
 		if(isAdvanced) {
 			meta.setDisplayName("§4[Lv 4] §cAdvanced Drop Charm");
-			lore.add("§7Level 3 Advanced Drop Charm");
+			lore.add("§7Level 4 Advanced Drop Charm");
 			lore.add("§7Effect: Raises droprate by 1.5x");
 			level = 4;
 		}
 		else {
 			meta.setDisplayName("§4[Lv 3] §cDrop Charm");
-			lore.add("§7Level 2 Drop Charm");
+			lore.add("§7Level 3 Drop Charm");
 			lore.add("§7Effect: Raises droprate by 1.2x");
 		}
 		meta.setLore(lore);
