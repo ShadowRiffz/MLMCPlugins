@@ -145,7 +145,12 @@ public class StonecutterItems {
 			meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
 			break;
 		}
-		lore.add("§7Level " + level + " Gem Augment");
+		if(isOverloaded) {
+			lore.add("§7Level " + level + " Overloaded Gem Augment");
+		}
+		else {
+			lore.add("§7Level " + level + " Gem Augment");
+		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -186,7 +191,12 @@ public class StonecutterItems {
 			meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
 			break;
 		}
-		lore.add("§7Level " + level + " Gem Augment");
+		if(isOverloaded) {
+			lore.add("§7Level " + level + " Overloaded Gem Augment");
+		}
+		else {
+			lore.add("§7Level " + level + " Gem Augment");
+		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -277,7 +287,12 @@ public class StonecutterItems {
 				break;
 			}
 		}
-		lore.add("§7Level " + level + " Overloaded Gem Augment");
+		if(isOverloaded) {
+			lore.add("§7Level " + level + " Overloaded Gem Augment");
+		}
+		else {
+			lore.add("§7Level " + level + " Gem Augment");
+		}
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
@@ -351,7 +366,12 @@ public class StonecutterItems {
 				break;
 			}
 		}
-		lore.add("§7Level " + level + " Overloaded Gem Augment");
+		if(isOverloaded) {
+			lore.add("§7Level " + level + " Overloaded Gem Augment");
+		}
+		else {
+			lore.add("§7Level " + level + " Gem Augment");
+		}
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
 			effect += ", reduces durability";
