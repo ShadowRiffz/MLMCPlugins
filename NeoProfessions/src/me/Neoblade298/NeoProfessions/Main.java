@@ -107,8 +107,18 @@ public class Main extends JavaPlugin implements Listener {
 				if(w.getName().equalsIgnoreCase("Argyll") ||
 					w.getName().equalsIgnoreCase("ClassPVP")) {
 					for (Player p : w.getPlayers()) {
+						// First check what charms the player has
 						ItemStack item = p.getInventory().getItemInMainHand();
-						if(masonUtils.charmLine(item, "Hunger") != null) {
+						String charmLine = null;
+						if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+							for(String line : item.getItemMeta().getLore()) {
+								if(line.contains("Hunger")) {
+									charmLine = line;
+									break;
+								}
+							}
+						}
+						if(charmLine != null) {
 							p.setFoodLevel(18);
 						}
 					}

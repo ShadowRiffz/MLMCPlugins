@@ -129,12 +129,20 @@ public class MasonListeners implements Listener {
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if(e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
+			// First check what charms the player has
+			ItemStack item = p.getInventory().getItemInMainHand();
+			String chanceLine = null;
+			if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+				for(String line : item.getItemMeta().getLore()) {
+					if(line.contains("Second Chance")) {
+						chanceLine = line;
+					}
+				}
+			}
 			if(e.getDamage() > p.getHealth()) {
 				if((secondChanceCooldown.containsKey(p) && secondChanceCooldown.get(p) > System.currentTimeMillis()) ||
 						!secondChanceCooldown.containsKey(p)) {
-					ItemStack item = p.getInventory().getItemInMainHand();
-					String line = masonUtils.charmLine(item, "Second Chance");
-					if(line != null) {
+					if(chanceLine != null) {
 						masonUtils.breakSecondChance(item);
 						util.sendMessage(p, "&7Your second chance charm was broken");
 						secondChanceCooldown.put(p, System.currentTimeMillis() + SECOND_CHANCE_COOLDOWN);
