@@ -91,6 +91,10 @@ public class PPR {
 		return this.description;
 	}
 	
+	public boolean isFilled() {
+		return user != null && offense != null && action != null && description != null;
+	}
+	
 	public void preview(Player p) {
 		p.sendMessage("§7-- §c: " + user + " §7--");
 		p.sendMessage("§cPPR ID§7: " + id);

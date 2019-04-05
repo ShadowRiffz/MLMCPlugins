@@ -94,7 +94,13 @@ public class Commands implements CommandExecutor {
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("post")) {
 					if (Main.pprs.containsKey(author)) {
-						Main.pprs.get(author).post(p);
+						PPR ppr = Main.pprs.get(author);
+						if (ppr.isFilled()) {
+							ppr.post(p);
+						}
+						else {
+							sender.sendMessage("§4[§c§lMLMC§4] §7You must fill every part of the PPR to post!");
+						}
 					}
 					else {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
