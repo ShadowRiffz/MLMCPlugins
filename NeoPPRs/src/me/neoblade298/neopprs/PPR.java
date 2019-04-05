@@ -40,7 +40,12 @@ public class PPR {
 	@SuppressWarnings("deprecation")
 	public void setUser(String user) {
 		this.user = user;
-		this.uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
+		if (Main.uuids.containsKey(user)) {
+			this.uuid = Main.uuids.get(user);
+		}
+		else {
+			this.uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
+		}
 	}
 	
 	public void setDate(String date) {
@@ -96,20 +101,18 @@ public class PPR {
 	}
 	
 	public void preview(Player p) {
-		p.sendMessage("§7-- §c: " + user + " §7--");
-		p.sendMessage("§cPPR ID§7: " + id);
-		p.sendMessage("§cDate§7: " + date);
+		p.sendMessage("§7-- §c" + user + " §7--");
 		p.sendMessage("§cOffense§7: " + offense);
 		p.sendMessage("§cAction§7: " + action);
 		p.sendMessage("§cDescription§7: " + description);
-		p.sendMessage("§cPosted by§7: " + author);
 	}
 	
 	public void show(Player p) {
-		p.sendMessage("§cPPR ID§7: " + id);
+		p.sendMessage("§c§nPPR #" + id + "(posted by " + author +") [" + date + "]");
 		p.sendMessage("§cOffense§7: " + offense);
 		p.sendMessage("§cAction§7: " + action);
 		p.sendMessage("§cDescription§7: " + description);
+		p.sendMessage("§7---");
 	}
 	
 	public void post(Player p) {
@@ -117,7 +120,9 @@ public class PPR {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + "," + user + "," + uuid + "," + date + "," + offense + "," + action + "," + description +")");
+			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
+			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
+			System.out.println("START 1");
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + uuid + "';");
 			p.sendMessage("§7-- §c: " + user + " §7--");
 			while (rs.next()) {
@@ -130,6 +135,6 @@ public class PPR {
 		catch(Exception e) {
 			System.out.println(e);
 			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
-		}  
+		}
 	}
 }

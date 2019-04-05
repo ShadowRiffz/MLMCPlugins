@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.sql.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	static HashMap<String, PPR> pprs;
+	static HashMap<String, String> uuids;
 	static int nextPPR;
 	static int nextAlt;
 	static String sqlUser = "neoblade298";
@@ -24,14 +28,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from neopprs_next");
+			ResultSet rs = stmt.executeQuery("select MAX(id) from neopprs_pprs");
 			while (rs.next()) {
-				if (rs.getString(1).equals("pprs")) {
-					nextPPR = rs.getInt(2);
-				}
-				else if (rs.getString(1).equals("alts")) {
-					nextAlt = rs.getInt(2);
-				}
+				nextPPR = rs.getInt(1) + 1;
+			}
+			rs = stmt.executeQuery("select MAX(id) from neopprs_alts");
+			while (rs.next()) {
+				nextAlt = rs.getInt(1) + 1;
 			}
 			con.close();
 		}
@@ -50,6 +53,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoPPRs Disabled");
 	    super.onDisable();
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		if (!uuids.containsKey(e.getPlayer().getName())) {
+			String name = e.getPlayer().getName();
+			uuids.put(name, e.getPlayer().getUniqueId().toString());
+		}
 	}
 	
 }
