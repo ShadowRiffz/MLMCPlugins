@@ -4,7 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,11 +18,13 @@ import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 	Main main;
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy");
 	
 	public Commands(Main main) {
 		this.main = main;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neopprs.admin") && sender instanceof Player) {
@@ -206,6 +214,142 @@ public class Commands implements CommandExecutor {
 					catch(Exception e) {
 						System.out.println(e);
 						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
+				}
+				else if (args[0].equalsIgnoreCase("alts")) {
+					if (args[1].equalsIgnoreCase("add") && args.length == 4) {
+						String mainAcc = args[2];
+						String altAcc = args[3];
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							
+							// Get the UUID of the main account
+							String mainuuid = null;
+							if (Main.uuids.containsKey(mainAcc)) {
+								Main.uuids.get(mainAcc);
+							}
+							else {
+								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + mainAcc.toUpperCase() + "';");
+								if (rs.next()) {
+									mainuuid = rs.getString(4);
+									Main.uuids.put(mainAcc, mainuuid);
+								}
+							}
+							
+							// Get the UUID of the alt account
+							String altuuid = null;
+							if (Main.uuids.containsKey(altAcc)) {
+								Main.uuids.get(altAcc);
+							}
+							else {
+								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + altAcc.toUpperCase() + "';");
+								if (rs.next()) {
+									altuuid = rs.getString(4);
+									Main.uuids.put(altAcc, altuuid);
+								}
+							}
+							
+							// If either UUID isn't found, just look it up manually
+							if (mainuuid == null) {
+								mainuuid = Bukkit.getServer().getOfflinePlayer(mainAcc).getUniqueId().toString();
+								Main.uuids.put(mainAcc, mainuuid);
+							}
+							if (altuuid == null) {
+								altuuid = Bukkit.getServer().getOfflinePlayer(altAcc).getUniqueId().toString();
+								Main.uuids.put(altAcc, altuuid);
+							}
+							
+							// Check for duplicate
+							rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + mainuuid + "' AND altuuid = '" + altuuid + "';");
+							if (rs.next()) {
+								p.sendMessage("§4[§c§lMLMC§4] §cThis alt account was already added!");
+							}
+							else {
+								stmt.executeUpdate("INSERT INTO neopprs_alts VALUES (" + Main.nextAlt + ",'" + p.getName() + "','"
+							+ mainAcc + "','" + mainuuid + "','" + altAcc + "','" + altuuid + "','" + dateformat.format(new Date()) + "')");
+								Main.nextAlt++;
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+					else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
+						String mainAcc = args[2];
+						String altAcc = args[3];
+						
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = " + mainAcc.toUpperCase() + " AND upper(altname) = " + altAcc.toUpperCase() + ";");
+							if (deleted > 0) {
+								p.sendMessage("§4[§c§lMLMC§4] §7Successfully removed alt account!");
+							}
+							else {
+								p.sendMessage("§4[§c§lMLMC§4] §7No alt accounts matching this were found.");
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+					else if (args.length == 3 && args[1].equalsIgnoreCase("list")) {
+						String user = args[2];
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+
+							// Get the UUID of the main account
+							String uuid = null;
+							if (Main.uuids.containsKey(user)) {
+								Main.uuids.get(user);
+							}
+							else {
+								rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '" + user.toUpperCase() + "';");
+								if (rs.next()) {
+									uuid = rs.getString(4);
+									Main.uuids.put(user, uuid);
+								}
+							}
+							
+							// Else just look it up manually
+							if (uuid == null) {
+								uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
+								Main.uuids.put(user, uuid);
+							}
+
+							ArrayList<String> alts = new ArrayList<String>();
+							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
+							while(rs.next()) {
+								alts.add(rs.getString(5));
+							}
+
+							String message = new String("§4[§c§lMLMC§4] §7Known alts:");
+							if (alts.isEmpty()) {
+								message += " None";
+							}
+							else {
+								for (String alt : alts) {
+									message += " " + alt;
+								}
+							}
+							p.sendMessage(message);
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
 					}
 				}
 			}
