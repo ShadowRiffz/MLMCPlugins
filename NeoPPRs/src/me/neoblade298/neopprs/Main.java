@@ -82,12 +82,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 			else {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + user.toUpperCase() + "';");
-				System.out.print(user.toUpperCase());
 				while (rs.next()) {
-					System.out.println("Success: " + rs.getString(4));
 					uuid = rs.getString(4);
 				}
-				System.out.println(uuid);
 			}
 			
 			if (uuid != null) {
@@ -101,7 +98,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				
 				// Show all relevant PPRs
 				for (String account : accounts) {
-					System.out.println("Iterating through " + account);
 					rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
 					while (rs.next()) {
 						PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
