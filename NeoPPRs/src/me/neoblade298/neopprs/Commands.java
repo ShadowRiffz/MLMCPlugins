@@ -110,6 +110,7 @@ public class Commands implements CommandExecutor {
 					if (Main.pprs.containsKey(author)) {
 						p.sendMessage("§4[§c§lMLMC§4] §7You exited PPR creation mode!");
 						Main.pprs.remove(author);
+						Main.isModifying.remove(author);
 					}
 					else {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
@@ -126,6 +127,7 @@ public class Commands implements CommandExecutor {
 								ppr.post(p);
 							}
 							Main.pprs.remove(author);
+							Main.isModifying.remove(author);
 						}
 						else {
 							sender.sendMessage("§4[§c§lMLMC§4] §7You must fill every part of the PPR to post!");

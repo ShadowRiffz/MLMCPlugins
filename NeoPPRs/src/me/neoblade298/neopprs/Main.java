@@ -45,9 +45,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			System.out.println(e);
 		}  
 		
-	    // Initiate hashmap
+	    // Initiate hashmaps
 		pprs = new HashMap<String, PPR>();
 		uuids = new HashMap<String, String>();
+		isModifying = new HashMap<String, Boolean>();
 	    
 	    // Get command listener
 	    this.getCommand("ppr").setExecutor(new Commands(this));
