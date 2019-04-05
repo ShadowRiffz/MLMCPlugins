@@ -14,6 +14,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	static HashMap<String, PPR> pprs;
 	static HashMap<String, String> uuids;
+	static HashMap<String, Boolean> isModifying;
 	static int nextPPR;
 	static int nextAlt;
 	static String sqlUser = "neoblade298";

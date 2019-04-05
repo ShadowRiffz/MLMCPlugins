@@ -38,6 +38,7 @@ public class Commands implements CommandExecutor {
 						PPR ppr = new PPR(Main.nextPPR, author);
 						Main.nextPPR++;
 						Main.pprs.put(author, ppr);
+						Main.isModifying.put(author, false);
 						ppr.preview(p);
 					}
 				}
@@ -118,7 +119,12 @@ public class Commands implements CommandExecutor {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						if (ppr.isFilled()) {
-							ppr.post(p);
+							if (Main.isModifying.get(author)) {
+								ppr.modify(p);
+							}
+							else {
+								ppr.post(p);
+							}
 							Main.pprs.remove(author);
 						}
 						else {
@@ -143,12 +149,11 @@ public class Commands implements CommandExecutor {
 							Class.forName("com.mysql.jdbc.Driver");
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
-							
-							// Show all relevant PPRs
 							ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE id = " + id + ";");
 							while (rs.next()) {
 								ppr = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
 							}
+							stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
 							con.close();
 						}
 						catch(Exception e) {
@@ -158,6 +163,7 @@ public class Commands implements CommandExecutor {
 						if (ppr != null) {
 							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
 							Main.pprs.put(author, ppr);
+							Main.isModifying.put(author, true);
 							ppr.preview(p);
 						}
 						else {

@@ -110,7 +110,6 @@ public class PPR {
 	
 	public void show(Player p) {
 		p.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
-		p.sendMessage("§7§m----------");
 		p.sendMessage("§cOffense§7: " + offense);
 		p.sendMessage("§cAction§7: " + action);
 		p.sendMessage("§cDescription§7: " + description);
@@ -134,6 +133,7 @@ public class PPR {
 			}
 			
 			// Show all relevant PPRs
+			p.sendMessage("§7§m----------");
 			for (String account : accounts) {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
 				while (rs.next()) {
@@ -141,8 +141,23 @@ public class PPR {
 					temp.show(p);
 				}
 			}
-			con.close();
 			p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+			con.close();
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+		}
+	}
+	public void modify(Player p) {
+		try{  
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Statement stmt = con.createStatement();
+			// Post the PPR to SQL
+			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', offense = '" + offense + "', action = '" + action + "', description = '" + description + "' WHERE id = " + id + ";");
+			p.sendMessage("§4[§c§lMLMC§4] §7Successfully modified PPR!");
+			con.close();
 		}
 		catch(Exception e) {
 			System.out.println(e);
