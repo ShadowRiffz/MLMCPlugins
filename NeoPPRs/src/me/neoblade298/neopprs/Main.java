@@ -82,8 +82,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 			else {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + user.toUpperCase() + "';");
-				while (rs.next()) {
+				if (rs.next()) {
 					uuid = rs.getString(4);
+					uuids.put(user, uuid);
 				}
 			}
 			
