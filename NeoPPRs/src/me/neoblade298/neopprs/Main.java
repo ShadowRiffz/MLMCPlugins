@@ -19,7 +19,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	static int nextAlt;
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
-	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC&useSSL=false";
+	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPPRs Enabled");
