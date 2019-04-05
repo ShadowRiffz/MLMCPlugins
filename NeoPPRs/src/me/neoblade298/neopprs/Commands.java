@@ -289,6 +289,7 @@ public class Commands implements CommandExecutor {
 								stmt.executeUpdate("INSERT INTO neopprs_alts VALUES (" + Main.nextAlt + ",'" + p.getName() + "','"
 							+ mainAcc + "','" + mainuuid + "','" + altAcc + "','" + altuuid + "','" + dateformat.format(new Date()) + "')");
 								Main.nextAlt++;
+								p.sendMessage("§4[§c§lMLMC§4] §7Successfully added alt account!");
 							}
 							con.close();
 						}
@@ -305,7 +306,7 @@ public class Commands implements CommandExecutor {
 							Class.forName("com.mysql.jdbc.Driver");
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
-							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = " + mainAcc.toUpperCase() + " AND upper(altname) = " + altAcc.toUpperCase() + ";");
+							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = '" + mainAcc.toUpperCase() + "' AND upper(altname) = '" + altAcc.toUpperCase() + "';");
 							if (deleted > 0) {
 								p.sendMessage("§4[§c§lMLMC§4] §7Successfully removed alt account!");
 							}
