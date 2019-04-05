@@ -21,7 +21,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		// Connect to MYSQL
 		try{  
-			Class.forName("com.mysql.jdbc.Driver");  
+			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from neopprs_next");
@@ -33,7 +33,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					nextAlt = rs.getInt(2);
 				}
 			}
-			con.close();  
+			con.close();
 			System.out.println("Next PPR: " + nextPPR + ", next alt: " + nextAlt);
 		}
 		catch(Exception e) {
