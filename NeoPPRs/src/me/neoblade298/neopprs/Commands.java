@@ -17,7 +17,6 @@ public class Commands implements CommandExecutor {
 	
 	public Commands(Main main) {
 		this.main = main;
-		System.out.println("TEST");
 	}
 	
 	@Override
