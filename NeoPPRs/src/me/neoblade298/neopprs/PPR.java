@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
@@ -108,11 +109,12 @@ public class PPR {
 	}
 	
 	public void show(Player p) {
-		p.sendMessage("§c§nPPR #" + id + "(posted by " + author +") [" + date + "]");
+		p.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
+		p.sendMessage("§7§m----------");
 		p.sendMessage("§cOffense§7: " + offense);
 		p.sendMessage("§cAction§7: " + action);
 		p.sendMessage("§cDescription§7: " + description);
-		p.sendMessage("§7---");
+		p.sendMessage("§7§m----------");
 	}
 	
 	public void post(Player p) {
@@ -120,14 +122,24 @@ public class PPR {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
+			// Post the PPR to SQL
 			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
-			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
-			System.out.println("START 1");
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + uuid + "';");
-			p.sendMessage("§7-- §c: " + user + " §7--");
+			
+			// Get all alt accounts together
+			ArrayList<String> accounts = new ArrayList<String>();
+			accounts.add(uuid);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
 			while (rs.next()) {
-				PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-				temp.show(p);
+				accounts.add(rs.getString(6));
+			}
+			
+			// Show all relevant PPRs
+			for (String account : accounts) {
+				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
+				while (rs.next()) {
+					PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+					temp.show(p);
+				}
 			}
 			con.close();
 			p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");

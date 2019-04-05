@@ -1,5 +1,12 @@
 package me.neoblade298.neopprs;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -120,6 +127,71 @@ public class Commands implements CommandExecutor {
 					}
 					else {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+					}
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("view")) {
+					main.viewPlayer(p, args[1]);
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("modify") && StringUtils.isNumeric(args[1])) {
+					if (Main.pprs.containsKey(author)) {
+						p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+					}
+					else {
+						int id = Integer.parseInt(args[1]);
+						PPR ppr = null;
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							
+							// Show all relevant PPRs
+							ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE id = " + id + ";");
+							while (rs.next()) {
+								ppr = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+						if (ppr != null) {
+							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							Main.pprs.put(author, ppr);
+							ppr.preview(p);
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7Could not find that PPR id!");
+						}
+					}
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
+					int id = Integer.parseInt(args[1]);
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
+						p.sendMessage("§4[§c§lMLMC§4] §7Removed PPR!");
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
+				}
+				else if (args.length == 3 && args[0].equalsIgnoreCase("rename")) {
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						stmt.executeUpdate("update neopprs_pprs set username = '" +  args[2] + "'WHERE upper(username) = '" + args[1].toUpperCase() + ";");
+						p.sendMessage("§4[§c§lMLMC§4] §7Successful renaming!");
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
 			}
