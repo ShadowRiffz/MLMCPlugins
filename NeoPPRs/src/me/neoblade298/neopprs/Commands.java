@@ -189,6 +189,25 @@ public class Commands implements CommandExecutor {
 						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
+				else if (args.length == 3 && args[0].equalsIgnoreCase("rename")) {
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" +  args[2] + "' WHERE upper(username) = '" + args[1].toUpperCase() + ";");
+						if (renamed > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successful renaming! " + renamed + " PPRs renamed.");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7No users matching this name found.");
+						}
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
+				}
 			}
 			return true;
 		}
