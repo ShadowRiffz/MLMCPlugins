@@ -31,9 +31,27 @@ public class Commands implements CommandExecutor {
 			Player p = (Player) sender;
 			String author = p.getName();
 			if(args.length == 0) {
-				// TODO: Help menu
+				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
+				p.sendMessage("§c/ppr create §7- Puts you into PPR creation mode");
+				p.sendMessage("§c/ppr set name §7- Sets username for PPR");
+				p.sendMessage("§c/ppr set offense §7- Sets offense for PPR");
+				p.sendMessage("§c/ppr set action §7- Sets action for PPR");
+				p.sendMessage("§c/ppr set desc §7- Sets description for PPR");
+				p.sendMessage("§c/ppr view §7- Shows a preview of the PPR");
+				p.sendMessage("§c/ppr post §7- Saves and posts PPR");
+				p.sendMessage("§c/ppr cancel §7- Exits PPR creation mode");
 			}
 			else {
+				if (args.length == 1 && args[1].equals("2")) {
+					p.sendMessage("§7--- §cNeoPPRs §7(2/2) ---");
+					p.sendMessage("§c/ppr view [player] §7- View all PPRs of player (and alts)");
+					p.sendMessage("§c/ppr modify [PPR ID] §7- Puts the PPR into creation mode, allowing you to modify it");
+					p.sendMessage("§c/ppr remove [PPR ID] §7- Deletes the specified PPR");
+					p.sendMessage("§c/ppr rename [oldname] [newname] §7- Used for name changes out of convenience");
+					p.sendMessage("§c/ppr alts add [main account] [alt] §7- Declares an alt for a player");
+					p.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
+					p.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
+				}
 				if (args.length == 1 && args[0].equalsIgnoreCase("create")) {
 					if (Main.pprs.containsKey(author)) {
 						p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
@@ -263,7 +281,7 @@ public class Commands implements CommandExecutor {
 							}
 							
 							// Check for duplicate
-							rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + mainuuid + "' AND altuuid = '" + altuuid + "';");
+							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + mainuuid + "' AND altuuid = '" + altuuid + "';");
 							if (rs.next()) {
 								p.sendMessage("§4[§c§lMLMC§4] §cThis alt account was already added!");
 							}
