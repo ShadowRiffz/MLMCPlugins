@@ -42,7 +42,7 @@ public class Commands implements CommandExecutor {
 				p.sendMessage("§c/ppr cancel §7- Exits PPR creation mode");
 			}
 			else {
-				if (args.length == 1 && args[1].equals("2")) {
+				if (args.length == 1 && args[0].equals("2")) {
 					p.sendMessage("§7--- §cNeoPPRs §7(2/2) ---");
 					p.sendMessage("§c/ppr view [player] §7- View all PPRs of player (and alts)");
 					p.sendMessage("§c/ppr modify [PPR ID] §7- Puts the PPR into creation mode, allowing you to modify it");
