@@ -155,7 +155,8 @@ public class PPR {
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
 			// Post the PPR to SQL
-			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', offense = '" + offense + "', action = '" + action + "', description = '" + description + "' WHERE id = " + id + ";");
+			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', uuid = '" + uuid + "', offense = '" + offense + "', action = '" + action + "', description = '"
+			+ description + "' WHERE id = " + id + ";");
 			p.sendMessage("§4[§c§lMLMC§4] §7Successfully modified PPR!");
 			con.close();
 		}
