@@ -3,6 +3,6 @@ author: Neoblade298
 main: me.neoblade298.neopprs.Main
 version: 1.00
 commands:
-  warning:
+  ppr:
     description: Base commands
     usage: /ppr
