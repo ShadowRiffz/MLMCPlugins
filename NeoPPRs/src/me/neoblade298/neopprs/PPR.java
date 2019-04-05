@@ -6,8 +6,9 @@ public class PPR {
 	private int id;
 	private String author, user, uuid, date, offense, action, description;
 	
-	public PPR(int id) {
+	public PPR(int id, String author) {
 		this.id = id;
+		this.author = author;
 	}
 	
 	public PPR(int id, String author, String user, String uuid, String date, String offense, String action, String description) {
