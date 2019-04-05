@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 public class PPR {
 	private int id;
 	private String author, user, uuid, date, offense, action, description;
-	private static DateFormat dateformat = new SimpleDateFormat("dd-MM-yy");
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy");
 	
 	public PPR(int id, String author) {
 		this.id = id;
