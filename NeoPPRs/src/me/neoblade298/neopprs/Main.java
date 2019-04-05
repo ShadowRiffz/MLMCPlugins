@@ -67,12 +67,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void viewPlayer(Player viewer, String user) {
+		boolean noError = false;
 		try{  
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
+			ResultSet rs;
 			
 			// Get UUID of user
 			String uuid = null;
@@ -80,24 +81,37 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				uuids.get(user);
 			}
 			else {
-				uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
-			}
-			
-			// Get all alt accounts together
-			ArrayList<String> accounts = new ArrayList<String>();
-			accounts.add(uuid);
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
-			while (rs.next()) {
-				accounts.add(rs.getString(6));
-			}
-			
-			// Show all relevant PPRs
-			for (String account : accounts) {
-				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
+				rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '" + user.toUpperCase() + "';");
 				while (rs.next()) {
-					PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-					temp.show(viewer);
+					uuid = rs.getString(4);
 				}
+			}
+			
+			if (uuid != null) {
+				// Get all alt accounts together
+				ArrayList<String> accounts = new ArrayList<String>();
+				accounts.add(uuid);
+				rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
+				while (rs.next()) {
+					accounts.add(rs.getString(6));
+				}
+				
+				// Show all relevant PPRs
+				for (String account : accounts) {
+					rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
+					while (rs.next()) {
+						PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+						temp.show(viewer);
+						noError = true;
+					}
+				}
+			}
+			else {
+				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found.");
+				noError = true;
+			}
+			if (!noError) {
+				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found.");
 			}
 			con.close();
 		}

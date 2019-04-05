@@ -175,8 +175,13 @@ public class Commands implements CommandExecutor {
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
-						stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
-						p.sendMessage("§4[§c§lMLMC§4] §7Removed PPR!");
+						int deleted = stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
+						if (deleted > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successfully removed PPR!");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7No PPRs matching this id were found.");
+						}
 						con.close();
 					}
 					catch(Exception e) {
@@ -189,8 +194,13 @@ public class Commands implements CommandExecutor {
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
-						stmt.executeUpdate("update neopprs_pprs set username = '" +  args[2] + "'WHERE upper(username) = '" + args[1].toUpperCase() + ";");
-						p.sendMessage("§4[§c§lMLMC§4] §7Successful renaming!");
+						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" +  args[2] + "'WHERE upper(username) = '" + args[1].toUpperCase() + ";");
+						if (renamed > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successful renaming! " + renamed + " PPRs renamed.");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7No users matching this name found.");
+						}
 						con.close();
 					}
 					catch(Exception e) {
