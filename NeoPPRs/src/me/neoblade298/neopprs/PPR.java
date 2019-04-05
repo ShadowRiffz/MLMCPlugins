@@ -46,6 +46,7 @@ public class PPR {
 		}
 		else {
 			this.uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
+			Main.uuids.put(user, this.uuid);
 		}
 	}
 	
