@@ -78,7 +78,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			// Get UUID of user
 			String uuid = null;
 			if (uuids.containsKey(user)) {
-				uuids.get(user);
+				uuid = uuids.get(user);
 			}
 			else {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + user.toUpperCase() + "';");
@@ -108,11 +108,11 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 			else {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found.");
+				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found, error 1.");
 				noError = true;
 			}
 			if (!noError) {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found.");
+				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found, error 2.");
 			}
 			con.close();
 		}
