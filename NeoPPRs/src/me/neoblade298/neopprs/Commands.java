@@ -247,7 +247,7 @@ public class Commands implements CommandExecutor {
 							// Get the UUID of the main account
 							String mainuuid = null;
 							if (Main.uuids.containsKey(mainAcc)) {
-								Main.uuids.get(mainAcc);
+								Main.uuids.get(mainAcc.toUpperCase());
 							}
 							else {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + mainAcc.toUpperCase() + "';");
@@ -260,7 +260,7 @@ public class Commands implements CommandExecutor {
 							// Get the UUID of the alt account
 							String altuuid = null;
 							if (Main.uuids.containsKey(altAcc)) {
-								Main.uuids.get(altAcc);
+								Main.uuids.get(altAcc.toUpperCase());
 							}
 							else {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + altAcc.toUpperCase() + "';");
@@ -331,7 +331,7 @@ public class Commands implements CommandExecutor {
 							// Get the UUID of the main account
 							String uuid = null;
 							if (Main.uuids.containsKey(user)) {
-								Main.uuids.get(user);
+								Main.uuids.get(user.toUpperCase());
 							}
 							else {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '" + user.toUpperCase() + "';");
