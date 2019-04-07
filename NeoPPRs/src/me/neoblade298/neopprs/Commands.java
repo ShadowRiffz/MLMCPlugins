@@ -253,7 +253,7 @@ public class Commands implements CommandExecutor {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + mainAcc.toUpperCase() + "';");
 								if (rs.next()) {
 									mainuuid = rs.getString(4);
-									Main.uuids.put(mainAcc, mainuuid);
+									Main.uuids.put(mainAcc.toUpperCase(), mainuuid);
 								}
 							}
 							
@@ -266,18 +266,18 @@ public class Commands implements CommandExecutor {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + altAcc.toUpperCase() + "';");
 								if (rs.next()) {
 									altuuid = rs.getString(4);
-									Main.uuids.put(altAcc, altuuid);
+									Main.uuids.put(altAcc.toUpperCase(), altuuid);
 								}
 							}
 							
 							// If either UUID isn't found, just look it up manually
 							if (mainuuid == null) {
 								mainuuid = Bukkit.getServer().getOfflinePlayer(mainAcc).getUniqueId().toString();
-								Main.uuids.put(mainAcc, mainuuid);
+								Main.uuids.put(mainAcc.toUpperCase(), mainuuid);
 							}
 							if (altuuid == null) {
 								altuuid = Bukkit.getServer().getOfflinePlayer(altAcc).getUniqueId().toString();
-								Main.uuids.put(altAcc, altuuid);
+								Main.uuids.put(altAcc.toUpperCase(), altuuid);
 							}
 							
 							// Check for duplicate
@@ -337,14 +337,14 @@ public class Commands implements CommandExecutor {
 								rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '" + user.toUpperCase() + "';");
 								if (rs.next()) {
 									uuid = rs.getString(4);
-									Main.uuids.put(user, uuid);
+									Main.uuids.put(user.toUpperCase(), uuid);
 								}
 							}
 							
 							// Else just look it up manually
 							if (uuid == null) {
 								uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
-								Main.uuids.put(user, uuid);
+								Main.uuids.put(user.toUpperCase(), uuid);
 							}
 
 							ArrayList<String> alts = new ArrayList<String>();
