@@ -61,7 +61,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		if (!uuids.containsKey(e.getPlayer().getName())) {
+		if (!uuids.containsKey(e.getPlayer().getName().toUpperCase())) {
 			String name = e.getPlayer().getName();
 			uuids.put(name.toUpperCase(), e.getPlayer().getUniqueId().toString());
 		}
@@ -77,7 +77,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			
 			// Get UUID of user
 			String uuid = null;
-			if (uuids.containsKey(user)) {
+			if (uuids.containsKey(user.toUpperCase())) {
 				uuid = uuids.get(user.toUpperCase());
 			}
 			else {

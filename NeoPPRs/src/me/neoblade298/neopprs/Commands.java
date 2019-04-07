@@ -246,7 +246,7 @@ public class Commands implements CommandExecutor {
 							
 							// Get the UUID of the main account
 							String mainuuid = null;
-							if (Main.uuids.containsKey(mainAcc)) {
+							if (Main.uuids.containsKey(mainAcc.toUpperCase())) {
 								Main.uuids.get(mainAcc.toUpperCase());
 							}
 							else {
@@ -259,7 +259,7 @@ public class Commands implements CommandExecutor {
 							
 							// Get the UUID of the alt account
 							String altuuid = null;
-							if (Main.uuids.containsKey(altAcc)) {
+							if (Main.uuids.containsKey(altAcc.toUpperCase())) {
 								Main.uuids.get(altAcc.toUpperCase());
 							}
 							else {
@@ -330,7 +330,7 @@ public class Commands implements CommandExecutor {
 
 							// Get the UUID of the main account
 							String uuid = null;
-							if (Main.uuids.containsKey(user)) {
+							if (Main.uuids.containsKey(user.toUpperCase())) {
 								Main.uuids.get(user.toUpperCase());
 							}
 							else {

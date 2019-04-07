@@ -41,12 +41,12 @@ public class PPR {
 	@SuppressWarnings("deprecation")
 	public void setUser(String user) {
 		this.user = user;
-		if (Main.uuids.containsKey(user)) {
-			this.uuid = Main.uuids.get(user);
+		if (Main.uuids.containsKey(user.toUpperCase())) {
+			this.uuid = Main.uuids.get(user.toUpperCase());
 		}
 		else {
 			this.uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
-			Main.uuids.put(user, this.uuid);
+			Main.uuids.put(user.toUpperCase(), this.uuid);
 		}
 	}
 	
