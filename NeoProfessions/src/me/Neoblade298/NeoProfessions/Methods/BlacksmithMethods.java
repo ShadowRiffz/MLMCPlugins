@@ -34,7 +34,7 @@ public class BlacksmithMethods {
 	final int REFORGE_COST_BASE = 1000;
 	final int REFORGE_COST_MULT = 2;
 	final int REFORGE_ESSENCE_PER_LVL = 6;
-	final int SCRAP_COST = 250;
+	final int SCRAP_COST = 500;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
 	
@@ -246,7 +246,7 @@ public class BlacksmithMethods {
 					if(econ.has(p, SCRAP_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, SCRAP_COST);
-						p.getInventory().addItem(common.getEssenceFragment(itemLevel));
+						p.getInventory().addItem(common.getEssence(itemLevel));
 						util.sendMessage(p, "&cSuccessfully scrapped item!");
 					}
 					else {

@@ -55,7 +55,7 @@ public class CulinarianMethods {
 	final static int SPICE_COST = 500;
 	final static int SPICE_ESSENCE = 1;
 	final static int CRAFT_COST = 50;
-	final static int ASSIMILATE_COST = 250;
+	final static int ASSIMILATE_COST = 500;
 	final static int SPECIAL_COST = 5000;
 	final static int SPECIAL_AMOUNT = 16;
 	final static int REMEDY_COST = 1000;
@@ -380,7 +380,7 @@ public class CulinarianMethods {
 					if(p.hasPermission("culinarian.assimilate." + level)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
 							p.getInventory().removeItem(util.setAmount(item, 1));
-							p.getInventory().addItem(common.getEssenceFragment(level));
+							p.getInventory().addItem(common.getEssence(level));
 							econ.withdrawPlayer(p, ASSIMILATE_COST);
 							util.sendMessage(p, "&7Successfully assimilated recipe!");
 						}
