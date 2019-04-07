@@ -353,16 +353,16 @@ public class Commands implements CommandExecutor {
 								alts.add(rs.getString(5));
 							}
 
-							String message = new String("§4[§c§lMLMC§4] §7Known alts:");
+							String message = new String("§4[§c§lMLMC§4] §7Known alts: ");
 							if (alts.isEmpty()) {
 								message += " None";
 							}
 							else {
 								for (String alt : alts) {
-									message += " " + alt;
+									message += alt + ", ";
 								}
 							}
-							p.sendMessage(message);
+							p.sendMessage(message.substring(0, message.length() - 2));
 							con.close();
 						}
 						catch(Exception e) {
@@ -370,6 +370,16 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
+					else {
+						p.sendMessage("§7--- §cNeoPPRs §7---");
+						p.sendMessage("§c/ppr alts add [main account] [alt] §7- Declares an alt for a player");
+						p.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
+						p.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
+					}
+				}
+				else {
+					p.sendMessage("§4[§c§lMLMC§4] §7Invalid commands!");
+					return true;
 				}
 			}
 			return true;
