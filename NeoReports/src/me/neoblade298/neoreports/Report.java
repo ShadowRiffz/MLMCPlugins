@@ -15,10 +15,11 @@ public class Report {
 	private boolean is_resolved, seen, is_urgent;
 	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy HH:mm");
 	
-	public Report(int id, String user, boolean is_urgent) {
+	public Report(int id, String user, String description, boolean is_urgent) {
 		this.id = id;
 		this.date = dateformat.format(new Date());
 		this.user = user;
+		this.description = description;
 		this.comment = "none";
 		this.is_resolved = false;
 		this.seen = false;
