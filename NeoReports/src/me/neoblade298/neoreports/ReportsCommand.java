@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neoreports.Main;
 
-public class ReportCommand implements CommandExecutor {
+public class ReportsCommand implements CommandExecutor {
 	Main main;
 	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy HH:mm");
 	
-	public ReportCommand(Main main) {
+	public ReportsCommand(Main main) {
 		this.main = main;
 	}
 	
@@ -35,24 +35,6 @@ public class ReportCommand implements CommandExecutor {
 					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
-			}
-			else if (args[0].equalsIgnoreCase("bug") && args.length > 1) {
-				String desc = "";
-				for (int i = 2; i < args.length - 1; i++) {
-					desc += args[i] + " ";
-				}
-				desc += args[args.length - 1];
-				Report rep = new Report(Main.nextReport, author, desc, false);
-				rep.post(p);
-			}
-			else if (args[0].equalsIgnoreCase("urgent") && args.length > 1) {
-				String desc = "";
-				for (int i = 2; i < args.length - 1; i++) {
-					desc += args[i] + " ";
-				}
-				desc += args[args.length - 1];
-				Report rep = new Report(Main.nextReport, author, desc, true);
-				rep.post(p);
 			}
 		}
 		return false;
