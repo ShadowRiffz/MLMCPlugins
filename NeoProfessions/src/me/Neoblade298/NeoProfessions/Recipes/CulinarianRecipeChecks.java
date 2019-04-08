@@ -64,7 +64,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkBlackWidow(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.1") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink1") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getBlackWidowRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -83,7 +83,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkPinkPanther(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.2") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink2") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getPinkPantherRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -102,7 +102,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkMidnightKiss(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.3") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink3") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getMidnightKissRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -121,7 +121,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkMidnightBlue(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.4") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink4") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getMidnightBlueRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 24);
@@ -140,7 +140,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkGoodAndEvil(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.5") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink5") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getGoodAndEvilRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -159,7 +159,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkThorHammer(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.6") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink6") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getThorHammerRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -178,7 +178,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkJackFrost(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.7") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink7") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getJackFrostRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -197,7 +197,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkWhiteRussian(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.8") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink8") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getWhiteRussianRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -216,7 +216,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkSwampWater(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.9") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink9") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getSwampWaterRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -235,7 +235,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkBlueMotorcycle(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.10") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink10") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getBlueMotorcycleRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -254,7 +254,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkRedDeath(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.11") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink11") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getRedDeathRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 23);
@@ -273,7 +273,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkBombsicle(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.12") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink12") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getBombsicleRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -292,7 +292,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkSweetTart(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.13") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink13") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getSweetTartRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
@@ -311,7 +311,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkPinaColada(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.14") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink14") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getPinaColadaRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 23);
@@ -330,7 +330,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkMargaritaOnTheRocks(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.15") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink15") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getMargaritaOnTheRocksRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 24);
@@ -349,7 +349,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkBloodyMary(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.drinks.16") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.drink16") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getBloodyMaryRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
