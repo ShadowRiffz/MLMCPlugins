@@ -108,11 +108,11 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 			else {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found, error 1.");
+				viewer.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
 				noError = true;
 			}
 			if (!noError) {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found, error 2.");
+				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
 			}
 			con.close();
 		}
