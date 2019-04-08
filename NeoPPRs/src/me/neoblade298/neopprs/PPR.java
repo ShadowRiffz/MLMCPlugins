@@ -55,15 +55,15 @@ public class PPR {
 	}
 	
 	public void setOffense(String offense) {
-		this.offense = offense;
+		this.offense = offense.replaceAll("'", "\'");;
 	}
 	
 	public void setAction(String action) {
-		this.action = action;
+		this.action = action.replaceAll("'", "\'");;
 	}
 	
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = description.replaceAll("'", "\'");
 	}
 	
 	public int getId() {
@@ -87,15 +87,15 @@ public class PPR {
 	}
 	
 	public String getOffense() {
-		return this.offense;
+		return this.offense.replaceAll("\'", "'");
 	}
 	
 	public String getAction() {
-		return this.action;
+		return this.action.replaceAll("\'", "'");
 	}
 	
 	public String getDescription() {
-		return this.description;
+		return this.description.replaceAll("\'", "'");
 	}
 	
 	public boolean isFilled() {
