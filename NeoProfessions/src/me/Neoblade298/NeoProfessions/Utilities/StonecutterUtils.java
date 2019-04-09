@@ -24,11 +24,11 @@ public class StonecutterUtils {
 	
 	// r
 	public boolean isEssence(ItemStack item) {
-		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Essence"));
+		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Essence"));
 	}
 	
 	public boolean isOre(ItemStack item) {
-		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Ore"));
+		return (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Ore"));
 	}
 	
 	public String getOreType(ItemStack item) {
