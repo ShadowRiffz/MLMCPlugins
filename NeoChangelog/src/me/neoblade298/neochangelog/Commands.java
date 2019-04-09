@@ -32,9 +32,6 @@ public class Commands implements CommandExecutor{
 	    		for(int j = 1; j < days.get(i).size(); j++) {
 	    			sender.sendMessage(ChatColor.GOLD + "" + j + ": " + ChatColor.GRAY + ((String)days.get(i).get(j)).replaceAll("&", "§"));
 	    		}
-	    		if(i == 2) {
-	    			return true;
-	    		}
     	  }
 	      return true;
     	}
