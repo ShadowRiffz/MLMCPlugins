@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Report {
@@ -118,6 +119,17 @@ public class Report {
 					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  is_resolved + "','" + is_urgent +"')");
 			if (post > 0) {
 				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+				if(is_urgent) {
+					Main.numUrgent++;
+					for (Player staff : Bukkit.getOnlinePlayers()) {
+						if (staff.hasPermission("neoreports.admin")) {
+							staff.sendMessage("§4[§c§lMLMC§4] §c§lAn urgent bug report was just posted!");
+						}
+					}
+				}
+				else {
+					Main.numBugs++;
+				}
 			}
 			con.close();
 		}

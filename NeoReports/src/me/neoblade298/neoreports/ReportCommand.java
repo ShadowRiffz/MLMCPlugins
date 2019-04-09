@@ -1,9 +1,5 @@
 package me.neoblade298.neoreports;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +9,6 @@ import me.neoblade298.neoreports.Main;
 
 public class ReportCommand implements CommandExecutor {
 	Main main;
-	private static DateFormat dateformat = new SimpleDateFormat("MM-dd");
 	
 	public ReportCommand(Main main) {
 		this.main = main;
@@ -54,11 +49,6 @@ public class ReportCommand implements CommandExecutor {
 				desc += args[args.length - 1];
 				Report rep = new Report(Main.nextReport, author, desc, true);
 				rep.post(p);
-				for (Player staff : Bukkit.getOnlinePlayers()) {
-					if (staff.hasPermission("neoreports.admin")) {
-						staff.sendMessage("§4[§c§lMLMC§4] §c§lAn urgent bug report was just posted!");
-					}
-				}
 			}
 		}
 		return false;
