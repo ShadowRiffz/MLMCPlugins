@@ -1,5 +1,9 @@
 package me.neoblade298.neoreports;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -34,6 +38,25 @@ public class ReportsCommand implements CommandExecutor {
 					p.sendMessage("§4/reports list [bug/urgent/resolved] §7- Lists all bugs of a certain type");
 					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
+				}
+			}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
+				try{  
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Statement stmt = con.createStatement();
+					ResultSet rs;
+					rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE user = '" + author + "';");
+					while(rs.next()) {
+						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+								rs.getInt(7) == 1, rs.getInt(8) == 1, rs.getInt(9) == 1);
+						temp.list(p);
+					}
+					con.close();
+				}
+				catch(Exception e) {
+					System.out.println(e);
+					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
 			}
 		}

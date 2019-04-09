@@ -1,4 +1,4 @@
-package me.neoblade298.neopprs;
+package me.neoblade298.neoreports;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,28 +36,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			getServer().getPluginManager().disablePlugin(this);
 			System.out.println(e);
 		}  
-		
-	    // Initiate hashmaps
-		pprs = new HashMap<String, PPR>();
-		uuids = new HashMap<String, String>();
-		isModifying = new HashMap<String, Boolean>();
 	    
 	    // Get command listener
 	    this.getCommand("report").setExecutor(new ReportCommand(this));
-	    this.getCommand("reports").setExecutor(new ReportCommand(this));
+	    this.getCommand("reports").setExecutor(new ReportsCommand(this));
 	}
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoPPRs Disabled");
 	    super.onDisable();
-	}
-	
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		if (!uuids.containsKey(e.getPlayer().getName().toUpperCase())) {
-			String name = e.getPlayer().getName();
-			uuids.put(name.toUpperCase(), e.getPlayer().getUniqueId().toString());
-		}
 	}
 	
 	public void viewPlayer(Player viewer, String user) {
