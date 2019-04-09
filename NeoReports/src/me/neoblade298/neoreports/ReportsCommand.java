@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +15,7 @@ import me.neoblade298.neoreports.Main;
 
 public class ReportsCommand implements CommandExecutor {
 	Main main;
+	static int NUM_REPORTS_PER_PAGE = 10;
 	
 	public ReportsCommand(Main main) {
 		this.main = main;
@@ -43,7 +45,7 @@ public class ReportsCommand implements CommandExecutor {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs;
-					rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE user = '" + author + "';");
+					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "';");
 					while(rs.next()) {
 						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
@@ -72,15 +74,196 @@ public class ReportsCommand implements CommandExecutor {
 					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
 			}
-			if (p.hasPermission("neoreports.admin")) {
+			else if (p.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
+					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+				}
+				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
+					// Show first page only
+					if (args.length == 2) {
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 0 AND is_resolved = 0 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+								temp.list(p);
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
+						int page = Integer.parseInt(args[2]);
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 0 AND is_resolved = 0 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
+									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+									temp.list(p);
+								}
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE * page) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+				}
+				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("urgent")) {
+					// Show first page only
+					if (args.length == 2) {
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+								temp.list(p);
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
+						int page = Integer.parseInt(args[2]);
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
+									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+									temp.list(p);
+								}
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE * page) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+				}
+				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("resolved")) {
+					// Show first page only
+					if (args.length == 2) {
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+								temp.list(p);
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
+						int page = Integer.parseInt(args[2]);
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id;");
+							int count = 1;
+							while(rs.next()) {
+								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
+									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+									temp.list(p);
+								}
+								count++;
+								if (count >= NUM_REPORTS_PER_PAGE * page) {
+									break;
+								}
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							System.out.println(e);
+							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						}
+					}
+				}
+				else if (args.length > 2 && args[0].equalsIgnoreCase("resolve") && StringUtils.isNumeric(args[1])) {
+					String desc = args[2];
+					for (int i = 0; i < args.length; i++) {
+						desc += " " + args[i];
+					}
 					try{  
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
-						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
-						if (deleted > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
+						ResultSet rs;
+						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
+						if (resolved > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
+						}
+						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
+						if (rs.next()) {
+							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
+						}
+						boolean is_urgent = rs.getInt(9) == 1;
+						if (is_urgent) {
+							Main.numUrgent--;
+						}
+						else {
+							Main.numBugs--;
 						}
 						con.close();
 					}
@@ -89,6 +272,32 @@ public class ReportsCommand implements CommandExecutor {
 						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
+				else if (args.length > 2 && args[0].equalsIgnoreCase("edit") && StringUtils.isNumeric(args[1])) {
+					String desc = args[2];
+					for (int i = 0; i < args.length; i++) {
+						desc += " " + args[i];
+					}
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						int edited = stmt.executeUpdate("UPDATE neoreports_bugs SET `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
+						if (edited > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successfully edited comment!");
+						}
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
+				}
+				else {
+					p.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
+				}
+			}
+			else {
+				sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
 			}
 		}
 		return false;
