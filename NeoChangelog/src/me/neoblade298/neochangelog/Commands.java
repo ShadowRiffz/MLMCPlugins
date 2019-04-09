@@ -26,7 +26,7 @@ public class Commands implements CommandExecutor{
 	    		sender.sendMessage("Changelog is empty!");
 	    		return true;
 	    	}
-	    	for(int i = 2; i < days.size(); i--) {
+	    	for(int i = 2; i > 0; i--) {
 	    		sender.sendMessage("" + ChatColor.RED + "Date: " + days.get(i).get(0) + ChatColor.GRAY + " (" + i + ")");
 	    		sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
 	    		for(int j = 1; j < days.get(i).size(); j++) {
