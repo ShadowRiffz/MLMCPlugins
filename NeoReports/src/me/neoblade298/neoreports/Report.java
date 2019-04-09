@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 public class Report {
 	private int id;
-	private String date, user, description, comment, resolver;
-	private boolean is_resolved, seen, is_urgent;
-	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy HH:mm");
+	private String date, user, description, comment, resolver, fixdate;
+	private boolean is_resolved, is_urgent;
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd");
 	
 	public Report(int id, String user, String description, boolean is_urgent) {
 		this.id = id;
@@ -22,20 +22,20 @@ public class Report {
 		this.description = description;
 		this.comment = "none";
 		this.resolver = "none";
+		this.fixdate = "none";
 		this.is_resolved = false;
-		this.seen = false;
 		this.is_urgent = is_urgent;
 	}
 	
-	public Report(int id, String date, String user, String description, String comment, String resolver, boolean is_resolved, boolean seen, boolean is_urgent) {
+	public Report(int id, String date, String user, String description, String comment, String resolver, String fixdate, boolean is_resolved, boolean is_urgent) {
 		this.id = id;
 		this.date = date;
 		this.user = user;
 		this.description = description;
 		this.comment = comment;
 		this.resolver = resolver;
+		this.fixdate = fixdate;
 		this.is_resolved = is_resolved;
-		this.seen = seen;
 		this.is_urgent = is_urgent;
 	}
 
@@ -57,10 +57,6 @@ public class Report {
 	
 	public void setResolved(boolean resolved) {
 		this.is_resolved = resolved;
-	}
-	
-	public void setSeen(boolean seen) {
-		this.seen = seen;
 	}
 	
 	public void setUrgency(boolean urgency) {
@@ -95,12 +91,22 @@ public class Report {
 		return this.is_resolved;
 	}
 	
-	public boolean isSeen() {
-		return this.seen;
-	}
-	
 	public boolean isUrgent() {
 		return this.is_urgent;
+	}
+	
+	public void list(Player p) {
+		String prefix = "§4";
+		if (is_urgent) {
+			prefix = "§4§l";
+		}
+		if (is_resolved) {
+			p.sendMessage(prefix + "(#" + id + ") §c" + user + " " + date + " §7 - " + description);
+			p.sendMessage("§c" + resolver + " " + fixdate + " §7 - " + comment);
+		}
+		else {
+			p.sendMessage(prefix + "(#" + id + ") §c" + user + " " + date + " §7 - " + description);
+		}
 	}
 	
 	public void post(Player p) {
@@ -109,7 +115,7 @@ public class Report {
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
 			int post = stmt.executeUpdate("INSERT INTO neoreports_bugs VALUES (" + id + ",'" + date + "','" + user + "','" + description +
-					"','" + comment + "','" + resolver + "','" + is_resolved + "','" + seen + "','" + is_urgent +"')");
+					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  is_resolved + "','" + is_urgent +"')");
 			if (post > 0) {
 				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
 			}

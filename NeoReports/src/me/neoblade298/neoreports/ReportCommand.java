@@ -13,7 +13,7 @@ import me.neoblade298.neoreports.Main;
 
 public class ReportCommand implements CommandExecutor {
 	Main main;
-	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy HH:mm");
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd");
 	
 	public ReportCommand(Main main) {
 		this.main = main;
