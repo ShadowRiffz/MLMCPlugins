@@ -343,7 +343,7 @@ public class ReportsCommand implements CommandExecutor {
 				}
 				else if (args.length > 2 && args[0].equalsIgnoreCase("edit") && StringUtils.isNumeric(args[1])) {
 					String desc = args[2];
-					for (int i = 0; i < args.length; i++) {
+					for (int i = 3; i < args.length; i++) {
 						desc += " " + args[i];
 					}
 					try{  
