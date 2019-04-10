@@ -111,12 +111,19 @@ public class Report {
 	}
 	
 	public void post(Player p) {
+		int resolved = 0, urgent = 0;
+		if (is_resolved) {
+			resolved = 1;
+		}
+		if (is_urgent) {
+			urgent = 1;
+		}
 		try{  
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
 			int post = stmt.executeUpdate("INSERT INTO neoreports_bugs VALUES (" + id + ",'" + date + "','" + user + "','" + description +
-					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  is_resolved + "','" + is_urgent +"')");
+					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  resolved + "','" + urgent +"')");
 			if (post > 0) {
 				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
 				if(is_urgent) {
