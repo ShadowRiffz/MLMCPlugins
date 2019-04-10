@@ -60,14 +60,17 @@ public class ReportsCommand implements CommandExecutor {
 				}
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
+			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1]) && !p.hasPermission("neoreports.admin")) {
 				try{  
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
-					int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
+					int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + " AND user = '" + author +"';");
 					if (deleted > 0) {
 						p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
+					}
+					else {
+						p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you the creator of the report?");
 					}
 					con.close();
 				}
@@ -80,6 +83,26 @@ public class ReportsCommand implements CommandExecutor {
 			else if (p.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
 					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+					return true;
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
+						if (deleted > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you sure the id is correct?");
+						}
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
 					return true;
 				}
 				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
@@ -295,6 +318,9 @@ public class ReportsCommand implements CommandExecutor {
 						int edited = stmt.executeUpdate("UPDATE neoreports_bugs SET `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
 						if (edited > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successfully edited comment!");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7Failed to edit comment!");
 						}
 						con.close();
 					}

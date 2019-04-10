@@ -138,6 +138,9 @@ public class Report {
 					Main.numBugs++;
 				}
 			}
+			else {
+				p.sendMessage("§4[§c§lMLMC§4] §7Failed to post report!");
+			}
 			con.close();
 		}
 		catch(Exception e) {
