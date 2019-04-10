@@ -15,7 +15,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
 	
 	public void onEnable() {
-		Bukkit.getServer().getLogger().info("NeoPPRs Enabled");
+		Bukkit.getServer().getLogger().info("NeoReports Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 
 		// Initialize static vars
@@ -44,12 +44,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}  
 	    
 	    // Get command listener
-	    this.getCommand("report").setExecutor(new ReportCommand(this));
-	    this.getCommand("reports").setExecutor(new ReportsCommand(this));
+	    this.getCommand("neoreport").setExecutor(new ReportCommand(this));
+	    this.getCommand("neoreports").setExecutor(new ReportsCommand(this));
 	}
 	
 	public void onDisable() {
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoPPRs Disabled");
+	    org.bukkit.Bukkit.getServer().getLogger().info("NeoReports Disabled");
 	    super.onDisable();
 	}
 	

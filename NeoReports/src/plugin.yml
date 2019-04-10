@@ -3,9 +3,9 @@ author: Neoblade298
 main: me.neoblade298.neoreports.Main
 version: 1.00
 commands:
-  report:
+  neoreport:
     description: Base commands
     usage: /report
-  reports:
+  neoreports:
     description: Base commands
     usage: /reports

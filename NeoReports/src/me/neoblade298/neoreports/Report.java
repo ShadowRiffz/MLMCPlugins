@@ -126,6 +126,7 @@ public class Report {
 					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  resolved + "','" + urgent +"')");
 			if (post > 0) {
 				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted report!");
+				Main.nextReport++;
 				if(is_urgent) {
 					Main.numUrgent++;
 					for (Player staff : Bukkit.getOnlinePlayers()) {
