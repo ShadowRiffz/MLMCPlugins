@@ -275,7 +275,7 @@ public class ReportsCommand implements CommandExecutor {
 				}
 				else if (args.length > 2 && args[0].equalsIgnoreCase("resolve") && StringUtils.isNumeric(args[1])) {
 					String desc = args[2];
-					for (int i = 0; i < args.length; i++) {
+					for (int i = 2; i < args.length; i++) {
 						desc += " " + args[i];
 					}
 					try{  
@@ -283,9 +283,44 @@ public class ReportsCommand implements CommandExecutor {
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
 						ResultSet rs;
-						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
+						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "', `resolver` = '" + author + "' WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
+						}
+						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
+						if (rs.next()) {
+							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
+						}
+						boolean is_urgent = rs.getInt(9) == 1;
+						if (is_urgent) {
+							Main.numUrgent--;
+						}
+						else {
+							Main.numBugs--;
+						}
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
+					return true;
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("unresolve") && StringUtils.isNumeric(args[1])) {
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 0 WHERE id = " + args[1] + ";");
+						if (resolved > 0) {
+							p.sendMessage("§4[§c§lMLMC§4] §7Successfully unresolved report!");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (rs.next()) {

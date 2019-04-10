@@ -29,6 +29,7 @@ public class ReportCommand implements CommandExecutor {
 					p.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
 					p.sendMessage("§4/reports list [bug/urgent/resolved] §7- Lists all bugs of a certain type");
 					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
+					p.sendMessage("§4/reports unresolve [bug id] §7- Unresolves a bug");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
 				return true;
