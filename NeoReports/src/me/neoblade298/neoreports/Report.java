@@ -102,11 +102,11 @@ public class Report {
 			prefix = "§4§l";
 		}
 		if (is_resolved) {
-			p.sendMessage(prefix + "(#" + id + ") §c" + user + " " + date + " §7 - " + description);
+			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + description);
 			p.sendMessage("§c" + resolver + " " + fixdate + " §7 - " + comment);
 		}
 		else {
-			p.sendMessage(prefix + "(#" + id + ") §c" + user + " " + date + " §7 - " + description);
+			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + description);
 		}
 	}
 	
