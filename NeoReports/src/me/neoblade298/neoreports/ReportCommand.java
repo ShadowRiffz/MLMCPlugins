@@ -36,7 +36,7 @@ public class ReportCommand implements CommandExecutor {
 			}
 			else if (args[0].equalsIgnoreCase("bug") && args.length > 1) {
 				String desc = args[1];
-				for (int i = 2; i < args.length - 1; i++) {
+				for (int i = 2; i < args.length; i++) {
 					desc += " " + args[i];
 				}
 				Report rep = new Report(Main.nextReport, author, desc, false);
@@ -45,7 +45,7 @@ public class ReportCommand implements CommandExecutor {
 			}
 			else if (args[0].equalsIgnoreCase("urgent") && args.length > 1) {
 				String desc = args[1];
-				for (int i = 2; i < args.length - 1; i++) {
+				for (int i = 2; i < args.length; i++) {
 					desc += " " + args[i];
 				}
 				Report rep = new Report(Main.nextReport, author, desc, true);
