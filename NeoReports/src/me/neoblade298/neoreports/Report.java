@@ -28,7 +28,7 @@ public class Report {
 		this.is_urgent = is_urgent;
 	}
 	
-	public Report(int id, String date, String user, String description, String comment, String resolver, String fixdate, boolean is_resolved, boolean is_urgent) {
+	public Report(int id, String date, String user, String description, String resolver, String comment, String fixdate, boolean is_resolved, boolean is_urgent) {
 		this.id = id;
 		this.date = date;
 		this.user = user;
