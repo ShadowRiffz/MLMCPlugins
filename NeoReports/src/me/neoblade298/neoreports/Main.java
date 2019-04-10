@@ -24,15 +24,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
 			Statement stmt = con.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("select MAX(id) from neoreports_reports");
+			ResultSet rs = stmt.executeQuery("select MAX(id) from neoreports_bugs");
 			while (rs.next()) {
 				nextReport = rs.getInt(1) + 1;
 			}
-			rs = stmt.executeQuery("select COUNT(*) from neoreports_reports WHERE is_urgent = 0 AND is_resolved = 0");
+			rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_urgent = 0 AND is_resolved = 0");
 			while (rs.next()) {
 				numBugs = rs.getInt(1);
 			}
-			rs = stmt.executeQuery("select COUNT(*) from neoreports_reports WHERE is_urgent = 1 AND is_resolved = 0");
+			rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0");
 			while (rs.next()) {
 				numUrgent = rs.getInt(1);
 			}
