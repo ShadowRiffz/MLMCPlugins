@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,6 +20,7 @@ import me.neoblade298.neoreports.Main;
 public class ReportsCommand implements CommandExecutor {
 	Main main;
 	static int NUM_REPORTS_PER_PAGE = 10;
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd");
 	
 	public ReportsCommand(Main main) {
 		this.main = main;
@@ -283,7 +288,8 @@ public class ReportsCommand implements CommandExecutor {
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
 						ResultSet rs;
-						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "', `resolver` = '" + author + "' WHERE id = " + args[1] + ";");
+						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "', `resolver` = '" + author + 
+								"', `fixdate` = '" + dateformat.format(new Date()) + "' WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
 						}
