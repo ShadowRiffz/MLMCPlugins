@@ -328,10 +328,10 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						boolean is_urgent = rs.getInt(9) == 1;
 						if (is_urgent) {
-							Main.numUrgent--;
+							Main.numUrgent++;
 						}
 						else {
-							Main.numBugs--;
+							Main.numBugs++;
 						}
 						con.close();
 					}
