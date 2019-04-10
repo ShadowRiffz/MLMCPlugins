@@ -31,6 +31,7 @@ public class ReportCommand implements CommandExecutor {
 					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
+				return true;
 			}
 			else if (args[0].equalsIgnoreCase("bug") && args.length > 1) {
 				String desc = "";
@@ -40,6 +41,7 @@ public class ReportCommand implements CommandExecutor {
 				desc += args[args.length - 1];
 				Report rep = new Report(Main.nextReport, author, desc, false);
 				rep.post(p);
+				return true;
 			}
 			else if (args[0].equalsIgnoreCase("urgent") && args.length > 1) {
 				String desc = "";
@@ -49,6 +51,11 @@ public class ReportCommand implements CommandExecutor {
 				desc += args[args.length - 1];
 				Report rep = new Report(Main.nextReport, author, desc, true);
 				rep.post(p);
+				return true;
+			}
+			else {
+				p.sendMessage("§c[§4§lMLMC§c] §7Invalid command!");
+				return true;
 			}
 		}
 		return false;

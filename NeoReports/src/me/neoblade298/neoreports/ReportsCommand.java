@@ -38,6 +38,7 @@ public class ReportsCommand implements CommandExecutor {
 					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
+				return true;
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
 				try{  
@@ -57,6 +58,7 @@ public class ReportsCommand implements CommandExecutor {
 					System.out.println(e);
 					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
+				return true;
 			}
 			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
 				try{  
@@ -73,10 +75,12 @@ public class ReportsCommand implements CommandExecutor {
 					System.out.println(e);
 					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
+				return true;
 			}
 			else if (p.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
 					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+					return true;
 				}
 				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
 					// Show first page only
@@ -103,6 +107,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
 						int page = Integer.parseInt(args[2]);
@@ -130,6 +135,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 				}
 				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("urgent")) {
@@ -157,6 +163,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
 						int page = Integer.parseInt(args[2]);
@@ -184,6 +191,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 				}
 				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("resolved")) {
@@ -211,6 +219,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 					else if (args.length == 3 && StringUtils.isNumeric(args[2])) {
 						int page = Integer.parseInt(args[2]);
@@ -238,6 +247,7 @@ public class ReportsCommand implements CommandExecutor {
 							System.out.println(e);
 							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
+						return true;
 					}
 				}
 				else if (args.length > 2 && args[0].equalsIgnoreCase("resolve") && StringUtils.isNumeric(args[1])) {
@@ -271,6 +281,7 @@ public class ReportsCommand implements CommandExecutor {
 						System.out.println(e);
 						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
+					return true;
 				}
 				else if (args.length > 2 && args[0].equalsIgnoreCase("edit") && StringUtils.isNumeric(args[1])) {
 					String desc = args[2];
@@ -291,13 +302,16 @@ public class ReportsCommand implements CommandExecutor {
 						System.out.println(e);
 						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
+					return true;
 				}
 				else {
 					p.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
+					return true;
 				}
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
+				return true;
 			}
 		}
 		return false;
