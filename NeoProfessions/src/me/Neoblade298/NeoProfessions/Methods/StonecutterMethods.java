@@ -138,7 +138,7 @@ public class StonecutterMethods {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
 				if(stonecutterUtils.isEssence(item)) {
-					int oldLevel = util.getEssenceLevel(item);
+					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 					int level = oldLevel + 1;
 					if(p.hasPermission("stonecutter.refine." + oldLevel)) {
 						if(econ.has(p, REFINE_COST)) {
@@ -155,8 +155,8 @@ public class StonecutterMethods {
 							}
 							
 							// Check if enough essence
-							if(p.getInventory().containsAtLeast(common.getEssence(level), cost)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(level), cost));
+							if(p.getInventory().containsAtLeast(common.getEssence(oldLevel), cost)) {
+								p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel), cost));
 								p.getInventory().addItem(common.getEssence(level));
 								econ.withdrawPlayer(p, REFINE_COST);
 								util.sendMessage(p, "&7Successfully refined essence!");
