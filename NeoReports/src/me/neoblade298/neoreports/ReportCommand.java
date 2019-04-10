@@ -20,7 +20,7 @@ public class ReportCommand implements CommandExecutor {
 			Player p = (Player) sender;
 			String author = p.getName();
 			if(args.length == 0) {
-				p.sendMessage("§7--- §cNeoReports ---");
+				p.sendMessage("§7--- §cNeoReports §7---");
 				p.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
 				p.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
 				p.sendMessage("§c/reports list §7- Lists all reports made by you");
