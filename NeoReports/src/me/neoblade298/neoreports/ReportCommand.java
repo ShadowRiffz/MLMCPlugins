@@ -35,21 +35,19 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("bug") && args.length > 1) {
-				String desc = "";
+				String desc = args[1];
 				for (int i = 2; i < args.length - 1; i++) {
-					desc += args[i] + " ";
+					desc += " " + args[i];
 				}
-				desc += args[args.length - 1];
 				Report rep = new Report(Main.nextReport, author, desc, false);
 				rep.post(p);
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("urgent") && args.length > 1) {
-				String desc = "";
+				String desc = args[1];
 				for (int i = 2; i < args.length - 1; i++) {
-					desc += args[i] + " ";
+					desc += " " + args[i];
 				}
-				desc += args[args.length - 1];
 				Report rep = new Report(Main.nextReport, author, desc, true);
 				rep.post(p);
 				return true;
