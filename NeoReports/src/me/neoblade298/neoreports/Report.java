@@ -125,7 +125,7 @@ public class Report {
 			int post = stmt.executeUpdate("INSERT INTO neoreports_bugs VALUES (" + id + ",'" + date + "','" + user + "','" + description +
 					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  resolved + "','" + urgent +"')");
 			if (post > 0) {
-				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted report!");
 				if(is_urgent) {
 					Main.numUrgent++;
 					for (Player staff : Bukkit.getOnlinePlayers()) {
