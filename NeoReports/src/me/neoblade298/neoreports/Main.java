@@ -3,7 +3,11 @@ package me.neoblade298.neoreports;
 import java.sql.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
@@ -51,6 +55,23 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoReports Disabled");
 	    super.onDisable();
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if (p.hasPermission("neoreports.admin")) {
+	    	BukkitRunnable joinTask = new BukkitRunnable() {
+				public void run() {
+					if (numUrgent > 0) {
+						p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
+					}
+					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+
+				}
+			};
+			joinTask.runTaskLater(this, 100L);
+		}
 	}
 	
 }
