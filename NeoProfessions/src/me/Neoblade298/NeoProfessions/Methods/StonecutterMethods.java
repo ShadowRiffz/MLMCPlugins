@@ -140,7 +140,7 @@ public class StonecutterMethods {
 				if(stonecutterUtils.isEssence(item)) {
 					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 					int level = oldLevel + 1;
-					if(p.hasPermission("stonecutter.refine." + oldLevel)) {
+					if(p.hasPermission("stonecutter.refine.tier." + level)) {
 						if(econ.has(p, REFINE_COST)) {
 							// Find essence cost via perms
 							int cost = REFINE_ESSENCE_0;
@@ -177,7 +177,7 @@ public class StonecutterMethods {
 					String oreType = stonecutterUtils.getOreType(item);
 					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 					int level = oldLevel + 1;
-					if(p.hasPermission("stonecutter.refine." + oldLevel)) {
+					if(p.hasPermission("stonecutter.refine.tier." + level)) {
 						if(econ.has(p, REFINE_COST)) {
 							// Find essence cost via perms
 							int cost = REFINE_ORE;
