@@ -39,7 +39,7 @@ public class ReportCommand implements CommandExecutor {
 				for (int i = 2; i < args.length; i++) {
 					desc += " " + args[i];
 				}
-				Report rep = new Report(Main.nextReport, author, desc, false);
+				Report rep = new Report(Main.nextReport, author, desc.replaceAll("'", "\'"), false);
 				rep.post(p);
 				return true;
 			}
@@ -48,7 +48,7 @@ public class ReportCommand implements CommandExecutor {
 				for (int i = 2; i < args.length; i++) {
 					desc += " " + args[i];
 				}
-				Report rep = new Report(Main.nextReport, author, desc, true);
+				Report rep = new Report(Main.nextReport, author, desc.replaceAll("'", "\'"), true);
 				rep.post(p);
 				return true;
 			}
