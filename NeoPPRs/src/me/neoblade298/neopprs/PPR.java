@@ -104,16 +104,46 @@ public class PPR {
 	
 	public void preview(Player p) {
 		p.sendMessage("§7-- §c" + user + " §7--");
-		p.sendMessage("§cOffense§7: " + getOffense());
-		p.sendMessage("§cAction§7: " + getAction());
-		p.sendMessage("§cDescription§7: " + getDescription());
+		if (offense == null) {
+			p.sendMessage("§cOffense§7: Not set");
+		}
+		else {
+			p.sendMessage("§cOffense§7: " + getOffense());
+		}
+		if (action == null) {
+			p.sendMessage("§cAction§7: Not set");
+		}
+		else {
+			p.sendMessage("§cAction§7: " + getAction());
+		}
+		if (description == null) {
+			p.sendMessage("§cDescription§7: Not set");
+		}
+		else {
+			p.sendMessage("§cDescription§7: " + getDescription());
+		}
 	}
 	
 	public void show(Player p) {
 		p.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
-		p.sendMessage("§cOffense§7: " + getOffense());
-		p.sendMessage("§cAction§7: " + getAction());
-		p.sendMessage("§cDescription§7: " + getDescription());
+		if (offense == null) {
+			p.sendMessage("§cOffense§7: Not set");
+		}
+		else {
+			p.sendMessage("§cOffense§7: " + getOffense());
+		}
+		if (action == null) {
+			p.sendMessage("§cAction§7: Not set");
+		}
+		else {
+			p.sendMessage("§cAction§7: " + getAction());
+		}
+		if (description == null) {
+			p.sendMessage("§cDescription§7: Not set");
+		}
+		else {
+			p.sendMessage("§cDescription§7: " + getDescription());
+		}
 		p.sendMessage("§7§m----------");
 	}
 	

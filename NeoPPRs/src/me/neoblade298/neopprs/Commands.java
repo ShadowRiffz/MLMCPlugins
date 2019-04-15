@@ -93,7 +93,7 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
 					}
 				}
-				else if (args.length > 1 && (args[0].equalsIgnoreCase("description") || args[1].equalsIgnoreCase("desc"))) {
+				else if (args.length > 1 && (args[0].equalsIgnoreCase("description") || args[0].equalsIgnoreCase("desc"))) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						String desc = args[1];
