@@ -32,11 +32,10 @@ public class Commands implements CommandExecutor {
 			String author = p.getName();
 			if(args.length == 0) {
 				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
-				p.sendMessage("§c/ppr create §7- Puts you into PPR creation mode");
-				p.sendMessage("§c/ppr set name §7- Sets username for PPR");
-				p.sendMessage("§c/ppr set offense §7- Sets offense for PPR");
-				p.sendMessage("§c/ppr set action §7- Sets action for PPR");
-				p.sendMessage("§c/ppr set desc §7- Sets description for PPR");
+				p.sendMessage("§c/ppr create [name]§7- Puts you into PPR creation mode");
+				p.sendMessage("§c/ppr offense §7- Sets offense for PPR");
+				p.sendMessage("§c/ppr action §7- Sets action for PPR");
+				p.sendMessage("§c/ppr desc §7- Sets description for PPR");
 				p.sendMessage("§c/ppr view §7- Shows a preview of the PPR");
 				p.sendMessage("§c/ppr post §7- Saves and posts PPR");
 				p.sendMessage("§c/ppr cancel §7- Exits PPR creation mode");
@@ -52,7 +51,7 @@ public class Commands implements CommandExecutor {
 					p.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
 					p.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
 				}
-				if (args.length == 1 && args[0].equalsIgnoreCase("create")) {
+				if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
 					if (Main.pprs.containsKey(author)) {
 						p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
 					}
@@ -62,20 +61,11 @@ public class Commands implements CommandExecutor {
 						Main.nextPPR++;
 						Main.pprs.put(author, ppr);
 						Main.isModifying.put(author, false);
-						ppr.preview(p);
-					}
-				}
-				else if (args.length == 3 && args[1].equalsIgnoreCase("name")) {
-					if (Main.pprs.containsKey(author)) {
-						PPR ppr = Main.pprs.get(author);
 						ppr.setUser(args[2]);
 						ppr.preview(p);
 					}
-					else {
-						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
-					}
 				}
-				else if (args.length > 2 && args[1].equalsIgnoreCase("offense")) {
+				else if (args.length > 1 && args[0].equalsIgnoreCase("offense")) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						String offense = "";
@@ -90,7 +80,7 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
 					}
 				}
-				else if (args.length > 2 && args[1].equalsIgnoreCase("action")) {
+				else if (args.length > 1 && args[0].equalsIgnoreCase("action")) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						String action = "";
@@ -105,7 +95,7 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
 					}
 				}
-				else if (args.length > 2 && (args[1].equalsIgnoreCase("description") || args[1].equalsIgnoreCase("desc"))) {
+				else if (args.length > 1 && (args[0].equalsIgnoreCase("description") || args[1].equalsIgnoreCase("desc"))) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						String desc = "";
