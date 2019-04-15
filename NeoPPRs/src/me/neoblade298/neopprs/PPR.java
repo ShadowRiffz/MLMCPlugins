@@ -55,15 +55,15 @@ public class PPR {
 	}
 	
 	public void setOffense(String offense) {
-		this.offense = offense.replaceAll("'", "\'");;
+		this.offense = offense.replaceAll("'", "\\\\'");
 	}
 	
 	public void setAction(String action) {
-		this.action = action.replaceAll("'", "\'");;
+		this.action = action.replaceAll("'", "\\\\'");
 	}
 	
 	public void setDescription(String description) {
-		this.description = description.replaceAll("'", "\'");
+		this.description = description.replaceAll("'", "\\\\'");
 	}
 	
 	public int getId() {
@@ -87,15 +87,15 @@ public class PPR {
 	}
 	
 	public String getOffense() {
-		return this.offense.replaceAll("\'", "'");
+		return this.offense.replaceAll("\\\\'", "'");
 	}
 	
 	public String getAction() {
-		return this.action.replaceAll("\'", "'");
+		return this.action.replaceAll("\\\\'", "'");
 	}
 	
 	public String getDescription() {
-		return this.description.replaceAll("\'", "'");
+		return this.description.replaceAll("\\\\'", "'");
 	}
 	
 	public boolean isFilled() {
@@ -104,16 +104,16 @@ public class PPR {
 	
 	public void preview(Player p) {
 		p.sendMessage("§7-- §c" + user + " §7--");
-		p.sendMessage("§cOffense§7: " + offense);
-		p.sendMessage("§cAction§7: " + action);
-		p.sendMessage("§cDescription§7: " + description);
+		p.sendMessage("§cOffense§7: " + getOffense());
+		p.sendMessage("§cAction§7: " + getAction());
+		p.sendMessage("§cDescription§7: " + getDescription());
 	}
 	
 	public void show(Player p) {
 		p.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
-		p.sendMessage("§cOffense§7: " + offense);
-		p.sendMessage("§cAction§7: " + action);
-		p.sendMessage("§cDescription§7: " + description);
+		p.sendMessage("§cOffense§7: " + getOffense());
+		p.sendMessage("§cAction§7: " + getAction());
+		p.sendMessage("§cDescription§7: " + getDescription());
 		p.sendMessage("§7§m----------");
 	}
 	

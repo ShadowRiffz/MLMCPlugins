@@ -61,18 +61,17 @@ public class Commands implements CommandExecutor {
 						Main.nextPPR++;
 						Main.pprs.put(author, ppr);
 						Main.isModifying.put(author, false);
-						ppr.setUser(args[2]);
+						ppr.setUser(args[1]);
 						ppr.preview(p);
 					}
 				}
 				else if (args.length > 1 && args[0].equalsIgnoreCase("offense")) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
-						String offense = "";
-						for (int i = 2; i < args.length - 1; i++) {
-							offense += args[i] + " ";
+						String offense = args[1];
+						for (int i = 2; i < args.length; i++) {
+							offense += " " + args[i];
 						}
-						offense += args[args.length - 1];
 						ppr.setOffense(offense);
 						ppr.preview(p);
 					}
@@ -83,11 +82,10 @@ public class Commands implements CommandExecutor {
 				else if (args.length > 1 && args[0].equalsIgnoreCase("action")) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
-						String action = "";
-						for (int i = 2; i < args.length - 1; i++) {
-							action += args[i] + " ";
+						String action = args[1];
+						for (int i = 2; i < args.length; i++) {
+							action += " " + args[i];
 						}
-						action += args[args.length - 1];
 						ppr.setAction(action);
 						ppr.preview(p);
 					}
@@ -98,11 +96,10 @@ public class Commands implements CommandExecutor {
 				else if (args.length > 1 && (args[0].equalsIgnoreCase("description") || args[1].equalsIgnoreCase("desc"))) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
-						String desc = "";
-						for (int i = 2; i < args.length - 1; i++) {
-							desc += args[i] + " ";
+						String desc = args[1];
+						for (int i = 2; i < args.length; i++) {
+							desc += " " + args[i];
 						}
-						desc += args[args.length - 1];
 						ppr.setDescription(desc);
 						ppr.preview(p);
 					}
