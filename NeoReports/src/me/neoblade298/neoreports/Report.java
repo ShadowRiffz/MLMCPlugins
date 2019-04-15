@@ -45,11 +45,11 @@ public class Report {
 	}
 	
 	public void setDescription(String description) {
-		this.description = description.replaceAll("'", "\'");
+		this.description = description.replaceAll("'", "\\\\'");
 	}
 	
 	public void setComment(String comment) {
-		this.comment = comment.replaceAll("'", "\'");
+		this.comment = comment.replaceAll("'", "\\\\'");
 	}
 	
 	public void setResolver(String resolver) {
@@ -77,11 +77,11 @@ public class Report {
 	}
 	
 	public String getDescription() {
-		return this.description.replaceAll("\'", "'");
+		return this.description.replaceAll("\\\\'", "'");
 	}
 	
 	public String getComment() {
-		return this.comment.replaceAll("\'", "'");
+		return this.comment.replaceAll("\\\\'", "'");
 	}
 	
 	public String getResolver() {
@@ -102,11 +102,11 @@ public class Report {
 			prefix = "§4§l";
 		}
 		if (is_resolved) {
-			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + description);
-			p.sendMessage("§c" + resolver + " " + fixdate + "§7 - " + comment);
+			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + getDescription());
+			p.sendMessage("§c" + resolver + " " + fixdate + "§7 - " + getComment());
 		}
 		else {
-			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + description);
+			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + getDescription());
 		}
 	}
 	
