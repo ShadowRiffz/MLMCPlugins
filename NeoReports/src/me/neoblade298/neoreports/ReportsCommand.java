@@ -39,8 +39,8 @@ public class ReportsCommand implements CommandExecutor {
 				p.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (do this after your bug is resolved!)");
 				if (sender.hasPermission("neoreports.admin")) {
 					p.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
-					p.sendMessage("§4/reports list [bug/urgent/resolved] §7- Lists all bugs of a certain type");
-					p.sendMessage("§4/reports resolve [bug id] [comment] §7- Resolves a bug, marking it with the comment");
+					p.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
+					p.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
 					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
 				return true;
