@@ -11,10 +11,14 @@ public class BoolAlg {
 				break;
 			}
 			input = input.replaceAll(" ", "");
-			input = input.replaceAll("a3", "a");
-			input = input.replaceAll("a2", "b");
-			input = input.replaceAll("a1", "c");
-			input = input.replaceAll("a0", "d");
+			input = input.replaceAll("a7", "a");
+			input = input.replaceAll("a6", "b");
+			input = input.replaceAll("a5", "c");
+			input = input.replaceAll("a4", "d");
+			input = input.replaceAll("a3", "e");
+			input = input.replaceAll("a2", "f");
+			input = input.replaceAll("a1", "g");
+			input = input.replaceAll("a0", "h");
 			while (input.contains("’")) {
 				int num = input.indexOf("’");
 				input = input.substring(0, num) + input.substring(num + 1, input.length());
