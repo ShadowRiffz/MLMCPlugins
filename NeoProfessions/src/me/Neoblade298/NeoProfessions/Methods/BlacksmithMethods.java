@@ -34,7 +34,7 @@ public class BlacksmithMethods {
 	final int REFORGE_COST_BASE = 1000;
 	final int REFORGE_COST_MULT = 2;
 	final int REFORGE_ESSENCE_PER_LVL = 6;
-	final int SCRAP_COST = 500;
+	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
 	
