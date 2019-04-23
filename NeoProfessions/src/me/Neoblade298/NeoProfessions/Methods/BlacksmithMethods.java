@@ -29,8 +29,8 @@ public class BlacksmithMethods {
 	final int REPAIR_ESSENCE = 1;
 	final int UNBREAKING_COST_PER_LVL = 5000;
 	final int PROTECTION_COST_PER_LVL = 5000;
-	final int UNBREAKING_ESSENCE_PER_LVL = 5;
-	final int PROTECTION_ESSENCE_PER_LVL = 5;
+	final int UNBREAKING_ESSENCE_PER_LVL = 4;
+	final int PROTECTION_ESSENCE_PER_LVL = 4;
 	final int REFORGE_COST_BASE = 1000;
 	final int REFORGE_COST_MULT = 2;
 	final int REFORGE_ESSENCE_PER_LVL = 6;
