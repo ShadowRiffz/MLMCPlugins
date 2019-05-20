@@ -37,7 +37,7 @@ public class MasonCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/mason create slot [level]");
 				util.sendMessage(p, "&7- &c/mason slot [slot #]");
 				util.sendMessage(p, "&7- &c/mason unslot [slot #]");
-				util.sendMessage(p, "&7- &c/mason remove [slot #]");
+				util.sendMessage(p, "&7- &c/mason remove slot [slot #]");
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
