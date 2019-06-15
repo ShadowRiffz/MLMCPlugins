@@ -93,7 +93,7 @@ public class StonecutterMethods {
 		attr = attr.toLowerCase();
 		if(p.getInventory().firstEmpty() != -1) {
 			if(p.hasPermission("stonecutter.attribute." + type + "." + attr)) {
-				if(p.hasPermission("stonecutter.overload." + level)) {
+				if(p.hasPermission("stonecutter.overload." + type + "." + level)) {
 					if(p.getInventory().containsAtLeast(common.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(sItems.getOre(attr, level), GEM_ORES))
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
