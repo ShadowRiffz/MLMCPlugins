@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -159,13 +160,17 @@ public class MasonListeners implements Listener {
 			return;
 		}
 		Player p = e.getPlayer();
+		ItemStack itemToSlot = p.getInventory().getItemInMainHand();
+		
+		if (itemToSlot.getType() == Material.ENDER_PEARL && itemToSlot.getItemMeta().hasLore()) {
+			e.setCancelled(true);
+		}
 		
 		if(slotItem.containsKey(p)) {
 			
 			e.setCancelled(true);
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
-			ItemStack itemToSlot = p.getInventory().getItemInMainHand();
 			int slotLevel = masonUtils.getSlotLevel(itemWithSlot, slot);
 			slotNum.remove(p);
 			slotItem.remove(p);
