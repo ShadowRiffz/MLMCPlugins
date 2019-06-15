@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Methods;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -40,6 +41,9 @@ public class CulinarianMethods {
 	DrinksRecipeItems drink;
 	CommonItems common;
 	DecimalFormat format;
+	
+	// Cooldown
+	HashMap<String, Boolean> specialCooldowns;
 	
 	// Constants
 	final static double GARNISH_BOOST_BASE = 1.1;
@@ -333,8 +337,8 @@ public class CulinarianMethods {
 					}
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
-						if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
-							if(econ.has(p, GARNISH_COST)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), REMEDY_ESSENCE)) {
+							if(econ.has(p, REMEDY_COST)) {
 								ItemMeta meta = item.getItemMeta();
 								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 								lore.add("§9Remedies " + status);
@@ -427,30 +431,36 @@ public class CulinarianMethods {
 			int slot = p.getInventory().firstEmpty();
 			if(slot != -1) {
 				if(econ.has(p, SPECIAL_COST)) {
-					// Randomize the tier to be received, 0 = ingr, 1-3 = tier 1-3, 4 = limited edition
-					Random gen = new Random();
-					int tier = gen.nextInt(level);
-					ArrayList<ItemStack> recipes = null;
-					if(tier == 0) {
-						recipes = ingr.getIngredients();
+					if (!specialCooldowns.containsKey(p.getName())) {
+						// Randomize the tier to be received, 0 = ingr, 1-3 = tier 1-3, 4 = limited edition
+						Random gen = new Random();
+						int tier = gen.nextInt(level);
+						ArrayList<ItemStack> recipes = null;
+						if(tier == 0) {
+							recipes = ingr.getIngredients();
+						}
+						else if(tier == 1) {
+							recipes = t1.getTier1Recipes();
+						}
+						else if(tier == 2) {
+							recipes = t2.getTier2Recipes();
+						}
+						else if(tier == 3) {
+							recipes = t3.getTier3Recipes();
+						}
+						else if(tier == 4) {
+							recipes = ler.getLimitedEditionRecipes();
+						}
+						ItemStack item = recipes.get(gen.nextInt(recipes.size()));
+						item.setAmount(SPECIAL_AMOUNT);
+						p.getInventory().addItem(item);
+						econ.withdrawPlayer(p, SPECIAL_COST);
+						specialCooldowns.put(p.getName(), true);
+						util.sendMessage(p, "&7Successfully received daily special!");
 					}
-					else if(tier == 1) {
-						recipes = t1.getTier1Recipes();
+					else {
+						util.sendMessage(p, "&cYou already used this today!");
 					}
-					else if(tier == 2) {
-						recipes = t2.getTier2Recipes();
-					}
-					else if(tier == 3) {
-						recipes = t3.getTier3Recipes();
-					}
-					else if(tier == 4) {
-						recipes = ler.getLimitedEditionRecipes();
-					}
-					ItemStack item = recipes.get(gen.nextInt(recipes.size()));
-					item.setAmount(SPECIAL_AMOUNT);
-					p.getInventory().addItem(item);
-					econ.withdrawPlayer(p, SPECIAL_COST);
-					util.sendMessage(p, "&7Successfully received daily special!");
 				}
 				else {
 					util.sendMessage(p, "&cYou lack the gold to do this!");
