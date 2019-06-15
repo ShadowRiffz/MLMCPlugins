@@ -77,11 +77,11 @@ public class StonecutterMethods {
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill!");
+				util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
 			}
 		}
 		else {
