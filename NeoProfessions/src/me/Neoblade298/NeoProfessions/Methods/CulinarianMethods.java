@@ -54,7 +54,7 @@ public class CulinarianMethods {
 	final static int PRESERVE_ESSENCE = 1;
 	final static int SPICE_COST = 500;
 	final static int SPICE_ESSENCE = 1;
-	final static int CRAFT_COST = 50;
+	final static int CRAFT_COST = 5;
 	final static int ASSIMILATE_COST = 100;
 	final static int SPECIAL_COST = 5000;
 	final static int SPECIAL_AMOUNT = 16;
