@@ -93,7 +93,7 @@ public class CulinarianCommands implements CommandExecutor {
 				}
 				else if(args[0].equalsIgnoreCase("remedy")) {
 					if(args.length == 2) {
-						if(args[2].equalsIgnoreCase("stun") || args[2].equalsIgnoreCase("silence") || args[2].equalsIgnoreCase("curse") || args[2].equalsIgnoreCase("root")) {
+						if(args[1].equalsIgnoreCase("stun") || args[1].equalsIgnoreCase("silence") || args[1].equalsIgnoreCase("curse") || args[1].equalsIgnoreCase("root")) {
 							culinarianMethods.remedy(p, args[2]);
 							return true;
 						}
