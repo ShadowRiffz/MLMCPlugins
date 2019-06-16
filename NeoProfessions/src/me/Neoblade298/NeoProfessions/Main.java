@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions;
 
 import java.util.Iterator;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -109,17 +110,20 @@ public class Main extends JavaPlugin implements Listener {
 					for (Player p : w.getPlayers()) {
 						// First check what charms the player has
 						ItemStack item = p.getInventory().getItemInMainHand();
-						String charmLine = null;
-						if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
-							for(String line : item.getItemMeta().getLore()) {
-								if(line.contains("Hunger")) {
-									charmLine = line;
-									break;
+						// Then make sure it's not a literal hunger charm
+						if (item.getType() != Material.PRISMARINE_CRYSTALS) {
+							String charmLine = null;
+							if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
+								for(String line : item.getItemMeta().getLore()) {
+									if(line.contains("Hunger")) {
+										charmLine = line;
+										break;
+									}
 								}
 							}
-						}
-						if(charmLine != null) {
-							p.setFoodLevel(18);
+							if(charmLine != null) {
+								p.setFoodLevel(18);
+							}
 						}
 					}
 				}

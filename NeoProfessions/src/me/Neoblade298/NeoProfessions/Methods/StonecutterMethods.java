@@ -77,11 +77,11 @@ public class StonecutterMethods {
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill!");
+				util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
 			}
 		}
 		else {
@@ -92,8 +92,8 @@ public class StonecutterMethods {
 	public void createOverloadedGem(Player p, String attr, String type, int level) {
 		attr = attr.toLowerCase();
 		if(p.getInventory().firstEmpty() != -1) {
-			if(p.hasPermission("stonecutter.attribute." + type + "." + attr)) {
-				if(p.hasPermission("stonecutter.overload." + level)) {
+			if(p.hasPermission("stonecutter.attribute." + attr)) {
+				if(p.hasPermission("stonecutter.overload." + type + "." + level)) {
 					if(p.getInventory().containsAtLeast(common.getEssence(level), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(sItems.getOre(attr, level), GEM_ORES))
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
@@ -120,11 +120,11 @@ public class StonecutterMethods {
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill!");
+				util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
 			}
 		}
 		else {

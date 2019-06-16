@@ -22,7 +22,7 @@ public class ReportCommand implements CommandExecutor {
 			if(args.length == 0) {
 				p.sendMessage("§7--- §cNeoReports §7---");
 				p.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
-				p.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
+				p.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use ONLY for catastrophic bugs (MUST be fixed in 1-2 days)");
 				p.sendMessage("§c/reports list §7- Lists all reports made by you");
 				p.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (you should do this after your bug is marked as resolved!)");
 				if (sender.hasPermission("neoreports.admin")) {

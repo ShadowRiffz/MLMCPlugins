@@ -282,6 +282,9 @@ public class CulinarianUtils {
 						if(item.isSimilar(new ItemStack(Material.MILK_BUCKET))) {
 							inv.addItem(new ItemStack(Material.BUCKET, amount));
 						}
+						if(item.isSimilar(new ItemStack(Material.LAVA_BUCKET))) {
+							inv.addItem(new ItemStack(Material.BUCKET, amount));
+						}
 					}
 					if(isSmelted) {
 						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));

@@ -289,6 +289,7 @@ public class LimitedEditionRecipeItems {
 	public ArrayList<ItemStack> getOlympianGyroRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD));
+		recipe.add(new ItemStack(Material.COOKED_MUTTON));
 		recipe.add(ingr.getBeetrootSauce());
 		recipe.add(ingr.getOnion());
 		recipe.add(ingr.getTomato());

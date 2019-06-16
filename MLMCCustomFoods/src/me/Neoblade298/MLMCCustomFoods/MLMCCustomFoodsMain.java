@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -68,6 +69,12 @@ public class MLMCCustomFoodsMain
         }
       }
     }, 0L, 1L);
+  }
+  
+  @EventHandler
+  public void onPlayerDeathEvent(PlayerDeathEvent e) {
+	  UUID id = e.getEntity().getUniqueId();
+	  this.effects.remove(id);
   }
   
   @EventHandler
