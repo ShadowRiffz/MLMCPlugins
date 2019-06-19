@@ -79,6 +79,7 @@ public class CulinarianMethods {
 		legend = new LegendaryRecipeItems();
 		drink = new DrinksRecipeItems();
 		format = new DecimalFormat("###.##");
+		specialCooldowns = new HashMap<String, Boolean>();
 	}
 	
 	public void garnish(Player p) {
