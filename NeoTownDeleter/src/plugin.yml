@@ -1,0 +1,8 @@
+name: NeoTownDeleter
+author: Neoblade298
+main: me.neoblade298.neotowndeleter.Main
+version: 1.00
+commands:
+  tdelete:
+    description: Does its job
+    usage: /tdelete [townname]
