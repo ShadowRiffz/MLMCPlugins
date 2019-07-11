@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
@@ -116,6 +117,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			if (checkTownInactive(town)) {
 			    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter deleted " + town.getName());
 				Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
+				try {
+					town.setBalance(0, "Town deleted");
+				} catch (EconomyException e) {
+					// TODO Auto-generated catch block
+					Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
+					e.printStackTrace();
+				}
 				TownyUniverse.getDataSource().removeTown(town);
 			}
 		}

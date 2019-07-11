@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
@@ -28,6 +29,13 @@ public class Commands implements CommandExecutor {
 			try {
 				Town town = TownyUniverse.getDataSource().getTown(args[0]);
 				if (main.checkTownInactive(town, p)) {
+					try {
+						town.setBalance(0, "Town deleted");
+					} catch (EconomyException e) {
+						// TODO Auto-generated catch block
+						Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
+						e.printStackTrace();
+					}
 					TownyUniverse.getDataSource().removeTown(town);
 					Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
 				}
