@@ -219,7 +219,7 @@ public class CulinarianRecipeChecks {
 		if(p.hasPermission("recipes.drink9") && p.hasPermission("culinarian.bartender")) {
 			for(ItemStack i : drink.getSwampWaterRecipe()) {
 				if(i.getType().equals(Material.POTION)) {
-					checkAlcoholBase(inv, 22);
+					checkAlcoholBase(inv, 23);
 				}
 				else {
 					if(!inv.containsAtLeast(i, 1)) {

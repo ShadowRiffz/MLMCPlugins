@@ -15,7 +15,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class CulinarianUtils {
 	
-	static final int CRAFT_COST = 50;
+	static final int CRAFT_COST = 5;
 	static Random gen = new Random();
 	Util util;
 	
@@ -317,6 +317,9 @@ public class CulinarianUtils {
 		}
 		else if(id[0].contains("Limited")) {
 			perm = "recipes.tler" + id[3];
+		}
+		else if(id[0].contains("Drink")) {
+			perm = "recipes.drink" + id[3];
 		}
 		else if(id[0].contains("Legendary")) {
 			perm = "recipes.tlegend" + id[2];
