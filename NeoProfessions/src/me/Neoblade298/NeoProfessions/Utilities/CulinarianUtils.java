@@ -58,7 +58,10 @@ public class CulinarianUtils {
 	}
 	
 	public void checkAlcoholDown(Player p, int amount) {
-		if(amount == 29) {
+		if(amount == 0) {
+			util.sendMessage(p, "&7You are completely sober&7 (0/100).");
+		}
+		else if(amount == 29) {
 			util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
 		}
 		else if(amount == 49) {
