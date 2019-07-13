@@ -72,24 +72,28 @@ public class ReportsCommand implements CommandExecutor {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
+					
+					// Modify counter if necessary
+					if(rs.next()) {
+						boolean is_resolved = rs.getInt(8) == 1;
+						boolean is_urgent = rs.getInt(9) == 1;
+						if (!is_resolved) {
+							if (is_urgent) {
+								Main.numUrgent--;
+							}
+							else {
+								Main.numBugs--;
+							}
+						}
+					}
+					
+					// Delete the bug
 					int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + " AND user = '" + author +"';");
 					if (deleted > 0) {
 						p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
 					}
 					else {
 						p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you the creator of the report?");
-					}
-					
-					// Modify counter if necessary
-					boolean is_resolved = rs.getInt(8) == 1;
-					boolean is_urgent = rs.getInt(9) == 1;
-					if (!is_resolved) {
-						if (is_urgent) {
-							Main.numUrgent--;
-						}
-						else {
-							Main.numBugs--;
-						}
 					}
 					con.close();
 				}
@@ -110,6 +114,22 @@ public class ReportsCommand implements CommandExecutor {
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
 						ResultSet rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
+						
+						// Modify counter if necessary
+						if(rs.next()) {
+							boolean is_resolved = rs.getInt(8) == 1;
+							boolean is_urgent = rs.getInt(9) == 1;
+							if (!is_resolved) {
+								if (is_urgent) {
+									Main.numUrgent--;
+								}
+								else {
+									Main.numBugs--;
+								}
+							}
+						}
+
+						// Delete the bug
 						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (deleted > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
@@ -118,17 +138,6 @@ public class ReportsCommand implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you sure the id is correct?");
 						}
 						
-						// Modify counter if necessary
-						boolean is_resolved = rs.getInt(8) == 1;
-						boolean is_urgent = rs.getInt(9) == 1;
-						if (!is_resolved) {
-							if (is_urgent) {
-								Main.numUrgent--;
-							}
-							else {
-								Main.numBugs--;
-							}
-						}
 						con.close();
 					}
 					catch(Exception e) {
