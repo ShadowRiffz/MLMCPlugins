@@ -89,7 +89,106 @@ public class CulinarianListeners implements Listener {
 				if(contents[i] != null && contents[i].hasItemMeta() && contents[i].getItemMeta().hasLore()) {
 					String id = contents[i].getItemMeta().getLore().get(0);
 
-					if(id.contains("Drink 1")) {
+					if(id.contains("Drink 10")) {
+						int drunk = 35 + gen.nextInt(10);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.03, "Strength", 40);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 11")) {
+						int drunk = 27 + gen.nextInt(7);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.03, "Intelligence", 40);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 12")) {
+						int drunk = 12 + gen.nextInt(7);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.04, "Vitality", 40);
+							addStat(p, -0.02, "Spirit", 40);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 13")) {
+						int drunk = 27 + gen.nextInt(7);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.035, "Spirit", 40);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 14")) {
+						int drunk = 40 + gen.nextInt(9);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.03, "Endurance", 20);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 15")) {
+						int drunk = 35 + gen.nextInt(10);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.04, "Intelligence", 20);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 16")) {
+						int drunk = 27 + gen.nextInt(7);
+						if(drunkness.containsKey(p)) {
+							drunkness.put(p, drunkness.get(p) + drunk);
+						} else {
+							drunkness.put(p, drunk);
+						}
+						culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
+						if(canGetAttrs) {
+							addStat(p, 0.04, "Strength", 30);
+						}
+				        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
+						break;
+					}
+					else if(id.contains("Drink 1")) {
 						int drunk = 27 + gen.nextInt(7);
 						if(drunkness.containsKey(p)) {
 							drunkness.put(p, drunkness.get(p) + drunk);
@@ -234,105 +333,6 @@ public class CulinarianListeners implements Listener {
 		boolean canGetAttrs = p.getWorld().getName().equalsIgnoreCase("Argyll") ||
 				p.getWorld().getName().equalsIgnoreCase("ClassPVP");
 		if(id.contains("Drink 10")) {
-			int drunk = 35 + gen.nextInt(10);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.03, "Strength", 40);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 11")) {
-			int drunk = 27 + gen.nextInt(7);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.03, "Intelligence", 40);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 12")) {
-			int drunk = 12 + gen.nextInt(7);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.04, "Vitality", 40);
-				addStat(p, -0.02, "Spirit", 40);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 13")) {
-			int drunk = 27 + gen.nextInt(7);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.035, "Spirit", 40);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 14")) {
-			int drunk = 40 + gen.nextInt(9);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.03, "Endurance", 20);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 15")) {
-			int drunk = 35 + gen.nextInt(10);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.04, "Intelligence", 20);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 16")) {
-			int drunk = 27 + gen.nextInt(7);
-			if(drunkness.containsKey(p)) {
-				drunkness.put(p, drunkness.get(p) + drunk);
-			} else {
-				drunkness.put(p, drunk);
-			}
-			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
-			if(canGetAttrs) {
-				addStat(p, 0.04, "Strength", 30);
-			}
-	        p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_GENERIC_DRINK, 1.0F, 1.0F);
-			break;
-		}
-		else if(id.contains("Drink 10")) {
 			int drunk = 35 + gen.nextInt(10);
 			if(drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
