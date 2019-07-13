@@ -45,8 +45,10 @@ public class CulinarianListeners implements Listener {
 		Bukkit.getScheduler().runTaskTimer(main, new Runnable() {
 			public void run() {
 				for(Player p : drunkness.keySet()) {
-					drunkness.put(p, drunkness.get(p) - 1);
-					culinarianUtils.checkAlcoholDown(p, drunkness.get(p));
+					if (drunkness.get(p) > 0) {
+						drunkness.put(p, drunkness.get(p) - 1);
+						culinarianUtils.checkAlcoholDown(p, drunkness.get(p));
+					}
 				}
 			}
 		}, 0, 100L);
