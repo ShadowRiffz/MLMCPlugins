@@ -329,6 +329,11 @@ public class MasonUtils {
 				count++;
 				if(slot == count) {
 					lore.remove(lineNum);
+					
+					// Also remove bonus attributes line if necessary
+					if (lineNum + 1 == lore.size()) {
+						lore.remove(lineNum - 1);
+					}
 					break;
 				}
 			}

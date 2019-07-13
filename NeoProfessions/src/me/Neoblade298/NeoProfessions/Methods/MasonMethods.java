@@ -343,8 +343,7 @@ public class MasonMethods {
 				if(level != -1) {
 					if(p.hasPermission("mason.engrave.tier." + level)) {
 						String line = masonUtils.getSlotLine(item, slot);
-						int slottedLevel = Character.getNumericValue(line.charAt(3));
-						if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel), UNENGRAVE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(level), UNENGRAVE_ESSENCE)) {
 							if(econ.has(p, UNENGRAVE_GOLD)) {
 								p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNENGRAVE_ESSENCE));
 								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
