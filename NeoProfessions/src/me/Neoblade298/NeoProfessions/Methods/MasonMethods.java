@@ -298,13 +298,15 @@ public class MasonMethods {
 		if(!item.getType().equals(Material.AIR)) {
 			if(masonUtils.isSlotUsed(item, slot)) {
 				int level = util.getItemLevel(item);
+				String line = masonUtils.getSlotLine(item, slot);
+				int slottedLevel = Character.getNumericValue(line.charAt(3));
 				if(p.hasPermission("mason.unslot." + level)) {
 					if(p.getInventory().firstEmpty() != -1) {
-						if(p.getInventory().containsAtLeast(common.getEssence(level), UNSLOT_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel), UNSLOT_ESSENCE)) {
 							if(econ.has(p, UNSLOT_GOLD_PER_LVL * level)) {
 								ItemStack returned = masonUtils.parseUnslot(p, slot);
 								if(returned != null) {
-									p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNSLOT_ESSENCE));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(slottedLevel), UNSLOT_ESSENCE));
 									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * level);
 									p.getInventory().addItem(returned);
 									util.sendMessage(p, "&cSuccessfully unslotted item!");
@@ -342,7 +344,6 @@ public class MasonMethods {
 				int level = util.getItemLevel(item);
 				if(level != -1) {
 					if(p.hasPermission("mason.engrave.tier." + level)) {
-						String line = masonUtils.getSlotLine(item, slot);
 						if(p.getInventory().containsAtLeast(common.getEssence(level), UNENGRAVE_ESSENCE)) {
 							if(econ.has(p, UNENGRAVE_GOLD)) {
 								p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNENGRAVE_ESSENCE));
