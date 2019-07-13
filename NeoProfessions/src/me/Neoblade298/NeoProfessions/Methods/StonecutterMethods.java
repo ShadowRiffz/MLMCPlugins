@@ -186,7 +186,7 @@ public class StonecutterMethods {
 								p.getInventory().removeItem(util.setAmount(sItems.getOre(oreType, oldLevel), cost));
 								p.getInventory().addItem(sItems.getOre(oreType, level));
 								econ.withdrawPlayer(p, REFINE_COST);
-								util.sendMessage(p, "&7Successfully refined essence!");
+								util.sendMessage(p, "&7Successfully refined ore!");
 							}
 							else {
 								util.sendMessage(p, "&cYou lack the essence to refine this!");
