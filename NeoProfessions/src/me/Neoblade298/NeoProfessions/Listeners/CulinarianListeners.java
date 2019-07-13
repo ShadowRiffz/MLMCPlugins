@@ -49,6 +49,9 @@ public class CulinarianListeners implements Listener {
 						drunkness.put(p, drunkness.get(p) - 1);
 						culinarianUtils.checkAlcoholDown(p, drunkness.get(p));
 					}
+					else if (drunkness.get(p) <= 0) {
+						drunkness.remove(p);
+					}
 				}
 			}
 		}, 0, 100L);
