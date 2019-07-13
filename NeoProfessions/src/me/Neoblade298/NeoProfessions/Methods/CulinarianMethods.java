@@ -169,13 +169,13 @@ public class CulinarianMethods {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				int level = 0;
-				if(p.hasPermission("culinarian.garnish.3")) {
+				if(p.hasPermission("culinarian.preserve.3")) {
 					level = 3;
 				}
-				else if(p.hasPermission("culinarian.garnish.2")) {
+				else if(p.hasPermission("culinarian.preserve.2")) {
 					level = 2;
 				}
-				else if(p.hasPermission("culinarian.garnish.1")) {
+				else if(p.hasPermission("culinarian.preserve.1")) {
 					level = 1;
 				}
 				
@@ -249,13 +249,13 @@ public class CulinarianMethods {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				int level = 0;
-				if(p.hasPermission("culinarian.garnish.3")) {
+				if(p.hasPermission("culinarian.spice.3")) {
 					level = 3;
 				}
-				else if(p.hasPermission("culinarian.garnish.2")) {
+				else if(p.hasPermission("culinarian.spice.2")) {
 					level = 2;
 				}
-				else if(p.hasPermission("culinarian.garnish.1")) {
+				else if(p.hasPermission("culinarian.spice.1")) {
 					level = 1;
 				}
 				
