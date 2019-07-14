@@ -3,6 +3,7 @@ package me.Neoblade298.MLMCCustomFoods;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
+import com.sucy.skill.api.util.StatusFlag;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -193,17 +194,17 @@ public class MLMCCustomFoodsMain
   			spiceMultiplier = Double.parseDouble(toParse);
   		}
   		if(line.contains("Remedies")) {
-  	  		if(line.contains("Remedies Stun")) {
-  	  			FlagManager.removeFlag(p, "stun");
+  	  		if(line.contains("Remedies stun")) {
+  	  			FlagManager.removeFlag(p, StatusFlag.STUN);
   	  		}
-  	  		else if(line.contains("Remedies Curse")) {
+  	  		else if(line.contains("Remedies curse")) {
   	  			FlagManager.removeFlag(p, "curse");
   	  		}
-  	  		else if(line.contains("Remedies Root")) {
-  	  			FlagManager.removeFlag(p, "root");
+  	  		else if(line.contains("Remedies root")) {
+  	  			FlagManager.removeFlag(p, StatusFlag.ROOT);
   	  		}
-  	  		else if(line.contains("Remedies Silence")) {
-  	  			FlagManager.removeFlag(p, "silence");
+  	  		else if(line.contains("Remedies silence")) {
+  	  			FlagManager.removeFlag(p, StatusFlag.SILENCE);
   	  		}
   		}
   	}
