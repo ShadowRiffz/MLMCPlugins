@@ -346,8 +346,9 @@ public class CulinarianMethods {
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 								p.getInventory().addItem(util.setAmount(item, 1));
+								p.getInventory().removeItem(common.getEssence(foodLevel));
 								p.getInventory().removeItem(util.setAmount(oldItem, 1));
-								econ.withdrawPlayer(p, GARNISH_COST);
+								econ.withdrawPlayer(p, REMEDY_COST);
 								util.sendMessage(p, "&7Successfully remedied dish!");
 							}
 							else {
