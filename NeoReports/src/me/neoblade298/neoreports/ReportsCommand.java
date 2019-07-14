@@ -320,7 +320,6 @@ public class ReportsCommand implements CommandExecutor {
 						desc += " " + args[i];
 					}
 					desc = desc.replaceAll("'", "\\\\'");
-					System.out.println(desc);
 					try{  
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -334,7 +333,6 @@ public class ReportsCommand implements CommandExecutor {
 						else {
 							p.sendMessage("§4[§c§lMLMC§4] §7Failed to resolve report!");
 						}
-						System.out.println(args[1]);
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (rs.next()) {
 							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
