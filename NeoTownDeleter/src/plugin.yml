@@ -1,6 +1,7 @@
 name: NeoTownDeleter
 author: Neoblade298
 main: me.neoblade298.neotowndeleter.Main
+depend: [Towny, Vault]
 version: 1.00
 commands:
   tdelete:
