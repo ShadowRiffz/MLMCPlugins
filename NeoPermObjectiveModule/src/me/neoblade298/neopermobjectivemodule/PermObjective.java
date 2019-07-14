@@ -35,7 +35,6 @@ public class PermObjective extends CustomObjective implements Listener {
     	// Check if the entity is an npc
     	if (entity.hasMetadata("NPC")) {
     		int id = CitizensAPI.getNPCRegistry().getNPC(entity).getId();
-    		System.out.println(id);
 	    	// Make sure to evaluate for all of the player's current quests
         	for (Quest quest : qp.getQuester(e.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
         	    Map<String, Object> map = getDataForPlayer(p, this, quest);
