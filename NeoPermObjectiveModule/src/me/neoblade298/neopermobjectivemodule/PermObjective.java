@@ -38,12 +38,14 @@ public class PermObjective extends CustomObjective implements Listener {
 	    	// Make sure to evaluate for all of the player's current quests
         	for (Quest quest : qp.getQuester(e.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
         	    Map<String, Object> map = getDataForPlayer(p, this, quest);
-	    		String perm = (String) map.get("Permission");
-	    		int objId = Integer.parseInt(((String) map.get("Id")));
-	    		
-	    		if (id == objId && p.hasPermission(perm)) {
-	    			incrementObjective(e.getPlayer(), this, 1, quest);
-	    		}
+        	    if (map != null) {
+		    		String perm = (String) map.get("Permission");
+		    		int objId = Integer.parseInt(((String) map.get("Id")));
+		    		
+		    		if (id == objId && p.hasPermission(perm)) {
+		    			incrementObjective(e.getPlayer(), this, 1, quest);
+		    		}
+        	    }
 	    	}
     	}
     }
