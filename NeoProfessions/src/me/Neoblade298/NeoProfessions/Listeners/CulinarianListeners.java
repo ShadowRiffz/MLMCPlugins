@@ -33,7 +33,7 @@ public class CulinarianListeners implements Listener {
 	CulinarianRecipes culinarianRecipes;
 	CulinarianUtils culinarianUtils;
 	CulinarianRecipeChecks check;
-	HashMap<Player, Integer> drunkness = new HashMap<Player, Integer>();
+	public HashMap<Player, Integer> drunkness = new HashMap<Player, Integer>();
 	HashMap<Player, Integer> numBonuses = new HashMap<Player, Integer>();
 	Random gen;
 	

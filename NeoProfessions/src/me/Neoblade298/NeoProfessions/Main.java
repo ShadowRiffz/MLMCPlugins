@@ -44,6 +44,7 @@ public class Main extends JavaPlugin implements Listener {
   public CulinarianMethods culinarianMethods;
   
   public CulinarianRecipes culinarianRecipes;
+  public CulinarianListeners culinarianListeners;
   
   public MasonListeners masonListeners;
   public MasonUtils masonUtils;
@@ -65,6 +66,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	  masonListeners = new MasonListeners(this);
 	  masonUtils = new MasonUtils();
+	  culinarianListeners = new CulinarianListeners(this);
 	  
 	  // Connect method classes to main
 	  blacksmithMethods = new BlacksmithMethods(this);
@@ -82,7 +84,7 @@ public class Main extends JavaPlugin implements Listener {
     // Setup Event Listeners
     getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
     getServer().getPluginManager().registerEvents(masonListeners, this);
-    getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
+    getServer().getPluginManager().registerEvents(culinarianListeners, this);
     getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
     
     // Setup recipes (make sure the recipes haven't been added before)

@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
@@ -17,6 +18,7 @@ import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
+import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 
@@ -49,7 +51,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(sender.hasPermission("neoprofessions.admin")) {
+		if(sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			Player p = null;
 			if(sender instanceof Player) {
 				p = (Player) sender;
@@ -58,6 +60,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/neoprofessions level [playername] <amount>");
 				sender.sendMessage("§7- §4/neoprofessions reset [playername]");
+				sender.sendMessage("§7- §4/neoprofessions sober [playername]");
+				sender.sendMessage("§7- §4/neoprofessions repair [playername]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
@@ -70,6 +74,23 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			else {
 				// /neoprofessions level playername
+				if (args[0].equalsIgnoreCase("sober")) {
+					if (args.length == 2) {
+						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);
+					}
+				}
+				if (args[0].equalsIgnoreCase("repair")) {
+					if (args.length == 2) {
+						Player target = Bukkit.getPlayer(args[1]);
+						ItemStack item = target.getInventory().getItemInMainHand();
+						Util util = new Util();
+						BlacksmithUtils bUtils = new BlacksmithUtils();
+						item.setDurability((short) 0);
+						if (bUtils.canRepair(item)) {
+							util.setCurrentDurability(item, util.getMaxDurability(item));
+						}
+					}
+				}
 				if (args[0].equalsIgnoreCase("level")) {
 					if (args.length == 2) {
 						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
