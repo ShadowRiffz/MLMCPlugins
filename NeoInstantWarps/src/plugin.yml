@@ -1,0 +1,9 @@
+name: NeoInstantWarps
+author: Neoblade298
+main: me.neoblade298.neoinstantwarps.Main
+depend: [Essentials]
+version: 1.00
+commands:
+  tdelete:
+    description: Does its job
+    usage: /iwarp [warpname] [playername]
