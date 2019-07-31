@@ -39,6 +39,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §cError: Invalid world");
 				e.printStackTrace();
 			}
+	    	return true;
 	    }
     	return false;
 	}

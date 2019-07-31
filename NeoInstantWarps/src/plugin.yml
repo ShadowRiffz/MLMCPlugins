@@ -4,6 +4,6 @@ main: me.neoblade298.neoinstantwarps.Main
 depend: [Essentials]
 version: 1.00
 commands:
-  tdelete:
+  iwarp:
     description: Does its job
     usage: /iwarp [warpname] [playername]
