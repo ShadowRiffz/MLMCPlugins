@@ -22,7 +22,7 @@ public class CulinarianRecipeChecks {
 
 	
 	public void checkVodka(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.Ingr22") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.Ingr22")) {
 			for(ItemStack i : ingr.getVodkaRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
@@ -36,7 +36,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkRum(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.Ingr23") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.Ingr23")) {
 			for(ItemStack i : ingr.getRumRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
@@ -50,7 +50,7 @@ public class CulinarianRecipeChecks {
 	}
 	
 	public void checkTequila(Player p, CraftingInventory inv) {
-		if(p.hasPermission("recipes.Ingr24") && p.hasPermission("culinarian.bartender")) {
+		if(p.hasPermission("recipes.Ingr24")) {
 			for(ItemStack i : ingr.getTequilaRecipe()) {
 				if(!inv.containsAtLeast(i, 1)) {
 					inv.setResult(null);
