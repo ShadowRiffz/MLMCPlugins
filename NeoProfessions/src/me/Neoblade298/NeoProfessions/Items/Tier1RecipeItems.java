@@ -120,7 +120,7 @@ public class Tier1RecipeItems {
 	public ItemStack getMashedPotatoes() {
 		ItemStack item = new ItemStack(Material.BAKED_POTATO);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Mashed Potato");
+		meta.setDisplayName("§9Mashed Potatoes");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 8");
 		meta.setLore(lore);
