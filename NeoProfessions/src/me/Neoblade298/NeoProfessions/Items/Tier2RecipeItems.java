@@ -152,7 +152,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getTunaSandwich() {
-		ItemStack item = new ItemStack(Material.RAW_FISH);
+		ItemStack item = new ItemStack(Material.COOKED_FISH);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Tuna Sandwich");
 		ArrayList<String> lore = new ArrayList<String>();
