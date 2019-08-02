@@ -77,6 +77,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("sober")) {
 					if (args.length == 2) {
 						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);
+						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
 					}
 				}
 				if (args[0].equalsIgnoreCase("repair")) {
@@ -89,6 +90,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						if (bUtils.canRepair(item)) {
 							util.setCurrentDurability(item, util.getMaxDurability(item));
 						}
+						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
 					}
 				}
 				if (args[0].equalsIgnoreCase("level")) {
