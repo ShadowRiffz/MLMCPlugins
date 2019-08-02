@@ -13,9 +13,9 @@ public class Commands
   public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args)
   {
     if ((sender.hasPermission("neoskills.use")) && 
-      (args.length == 2))
+      (args.length == 3))
     {
-      Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "class forcecast " + sender.getName() + " " + args[0] + " " + args[1].substring(0, args[1].length() - 2));
+      Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "class forcecast " + args[2] + " " + args[0] + " " + args[1].substring(0, args[1].length() - 2));
       return true;
     }
     System.out.println("Neoskills something went wrong.");
