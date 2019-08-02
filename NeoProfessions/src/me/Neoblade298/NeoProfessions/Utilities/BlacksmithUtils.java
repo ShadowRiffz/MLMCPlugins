@@ -45,11 +45,12 @@ public class BlacksmithUtils {
 	
 	public boolean canRepair(ItemStack item) {
 		// Check if the item is a quest item
-		if(util.getItemLevel(item) != -1) {
-			return true;
-		}
-		if(item.getType().getMaxDurability() > 0) {
-			return true;
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			if(util.getItemLevel(item) != -1) {
+				if(item.getType().getMaxDurability() > 0) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
