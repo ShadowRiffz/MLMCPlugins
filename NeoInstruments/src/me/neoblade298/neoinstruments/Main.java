@@ -102,31 +102,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (this.freePlaying.contains(e.getPlayer())) {
 			e.setCancelled(true);
 			e.getPlayer().getWorld().spawnParticle(Particle.NOTE, e.getPlayer().getLocation().add(0, 2, 0), 1, null);
-			Set<String> tags = e.getPlayer().getScoreboardTags();
-			Sound sound = null;
-			if (tags.contains("Piano")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_HARP;
-			} else if (tags.contains("Ocarina")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_FLUTE;
-			} else if (tags.contains("Bell")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_BELL;
-			} else if (tags.contains("Chime")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
-			} else if (tags.contains("Base")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
-			} else if (tags.contains("Guitar")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_GUITAR;
-			} else if (tags.contains("Xylophone")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
-			} else if (tags.contains("Clicks")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_HAT;
-			} else if (tags.contains("Harp")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_PLING;
-			} else if (tags.contains("Snare")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_SNARE;
-			} else if (tags.contains("Double")) {
-				sound = Sound.BLOCK_NOTE_BLOCK_BASS;
-			}
+			Sound sound = getCurrentInstrument(e.getPlayer());
 
 			String[] lowNoSneakNoteArr = { "f#", "g#", "a#", "b", "c#", "d#", "f", "f#" };
 			String[] lowSneakNoteArr = { "g", "a", "b", "c", "d", "e", "f", "G" };
@@ -155,44 +131,18 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void playNotes(Player player, String[] notes) {
 		player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 1, null);
-		Set<String> tags = player.getScoreboardTags();
-		final Sound sound;
-		if (tags.contains("Piano")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_HARP;
-		} else if (tags.contains("Ocarina")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_FLUTE;
-		} else if (tags.contains("Bell")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_BELL;
-		} else if (tags.contains("Chime")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
-		} else if (tags.contains("Base")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
-		} else if (tags.contains("Guitar")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_GUITAR;
-		} else if (tags.contains("Xylophone")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
-		} else if (tags.contains("Clicks")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_HAT;
-		} else if (tags.contains("Harp")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_PLING;
-		} else if (tags.contains("Snare")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_SNARE;
-		} else if (tags.contains("Double")) {
-			sound = Sound.BLOCK_NOTE_BLOCK_BASS;
-		} else {
-			sound = null;
-		}
+		final Sound sound = getCurrentInstrument(player);
 
 		new BukkitRunnable() {
 			private int cnt = 0;
-			private int end = notes.length;
 
 			public void run() {
-				if (cnt < end) {
+				if (cnt < notes.length) {
 					float pitch = getPitch(notes[cnt]);
 					if (pitch != 0.0F) {
 						player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
 					} else {
+						// play mute note, representing a pause
 						player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
 					}
 					cnt++;
@@ -251,6 +201,37 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	// Helper Methods
+	
+	private Sound getCurrentInstrument(Player player) {
+		Set<String> tags = player.getScoreboardTags();
+		final Sound sound;
+		if (tags.contains("Piano")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_HARP;
+		} else if (tags.contains("Ocarina")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_FLUTE;
+		} else if (tags.contains("Bell")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_BELL;
+		} else if (tags.contains("Chime")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
+		} else if (tags.contains("Base")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
+		} else if (tags.contains("Guitar")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_GUITAR;
+		} else if (tags.contains("Xylophone")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
+		} else if (tags.contains("Clicks")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_HAT;
+		} else if (tags.contains("Harp")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_PLING;
+		} else if (tags.contains("Snare")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_SNARE;
+		} else if (tags.contains("Double")) {
+			sound = Sound.BLOCK_NOTE_BLOCK_BASS;
+		} else {
+			sound = null;
+		}
+		return sound;
+	}
 
 	private float getPitch(String note) {
 		switch (note) {
