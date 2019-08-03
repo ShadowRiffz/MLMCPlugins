@@ -33,6 +33,7 @@ public class Commands implements CommandExecutor {
 					main.superalex();
 				}
 				break;
+			}
 		}
 		return true;
 	}
