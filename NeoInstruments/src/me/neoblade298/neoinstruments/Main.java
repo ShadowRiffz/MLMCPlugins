@@ -113,118 +113,28 @@ public class Main extends JavaPlugin implements Listener {
 				sound = Sound.BLOCK_NOTE_BASS;
 			}
 			
+			String[] lowNoSneakNoteArr = {"f#", "g#", "a#", "b", "c#", "d#", "f", "f#"};
+			String[] lowSneakNoteArr = {"g", "a", "b", "c", "d", "e", "f", "G"};
+			String[] highNoSneakNoteArr = {"F#", "G#", "A#", "B", "C#", "D#", "F", "##"};
+			String[] highSneakNoteArr = {"G", "A", "B", "C", "D", "E", "F", "F#"};
 			float pitch = 1.0F;
+			int slot = e.getNewSlot();
+			
 			if (!this.upperRegister.contains(e.getPlayer())) {
-
 				if (!e.getPlayer().isSneaking()) {
-					switch (e.getNewSlot()) {
-					case 0:
-						pitch = 0.5F;
-						break;
-					case 1:
-						pitch = 0.5612F;
-						break;
-					case 2:
-						pitch = 0.6299F;
-						break;
-					case 3:
-						pitch = 0.6674F;
-						break;
-					case 4:
-						pitch = 0.7492F;
-						break;
-					case 5:
-						pitch = 0.8409F;
-						break;
-					case 6:
-						pitch = 0.9439F;
-						break;
-					case 7:
-						pitch = 1.0F;
-					}
+					pitch = getPitch(lowNoSneakNoteArr[slot]);
 				} else {
-					switch (e.getNewSlot()) {
-					case 0:
-						pitch = 0.5297F;
-						break;
-					case 1:
-						pitch = 0.5946F;
-						break;
-					case 2:
-						pitch = 0.6674F;
-						break;
-					case 3:
-						pitch = 0.7071F;
-						break;
-					case 4:
-						pitch = 0.7937F;
-						break;
-					case 5:
-						pitch = 0.8909F;
-						break;
-					case 6:
-						pitch = 1.0F;
-						break;
-					case 7:
-						pitch = 1.06F;
-					}
-				}
-			} else if (!e.getPlayer().isSneaking()) {
-				switch (e.getNewSlot()) {
-				case 0:
-					pitch = 1.0F;
-					break;
-				case 1:
-					pitch = 1.1225F;
-					break;
-				case 2:
-					pitch = 1.2599F;
-					break;
-				case 3:
-					pitch = 1.3348F;
-					break;
-				case 4:
-					pitch = 1.4983F;
-					break;
-				case 5:
-					pitch = 1.6818F;
-					break;
-				case 6:
-					pitch = 1.8877F;
-					break;
-				case 7:
-					pitch = 2.0F;
+					pitch = getPitch(lowSneakNoteArr[slot]);
 				}
 			} else {
-				switch (e.getNewSlot()) {
-				case 0:
-					pitch = 1.0595F;
-					break;
-				case 1:
-					pitch = 1.1892F;
-					break;
-				case 2:
-					pitch = 1.3348F;
-					break;
-				case 3:
-					pitch = 1.4142F;
-					break;
-				case 4:
-					pitch = 1.5874F;
-					break;
-				case 5:
-					pitch = 1.7818F;
-					break;
-				case 6:
-					pitch = 2.0F;
-					break;
-				case 7:
-					pitch = 2.0F;
+				if (!e.getPlayer().isSneaking()) {
+					pitch = getPitch(highNoSneakNoteArr[slot]);
+				} else {
+					pitch = getPitch(highSneakNoteArr[slot]);
 				}
 			}
 			
 			e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), sound, 3.0F, pitch);
-			// TODO: maybe cleanup switches more
 		}
 	}
 	
@@ -254,25 +164,59 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	private float getPitch(String note) {
-		note = note.toLowerCase();
-		char charNote = note.charAt(0);
-		switch(charNote) {
-		case 'a':
-			return 0.5946F;
-		case 'b':
-			return 0.6674F;
-		case 'c':
-			return 0.7071F;
-		case 'd':
-			return 0.7937F;
-		case 'e':
-			return 0.89089F;
-		case 'f':
-			return 0.9439F;
-		case 'g':
-			return 1.0594F;
-		default:
-			return 2.0F;
-		}
+			switch(note) {
+			case "f#":
+				return 0.5F;
+			case "g":
+				return 0.5297F;
+			case "g#":
+				return 0.5612F;
+			case "a":
+				return 0.5946F;
+			case "a#":
+				return 0.63F;
+			case "b":
+				return 0.6674F;
+			case "c":
+				return 0.7071F;
+			case "c#":
+				return 0.7492F;
+			case "d":
+				return 0.7937F;
+			case "d#":
+				return 0.8409F;
+			case "e":
+				return 0.8909F;
+			case "f":
+				return 0.9439F;
+			case "F#":
+				return 1.0F;
+			case "G":
+				return 1.0595F;
+			case "G#":
+				return 1.1125F;
+			case "A":
+				return 1.1892F;
+			case "A#":
+				return 1.2599F;
+			case "B":
+				return 1.3348F;
+			case "C":
+				return 1.4142F;
+			case "C#":
+				return 1.4983F;
+			case "D":
+				return 1.5874F;
+			case "D#":
+				return 1.6818F;
+			case "E":
+				return 1.7818F;
+			case "F":
+				return 1.8877F;
+			case "##":
+				return 2.0F;
+			default:
+				return 1.0F;
+			}
 	}
 }
