@@ -248,7 +248,6 @@ public class Main
   
 	public void reduceDurability(ItemStack item, Player player, int i)
   {
-		System.out.println("Reduce durability");
     if ((item != null) && 
         (item.hasItemMeta()) && 
         (item.getItemMeta().hasEnchant(Enchantment.DURABILITY)))
