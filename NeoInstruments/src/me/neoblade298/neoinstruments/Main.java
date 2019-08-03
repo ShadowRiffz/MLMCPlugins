@@ -178,6 +178,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public void superalex() {
+		this.getServer().broadcastMessage("Daily reminder that Superalex is a god!");
+	}
+	
 	// Helper Methods
 	
 	private float getPitch(String note) {
