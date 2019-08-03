@@ -12,6 +12,7 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +51,20 @@ public class Main extends JavaPlugin implements Listener {
   		if (e.getResult().containsEnchantment(Enchantment.CHANNELING)) {
   			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
   			e.getViewers().get(0).closeInventory();
+  		}
+  	}
+  	
+  	@EventHandler
+  	public void changeHeld(PlayerItemHeldEvent e) {
+  		ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
+  		Map<Enchantment, Integer> enchs = item.getEnchantments();
+  		if (enchs.containsKey(Enchantment.RIPTIDE)) {
+  			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
+  			item.removeEnchantment(Enchantment.RIPTIDE);
+  		}
+  		if (enchs.containsKey(Enchantment.CHANNELING)) {
+  			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
+  			item.removeEnchantment(Enchantment.CHANNELING);
   		}
   	}
 }
