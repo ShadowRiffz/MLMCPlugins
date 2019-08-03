@@ -19,13 +19,13 @@ public class Commands implements CommandExecutor {
 		if (args.length > 0) {
 
 			switch (args[0]) {
-			case "read":
-				main.playBook((Player) sender);
+			case "edit":
+				main.editBook((Player) sender);
 				break;
 			case "tempo":
 				if(args.length > 1 && args[1] != null) {
 					main.setTempo(Integer.parseInt(args[1]));
-					((Player)sender).sendMessage("Tempo set to " + args[1]);
+					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + args[1]);
 				}
 				break;
 			case "superalex":
