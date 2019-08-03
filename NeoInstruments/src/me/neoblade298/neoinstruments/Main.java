@@ -182,7 +182,7 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			sound = null;
 		}
-		
+
 		new BukkitRunnable() {
 			private int cnt = 0;
 			private int end = notes.length;
@@ -216,20 +216,6 @@ public class Main extends JavaPlugin implements Listener {
 		}.runTaskTimer(this, 0L, this.noteDelay);
 	}
 
-	// deprecated
-	public void playBookInHand(Player player) {
-		ItemStack item = player.getInventory().getItemInMainHand();
-		if (item.getType() == Material.WRITABLE_BOOK || item.getType() == Material.WRITTEN_BOOK) {
-			List<String> pages = ((BookMeta) item.getItemMeta()).getPages();
-			List<String> notes = new ArrayList<String>();
-			for (String page : pages) {
-				notes.addAll(Arrays.asList(page.split(" ")));
-			}
-			String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
-			playNotes(player, notesArr);
-		}
-	}
-
 	public void playBook(Player player, ItemStack book) {
 		List<String> pages = ((BookMeta) book.getItemMeta()).getPages();
 		List<String> notes = new ArrayList<String>();
@@ -238,10 +224,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
 		playNotes(player, notesArr);
-	}
-
-	public void setTempo(int bpm) {
-		this.noteDelay = 1200L / bpm;
 	}
 
 	public void editBook(Player player) {
@@ -257,8 +239,15 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	public void setTempo(int bpm) {
+		if (bpm == 0) {
+			bpm = 1;
+		}
+		this.noteDelay = 1200L / bpm;
+	}
+
 	public void superalex() {
-		this.getServer().broadcastMessage("§c[] Daily reminder that Superalex is a god! []");
+		this.getServer().broadcastMessage("§4[§c§lMLMC§4] §aDaily reminder that Superalex is a god!");
 	}
 
 	// Helper Methods
