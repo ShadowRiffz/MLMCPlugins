@@ -22,6 +22,12 @@ public class Commands implements CommandExecutor {
 			case "read":
 				main.playBook((Player) sender);
 				break;
+			case "tempo":
+				if(args.length > 1 && args[1] != null) {
+					main.setTempo(Integer.parseInt(args[1]));
+					((Player)sender).sendMessage("Tempo set to " + args[1]);
+				}
+				break;
 			case "superalex":
 				if(((Player) sender).getName().toLowerCase().contains("superalex")){
 					main.superalex();

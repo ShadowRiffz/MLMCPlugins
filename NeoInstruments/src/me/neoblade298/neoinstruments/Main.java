@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Main extends JavaPlugin implements Listener {
 	List<Player> playing = new ArrayList<Player>();
 	List<Player> upperRegister = new ArrayList<Player>();
+	long noteDelay = 20L;
 
 	public void onEnable() {
 		super.onEnable();
@@ -142,27 +143,24 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public void playNotes(Player player, String[] notes) {
-		class NotesRunnable extends BukkitRunnable{
+	public void playNotes(Player player, String[] notes) {		
+		new BukkitRunnable(){
 			private int cnt = 0;
-			private int endCnt;
-			
-			public NotesRunnable(int end) {
-				endCnt = end;
-			}
-			
-			@Override
+			private int end = notes.length;
 			public void run() {
-				if(cnt < endCnt) {
-					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 3.0F, getPitch(notes[cnt]));
+				if(cnt < end) {
+					float pitch = getPitch(notes[cnt]);
+					if(pitch != 0.0F) {
+						player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 3.0F, pitch);
+					} else {
+						player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 0.0F, 1.0F);
+					}
 					cnt++;
 				} else {
 					cancel();
 				}
 			}
-		}
-		
-		new NotesRunnable(notes.length).runTaskTimer(this, 0L, 20L);
+		}.runTaskTimer(this, 0L, this.noteDelay);
 	}
 	
 	public void playBook(Player player) {
@@ -178,8 +176,12 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public void setTempo(int bpm) {
+		this.noteDelay = 1200L/bpm;
+	}
+	
 	public void superalex() {
-		this.getServer().broadcastMessage("Daily reminder that Superalex is a god!");
+		this.getServer().broadcastMessage("§c[] Daily reminder that Superalex is a god! []");
 	}
 	
 	// Helper Methods
@@ -237,7 +239,7 @@ public class Main extends JavaPlugin implements Listener {
 			case "##":
 				return 2.0F;
 			default:
-				return 1.0F;
+				return 0.0F;
 			}
 	}
 }
