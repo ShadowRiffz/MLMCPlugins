@@ -1,10 +1,12 @@
 package me.neoblade298.neoinstruments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import net.md_5.bungee.api.ChatColor;
+// import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,6 +16,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -43,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
 					&& (!this.playing.contains(e.getPlayer()))) {
 				List<String> lore = e.getItem().getItemMeta().getLore();
 				if (((String) lore.get(0)).contains("Instrument")) {
-					lore.set(0, ChatColor.stripColor((String) lore.get(0)));
+					// lore.set(0, ChatColor.stripColor((String) lore.get(0))); TODO: fix/update
 					String[] temp = ((String) lore.get(0)).split(" ");
 					e.getPlayer().addScoreboardTag(temp[0]);
 					this.playing.add(e.getPlayer());
@@ -90,27 +94,27 @@ public class Main extends JavaPlugin implements Listener {
 			Set<String> tags = e.getPlayer().getScoreboardTags();
 			Sound sound = null;
 			if (tags.contains("Piano")) {
-				sound = Sound.BLOCK_NOTE_HARP;
+				sound = Sound.BLOCK_NOTE_BLOCK_HARP;
 			} else if (tags.contains("Ocarina")) {
-				sound = Sound.BLOCK_NOTE_FLUTE;
+				sound = Sound.BLOCK_NOTE_BLOCK_FLUTE;
 			} else if (tags.contains("Bell")) {
-				sound = Sound.BLOCK_NOTE_BELL;
+				sound = Sound.BLOCK_NOTE_BLOCK_BELL;
 			} else if (tags.contains("Chime")) {
-				sound = Sound.BLOCK_NOTE_CHIME;
+				sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
 			} else if (tags.contains("Base")) {
-				sound = Sound.BLOCK_NOTE_BASEDRUM;
+				sound = Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
 			} else if (tags.contains("Guitar")) {
-				sound = Sound.BLOCK_NOTE_GUITAR;
+				sound = Sound.BLOCK_NOTE_BLOCK_GUITAR;
 			} else if (tags.contains("Xylophone")) {
-				sound = Sound.BLOCK_NOTE_XYLOPHONE;
+				sound = Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
 			} else if (tags.contains("Clicks")) {
-				sound = Sound.BLOCK_NOTE_HAT;
+				sound = Sound.BLOCK_NOTE_BLOCK_HAT;
 			} else if (tags.contains("Harp")) {
-				sound = Sound.BLOCK_NOTE_PLING;
+				sound = Sound.BLOCK_NOTE_BLOCK_PLING;
 			} else if (tags.contains("Snare")) {
-				sound = Sound.BLOCK_NOTE_SNARE;
+				sound = Sound.BLOCK_NOTE_BLOCK_SNARE;
 			} else if (tags.contains("Double")) {
-				sound = Sound.BLOCK_NOTE_BASS;
+				sound = Sound.BLOCK_NOTE_BLOCK_BASS;
 			}
 			
 			String[] lowNoSneakNoteArr = {"f#", "g#", "a#", "b", "c#", "d#", "f", "f#"};
@@ -138,21 +142,19 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public void playTest(Player player, String[] notes) {
-		// testing basics
-		
-		class TempRunnable extends BukkitRunnable{
+	public void playNotes(Player player, String[] notes) {
+		class NotesRunnable extends BukkitRunnable{
 			private int cnt = 0;
 			private int endCnt;
 			
-			public TempRunnable(int end) {
+			public NotesRunnable(int end) {
 				endCnt = end;
 			}
 			
 			@Override
 			public void run() {
 				if(cnt < endCnt) {
-					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 3.0F, getPitch(notes[cnt]));
+					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 3.0F, getPitch(notes[cnt]));
 					cnt++;
 				} else {
 					cancel();
@@ -160,8 +162,23 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
-		new TempRunnable(notes.length).runTaskTimer(this, 0L, 20L);
+		new NotesRunnable(notes.length).runTaskTimer(this, 0L, 20L);
 	}
+	
+	public void playBook(Player player) {
+		ItemStack item = player.getInventory().getItemInMainHand();
+		if(item.getType() == Material.WRITABLE_BOOK || item.getType() == Material.WRITTEN_BOOK) {
+			List<String> pages = ((BookMeta)item.getItemMeta()).getPages();
+			List<String> notes = new ArrayList<String>();
+			for(String page : pages) {
+				notes.addAll(Arrays.asList(page.split(" ")));
+			}
+			String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
+			playNotes(player, notesArr);
+		}
+	}
+	
+	// Helper Methods
 	
 	private float getPitch(String note) {
 			switch(note) {

@@ -17,11 +17,17 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
-		if(args.length > 0) {
-			main.playTest((Player) sender, args);
+		if(args.length == 0) {
+			return true;
 		}
 		
+		switch(args[0]) {
+		case "read":
+			main.playBook((Player) sender);
+			break;
+		default:
+			main.playNotes((Player) sender, args);
+		}		
 		return true;
-		
 	}
 }
