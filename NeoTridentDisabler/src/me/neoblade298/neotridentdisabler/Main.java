@@ -35,12 +35,20 @@ public class Main extends JavaPlugin implements Listener {
   			e.getEnchanter().sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
   			e.setCancelled(true);
   		}
+  		if (enchs.containsKey(Enchantment.CHANNELING)) {
+  			e.getEnchanter().sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
+  			e.setCancelled(true);
+  		}
   	}
   	
   	@EventHandler
   	public void onAnvilPrep(PrepareAnvilEvent e) {
   		if (e.getResult().containsEnchantment(Enchantment.RIPTIDE)) {
   			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
+  			e.getViewers().get(0).closeInventory();
+  		}
+  		if (e.getResult().containsEnchantment(Enchantment.CHANNELING)) {
+  			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
   			e.getViewers().get(0).closeInventory();
   		}
   	}
