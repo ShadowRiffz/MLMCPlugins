@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -43,7 +44,6 @@ public class Main
     Bukkit.getServer().getLogger().info("NeoDurability Disabled");
   }
   
-  @SuppressWarnings("deprecation")
 	@EventHandler
   public void onDamageMelee(EntityDamageByEntityEvent e)
   {
@@ -143,7 +143,7 @@ public class Main
       if(player.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
       	return;
       }
-      
+
       ItemStack main = player.getEquipment().getItemInMainHand();
       ItemStack off = player.getEquipment().getItemInOffHand();
       double random = gen.nextDouble();
@@ -202,8 +202,7 @@ public class Main
   @EventHandler
   public void onDurabilityLoss(PlayerItemDamageEvent e) {
 	  if(e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore() && e.getItem().getItemMeta().getLore().get(0).contains("Tier")) {
-	  	if(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll") &&
-	  			e.getDamage() > 10) {
+	  	if(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll")) {
 	  		e.setCancelled(true);
 	  	}
 	  	else if(e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
@@ -247,9 +246,9 @@ public class Main
     }
   }
   
-  @SuppressWarnings("deprecation")
 	public void reduceDurability(ItemStack item, Player player, int i)
   {
+		System.out.println("Reduce durability");
     if ((item != null) && 
         (item.hasItemMeta()) && 
         (item.getItemMeta().hasEnchant(Enchantment.DURABILITY)))
@@ -310,12 +309,12 @@ public class Main
             }
           }
           lore = DURABILITYSTRING + (int)d + " / " + (int)dM;
-          if ((!im.spigot().isUnbreakable()) && (item.getType().getMaxDurability() > 0))
+          if ((!im.isUnbreakable()) && (item.getType().getMaxDurability() > 0))
           {
             double p = 1.0D - d / dM;
             
             double dN = p * (item.getType().getMaxDurability() - 1);
-            item.setDurability((short)(int)dN);
+            ((Damageable) im).setDamage((int) dN);
           }
         }
         newLore.add(lore);
