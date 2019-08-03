@@ -104,7 +104,7 @@ public class Main extends JavaPlugin implements Listener {
 			e.getPlayer().getWorld().spawnParticle(Particle.NOTE, e.getPlayer().getLocation().add(0, 2, 0), 1, null);
 			Sound sound = getCurrentInstrument(e.getPlayer());
 
-			String[] lowNoSneakNoteArr = { "f#", "g#", "a#", "b", "c#", "d#", "f", "f#" };
+			String[] lowNoSneakNoteArr = { "f#", "g#", "a#", "b", "c#", "d#", "f", "F#" };
 			String[] lowSneakNoteArr = { "g", "a", "b", "c", "d", "e", "f", "G" };
 			String[] highNoSneakNoteArr = { "F#", "G#", "A#", "B", "C#", "D#", "F", "##" };
 			String[] highSneakNoteArr = { "G", "A", "B", "C", "D", "E", "F", "F#" };
