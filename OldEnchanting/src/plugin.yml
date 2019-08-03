@@ -1,4 +1,4 @@
 name: OldEnchanting
 main: im.hoss.OldEnchanting.OldEnchanting
 version: 1.02
-commands:
+api-version: 1.13
