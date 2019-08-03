@@ -33,11 +33,6 @@ public class Commands implements CommandExecutor {
 					main.superalex();
 				}
 				break;
-			default:
-				if((sender.isOp() || sender.hasPermission("*"))) {
-					main.playNotes((Player) sender, args);
-				}
-			}
 		}
 		return true;
 	}
