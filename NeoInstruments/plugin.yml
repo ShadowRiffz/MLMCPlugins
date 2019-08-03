@@ -2,3 +2,7 @@ name: NeoInstruments
 author: Neoblade298
 main: me.neoblade298.neoinstruments.Main
 version: 1.00
+commands:
+  instruments:
+    description: Plays notes
+    usage: /instruments [notes]

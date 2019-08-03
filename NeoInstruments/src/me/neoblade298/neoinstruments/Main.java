@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
 	List<Player> playing = new ArrayList<Player>();
@@ -229,14 +230,27 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void playTest(Player player, String[] notes) {
 		// testing basics
-		for(String note : notes) {
-			player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 3.0F, getPitch(note));
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		
+		class TempRunnable extends BukkitRunnable{
+			private int cnt = 0;
+			private int endCnt;
+			
+			public TempRunnable(int end) {
+				endCnt = end;
+			}
+			
+			@Override
+			public void run() {
+				if(cnt < endCnt) {
+					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 3.0F, getPitch(notes[cnt]));
+					cnt++;
+				} else {
+					cancel();
+				}
 			}
 		}
+		
+		new TempRunnable(notes.length).runTaskTimer(this, 0L, 20L);
 	}
 	
 	private float getPitch(String note) {
