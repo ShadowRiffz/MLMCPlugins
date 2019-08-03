@@ -112,7 +112,7 @@ public class Main extends JavaPlugin implements Listener {
 				sound = Sound.BLOCK_NOTE_BASS;
 			}
 			
-			float pitch = 0.0F;
+			float pitch = 1.0F;
 			if (!this.upperRegister.contains(e.getPlayer())) {
 
 				if (!e.getPlayer().isSneaking()) {
@@ -223,6 +223,42 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			
 			e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), sound, 3.0F, pitch);
+			// TODO: maybe cleanup switches more
+		}
+	}
+	
+	public void playTest(Player player, String[] notes) {
+		// testing basics
+		for(String note : notes) {
+			player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 3.0F, getPitch(note));
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private float getPitch(String note) {
+		note = note.toLowerCase();
+		char charNote = note.charAt(0);
+		switch(charNote) {
+		case 'a':
+			return 0.5946F;
+		case 'b':
+			return 0.6674F;
+		case 'c':
+			return 0.7071F;
+		case 'd':
+			return 0.7937F;
+		case 'e':
+			return 0.89089F;
+		case 'f':
+			return 0.9439F;
+		case 'g':
+			return 1.0594F;
+		default:
+			return 2.0F;
 		}
 	}
 }
