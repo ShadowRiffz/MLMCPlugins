@@ -71,7 +71,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					if (numUrgent > 0) {
 						p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
 					}
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
 
 				}
 			};
