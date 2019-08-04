@@ -105,7 +105,7 @@ public class ReportsCommand implements CommandExecutor {
 			}
 			else if (p.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent);
+					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
 					return true;
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
@@ -338,6 +338,7 @@ public class ReportsCommand implements CommandExecutor {
 							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
 						}
 						boolean is_urgent = rs.getInt(9) == 1;
+						Main.numResolved++;
 						if (is_urgent) {
 							Main.numUrgent--;
 						}

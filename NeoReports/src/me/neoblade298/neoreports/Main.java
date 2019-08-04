@@ -14,6 +14,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	static int nextReport;
 	static int numBugs;
 	static int numUrgent;
+	static int numResolved;
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
@@ -39,6 +40,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0");
 			while (rs.next()) {
 				numUrgent = rs.getInt(1);
+			}
+			rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_resolved = 1");
+			while (rs.next()) {
+				numResolved = rs.getInt(1);
 			}
 			con.close();
 		}
