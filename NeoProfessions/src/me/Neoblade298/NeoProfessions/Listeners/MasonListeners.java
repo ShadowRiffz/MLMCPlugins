@@ -166,6 +166,10 @@ public class MasonListeners implements Listener {
 			e.setCancelled(true);
 		}
 		
+		if (itemToSlot.getType() == Material.EYE_OF_ENDER && itemToSlot.getItemMeta().hasLore()) {
+			e.setCancelled(true);
+		}
+		
 		if(slotItem.containsKey(p)) {
 			
 			e.setCancelled(true);
