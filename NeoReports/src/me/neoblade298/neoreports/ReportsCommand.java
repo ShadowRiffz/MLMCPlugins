@@ -417,6 +417,7 @@ public class ReportsCommand implements CommandExecutor {
 						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE is_resolved = 1;");
 						if (deleted > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + deleted + "§7 reports!");
+							Main.numResolved = 0;
 						}
 						else {
 							p.sendMessage("§4[§c§lMLMC§4] §7No reports to clean!");
