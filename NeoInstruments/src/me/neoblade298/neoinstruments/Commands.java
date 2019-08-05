@@ -24,7 +24,7 @@ public class Commands implements CommandExecutor {
 				break;
 			case "tempo":
 				if(args.length > 1 && args[1] != null) {
-					main.setTempo(Integer.parseInt(args[1]));
+					main.setTempo((Player) sender, Integer.parseInt(args[1]));
 					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + args[1]);
 				}
 				break;

@@ -2,7 +2,9 @@ package me.neoblade298.neoinstruments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +27,7 @@ public class Main extends JavaPlugin implements Listener {
 	List<Player> freePlaying = new ArrayList<Player>();
 	List<Player> bookPlaying = new ArrayList<Player>();
 	List<Player> upperRegister = new ArrayList<Player>();
-	long noteDelay = 20L;
+	Map<Player, Long> noteDelays = new HashMap<Player, Long>(); 
 
 	public void onEnable() {
 		super.onEnable();
@@ -163,7 +165,7 @@ public class Main extends JavaPlugin implements Listener {
 					player.sendMessage("§4[§c§lMLMC§4] §7You finished playing your instrument book!");
 				}
 			}
-		}.runTaskTimer(this, 0L, this.noteDelay);
+		}.runTaskTimer(this, 0L, getNoteDelay(player));
 	}
 
 	public void playBook(Player player, ItemStack book) {
@@ -189,11 +191,16 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
-	public void setTempo(int bpm) {
+	public void setTempo(Player player, int bpm) {
 		if (bpm == 0) {
 			bpm = 1;
 		}
-		this.noteDelay = 1200L / bpm;
+		long noteDelay = 1200L / bpm;
+		if(!this.noteDelays.containsKey(player)) {
+			this.noteDelays.put(player, noteDelay);
+		} else {
+			this.noteDelays.replace(player, noteDelay);
+		}
 	}
 
 	public void superalex() {
@@ -201,6 +208,13 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	// Helper Methods
+	
+	private long getNoteDelay(Player player) {
+		if(this.noteDelays.containsKey(player)) {
+			return this.noteDelays.get(player);
+		}
+		return 10L;
+	}
 	
 	private Sound getCurrentInstrument(Player player) {
 		Set<String> tags = player.getScoreboardTags();
