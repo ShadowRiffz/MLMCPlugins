@@ -27,7 +27,9 @@ public class Main extends JavaPlugin implements Listener {
 	List<Player> freePlaying = new ArrayList<Player>();
 	List<Player> bookPlaying = new ArrayList<Player>();
 	List<Player> upperRegister = new ArrayList<Player>();
-	Map<Player, Long> noteDelays = new HashMap<Player, Long>(); 
+	Map<Player, Long> noteDelays = new HashMap<Player, Long>();
+	List<ArrayList<Player>> syncLists = new ArrayList<ArrayList<Player>>();
+	List<Player> syncedPlayers = new ArrayList<Player>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -58,9 +60,6 @@ public class Main extends JavaPlugin implements Listener {
 					ItemStack offHandItem = e.getPlayer().getInventory().getItemInOffHand();
 					if ((offHandItem != null) && (offHandItem.getType() == Material.WRITTEN_BOOK)
 							&& (offHandItem.hasItemMeta())) {
-						this.bookPlaying.add(e.getPlayer());
-						e.getPlayer().sendMessage(
-								"§4[§c§lMLMC§4] §7You begin playing your instrument book! Right click again to stop!");
 						playBook(e.getPlayer(), offHandItem);
 					} else {
 						this.freePlaying.add(e.getPlayer());
@@ -70,20 +69,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				}
 			} else if (this.freePlaying.contains(e.getPlayer())) {
-				this.freePlaying.remove(e.getPlayer());
-				this.bookPlaying.remove(e.getPlayer());
-				this.upperRegister.remove(e.getPlayer());
-				e.getPlayer().removeScoreboardTag("Ocarina");
-				e.getPlayer().removeScoreboardTag("Bell");
-				e.getPlayer().removeScoreboardTag("Chime");
-				e.getPlayer().removeScoreboardTag("Base");
-				e.getPlayer().removeScoreboardTag("Guitar");
-				e.getPlayer().removeScoreboardTag("Xylophone");
-				e.getPlayer().removeScoreboardTag("Clicks");
-				e.getPlayer().removeScoreboardTag("Piano");
-				e.getPlayer().removeScoreboardTag("Snare");
-				e.getPlayer().removeScoreboardTag("Double");
-				e.getPlayer().removeScoreboardTag("Harp");
+				stopPlaying(e.getPlayer());
 				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You stopped playing your instrument!");
 			}
 		} else if (((e.getAction() == Action.LEFT_CLICK_AIR) || (e.getAction() == Action.LEFT_CLICK_BLOCK))
@@ -150,18 +136,7 @@ public class Main extends JavaPlugin implements Listener {
 					cnt++;
 				} else {
 					cancel();
-					bookPlaying.remove(player);
-					player.removeScoreboardTag("Ocarina");
-					player.removeScoreboardTag("Bell");
-					player.removeScoreboardTag("Chime");
-					player.removeScoreboardTag("Base");
-					player.removeScoreboardTag("Guitar");
-					player.removeScoreboardTag("Xylophone");
-					player.removeScoreboardTag("Clicks");
-					player.removeScoreboardTag("Piano");
-					player.removeScoreboardTag("Snare");
-					player.removeScoreboardTag("Double");
-					player.removeScoreboardTag("Harp");
+					stopPlaying(player);
 					player.sendMessage("§4[§c§lMLMC§4] §7You finished playing your instrument book!");
 				}
 			}
@@ -175,7 +150,25 @@ public class Main extends JavaPlugin implements Listener {
 			notes.addAll(Arrays.asList(page.split(" ")));
 		}
 		String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
-		playNotes(player, notesArr);
+		
+		this.bookPlaying.add(player);
+		
+		if(!this.syncedPlayers.contains(player)) { // if playing solo
+			player.sendMessage("§4[§c§lMLMC§4] §7You begin playing your instrument book! Right click again to stop!");
+			playNotes(player, notesArr);
+		} else {
+			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
+			ArrayList<Player> syncList = new ArrayList<Player>();
+			for (ArrayList<Player> checkList : this.syncLists) {
+				if (checkList.contains(player)) {
+					syncList = checkList;
+					break;
+				}
+			}
+			if(this.bookPlaying.containsAll(syncList)) {
+				playNotes(player, notesArr);
+			}
+		}
 	}
 
 	public void editBook(Player player) {
@@ -196,11 +189,104 @@ public class Main extends JavaPlugin implements Listener {
 			bpm = 1;
 		}
 		long noteDelay = 1200L / bpm;
-		if(!this.noteDelays.containsKey(player)) {
+		if (!this.noteDelays.containsKey(player)) {
 			this.noteDelays.put(player, noteDelay);
 		} else {
 			this.noteDelays.replace(player, noteDelay);
 		}
+	}
+
+	public void sync(Player player, String toSyncTo) {
+		Player syncTo = player.getServer().getPlayer(toSyncTo);
+		ArrayList<Player> syncList = new ArrayList<Player>();
+		if (this.syncedPlayers.contains(player)) {
+			if (this.syncedPlayers.contains(syncTo)) {
+				// if player and syncTo are in separate syncLists, combine them; otherwise, no
+				// need to do anything
+				for (ArrayList<Player> checkList : this.syncLists) {
+					if (checkList.contains(player)) {
+						syncList = checkList;
+						break;
+					}
+				}
+				if (!syncList.contains(syncTo)) {
+					ArrayList<Player> syncTosSyncList = new ArrayList<Player>();
+					for (ArrayList<Player> checkList : this.syncLists) {
+						if (checkList.contains(syncTo)) {
+							syncTosSyncList = checkList;
+							break;
+						}
+					}
+					syncList.addAll(syncTosSyncList);
+					this.syncLists.remove(syncTosSyncList);
+				}
+			} else {
+				this.syncedPlayers.add(syncTo);
+				// add syncTo to player's syncList
+				for (ArrayList<Player> checkList : this.syncLists) {
+					if (checkList.contains(player)) {
+						syncList = checkList;
+						break;
+					}
+				}
+				syncList.add(syncTo);
+			}
+		} else {
+			this.syncedPlayers.add(player);
+			if (this.syncedPlayers.contains(syncTo)) {
+				// add player to syncTo's syncList
+				for (ArrayList<Player> checkList : this.syncLists) {
+					if (checkList.contains(syncTo)) {
+						syncList = checkList;
+						break;
+					}
+				}
+				syncList.add(player);
+			} else {
+				this.syncedPlayers.add(syncTo);
+				// add new syncList with both player and syncTo
+				syncList.add(player);
+				syncList.add(syncTo);
+				this.syncLists.add(syncList);
+			}
+		}
+	}
+
+	public void desync(Player player) {
+		if (!this.syncedPlayers.contains(player)) {
+			return;
+		}
+		this.syncedPlayers.remove(player);
+
+		ArrayList<Player> syncList = new ArrayList<Player>();
+		for (ArrayList<Player> checkList : this.syncLists) {
+			if (checkList.contains(player)) {
+				syncList = checkList;
+				break;
+			}
+		}
+		if (syncList.size() < 3) { // if updated syncList will have nobody synced to each other
+			this.syncLists.remove(syncList);
+		} else {
+			syncList.remove(player);
+		}
+	}
+
+	public void stopPlaying(Player player) {
+		this.upperRegister.remove(player);
+		this.freePlaying.remove(player);
+		this.bookPlaying.remove(player);
+		player.removeScoreboardTag("Ocarina");
+		player.removeScoreboardTag("Bell");
+		player.removeScoreboardTag("Chime");
+		player.removeScoreboardTag("Base");
+		player.removeScoreboardTag("Guitar");
+		player.removeScoreboardTag("Xylophone");
+		player.removeScoreboardTag("Clicks");
+		player.removeScoreboardTag("Piano");
+		player.removeScoreboardTag("Snare");
+		player.removeScoreboardTag("Double");
+		player.removeScoreboardTag("Harp");
 	}
 
 	public void superalex() {
@@ -208,14 +294,14 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	// Helper Methods
-	
+
 	private long getNoteDelay(Player player) {
-		if(this.noteDelays.containsKey(player)) {
+		if (this.noteDelays.containsKey(player)) {
 			return this.noteDelays.get(player);
 		}
 		return 10L;
 	}
-	
+
 	private Sound getCurrentInstrument(Player player) {
 		Set<String> tags = player.getScoreboardTags();
 		final Sound sound;

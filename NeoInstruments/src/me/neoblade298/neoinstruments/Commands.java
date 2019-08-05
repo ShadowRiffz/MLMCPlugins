@@ -28,6 +28,14 @@ public class Commands implements CommandExecutor {
 					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + args[1]);
 				}
 				break;
+			case "sync":
+				if(args.length > 1 && args[1] != null) {
+					main.sync((Player) sender, args[1]);
+					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Synced with " + args[1]);
+				}
+				break;
+			case "unsync":
+				break;
 			case "superalex":
 				if(((Player) sender).getName().toLowerCase().contains("superalex")){
 					main.superalex();
