@@ -252,7 +252,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
-	public void desync(Player player) {
+	public void unsync(Player player) {
 		if (!this.syncedPlayers.contains(player)) {
 			return;
 		}

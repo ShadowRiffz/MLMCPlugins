@@ -35,6 +35,8 @@ public class Commands implements CommandExecutor {
 				}
 				break;
 			case "unsync":
+				main.unsync((Player) sender);
+				((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Unsynced");
 				break;
 			case "superalex":
 				if(((Player) sender).getName().toLowerCase().contains("superalex")){
