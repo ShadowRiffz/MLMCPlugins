@@ -26,7 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
 	Set<Player> freePlaying = new HashSet<Player>();
-	Set<Player> bookPlaying = new HashSet<Player>();
+	static Set<Player> bookPlaying = new HashSet<Player>();
 	Set<Player> upperRegister = new HashSet<Player>();
 	Map<Player, Long> noteDelays = new HashMap<Player, Long>();
 	Set<HashSet<Player>> syncSets = new HashSet<HashSet<Player>>();
@@ -53,7 +53,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		if ((e.getAction() == Action.RIGHT_CLICK_AIR) || (e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
 			if ((e.getItem() != null) && (e.getItem().hasItemMeta()) && (e.getItem().getItemMeta().hasLore())
-					&& (!this.freePlaying.contains(e.getPlayer())) && (!this.bookPlaying.contains(e.getPlayer()))) {
+					&& (!this.freePlaying.contains(e.getPlayer())) && (!bookPlaying.contains(e.getPlayer()))) {
 				List<String> lore = e.getItem().getItemMeta().getLore();
 				if (((String) lore.get(0)).contains("Instrument")) {
 					lore.set(0, ChatColor.stripColor((String) lore.get(0)));
@@ -71,7 +71,7 @@ public class Main extends JavaPlugin implements Listener {
 								"§4[§c§lMLMC§4] §7You begin playing your instrument freehand! Right click again to stop!");
 					}
 				}
-			} else if (this.freePlaying.contains(e.getPlayer())) {
+			} else if (this.freePlaying.contains(e.getPlayer()) || bookPlaying.contains(e.getPlayer())) {
 				stopPlaying(e.getPlayer());
 				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You stopped playing your instrument!");
 			}
@@ -122,34 +122,51 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlaySyncedEvent(PlaySyncedEvent e) {
-		e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You being playing your instrument book synced!");
+		e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You being playing your instrument book synced! Right click again to stop!");
 		playNotes(e.getPlayer(), this.noteArrs.get(e.getPlayer()));
 	}
 
+	class MusicRunnable extends BukkitRunnable {
+		private final Player player;
+		private final String[] notes;
+		private final Sound sound;
+		private int cnt = 0;
+		
+		public MusicRunnable(Player player, String[] notes, Sound sound) {
+			this.player = player;
+			this.notes = notes;
+			this.sound = sound;
+		}
+		
+		@Override
+		public void run() {
+			if(!Main.bookPlaying.contains(player)) {
+				cancel();
+			}
+			
+			if (cnt < notes.length) {
+				float pitch = getPitch(notes[cnt]);
+				if (pitch != 0.0F) {
+					player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
+					player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 1, null);
+				} else {
+					// play mute note, representing a pause
+					player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
+				}
+				cnt++;
+			} else {
+				cancel();
+				stopPlaying(player);
+				player.sendMessage("§4[§c§lMLMC§4] §7You finished playing your instrument book!");
+			}
+		}
+	}
+	
 	public void playNotes(Player player, String[] notes) {
-		player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 1, null);
 		final Sound sound = getCurrentInstrument(player);
 
-		new BukkitRunnable() {
-			private int cnt = 0;
-
-			public void run() {
-				if (cnt < notes.length) {
-					float pitch = getPitch(notes[cnt]);
-					if (pitch != 0.0F) {
-						player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
-					} else {
-						// play mute note, representing a pause
-						player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
-					}
-					cnt++;
-				} else {
-					cancel();
-					stopPlaying(player);
-					player.sendMessage("§4[§c§lMLMC§4] §7You finished playing your instrument book!");
-				}
-			}
-		}.runTaskTimer(this, 0L, getNoteDelay(player));
+		MusicRunnable musicPlayer = new MusicRunnable(player, notes, sound);
+		musicPlayer.runTaskTimer(this, 0L, getNoteDelay(player));
 	}
 
 	public void playBook(Player player, ItemStack book) {
@@ -160,7 +177,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
 		
-		this.bookPlaying.add(player);
+		bookPlaying.add(player);
 		
 		if(!this.syncedPlayers.contains(player)) { // if playing solo
 			player.sendMessage("§4[§c§lMLMC§4] §7You begin playing your instrument book! Right click again to stop!");
@@ -169,7 +186,7 @@ public class Main extends JavaPlugin implements Listener {
 			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
 			HashSet<Player> syncSet = getsyncSet(player);
 			this.noteArrs.put(player, notesArr);
-			if(this.bookPlaying.containsAll(syncSet)) {
+			if(bookPlaying.containsAll(syncSet)) {
 				for(Player currPlayer : syncSet) {
 					Bukkit.getPluginManager().callEvent(new PlaySyncedEvent(currPlayer));
 				}
@@ -281,7 +298,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void stopPlaying(Player player) {
 		this.upperRegister.remove(player);
 		this.freePlaying.remove(player);
-		this.bookPlaying.remove(player);
+		bookPlaying.remove(player);
 		player.removeScoreboardTag("Ocarina");
 		player.removeScoreboardTag("Bell");
 		player.removeScoreboardTag("Chime");
