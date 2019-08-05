@@ -3,6 +3,7 @@ package me.neoblade298.neoinstruments;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,14 +25,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
-	List<Player> freePlaying = new ArrayList<Player>();
-	List<Player> bookPlaying = new ArrayList<Player>();
-	List<Player> upperRegister = new ArrayList<Player>();
+	Set<Player> freePlaying = new HashSet<Player>();
+	Set<Player> bookPlaying = new HashSet<Player>();
+	Set<Player> upperRegister = new HashSet<Player>();
 	Map<Player, Long> noteDelays = new HashMap<Player, Long>();
-	List<ArrayList<Player>> syncLists = new ArrayList<ArrayList<Player>>();
-	List<Player> syncedPlayers = new ArrayList<Player>();
+	Set<HashSet<Player>> syncSets = new HashSet<HashSet<Player>>();
+	Set<Player> syncedPlayers = new HashSet<Player>();
 	Map<Player, String[]> noteArrs = new HashMap<Player, String[]>();
-	List<Player> awaitingConfirmation = new ArrayList<Player>();
+	Set<Player> awaitingConfirmation = new HashSet<Player>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -166,10 +167,10 @@ public class Main extends JavaPlugin implements Listener {
 			playNotes(player, notesArr);
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
-			ArrayList<Player> syncList = getSyncList(player);
+			HashSet<Player> syncSet = getsyncSet(player);
 			this.noteArrs.put(player, notesArr);
-			if(this.bookPlaying.containsAll(syncList)) {
-				for(Player currPlayer : syncList) {
+			if(this.bookPlaying.containsAll(syncSet)) {
+				for(Player currPlayer : syncSet) {
 					Bukkit.getPluginManager().callEvent(new PlaySyncedEvent(currPlayer));
 				}
 			}
@@ -225,34 +226,34 @@ public class Main extends JavaPlugin implements Listener {
 	public void sync(Player player, Player syncTo) {
 		if (this.syncedPlayers.contains(player)) {
 			if (this.syncedPlayers.contains(syncTo)) {
-				// if player and syncTo are in separate syncLists, combine them
+				// if player and syncTo are in separate syncSets, combine them
 				// otherwise, no need to do anything
-				ArrayList<Player> syncList = getSyncList(player);
-				if (!syncList.contains(syncTo)) {
-					ArrayList<Player> syncTosSyncList = getSyncList(syncTo);
-					syncList.addAll(syncTosSyncList);
-					this.syncLists.remove(syncTosSyncList);
+				HashSet<Player> syncSet = getsyncSet(player);
+				if (!syncSet.contains(syncTo)) {
+					HashSet<Player> syncTossyncSet = getsyncSet(syncTo);
+					syncSet.addAll(syncTossyncSet);
+					this.syncSets.remove(syncTossyncSet);
 				} else {
 					player.sendMessage("§4[§c§lMLMC§4] §7You are already synced with " + syncTo.getName() + "!");
 					return;
 				}
 			} else {
 				this.syncedPlayers.add(syncTo);
-				// add syncTo to player's syncList
-				getSyncList(player).add(syncTo);
+				// add syncTo to player's syncSet
+				getsyncSet(player).add(syncTo);
 			}
 		} else {
 			this.syncedPlayers.add(player);
 			if (this.syncedPlayers.contains(syncTo)) {
-				// add player to syncTo's syncList
-				getSyncList(syncTo).add(player);
+				// add player to syncTo's syncSet
+				getsyncSet(syncTo).add(player);
 			} else {
 				this.syncedPlayers.add(syncTo);
-				// add new syncList with both player and syncTo
-				ArrayList<Player> syncList = new ArrayList<Player>();
-				syncList.add(player);
-				syncList.add(syncTo);
-				this.syncLists.add(syncList);
+				// add new syncSet with both player and syncTo
+				HashSet<Player> syncSet = new HashSet<Player>();
+				syncSet.add(player);
+				syncSet.add(syncTo);
+				this.syncSets.add(syncSet);
 			}
 		}
 
@@ -269,11 +270,11 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		this.syncedPlayers.remove(player);
 
-		ArrayList<Player> syncList = getSyncList(player);
-		if (syncList.size() < 3) { // if updated syncList will have nobody synced to each other
-			this.syncLists.remove(syncList);
+		HashSet<Player> syncSet = getsyncSet(player);
+		if (syncSet.size() < 3) { // if updated syncSet will have nobody synced to each other
+			this.syncSets.remove(syncSet);
 		} else {
-			syncList.remove(player);
+			syncSet.remove(player);
 		}
 	}
 
@@ -300,15 +301,15 @@ public class Main extends JavaPlugin implements Listener {
 
 	// Helper Methods
 	
-	private ArrayList<Player> getSyncList(Player player){
-		ArrayList<Player> syncList = new ArrayList<Player>();
-		for (ArrayList<Player> checkList : this.syncLists) {
+	private HashSet<Player> getsyncSet(Player player){
+		HashSet<Player> syncSet = new HashSet<Player>();
+		for (HashSet<Player> checkList : this.syncSets) {
 			if (checkList.contains(player)) {
-				syncList = checkList;
+				syncSet = checkList;
 				break;
 			}
 		}
-		return syncList;
+		return syncSet;
 	}
 
 	private long getNoteDelay(Player player) {
