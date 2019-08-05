@@ -25,25 +25,25 @@ public class Commands implements CommandExecutor {
 			case "tempo":
 				if(args.length > 1 && args[1] != null) {
 					main.setTempo((Player) sender, Integer.parseInt(args[1]));
-					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + args[1]);
 				}
 				break;
 			case "sync":
 				if(args.length > 1 && args[1] != null) {
 					main.sync((Player) sender, args[1]);
-					((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Synced with " + args[1]);
 				}
 				break;
 			case "unsync":
 				main.unsync((Player) sender);
-				((Player)sender).sendMessage("§4[§c§lMLMC§4] §7Unsynced");
 				break;
 			case "superalex":
 				if(((Player) sender).getName().toLowerCase().contains("superalex")){
 					main.superalex();
 				}
 				break;
+			default:
+				((Player)sender).sendMessage("Unknown command. Usage: /instruments <edit/tempo/sync/unsync>");
 			}
+				
 		}
 		return true;
 	}

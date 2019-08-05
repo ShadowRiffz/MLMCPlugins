@@ -203,57 +203,38 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			this.noteDelays.replace(player, noteDelay);
 		}
+		player.sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + bpm);
 	}
 
 	public void sync(Player player, String toSyncTo) {
+		player.sendMessage("§4[§c§lMLMC§4] §7Synced with " + toSyncTo);
+		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " has synced with you");
+		
 		Player syncTo = player.getServer().getPlayer(toSyncTo);
-		ArrayList<Player> syncList = new ArrayList<Player>();
 		if (this.syncedPlayers.contains(player)) {
 			if (this.syncedPlayers.contains(syncTo)) {
-				// if player and syncTo are in separate syncLists, combine them; otherwise, no
-				// need to do anything
-				for (ArrayList<Player> checkList : this.syncLists) {
-					if (checkList.contains(player)) {
-						syncList = checkList;
-						break;
-					}
-				}
+				// if player and syncTo are in separate syncLists, combine them
+				// otherwise, no need to do anything
+				ArrayList<Player> syncList = getSyncList(player);
 				if (!syncList.contains(syncTo)) {
-					ArrayList<Player> syncTosSyncList = new ArrayList<Player>();
-					for (ArrayList<Player> checkList : this.syncLists) {
-						if (checkList.contains(syncTo)) {
-							syncTosSyncList = checkList;
-							break;
-						}
-					}
+					ArrayList<Player> syncTosSyncList = getSyncList(syncTo);
 					syncList.addAll(syncTosSyncList);
 					this.syncLists.remove(syncTosSyncList);
 				}
 			} else {
 				this.syncedPlayers.add(syncTo);
 				// add syncTo to player's syncList
-				for (ArrayList<Player> checkList : this.syncLists) {
-					if (checkList.contains(player)) {
-						syncList = checkList;
-						break;
-					}
-				}
-				syncList.add(syncTo);
+				getSyncList(player).add(syncTo);
 			}
 		} else {
 			this.syncedPlayers.add(player);
 			if (this.syncedPlayers.contains(syncTo)) {
 				// add player to syncTo's syncList
-				for (ArrayList<Player> checkList : this.syncLists) {
-					if (checkList.contains(syncTo)) {
-						syncList = checkList;
-						break;
-					}
-				}
-				syncList.add(player);
+				getSyncList(syncTo).add(player);
 			} else {
 				this.syncedPlayers.add(syncTo);
 				// add new syncList with both player and syncTo
+				ArrayList<Player> syncList = new ArrayList<Player>();
 				syncList.add(player);
 				syncList.add(syncTo);
 				this.syncLists.add(syncList);
@@ -262,18 +243,16 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void unsync(Player player) {
+		player.sendMessage("§4[§c§lMLMC§4] §7Unsynced");
+		
+		stopPlaying(player);
+		
 		if (!this.syncedPlayers.contains(player)) {
 			return;
 		}
 		this.syncedPlayers.remove(player);
 
-		ArrayList<Player> syncList = new ArrayList<Player>();
-		for (ArrayList<Player> checkList : this.syncLists) {
-			if (checkList.contains(player)) {
-				syncList = checkList;
-				break;
-			}
-		}
+		ArrayList<Player> syncList = getSyncList(player);
 		if (syncList.size() < 3) { // if updated syncList will have nobody synced to each other
 			this.syncLists.remove(syncList);
 		} else {
@@ -303,6 +282,17 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	// Helper Methods
+	
+	private ArrayList<Player> getSyncList(Player player){
+		ArrayList<Player> syncList = new ArrayList<Player>();
+		for (ArrayList<Player> checkList : this.syncLists) {
+			if (checkList.contains(player)) {
+				syncList = checkList;
+				break;
+			}
+		}
+		return syncList;
+	}
 
 	private long getNoteDelay(Player player) {
 		if (this.noteDelays.containsKey(player)) {
