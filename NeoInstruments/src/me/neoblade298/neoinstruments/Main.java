@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 	Map<Player, Long> noteDelays = new HashMap<Player, Long>();
 	List<ArrayList<Player>> syncLists = new ArrayList<ArrayList<Player>>();
 	List<Player> syncedPlayers = new ArrayList<Player>();
+	Map<Player, String[]> noteArrs = new HashMap<Player, String[]>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -116,6 +117,11 @@ public class Main extends JavaPlugin implements Listener {
 			e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), sound, 3.0F, pitch);
 		}
 	}
+	
+	@EventHandler
+	public void onPlaySyncedEvent(PlaySyncedEvent e) {
+		playNotes(e.getPlayer(), this.noteArrs.get(e.getPlayer()));
+	}
 
 	public void playNotes(Player player, String[] notes) {
 		player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 1, null);
@@ -165,8 +171,11 @@ public class Main extends JavaPlugin implements Listener {
 					break;
 				}
 			}
+			this.noteArrs.put(player, notesArr);
 			if(this.bookPlaying.containsAll(syncList)) {
-				playNotes(player, notesArr);
+				for(Player currPlayer : syncList) {
+					Bukkit.getPluginManager().callEvent(new PlaySyncedEvent(currPlayer));
+				}
 			}
 		}
 	}
