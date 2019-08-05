@@ -31,6 +31,7 @@ public class Main extends JavaPlugin implements Listener {
 	List<ArrayList<Player>> syncLists = new ArrayList<ArrayList<Player>>();
 	List<Player> syncedPlayers = new ArrayList<Player>();
 	Map<Player, String[]> noteArrs = new HashMap<Player, String[]>();
+	List<Player> awaitingConfirmation = new ArrayList<Player>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -120,6 +121,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlaySyncedEvent(PlaySyncedEvent e) {
+		e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You being playing your instrument book synced!");
 		playNotes(e.getPlayer(), this.noteArrs.get(e.getPlayer()));
 	}
 
@@ -164,13 +166,7 @@ public class Main extends JavaPlugin implements Listener {
 			playNotes(player, notesArr);
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
-			ArrayList<Player> syncList = new ArrayList<Player>();
-			for (ArrayList<Player> checkList : this.syncLists) {
-				if (checkList.contains(player)) {
-					syncList = checkList;
-					break;
-				}
-			}
+			ArrayList<Player> syncList = getSyncList(player);
 			this.noteArrs.put(player, notesArr);
 			if(this.bookPlaying.containsAll(syncList)) {
 				for(Player currPlayer : syncList) {
@@ -180,6 +176,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	// TODO: distinguish between regular books and instrument books
 	public void editBook(Player player) {
 		ItemStack item = player.getInventory().getItemInMainHand();
 		if (item.getType() == Material.WRITTEN_BOOK
@@ -205,12 +202,27 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		player.sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + bpm);
 	}
+	
+	public void askSync(Player player, String toSyncTo) {
+		player.sendMessage("§4[§c§lMLMC§4] §7Sync requested");
+		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " is requesting to sync. Confirm with §c/instruments confirm " + player.getName());
+		this.awaitingConfirmation.add(player.getServer().getPlayer(toSyncTo));
+	}
+	
+	public void confirmSync(Player confirmedPlayer, String originalAsker) {
+		if(this.awaitingConfirmation.contains(confirmedPlayer)) {
+			confirmedPlayer.sendMessage("§4[§c§lMLMC§4] §7Confirmed sync with " + confirmedPlayer.getServer().getPlayer(originalAsker).getName());
+			// looks lengthy, but provides full username
+			this.awaitingConfirmation.remove(confirmedPlayer);
+			sync(confirmedPlayer.getServer().getPlayer(originalAsker), confirmedPlayer);
+		}
+	}
+	
+	public void denySync(Player player) {
+		this.awaitingConfirmation.remove(player);
+	}
 
-	public void sync(Player player, String toSyncTo) {
-		player.sendMessage("§4[§c§lMLMC§4] §7Synced with " + toSyncTo);
-		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " has synced with you");
-		
-		Player syncTo = player.getServer().getPlayer(toSyncTo);
+	public void sync(Player player, Player syncTo) {
 		if (this.syncedPlayers.contains(player)) {
 			if (this.syncedPlayers.contains(syncTo)) {
 				// if player and syncTo are in separate syncLists, combine them
@@ -220,6 +232,9 @@ public class Main extends JavaPlugin implements Listener {
 					ArrayList<Player> syncTosSyncList = getSyncList(syncTo);
 					syncList.addAll(syncTosSyncList);
 					this.syncLists.remove(syncTosSyncList);
+				} else {
+					player.sendMessage("§4[§c§lMLMC§4] §7You are already synced with " + syncTo.getName() + "!");
+					return;
 				}
 			} else {
 				this.syncedPlayers.add(syncTo);
@@ -240,6 +255,8 @@ public class Main extends JavaPlugin implements Listener {
 				this.syncLists.add(syncList);
 			}
 		}
+
+		player.sendMessage("§4[§c§lMLMC§4] §7Synced with " + syncTo.getName());
 	}
 
 	public void unsync(Player player) {
