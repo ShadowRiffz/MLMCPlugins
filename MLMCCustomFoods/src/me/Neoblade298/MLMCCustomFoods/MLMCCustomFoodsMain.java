@@ -209,6 +209,7 @@ public class MLMCCustomFoodsMain
   		}
   	}
     food.eat(p, preserveMultiplier);
+    e.setCancelled(true);
     
     
     
