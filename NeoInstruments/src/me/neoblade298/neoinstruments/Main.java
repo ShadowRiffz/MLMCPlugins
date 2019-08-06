@@ -144,13 +144,13 @@ public class Main extends JavaPlugin implements Listener {
 
 	class MusicRunnable extends BukkitRunnable {
 		private final Player player;
-		private final String[] notes;
+		private final String[] chords;
 		private final Sound sound;
 		private int cnt = 0;
 
-		public MusicRunnable(Player player, String[] notes, Sound sound) {
+		public MusicRunnable(Player player, String[] chords, Sound sound) {
 			this.player = player;
-			this.notes = notes;
+			this.chords = chords;
 			this.sound = sound;
 		}
 
@@ -160,15 +160,13 @@ public class Main extends JavaPlugin implements Listener {
 				cancel();
 			}
 
-			if (cnt < notes.length) {
-				float pitch = getPitch(notes[cnt]);
-				if (pitch != 0.0F) {
-					player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
-					player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 0, pitch, 0.0, 0.0);
-				} else {
-					// play mute note, representing a pause
-					player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
+			if (cnt < chords.length) {
+				String[] notes = chords[cnt].split("\\*");
+				Set<Float> pitches = new HashSet<Float>();
+				for (String note : notes) {
+					pitches.add(getPitch(note));
 				}
+				playChord(player, pitches, sound);
 				cnt++;
 			} else {
 				cancel();
@@ -180,6 +178,18 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void playNotes(Player player, String[] notes) {
 		new MusicRunnable(player, notes, getCurrentInstrument(player)).runTaskTimer(this, 0L, getNoteDelay(player));
+	}
+
+	public void playChord(Player player, Set<Float> pitches, Sound sound) {
+		for (float pitch : pitches) {
+			if (pitch != 0.0F) {
+				player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
+				player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 0, pitch, 0.0, 0.0);
+			} else {
+				// play mute note, representing a pause
+				player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
+			}
+		}
 	}
 
 	public void playBook(Player player, ItemStack book) {
