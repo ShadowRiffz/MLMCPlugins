@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
@@ -86,7 +88,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ItemStack item = target.getInventory().getItemInMainHand();
 						Util util = new Util();
 						BlacksmithUtils bUtils = new BlacksmithUtils();
-						item.setDurability((short) 0);
+						ItemMeta im = item.getItemMeta();
+						((Damageable) im).setDamage(0);
+						item.setItemMeta(im);
 						if (bUtils.canRepair(item)) {
 							util.setCurrentDurability(item, util.getMaxDurability(item));
 						}

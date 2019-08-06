@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Util {
@@ -195,7 +196,9 @@ public class Util {
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				double percentage = 1-((double)durability / (double)getMaxDurability(item));
-				item.setDurability((short) ((item.getType().getMaxDurability()-1) * percentage));
+				ItemMeta im = item.getItemMeta();
+				((Damageable) im).setDamage((int) (item.getType().getMaxDurability()-1 * percentage));
+				item.setItemMeta(im);
 				return;
 			}
 		}
@@ -216,7 +219,9 @@ public class Util {
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				double percentage = 1-((double)getCurrentDurability(item) / (double)durability);
-				item.setDurability((short) ((item.getType().getMaxDurability()-1) * percentage));
+				ItemMeta im = item.getItemMeta();
+				((Damageable) im).setDamage((int) ((item.getType().getMaxDurability()-1) * percentage));
+				item.setItemMeta(im);
 				return;
 			}
 		}
