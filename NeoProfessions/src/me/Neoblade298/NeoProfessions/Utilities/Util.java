@@ -197,7 +197,7 @@ public class Util {
 				item.setItemMeta(meta);
 				double percentage = 1-((double)durability / (double)getMaxDurability(item));
 				ItemMeta im = item.getItemMeta();
-				((Damageable) im).setDamage((int) (item.getType().getMaxDurability()-1 * percentage));
+				((Damageable) im).setDamage((int) ((item.getType().getMaxDurability()-1) * percentage));
 				item.setItemMeta(im);
 				return;
 			}

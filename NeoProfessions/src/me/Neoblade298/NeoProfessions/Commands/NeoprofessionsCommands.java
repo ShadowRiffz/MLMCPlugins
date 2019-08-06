@@ -89,7 +89,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						Util util = new Util();
 						BlacksmithUtils bUtils = new BlacksmithUtils();
 						ItemMeta im = item.getItemMeta();
-						((Damageable) im).setDamage(0);
+						((Damageable) im).setDamage(item.getType().getMaxDurability());
 						item.setItemMeta(im);
 						if (bUtils.canRepair(item)) {
 							util.setCurrentDurability(item, util.getMaxDurability(item));
