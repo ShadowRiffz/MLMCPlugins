@@ -70,14 +70,14 @@ public class LimitedEditionRecipeItems {
 	}
 
 	public ItemStack getCandyCane() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.ROSE_RED);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Candy Cane");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 4");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 1);
+		return item;
 	}
 
 	public ItemStack getGingerbread() {
@@ -103,7 +103,7 @@ public class LimitedEditionRecipeItems {
 	}
 
 	public ItemStack getSmokedHam() {
-		ItemStack item = new ItemStack(Material.GRILLED_PORK);
+		ItemStack item = new ItemStack(Material.COOKED_PORKCHOP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Smoked Ham");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -147,7 +147,7 @@ public class LimitedEditionRecipeItems {
 	}
 
 	public ItemStack getCupcake() {
-		ItemStack item = new ItemStack(Material.CHORUS_FRUIT_POPPED);
+		ItemStack item = new ItemStack(Material.POPPED_CHORUS_FRUIT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Cupcake");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -158,7 +158,7 @@ public class LimitedEditionRecipeItems {
 	}
 
 	public ItemStack getFishAndChips() {
-		ItemStack item = new ItemStack(Material.COOKED_FISH);
+		ItemStack item = new ItemStack(Material.COOKED_COD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Fish And Chips");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -232,14 +232,14 @@ public class LimitedEditionRecipeItems {
 	
 	public ArrayList<ItemStack> getBakedEyeballRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.EYE_OF_ENDER));
+		recipe.add(new ItemStack(Material.ENDER_EYE));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getCandyCaneRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK, 4), 1));
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK, 2), 15));
+		recipe.add(new ItemStack(Material.ROSE_RED, 4));
+		recipe.add(new ItemStack(Material.BONE_MEAL, 2));
 		recipe.add(new ItemStack(Material.SUGAR, 3));
 		return recipe;
 	}
@@ -256,7 +256,7 @@ public class LimitedEditionRecipeItems {
 	
 	public ArrayList<ItemStack> getSmokedHamRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.GRILLED_PORK));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
 		return recipe;
 	}
 	
@@ -308,8 +308,8 @@ public class LimitedEditionRecipeItems {
 	
 	public ArrayList<ItemStack> getFishAndChipsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.COOKED_FISH));
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.COOKED_COD));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(ingr.getLemon());
 		recipe.add(ingr.getSalt());
 		recipe.add(ingr.getOil());
@@ -328,7 +328,7 @@ public class LimitedEditionRecipeItems {
 	public ArrayList<ItemStack> getVitalacRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_MUTTON, 3));
-		recipe.add(new ItemStack(Material.PORK, 2));
+		recipe.add(new ItemStack(Material.PORKCHOP, 2));
 		recipe.add(util.setAmount(ingr.getSpices(), 3));
 		recipe.add(ingr.getPepper());
 		return recipe;

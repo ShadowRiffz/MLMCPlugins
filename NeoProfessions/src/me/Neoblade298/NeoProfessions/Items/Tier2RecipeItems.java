@@ -75,7 +75,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getHoneyedHam() {
-		ItemStack item = new ItemStack(Material.GRILLED_PORK);
+		ItemStack item = new ItemStack(Material.COOKED_PORKCHOP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Honeyed Ham");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -130,7 +130,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getExoticTea() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
+		ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Exotic Tea");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -152,7 +152,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getTunaSandwich() {
-		ItemStack item = new ItemStack(Material.COOKED_FISH);
+		ItemStack item = new ItemStack(Material.COOKED_COD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Tuna Sandwich");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -196,18 +196,18 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getLemonTart() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lemon Tart");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 15");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 11);
+		return item;
 	}
 	
 	public ItemStack getWrappedChicken() {
-		ItemStack item = new ItemStack(Material.GRILLED_PORK);
+		ItemStack item = new ItemStack(Material.COOKED_PORKCHOP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Wrapped Chicken");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -218,7 +218,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getMysteryMeat() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
+		ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Mystery Meat");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -296,14 +296,14 @@ public class Tier2RecipeItems {
 	
 	public ArrayList<ItemStack> getHoneyedHamRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.GRILLED_PORK));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
 		recipe.add(ingr.getHoney());
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getCandyBarRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK), 3));
+		recipe.add(new ItemStack(Material.COCOA_BEANS));
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(ingr.getHoney());
 		return recipe;
@@ -320,7 +320,7 @@ public class Tier2RecipeItems {
 	public ArrayList<ItemStack> getSandwichRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD, 2));
-		recipe.add(new ItemStack(Material.GRILLED_PORK));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
 		recipe.add(ingr.getGreens());
 		recipe.add(ingr.getTomato());
 		return recipe;
@@ -354,7 +354,7 @@ public class Tier2RecipeItems {
 	public ArrayList<ItemStack> getTunaSandwichRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BREAD, 2));
-		recipe.add(new ItemStack(Material.COOKED_FISH));
+		recipe.add(new ItemStack(Material.COOKED_COD));
 		recipe.add(ingr.getBeetrootSauce());
 		recipe.add(ingr.getGreens());
 		return recipe;
@@ -379,7 +379,7 @@ public class Tier2RecipeItems {
 	
 	public ArrayList<ItemStack> getHashBrownsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(ingr.getBeetrootSauce());
 		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		return recipe;

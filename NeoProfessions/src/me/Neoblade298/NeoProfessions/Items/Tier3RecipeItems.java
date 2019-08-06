@@ -65,7 +65,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getApplePorkchops() {
-		ItemStack item = new ItemStack(Material.GRILLED_PORK);
+		ItemStack item = new ItemStack(Material.COOKED_PORKCHOP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Apple Porkchops");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -76,14 +76,14 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getScrambledEggs() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Scrambled Eggs");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 3 Recipe 4");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 11);
+		return item;
 	}
 	
 	public ItemStack getLambKabob() {
@@ -131,29 +131,29 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSpaghettiBolognese() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.ROSE_RED);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Spaghetti Bolognese");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 3 Recipe 9");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 1);
+		return item;
 	}
 	
 	public ItemStack getFilletedSalmon() {
-		ItemStack item = new ItemStack(Material.COOKED_FISH);
+		ItemStack item = new ItemStack(Material.ROSE_RED);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Filleted Salmon");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 3 Recipe 10");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 1);
+		return item;
 	}
 	
 	public ItemStack getRoastBream() {
-		ItemStack item = new ItemStack(Material.COOKED_FISH);
+		ItemStack item = new ItemStack(Material.COOKED_COD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Roast Bream");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -241,7 +241,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getButteredWortes() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
+		ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Buttered Wortes");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -293,7 +293,7 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getApplePorkchopsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.GRILLED_PORK, 2));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP, 2));
 		recipe.add(new ItemStack(Material.APPLE));
 		recipe.add(ingr.getSpices());
 		return recipe;
@@ -327,7 +327,7 @@ public class Tier3RecipeItems {
 	public ArrayList<ItemStack> getLoadedBakedPotatoRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BAKED_POTATO));
-		recipe.add(new ItemStack(Material.GRILLED_PORK));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
 		recipe.add(util.setAmount(ingr.getButter(), 2));
 		recipe.add(ingr.getSalt());
 		return recipe;
@@ -353,7 +353,7 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getFilletedSalmonRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(util.setData(new ItemStack(Material.COOKED_FISH), 1));
+		recipe.add(new ItemStack(Material.COOKED_SALMON));
 		recipe.add(ingr.getSalt());
 		recipe.add(ingr.getOnion());
 		recipe.add(ingr.getButter());
@@ -362,7 +362,7 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getRoastBreamRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.COOKED_FISH));
+		recipe.add(new ItemStack(Material.COOKED_COD));
 		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		recipe.add(ingr.getButter());
 		recipe.add(ingr.getGreens());
@@ -386,7 +386,7 @@ public class Tier3RecipeItems {
 	public ArrayList<ItemStack> getHeartyBurritoRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_BEEF));
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(ingr.getGreens());
 		recipe.add(ingr.getBeetrootSauce());
 		recipe.add(ingr.getCheese());
@@ -396,7 +396,7 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getHeroSandwichRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.GRILLED_PORK));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
 		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		recipe.add(ingr.getCheese());
 		recipe.add(ingr.getToast());
@@ -407,7 +407,7 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getLambStewRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(new ItemStack(Material.BOWL));
 		recipe.add(new ItemStack(Material.COOKED_MUTTON));
 		recipe.add(ingr.getSalt());

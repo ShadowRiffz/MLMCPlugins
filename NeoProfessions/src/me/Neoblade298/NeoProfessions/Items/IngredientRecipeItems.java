@@ -56,7 +56,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getSpices() {
-		ItemStack item = new ItemStack(Material.SEEDS);
+		ItemStack item = new ItemStack(Material.WHEAT_SEEDS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eSpices");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -67,14 +67,14 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getGreens() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eGreens");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 3");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 2);
+		return item;
 	}
 	
 	public ItemStack getToast() {
@@ -111,18 +111,18 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getButter() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eButter");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 7");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 11);
+		return item;
 	}
 	
 	public ItemStack getLemon() {
-		ItemStack item = new ItemStack(Material.SPECKLED_MELON);
+		ItemStack item = new ItemStack(Material.GLISTERING_MELON_SLICE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eLemon");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -144,14 +144,14 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getHoney() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eHoney");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 10");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 11);
+		return item;
 	}
 	
 	public ItemStack getYeast() {
@@ -199,25 +199,25 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getHops() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.COCOA_BEANS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eHops");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 15");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 3);
+		return item;
 	}
 	
 	public ItemStack getCheese() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.ORANGE_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eCheese");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 16");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 14);
+		return item;
 	}
 	
 	public ItemStack getTortilla() {
@@ -232,14 +232,14 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getExoticGreens() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eExotic Greens");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Ingredient 18");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 2);
+		return item;
 	}
 	
 	public ItemStack getRice() {
@@ -322,17 +322,17 @@ public class IngredientRecipeItems {
 	
 	public ArrayList<ItemStack> getSpicesRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.NETHER_STALK));
-		recipe.add(new ItemStack(Material.SEEDS));
+		recipe.add(new ItemStack(Material.NETHER_WART));
+		recipe.add(new ItemStack(Material.WHEAT_SEEDS));
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.REDSTONE));
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK), 3));
+		recipe.add(new ItemStack(Material.CACTUS_GREEN));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getGreensRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.LEAVES, 3));
+		recipe.add(new ItemStack(Material.OAK_LEAVES));
 		return recipe;
 	}
 	
@@ -344,14 +344,14 @@ public class IngredientRecipeItems {
 	
 	public ArrayList<ItemStack> getOilRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.COOKED_FISH));
+		recipe.add(new ItemStack(Material.COOKED_COD));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getTomatoRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.BEETROOT));
-		recipe.add(new ItemStack(Material.RED_ROSE));
+		recipe.add(new ItemStack(Material.POPPY));
 		return recipe;
 	}
 	
@@ -378,7 +378,7 @@ public class IngredientRecipeItems {
 	
 	public ArrayList<ItemStack> getHoneyRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.DOUBLE_PLANT));
+		recipe.add(new ItemStack(Material.SUNFLOWER));
 		recipe.add(new ItemStack(Material.SUGAR));
 		return recipe;
 	}
@@ -436,14 +436,14 @@ public class IngredientRecipeItems {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.CACTUS));
 		recipe.add(new ItemStack(Material.VINE));
-		recipe.add(new ItemStack(Material.LEAVES));
+		recipe.add(new ItemStack(Material.OAK_LEAVES));
 		recipe.add(new ItemStack(Material.CHORUS_FRUIT));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getRiceRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.SEEDS));
+		recipe.add(new ItemStack(Material.WHEAT_SEEDS));
 		return recipe;
 	}
 	
@@ -462,7 +462,7 @@ public class IngredientRecipeItems {
 	
 	public ArrayList<ItemStack> getVodkaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
 		recipe.add(getYeast());
 		return recipe;

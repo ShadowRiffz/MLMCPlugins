@@ -45,7 +45,7 @@ public class StonecutterItems {
 	Random gen = new Random();
 	
 	public ItemStack getOre(String type, int level) {
-		ItemStack item = new ItemStack(Material.FIREWORK_CHARGE);
+		ItemStack item = new ItemStack(Material.FIREWORK_STAR);
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
 		Builder fe = FireworkEffect.builder();
 		String oreName = null;
@@ -115,7 +115,7 @@ public class StonecutterItems {
 	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
-			item = new ItemStack(Material.EYE_OF_ENDER);
+			item = new ItemStack(Material.ENDER_EYE);
 		}
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -170,7 +170,7 @@ public class StonecutterItems {
 	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
-			item = new ItemStack(Material.EYE_OF_ENDER);
+			item = new ItemStack(Material.ENDER_EYE);
 		}
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -216,7 +216,7 @@ public class StonecutterItems {
 	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
-			item = new ItemStack(Material.EYE_OF_ENDER);
+			item = new ItemStack(Material.ENDER_EYE);
 		}
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
@@ -312,7 +312,7 @@ public class StonecutterItems {
 	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
-			item = new ItemStack(Material.EYE_OF_ENDER);
+			item = new ItemStack(Material.ENDER_EYE);
 		}
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();

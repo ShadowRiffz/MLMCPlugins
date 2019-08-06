@@ -67,14 +67,14 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getMattiforniaRoll() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.LIME_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lMattifornia Roll");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6§lLegendary Recipe 5");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 10);
+		return item;
 	}
 	
 	public ItemStack getTilanSalad() {
@@ -143,10 +143,10 @@ public class LegendaryRecipeItems {
 	
 	public ArrayList<ItemStack> getMattiforniaRollRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.RAW_FISH));
-		recipe.add(util.setData(new ItemStack(Material.RAW_FISH), 1));
-		recipe.add(util.setData(new ItemStack(Material.RAW_FISH), 2));
-		recipe.add(util.setData(new ItemStack(Material.RAW_FISH), 3));
+		recipe.add(new ItemStack(Material.COD));
+		recipe.add(new ItemStack(Material.SALMON));
+		recipe.add(new ItemStack(Material.PUFFERFISH));
+		recipe.add(new ItemStack(Material.TROPICAL_FISH));
 		recipe.add(util.setAmount(ingr.getRice(), 3));
 		recipe.add(util.setAmount(ingr.getExoticGreens(), 2));
 		return recipe;

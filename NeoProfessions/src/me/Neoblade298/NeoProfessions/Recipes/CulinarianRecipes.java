@@ -54,7 +54,7 @@ public class CulinarianRecipes {
 		ShapedRecipe recipe = new ShapedRecipe(key, ingr.getVodka());
 		recipe.shape("Y", "P", "W");
 		recipe.setIngredient('Y', Material.MELON_SEEDS);
-		recipe.setIngredient('P', Material.POTATO_ITEM);
+		recipe.setIngredient('P', Material.POTATO);
 		recipe.setIngredient('W', Material.WATER_BUCKET);
 		return recipe;
 	}
@@ -84,7 +84,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBlackWidow());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SACK);
+		recipe.addIngredient(Material.INK_SAC);
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SPIDER_EYE);
 		return recipe;
@@ -107,7 +107,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.CYAN));
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		return recipe;
 	}
 	
@@ -127,7 +127,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.YELLOW));
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
 	}
@@ -172,7 +172,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(new Dye(DyeColor.LIME));
 		recipe.addIngredient(Material.APPLE);
 		recipe.addIngredient(Material.MELON);
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		return recipe;
 	}
 	
@@ -182,7 +182,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.BLUE));
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		recipe.addIngredient(Material.ICE);
 		return recipe;
 	}
@@ -194,7 +194,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.ORANGE));
 		recipe.addIngredient(Material.ICE);
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		return recipe;
 	}
 	
@@ -215,7 +215,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(new Dye(DyeColor.PINK));
 		recipe.addIngredient(Material.MELON);
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		return recipe;
 	}
 	
@@ -237,7 +237,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(new Dye(DyeColor.GREEN));
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SUGAR);
-		recipe.addIngredient(Material.SPECKLED_MELON);
+		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		return recipe;
 	}
 	

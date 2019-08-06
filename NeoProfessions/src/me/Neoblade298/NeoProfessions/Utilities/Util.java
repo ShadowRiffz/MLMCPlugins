@@ -20,11 +20,6 @@ public class Util {
 		return item;
 	}
 	
-	public ItemStack setData(ItemStack item, int data) {
-		item.setDurability((short) data);
-		return item;
-	}
-	
 	public int getEssenceLevel(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return -1;
@@ -122,19 +117,19 @@ public class Util {
 	public boolean isWeapon(ItemStack item) {
 		Material mat = item.getType();
 		return
-				mat.equals(Material.WOOD_SWORD) ||
+				mat.equals(Material.WOODEN_SWORD) ||
 				mat.equals(Material.STONE_SWORD) ||
-				mat.equals(Material.GOLD_SWORD) ||
+				mat.equals(Material.GOLDEN_SWORD) ||
 				mat.equals(Material.IRON_SWORD) ||
 				mat.equals(Material.DIAMOND_SWORD) ||
-				mat.equals(Material.WOOD_AXE) ||
+				mat.equals(Material.WOODEN_AXE) ||
 				mat.equals(Material.STONE_AXE) ||
-				mat.equals(Material.GOLD_AXE) ||
+				mat.equals(Material.GOLDEN_AXE) ||
 				mat.equals(Material.IRON_AXE) ||
 				mat.equals(Material.DIAMOND_AXE) ||
-				mat.equals(Material.WOOD_HOE) ||
+				mat.equals(Material.WOODEN_HOE) ||
 				mat.equals(Material.STONE_HOE) ||
-				mat.equals(Material.GOLD_HOE) ||
+				mat.equals(Material.GOLDEN_HOE) ||
 				mat.equals(Material.IRON_HOE) ||
 				mat.equals(Material.DIAMOND_HOE) ||
 				mat.equals(Material.SHIELD) ||
@@ -146,19 +141,19 @@ public class Util {
 		Material mat = item.getType();
 		return
 				mat.equals(Material.LEATHER_HELMET) ||
-				mat.equals(Material.GOLD_HELMET) ||
+				mat.equals(Material.GOLDEN_HELMET) ||
 				mat.equals(Material.IRON_HELMET) ||
 				mat.equals(Material.DIAMOND_HELMET) ||
 				mat.equals(Material.LEATHER_CHESTPLATE) ||
-				mat.equals(Material.GOLD_CHESTPLATE) ||
+				mat.equals(Material.GOLDEN_CHESTPLATE) ||
 				mat.equals(Material.IRON_CHESTPLATE) ||
 				mat.equals(Material.DIAMOND_CHESTPLATE) ||
 				mat.equals(Material.LEATHER_LEGGINGS) ||
-				mat.equals(Material.GOLD_LEGGINGS) ||
+				mat.equals(Material.GOLDEN_LEGGINGS) ||
 				mat.equals(Material.IRON_LEGGINGS) ||
 				mat.equals(Material.DIAMOND_LEGGINGS) ||
 				mat.equals(Material.LEATHER_BOOTS) ||
-				mat.equals(Material.GOLD_BOOTS) ||
+				mat.equals(Material.GOLDEN_BOOTS) ||
 				mat.equals(Material.IRON_BOOTS) ||
 				mat.equals(Material.DIAMOND_BOOTS);
 	}

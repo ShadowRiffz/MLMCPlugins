@@ -98,12 +98,12 @@ public class CulinarianUtils {
 		int total = 0;
 		for(ItemStack content : contents) {
 			if(content != null) {
-				if(content.isSimilar(new ItemStack(Material.LEAVES)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 1)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 2)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 3)) ||
-						content.isSimilar(new ItemStack(Material.LEAVES_2)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES_2), 1))) {
+				if(content.isSimilar(new ItemStack(Material.OAK_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.SPRUCE_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.BIRCH_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.JUNGLE_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.ACACIA_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.DARK_OAK_LEAVES))) {
 					total += content.getAmount();
 				}
 			}
@@ -119,12 +119,12 @@ public class CulinarianUtils {
 				return;
 			}
 			if(content != null) {
-				if(content.isSimilar(new ItemStack(Material.LEAVES)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 1)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 2)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES), 3)) ||
-						content.isSimilar(new ItemStack(Material.LEAVES_2)) ||
-						content.isSimilar(util.setData(new ItemStack(Material.LEAVES_2), 1))) {
+				if(content.isSimilar(new ItemStack(Material.OAK_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.SPRUCE_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.BIRCH_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.ACACIA_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.DARK_OAK_LEAVES)) ||
+						content.isSimilar(new ItemStack(Material.JUNGLE_LEAVES))) {
 					if(content.getAmount() > amount) {
 						content.setAmount(content.getAmount() - amount);
 						inv.setItem(slotNum, content);
@@ -183,7 +183,7 @@ public class CulinarianUtils {
 		ItemStack[] contents = inv.getStorageContents();
 		for(ItemStack item : items) {
 			int total = 0;
-			if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+			if(item.isSimilar(new ItemStack(Material.OAK_LEAVES))) {
 				total = getTotalLeaves(contents);
 			}
 			else if(item.isSimilar(new ItemStack(Material.RED_MUSHROOM))) {
@@ -220,7 +220,7 @@ public class CulinarianUtils {
 	public boolean canCraft(Player p, ArrayList<ItemStack> items, boolean isSmelted, int amount) {
 		PlayerInventory inv = p.getInventory();
 		for(ItemStack item : items) {
-			if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+			if(item.isSimilar(new ItemStack(Material.OAK_LEAVES))) {
 				if(getTotalLeaves(inv.getStorageContents()) < item.getAmount() * amount) {
 					return false;
 				}
@@ -265,8 +265,8 @@ public class CulinarianUtils {
 			if(econ.has(p, CRAFT_COST * amount)) {
 				if(amount > 0) {
 					for(ItemStack item : recipe) {
-						// Edge case for leaves
-						if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+						// Edge case for OAK_LEAVES
+						if(item.isSimilar(new ItemStack(Material.OAK_LEAVES))) {
 							removeLeaves(inv, item.getAmount() * amount);
 						}
 						// Edge case for mushrooms
@@ -332,8 +332,8 @@ public class CulinarianUtils {
 			if(canCraft(p, recipe, isSmelted, amount)) {
 				if(econ.has(p, CRAFT_COST * amount)) {
 					for(ItemStack item : recipe) {
-						// Edge case for leaves
-						if(item.isSimilar(new ItemStack(Material.LEAVES))) {
+						// Edge case for OAK_LEAVES
+						if(item.isSimilar(new ItemStack(Material.OAK_LEAVES))) {
 							removeLeaves(inv, item.getAmount() * amount);
 						}
 						// Edge case for mushrooms

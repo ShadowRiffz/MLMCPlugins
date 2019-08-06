@@ -54,7 +54,7 @@ public class Tier1RecipeItems {
 	public ItemStack getSunflowerSeeds() {
 		ItemStack item = new ItemStack(Material.PUMPKIN_SEEDS);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Sunflower Seeds");
+		meta.setDisplayName("§9Sunflower WHEAT_SEEDS");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 2");
 		meta.setLore(lore);
@@ -63,7 +63,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getBoiledEgg() {
-		ItemStack item = new ItemStack(Material.FIREWORK_CHARGE);
+		ItemStack item = new ItemStack(Material.FIREWORK_STAR);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Boiled Egg");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -85,14 +85,14 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getHotChocolate() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§(Hot Chocolate");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 5");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 3);
+		return item;
 	}
 	
 	public ItemStack getGreenTea() {
@@ -129,14 +129,14 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getSpinach() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Spinach");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 9");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 2);
+		return item;
 	}
 	
 	public ItemStack getChocolateTruffle() {
@@ -151,7 +151,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getMusli() {
-		ItemStack item = new ItemStack(Material.SEEDS);
+		ItemStack item = new ItemStack(Material.WHEAT_SEEDS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Musli");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -184,14 +184,14 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getChocolateMilk() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.COCOA_BEANS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chocolate Milk");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 14");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 3);
+		return item;
 	}
 	
 	public ItemStack getCheeseTortilla() {
@@ -206,18 +206,18 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getSushi() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.LIME_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Sushi");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 16");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 10);
+		return item;
 	}
 	
 	public ItemStack getPottage() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_SOUP);
+		ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Pottage");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -228,25 +228,25 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getButteredPopcorn() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Buttered Popcorn");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 18");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 11);
+		return item;
 	}
 	
 	public ItemStack getChipsAndSalsa() {
-		ItemStack item = new ItemStack(Material.INK_SACK);
+		ItemStack item = new ItemStack(Material.ROSE_RED);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chips and Salsa");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 19");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return util.setData(item, 1);
+		return item;
 	}
 	
 	public ItemStack getGruel() {
@@ -268,7 +268,7 @@ public class Tier1RecipeItems {
 	
 	public ArrayList<ItemStack> getSunflowerSeedsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.DOUBLE_PLANT, 2));
+		recipe.add(new ItemStack(Material.SUNFLOWER, 2));
 		return recipe;
 	}
 	
@@ -288,14 +288,14 @@ public class Tier1RecipeItems {
 	
 	public ArrayList<ItemStack> getHotChocolateRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK), 3));
+		recipe.add(new ItemStack(Material.COCOA_BEANS));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getGreenTeaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
-		recipe.add(new ItemStack(Material.LEAVES));
+		recipe.add(new ItemStack(Material.OAK_LEAVES));
 		return recipe;
 	}
 	
@@ -308,7 +308,7 @@ public class Tier1RecipeItems {
 	
 	public ArrayList<ItemStack> getMashedPotatoesRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.POTATO_ITEM));
+		recipe.add(new ItemStack(Material.POTATO));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		return recipe;
 	}
@@ -322,14 +322,14 @@ public class Tier1RecipeItems {
 	
 	public ArrayList<ItemStack> getChocolateTruffleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(util.setData(new ItemStack(Material.INK_SACK), 3));
+		recipe.add(new ItemStack(Material.COCOA_BEANS));
 		recipe.add(new ItemStack(Material.RED_MUSHROOM));
 		return recipe;
 	}
 	
 	public ArrayList<ItemStack> getMusliRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.SEEDS));
+		recipe.add(new ItemStack(Material.WHEAT_SEEDS));
 		recipe.add(new ItemStack(Material.BEETROOT_SEEDS));
 		recipe.add(new ItemStack(Material.PUMPKIN_SEEDS));
 		recipe.add(new ItemStack(Material.MELON_SEEDS));
@@ -355,7 +355,7 @@ public class Tier1RecipeItems {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(new ItemStack(Material.SUGAR));
-		recipe.add(util.setData(new ItemStack(Material.PUMPKIN_SEEDS), 3));
+		recipe.add(new ItemStack(Material.COCOA_BEANS));
 		return recipe;
 	}
 	
@@ -370,7 +370,7 @@ public class Tier1RecipeItems {
 	public ArrayList<ItemStack> getSushiRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(util.setAmount(ingr.getExoticGreens(), 3));
-		recipe.add(new ItemStack(Material.RAW_FISH));
+		recipe.add(new ItemStack(Material.COD));
 		recipe.add(util.setAmount(ingr.getRice(), 3));
 		return recipe;
 	}
