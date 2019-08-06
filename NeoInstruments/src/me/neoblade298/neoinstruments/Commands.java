@@ -48,6 +48,11 @@ public class Commands implements CommandExecutor {
 			case "deny":
 				main.denySync(player);
 				break;
+			case "getbook":
+				if(player.isOp() || player.hasPermission("*")) {
+					main.getBook(player);
+				}
+				break;
 			case "superalex":
 				if(player.getName().toLowerCase().contains("superalex")){
 					main.superalex();
