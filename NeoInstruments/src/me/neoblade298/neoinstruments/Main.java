@@ -164,7 +164,7 @@ public class Main extends JavaPlugin implements Listener {
 				float pitch = getPitch(notes[cnt]);
 				if (pitch != 0.0F) {
 					player.getWorld().playSound(player.getLocation(), sound, 3.0F, pitch);
-					player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 1, null);
+					player.getWorld().spawnParticle(Particle.NOTE, player.getLocation().add(0, 2, 0), 0, pitch, 0.0, 0.0);
 				} else {
 					// play mute note, representing a pause
 					player.getWorld().playSound(player.getLocation(), sound, 0.0F, 1.0F);
