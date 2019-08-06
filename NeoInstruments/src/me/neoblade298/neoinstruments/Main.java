@@ -16,17 +16,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
-	Set<Player> freePlaying = new HashSet<Player>();
 	static Set<Player> bookPlaying = new HashSet<Player>();
+	Set<Player> freePlaying = new HashSet<Player>();
 	Set<Player> upperRegister = new HashSet<Player>();
 	Map<Player, Long> noteDelays = new HashMap<Player, Long>();
 	Set<HashSet<Player>> syncSets = new HashSet<HashSet<Player>>();
@@ -55,14 +57,15 @@ public class Main extends JavaPlugin implements Listener {
 			if ((e.getItem() != null) && (e.getItem().hasItemMeta()) && (e.getItem().getItemMeta().hasLore())
 					&& (!this.freePlaying.contains(e.getPlayer())) && (!bookPlaying.contains(e.getPlayer()))) {
 				List<String> lore = e.getItem().getItemMeta().getLore();
-				if (((String) lore.get(0)).contains("Instrument")) {
+				if (lore.get(0).contains("Instrument") && !lore.get(0).contains("Book")) {
 					lore.set(0, ChatColor.stripColor((String) lore.get(0)));
 					String[] temp = ((String) lore.get(0)).split(" ");
 					e.getPlayer().addScoreboardTag(temp[0]);
 
 					ItemStack offHandItem = e.getPlayer().getInventory().getItemInOffHand();
 					if ((offHandItem != null) && (offHandItem.getType() == Material.WRITTEN_BOOK)
-							&& (offHandItem.hasItemMeta())) {
+							&& (offHandItem.hasItemMeta()) && (offHandItem.getItemMeta().hasLore())
+							&& offHandItem.getItemMeta().getLore().get(0).contains("Instrument Book")) {
 						playBook(e.getPlayer(), offHandItem);
 					} else {
 						this.freePlaying.add(e.getPlayer());
@@ -119,10 +122,23 @@ public class Main extends JavaPlugin implements Listener {
 			e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(), sound, 3.0F, pitch);
 		}
 	}
-	
+
+	@EventHandler
+	public void onSignedEvent(PlayerEditBookEvent e) {
+		if (e.isSigning() && e.getPreviousBookMeta().hasLore()
+				&& e.getPreviousBookMeta().getLore().get(0).contains("Instrument Book")) {
+			List<String> lore = new ArrayList<String>();
+			lore.add("§eInstrument Book");
+			BookMeta newMeta = e.getNewBookMeta();
+			newMeta.setLore(lore);
+			e.setNewBookMeta(newMeta);
+		}
+	}
+
 	@EventHandler
 	public void onPlaySyncedEvent(PlaySyncedEvent e) {
-		e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You being playing your instrument book synced! Right click again to stop!");
+		e.getPlayer().sendMessage(
+				"§4[§c§lMLMC§4] §7You being playing your instrument book synced! Right click again to stop!");
 		playNotes(e.getPlayer(), this.noteArrs.get(e.getPlayer()));
 	}
 
@@ -131,19 +147,19 @@ public class Main extends JavaPlugin implements Listener {
 		private final String[] notes;
 		private final Sound sound;
 		private int cnt = 0;
-		
+
 		public MusicRunnable(Player player, String[] notes, Sound sound) {
 			this.player = player;
 			this.notes = notes;
 			this.sound = sound;
 		}
-		
+
 		@Override
 		public void run() {
-			if(!Main.bookPlaying.contains(player)) {
+			if (!Main.bookPlaying.contains(player)) {
 				cancel();
 			}
-			
+
 			if (cnt < notes.length) {
 				float pitch = getPitch(notes[cnt]);
 				if (pitch != 0.0F) {
@@ -161,12 +177,9 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
-	public void playNotes(Player player, String[] notes) {
-		final Sound sound = getCurrentInstrument(player);
 
-		MusicRunnable musicPlayer = new MusicRunnable(player, notes, sound);
-		musicPlayer.runTaskTimer(this, 0L, getNoteDelay(player));
+	public void playNotes(Player player, String[] notes) {
+		new MusicRunnable(player, notes, getCurrentInstrument(player)).runTaskTimer(this, 0L, getNoteDelay(player));
 	}
 
 	public void playBook(Player player, ItemStack book) {
@@ -176,30 +189,30 @@ public class Main extends JavaPlugin implements Listener {
 			notes.addAll(Arrays.asList(page.split(" ")));
 		}
 		String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);
-		
+
 		bookPlaying.add(player);
-		
-		if(!this.syncedPlayers.contains(player)) { // if playing solo
+
+		if (!this.syncedPlayers.contains(player)) { // if playing solo
 			player.sendMessage("§4[§c§lMLMC§4] §7You begin playing your instrument book! Right click again to stop!");
 			playNotes(player, notesArr);
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
 			HashSet<Player> syncSet = getsyncSet(player);
 			this.noteArrs.put(player, notesArr);
-			if(bookPlaying.containsAll(syncSet)) {
-				for(Player currPlayer : syncSet) {
+			if (bookPlaying.containsAll(syncSet)) {
+				for (Player currPlayer : syncSet) {
 					Bukkit.getPluginManager().callEvent(new PlaySyncedEvent(currPlayer));
 				}
 			}
 		}
 	}
 
-	// TODO: distinguish between regular books and instrument books
 	public void editBook(Player player) {
 		ItemStack item = player.getInventory().getItemInMainHand();
 		if (item.getType() == Material.WRITTEN_BOOK
 				&& ((BookMeta) item.getItemMeta()).getAuthor().equals(player.getName())
-				&& ((BookMeta) item.getItemMeta()).getGeneration() == BookMeta.Generation.ORIGINAL) {
+				&& ((BookMeta) item.getItemMeta()).getGeneration() == BookMeta.Generation.ORIGINAL
+				&& item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Instrument Book")) {
 			ItemStack newItem = new ItemStack(item);
 			newItem.setType(Material.WRITABLE_BOOK);
 			player.getInventory().setItemInMainHand(newItem);
@@ -208,8 +221,18 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	public void getBook(Player player) {
+		ItemStack book = new ItemStack(Material.WRITABLE_BOOK);
+		List<String> lore = new ArrayList<String>();
+		lore.add("§eInstrument Book");
+		ItemMeta meta = book.getItemMeta();
+		meta.setLore(lore);
+		book.setItemMeta(meta);
+		player.getInventory().addItem(book);
+	}
+
 	public void setTempo(Player player, int bpm) {
-		if (bpm == 0) {
+		if (bpm < 1) {
 			bpm = 1;
 		}
 		long noteDelay = 1200L / bpm;
@@ -220,22 +243,25 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		player.sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + bpm);
 	}
-	
+
 	public void askSync(Player player, String toSyncTo) {
-		player.sendMessage("§4[§c§lMLMC§4] §7Sync requested");
-		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " is requesting to sync. Confirm with §c/instruments confirm " + player.getName());
+		player.sendMessage("§4[§c§lMLMC§4] §7Sync with " + player.getServer().getPlayer(toSyncTo) + " requested");
+		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName()
+				+ " is requesting to sync. Confirm with §c/instruments confirm " + player.getName());
+		// TODO: if command name changes, change here as well
 		this.awaitingConfirmation.add(player.getServer().getPlayer(toSyncTo));
 	}
-	
+
 	public void confirmSync(Player confirmedPlayer, String originalAsker) {
-		if(this.awaitingConfirmation.contains(confirmedPlayer)) {
-			confirmedPlayer.sendMessage("§4[§c§lMLMC§4] §7Confirmed sync with " + confirmedPlayer.getServer().getPlayer(originalAsker).getName());
-			// looks lengthy, but provides full username
+		if (this.awaitingConfirmation.contains(confirmedPlayer)) {
+			confirmedPlayer.sendMessage("§4[§c§lMLMC§4] §7Confirmed sync with "
+					+ confirmedPlayer.getServer().getPlayer(originalAsker).getName());
+			// bulky getName() provides fully formatted username
 			this.awaitingConfirmation.remove(confirmedPlayer);
 			sync(confirmedPlayer.getServer().getPlayer(originalAsker), confirmedPlayer);
 		}
 	}
-	
+
 	public void denySync(Player player) {
 		this.awaitingConfirmation.remove(player);
 	}
@@ -279,9 +305,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void unsync(Player player) {
 		player.sendMessage("§4[§c§lMLMC§4] §7Unsynced");
-		
+
 		stopPlaying(player);
-		
+
 		if (!this.syncedPlayers.contains(player)) {
 			return;
 		}
@@ -317,8 +343,8 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	// Helper Methods
-	
-	private HashSet<Player> getsyncSet(Player player){
+
+	private HashSet<Player> getsyncSet(Player player) {
 		HashSet<Player> syncSet = new HashSet<Player>();
 		for (HashSet<Player> checkList : this.syncSets) {
 			if (checkList.contains(player)) {
