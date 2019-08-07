@@ -14,6 +14,8 @@ import com.sucy.skill.api.player.PlayerClass;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
+import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
@@ -36,6 +38,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	BlacksmithItems bItems;
 	StonecutterItems sItems;
 	MasonItems mItems;
+	IngredientRecipeItems ingr;
+	DrinksRecipeItems drink;
 	
 	public NeoprofessionsCommands(Main main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c, MasonMethods m) {
 		this.main = main;
@@ -48,6 +52,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		bItems = new BlacksmithItems();
 		sItems = new StonecutterItems();
 		mItems = new MasonItems();
+		ingr = new IngredientRecipeItems();
 	}
 	
 	@Override
@@ -67,6 +72,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
+				sender.sendMessage("§7- §4/neoprofessions <playername> get ingr [22-24]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get durability [weapon/armor] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get ore [attribute] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get gem [weapon/armor] [attribute] [level]");
@@ -161,6 +167,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(sItems.getArmorGem(args[3], Integer.parseInt(args[4]), false));
 						}
 					}
+					else if(args[1].equalsIgnoreCase("ingr")) {
+						if (args[2].equals("22")) {
+							p.getInventory().addItem(ingr.getVodka());
+						}
+						else if (args[2].equals("23")) {
+							p.getInventory().addItem(ingr.getRum());
+						}
+						else if (args[2].equals("24")) {
+							p.getInventory().addItem(ingr.getTequila());
+						}
+					}
 					else if(args[1].equalsIgnoreCase("overload")) {
 						if(args[2].equalsIgnoreCase("weapon")) {
 							p.getInventory().addItem(sItems.getWeaponGem(args[3], Integer.parseInt(args[4]), true));
@@ -224,6 +241,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						}
 						else if(args[2].equalsIgnoreCase("ore")) {
 							p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
+						}
+						else if(args[1].equalsIgnoreCase("ingr")) {
+							if (args[2].equals("22")) {
+								p.getInventory().addItem(ingr.getVodka());
+							}
+							else if (args[2].equals("23")) {
+								p.getInventory().addItem(ingr.getRum());
+							}
+							else if (args[2].equals("24")) {
+								p.getInventory().addItem(ingr.getTequila());
+							}
 						}
 						else if(args[2].equalsIgnoreCase("gem")) {
 							if(args[3].equalsIgnoreCase("weapon")) {
