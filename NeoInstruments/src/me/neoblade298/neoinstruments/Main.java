@@ -40,7 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 		super.onEnable();
 		Bukkit.getServer().getLogger().info("NeoInstruments Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-		this.getCommand("instruments").setExecutor(new Commands(this)); // TODO: decide command name
+		this.getCommand("music").setExecutor(new Commands(this));
 	}
 
 	public void onDisable() {
@@ -101,7 +101,7 @@ public class Main extends JavaPlugin implements Listener {
 			String[] lowNoSneakNoteArr = { "f#", "g#", "a#", "b", "c#", "d#", "f", "F#" };
 			String[] lowSneakNoteArr = { "g", "a", "b", "c", "d", "e", "f", "G" };
 			String[] highNoSneakNoteArr = { "F#", "G#", "A#", "B", "C#", "D#", "F", "##" };
-			String[] highSneakNoteArr = { "G", "A", "B", "C", "D", "E", "F", "F#" };
+			String[] highSneakNoteArr = { "G", "A", "B", "C", "D", "E", "F", "##" };
 			float pitch = 0.0F;
 			int slot = e.getNewSlot();
 
@@ -133,13 +133,6 @@ public class Main extends JavaPlugin implements Listener {
 			newMeta.setLore(lore);
 			e.setNewBookMeta(newMeta);
 		}
-	}
-
-	@EventHandler
-	public void onPlaySyncedEvent(PlaySyncedEvent e) {
-		e.getPlayer().sendMessage(
-				"§4[§c§lMLMC§4] §7You being playing your instrument book synced! Right click again to stop!");
-		playNotes(e.getPlayer(), this.noteArrs.get(e.getPlayer()));
 	}
 
 	class MusicRunnable extends BukkitRunnable {
@@ -205,13 +198,15 @@ public class Main extends JavaPlugin implements Listener {
 		if (!this.syncedPlayers.contains(player)) { // if playing solo
 			player.sendMessage("§4[§c§lMLMC§4] §7You begin playing your instrument book! Right click again to stop!");
 			playNotes(player, notesArr);
-		} else {
+		} else { // if playing synced (2+ people)
 			player.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
 			HashSet<Player> syncSet = getsyncSet(player);
 			this.noteArrs.put(player, notesArr);
 			if (bookPlaying.containsAll(syncSet)) {
 				for (Player currPlayer : syncSet) {
-					Bukkit.getPluginManager().callEvent(new PlaySyncedEvent(currPlayer));
+					currPlayer.sendMessage(
+							"§4[§c§lMLMC§4] §7You being playing your instrument book synced! Right click again to stop!");
+					playNotes(currPlayer, this.noteArrs.get(currPlayer));
 				}
 			}
 		}
@@ -257,8 +252,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void askSync(Player player, String toSyncTo) {
 		player.sendMessage("§4[§c§lMLMC§4] §7Sync with " + player.getServer().getPlayer(toSyncTo) + " requested");
 		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName()
-				+ " is requesting to sync. Confirm with §c/instruments confirm " + player.getName());
-		// TODO: if command name changes, change here as well
+				+ " is requesting to sync. Confirm with §c/music confirm " + player.getName());
 		this.awaitingConfirmation.add(player.getServer().getPlayer(toSyncTo));
 	}
 
