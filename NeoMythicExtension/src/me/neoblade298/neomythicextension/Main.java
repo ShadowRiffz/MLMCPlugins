@@ -46,6 +46,12 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(condition);
 			log.info("-- Registered SkillAPIFlagCondition!");
 		}
+
+		if(event.getConditionName().equalsIgnoreCase("mobsinradius"))	{
+			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
+			event.register(condition);
+			log.info("-- Registered MobsInRadiusCondition!");
+		}
 	}
 	
 	/*
