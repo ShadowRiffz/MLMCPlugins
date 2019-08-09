@@ -1,0 +1,10 @@
+name: Tractor
+version: 1.2
+author: M1nef4n
+api-version: 1.13
+
+main: com.gmail.holubvojtech.tractor.Tractor
+
+commands:
+  tractor:
+    usage: ""
