@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.gmail.berndivader.mythicmobsext.conditions.MobsInRadiusCondition;
+
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
@@ -48,7 +51,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		if(event.getConditionName().equalsIgnoreCase("mobsinradius"))	{
-			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
+			MobsInRadiusCondition condition = new MobsInRadiusCondition(event.getConfig());
 			event.register(condition);
 			log.info("-- Registered MobsInRadiusCondition!");
 		}
