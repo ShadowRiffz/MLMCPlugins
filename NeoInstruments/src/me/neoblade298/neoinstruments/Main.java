@@ -250,6 +250,11 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void askSync(Player player, String toSyncTo) {
+		if(player.getServer().getPlayer(toSyncTo) == null) {
+			player.sendMessage("§4[§c§lMLMC§4] §7" + toSyncTo + " unavailable.");
+			return;
+		}		
+		
 		player.sendMessage("§4[§c§lMLMC§4] §7Sync with " + player.getServer().getPlayer(toSyncTo) + " requested");
 		player.getServer().getPlayer(toSyncTo).sendMessage("§4[§c§lMLMC§4] §7" + player.getName()
 				+ " is requesting to sync. Confirm with §c/music confirm " + player.getName());
