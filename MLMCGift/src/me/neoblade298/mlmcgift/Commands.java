@@ -20,12 +20,15 @@ public class Commands implements CommandExecutor {
 		}
 		Player player = (Player) sender;
 
-		if (args.length > 0) {
-			main.sendItem(player, args[0]);
+		if (args.length == 1) {
+			if(args[0].equals("accept")) {
+				main.acceptRequest(player);
+			} else {
+				main.sendRequest(player, args[0]);				
+			}
+			return true;
 		} else {
-			player.sendMessage("Unknown command. Usage: /gift <player>");
+			return false;
 		}
-		
-		return true;
 	}
 }

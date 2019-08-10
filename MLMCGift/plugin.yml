@@ -6,7 +6,7 @@ api-version: 1.13
 commands:
   gift:
     description: Gifts target player the item(s) in hand
-    usage: /<command> <player>
+    usage: "Usage: /<command> <player>"
     permission: mlmcgift.gift
     permission-message: You do not have permission to gift.
 permissions:
