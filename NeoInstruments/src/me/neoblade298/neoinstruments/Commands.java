@@ -59,12 +59,12 @@ public class Commands implements CommandExecutor {
 				}
 				break;
 			default:
-				player.sendMessage("Unknown command. Usage: /music <edit/tempo/sync/unsync>");
+				return false;
 			}
+			
+			return true;
 		} else {
-			player.sendMessage("Usage: /music <edit/tempo/sync/unsync>");
+			return false;
 		}
-		
-		return true;
 	}
 }

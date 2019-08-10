@@ -24,13 +24,20 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void sendItem(Player player, String receiver) {
-		if(player.getServer().getPlayer(receiver) == null) {
+		if(player.getServer().getPlayer(receiver) == null) { // usually because receiver not online
 			player.sendMessage("§4[§c§lMLMC§4] §7" + receiver + " unavailable.");
 			return;
 		}
 		
+		if(player.getServer().getPlayer(receiver).getInventory().firstEmpty() == -1) { // no space
+			player.sendMessage("§4[§c§lMLMC§4] §7" + player.getServer().getPlayer(receiver).getName() + " cannot accept items.");
+			return;
+		}
+		
+		// TODO: permission check
+		
 		ItemStack item = player.getInventory().getItemInMainHand();
 		player.getInventory().setItemInMainHand(null);
-		player.getServer().getPlayer(receiver).getInventory().setItemInMainHand(item);
+		player.getServer().getPlayer(receiver).getInventory().addItem(item);
 	}
 }
