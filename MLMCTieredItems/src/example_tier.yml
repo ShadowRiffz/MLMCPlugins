@@ -1,0 +1,72 @@
+# This should go inside the tier folder
+
+# All of the lore and names support color codes
+# The name is what you use to get an item from the tier
+tier-name: "&cExample Tier"
+# The material ID
+# Can be ID:DATA or just ID
+# Skulls are allowed to be ID:DATA:OWNER
+# The list of items can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+materials:
+- "GOLD_AXE"
+# The lore
+# Can contain random<min,max> for a random number
+lore:
+    required:
+    - "Contains random<1,9> potatoes!"
+    - "Used to slay telephone poles"
+    - "random<121,169> extra easter eggs ensured"
+    # The :5 means it has a weight of 5. Default is a weight of one
+    optional:
+    - "&bAwesome stuff:5"
+    - "&cPowerful too:4"
+    - "&aVery magical:1"
+    - "&aThis is supposed to be as rare as magic"
+    optional-min: 1
+    optional-max: 2
+enchantments:
+    # The enchantments can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
+    hide: false
+    required: []
+    # These are written as ENCHANTMENT:LOWEST:HIGHEST:WEIGHT
+    # The weight is optional
+    # The enchantments should also work with id numbers
+    optional:
+    - LUCK:5:8
+    - MENDING:1:1:10
+    - THORNS:1:3
+    - DAMAGE_ALL:7:8:10
+    optional-min: 1
+    optional-max: 1
+# Inside all these names, there is an optional weight that can be added to the end
+# The default is 1
+names:
+    prefix:
+        names:
+        - "Awesome"
+        - "Cool:10"
+        - "Magical:1"
+        min-amount: 1
+        max-amount: 2
+    name:
+        names:
+        - "Artifact:10"
+        - "Potato:1"
+        - "Thingy"
+    suffix:
+        names:
+        - "Crusher:10"
+        - "Says hi:1"
+        - "Likes pop-tarts"
+        min-amount: 1
+        max-amount: 1
+ # The custom durability will only be applied to items if true
+ # Otherwise, it will only be applied to damageable items
+durability:
+     custom: true
+     max-durability: 300
+     min-durability: 70
+     durability-scale: 5
+     durability-percent-min: 25
+     durability-percent-max: 90
+     unbreakable: true
