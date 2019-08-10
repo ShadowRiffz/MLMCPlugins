@@ -61,9 +61,9 @@ public class Commands implements CommandExecutor {
 			default:
 				player.sendMessage("Unknown command. Usage: /music <edit/tempo/sync/unsync>");
 			}
+		} else {
+			player.sendMessage("Usage: /music <edit/tempo/sync/unsync>");
 		}
-		
-		player.sendMessage("Usage: /music <edit/tempo/sync/unsync>");
 		
 		return true;
 	}
