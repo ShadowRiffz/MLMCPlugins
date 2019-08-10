@@ -34,9 +34,7 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Block block = event.getBlock();
 		final Material seedBlockMat = block.getType();
-		System.out.println(seedBlockMat);
 		Material seedItemMat = (Material) Tractor.getCfg().getSeedTypes().get(seedBlockMat);
-		System.out.println(seedItemMat);
 		if (seedItemMat == null) {
 			return;
 		}
