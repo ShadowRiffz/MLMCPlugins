@@ -226,7 +226,6 @@ public class MLMCTieredItemsMain extends JavaPlugin implements Listener {
 						return false;
 					}
 					msg(s, new String[] { "got item", t.getName() });
-					System.out.println(t.getName() + " " + t.getItem());
 					p.getInventory().addItem(new ItemStack[] { t.getItem() });
 					return true;
 				}

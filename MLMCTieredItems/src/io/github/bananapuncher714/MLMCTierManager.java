@@ -94,7 +94,6 @@ public class MLMCTierManager {
 
 	public void loadSets() {
 		FileConfiguration c = this.plugin.getConfig();
-		System.out.println("Loads sets");
 		HashMap<String, ArrayList<String>> sets = new HashMap<String, ArrayList<String>>();
 		for (String s : c.getConfigurationSection("sets").getKeys(false)) {
 			ArrayList<String> set = new ArrayList<String>(c.getStringList("sets." + s));
@@ -102,7 +101,6 @@ public class MLMCTierManager {
 			this.plugin.getLogger().info("Loaded set '" + s + "'");
 		}
 		this.plugin.sets = sets;
-		System.out.println(this.plugin.sets);
 	}
 
 	public void addDamageables() {
