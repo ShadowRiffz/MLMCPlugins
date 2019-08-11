@@ -1,8 +1,6 @@
 package me.neoblade298.mlmcgift;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
-	Map<Player, ItemStack> awaitingConfirmation = new HashMap<Player, ItemStack>();
+	GiftRequestSet requests = new GiftRequestSet();
 	YamlConfiguration conf;
 	int price;
 	int timeout;
@@ -29,7 +27,7 @@ public class Main extends JavaPlugin implements Listener {
 	    }
 	  	conf = YamlConfiguration.loadConfiguration(file);
 	  	price = conf.getInt("price", 0);
-	  	timeout = conf.getInt("timeout", 60);
+	  	timeout = conf.getInt("timeout", 10);
 	  	// Bukkit.getServer().getLogger().info("MLMCGift Config Loaded: Price = " + price);
 	}
 
@@ -49,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		if(awaitingConfirmation.containsKey(player.getServer().getPlayer(receiver))) { // avoids multiple requests at once
+		if(requests.containsReceiver(player.getServer().getPlayer(receiver))) { // avoids multiple requests at once
 			player.sendMessage("§4[§c§lMLMC§4] §7" + receiver + " already has a request!");
 			return;
 		}
@@ -58,23 +56,24 @@ public class Main extends JavaPlugin implements Listener {
 		player.getInventory().setItemInMainHand(null);
 		
 		player.sendMessage("§4[§c§lMLMC§4] §7Request sent to " + player.getServer().getPlayer(receiver).getName());
-		player.getServer().getPlayer(receiver).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " is requesting to gift you §r" + item.getAmount() + " " + item.getType() + ".");
+		player.getServer().getPlayer(receiver).sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " is requesting to gift you."); //§r" + item.getAmount() + " " + item.getType() + ".");
 		
-		awaitingConfirmation.put(player.getServer().getPlayer(receiver), item);
+		GiftRequest request = new GiftRequest(player, player.getServer().getPlayer(receiver), item); 
+		requests.add(request);
 		
 		new BukkitRunnable() {
 			public void run() {
-				if(awaitingConfirmation.containsKey(player.getServer().getPlayer(receiver))) {
-					player.sendMessage("§4[§c§lMLMC§4] §7" + receiver + " did not respond to your request.");
-					awaitingConfirmation.remove(player.getServer().getPlayer(receiver));
+				if(requests.containsReceiver(player.getServer().getPlayer(receiver))) {
+					player.sendMessage("§4[§c§lMLMC§4] §7" + player.getServer().getPlayer(receiver).getName() + " did not respond to your request.");
+					requests.remove(request);
 					player.getInventory().addItem(item);
 				}
 			}
 		}.runTaskLater(this, 20L * timeout); // auto-deny after timeout
 	}
 	
-	public void acceptRequest(Player player) {
-		if(!awaitingConfirmation.containsKey(player)) {
+	public void acceptRequest(Player player) { // player is the person accepting (receiver)
+		if(!requests.containsReceiver(player)) {
 			player.sendMessage("§4[§c§lMLMC§4] §7You do not have a pending request!");
 			return;
 		}
@@ -84,7 +83,28 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		player.getInventory().addItem(awaitingConfirmation.get(player));
-		awaitingConfirmation.remove(player);
+		GiftRequest request = requests.getRequestByReceiver(player);
+		
+		player.getInventory().addItem(request.getItem());
+		
+		player.sendMessage("§4[§c§lMLMC§4] §7Gift accepted!");
+		request.getSender().sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " has accepted the gift!");
+		
+		requests.remove(request);
+	}
+	
+	public void denyRequest(Player player) { // player is the person denying (receiver)
+		if(!requests.containsReceiver(player)) {
+			player.sendMessage("§4[§c§lMLMC§4] §7You do not have a pending request!");
+			return;
+		}
+
+		GiftRequest request = requests.getRequestByReceiver(player);
+		request.getSender().getInventory().addItem(request.getItem());
+		
+		requests.remove(request);
+		
+		player.sendMessage("§4[§c§lMLMC§4] §7Request denied.");
+		request.getSender().sendMessage("§4[§c§lMLMC§4] §7" + player.getName() + " has denied your request.");
 	}
 }

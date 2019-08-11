@@ -2,4 +2,4 @@
 price: 100
 
 # request auto-deny timeout
-timeout: 60
+timeout: 10

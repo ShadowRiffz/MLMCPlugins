@@ -15,16 +15,19 @@ public class Commands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if(!(sender instanceof Player)) {
+		if (!(sender instanceof Player)) {
 			return false;
 		}
 		Player player = (Player) sender;
 
 		if (args.length == 1) {
-			if(args[0].equals("accept")) {
+			if (args[0].equals("accept")) {
 				main.acceptRequest(player);
+			} else if (args[0].equals("deny")) {
+				main.denyRequest(player);
+				return true;
 			} else {
-				main.sendRequest(player, args[0]);				
+				main.sendRequest(player, args[0]);
 			}
 			return true;
 		} else {
