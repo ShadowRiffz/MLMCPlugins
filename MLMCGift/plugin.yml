@@ -3,6 +3,7 @@ author: Alex Diss
 main: me.neoblade298.mlmcgift.Main
 version: 1.0
 api-version: 1.13
+softdepend: [Vault]
 commands:
   gift:
     description: Gifts target player the item(s) in hand
