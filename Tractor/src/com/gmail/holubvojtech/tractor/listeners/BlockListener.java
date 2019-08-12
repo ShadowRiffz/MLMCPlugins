@@ -22,13 +22,11 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.PlayerInventory;
 
 public class BlockListener implements Listener {
-	private static final Map<Material, Material> SOIL_OVERRIDE = new HashMap<Material, Material>() {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 2558397491751251351L;
-	};
+	private Tractor main;
+	
+	public BlockListener(Tractor main) {
+		this.main = main;
+	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -38,7 +36,7 @@ public class BlockListener implements Listener {
 		if (seedItemMat == null) {
 			return;
 		}
-		final Material soilType = (Material) Utils.getOrDefault(SOIL_OVERRIDE, seedBlockMat, Material.FARMLAND);
+		final Material soilType = (Material) Utils.getOrDefault(main.SOIL_OVERRIDE, seedBlockMat, Material.FARMLAND);
 
 		Player player = event.getPlayer();
 		if (!Tractor.hasPlayerData(player)) {
