@@ -42,7 +42,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			// 2. Check less than 100 residents
 			if (town.getNumResidents() < 100) {
 				// 3. Check less than 1000 claimed plots
-				if (town.getPurchasedBlocks() < 1000) {
+				if (town.getTownBlocks().size() < 1000) {
 					// 4. Check if owned by NPC
 					if (!town.getMayor().isNPC()) {
 						// 5. Check if all residents of rank assistant, advisor are inactive
@@ -71,7 +71,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			// 2. Check less than 100 residents
 			if (town.getNumResidents() < 100) {
 				// 3. Check less than 1000 claimed plots
-				if (town.getPurchasedBlocks() < 1000) {
+				if (town.getTownBlocks().size() < 1000) {
 					// 4. Check if owned by NPC
 					if (!town.getMayor().isNPC()) {
 						// 5. Check if all residents of rank assistant, advisor are inactive
