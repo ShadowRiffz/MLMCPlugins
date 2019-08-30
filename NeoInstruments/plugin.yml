@@ -1,4 +1,9 @@
 name: NeoInstruments
-author: Neoblade298
+authors: [Neoblade298, Alex Diss]
 main: me.neoblade298.neoinstruments.Main
-version: 1.00
+version: 1.2
+api-version: 1.13
+commands:
+  music:
+    description: Various music book commands
+    usage: "Usage: /<command> <edit/tempo/sync/unsync>"

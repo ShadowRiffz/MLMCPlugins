@@ -20,7 +20,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	    // Get command listener
 	    this.getCommand("tdelete").setExecutor(new Commands(this));
 	    
-	    // On enable, sweep after 2 seconds
+	    // On enable, sweep after 2 minutes
 		BukkitRunnable sweep = new BukkitRunnable() {
 			public void run() {
 				sweepTowns();
