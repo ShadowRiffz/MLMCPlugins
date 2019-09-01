@@ -346,11 +346,7 @@ public class Main extends JavaPlugin implements Listener {
 		player.removeScoreboardTag("Double");
 		player.removeScoreboardTag("Harp");
 	}
-
-	public void superalex() {
-		this.getServer().broadcastMessage("§4[§c§lMLMC§4] §aDaily reminder that Superalex is a god!");
-	}
-
+	
 	// Helper Methods
 
 	private HashSet<Player> getsyncSet(Player player) {

@@ -2,7 +2,7 @@ name: NeoInstruments
 authors: [Neoblade298, Alex Diss]
 main: me.neoblade298.neoinstruments.Main
 version: 1.2
-api-version: 1.13
+api-version: 1.14
 commands:
   music:
     description: Various music book commands

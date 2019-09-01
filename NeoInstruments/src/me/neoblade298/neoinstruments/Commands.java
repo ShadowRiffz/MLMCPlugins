@@ -53,11 +53,6 @@ public class Commands implements CommandExecutor {
 					main.getBook(player);
 				}
 				break;
-			case "superalex":
-				if(player.getName().toLowerCase().contains("superalex")){
-					main.superalex();
-				}
-				break;
 			default:
 				return false;
 			}
