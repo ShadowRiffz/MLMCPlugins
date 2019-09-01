@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -240,7 +241,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
 						}
 						else if(args[2].equalsIgnoreCase("ore")) {
-							p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
+							if (StringUtils.isNumeric(args[3])) {
+								p.getInventory().addItem(sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4])));
+							}
+							else {
+								p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
+							}
 						}
 						else if(args[1].equalsIgnoreCase("ingr")) {
 							if (args[2].equals("22")) {
