@@ -2,14 +2,11 @@ package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.ArrayList;
 
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.material.Dye;
-
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
