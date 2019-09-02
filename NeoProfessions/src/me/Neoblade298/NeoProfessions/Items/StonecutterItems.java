@@ -146,6 +146,10 @@ public class StonecutterItems {
 				oreName = "Adamantium";
 				fe.withColor(Color.BLACK, Color.RED);
 				break;
+			default:
+				oreName = "Adamantium";
+				fe.withColor(Color.BLACK, Color.RED);
+				break;
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		switch (level) {
