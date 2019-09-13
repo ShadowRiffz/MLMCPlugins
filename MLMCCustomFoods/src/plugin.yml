@@ -1,5 +1,6 @@
  name: MLMCCustomFoods
  version: 1.1
+ api-version: 1.14
  description: Written originally by bananapuncher714, edited by Neoblade298
  author: Neoblade298, bananapuncher714
  main: me.Neoblade298.MLMCCustomFoods.MLMCCustomFoodsMain
