@@ -294,7 +294,7 @@ public class DrinksRecipeItems {
 		recipe.add(common.getEssence(2));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getLemon());
-		recipe.add(new ItemStack(Material.DANDELION_YELLOW));
+		recipe.add(new ItemStack(Material.YELLOW_DYE));
 		recipe.add(new ItemStack(Material.APPLE));
 		return recipe;
 	}
@@ -393,7 +393,7 @@ public class DrinksRecipeItems {
 		recipe.add(ingr.getTequila());
 		recipe.add(ingr.getSalt());
 		recipe.add(ingr.getLemon());
-		recipe.add(new ItemStack(Material.CACTUS_GREEN));
+		recipe.add(new ItemStack(Material.GREEN_DYE));
 		recipe.add(new ItemStack(Material.ICE));
 		return recipe;
 	}
@@ -404,7 +404,7 @@ public class DrinksRecipeItems {
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getTomato());
 		recipe.add(ingr.getGreens());
-		recipe.add(new ItemStack(Material.ROSE_RED));
+		recipe.add(new ItemStack(Material.RED_DYE));
 		recipe.add(new ItemStack(Material.ICE));
 		return recipe;
 	}

@@ -85,7 +85,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getHotChocolate() {
-		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
+		ItemStack item = new ItemStack(Material.GREEN_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§(Hot Chocolate");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -129,7 +129,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getSpinach() {
-		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
+		ItemStack item = new ItemStack(Material.GREEN_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Spinach");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -228,7 +228,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getButteredPopcorn() {
-		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
+		ItemStack item = new ItemStack(Material.YELLOW_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Buttered Popcorn");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -239,7 +239,7 @@ public class Tier1RecipeItems {
 	}
 	
 	public ItemStack getChipsAndSalsa() {
-		ItemStack item = new ItemStack(Material.ROSE_RED);
+		ItemStack item = new ItemStack(Material.RED_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chips and Salsa");
 		ArrayList<String> lore = new ArrayList<String>();

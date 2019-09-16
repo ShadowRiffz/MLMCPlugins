@@ -76,7 +76,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getScrambledEggs() {
-		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
+		ItemStack item = new ItemStack(Material.YELLOW_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Scrambled Eggs");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -131,7 +131,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSpaghettiBolognese() {
-		ItemStack item = new ItemStack(Material.ROSE_RED);
+		ItemStack item = new ItemStack(Material.RED_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Spaghetti Bolognese");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -142,7 +142,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getFilletedSalmon() {
-		ItemStack item = new ItemStack(Material.ROSE_RED);
+		ItemStack item = new ItemStack(Material.RED_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Filleted Salmon");
 		ArrayList<String> lore = new ArrayList<String>();

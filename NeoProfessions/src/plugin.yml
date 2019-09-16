@@ -2,7 +2,7 @@ name: NeoProfessions
 author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Main
 version: 1.0
-api-version: 1.13
+api-version: 1.14
 commands:
   neoprofessions:
     description: Admin commands

@@ -123,7 +123,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getGoodAndEvil());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.DANDELION_YELLOW);
+		recipe.addIngredient(Material.YELLOW_DYE);
 		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
@@ -146,7 +146,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(Material.LIGHT_BLUE_DYE);
-		recipe.addIngredient(Material.DANDELION_YELLOW);
+		recipe.addIngredient(Material.YELLOW_DYE);
 		recipe.addIngredient(Material.ICE);
 		return recipe;
 	}
@@ -231,7 +231,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getMargaritaOnTheRocks());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.CACTUS_GREEN);
+		recipe.addIngredient(Material.GREEN_DYE);
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SUGAR);
 		recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
@@ -243,8 +243,8 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, drink.getBloodyMary());
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.ROSE_RED);
-		recipe.addIngredient(Material.CACTUS_GREEN);
+		recipe.addIngredient(Material.RED_DYE);
+		recipe.addIngredient(Material.GREEN_DYE);
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;

@@ -196,7 +196,7 @@ public class Tier2RecipeItems {
 	}
 	
 	public ItemStack getLemonTart() {
-		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
+		ItemStack item = new ItemStack(Material.YELLOW_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lemon Tart");
 		ArrayList<String> lore = new ArrayList<String>();

@@ -67,7 +67,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getGreens() {
-		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
+		ItemStack item = new ItemStack(Material.GREEN_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eGreens");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -111,7 +111,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getButter() {
-		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
+		ItemStack item = new ItemStack(Material.YELLOW_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eButter");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -144,7 +144,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getHoney() {
-		ItemStack item = new ItemStack(Material.DANDELION_YELLOW);
+		ItemStack item = new ItemStack(Material.YELLOW_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eHoney");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -232,7 +232,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getExoticGreens() {
-		ItemStack item = new ItemStack(Material.CACTUS_GREEN);
+		ItemStack item = new ItemStack(Material.GREEN_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eExotic Greens");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -326,7 +326,7 @@ public class IngredientRecipeItems {
 		recipe.add(new ItemStack(Material.WHEAT_SEEDS));
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.REDSTONE));
-		recipe.add(new ItemStack(Material.CACTUS_GREEN));
+		recipe.add(new ItemStack(Material.GREEN_DYE));
 		return recipe;
 	}
 	

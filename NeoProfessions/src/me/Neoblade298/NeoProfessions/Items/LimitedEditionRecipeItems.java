@@ -70,7 +70,7 @@ public class LimitedEditionRecipeItems {
 	}
 
 	public ItemStack getCandyCane() {
-		ItemStack item = new ItemStack(Material.ROSE_RED);
+		ItemStack item = new ItemStack(Material.RED_DYE);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Candy Cane");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -238,7 +238,7 @@ public class LimitedEditionRecipeItems {
 	
 	public ArrayList<ItemStack> getCandyCaneRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.ROSE_RED, 4));
+		recipe.add(new ItemStack(Material.RED_DYE, 4));
 		recipe.add(new ItemStack(Material.BONE_MEAL, 2));
 		recipe.add(new ItemStack(Material.SUGAR, 3));
 		return recipe;

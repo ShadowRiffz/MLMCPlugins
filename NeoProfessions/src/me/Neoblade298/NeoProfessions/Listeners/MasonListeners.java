@@ -87,7 +87,7 @@ public class MasonListeners implements Listener {
 			// Looting charm
 			if(lootLine != null) {
 				if(lootLine.contains("Advanced") && e.getMobType().getDisplayName() != null) {
-					String[] name = e.getMobType().getDisplayName().split(" ");
+					String[] name = e.getMobType().getDisplayName().get().split(" ");
 					if(name.length > 2) {
 						if(name[1].contains("]")) {
 							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
@@ -97,7 +97,7 @@ public class MasonListeners implements Listener {
 					}
 				}
 				else if (e.getMobType().getDisplayName() != null){
-					String[] name = e.getMobType().getDisplayName().split(" ");
+					String[] name = e.getMobType().getDisplayName().get().split(" ");
 					if(name.length > 2) {
 						if(name[1].contains("]")) {
 							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
