@@ -87,7 +87,7 @@ public class Tier1RecipeItems {
 	public ItemStack getHotChocolate() {
 		ItemStack item = new ItemStack(Material.GREEN_DYE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§(Hot Chocolate");
+		meta.setDisplayName("§9Hot Chocolate");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 5");
 		meta.setLore(lore);
