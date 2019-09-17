@@ -1,8 +1,9 @@
 name: NeoStats
 author: Neoblade298
 main: me.neoblade298.neostats.Main
-version: 1.00
-depend: [MythicMobs]
+version: 1.01
+api-version: 1.14
+depend: [MythicMobs, SkillAPI]
 commands:
   neostats:
     description: Various usages of stats

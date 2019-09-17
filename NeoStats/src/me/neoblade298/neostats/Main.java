@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.SkillHealEvent;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -119,7 +120,7 @@ public class Main extends JavaPlugin implements Listener{
 							int selfHeal = (int) Math.round((selfHealed.get(player) * 100) / 100);
 							int allyHeal = (int) Math.round((allyHealed.get(player) * 100) / 100);
 						
-							String stat = new String("§e" + player + "§7 - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+							String stat = new String("§e" + player + "§7 (§e" + SkillAPI.getPlayerData(Bukkit.getPlayer(player)).getClass("class").getData().getName() + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
 							Bukkit.getPlayer(receiver).sendMessage(stat);
 							toRemove.add(receiver);
 						}
