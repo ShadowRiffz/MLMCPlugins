@@ -2,42 +2,13 @@ import java.util.Scanner;
 
 public class BoolAlg {
 	public static void main(String args[]) {
-		Scanner scan = new Scanner(System.in);
-		while (true) {
-			String input = null;
-			System.out.println("Next: ");
-			input = scan.nextLine();
-			if (input.equalsIgnoreCase("done")) {
-				break;
-			}
-			input = input.replaceAll(" ", "");
-			input = input.replaceAll("a7", "a");
-			input = input.replaceAll("a6", "b");
-			input = input.replaceAll("a5", "c");
-			input = input.replaceAll("a4", "d");
-			input = input.replaceAll("a3", "e");
-			input = input.replaceAll("a2", "f");
-			input = input.replaceAll("a1", "g");
-			input = input.replaceAll("a0", "h");
-			while (input.contains("’")) {
-				int num = input.indexOf("’");
-				input = input.substring(0, num) + input.substring(num + 1, input.length());
-				input = input.substring(0, num - 1) + "~" + input.substring(num - 1, input.length());
-			}
-			for(int i = 0; i < input.length() - 1; i++) {
-				char letter = input.charAt(i);
-				char next = input.charAt(i+1);
-				if (letter != '(' && letter != '\'' && letter != '~' && letter != '+' && letter != '*') {
-					if (next != '\'' && next != '+' && next != ')' && next != '*') {
-						input = input.substring(0, i + 1) + "*" + input.substring(i + 1, input.length());
-					}
-				}
-				else if (letter == ')' && next == '(') {
-					input = input.substring(0, i + 1) + "*" + input.substring(i + 1, input.length());
-				}
-			}
-			System.out.println(input);
-		}
-		scan.close();
+		int x1=0, x2=0, x=0, y1=0, y2=0, y=0;
+		if (x1 > x2)
+		    x = x1;
+		    else x = x2; 
+		if (y1 > y2)
+		    y = y1;
+	    else y = y2;
+		System.out.println(x + " " + y);
 	}
 }
