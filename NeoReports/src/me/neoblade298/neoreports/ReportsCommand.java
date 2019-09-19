@@ -58,6 +58,7 @@ public class ReportsCommand implements CommandExecutor {
 								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
 						temp.list(p);
 					}
+					p.sendMessage("§7=====");
 					con.close();
 				}
 				catch(Exception e) {
@@ -165,6 +166,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -193,6 +195,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -221,6 +224,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -249,6 +253,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -277,6 +282,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -305,6 +311,7 @@ public class ReportsCommand implements CommandExecutor {
 									break;
 								}
 							}
+							p.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
@@ -316,9 +323,11 @@ public class ReportsCommand implements CommandExecutor {
 				}
 				else if (args.length > 2 && args[0].equalsIgnoreCase("resolve") && StringUtils.isNumeric(args[1])) {
 					String desc = args[2];
+					String comment;
 					for (int i = 3; i < args.length; i++) {
 						desc += " " + args[i];
 					}
+					comment = desc;
 					desc = desc.replaceAll("'", "\\\\'");
 					try{  
 						Class.forName("com.mysql.jdbc.Driver");
@@ -335,7 +344,7 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (rs.next()) {
-							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
+							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! Message: " + comment);
 						}
 						boolean is_urgent = rs.getInt(9) == 1;
 						Main.numResolved++;
@@ -367,9 +376,6 @@ public class ReportsCommand implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
-						if (rs.next()) {
-							Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mail send " + rs.getString(3) + " Your bug report of ID " + args[1] + " has been resolved! /reports list");
-						}
 						boolean is_urgent = rs.getInt(9) == 1;
 						if (is_urgent) {
 							Main.numUrgent++;
