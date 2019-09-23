@@ -1,9 +1,12 @@
 package me.neoblade298.neotowndeleter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,6 +16,8 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
+	
+	public List<Town> deletableTowns = new ArrayList<Town>();
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoTownDeleter Enabled");
@@ -112,21 +117,35 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	public void sweepTowns() {
+		deletableTowns.clear();
 		List<Town> towns = TownyUniverse.getDataSource().getTowns();
 		for (Town town : towns) {
+			// Make list of towns that can be deleted
 			if (checkTownInactive(town)) {
-			    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter deleted " + town.getName());
-				Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
-				try {
-					town.setBalance(0, "Town deleted");
-				} catch (EconomyException e) {
-					// TODO Auto-generated catch block
-					Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
-					e.printStackTrace();
-				}
-				TownyUniverse.getDataSource().removeTown(town);
+				deletableTowns.add(town);
 			}
 		}
+		
+		// If there are less than 5 towns that can be deleted, delete them; otherwise wait for confirmation
+		if (deletableTowns.size() < 5) {
+			deleteTowns();
+		}
+	}
+	
+	public void deleteTowns() {
+		for (Town town : deletableTowns) {
+		    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter deleted " + town.getName());
+			Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
+			try {
+				town.setBalance(0, "Town deleted");
+			} catch (EconomyException e) {
+				// TODO Auto-generated catch block
+				Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
+				e.printStackTrace();
+			}
+			TownyUniverse.getDataSource().removeTown(town);
+		}
+		deletableTowns.clear();
 	}
 	
 	public void sendError(Player p, String msg) {
@@ -138,5 +157,20 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public boolean checkPlayerInactive(Resident res) {
 		long threshold = res.getLastOnline() + 2592000000L;
 		return System.currentTimeMillis() > threshold;
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if (p.hasPermission("tdeleter.admin")) {
+			if (deletableTowns.size() > 0) {
+				String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+				for (Town town : deletableTowns) {
+					msg += town.getName() + " ";
+				}
+				p.sendMessage(msg);
+				p.sendMessage("§4[§c§lMLMC§4] §7Type §e/tdelete confirm §7to delete all listed towns.");
+			}
+		}
 	}
 }

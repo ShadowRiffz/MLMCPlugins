@@ -25,6 +25,16 @@ public class Commands implements CommandExecutor {
 			main.sweepTowns();
 			return true;
 		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("confirm") && p.hasPermission("tdeleter.admin")) {
+			if (this.main.deletableTowns.size() > 0) {
+				this.main.deleteTowns();
+				return true;
+			}
+			else {
+				p.sendMessage("§4[§c§lMLMC§4] §7No towns can currently be deleted! Try §e/tdelete sweep§7?");
+				return true;
+			}
+		}
 		else if (args.length == 1 && p.hasPermission("tdeleter.admin")) {
 			try {
 				Town town = TownyUniverse.getDataSource().getTown(args[0]);
