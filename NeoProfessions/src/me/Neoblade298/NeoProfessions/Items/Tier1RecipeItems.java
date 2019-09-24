@@ -54,7 +54,7 @@ public class Tier1RecipeItems {
 	public ItemStack getSunflowerSeeds() {
 		ItemStack item = new ItemStack(Material.PUMPKIN_SEEDS);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Sunflower WHEAT_SEEDS");
+		meta.setDisplayName("§9Sunflower Seeds");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 1 Recipe 2");
 		meta.setLore(lore);
