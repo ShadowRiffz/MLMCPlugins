@@ -1,13 +1,9 @@
 package im.hoss.OldEnchanting;
 
 import java.util.Map;
-import java.util.logging.Logger;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
@@ -16,9 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EnchantingInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class OldEnchanting extends JavaPlugin implements Listener {
@@ -47,7 +41,7 @@ public class OldEnchanting extends JavaPlugin implements Listener {
 		if (enchs.containsKey(Enchantment.RIPTIDE) || enchs.containsKey(Enchantment.CHANNELING)) {
 			return;
 		}
-		e.getEnchanter().setLevel(e.getEnchanter().getLevel() - e.getExpLevelCost() + (e.whichButton() + 1) + 1);
+		e.getEnchanter().setLevel(e.getEnchanter().getLevel() - e.getExpLevelCost() + (e.whichButton() + 1));
 		e.setExpLevelCost(1);
 	}
 
