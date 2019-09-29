@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class LegendaryRecipeItems {
@@ -14,6 +15,15 @@ public class LegendaryRecipeItems {
 	Tier1RecipeItems t1;
 	Tier2RecipeItems t2;
 	Tier3RecipeItems t3;
+	
+	String BASE64_R1 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFlZTYzMjVjZmNjMDVhNjBlNjFiNjQwNmI4YjdkZTE0NmFjOTNhOTA0YmI0YzRlZDcyNWZjZTc3ZTUzM2UwOCJ9fX0";
+	String BASE64_R2 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIxMjVkMTI5MTkwYzg4ZjhjNDRlNDJlOGM1MWFkNWVkYmU0NDVlNjc0ZDk4YWYwNjc2Yzc0NjA5NDg1YzE1In19fQ";
+	String BASE64_R3 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTIxZDhkOWFlNTI3OGUyNmJjNDM5OTkyM2QyNWNjYjkxNzNlODM3NDhlOWJhZDZkZjc2MzE0YmE5NDM2OWUifX19";
+	String BASE64_R4 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjJlNmFhYjgzMTFkZTFiNDdiOTQ1NWI4YjhhOGE0OWY3NDU2ODBkODI5ZjU1ODYxOTA4ODQ5ZDJhMjI1OTMifX19";
+	String BASE64_R5 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTc5ZTQxYzE0NmI5NTQ5Nzg2YmRiNzEzOGYzNDlmZDdjMzk1MjkwMWY4N2NhOWMyMjU4OWNhMmFlNjQ4OCJ9fX0";
+	String BASE64_R6 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWZlOTJlMTFhNjdiNTY5MzU0NDZhMjE0Y2FhMzcyM2QyOWU2ZGI1NmM1NWZhOGQ0MzE3OWE4YTMxNzZjNmMxIn19fQ";
+	String BASE64_R7 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdlMzhiZTI4ZGZiM2Y3MDNmOTBhNDYwNzExOWZjZWY5NGJmM2UxYzgyNjIxYzI5MzA2ZjA1MzgyMTlkNGUxIn19fQ";
+
 	public LegendaryRecipeItems() {
 		util = new Util();
 		ingr = new IngredientRecipeItems();
@@ -23,7 +33,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getDragonScrambledEggs() {
-		ItemStack item = new ItemStack(Material.GLOWSTONE_DUST);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lDragon Scrambled Eggs");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -34,7 +44,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getNeoFullCourseSpecial() {
-		ItemStack item = new ItemStack(Material.COOKED_BEEF);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R2);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lNeo's Full Course Special");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -45,7 +55,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getTobiasFamousCake() {
-		ItemStack item = new ItemStack(Material.CAKE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R3);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lTobias' Famous Cake");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -56,7 +66,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getLowDistrictCheeseSteak() {
-		ItemStack item = new ItemStack(Material.BREAD);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R4);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lLow District Cheese Steak");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -67,7 +77,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getMattiforniaRoll() {
-		ItemStack item = new ItemStack(Material.LIME_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R5);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lMattifornia Roll");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -78,7 +88,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getTilanSalad() {
-		ItemStack item = new ItemStack(Material.RABBIT_STEW);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R6);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lTilan's Salad");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -89,7 +99,7 @@ public class LegendaryRecipeItems {
 	}
 	
 	public ItemStack getSuperSundae() {
-		ItemStack item = new ItemStack(Material.MILK_BUCKET);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R7);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9§lSuper's Sundae");
 		ArrayList<String> lore = new ArrayList<String>();

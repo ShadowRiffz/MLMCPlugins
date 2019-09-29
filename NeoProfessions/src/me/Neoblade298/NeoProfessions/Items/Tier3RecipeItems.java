@@ -6,11 +6,35 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Tier3RecipeItems {
 	Util util;
 	IngredientRecipeItems ingr;
+	
+	String BASE64_R1 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWZlOTJlMTFhNjdiNTY5MzU0NDZhMjE0Y2FhMzcyM2QyOWU2ZGI1NmM1NWZhOGQ0MzE3OWE4YTMxNzZjNmMxIn19fQ";
+	String BASE64_R2 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjhmYjA1MDJhM2FhNWY4YmQzMmE1ZWE1ZTUxOWMzZGQzNTMyMzQxNzBkZmVmOTU5ZWU4YWRiOTQ4N2ZlYSJ9fX0";
+	String BASE64_R3 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2I4MTcyYzJkZmUzZjk0ZTkyZWVhZjcyZjc4ZmNmNjM0ZTk5NjY1N2ZmNzRkNzNkOTNlNTc4MTUyOGI0NTgzIn19fQ";
+	String BASE64_R4 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFlZTYzMjVjZmNjMDVhNjBlNjFiNjQwNmI4YjdkZTE0NmFjOTNhOTA0YmI0YzRlZDcyNWZjZTc3ZTUzM2UwOCJ9fX0";
+	String BASE64_R5 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTIxMDdkMjg0ODM1ZmRmOTU4MzU5YjQ4NzFmMmM1OTNlNzJkNzdhNGNjZDk2NTdjY2Y2NDJmOTUzYjdiMzUifX19";
+	String BASE64_R6 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzhjZmQwNTg4YThhOTNiOGNkMjFiZGQyY2UxNjU0ODljYjM5Mzk0ODcxNGZkZDg1ZmIxMGU0NGQ0ODg2ZjYifX19";
+	String BASE64_R7 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTMzZmE3ZDNlNjNiMjgwYTVkN2UyYmIwOTMzMmRmZjg2YjE3ZGVjZDJiMDllY2NkZDYyZGE1MjY1NTk3Zjc0ZCJ9fX0";
+	String BASE64_R8 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWIzYzdkOGQ4OWRhZTE2YTI5ZWVhMWE0Mzk4ZWVlYmFiZmFmYmYwMjhkNmUyNWVjYWU5NzdlZmUzMGM4In19fQ";
+	String BASE64_R9 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjIzZGZkNGNlNTc3ODY5MTQ5NjhhMmIzYmE4MjE3M2JhN2M2Y2I4YmMwODQ0MmQ0MTMwY2IwOWM0YTAwMDk4MCJ9fX0";
+	String BASE64_R10 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzVjYzc3ODE5Yzk5M2MxOTZjM2E1NzhkZGNlMGVmNmIyMGVhMTc1ZDk5ZTYxNTRmNmI1NTRjMTFiODRmZDU0MiJ9fX0";
+	String BASE64_R11 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVkMjljMGI0ZjE3NWI2NDBhZmNhYjQ0NWJkMTI5YzhmYjhiYTdjNDY1MTJjYTU2M2YxMDExOTU5MzJhZDdmNCJ9fX0";
+	String BASE64_R12 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTRkMjFkYjRkZGU5MmExZDFmNjg5MGJmNzhhN2UxNDIxY2Y5NDAxNzkyMTAzMGQxMjM5NjdiZmQ2ZGNkMWFlYSJ9fX0";
+	String BASE64_R13 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTM4N2E2MjFlMjY2MTg2ZTYwNjgzMzkyZWIyNzRlYmIyMjViMDQ4NjhhYjk1OTE3N2Q5ZGMxODFkOGYyODYifX19";
+	String BASE64_R14 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTQ5NjU4OWZiNWMxZjY5Mzg3YjdmYjE3ZDkyMzEyMDU4ZmY2ZThlYmViM2ViODllNGY3M2U3ODE5NjExM2IifX19";
+	String BASE64_R15 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWU5ZTQwZjJkOGZjZTVmOThhNmEwNDk3MjNhNDAzMDI2NjU1MTNmZTdlMTA0MWVmZGZlZmZlZDgyMjc3Yzc3YSJ9fX0";
+	String BASE64_R16 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjA2NTU1NzA2YjY0MWZkYWY0MzZjMDc2NjNmOTIzYWZjNWVlNzIxNDZmOTAxOTVmYjMzN2I5ZGU3NjY1ODhkIn19fQ";
+	String BASE64_R17 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmViZjUxYTNhNTJiNzQ3MmEyODVjNjU4Mjg0Njg4YmNiZTU3Y2Q5ZjZmYWE3YTNlNGMyNmE2MTA1MjU0In19fQ";
+	String BASE64_R18 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTIxOGM0YTAwMDQ3YmJmZDdmMzVhNzRjYTNkOTQ4OTgyY2NhZWNkMjhjMjcwOGMyZGFjMDcwZDNlYmYxZTRhYyJ9fX0";
+	String BASE64_R19 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2RjM2MzNTEyZWZlY2FkOWQ2NTdiOGNlNTM1YWM2YWU3NWRmNzc4OTQ5YmM2MzU5ODdjZDI4MjY2ZDIxMyJ9fX0";
+	String BASE64_R20 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmVkODcwNDYxMGFlYzI5ZmVmOTc5ZWM3ZmNmNTEzZTE3YTczN2U1MWE2MWIyYjI2ZDc0YTVmZGM1ZGE3OSJ9fX0";
+	String BASE64_R21 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDNlMjBhMjZjYmI1NzQwYTE1OGRhOTkxZWY5NGRjZDMyZDQ0N2U5YWMwM2FhMGU4ZjgyOWE0OTgzMDYxOWExMCJ9fX0";
+	
 	public Tier3RecipeItems() {
 		util = new Util();
 		ingr = new IngredientRecipeItems();
@@ -43,7 +67,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getGardenSalad() {
-		ItemStack item = new ItemStack(Material.RABBIT_STEW);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Garden Salad");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -54,7 +78,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getChickenLeg() {
-		ItemStack item = new ItemStack(Material.COOKED_CHICKEN);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R2);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chicken Leg");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -65,7 +89,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getApplePorkchops() {
-		ItemStack item = new ItemStack(Material.COOKED_PORKCHOP);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R3);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Apple Porkchops");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -76,7 +100,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getScrambledEggs() {
-		ItemStack item = new ItemStack(Material.YELLOW_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R4);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Scrambled Eggs");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -87,7 +111,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getLambKabob() {
-		ItemStack item = new ItemStack(Material.COOKED_MUTTON);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R5);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lamb Kabob");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -98,7 +122,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getZestySteak() {
-		ItemStack item = new ItemStack(Material.COOKED_BEEF);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R6);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Zesty Steak");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -109,7 +133,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getLoadedBakedPotato() {
-		ItemStack item = new ItemStack(Material.BAKED_POTATO);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R7);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Loaded Baked Potato");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -120,7 +144,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSweetBuns() {
-		ItemStack item = new ItemStack(Material.BREAD);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R8);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Sweet Buns");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -131,7 +155,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSpaghettiBolognese() {
-		ItemStack item = new ItemStack(Material.RED_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R9);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Spaghetti Bolognese");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -142,7 +166,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getFilletedSalmon() {
-		ItemStack item = new ItemStack(Material.RED_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R10);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Filleted Salmon");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -153,7 +177,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getRoastBream() {
-		ItemStack item = new ItemStack(Material.COOKED_COD);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R11);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Roast Bream");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -164,7 +188,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSmoothie() {
-		ItemStack item = new ItemStack(Material.BEETROOT_SOUP);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R12);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Smoothie");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -175,7 +199,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getHeartyBurrito() {
-		ItemStack item = new ItemStack(Material.ROTTEN_FLESH);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R13);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Hearty Burrito");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -186,7 +210,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getHeroSandwich() {
-		ItemStack item = new ItemStack(Material.BREAD);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R14);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Hero Sandwich");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -197,7 +221,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getLambStew() {
-		ItemStack item = new ItemStack(Material.RABBIT_STEW);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R15);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Lamb Stew");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -208,7 +232,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getHoneyGlazedChicken() {
-		ItemStack item = new ItemStack(Material.COOKED_CHICKEN);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R16);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Honey Glazed Chicken");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -219,7 +243,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getAppleCider() {
-		ItemStack item = new ItemStack(Material.WATER_BUCKET);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R17);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Apple Cider");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -230,7 +254,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getMushroomPasty() {
-		ItemStack item = new ItemStack(Material.RABBIT_STEW);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R18);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Mushroom Pasty");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -241,7 +265,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getButteredWortes() {
-		ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R19);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Buttered Wortes");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -252,7 +276,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getSpongeCake() {
-		ItemStack item = new ItemStack(Material.PUMPKIN_PIE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R20);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Sponge Cake");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -263,7 +287,7 @@ public class Tier3RecipeItems {
 	}
 	
 	public ItemStack getChickenParmesan() {
-		ItemStack item = new ItemStack(Material.COOKED_CHICKEN);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R21);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Chicken Parmesan");
 		ArrayList<String> lore = new ArrayList<String>();
