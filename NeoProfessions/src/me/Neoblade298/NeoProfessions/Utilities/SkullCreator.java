@@ -215,6 +215,7 @@ public class SkullCreator {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static ItemStack getPlayerSkullItem() {
 		if (newerApi()) {
 			return new ItemStack(Material.valueOf("PLAYER_HEAD"));
