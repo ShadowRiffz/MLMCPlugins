@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.HashMap;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -82,22 +81,12 @@ public class Commands implements CommandExecutor {
 	    	Player p = (Player) sender;
 	    	String name = WordUtils.capitalize(args[1]);
 	    	if (name.equalsIgnoreCase("all")) {
-	    		
+	    		for (String boss : main.cooldowns.keySet()) {
+	    			main.getCooldown(boss, p);
+	    		}
 	    	}
 	    	else {
-	    		if (main.cooldowns.containsKey(name)) {
-	    			if (main.cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
-	    				
-	    			}
-	    			else {
-		    			p.sendMessage("§4[§c§lBosses§4] §7- Invalid boss name!");
-	    			}
-	    			return true;
-	    		}
-	    		else {
-	    			p.sendMessage("§4[§c§lBosses§4] §7- Invalid boss name!");
-	    			return true;
-	    		}
+	    		main.getCooldown(name, p);
 	    	}
 	    }
 		return false;

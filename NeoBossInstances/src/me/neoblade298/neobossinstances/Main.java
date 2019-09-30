@@ -112,7 +112,6 @@ public class Main extends JavaPlugin implements Listener {
 		// Only save cooldowns that still matter (still on cooldown)
 		if (!isInstance) {
 			try {
-				// Connect
 				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				Statement stmt = con.createStatement();
 				
@@ -120,7 +119,8 @@ public class Main extends JavaPlugin implements Listener {
 					int cooldown = bossInfo.get(boss).getCooldown();
 					HashMap<String, Long> lastFought = cooldowns.get(boss);
 					for (String uuid : lastFought.keySet()) {
-						if ((System.currentTimeMillis() - lastFought.get(uuid)) < cooldown) {
+						// Only add to the cooldown list if it's still relevant
+						if ((System.currentTimeMillis() - lastFought.get(uuid)) < (cooldown * 1000)) {
 							stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + boss + "'," + lastFought.get(uuid) + ")");
 						}
 					}
@@ -199,6 +199,33 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	public boolean getCooldown(String name, Player p) {
+		if (cooldowns.containsKey(name)) {
+			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
+				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
+				long currTime = System.currentTimeMillis();
+				int cooldown = bossInfo.get(name).getCooldown() * 1000;
+				
+				if (currTime > lastUse + cooldown) {
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7is off cooldown!");
+				}
+				else {
+					double temp = (lastUse + cooldown - currTime) / 6000;
+					temp /= 10;
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7has §c" + temp + " §7minutes remaining!");
+				}
+			}
+			else {
+    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7is off cooldown!");
+			}
+			return true;
+		}
+		else {
+			p.sendMessage("§4[§c§lBosses§4] §7- Invalid boss name!");
+			return true;
 		}
 	}
 	
