@@ -115,6 +115,10 @@ public class Main extends JavaPlugin implements Listener {
 				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				Statement stmt = con.createStatement();
 				
+				// First clear all the cooldowns on the SQL currently
+				stmt.executeUpdate("delete from neobossinstances_cds;");
+				
+				// Then add the cooldowns from the hashmap into SQL
 				for (String boss : cooldowns.keySet()) {
 					int cooldown = bossInfo.get(boss).getCooldown();
 					HashMap<String, Long> lastFought = cooldowns.get(boss);

@@ -49,7 +49,6 @@ public class Commands implements CommandExecutor {
 				    					
 
 	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
-	    								stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + args[2] + "'," + System.currentTimeMillis() + ");");
 				    					con.close();
 				    				}
 				    				catch (Exception e) {
