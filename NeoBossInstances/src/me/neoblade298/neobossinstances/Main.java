@@ -5,16 +5,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -25,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 	int cmdDelay = 0;
 	boolean isInstance = false;
 	String instanceName = null;
+	Plugin main = this;
 	
 	// SQL
 	static String sqlUser = "neoblade298";
@@ -36,10 +42,12 @@ public class Main extends JavaPlugin implements Listener {
 	// payload is last fought
 	HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
 	HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
-	Set<String> instanceNames = null;
+	ArrayList<String> instanceNames = null;
+	ArrayList<String> activeBosses = new ArrayList<String>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
+	    this.getCommand("boss").setExecutor(new Commands(this));
 
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
@@ -55,8 +63,7 @@ public class Main extends JavaPlugin implements Listener {
 		instanceName = getConfig().getString("Instance_Name");
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
-		ConfigurationSection instances = getConfig().getConfigurationSection("Instances");
-		instanceNames = instances.getKeys(false);
+		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
 
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
@@ -81,9 +88,10 @@ public class Main extends JavaPlugin implements Listener {
 
 		// Populate boss information
 		for (String boss : bosses.getKeys(false)) {
-			int cooldown = bosses.getInt("Cooldown");
-			String cmd = bosses.getString("Command");
-			String[] sloc = bosses.getString("Coordinates").split(" ");
+			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
+			int cooldown = bossSection.getInt("Cooldown");
+			String cmd = bossSection.getString("Command");
+			String[] sloc = bossSection.getString("Coordinates").split(" ");
 			double x = Double.parseDouble(sloc[0]);
 			double y = Double.parseDouble(sloc[1]);
 			double z = Double.parseDouble(sloc[2]);
@@ -125,5 +133,52 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		Bukkit.getServer().getLogger().info("NeoBossInstances Disabled");
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		// If instance, check where to send a player
+		if (isInstance) {
+			Player p = e.getPlayer();
+			String uuid = p.getUniqueId().toString();
+    		BukkitRunnable sendPlayer = new BukkitRunnable() {
+    			public void run() {
+    				try {
+    					// Connect
+    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+    					Statement stmt = con.createStatement();
+    					ResultSet rs;
+
+    					// Check where the player should be
+    					String boss;
+    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+    					if (rs.next()) {
+    						boss = rs.getString(2);
+    						p.teleport(bossInfo.get(boss).getCoords());
+    						// Execute the command if it was not already executed
+    						if (!activeBosses.contains(boss)) {
+    							activeBosses.add(boss);
+    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
+    				    			public void run() {
+    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+    				    				activeBosses.remove(boss);
+    				    			}
+    				    		};
+    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+    						}
+    					}
+    					else {
+    						// TODO: Handle what happens when the player isn't supposed to be here
+    					}
+    					
+    					con.close();
+    				}
+    				catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		};
+    		sendPlayer.runTaskLater(this, 60L);
+		}
 	}
 }

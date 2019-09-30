@@ -20,23 +20,24 @@ public class Commands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-	    if(sender.hasPermission("bossinstances.admin")) {
+	    if(sender.hasPermission("bossinstances.admin") || sender.isOp()) {
 	    	// /boss tp player nameofboss
 	    	if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
 	    		boolean found = false;
-	    		// Find available instance
 	    		try {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs;
-					
+
+		    		// Find available instance
 					for (String instance : main.instanceNames) {
 						rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + args[2] + "' AND instance = '" + instance + "';");
 						if (!rs.next()) {
 							found = true;
+	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bungeee send " + args[1] + " " + instance);
 				    		
-				    		// Wait for everyone to enter, then update sql
+				    		// Wait for everyone to enter, then update sql so the instance still shows as empty
 				    		BukkitRunnable addSql = new BukkitRunnable() {
 				    			public void run() {
 				    				try {
@@ -44,9 +45,8 @@ public class Commands implements CommandExecutor {
 				    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				    					Statement stmt = con.createStatement();
 				    					
-				    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 
-	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "',0)");
+	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
 				    					con.close();
 				    				}
 				    				catch (Exception e) {
@@ -69,8 +69,10 @@ public class Commands implements CommandExecutor {
 	    	}
 	    }
 	    else {
+	    	sender.sendMessage("Fail");
 			return false;
 	    }
+    	sender.sendMessage("Fail2");
 		return false;
 	}
 }
