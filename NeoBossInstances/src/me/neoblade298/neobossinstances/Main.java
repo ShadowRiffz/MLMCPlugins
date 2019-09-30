@@ -43,8 +43,8 @@ public class Main extends JavaPlugin implements Listener {
 	// Databases
 	// Cooldowns: Key is boss name, payload is hashmap where key is playername and
 	// payload is last fought
-	HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
-	HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
+	public HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
+	public HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 
