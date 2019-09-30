@@ -16,7 +16,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -180,5 +183,37 @@ public class Main extends JavaPlugin implements Listener {
     		};
     		sendPlayer.runTaskLater(this, 60L);
 		}
+	}
+	
+	public void handleLoss(Player p) {
+		p.spigot().respawn();
+		String uuid = p.getUniqueId().toString();
+    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand);
+    	// Delete player from all fights
+		try {
+			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+			
+			con.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		handleLoss(e.getEntity());
+	}
+	
+	@EventHandler
+	public void onQuit(PlayerQuitEvent e) {
+		handleLoss(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		handleLoss(e.getPlayer());
 	}
 }

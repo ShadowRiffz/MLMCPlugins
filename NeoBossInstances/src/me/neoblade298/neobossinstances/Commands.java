@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Commands implements CommandExecutor {
@@ -37,7 +40,7 @@ public class Commands implements CommandExecutor {
 	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bungeee send " + args[1] + " " + instance);
 				    		
-				    		// Wait for everyone to enter, then update sql so the instance still shows as empty
+				    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
 				    		BukkitRunnable addSql = new BukkitRunnable() {
 				    			public void run() {
 				    				try {
@@ -63,16 +66,40 @@ public class Commands implements CommandExecutor {
 	    			e.printStackTrace();
 	    		}
 	    		if (!found) {
-	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lMLMC§4] §7No available instances found!");
+	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
 	    		}
 	    		return true;
 	    	}
 	    }
-	    else {
-	    	sender.sendMessage("Fail");
-			return false;
+	    if (args.length == 0) {
+			sender.sendMessage("§4[§c§lBosses§4]");
+			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
+			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
+			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
+			return true;
 	    }
-    	sender.sendMessage("Fail2");
+	    else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
+	    	Player p = (Player) sender;
+	    	String name = WordUtils.capitalize(args[1]);
+	    	if (name.equalsIgnoreCase("all")) {
+	    		
+	    	}
+	    	else {
+	    		if (main.cooldowns.containsKey(name)) {
+	    			if (main.cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
+	    				
+	    			}
+	    			else {
+		    			p.sendMessage("§4[§c§lBosses§4] §7- Invalid boss name!");
+	    			}
+	    			return true;
+	    		}
+	    		else {
+	    			p.sendMessage("§4[§c§lBosses§4] §7- Invalid boss name!");
+	    			return true;
+	    		}
+	    	}
+	    }
 		return false;
 	}
 }
