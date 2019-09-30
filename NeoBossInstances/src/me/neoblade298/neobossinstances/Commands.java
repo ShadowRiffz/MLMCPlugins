@@ -37,6 +37,7 @@ public class Commands implements CommandExecutor {
 						if (!rs.next()) {
 							found = true;
 	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+	    					main.cooldowns.get(args[2]).put(uuid, System.currentTimeMillis());
 				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bungeee send " + args[1] + " " + instance);
 				    		
 				    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
@@ -47,7 +48,6 @@ public class Commands implements CommandExecutor {
 				    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				    					Statement stmt = con.createStatement();
 				    					
-
 	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
 				    					con.close();
 				    				}
@@ -71,7 +71,7 @@ public class Commands implements CommandExecutor {
 	    	}
 	    }
 	    if (args.length == 0) {
-			sender.sendMessage("§4[§c§lBosses§4]");
+			sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
 			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
 			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
 			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
