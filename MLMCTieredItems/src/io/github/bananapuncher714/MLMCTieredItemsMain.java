@@ -305,11 +305,13 @@ public class MLMCTieredItemsMain extends JavaPlugin implements Listener {
 		int j = (arrayOfItemStack = e.getInventory().getContents()).length;
 		for (int i = 0; i < j; i++) {
 			ItemStack item = arrayOfItemStack[i];
-			if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-				for (String line : item.getItemMeta().getLore())
-				if (line.contains("Tier")) {
-					e.setResult(null);
-					return;
+			if (item != null) {
+				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+					for (String line : item.getItemMeta().getLore())
+					if (line.contains("Tier")) {
+						e.setResult(null);
+						return;
+					}
 				}
 			}
 		}
