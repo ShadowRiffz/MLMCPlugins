@@ -19,8 +19,8 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
 	protected final int max;
 	private int count;
 
-	public InstanceTpMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public InstanceTpMechanic(MythicLineConfig config) {
+		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
         
