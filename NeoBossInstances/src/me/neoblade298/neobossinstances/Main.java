@@ -3,8 +3,10 @@ package me.neoblade298.neobossinstances;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,8 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import me.neoblade298.neobossinstances.Objects.Boss;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -36,6 +36,7 @@ public class Main extends JavaPlugin implements Listener {
 	// payload is last fought
 	HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
 	HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
+	Set<String> instanceNames = null;
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -54,13 +55,27 @@ public class Main extends JavaPlugin implements Listener {
 		instanceName = getConfig().getString("Instance_Name");
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
+		ConfigurationSection instances = getConfig().getConfigurationSection("Instances");
+		instanceNames = instances.getKeys(false);
 
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
-			for (String boss : bosses.getKeys(false)) {
-				cooldowns.put(boss, new HashMap<String, Long>());
-				// TODO: Clean all cooldowns longer than the boss cooldown from SQL
-				// TODO: Place remaining cooldowns in cooldowns hashmap
+			try {
+				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Statement stmt = con.createStatement();
+				ResultSet rs;
+				
+				for (String boss : bosses.getKeys(false)) {
+					HashMap<String, Long> cds = new HashMap<String, Long>();
+					cooldowns.put(boss, cds);
+					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
+					while (rs.next()) {
+						cds.put(rs.getString(1), rs.getLong(3));
+					}
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -89,7 +104,6 @@ public class Main extends JavaPlugin implements Listener {
 				// Connect
 				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				Statement stmt = con.createStatement();
-				
 				
 				for (String boss : cooldowns.keySet()) {
 					int cooldown = bossInfo.get(boss).getCooldown();

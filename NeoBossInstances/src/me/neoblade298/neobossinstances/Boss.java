@@ -1,4 +1,4 @@
-package me.neoblade298.neobossinstances.Objects;
+package me.neoblade298.neobossinstances;
 
 import org.bukkit.Location;
 
