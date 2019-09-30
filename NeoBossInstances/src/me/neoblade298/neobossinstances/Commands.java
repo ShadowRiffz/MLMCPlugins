@@ -49,6 +49,7 @@ public class Commands implements CommandExecutor {
 				    					
 
 	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
+	    								stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + args[2] + "'," + System.currentTimeMillis() + ");");
 				    					con.close();
 				    				}
 				    				catch (Exception e) {
@@ -78,15 +79,20 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 	    else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
-	    	Player p = (Player) sender;
-	    	String name = WordUtils.capitalize(args[1]);
-	    	if (name.equalsIgnoreCase("all")) {
-	    		for (String boss : main.cooldowns.keySet()) {
-	    			main.getCooldown(boss, p);
-	    		}
+	    	if (!main.isInstance) {
+		    	Player p = (Player) sender;
+		    	String name = WordUtils.capitalize(args[1]);
+		    	if (name.equalsIgnoreCase("all")) {
+		    		for (String boss : main.cooldowns.keySet()) {
+		    			return main.getCooldown(boss, p);
+		    		}
+		    	}
+		    	else {
+		    		return main.getCooldown(name, p);
+		    	}
 	    	}
 	    	else {
-	    		main.getCooldown(name, p);
+				sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
 	    	}
 	    }
 		return false;

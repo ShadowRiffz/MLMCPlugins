@@ -231,16 +231,22 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		handleLoss(e.getEntity());
+		if (isInstance) {
+			handleLoss(e.getEntity());
+		}
 	}
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
-		handleLoss(e.getPlayer());
+		if (isInstance) {
+			handleLoss(e.getPlayer());
+		}
 	}
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		handleLoss(e.getPlayer());
+		if (isInstance) {
+			handleLoss(e.getPlayer());
+		}
 	}
 }
