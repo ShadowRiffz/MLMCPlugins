@@ -12,6 +12,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import me.neoblade298.neobossinstances.Main;
 
 public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	protected final String boss;
@@ -35,8 +36,31 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
     	// Check if target is player
     	if (bukkitTarget instanceof Player) {
     		Player p = (Player) bukkitTarget;
-    		// TODO: Check if player has no cooldown
-    		if (true) {
+    		Main pl = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
+    		
+    		// If player is in hashmap, check their cooldown.
+    		if (pl.cooldowns.get(this.boss).containsKey(p.getUniqueId().toString())) {
+	    		long lastUse = pl.cooldowns.get(this.boss).get(p.getUniqueId().toString());
+	    		long currTime = System.currentTimeMillis();
+	    		long cooldown = pl.bossInfo.get(this.boss).getCooldown() * 1000;
+	    		if (currTime > lastUse + cooldown) {
+	    			if (count < max) {
+	    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss);
+	    				count++;
+			    		BukkitRunnable resetCount = new BukkitRunnable() {
+			    			public void run() {
+			    				count = 0;
+			    			}
+			    		};
+			    		resetCount.runTaskLater(MythicMobs.inst(), 60L);
+	    			}
+	    		}
+	    		else {
+	    			p.sendMessage("§4[§c§lBosses§4] §7You are on cooldown and thus cannot join this boss fight.");
+	    		}
+    		}
+    		// If player is not in hashmap, they don't have a cooldown
+    		else {
     			if (count < max) {
     				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss);
     				count++;
