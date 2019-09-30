@@ -1,0 +1,23 @@
+# Whether this server is an instance or not (the main server is not)
+# If true, also give the name of the instance
+Is_Instance: false
+Instance_Name: "Instance1"
+
+# Command to return a player to the main server
+Return_Command: "server main %player%"
+
+# How long to wait before running the boss command, in seconds
+Command_Delay: 10
+
+# Configure all bosses here
+# Cooldown in seconds
+Bosses:
+    Ratface:
+        Cooldown: 1800
+        Coordinates: "1 1 1 1 1"
+        Command: "mythicmobs mobs spawn Ratface"
+
+# List of instances and the commands to teleport there
+Instances:
+    Instance1: "server s1 %player%"
+    Instance2: "server s2 %player%"
