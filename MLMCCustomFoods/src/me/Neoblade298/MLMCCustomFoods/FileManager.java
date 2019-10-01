@@ -30,7 +30,7 @@ public class FileManager {
 		FileConfiguration foodConfig = YamlConfiguration.loadConfiguration(this.save);
 		HashMap<String, Food> foods = new HashMap<String, Food>();
 		for (String s : foodConfig.getKeys(false)) {
-			if (!s.equalsIgnoreCase("valid-worlds")) {
+			if (!s.equalsIgnoreCase("is-instance")) {
 				String name = foodConfig.getString(s + ".name").replaceAll("&", "§");
 				ArrayList<String> lore = new ArrayList<String>();
 				for (String loreLine : foodConfig.getStringList(s + ".lore")) {
