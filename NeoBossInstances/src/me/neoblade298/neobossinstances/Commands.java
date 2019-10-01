@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
@@ -24,7 +23,7 @@ public class Commands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-	    if(sender.hasPermission("bossinstances.admin") || sender.isOp()) {
+	    if (sender.hasPermission("bossinstances.admin") || sender.isOp()) {
 	    	// /boss tp player nameofboss
 	    	if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
 	    		boolean found = false;
@@ -76,6 +75,7 @@ public class Commands implements CommandExecutor {
 		    	if (main.cooldowns.get(WordUtils.capitalize(args[2])).containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
 		    		main.cooldowns.get(WordUtils.capitalize(args[2])).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
 		    	}
+		    	return true;
 		    }
 		    // /boss resetcds player
 		    else if (args.length == 2 && args[0].equalsIgnoreCase("resetcds") && !main.isInstance) {
@@ -84,12 +84,14 @@ public class Commands implements CommandExecutor {
 		    			main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
 		    		}
 		    	}
+		    	return true;
 		    }
 		    // /boss resetallcds
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetallcds") && !main.isInstance) {
 		    	for (String boss : main.cooldowns.keySet()) {
 		    		main.cooldowns.get(boss).clear();
 		    	}
+		    	return true;
 		    }
 	    	// /boss resetinstances
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetinstances") && !main.isInstance) {
@@ -104,6 +106,7 @@ public class Commands implements CommandExecutor {
 				catch (Exception e) {
 					e.printStackTrace();
 				}
+		    	return true;
 		    }
 	    }
 	    
@@ -115,10 +118,10 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
-				sender.sendMessage("§4/boss tp resetcd [player] [boss]§7- Resets a player cooldown for a boss");
-				sender.sendMessage("§4/boss tp resetcds [player] §7- Resets a player cooldown for all bosses");
-				sender.sendMessage("§4/boss tp resetallcds §7- Resets all player cooldowns");
-				sender.sendMessage("§4/boss tp resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
+				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
+				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
+				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
 			}
 			return true;
 	    }
@@ -138,6 +141,7 @@ public class Commands implements CommandExecutor {
 	    	else {
 				sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
 	    	}
+	    	return true;
 	    }
 	    else if (args.length == 2 && args[0].equalsIgnoreCase("instances") && sender instanceof Player) {
 	    	if (!main.isInstance) {
@@ -157,7 +161,7 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("§e" + instance + "§7: Empty");
 						}
 						else {
-							String temp = "§e" + instance + "§7: §e" + Bukkit.getPlayer(UUID.fromString(rs.getString(1))).getName();
+							String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 							while (rs.next()) {
 								temp += "§7, §e" + Bukkit.getPlayer(UUID.fromString(rs.getString(1))).getName();
 							}
@@ -172,6 +176,7 @@ public class Commands implements CommandExecutor {
 	    	else {
 				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
 	    	}
+	    	return true;
 	    }
 		return false;
 	}

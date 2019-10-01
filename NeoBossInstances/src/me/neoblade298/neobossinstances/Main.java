@@ -190,20 +190,27 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLoss(Player p) {
-		p.spigot().respawn();
-		String uuid = p.getUniqueId().toString();
-    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand);
-    	// Delete player from all fights
-		try {
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-			
-			con.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		BukkitRunnable respawn = new BukkitRunnable() {
+			public void run() {
+				if (p.isDead()) {
+					p.spigot().respawn();
+				}
+				String uuid = p.getUniqueId().toString();
+		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand);
+		    	// Delete player from all fights
+				try {
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Statement stmt = con.createStatement();
+					stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+					
+					con.close();
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		};
+		respawn.runTaskLater(main, 20L);
 	}
 	
 	public boolean getCooldown(String name, Player p) {
