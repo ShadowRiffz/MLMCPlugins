@@ -86,7 +86,7 @@ public class Main
   	      if (main != null && !main.equals(new ItemStack(Material.AIR)) && main.hasItemMeta() && main.getItemMeta().hasLore() && main.getItemMeta().getLore().get(0).contains("Tier")) {
   	        FlagManager.addFlag(player, "WeaponDur", 20);
   	        reduceDurability(main, player, 0);
-  	      } else if (off != null && !off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+  	      } else if (off != null && !off.equals(new ItemStack(Material.AIR)) && off.hasItemMeta() && off.getItemMeta().hasLore() && off.getItemMeta().getLore().get(0).contains("Tier")) {
   	        FlagManager.addFlag(player, "WeaponDur", 20);
   	        reduceDurability(off, player, 5);
   	      }
