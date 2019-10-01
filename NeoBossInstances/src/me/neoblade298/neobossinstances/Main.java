@@ -208,13 +208,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public boolean getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
-			System.out.println(cooldowns);
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				int cooldown = bossInfo.get(name).getCooldown() * 1000;
-				System.out.println(lastUse + " + " + cooldown + " - " + currTime);
-				System.out.println("= " + (lastUse + cooldown - currTime) / 6000);
 				
 				if (currTime > lastUse + cooldown) {
 	    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7is off cooldown!");
