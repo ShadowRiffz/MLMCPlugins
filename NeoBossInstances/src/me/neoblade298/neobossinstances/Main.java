@@ -171,8 +171,9 @@ public class Main extends JavaPlugin implements Listener {
     					// Check where the player should be
     					String boss;
     					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-    					if (rs.next()) {
-    						boss = rs.getString(2);
+    					rs.next();
+						boss = rs.getString(2);
+    					if (boss != null) {
     						p.teleport(bossInfo.get(boss).getCoords());
     						// Execute the command if it was not already executed
     						if (!activeBosses.contains(boss)) {
@@ -187,7 +188,13 @@ public class Main extends JavaPlugin implements Listener {
     						}
     					}
     					else {
-    						// TODO: Handle what happens when the player isn't supposed to be here
+    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
+				    		BukkitRunnable returnPlayer = new BukkitRunnable() {
+				    			public void run() {
+	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
+				    			}
+				    		};
+				    		returnPlayer.runTaskLater(main, 100L);
     					}
     					
     					con.close();
@@ -209,7 +216,7 @@ public class Main extends JavaPlugin implements Listener {
 				}
 				String uuid = p.getUniqueId().toString();
 				p.teleport(instanceSpawn);
-		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand);
+		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
 		    	// Delete player from all fights
 				try {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
