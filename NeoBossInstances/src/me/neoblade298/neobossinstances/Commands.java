@@ -188,9 +188,9 @@ public class Commands implements CommandExecutor {
 	    	}
 	    	return true;
 	    }
-	    else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return") && sender instanceof Player) {
-	    	Player p = (Player) sender;
-	    	if (args.length == 1) {
+	    else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return")) {
+	    	if (args.length == 1 && sender instanceof Player) {
+		    	Player p = (Player) sender;
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
 	    		return true;
