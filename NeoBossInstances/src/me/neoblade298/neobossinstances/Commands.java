@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
@@ -28,49 +26,35 @@ public class Commands implements CommandExecutor {
 	    if (sender.hasPermission("bossinstances.admin") || sender.isOp()) {
 	    	// /boss tp player nameofboss
 	    	if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
-	    		boolean found = false;
-	    		try {
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-					Statement stmt = con.createStatement();
-					ResultSet rs;
-
-		    		// Find available instance randomly
-					ArrayList<String> instanceNamesCopy = new ArrayList<String>(main.instanceNames);
-					Collections.shuffle(instanceNamesCopy);
-					for (String instance : instanceNamesCopy) {
-						rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + args[2] + "' AND instance = '" + instance + "';");
-						if (!rs.next()) {
-							found = true;
-	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-	    					main.cooldowns.get(args[2]).put(uuid, System.currentTimeMillis());
-	    					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
-				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-				    		
-				    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
-				    		BukkitRunnable addSql = new BukkitRunnable() {
-				    			public void run() {
-				    				try {
-				    					// Connect
-				    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-				    					Statement stmt = con.createStatement();
-				    					
-	    								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
-				    					con.close();
-				    				}
-				    				catch (Exception e) {
-				    					e.printStackTrace();
-				    				}
-				    			}
-				    		};
-				    		addSql.runTaskLater(main, 60L);
-							break;
-						}
-					}
-	    		}
-	    		catch (Exception e) {
-	    			e.printStackTrace();
-	    		}
-	    		if (!found) {
+				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+				String boss = WordUtils.capitalize(args[2]);
+				
+				// Find an open instance
+				String instance = main.findInstance(boss);
+				if (instance != null) {
+					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+		    		
+		    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
+		    		BukkitRunnable addSql = new BukkitRunnable() {
+		    			public void run() {
+		    				try {
+		    					// Connect
+		    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		    					Statement stmt = con.createStatement();
+		    					
+								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
+		    					con.close();
+		    				}
+		    				catch (Exception e) {
+		    					e.printStackTrace();
+		    				}
+		    			}
+		    		};
+		    		addSql.runTaskLater(main, 60L);
+				}
+				else {
 	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
 	    		}
 	    		return true;
