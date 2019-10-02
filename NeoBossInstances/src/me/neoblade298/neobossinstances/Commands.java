@@ -41,6 +41,7 @@ public class Commands implements CommandExecutor {
 							found = true;
 	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 	    					main.cooldowns.get(args[2]).put(uuid, System.currentTimeMillis());
+	    					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 				    		
 				    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
@@ -76,6 +77,7 @@ public class Commands implements CommandExecutor {
 		    else if (args.length == 3 && args[0].equalsIgnoreCase("resetcd") && !main.isInstance) {
 		    	if (main.cooldowns.get(WordUtils.capitalize(args[2])).containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
 		    		main.cooldowns.get(WordUtils.capitalize(args[2])).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
+					sender.sendMessage("§4[§c§lBosses§4] §7Cleared cooldown!");
 		    	}
 		    	return true;
 		    }
@@ -84,6 +86,7 @@ public class Commands implements CommandExecutor {
 		    	for (String boss : main.cooldowns.keySet()) {
 		    		if (main.cooldowns.get(boss).containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
 		    			main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
+						sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns for player!");
 		    		}
 		    	}
 		    	return true;
@@ -92,6 +95,7 @@ public class Commands implements CommandExecutor {
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetallcds") && !main.isInstance) {
 		    	for (String boss : main.cooldowns.keySet()) {
 		    		main.cooldowns.get(boss).clear();
+					sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns!");
 		    	}
 		    	return true;
 		    }
@@ -102,7 +106,8 @@ public class Commands implements CommandExecutor {
 					Statement stmt = con.createStatement();
 					
 					// First clear all the cooldowns on the SQL currently
-					stmt.executeUpdate("delete from neobossinstances_fights;");
+					int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
+					sender.sendMessage("§4[§c§lBosses§4] §7Deleted §e" + deleted + " §7instances!");
 					con.close();
 				}
 				catch (Exception e) {
@@ -185,9 +190,13 @@ public class Commands implements CommandExecutor {
 	    	Player p = (Player) sender;
 	    	if (args.length == 1) {
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
+				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
+	    		return true;
 	    	}
 	    	else {
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
+				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
+	    		return true;
 	    	}
 	    }
 		return false;

@@ -35,6 +35,8 @@ public class Main extends JavaPlugin implements Listener {
 	boolean isInstance = false;
 	String instanceName = null;
 	Plugin main = this;
+	Location mainSpawn = null;
+	Location instanceSpawn = null;
 	
 	// SQL
 	static String sqlUser = "neoblade298";
@@ -66,6 +68,8 @@ public class Main extends JavaPlugin implements Listener {
 		cmdDelay = getConfig().getInt("Command_Delay");
 		isInstance = getConfig().getBoolean("Is_Instance");
 		instanceName = getConfig().getString("Instance_Name");
+		mainSpawn = parseLocation(getConfig().getString("Main_Spawn"));
+		instanceSpawn = parseLocation(getConfig().getString("Instance_Spawn"));
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
@@ -96,13 +100,8 @@ public class Main extends JavaPlugin implements Listener {
 			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
 			int cooldown = bossSection.getInt("Cooldown");
 			String cmd = bossSection.getString("Command");
-			String[] sloc = bossSection.getString("Coordinates").split(" ");
-			double x = Double.parseDouble(sloc[0]);
-			double y = Double.parseDouble(sloc[1]);
-			double z = Double.parseDouble(sloc[2]);
-			float pitch = Float.parseFloat(sloc[3]);
-			float yaw = Float.parseFloat(sloc[4]);
-			Location loc = new Location(getServer().getWorld("Argyll"), x, y, z, yaw, pitch);
+			
+			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			bossInfo.put(boss, new Boss(loc, cmd, cooldown));
 		}
 
@@ -144,11 +143,22 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.getServer().getLogger().info("NeoBossInstances Disabled");
 	}
 	
+	public Location parseLocation(String toParse) {
+		String[] sloc = toParse.split(" ");
+		double x = Double.parseDouble(sloc[0]);
+		double y = Double.parseDouble(sloc[1]);
+		double z = Double.parseDouble(sloc[2]);
+		float pitch = Float.parseFloat(sloc[3]);
+		float yaw = Float.parseFloat(sloc[4]);
+		return new Location(getServer().getWorld("Argyll"), x, y, z, yaw, pitch);
+	}
+	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		// If instance, check where to send a player
 		if (isInstance) {
 			Player p = e.getPlayer();
+			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
     			public void run() {
@@ -191,7 +201,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public void handleLoss(Player p) {
+	public void handleLeave(Player p) {
 		BukkitRunnable respawn = new BukkitRunnable() {
 			public void run() {
 				if (p.isDead()) {
@@ -245,21 +255,21 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
-			handleLoss(e.getEntity());
+			handleLeave(e.getEntity());
 		}
 	}
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
-			handleLoss(e.getPlayer());
+			handleLeave(e.getPlayer());
 		}
 	}
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
-			handleLoss(e.getPlayer());
+			handleLeave(e.getPlayer());
 		}
 	}
 }

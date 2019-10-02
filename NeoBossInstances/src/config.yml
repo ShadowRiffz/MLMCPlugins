@@ -1,11 +1,17 @@
 # Whether this server is an instance or not (the main server is not)
 # If true, also give the name of the instance
 Is_Instance: false
-Instance_Name: "Instance1"
+Instance_Name: "s1"
 
-# Command to send/return a player to/from an instance
-Send_Command: "bungeee send %player% %instance%"
-Return_Command: "bungeee send %player% s1"
+# Command to return a player to the main server
+Send_Command: "sync console bungee send %player% %instance%"
+Return_Command: "sync console bungee send %player% s1"
+
+# Where the player is sent to when logging in
+# This is to keep them from spawning back into the old waiting room or boss fight
+Main_Spawn: "1561.5 95.0 -715.5 180.0 0.0"
+Instance_Spawn: "1561.5 95.0 -715.5 180.0 0.0"
+
 
 # How long to wait before running the boss command, in seconds
 Command_Delay: 10
@@ -15,9 +21,10 @@ Command_Delay: 10
 Bosses:
     Ratface:
         Cooldown: 1800
-        Coordinates: "-650.5 4.0 -80.0 0.0 0.0"
+        Coordinates: "-650.5 5.0 -80.0 270.0 0.0"
         Command: "mythicmobs mobs spawn Ratface 1 Argyll,-633,5,-81"
 
 # List of instances and the commands to teleport there
 Instances:
   - s2
+  - s3
