@@ -47,19 +47,7 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
 	    		long currTime = System.currentTimeMillis();
 	    		long cooldown = pl.bossInfo.get(this.boss).getCooldown() * 1000;
 	    		if (currTime > lastUse + cooldown) {
-	    			if (count < max) {
-	    				if (count == 0) {
-		    				this.instance = this.nbi.findInstance(this.boss);
-	    				}
-	    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss + " " + this.instance);
-	    				count++;
-			    		BukkitRunnable resetCount = new BukkitRunnable() {
-			    			public void run() {
-			    				count = 0;
-			    			}
-			    		};
-			    		resetCount.runTaskLater(MythicMobs.inst(), 60L);
-	    			}
+	    			sendPlayer(p);
 	    		}
 	    		else {
 	    			p.sendMessage("§4[§c§lBosses§4] §7You are on cooldown and thus cannot join this boss fight.");
@@ -67,19 +55,26 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
     		}
     		// If player is not in hashmap, they don't have a cooldown
     		else {
-    			if (count < max) {
-    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss);
-    				count++;
-		    		BukkitRunnable resetCount = new BukkitRunnable() {
-		    			public void run() {
-		    				count = 0;
-		    			}
-		    		};
-		    		resetCount.runTaskLater(MythicMobs.inst(), 60L);
-    			}
+    			sendPlayer(p);
     		}
     	}
     	return true;
     }
+	
+	public void sendPlayer(Player p) {
+		if (count < max) {
+			if (count == 0) {
+				this.instance = this.nbi.findInstance(this.boss);
+			}
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss + " " + this.instance);
+			count++;
+    		BukkitRunnable resetCount = new BukkitRunnable() {
+    			public void run() {
+    				count = 0;
+    			}
+    		};
+    		resetCount.runTaskLater(MythicMobs.inst(), 60L);
+		}
+	}
 
 }
