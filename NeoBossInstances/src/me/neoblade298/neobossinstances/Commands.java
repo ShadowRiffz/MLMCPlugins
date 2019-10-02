@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
@@ -32,7 +33,8 @@ public class Commands implements CommandExecutor {
 					Statement stmt = con.createStatement();
 					ResultSet rs;
 
-		    		// Find available instance
+		    		// Find available instance randomly
+					Collections.shuffle(main.instanceNames);
 					for (String instance : main.instanceNames) {
 						rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + args[2] + "' AND instance = '" + instance + "';");
 						if (!rs.next()) {
