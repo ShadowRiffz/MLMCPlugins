@@ -3,7 +3,8 @@
 Is_Instance: false
 Instance_Name: "Instance1"
 
-# Command to return a player to the main server
+# Command to return a player to an instance
+Send_Command: "bungeee send %player% %instance%"
 Return_Command: "bungeee send %player% s1"
 
 # How long to wait before running the boss command, in seconds

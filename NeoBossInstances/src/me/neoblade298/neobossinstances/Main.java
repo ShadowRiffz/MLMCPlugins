@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 	File file = null;
 	FileConfiguration conf = null;
 	String returnCommand = null;
+	String sendCommand = null;
 	int cmdDelay = 0;
 	boolean isInstance = false;
 	String instanceName = null;
@@ -60,6 +61,7 @@ public class Main extends JavaPlugin implements Listener {
 		conf = YamlConfiguration.loadConfiguration(file);
 
 		// Load values from config
+		sendCommand = getConfig().getString("Send_Command");
 		returnCommand = getConfig().getString("Return_Command");
 		cmdDelay = getConfig().getInt("Command_Delay");
 		isInstance = getConfig().getBoolean("Is_Instance");

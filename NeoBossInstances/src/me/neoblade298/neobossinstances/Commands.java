@@ -39,7 +39,7 @@ public class Commands implements CommandExecutor {
 							found = true;
 	    					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 	    					main.cooldowns.get(args[2]).put(uuid, System.currentTimeMillis());
-				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bungeee send " + args[1] + " " + instance);
+				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 				    		
 				    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
 				    		BukkitRunnable addSql = new BukkitRunnable() {
@@ -122,6 +122,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 			}
 			return true;
 	    }
@@ -177,6 +178,15 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
 	    	}
 	    	return true;
+	    }
+	    else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return") && sender instanceof Player) {
+	    	Player p = (Player) sender;
+	    	if (args.length == 1) {
+	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
+	    	}
+	    	else {
+	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
+	    	}
 	    }
 		return false;
 	}
