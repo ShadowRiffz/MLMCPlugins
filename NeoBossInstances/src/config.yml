@@ -3,7 +3,7 @@
 Is_Instance: false
 Instance_Name: "Instance1"
 
-# Command to return a player to an instance
+# Command to send/return a player to/from an instance
 Send_Command: "bungeee send %player% %instance%"
 Return_Command: "bungeee send %player% s1"
 
