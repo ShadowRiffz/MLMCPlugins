@@ -43,7 +43,7 @@ public class Commands implements CommandExecutor {
 		    					// Connect
 		    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 		    					Statement stmt = con.createStatement();
-		    					
+
 								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 		    					con.close();
 		    				}
@@ -61,6 +61,7 @@ public class Commands implements CommandExecutor {
 	    	}
 	    	// /boss tp player nameofboss instance
 	    	else if (args.length == 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
+	    		System.out.println("Instance: " + args[3]);
 				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 				String boss = WordUtils.capitalize(args[2]);
 				String instance = WordUtils.capitalize(args[3]);
