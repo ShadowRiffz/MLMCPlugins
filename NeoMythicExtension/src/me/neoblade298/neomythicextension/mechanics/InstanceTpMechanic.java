@@ -18,11 +18,13 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
 	protected final String boss;
 	protected final int max;
 	private int count;
+	Main nbi;
 
 	public InstanceTpMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
+        this.nbi = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoBossInstances");
         
         this.boss = config.getString("boss", "Ratface");
         this.max = config.getInteger("max", 4);
@@ -45,7 +47,8 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
 	    		long cooldown = pl.bossInfo.get(this.boss).getCooldown() * 1000;
 	    		if (currTime > lastUse + cooldown) {
 	    			if (count < max) {
-	    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss);
+	    				String instance = this.nbi.findInstance(this.boss);
+	    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "boss tp " + p.getName() + " " + this.boss + " " + instance);
 	    				count++;
 			    		BukkitRunnable resetCount = new BukkitRunnable() {
 			    			public void run() {
