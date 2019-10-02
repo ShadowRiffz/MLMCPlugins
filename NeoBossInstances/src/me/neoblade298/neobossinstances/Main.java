@@ -74,7 +74,6 @@ public class Main extends JavaPlugin implements Listener {
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
-		Collections.reverse(instanceNames);
 
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
@@ -133,7 +132,6 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				}
 				
-				// TODO: Clear all queues, fights, and instances in SQL
 				int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
 				Bukkit.getServer().getLogger().info("Cleared " + deleted + " fights from NeoBossInstances");
 				con.close();
@@ -162,53 +160,51 @@ public class Main extends JavaPlugin implements Listener {
 			Player p = e.getPlayer();
 			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
-			if (!p.hasPermission("bossinstances.admin")) {
-	    		BukkitRunnable sendPlayer = new BukkitRunnable() {
-	    			public void run() {
-	    				try {
-	    					// Connect
-	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-	    					Statement stmt = con.createStatement();
-	    					ResultSet rs;
-	
-	    					// Check where the player should be
-	    					String boss;
-	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-	    					rs.next();
-							boss = rs.getString(2);
-	    					if (boss != null) {
-	    						p.teleport(bossInfo.get(boss).getCoords());
-	    						// Execute the command if it was not already executed
-	    						if (!activeBosses.contains(boss)) {
-	    							activeBosses.add(boss);
-	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
-	    				    			public void run() {
-	    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-	    				    				activeBosses.remove(boss);
-	    				    			}
-	    				    		};
-	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
-	    						}
-	    					}
-	    					else {
-	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
-					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
-					    			public void run() {
-		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-					    			}
-					    		};
-					    		returnPlayer.runTaskLater(main, 100L);
-	    					}
-	    					
-	    					con.close();
-	    				}
-	    				catch (Exception e) {
-	    					e.printStackTrace();
-	    				}
-	    			}
-	    		};
-	    		sendPlayer.runTaskLater(this, 60L);
-			}
+    		BukkitRunnable sendPlayer = new BukkitRunnable() {
+    			public void run() {
+    				try {
+    					// Connect
+    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+    					Statement stmt = con.createStatement();
+    					ResultSet rs;
+
+    					// Check where the player should be
+    					String boss;
+    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+    					rs.next();
+						boss = rs.getString(2);
+    					if (boss != null) {
+    						p.teleport(bossInfo.get(boss).getCoords());
+    						// Execute the command if it was not already executed
+    						if (!activeBosses.contains(boss)) {
+    							activeBosses.add(boss);
+    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
+    				    			public void run() {
+    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+    				    				activeBosses.remove(boss);
+    				    			}
+    				    		};
+    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+    						}
+    					}
+    					else if (!p.hasPermission("bossinstances.admin")) {
+    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
+				    		BukkitRunnable returnPlayer = new BukkitRunnable() {
+				    			public void run() {
+	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
+				    			}
+				    		};
+				    		returnPlayer.runTaskLater(main, 100L);
+    					}
+    					
+    					con.close();
+    				}
+    				catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		};
+    		sendPlayer.runTaskLater(this, 60L);
 		}
 	}
 	
