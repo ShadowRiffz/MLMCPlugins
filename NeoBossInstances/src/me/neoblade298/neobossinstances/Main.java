@@ -202,12 +202,13 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeave(Player p) {
-		BukkitRunnable respawn = new BukkitRunnable() {
+		BukkitRunnable handle = new BukkitRunnable() {
 			public void run() {
 				if (p.isDead()) {
 					p.spigot().respawn();
 				}
 				String uuid = p.getUniqueId().toString();
+				p.teleport(instanceSpawn);
 		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand);
 		    	// Delete player from all fights
 				try {
@@ -222,7 +223,7 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		};
-		respawn.runTaskLater(main, 20L);
+		handle.runTaskLater(main, 20L);
 	}
 	
 	public boolean getCooldown(String name, Player p) {
