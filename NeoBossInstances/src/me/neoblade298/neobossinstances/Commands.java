@@ -44,7 +44,7 @@ public class Commands implements CommandExecutor {
 		    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 		    					Statement stmt = con.createStatement();
 		    					
-								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + args[2] + "','" + instance + "');");
+								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 		    					con.close();
 		    				}
 		    				catch (Exception e) {
@@ -57,6 +57,35 @@ public class Commands implements CommandExecutor {
 				else {
 	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
 	    		}
+	    		return true;
+	    	}
+	    	// /boss tp player nameofboss instance
+	    	else if (args.length == 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
+				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+				String boss = WordUtils.capitalize(args[2]);
+				String instance = WordUtils.capitalize(args[3]);
+				
+				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+				Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+	    		
+	    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
+	    		BukkitRunnable addSql = new BukkitRunnable() {
+	    			public void run() {
+	    				try {
+	    					// Connect
+	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+	    					Statement stmt = con.createStatement();
+	    					
+							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
+	    					con.close();
+	    				}
+	    				catch (Exception e) {
+	    					e.printStackTrace();
+	    				}
+	    			}
+	    		};
+	    		addSql.runTaskLater(main, 60L);
 	    		return true;
 	    	}
 		    // /boss resetcd player boss
