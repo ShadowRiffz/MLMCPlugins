@@ -187,9 +187,11 @@ public class Commands implements CommandExecutor {
 						else {
 							String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 							while (rs.next()) {
-								temp += "§7, §e" + Bukkit.getPlayer(UUID.fromString(rs.getString(1))).getName();
+								temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 							}
-							p.sendMessage(temp);
+							if (temp != null) {
+								p.sendMessage(temp);
+							}
 						}
 					}
 	    		}
