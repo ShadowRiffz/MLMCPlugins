@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+
 public class Commands implements CommandExecutor {
 	private Main main = null;
 
@@ -33,6 +35,7 @@ public class Commands implements CommandExecutor {
 				String instance = main.findInstance(boss);
 				if (instance != null) {
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+					SkillAPI.unloadPlayerData(Bukkit.getPlayer(args[1]));
 					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 		    		
@@ -61,12 +64,12 @@ public class Commands implements CommandExecutor {
 	    	}
 	    	// /boss tp player nameofboss instance
 	    	else if (args.length == 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
-	    		System.out.println("Instance: " + args[3]);
 				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 				String boss = WordUtils.capitalize(args[2]);
 				String instance = WordUtils.capitalize(args[3]);
 				
 				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+				SkillAPI.unloadPlayerData(Bukkit.getPlayer(args[1]));
 				Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 	    		
@@ -111,8 +114,8 @@ public class Commands implements CommandExecutor {
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetallcds") && !main.isInstance) {
 		    	for (String boss : main.cooldowns.keySet()) {
 		    		main.cooldowns.get(boss).clear();
-					sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns!");
 		    	}
+				sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns!");
 		    	return true;
 		    }
 	    	// /boss resetinstances
@@ -155,8 +158,9 @@ public class Commands implements CommandExecutor {
 		    	String name = WordUtils.capitalize(args[1]);
 		    	if (name.equalsIgnoreCase("all")) {
 		    		for (String boss : main.cooldowns.keySet()) {
-		    			return main.getCooldown(boss, p);
+		    			main.getCooldown(boss, p);
 		    		}
+	    			return true;
 		    	}
 		    	else {
 		    		return main.getCooldown(name, p);
@@ -171,33 +175,38 @@ public class Commands implements CommandExecutor {
 	    	if (!main.isInstance) {
 		    	Player p = (Player) sender;
 		    	String name = WordUtils.capitalize(args[1]);
-	    		try {
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-					Statement stmt = con.createStatement();
-					ResultSet rs;
-
-		    		// Find available instance
-					for (String instance : main.instanceNames) {
-						rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + name + "' AND instance = '" + instance + "';");
-						
-						// Empty instance
-						if (!rs.next()) {
-							p.sendMessage("§e" + instance + "§7: Empty");
-						}
-						else {
-							String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
-							while (rs.next()) {
-								temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
+		    	if (main.cooldowns.keySet().contains(name)) {
+		    		try {
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+	
+			    		// Find available instance
+						for (String instance : main.instanceNames) {
+							rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + name + "' AND instance = '" + instance + "';");
+							
+							// Empty instance
+							if (!rs.next()) {
+								p.sendMessage("§e" + instance + "§7: Empty");
 							}
-							if (temp != null) {
-								p.sendMessage(temp);
+							else {
+								String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
+								while (rs.next()) {
+									temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
+								}
+								if (temp != null) {
+									p.sendMessage(temp);
+								}
 							}
 						}
-					}
-	    		}
-	    		catch (Exception e) {
-	    			e.printStackTrace();
-	    		}
+		    		}
+		    		catch (Exception e) {
+		    			e.printStackTrace();
+		    		}
+		    	}
+		    	else {
+					p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
+		    	}
 	    	}
 	    	else {
 				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
