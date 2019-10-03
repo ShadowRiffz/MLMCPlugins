@@ -81,10 +81,19 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				uuid = uuids.get(user.toUpperCase());
 			}
 			else {
+				// Find UUID in PPRs
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + user.toUpperCase() + "';");
 				if (rs.next()) {
 					uuid = rs.getString(4);
 					uuids.put(user.toUpperCase(), uuid);
+				}
+				// If unable to find, look in alts, use the MAIN name
+				else {
+					rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(altname) = '" + user.toUpperCase() + "';");
+					if (rs.next()) {
+						uuid = rs.getString(4);
+						uuids.put(user.toUpperCase(), uuid);
+					}
 				}
 			}
 			
