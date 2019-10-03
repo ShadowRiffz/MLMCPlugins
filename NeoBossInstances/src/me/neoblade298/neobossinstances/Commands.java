@@ -131,6 +131,13 @@ public class Commands implements CommandExecutor {
 				}
 		    	return true;
 		    }
+	    	// /boss permissions
+		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetinstances") && !main.isInstance) {
+				sender.sendMessage("§4bossinstances.admin §7- All permissions");
+				sender.sendMessage("§4bossinstances.exemptleave §7- Do not teleport player to spawn on leaving");
+				sender.sendMessage("§4bossinstances.exemptjoin §7- Do not teleport player to boss fight on joining");
+		    	return true;
+		    }
 	    }
 	    
 	    
@@ -146,6 +153,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
 				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
+				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
 			}
 			return true;
 	    }

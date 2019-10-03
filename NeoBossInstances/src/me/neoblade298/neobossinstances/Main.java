@@ -187,7 +187,7 @@ public class Main extends JavaPlugin implements Listener {
     				    		summonBoss.runTaskLater(main, cmdDelay * 20);
     						}
     					}
-    					else if (!p.hasPermission("bossinstances.admin")) {
+    					else if (!p.hasPermission("bossinstances.exemptjoin")) {
     		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
 				    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 				    			public void run() {
@@ -235,7 +235,9 @@ public class Main extends JavaPlugin implements Listener {
 					p.spigot().respawn();
 				}
 				String uuid = p.getUniqueId().toString();
-				p.teleport(instanceSpawn);
+				if (p.hasPermission("bossinstances.exemptleave")) {
+					p.teleport(instanceSpawn);
+				}
 		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
 		    	// Delete player from all fights
 				try {
