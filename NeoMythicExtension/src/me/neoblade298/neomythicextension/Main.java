@@ -13,6 +13,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
+import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 
@@ -59,6 +60,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if(event.getConditionName().equalsIgnoreCase("nglobalscore"))	{
 			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig());
+			event.register(condition);
+		}
+
+		if(event.getConditionName().equalsIgnoreCase("nscore"))	{
+			ScoreCondition condition = new ScoreCondition(event.getConfig());
 			event.register(condition);
 		}
 	}
