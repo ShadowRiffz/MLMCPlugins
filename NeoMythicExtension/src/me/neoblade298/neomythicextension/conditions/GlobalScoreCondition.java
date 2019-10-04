@@ -16,7 +16,6 @@ public class GlobalScoreCondition extends SkillCondition implements IEntityCondi
         operation = mlc.getString(new String[] {"operation", "op"});
         objective = mlc.getString(new String[] {"objective", "obj", "o"});
         value = mlc.getInteger(new String[] {"value", "v"});
-        System.out.println("@NEO operation = " + operation);
     }
 
     public boolean check(AbstractEntity t) {

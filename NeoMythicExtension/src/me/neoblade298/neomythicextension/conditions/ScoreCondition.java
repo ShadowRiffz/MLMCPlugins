@@ -18,7 +18,6 @@ public class ScoreCondition extends SkillCondition implements IEntityCondition {
         objective = mlc.getString(new String[] {"objective", "obj", "o"});
         entry = mlc.getString(new String[] {"entry", "e"});
         value = mlc.getInteger(new String[] {"value", "v"});
-        System.out.println("@NEO operation = " + operation);
     }
 
     public boolean check(AbstractEntity t) {
