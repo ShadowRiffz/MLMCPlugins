@@ -12,6 +12,7 @@ import com.gmail.berndivader.mythicmobsext.conditions.MobsInRadiusCondition;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
+import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 
@@ -49,13 +50,16 @@ public class Main extends JavaPlugin implements Listener {
 		if(event.getConditionName().equalsIgnoreCase("hasflag"))	{
 			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
 			event.register(condition);
-			log.info("-- Registered SkillAPIFlagCondition!");
 		}
 
 		if(event.getConditionName().equalsIgnoreCase("mobsinradius"))	{
 			MobsInRadiusCondition condition = new MobsInRadiusCondition(event.getConfig());
 			event.register(condition);
-			log.info("-- Registered MobsInRadiusCondition!");
+		}
+
+		if(event.getConditionName().equalsIgnoreCase("nglobalscore"))	{
+			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig());
+			event.register(condition);
 		}
 	}
 	
@@ -65,7 +69,6 @@ public class Main extends JavaPlugin implements Listener {
 		if(event.getMechanicName().equalsIgnoreCase("instancetp"))	{
 			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
 			event.register(mechanic);
-			log.info("-- Registered InstanceTpMechanic!");
 		}
 	}
 	

@@ -1,19 +1,9 @@
 package me.neoblade298.neomythicextension.conditions;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import com.sucy.skill.api.util.FlagManager;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ICasterCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 public class GlobalScoreCondition extends SkillCondition implements IEntityCondition {
