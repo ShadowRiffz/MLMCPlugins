@@ -19,22 +19,30 @@ public class GlobalScoreCondition extends SkillCondition implements IEntityCondi
     }
 
     public boolean check(AbstractEntity t) {
-    	int score = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective).getScore("dummy").getScore();
+    	int score = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective).getScore("__GLOBAL__").getScore();
+    	boolean toReturn = false;
     	
     	switch (operation) {
     	case "==":
-    		return score == value;
+    		System.out.println("Equals " + score + " " + value + ", op " + operation);
+    		toReturn = score == value; break;
     	case "!=":
-			return score != value;
+    		System.out.println("NE " + score + " " + value + ", op " + operation);
+    		toReturn = score != value; break;
     	case ">=":
-			return score >= value;
+    		System.out.println("GE " + score + " " + value + ", op " + operation);
+    		toReturn = score >= value; break;
     	case "<=":
-    		return score <= value;
+    		System.out.println("LE " + score + " " + value + ", op " + operation);
+    		toReturn = score <= value; break;
     	case ">":
-    		return score > value;
+    		System.out.println("GT " + score + " " + value + ", op " + operation);
+    		toReturn = score > value; break;
     	case "<":
-    		return score < value;
+    		System.out.println("LT " + score + " " + value + ", op " + operation);
+    		toReturn = score < value; break;
     	}
-    	return false;
+
+    	return toReturn;
     }
 }
