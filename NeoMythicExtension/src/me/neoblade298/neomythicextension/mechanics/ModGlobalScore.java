@@ -31,7 +31,6 @@ public class ModGlobalScore extends SkillMechanic implements INoTargetSkill {
 		if (nme.globalscores.containsKey(objective)) {
 			score = nme.globalscores.get(objective);
 		}
-		System.out.println("@NEO " + operation);
 		
 		// Perform operation
 		switch (operation) {
