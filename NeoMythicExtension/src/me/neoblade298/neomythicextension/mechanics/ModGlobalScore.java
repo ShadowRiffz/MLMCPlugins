@@ -21,7 +21,7 @@ public class ModGlobalScore extends SkillMechanic implements ITargetedEntitySkil
         this.nme = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoMythicExtension");
         
         this.objective = config.getString(new String[] {"objective", "obj", "o"}, "default");
-        this.operation = config.getString(new String[] {"operation", "op"}, "+");
+        this.operation = config.getString(new String[] {"operation", "op"}, "=");
         this.value = config.getInteger(new String[] {"value", "v"}, 1);
 	}
 	
@@ -35,6 +35,8 @@ public class ModGlobalScore extends SkillMechanic implements ITargetedEntitySkil
 		
 		// Perform operation
 		switch (operation) {
+		case "=":
+			nme.globalscores.put(objective, value); break;
 		case "+":
 			nme.globalscores.put(objective, score + value); break;
 		case "-":
