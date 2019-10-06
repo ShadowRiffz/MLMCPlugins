@@ -25,11 +25,8 @@ public class GlobalScoreCondition extends SkillCondition implements IEntityCondi
     	boolean toReturn = false;
     	
     	// Check if the value even exists
-    	String debug = "1";
     	if (nme.globalscores.containsKey(objective)) {
-        	debug += "2";
     		int score = nme.globalscores.get(objective);
-        	debug += " score = " + score;
         	switch (operation) {
         	case "==":
         		toReturn = score == value; break;
@@ -45,7 +42,6 @@ public class GlobalScoreCondition extends SkillCondition implements IEntityCondi
         		toReturn = score < value; break;
         	}
     	}
-    	System.out.println(debug);
     	return toReturn;
     }
 }
