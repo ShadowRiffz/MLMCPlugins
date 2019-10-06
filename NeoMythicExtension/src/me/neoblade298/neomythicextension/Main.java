@@ -1,5 +1,6 @@
 package me.neoblade298.neomythicextension;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -16,15 +17,22 @@ import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
+import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
+import me.neoblade298.neomythicextension.mechanics.ModScore;
 
 public class Main extends JavaPlugin implements Listener {
 
 	private Logger log;
+	public HashMap<String, Integer> globalscores;
+	// Hashmap of objectives which leads to hashmap of uuids to integers
+	public HashMap<String, HashMap<String, Integer>> scores;
 	 
 	@Override
 	public void onEnable() {
 		log = this.getLogger();
 		Bukkit.getPluginManager().registerEvents(this, this);
+		globalscores = new HashMap<String, Integer>();
+		scores = new HashMap<String, HashMap<String, Integer>>();
 		
 		log.info("NeoMythicExtensions Enabled!");
 	}
@@ -71,9 +79,20 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
+		log.info("MythicMechanicLoadEvent called for mechanic " + event.getMechanicName());
 
 		if(event.getMechanicName().equalsIgnoreCase("instancetp"))	{
 			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if(event.getMechanicName().equalsIgnoreCase("nscore"))	{
+			ModScore mechanic = new ModScore(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if(event.getMechanicName().equalsIgnoreCase("nglobalscore"))	{
+			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig());
 			event.register(mechanic);
 		}
 	}

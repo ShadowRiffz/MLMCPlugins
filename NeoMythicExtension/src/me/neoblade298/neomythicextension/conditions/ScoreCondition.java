@@ -1,6 +1,7 @@
 package me.neoblade298.neomythicextension.conditions;
 
 import org.bukkit.Bukkit;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
@@ -20,6 +21,7 @@ public class ScoreCondition extends SkillCondition implements IEntityCondition {
         value = mlc.getInteger(new String[] {"value", "v"});
     }
 
+    // CURRENTLY UNUSED CONDITION
     public boolean check(AbstractEntity t) {
     	int score = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective).getScore(entry).getScore();
     	
