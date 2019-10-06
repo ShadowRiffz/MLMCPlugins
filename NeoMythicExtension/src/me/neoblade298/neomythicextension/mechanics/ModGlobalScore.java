@@ -1,14 +1,13 @@
 package me.neoblade298.neomythicextension.mechanics;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
+import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import me.neoblade298.neomythicextension.Main;
 
-public class ModGlobalScore extends SkillMechanic implements ITargetedEntitySkill {
+public class ModGlobalScore extends SkillMechanic implements INoTargetSkill {
 	protected final String objective;
 	protected final String operation;
 	protected final int value;
@@ -26,12 +25,13 @@ public class ModGlobalScore extends SkillMechanic implements ITargetedEntitySkil
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public boolean cast(SkillMetadata data) {
 		// Get current score
 		int score = 0;
 		if (nme.globalscores.containsKey(objective)) {
 			score = nme.globalscores.get(objective);
 		}
+		System.out.println("@NEO " + operation);
 		
 		// Perform operation
 		switch (operation) {
