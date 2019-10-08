@@ -14,8 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.sucy.skill.SkillAPI;
-
 public class Commands implements CommandExecutor {
 	private Main main = null;
 
@@ -35,7 +33,6 @@ public class Commands implements CommandExecutor {
 				String instance = main.findInstance(boss);
 				if (instance != null) {
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-					SkillAPI.unloadPlayerData(Bukkit.getPlayer(args[1]));
 					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 		    		
@@ -69,7 +66,6 @@ public class Commands implements CommandExecutor {
 				String instance = WordUtils.capitalize(args[3]);
 				
 				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-				SkillAPI.unloadPlayerData(Bukkit.getPlayer(args[1]));
 				Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 	    		

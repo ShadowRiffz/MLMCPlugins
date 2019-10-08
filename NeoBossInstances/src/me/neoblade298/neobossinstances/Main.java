@@ -25,8 +25,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.sucy.skill.SkillAPI;
-
 public class Main extends JavaPlugin implements Listener {
 
 	// Config items
