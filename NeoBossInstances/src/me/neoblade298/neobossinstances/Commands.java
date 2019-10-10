@@ -14,6 +14,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.log.Logger;
+
 public class Commands implements CommandExecutor {
 	private Main main = null;
 
@@ -32,6 +35,7 @@ public class Commands implements CommandExecutor {
 				// Find an open instance
 				String instance = main.findInstance(boss);
 				if (instance != null) {
+					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
 		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
@@ -61,6 +65,7 @@ public class Commands implements CommandExecutor {
 	    	}
 	    	// /boss tp player nameofboss instance
 	    	else if (args.length == 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
+				SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 				String boss = WordUtils.capitalize(args[2]);
 				String instance = WordUtils.capitalize(args[3]);
@@ -156,6 +161,11 @@ public class Commands implements CommandExecutor {
 			}
 			return true;
 	    }
+	    else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
+	    	sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
+	    	SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+	    	return true;
+	    }
 	    else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
 	    	if (!main.isInstance) {
 		    	Player p = (Player) sender;
@@ -220,11 +230,13 @@ public class Commands implements CommandExecutor {
 	    else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return")) {
 	    	if (args.length == 1 && sender instanceof Player) {
 		    	Player p = (Player) sender;
+				SkillAPI.saveSingle(p);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
 	    		return true;
 	    	}
 	    	else {
+				SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
 	    		return true;

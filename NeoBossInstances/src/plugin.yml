@@ -3,7 +3,8 @@ author: Neoblade298
 main: me.neoblade298.neobossinstances.Main
 api-version: 1.14
 version: 1.0
-depend: [SkillAPI,Multiverse-Core]
+depend: [SkillAPI]
+softdepend: [Multiverse-Core]
 commands:
   boss:
     description: Does its job
