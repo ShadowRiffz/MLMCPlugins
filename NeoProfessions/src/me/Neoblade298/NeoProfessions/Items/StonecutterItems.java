@@ -49,6 +49,7 @@ public class StonecutterItems {
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
 		Builder fe = FireworkEffect.builder();
 		String oreName = null;
+		type = type.toLowerCase();
 		switch (type) {
 			case "strength":
 				oreName = "Ruby";
