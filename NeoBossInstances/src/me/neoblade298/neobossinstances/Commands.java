@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.log.Logger;
 
 public class Commands implements CommandExecutor {
 	private Main main = null;
