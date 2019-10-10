@@ -158,7 +158,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 					}
 					else if(args[1].equalsIgnoreCase("ore")) {
-						if (StringUtils.isNumeric(args[3])) {
+						if (StringUtils.isNumeric(args[2])) {
 							p.getInventory().addItem(sItems.getOre(Integer.parseInt(args[2]), Integer.parseInt(args[3])));
 						}
 						else {
