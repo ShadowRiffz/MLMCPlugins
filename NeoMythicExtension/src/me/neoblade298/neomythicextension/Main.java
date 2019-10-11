@@ -33,7 +33,9 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		globalscores = new HashMap<String, Integer>();
 		scores = new HashMap<String, HashMap<String, Integer>>();
-		
+
+	    // Get command listener
+	    this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
 	}
 	
