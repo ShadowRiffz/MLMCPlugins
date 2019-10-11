@@ -129,6 +129,7 @@ public class SkullCreator {
 	 * @param base64 The base64 string containing the texture
 	 * @return The head with a custom texture
 	 */
+	@SuppressWarnings("deprecation")
 	public static ItemStack itemWithBase64(ItemStack item, String base64) {
 		notNull(item, "item");
 		notNull(base64, "base64");
