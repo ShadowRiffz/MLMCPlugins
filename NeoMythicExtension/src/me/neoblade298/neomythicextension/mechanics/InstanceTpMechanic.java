@@ -50,7 +50,9 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
 	    			sendPlayer(p);
 	    		}
 	    		else {
-	    			p.sendMessage("§4[§c§lBosses§4] §7You are on cooldown and thus cannot join this boss fight.");
+					double temp = (lastUse + cooldown - currTime) / 6000;
+					temp /= 10;
+		    		p.sendMessage("§4[§c§lBosses§4] §7You are on cooldown for §e" + temp + " §7more minutes!");
 	    		}
     		}
     		// If player is not in hashmap, they don't have a cooldown
