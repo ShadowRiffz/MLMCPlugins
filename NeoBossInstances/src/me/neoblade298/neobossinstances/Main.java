@@ -38,6 +38,7 @@ public class Main extends JavaPlugin implements Listener {
 	Plugin main = this;
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
+	boolean isDebug = false;
 	
 	// SQL
 	static String sqlUser = "neoblade298";
@@ -175,6 +176,7 @@ public class Main extends JavaPlugin implements Listener {
 						boss = rs.getString(2);
     					if (boss != null) {
     						p.teleport(bossInfo.get(boss).getCoords());
+    						p.setHealth(p.getMaxHealth());
     						// Execute the command if it was not already executed
     						if (!activeBosses.contains(boss)) {
     							activeBosses.add(boss);

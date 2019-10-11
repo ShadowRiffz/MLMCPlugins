@@ -47,6 +47,9 @@ public class Commands implements CommandExecutor {
 		    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 		    					Statement stmt = con.createStatement();
 
+		    					if (main.isDebug) {
+		    						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
+		    					}
 								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 		    					con.close();
 		    				}
@@ -80,7 +83,10 @@ public class Commands implements CommandExecutor {
 	    					// Connect
 	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 	    					Statement stmt = con.createStatement();
-	    					
+
+	    					if (main.isDebug) {
+	    						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
+	    					}
 							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 	    					con.close();
 	    				}
@@ -139,6 +145,12 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4bossinstances.admin §7- All permissions");
 				sender.sendMessage("§4bossinstances.exemptleave §7- Do not teleport player to spawn on leaving");
 				sender.sendMessage("§4bossinstances.exemptjoin §7- Do not teleport player to boss fight on joining");
+		    	return true;
+		    }
+		    // /boss debug
+		    else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
+		    	main.isDebug = !main.isDebug;
+				sender.sendMessage("§4[§c§lBosses§4] §7Set debug to §e" + main.isDebug + "§7!");
 		    	return true;
 		    }
 	    }
