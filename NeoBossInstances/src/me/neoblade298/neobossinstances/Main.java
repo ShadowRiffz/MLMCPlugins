@@ -25,6 +25,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+
 public class Main extends JavaPlugin implements Listener {
 
 	// Config items
@@ -288,6 +290,8 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
+			Player p = e.getEntity();
+			SkillAPI.saveSingle(p);
 			handleLeave(e.getEntity());
 		}
 	}
@@ -295,14 +299,18 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
-			handleLeave(e.getPlayer());
+			Player p = e.getPlayer();
+			SkillAPI.saveSingle(p);
+			handleLeave(p);
 		}
 	}
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
-			handleLeave(e.getPlayer());
+			Player p = e.getPlayer();
+			SkillAPI.saveSingle(p);
+			handleLeave(p);
 		}
 	}
 }
