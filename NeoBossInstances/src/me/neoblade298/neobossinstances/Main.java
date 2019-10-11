@@ -162,7 +162,8 @@ public class Main extends JavaPlugin implements Listener {
 			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
-    			public void run() {
+    			@SuppressWarnings("deprecation")
+				public void run() {
     				try {
     					// Connect
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
