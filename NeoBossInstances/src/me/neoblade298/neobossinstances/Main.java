@@ -205,6 +205,7 @@ public class Main extends JavaPlugin implements Listener {
 	    				    			}
 	    				    		};
 	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+	    				    		this.cancel();
 	    						}
 	    					}
 	    					// Retried 3 times, time to teleport them out
