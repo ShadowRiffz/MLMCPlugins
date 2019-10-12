@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 public class Main extends JavaPlugin implements Listener {
 
 	// Config items
@@ -41,6 +45,8 @@ public class Main extends JavaPlugin implements Listener {
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
 	boolean isDebug = false;
+	
+	PermissionManager pex = null;
 	
 	// SQL
 	static String sqlUser = "neoblade298";
@@ -77,6 +83,8 @@ public class Main extends JavaPlugin implements Listener {
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
+		
+		pex = PermissionsEx.getPermissionManager();
 
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
@@ -164,6 +172,8 @@ public class Main extends JavaPlugin implements Listener {
 			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
+    			int count = 0;
+    			
     			@SuppressWarnings("deprecation")
 				public void run() {
     				try {
@@ -171,6 +181,7 @@ public class Main extends JavaPlugin implements Listener {
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
     					Statement stmt = con.createStatement();
     					ResultSet rs;
+    					initPermissions(p, con, uuid);
 
     					// Check where the player should be
     					String boss;
@@ -191,8 +202,10 @@ public class Main extends JavaPlugin implements Listener {
     				    		};
     				    		summonBoss.runTaskLater(main, cmdDelay * 20);
     						}
+    						this.cancel();
     					}
-    					else if (!p.hasPermission("bossinstances.exemptjoin")) {
+    					// Retried 3 times, time to teleport them out
+    					else if (!p.hasPermission("bossinstances.exemptjoin") && count >= 3) {
     		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
 				    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 				    			public void run() {
@@ -200,6 +213,11 @@ public class Main extends JavaPlugin implements Listener {
 				    			}
 				    		};
 				    		returnPlayer.runTaskLater(main, 100L);
+    						this.cancel();
+    					}
+    					// Task failed, retry
+    					else {
+    						count++;
     					}
     					
     					con.close();
@@ -209,7 +227,7 @@ public class Main extends JavaPlugin implements Listener {
     				}
     			}
     		};
-    		sendPlayer.runTaskLater(this, 60L);
+    		sendPlayer.runTaskTimer(this, 60L, 60L);
 		}
 	}
 	
@@ -233,27 +251,68 @@ public class Main extends JavaPlugin implements Listener {
 		return null;
 	}
 	
+	public void initPermissions(Player p, Connection con, String uuid) {
+		Statement stmt;
+		try {
+			stmt = con.createStatement();
+			ResultSet rs;
+			ArrayList<String> permList = new ArrayList<String>();
+			
+			// Add collections
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'collections.%';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
+			// Add bossinstance perms
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'bossinstances.%';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
+			// Add *
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE '*';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
+			permList.add("chatformat.default");
+			permList.add("deluxechat.bungee.chat");
+			pex.getUser(p).setPermissions(permList);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void handleLeave(Player p) {
+		pex.getUser(p).setPermissions(new ArrayList<String>());
+    	// Delete player from all fights
+		String uuid = p.getUniqueId().toString();
+		try {
+			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+			
+			con.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		pex.getUser(p).setPermissions(new ArrayList<String>());
+		
 		BukkitRunnable handle = new BukkitRunnable() {
 			public void run() {
-				if (p.isDead()) {
-					p.spigot().respawn();
-				}
-				String uuid = p.getUniqueId().toString();
-				if (p.hasPermission("bossinstances.exemptleave")) {
-					p.teleport(instanceSpawn);
-				}
-		    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-		    	// Delete player from all fights
-				try {
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-					Statement stmt = con.createStatement();
-					stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-					
-					con.close();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
+				// Check if player is still here
+				if (Bukkit.getPlayer(p.getName()) != null) {
+					if (p.isDead()) {
+						p.spigot().respawn();
+					}
+					if (p.hasPermission("bossinstances.exemptleave")) {
+						p.teleport(instanceSpawn);
+					}
+			    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
 				}
 			}
 		};
@@ -291,7 +350,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
 			Player p = e.getEntity();
-			SkillAPI.saveSingle(p);
+			BukkitRunnable save = new BukkitRunnable() {
+				public void run() {
+					SkillAPI.saveSingle(p);
+				}
+			};
+			save.runTaskLater(main, 10L);
 			handleLeave(e.getEntity());
 		}
 	}
