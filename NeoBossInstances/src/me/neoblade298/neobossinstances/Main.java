@@ -194,13 +194,13 @@ public class Main extends JavaPlugin implements Listener {
 							boss = rs.getString(2);
 	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
-	    						p.setHealth(p.getMaxHealth());
 	    						// Execute the command if it was not already executed
 	    						if (!activeBosses.contains(boss)) {
 	    							activeBosses.add(boss);
 	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
 	    				    			public void run() {
 	    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+	    		    						p.setHealth(p.getMaxHealth());
 	    				    				activeBosses.remove(boss);
 	    				    			}
 	    				    		};
