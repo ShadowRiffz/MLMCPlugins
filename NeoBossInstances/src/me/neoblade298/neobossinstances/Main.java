@@ -176,54 +176,57 @@ public class Main extends JavaPlugin implements Listener {
     			
     			@SuppressWarnings("deprecation")
 				public void run() {
-    				try {
-    					// Connect
-    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-    					Statement stmt = con.createStatement();
-    					ResultSet rs;
-    					initPermissions(p, con, uuid);
-
-    					// Check where the player should be
-    					String boss;
-    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-    					rs.next();
-						boss = rs.getString(2);
-    					if (boss != null) {
-    						p.teleport(bossInfo.get(boss).getCoords());
-    						p.setHealth(p.getMaxHealth());
-    						// Execute the command if it was not already executed
-    						if (!activeBosses.contains(boss)) {
-    							activeBosses.add(boss);
-    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
-    				    			public void run() {
-    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-    				    				activeBosses.remove(boss);
-    				    			}
-    				    		};
-    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
-    						}
-    						this.cancel();
-    					}
-    					// Retried 3 times, time to teleport them out
-    					else if (!p.hasPermission("bossinstances.exemptjoin") && count >= 3) {
-    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
-				    		BukkitRunnable returnPlayer = new BukkitRunnable() {
-				    			public void run() {
-	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-				    			}
-				    		};
-				    		returnPlayer.runTaskLater(main, 100L);
-    						this.cancel();
-    					}
-    					// Task failed, retry
-    					else {
-    						count++;
-    					}
-    					
-    					con.close();
+    				if (count > 3 || p.hasPermission("bossinstances.exemptjoin")) {
+    					this.cancel();
     				}
-    				catch (Exception e) {
-    					e.printStackTrace();
+    				else {
+	    				try {
+	    					// Connect
+	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+	    					Statement stmt = con.createStatement();
+	    					ResultSet rs;
+	    					initPermissions(p, con, uuid);
+	
+	    					// Check where the player should be
+	    					String boss;
+	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+	    					rs.next();
+							boss = rs.getString(2);
+	    					if (boss != null) {
+	    						p.teleport(bossInfo.get(boss).getCoords());
+	    						p.setHealth(p.getMaxHealth());
+	    						// Execute the command if it was not already executed
+	    						if (!activeBosses.contains(boss)) {
+	    							activeBosses.add(boss);
+	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
+	    				    			public void run() {
+	    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+	    				    				activeBosses.remove(boss);
+	    				    			}
+	    				    		};
+	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+	    						}
+	    					}
+	    					// Retried 3 times, time to teleport them out
+	    					else if (count >= 3) {
+	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
+					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
+					    			public void run() {
+		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
+					    			}
+					    		};
+					    		returnPlayer.runTaskLater(main, 100L);
+	    					}
+	    					// Task failed, retry
+	    					else {
+	    						count++;
+	    					}
+	    					
+	    					con.close();
+	    				}
+	    				catch (Exception e) {
+	    					e.printStackTrace();
+	    				}
     				}
     			}
     		};
@@ -278,6 +281,9 @@ public class Main extends JavaPlugin implements Listener {
 			
 			permList.add("chatformat.default");
 			permList.add("deluxechat.bungee.chat");
+			if (isDebug) {
+				System.out.println(p.getName() + " " + permList);
+			}
 			pex.getUser(p).setPermissions(permList);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
