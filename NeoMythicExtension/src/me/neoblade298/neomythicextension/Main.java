@@ -19,6 +19,7 @@ import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
+import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -95,6 +96,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if(event.getMechanicName().equalsIgnoreCase("nglobalscore"))	{
 			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if(event.getMechanicName().equalsIgnoreCase("warn"))	{
+			WarnMechanic mechanic = new WarnMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}
