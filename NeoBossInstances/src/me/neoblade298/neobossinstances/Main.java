@@ -176,17 +176,17 @@ public class Main extends JavaPlugin implements Listener {
     			
     			@SuppressWarnings("deprecation")
 				public void run() {
-    				if (count > 3 || p.hasPermission("bossinstances.exemptjoin")) {
-    					this.cancel();
-    				}
-    				else {
-	    				try {
-	    					// Connect
-	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-	    					Statement stmt = con.createStatement();
-	    					ResultSet rs;
-	    					initPermissions(p, con, uuid);
-	
+    				try {
+    					// Connect
+    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+    					Statement stmt = con.createStatement();
+    					ResultSet rs;
+    					initPermissions(p, con, uuid);
+
+        				if (count > 3 || p.hasPermission("bossinstances.exemptjoin")) {
+        					this.cancel();
+        				}
+        				else {
 	    					// Check where the player should be
 	    					String boss;
 	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
@@ -194,19 +194,25 @@ public class Main extends JavaPlugin implements Listener {
 							boss = rs.getString(2);
 	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
-	    						// Execute the command if it was not already executed
-	    						if (!activeBosses.contains(boss)) {
-	    							activeBosses.add(boss);
-	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
-	    				    			public void run() {
-	    	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-	    		    						p.setHealth(p.getMaxHealth());
-	    				    				activeBosses.remove(boss);
-	    				    			}
-	    				    		};
-	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
-	    				    		this.cancel();
-	    						}
+    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
+    				    			public void run() {
+    		    						p.setHealth(p.getMaxHealth());
+    		    						// Only spawn boss if it hasn't been spawned before
+    		    						if (!activeBosses.contains(boss)) {
+    		    							activeBosses.add(boss);
+        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+
+    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
+    		    				    			public void run() {
+    		    				    				activeBosses.remove(boss);
+    		    				    			}
+    		    				    		};
+    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
+    		    						}
+    				    			}
+    				    		};
+    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+    				    		this.cancel();
 	    					}
 	    					// Retried 3 times, time to teleport them out
 	    					else if (count >= 3) {
@@ -224,12 +230,12 @@ public class Main extends JavaPlugin implements Listener {
 	    					}
 	    					
 	    					con.close();
-	    				}
-	    				catch (Exception e) {
-	    					e.printStackTrace();
-	    				}
+        				}
     				}
-    			}
+    				catch (Exception e) {
+    					e.printStackTrace();
+    				}
+				}
     		};
     		sendPlayer.runTaskTimer(this, 60L, 60L);
 		}
@@ -270,6 +276,12 @@ public class Main extends JavaPlugin implements Listener {
 			
 			// Add bossinstance perms
 			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'bossinstances.%';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
+			// Add drop perms
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'drop.%';");
 			while (rs.next()) {
 				permList.add(rs.getString(1));
 			}
