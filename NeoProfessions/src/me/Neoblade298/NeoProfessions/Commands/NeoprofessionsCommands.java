@@ -163,10 +163,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							amount = Integer.parseInt(args[4]);
 						}
 						if (StringUtils.isNumeric(args[2])) {
-							p.getInventory().addItem();
+							ItemStack ore = sItems.getOre(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+							ore.setAmount(amount);
+							p.getInventory().addItem(ore);
 						}
 						else {
-							p.getInventory().addItem(sItems.getOre(args[2], Integer.parseInt(args[3])));
+							ItemStack ore = sItems.getOre(args[2], Integer.parseInt(args[3]));
+							ore.setAmount(amount);
+							p.getInventory().addItem(ore);
 						}
 					}
 					else if(args[1].equalsIgnoreCase("gem")) {
@@ -250,11 +254,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
 						}
 						else if(args[2].equalsIgnoreCase("ore")) {
+							int amount = 1;
+							if (args.length == 6) {
+								amount = Integer.parseInt(args[5]);
+							}
 							if (StringUtils.isNumeric(args[3])) {
-								p.getInventory().addItem(sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4])));
+								ItemStack ore = sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+								ore.setAmount(amount);
+								p.getInventory().addItem(ore);
 							}
 							else {
-								p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
+								ItemStack ore = sItems.getOre(args[3], Integer.parseInt(args[4]));
+								ore.setAmount(amount);
+								p.getInventory().addItem(ore);
 							}
 						}
 						else if(args[1].equalsIgnoreCase("ingr")) {
