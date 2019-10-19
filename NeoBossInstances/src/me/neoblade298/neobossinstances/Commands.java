@@ -141,7 +141,7 @@ public class Commands implements CommandExecutor {
 		    	return true;
 		    }
 	    	// /boss permissions
-		    else if (args.length == 1 && args[0].equalsIgnoreCase("resetinstances") && !main.isInstance) {
+		    else if (args.length == 1 && args[0].equalsIgnoreCase("permissions") && !main.isInstance) {
 				sender.sendMessage("§4bossinstances.admin §7- All permissions");
 				sender.sendMessage("§4bossinstances.exemptleave §7- Do not teleport player to spawn on leaving");
 				sender.sendMessage("§4bossinstances.exemptjoin §7- Do not teleport player to boss fight on joining");
