@@ -164,6 +164,8 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		}
 		if (food.getName().contains("Chest") && isInstance) {
 			String message = "&cYou cannot open chests in a boss fight!";
+			message = message.replaceAll("&", "§");
+			p.sendMessage(message);
 			return;
 		}
 

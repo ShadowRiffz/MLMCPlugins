@@ -75,7 +75,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get ingr [22-24]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get durability [weapon/armor] [level]");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get ore [attribute or 1-7] [level]");
+				sender.sendMessage("§7- §4/neoprofessions <playername> get ore [attribute or 1-7] [level] <amount>");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get gem [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get overload [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get [basic/advanced] [charm]");
@@ -158,11 +158,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 					}
 					else if(args[1].equalsIgnoreCase("ore")) {
+						int amount = 1;
+						if (args.length == 5) {
+							amount = Integer.parseInt(args[4]);
+						}
 						if (StringUtils.isNumeric(args[2])) {
-							p.getInventory().addItem(sItems.getOre(Integer.parseInt(args[2]), Integer.parseInt(args[3])));
+							ItemStack ore = sItems.getOre(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+							ore.setAmount(amount);
+							p.getInventory().addItem(ore);
 						}
 						else {
-							p.getInventory().addItem(sItems.getOre(args[2], Integer.parseInt(args[3])));
+							ItemStack ore = sItems.getOre(args[2], Integer.parseInt(args[3]));
+							ore.setAmount(amount);
+							p.getInventory().addItem(ore);
 						}
 					}
 					else if(args[1].equalsIgnoreCase("gem")) {
@@ -246,11 +254,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
 						}
 						else if(args[2].equalsIgnoreCase("ore")) {
+							int amount = 1;
+							if (args.length == 6) {
+								amount = Integer.parseInt(args[5]);
+							}
 							if (StringUtils.isNumeric(args[3])) {
-								p.getInventory().addItem(sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4])));
+								ItemStack ore = sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+								ore.setAmount(amount);
+								p.getInventory().addItem(ore);
 							}
 							else {
-								p.getInventory().addItem(sItems.getOre(args[3], Integer.parseInt(args[4])));
+								ItemStack ore = sItems.getOre(args[3], Integer.parseInt(args[4]));
+								ore.setAmount(amount);
+								p.getInventory().addItem(ore);
 							}
 						}
 						else if(args[1].equalsIgnoreCase("ingr")) {
