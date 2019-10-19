@@ -36,12 +36,12 @@ public class Commands implements CommandExecutor {
 				if (instance != null) {
 					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
-		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 		    		
 		    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
 		    		BukkitRunnable addSql = new BukkitRunnable() {
 		    			public void run() {
+							Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+				    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 		    				try {
 		    					// Connect
 		    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -74,11 +74,11 @@ public class Commands implements CommandExecutor {
 				
 				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 				Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
-	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 	    		
 	    		// Wait for everyone to enter, then update sql so the instance still shows as empty until everyone leaves
 	    		BukkitRunnable addSql = new BukkitRunnable() {
 	    			public void run() {
+	    	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 	    				try {
 	    					// Connect
 	    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -242,14 +242,24 @@ public class Commands implements CommandExecutor {
 	    	if (args.length == 1 && sender instanceof Player) {
 		    	Player p = (Player) sender;
 				SkillAPI.saveSingle(p);
-	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
+	    		BukkitRunnable sendBack = new BukkitRunnable() {
+	    			public void run() {
+    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
+	    			}
+	    		};
+	    		sendBack.run();
 	    		return true;
 	    	}
 	    	else {
 				SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
+	    		BukkitRunnable sendBack = new BukkitRunnable() {
+	    			public void run() {
+    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
+	    			}
+	    		};
+	    		sendBack.run();
 	    		return true;
 	    	}
 	    }
