@@ -248,7 +248,7 @@ public class Commands implements CommandExecutor {
     					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", p.getName()));
 	    			}
 	    		};
-	    		sendBack.run();
+	    		sendBack.runTaskLater(main, 20L);
 	    		return true;
 	    	}
 	    	else {
@@ -259,7 +259,7 @@ public class Commands implements CommandExecutor {
     					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.returnCommand.replaceAll("%player%", args[1]));
 	    			}
 	    		};
-	    		sendBack.run();
+	    		sendBack.runTaskLater(main, 20L);
 	    		return true;
 	    	}
 	    }
