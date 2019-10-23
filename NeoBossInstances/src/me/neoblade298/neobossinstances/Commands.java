@@ -58,7 +58,7 @@ public class Commands implements CommandExecutor {
 		    				}
 		    			}
 		    		};
-		    		addSql.runTaskLater(main, 20L);
+		    		addSql.runTaskLater(main, 40L);
 				}
 				else {
 	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
@@ -95,7 +95,7 @@ public class Commands implements CommandExecutor {
 	    				}
 	    			}
 	    		};
-	    		addSql.runTaskLater(main, 20L);
+	    		addSql.runTaskLater(main, 40L);
 	    		return true;
 	    	}
 		    // /boss resetcd player boss
