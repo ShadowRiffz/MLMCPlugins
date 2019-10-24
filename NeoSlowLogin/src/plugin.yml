@@ -1,0 +1,5 @@
+ name: NeoSlowLogin
+ version: 1.0
+ description: Stops players from logging in from other locations and slows reconnects
+ author: Neoblade298
+ main: me.neoblade298.neoslowlogin.Main
