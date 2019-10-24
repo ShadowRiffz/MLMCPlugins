@@ -3,7 +3,6 @@ package me.neoblade298.neoslowlogin;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -26,15 +25,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void OnJoinFirst(AsyncPlayerPreLoginEvent e) {
-		Player player = Bukkit.getServer().getPlayerExact(e.getName());
-		if (player == null) {
-			return;
-		}
-		if (player.isOnline()) {
+		if (Bukkit.getPlayer(e.getName()) != null) {
 			e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
 					ChatColor.RED + "A player with your name is already logged on!");
 		}
-		else if (leaveTimer.contains(player.getName())) {
+		else if (leaveTimer.contains(e.getName())) {
 			e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
 					ChatColor.RED + "Reconnected too quickly! Please wait a few seconds!");
 		}
