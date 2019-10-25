@@ -1,6 +1,5 @@
 package me.neoblade298.neoslowlogin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
