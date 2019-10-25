@@ -1,6 +1,8 @@
 package me.neoblade298.neoslowlogin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -12,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
-	ArrayList<String> leaveTimer = new ArrayList<String>();
+	HashMap<String, Long> leaveTimes = new HashMap<String, Long>();
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoSlowLogin Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
@@ -29,7 +31,7 @@ public class Main extends JavaPlugin implements Listener {
 			e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
 					ChatColor.RED + "A player with your name is already logged on!");
 		}
-		else if (leaveTimer.contains(e.getName())) {
+		else if (!canJoin(e.getName())) {
 			e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
 					ChatColor.RED + "Reconnected too quickly! Please wait a few seconds!");
 		}
@@ -46,13 +48,28 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeave(String name) {
-		leaveTimer.add(name);
+		leaveTimes.put(name, System.currentTimeMillis());
 		
 		BukkitRunnable endTimer = new BukkitRunnable() {
 			public void run() {
-				leaveTimer.remove(name);
+				leaveTimes.remove(name);
 			}
 		};
 		endTimer.runTaskLaterAsynchronously(this, 60L);
+	}
+	
+	public boolean canJoin(String name) {
+		if (leaveTimes.containsKey(name)) {
+			long leaveTime = leaveTimes.get(name);
+			long currTime = System.currentTimeMillis();
+			long elapsedTime = leaveTime - currTime;
+			if (elapsedTime > 3000) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		return true;
 	}
 }
