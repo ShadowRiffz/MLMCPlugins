@@ -61,7 +61,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (leaveTimes.containsKey(name)) {
 			long leaveTime = leaveTimes.get(name);
 			long currTime = System.currentTimeMillis();
-			long elapsedTime = leaveTime - currTime;
+			long elapsedTime = currTime - leaveTime;
 			if (elapsedTime > 3000) {
 				return true;
 			}
