@@ -31,7 +31,7 @@ public class Main extends JavaPlugin implements Listener {
 		sqlUser = getConfig().getString("sql_user");
 		sqlPass = getConfig().getString("sql_pass");
 		connection = getConfig().getString("connection");
-		connection = getConfig().getString("instance_name");
+		instanceName = getConfig().getString("instance_name");
 
 		getCommand("neogoldrandomizer").setExecutor(new Commands(this));
 	}

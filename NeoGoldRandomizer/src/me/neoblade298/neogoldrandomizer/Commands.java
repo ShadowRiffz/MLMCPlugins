@@ -22,7 +22,7 @@ public class Commands implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.isOp()) {
-			if (args.length == 4) {
+			if (args.length == 3) {
 
 				// First check number of players in the instance
 				ArrayList<String> players = new ArrayList<String>();
@@ -32,11 +32,12 @@ public class Commands implements CommandExecutor {
 					ResultSet rs;
 
 					// Find available instance
-					rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + args[1]
+					rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + args[0]
 							+ "' AND instance = '" + Main.instanceName + "';");
 
 					while (rs.next()) {
 						players.add(Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName());
+						System.out.println(rs.getString(1));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,8 +45,8 @@ public class Commands implements CommandExecutor {
 
 				// Get gold min and max for party size
 				double bonus = 0.9 + (players.size() * 0.1);
-				double min = Integer.parseInt(args[1]) / players.size() * bonus;
-				double max = Integer.parseInt(args[2]) / players.size() * bonus;
+				double min = (Integer.parseInt(args[1]) / players.size()) * bonus;
+				double max = (Integer.parseInt(args[2]) / players.size()) * bonus;
 				
 				// Generate gold for each player
 				for (String player : players) {
