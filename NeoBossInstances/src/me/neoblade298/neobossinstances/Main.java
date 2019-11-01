@@ -181,7 +181,10 @@ public class Main extends JavaPlugin implements Listener {
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
     					Statement stmt = con.createStatement();
     					ResultSet rs;
-    					initPermissions(p, con, uuid);
+    					// Only initialize perms once
+    					if (count == 0) {
+    						initPermissions(p, con, uuid);
+    					}
 
         				if (count > 3) {
         					this.cancel();
