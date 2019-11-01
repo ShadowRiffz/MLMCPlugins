@@ -58,7 +58,7 @@ public class Commands implements CommandExecutor {
 		    				}
 		    			}
 		    		};
-		    		addSql.runTaskLater(main, 40L);
+		    		addSql.runTaskLater(main, 100L);
 				}
 				else {
 	    			Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
@@ -95,7 +95,7 @@ public class Commands implements CommandExecutor {
 	    				}
 	    			}
 	    		};
-	    		addSql.runTaskLater(main, 40L);
+	    		addSql.runTaskLater(main, 100L);
 	    		return true;
 	    	}
 		    // /boss resetcd player boss
@@ -163,6 +163,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
+				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
 				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
