@@ -43,15 +43,15 @@ public class Commands implements CommandExecutor {
 					e.printStackTrace();
 				}
 
-				// Get gold min and max for party size
+				// Get gold min and max for party size, generate gold
 				double bonus = 0.9 + (players.size() * 0.1);
 				double min = (Integer.parseInt(args[1]) / players.size()) * bonus;
 				double max = (Integer.parseInt(args[2]) / players.size()) * bonus;
+				double gold = Math.random() * (max - min) + min;
+				gold = Math.round(gold / 25.0D) * 25L;
 				
-				// Generate gold for each player
+				// Give gold to each player
 				for (String player : players) {
-					double gold = Math.random() * (max - min) + min;
-					gold = Math.round(gold / 25.0D) * 25L;
 					ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 					String command = "sync console MLMC eco give " + player + " " + (int) gold;
 					Bukkit.dispatchCommand(console, command);

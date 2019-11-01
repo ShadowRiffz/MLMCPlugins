@@ -286,6 +286,12 @@ public class Main extends JavaPlugin implements Listener {
 				permList.add(rs.getString(1));
 			}
 			
+			// Add party perms
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'parties.%';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
 			// Add *
 			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE '*';");
 			while (rs.next()) {
