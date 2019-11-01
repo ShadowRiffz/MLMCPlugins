@@ -223,6 +223,7 @@ public class Main extends JavaPlugin implements Listener {
 					    			}
 					    		};
 					    		returnPlayer.runTaskLater(main, 100L);
+					    		count++;
 	    					}
 	    					// Task failed, retry
 	    					else {
