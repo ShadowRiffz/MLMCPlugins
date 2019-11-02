@@ -39,7 +39,7 @@ public class StonecutterCommands implements CommandExecutor {
 				util.sendMessage(p, "&8&l[&cStonecutter&8&l]");
 				util.sendMessage(p, "&7- &c/stonecutter create gem [weapon/armor] [attribute] [level]");
 				util.sendMessage(p, "&7- &c/stonecutter create overload [weapon/armor] [attribute] [level]");
-				util.sendMessage(p, "&7- &c/stonecutter refine");
+				util.sendMessage(p, "&7- &c/stonecutter refine [all]");
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create")) {
@@ -132,7 +132,11 @@ public class StonecutterCommands implements CommandExecutor {
 			}
 			else if(args[0].equalsIgnoreCase("refine")) {
 				if(args.length == 1) {
-					stonecutterMethods.refine(p);
+					stonecutterMethods.refine(p, false);
+					return true;
+				}
+				else if (args.length == 2 && args[2].equalsIgnoreCase("all")) {
+					stonecutterMethods.refine(p, true);
 					return true;
 				}
 				else {

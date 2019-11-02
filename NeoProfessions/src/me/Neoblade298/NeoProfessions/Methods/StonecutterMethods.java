@@ -132,7 +132,7 @@ public class StonecutterMethods {
 		}
 	}
 	
-	public void refine(Player p) {
+	public void refine(Player p, boolean all) {
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
 			int slot = p.getInventory().firstEmpty();
@@ -140,37 +140,50 @@ public class StonecutterMethods {
 				if(stonecutterUtils.isEssence(item)) {
 					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 					int level = oldLevel + 1;
-					if(p.hasPermission("stonecutter.refine.tier." + level)) {
-						if(econ.has(p, REFINE_COST)) {
-							// Find essence cost via perms
-							int cost = REFINE_ESSENCE_0;
-							if(p.hasPermission("stonecutter.refine.finesse.3")) {
-								cost = REFINE_ESSENCE_3;
-							}
-							else if(p.hasPermission("stonecutter.refine.finesse.2")) {
-								cost = REFINE_ESSENCE_2;
-							}
-							else if(p.hasPermission("stonecutter.refine.finesse.1")) {
-								cost = REFINE_ESSENCE_1;
-							}
-							
-							// Check if enough essence
-							if(p.getInventory().containsAtLeast(common.getEssence(oldLevel), cost)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel), cost));
-								p.getInventory().addItem(common.getEssence(level));
-								econ.withdrawPlayer(p, REFINE_COST);
-								util.sendMessage(p, "&7Successfully refined essence!");
+					
+					// Find essence cost via perms
+					int cost = REFINE_ESSENCE_0;
+					if(p.hasPermission("stonecutter.refine.finesse.3")) {
+						cost = REFINE_ESSENCE_3;
+					}
+					else if(p.hasPermission("stonecutter.refine.finesse.2")) {
+						cost = REFINE_ESSENCE_2;
+					}
+					else if(p.hasPermission("stonecutter.refine.finesse.1")) {
+						cost = REFINE_ESSENCE_1;
+					}
+					
+					int repetitions = 1;
+					if (all) {
+						repetitions = item.getAmount();
+					}
+					
+					// Check if enough gold
+					for (int i = 0; i < repetitions; i++) {
+						if(p.hasPermission("stonecutter.refine.tier." + level)) {
+							if(econ.has(p, REFINE_COST)) {
+								
+								// Check if enough essence
+								if(p.getInventory().containsAtLeast(common.getEssence(oldLevel), cost)) {
+									p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel), cost));
+									p.getInventory().addItem(common.getEssence(level));
+									econ.withdrawPlayer(p, REFINE_COST);
+									util.sendMessage(p, "&7Successfully refined essence!");
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the essence to refine this!");
+									break;
+								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the essence to refine this!");
+								util.sendMessage(p, "&cYou lack the gold to refine this!");
+								break;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the gold to refine this!");
+							util.sendMessage(p, "&cYou do not yet have the required skill!");
+							break;
 						}
-					}
-					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else if(stonecutterUtils.isOre(item)) {
