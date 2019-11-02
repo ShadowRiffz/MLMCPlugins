@@ -52,14 +52,14 @@ public class CulinarianMethods {
 	final static double PRESERVE_BOOST_PER_LVL = -0.1;
 	final static double SPICE_BOOST_BASE = 1.1;
 	final static double SPICE_BOOST_PER_LVL = 0.15;
-	final static int GARNISH_COST = 500;
+	final static int GARNISH_COST = 50;
 	final static int GARNISH_ESSENCE = 1;
-	final static int PRESERVE_COST = 500;
+	final static int PRESERVE_COST = 50;
 	final static int PRESERVE_ESSENCE = 1;
-	final static int SPICE_COST = 500;
+	final static int SPICE_COST = 50;
 	final static int SPICE_ESSENCE = 1;
 	final static int ASSIMILATE_COST = 100;
-	final static int SPECIAL_COST = 5000;
+	final static int SPECIAL_COST = 2000;
 	final static int SPECIAL_AMOUNT = 16;
 	final static int REMEDY_COST = 1000;
 	final static int REMEDY_ESSENCE = 1;
@@ -116,7 +116,6 @@ public class CulinarianMethods {
 						}
 					}
 					if(isFood) {
-						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
 							// Get repetitions
 							int repetitions = 1;
@@ -124,7 +123,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(2), GARNISH_ESSENCE)) {
 									if(econ.has(p, GARNISH_COST)) {
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -133,7 +132,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(common.getEssence(2));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, GARNISH_COST);
 										if (i == repetitions - 1) {
@@ -207,7 +206,6 @@ public class CulinarianMethods {
 						}
 					}
 					if(isFood) {
-						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
 							// Get repetitions
 							int repetitions = 1;
@@ -215,7 +213,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), PRESERVE_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(2), PRESERVE_ESSENCE)) {
 									if(econ.has(p, PRESERVE_COST)) {
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -224,7 +222,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(common.getEssence(2));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, PRESERVE_COST);
 										if (i == repetitions - 1) {
@@ -298,7 +296,6 @@ public class CulinarianMethods {
 						}
 					}
 					if(isFood) {
-						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
 							// Get repetitions
 							int repetitions = 1;
@@ -306,7 +303,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), SPICE_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(2), SPICE_ESSENCE)) {
 									if(econ.has(p, SPICE_COST)) {
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -315,7 +312,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(common.getEssence(2));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, SPICE_COST);
 										if (i == repetitions - 1) {

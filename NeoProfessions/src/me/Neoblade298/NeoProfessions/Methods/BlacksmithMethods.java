@@ -29,11 +29,13 @@ public class BlacksmithMethods {
 	final int REPAIR_ESSENCE = 1;
 	final int UNBREAKING_COST_PER_LVL = 5000;
 	final int PROTECTION_COST_PER_LVL = 5000;
+	final int UNBREAKING_ESSENCE_BASE = 2;
 	final int UNBREAKING_ESSENCE_PER_LVL = 4;
+	final int PROTECTION_ESSENCE_BASE = 2;
 	final int PROTECTION_ESSENCE_PER_LVL = 4;
 	final int REFORGE_COST_BASE = 1000;
 	final int REFORGE_COST_MULT = 2;
-	final int REFORGE_ESSENCE_PER_LVL = 6;
+	final int REFORGE_ESSENCE_PER_LVL = 4;
 	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
@@ -112,10 +114,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
 								if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), UNBREAKING_ESSENCE_PER_LVL * enchLevel));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE));
 									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
@@ -159,10 +161,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
 								if(econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), PROTECTION_ESSENCE_PER_LVL * enchLevel));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE));
 									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
