@@ -181,9 +181,12 @@ public class Main extends JavaPlugin implements Listener {
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
     					Statement stmt = con.createStatement();
     					ResultSet rs;
-    					initPermissions(p, con, uuid);
+    					// Only initialize perms once
+    					if (count == 0) {
+    						initPermissions(p, con, uuid);
+    					}
 
-        				if (count > 3 || p.hasPermission("bossinstances.exemptjoin")) {
+        				if (count > 3) {
         					this.cancel();
         				}
         				else {
@@ -215,7 +218,7 @@ public class Main extends JavaPlugin implements Listener {
     				    		this.cancel();
 	    					}
 	    					// Retried 3 times, time to teleport them out
-	    					else if (count >= 3) {
+	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
 	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
 					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 					    			public void run() {
@@ -223,6 +226,7 @@ public class Main extends JavaPlugin implements Listener {
 					    			}
 					    		};
 					    		returnPlayer.runTaskLater(main, 100L);
+					    		count++;
 	    					}
 	    					// Task failed, retry
 	    					else {
@@ -282,6 +286,12 @@ public class Main extends JavaPlugin implements Listener {
 			
 			// Add drop perms
 			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'drop.%';");
+			while (rs.next()) {
+				permList.add(rs.getString(1));
+			}
+			
+			// Add party perms
+			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'parties.%';");
 			while (rs.next()) {
 				permList.add(rs.getString(1));
 			}

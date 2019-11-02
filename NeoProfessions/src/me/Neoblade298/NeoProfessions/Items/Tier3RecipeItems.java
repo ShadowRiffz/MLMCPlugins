@@ -326,8 +326,8 @@ public class Tier3RecipeItems {
 	public ArrayList<ItemStack> getScrambledEggsRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.EGG, 3));
-		recipe.add(util.setAmount(ingr.getSalt(), 2));
-		recipe.add(ingr.getOil());
+		recipe.add(util.setAmount(ingr.getOil(), 2));
+		recipe.add(ingr.getSalt());
 		return recipe;
 	}
 	

@@ -1,0 +1,9 @@
+name: NeoGoldRandomizer
+author: Neoblade298
+main: me.neoblade298.neogoldrandomizer.Main
+version: 1.01
+api-version: 1.14
+commands:
+  neogoldrandomizer:
+    description: Does its job
+    usage: /neogoldrandomizer [playername] [bossname] [min gold] [max gold]
