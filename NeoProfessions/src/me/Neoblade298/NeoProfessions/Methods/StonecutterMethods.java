@@ -29,7 +29,7 @@ public class StonecutterMethods {
 	static final int GEM_COST_PER_LVL = 1500;
 	static final int GEM_ESSENCE = 8;
 	static final int GEM_ORES = 8;
-	static final int REFINE_COST = 1000;
+	static final int REFINE_COST = 500;
 	static final int REFINE_ORE = 3;
 	static final int REFINE_ESSENCE_0 = 10;
 	static final int REFINE_ESSENCE_1 = 9;
