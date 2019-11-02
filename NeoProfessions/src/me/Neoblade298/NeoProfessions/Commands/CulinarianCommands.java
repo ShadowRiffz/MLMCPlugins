@@ -31,9 +31,9 @@ public class CulinarianCommands implements CommandExecutor {
 
 			if (args.length == 0) {
 				util.sendMessage(p, "&8&l[&cCulinarian&8&l]");
-				util.sendMessage(p, "&7- &c/culinarian garnish");
-				util.sendMessage(p, "&7- &c/culinarian spice");
-				util.sendMessage(p, "&7- &c/culinarian preserve");
+				util.sendMessage(p, "&7- &c/culinarian garnish [all]");
+				util.sendMessage(p, "&7- &c/culinarian spice [all]");
+				util.sendMessage(p, "&7- &c/culinarian preserve [all]");
 				util.sendMessage(p, "&7- &c/culinarian special");
 				util.sendMessage(p, "&7- &c/culinarian assimilate");
 				util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence]");
@@ -43,7 +43,11 @@ public class CulinarianCommands implements CommandExecutor {
 			else {
 				if(args[0].equalsIgnoreCase("garnish")) {
 					if(args.length == 1) {
-						culinarianMethods.garnish(p);
+						culinarianMethods.garnish(p, false);
+						return true;
+					}
+					else if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+						culinarianMethods.garnish(p, true);
 						return true;
 					}
 					else {
@@ -53,7 +57,11 @@ public class CulinarianCommands implements CommandExecutor {
 				}
 				else if(args[0].equalsIgnoreCase("preserve")) {
 					if(args.length == 1) {
-						culinarianMethods.preserve(p);
+						culinarianMethods.preserve(p, false);
+						return true;
+					}
+					else if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+						culinarianMethods.preserve(p, true);
 						return true;
 					}
 					else {
@@ -63,7 +71,11 @@ public class CulinarianCommands implements CommandExecutor {
 				}
 				else if(args[0].equalsIgnoreCase("spice")) {
 					if(args.length == 1) {
-						culinarianMethods.spice(p);
+						culinarianMethods.spice(p, false);
+						return true;
+					}
+					else if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+						culinarianMethods.spice(p, true);
 						return true;
 					}
 					else {

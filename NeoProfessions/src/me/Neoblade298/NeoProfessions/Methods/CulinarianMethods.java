@@ -82,7 +82,7 @@ public class CulinarianMethods {
 		specialCooldowns = new HashMap<String, Boolean>();
 	}
 	
-	public void garnish(Player p) {
+	public void garnish(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
@@ -119,26 +119,37 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
-								if(econ.has(p, GARNISH_COST)) {
-									ItemMeta meta = item.getItemMeta();
-									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-									double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Garnished (" + format.format(multiplier) + "x Attribute Boost)");
-									meta.setLore(lore);
-									item.setItemMeta(meta);
-									p.getInventory().addItem(util.setAmount(item, 1));
-									p.getInventory().removeItem(common.getEssence(foodLevel));
-									p.getInventory().removeItem(util.setAmount(oldItem, 1));
-									econ.withdrawPlayer(p, GARNISH_COST);
-									util.sendMessage(p, "&7Successfully garnished dish!");
+							// Get repetitions
+							int repetitions = 1;
+							if (all) {
+								repetitions = oldItem.getAmount();
+							}
+							for (int i = 0; i < repetitions; i++) {
+								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), GARNISH_ESSENCE)) {
+									if(econ.has(p, GARNISH_COST)) {
+										ItemMeta meta = item.getItemMeta();
+										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+										double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
+										lore.add("§9Garnished (" + format.format(multiplier) + "x Attribute Boost)");
+										meta.setLore(lore);
+										item.setItemMeta(meta);
+										p.getInventory().addItem(util.setAmount(item, 1));
+										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(util.setAmount(oldItem, 1));
+										econ.withdrawPlayer(p, GARNISH_COST);
+										if (i == repetitions - 1) {
+											util.sendMessage(p, "&7Successfully garnished dish!");
+										}
+									}
+									else {
+										util.sendMessage(p, "&cYou lack the gold to garnish this!");
+										break;
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to garnish this!");
+									util.sendMessage(p, "&cYou lack the materials to garnish this!");
+									break;
 								}
-							}
-							else {
-								util.sendMessage(p, "&cYou lack the materials to garnish this!");
 							}
 						}
 						else {
@@ -162,7 +173,7 @@ public class CulinarianMethods {
 		}
 	}
 	
-	public void preserve(Player p) {
+	public void preserve(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
@@ -199,26 +210,37 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), PRESERVE_ESSENCE)) {
-								if(econ.has(p, PRESERVE_COST)) {
-									ItemMeta meta = item.getItemMeta();
-									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-									double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Preserved (" + format.format(multiplier) + "x Duration Boost)");
-									meta.setLore(lore);
-									item.setItemMeta(meta);
-									p.getInventory().addItem(util.setAmount(item, 1));
-									p.getInventory().removeItem(common.getEssence(foodLevel));
-									p.getInventory().removeItem(util.setAmount(oldItem, 1));
-									econ.withdrawPlayer(p, PRESERVE_COST);
-									util.sendMessage(p, "&7Successfully preserved dish!");
+							// Get repetitions
+							int repetitions = 1;
+							if (all) {
+								repetitions = oldItem.getAmount();
+							}
+							for (int i = 0; i < repetitions; i++) {
+								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), PRESERVE_ESSENCE)) {
+									if(econ.has(p, PRESERVE_COST)) {
+										ItemMeta meta = item.getItemMeta();
+										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+										double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
+										lore.add("§9Preserved (" + format.format(multiplier) + "x Duration Boost)");
+										meta.setLore(lore);
+										item.setItemMeta(meta);
+										p.getInventory().addItem(util.setAmount(item, 1));
+										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(util.setAmount(oldItem, 1));
+										econ.withdrawPlayer(p, PRESERVE_COST);
+										if (i == repetitions - 1) {
+											util.sendMessage(p, "&7Successfully preserved dish!");
+										}
+									}
+									else {
+										util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+										break;
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+									util.sendMessage(p, "&cYou lack the materials to preserve this!");
+									break;
 								}
-							}
-							else {
-								util.sendMessage(p, "&cYou lack the materials to preserve this!");
 							}
 						}
 						else {
@@ -242,7 +264,7 @@ public class CulinarianMethods {
 		}
 	}
 	
-	public void spice(Player p) {
+	public void spice(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
@@ -279,26 +301,37 @@ public class CulinarianMethods {
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
 						if(!isBoosted) {
-							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), SPICE_ESSENCE)) {
-								if(econ.has(p, SPICE_COST)) {
-									ItemMeta meta = item.getItemMeta();
-									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-									double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
-									lore.add("§9Spiced (" + format.format(multiplier) + "x Restoration Boost)");
-									meta.setLore(lore);
-									item.setItemMeta(meta);
-									p.getInventory().addItem(util.setAmount(item, 1));
-									p.getInventory().removeItem(common.getEssence(foodLevel));
-									p.getInventory().removeItem(util.setAmount(oldItem, 1));
-									econ.withdrawPlayer(p, SPICE_COST);
-									util.sendMessage(p, "&7Successfully spiced dish!");
+							// Get repetitions
+							int repetitions = 1;
+							if (all) {
+								repetitions = oldItem.getAmount();
+							}
+							for (int i = 0; i < repetitions; i++) {
+								if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), SPICE_ESSENCE)) {
+									if(econ.has(p, SPICE_COST)) {
+										ItemMeta meta = item.getItemMeta();
+										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+										double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
+										lore.add("§9Spiced (" + format.format(multiplier) + "x Restoration Boost)");
+										meta.setLore(lore);
+										item.setItemMeta(meta);
+										p.getInventory().addItem(util.setAmount(item, 1));
+										p.getInventory().removeItem(common.getEssence(foodLevel));
+										p.getInventory().removeItem(util.setAmount(oldItem, 1));
+										econ.withdrawPlayer(p, SPICE_COST);
+										if (i == repetitions - 1) {
+											util.sendMessage(p, "&7Successfully spiced dish!");
+										}
+									}
+									else {
+										util.sendMessage(p, "&cYou lack the gold to spice this!");
+										break;
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to spice this!");
+									util.sendMessage(p, "&cYou lack the materials to spice this!");
+									break;
 								}
-							}
-							else {
-								util.sendMessage(p, "&cYou lack the materials to spice this!");
 							}
 						}
 						else {

@@ -135,7 +135,7 @@ public class StonecutterCommands implements CommandExecutor {
 					stonecutterMethods.refine(p, false);
 					return true;
 				}
-				else if (args.length == 2 && args[2].equalsIgnoreCase("all")) {
+				else if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
 					stonecutterMethods.refine(p, true);
 					return true;
 				}

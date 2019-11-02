@@ -168,7 +168,9 @@ public class StonecutterMethods {
 									p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel), cost));
 									p.getInventory().addItem(common.getEssence(level));
 									econ.withdrawPlayer(p, REFINE_COST);
-									util.sendMessage(p, "&7Successfully refined essence!");
+									if (i == repetitions - 1) {
+										util.sendMessage(p, "&7Successfully refined essence!");
+									}
 								}
 								else {
 									util.sendMessage(p, "&cYou lack the essence to refine this!");
