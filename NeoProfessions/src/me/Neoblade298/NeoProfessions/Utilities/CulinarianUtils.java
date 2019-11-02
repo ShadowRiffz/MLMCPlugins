@@ -15,7 +15,8 @@ import net.milkbowl.vault.economy.Economy;
 
 public class CulinarianUtils {
 	
-	static final int CRAFT_COST = 5;
+	static final int CRAFT_COST = 1;
+	static final int NUM_PER_CRAFT = 4;
 	static Random gen = new Random();
 	Util util;
 	
@@ -293,8 +294,8 @@ public class CulinarianUtils {
 						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
-					inv.addItem(util.setAmount(result, amount));
-					util.sendMessage(p, "&7Successfully crafted &e" + amount + " " + name);
+					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
+					util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
 				}
 				else {
 					util.sendMessage(p, "&cYou lack the ingredients to craft any of this recipe!");
@@ -357,8 +358,8 @@ public class CulinarianUtils {
 						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
-					inv.addItem(util.setAmount(result, amount));
-					util.sendMessage(p, "&7Successfully crafted &e" + amount + " " + name);
+					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
+					util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
 				}
 				else {
 					util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
