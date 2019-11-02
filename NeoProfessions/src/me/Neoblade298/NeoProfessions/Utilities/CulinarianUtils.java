@@ -66,12 +66,12 @@ public class CulinarianUtils {
 			util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
 		}
 		else if(amount == 49) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30*20, 0), true);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 5*20, 0), true);
 			util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7 (49/100).");
 		}
 		else if(amount == 69) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60*20, 0), true);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10*20, 0), true);
 			util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7 (69/100).");
 		}
 	}

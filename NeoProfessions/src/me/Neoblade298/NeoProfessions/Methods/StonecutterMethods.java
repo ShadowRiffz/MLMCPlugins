@@ -31,9 +31,9 @@ public class StonecutterMethods {
 	static final int GEM_ORES = 8;
 	static final int REFINE_COST = 500;
 	static final int REFINE_ORE = 3;
-	static final int REFINE_ESSENCE_0 = 10;
-	static final int REFINE_ESSENCE_1 = 9;
-	static final int REFINE_ESSENCE_2 = 7;
+	static final int REFINE_ESSENCE_0 = 7;
+	static final int REFINE_ESSENCE_1 = 6;
+	static final int REFINE_ESSENCE_2 = 5;
 	static final int REFINE_ESSENCE_3 = 4;
 	
 	public StonecutterMethods(Main main) {

@@ -61,7 +61,7 @@ public class CulinarianMethods {
 	final static int ASSIMILATE_COST = 100;
 	final static int SPECIAL_COST = 2000;
 	final static int SPECIAL_AMOUNT = 16;
-	final static int REMEDY_COST = 1000;
+	final static int REMEDY_COST = 100;
 	final static int REMEDY_ESSENCE = 1;
 	
 	public CulinarianMethods(Main main) {
