@@ -36,7 +36,7 @@ public class CulinarianCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/culinarian preserve [all]");
 				util.sendMessage(p, "&7- &c/culinarian special");
 				util.sendMessage(p, "&7- &c/culinarian assimilate");
-				util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence]");
+				util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence] [all]");
 				util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limited/drink/legendary] [itemname] <amount>");
 				return true;
 			}
@@ -106,7 +106,17 @@ public class CulinarianCommands implements CommandExecutor {
 				else if(args[0].equalsIgnoreCase("remedy")) {
 					if(args.length == 2) {
 						if(args[1].equalsIgnoreCase("stun") || args[1].equalsIgnoreCase("silence") || args[1].equalsIgnoreCase("curse") || args[1].equalsIgnoreCase("root")) {
-							culinarianMethods.remedy(p, args[1]);
+							culinarianMethods.remedy(p, args[1], false);
+							return true;
+						}
+						else {
+							util.sendMessage(p, "&cInvalid parameters!");
+							return true;
+						}
+					}
+					else if (args.length == 3) {
+						if(args[1].equalsIgnoreCase("all")) {
+							culinarianMethods.remedy(p, args[1], true);
 							return true;
 						}
 						else {

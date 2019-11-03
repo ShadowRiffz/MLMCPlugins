@@ -351,7 +351,7 @@ public class CulinarianMethods {
 		}
 	}
 	
-	public void remedy(Player p, String status) {
+	public void remedy(Player p, String status, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
@@ -367,25 +367,35 @@ public class CulinarianMethods {
 					}
 					if(isFood) {
 						int foodLevel = culinarianUtils.getRecipeLevel(item);
-						if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), REMEDY_ESSENCE)) {
-							if(econ.has(p, REMEDY_COST)) {
-								ItemMeta meta = item.getItemMeta();
-								ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-								lore.add("§9Remedies " + status);
-								meta.setLore(lore);
-								item.setItemMeta(meta);
-								p.getInventory().addItem(util.setAmount(item, 1));
-								p.getInventory().removeItem(common.getEssence(foodLevel));
-								p.getInventory().removeItem(util.setAmount(oldItem, 1));
-								econ.withdrawPlayer(p, REMEDY_COST);
-								util.sendMessage(p, "&7Successfully remedied dish!");
+						int repetitions = 1;
+						if (all) {
+							repetitions = oldItem.getAmount();
+						}
+						for (int i = 0; i < repetitions; i++) {
+							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), REMEDY_ESSENCE)) {
+								if(econ.has(p, REMEDY_COST)) {
+									ItemMeta meta = item.getItemMeta();
+									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+									lore.add("§9Remedies " + status);
+									meta.setLore(lore);
+									item.setItemMeta(meta);
+									p.getInventory().addItem(util.setAmount(item, 1));
+									p.getInventory().removeItem(common.getEssence(foodLevel));
+									p.getInventory().removeItem(util.setAmount(oldItem, 1));
+									econ.withdrawPlayer(p, REMEDY_COST);
+									if (i == repetitions - 1) {
+										util.sendMessage(p, "&7Successfully remedied dish!");
+									}
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the gold to remedy this!");
+									break;
+								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to remedy this!");
+								util.sendMessage(p, "&cYou lack the materials to remedy this!");
+								break;
 							}
-						}
-						else {
-							util.sendMessage(p, "&cYou lack the materials to remedy this!");
 						}
 					}
 					else {
