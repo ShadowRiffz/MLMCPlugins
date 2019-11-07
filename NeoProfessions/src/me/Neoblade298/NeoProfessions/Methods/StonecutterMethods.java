@@ -155,7 +155,7 @@ public class StonecutterMethods {
 					
 					int repetitions = 1;
 					if (all) {
-						repetitions = item.getAmount();
+						repetitions = item.getAmount() / cost;
 					}
 					
 					// Check if enough gold

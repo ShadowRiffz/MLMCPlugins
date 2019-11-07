@@ -83,8 +83,7 @@ public class CulinarianMethods {
 	
 	public void garnish(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
-		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if(!item.getType().equals(Material.AIR)) {
+		if(!oldItem.getType().equals(Material.AIR)) {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				int level = 0;
@@ -101,7 +100,7 @@ public class CulinarianMethods {
 				if(level != 0) {
 					boolean isFood = false;
 					boolean isBoosted = false;
-					for(String line : item.getItemMeta().getLore()) {
+					for(String line : oldItem.getItemMeta().getLore()) {
 						if(line.contains("Recipe")) {
 							isFood = true;
 						}
@@ -125,6 +124,7 @@ public class CulinarianMethods {
 							for (int i = 0; i < repetitions; i++) {
 								if(p.getInventory().containsAtLeast(common.getEssence(2), GARNISH_ESSENCE)) {
 									if(econ.has(p, GARNISH_COST)) {
+										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 										double multiplier = GARNISH_BOOST_BASE + (GARNISH_BOOST_PER_LVL * (level - 1));
@@ -173,8 +173,7 @@ public class CulinarianMethods {
 	
 	public void preserve(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
-		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if(!item.getType().equals(Material.AIR)) {
+		if(!oldItem.getType().equals(Material.AIR)) {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				int level = 0;
@@ -191,7 +190,7 @@ public class CulinarianMethods {
 				if(level != 0) {
 					boolean isFood = false;
 					boolean isBoosted = false;
-					for(String line : item.getItemMeta().getLore()) {
+					for(String line : oldItem.getItemMeta().getLore()) {
 						if(line.contains("Recipe")) {
 							isFood = true;
 						}
@@ -215,6 +214,7 @@ public class CulinarianMethods {
 							for (int i = 0; i < repetitions; i++) {
 								if(p.getInventory().containsAtLeast(common.getEssence(2), PRESERVE_ESSENCE)) {
 									if(econ.has(p, PRESERVE_COST)) {
+										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 										double multiplier = PRESERVE_BOOST_BASE + (PRESERVE_BOOST_PER_LVL * (level - 1));
@@ -263,8 +263,7 @@ public class CulinarianMethods {
 	
 	public void spice(Player p, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
-		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if(!item.getType().equals(Material.AIR)) {
+		if(!oldItem.getType().equals(Material.AIR)) {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				int level = 0;
@@ -281,7 +280,7 @@ public class CulinarianMethods {
 				if(level != 0) {
 					boolean isFood = false;
 					boolean isBoosted = false;
-					for(String line : item.getItemMeta().getLore()) {
+					for(String line : oldItem.getItemMeta().getLore()) {
 						if(line.contains("Recipe")) {
 							isFood = true;
 						}
@@ -305,6 +304,7 @@ public class CulinarianMethods {
 							for (int i = 0; i < repetitions; i++) {
 								if(p.getInventory().containsAtLeast(common.getEssence(2), SPICE_ESSENCE)) {
 									if(econ.has(p, SPICE_COST)) {
+										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
 										ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 										double multiplier = SPICE_BOOST_BASE + (SPICE_BOOST_PER_LVL * (level - 1));
@@ -353,20 +353,19 @@ public class CulinarianMethods {
 	
 	public void remedy(Player p, String status, boolean all) {
 		ItemStack oldItem = p.getInventory().getItemInMainHand().clone();
-		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if(!item.getType().equals(Material.AIR)) {
+		if(!oldItem.getType().equals(Material.AIR)) {
 			int invSpace = p.getInventory().firstEmpty();
 			if(invSpace != -1) {
 				if(p.hasPermission("culinarian.remedy." + status)) {
 					boolean isFood = false;
-					for(String line : item.getItemMeta().getLore()) {
+					for(String line : oldItem.getItemMeta().getLore()) {
 						if(line.contains("Recipe")) {
 							isFood = true;
 							break;
 						}
 					}
 					if(isFood) {
-						int foodLevel = culinarianUtils.getRecipeLevel(item);
+						int foodLevel = culinarianUtils.getRecipeLevel(oldItem);
 						int repetitions = 1;
 						if (all) {
 							repetitions = oldItem.getAmount();
@@ -374,6 +373,7 @@ public class CulinarianMethods {
 						for (int i = 0; i < repetitions; i++) {
 							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), REMEDY_ESSENCE)) {
 								if(econ.has(p, REMEDY_COST)) {
+									ItemStack item = oldItem.clone();
 									ItemMeta meta = item.getItemMeta();
 									ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 									lore.add("§9Remedies " + status);
