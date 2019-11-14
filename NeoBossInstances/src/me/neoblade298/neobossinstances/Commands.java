@@ -161,6 +161,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
 			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
 			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
+			sender.sendMessage("§4/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
 				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
