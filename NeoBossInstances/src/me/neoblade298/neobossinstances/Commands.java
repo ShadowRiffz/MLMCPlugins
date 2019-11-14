@@ -153,6 +153,48 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4[§c§lBosses§4] §7Set debug to §e" + main.isDebug + "§7!");
 		    	return true;
 		    }
+	    	// /boss instances
+		    else if (args.length == 1 && args[0].equalsIgnoreCase("instances")) {
+		    	if (!main.isInstance) {
+			    	String name = WordUtils.capitalize(args[1]);
+			    	if (main.cooldowns.keySet().contains(name)) {
+			    		try {
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							ResultSet rs;
+		
+				    		// Find available instance
+							for (String instance : main.instanceNames) {
+								rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE instance = '" + instance + "';");
+								
+								// Empty instance
+								if (!rs.next()) {
+									sender.sendMessage("§e" + instance + "§7: Empty");
+								}
+								else {
+									String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
+									while (rs.next()) {
+										temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
+									}
+									if (temp != null) {
+										sender.sendMessage(temp);
+									}
+								}
+							}
+			    		}
+			    		catch (Exception e) {
+			    			e.printStackTrace();
+			    		}
+			    	}
+			    	else {
+						p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
+			    	}
+		    	}
+		    	else {
+					sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
+		    	}
+		    	return true;
+		    }
 	    }
 	    
 	    
@@ -161,7 +203,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
 			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
 			sender.sendMessage("§c/boss instances [name] §7- Shows instances for boss");
-			sender.sendMessage("§4/boss return §7- Returns you safely to the main server");
+			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
 				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
@@ -171,6 +213,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
 				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
+				sender.sendMessage("§4/boss instances §7- Shows all players in instances");
 			}
 			return true;
 	    }
