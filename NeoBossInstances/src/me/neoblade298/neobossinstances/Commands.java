@@ -156,39 +156,33 @@ public class Commands implements CommandExecutor {
 	    	// /boss instances
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("instances")) {
 		    	if (!main.isInstance) {
-			    	String name = WordUtils.capitalize(args[1]);
-			    	if (main.cooldowns.keySet().contains(name)) {
-			    		try {
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-							Statement stmt = con.createStatement();
-							ResultSet rs;
-		
-				    		// Find available instance
-							for (String instance : main.instanceNames) {
-								rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE instance = '" + instance + "';");
-								
-								// Empty instance
-								if (!rs.next()) {
-									sender.sendMessage("§e" + instance + "§7: Empty");
+		    		try {
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+	
+			    		// Find available instance
+						for (String instance : main.instanceNames) {
+							rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE instance = '" + instance + "';");
+							
+							// Empty instance
+							if (!rs.next()) {
+								sender.sendMessage("§e" + instance + "§7: Empty");
+							}
+							else {
+								String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
+								while (rs.next()) {
+									temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
 								}
-								else {
-									String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
-									while (rs.next()) {
-										temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
-									}
-									if (temp != null) {
-										sender.sendMessage(temp);
-									}
+								if (temp != null) {
+									sender.sendMessage(temp);
 								}
 							}
-			    		}
-			    		catch (Exception e) {
-			    			e.printStackTrace();
-			    		}
-			    	}
-			    	else {
-						p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
-			    	}
+						}
+		    		}
+		    		catch (Exception e) {
+		    			e.printStackTrace();
+		    		}
 		    	}
 		    	else {
 					sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
