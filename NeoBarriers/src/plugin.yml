@@ -1,0 +1,9 @@
+name: NeoBarriers
+author: Neoblade298
+main: me.neoblade298.neobarriers.Main
+version: 1.0
+api-version: 1.14
+commands:
+  barriers:
+    description: Opens a help menu
+    usage: /barriers

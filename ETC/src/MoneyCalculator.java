@@ -31,10 +31,8 @@ public class MoneyCalculator {
 		
 		int count = 0;
 		for (String p : players.keySet()) {
-			if (players.get(p) > 5000) {
-				System.out.println(p + ": " + players.get(p));
-				count++;
-			}
+			System.out.println("  - /eco take " + p + " " + players.get(p));
+			count++;
 		}
 		System.out.println("Total players: " + count);
 		
