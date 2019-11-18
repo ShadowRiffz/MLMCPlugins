@@ -30,14 +30,16 @@ public class Main extends JavaPlugin implements Listener {
 	public void onPlace(BlockPlaceEvent e) {
 		Player p = e.getPlayer();
 		Block block = e.getBlock();
-		if (p.getGameMode().equals(GameMode.CREATIVE)) {
-			if (yvalues.containsKey(p.getName())) {
-				Location loc = block.getLocation();
-				for (int i = block.getY() + 1; i <= yvalues.get(p.getName()); i++) {
-					loc.add(0, 1, 0);
-					Block blockAtLoc = loc.getBlock();
-					if (blockAtLoc.getType().equals(Material.AIR)) {
-						blockAtLoc.setType(Material.BARRIER);
+		if (block.getType().equals(Material.BARRIER)) {
+			if (p.getGameMode().equals(GameMode.CREATIVE)) {
+				if (yvalues.containsKey(p.getName())) {
+					Location loc = block.getLocation();
+					for (int i = block.getY() + 1; i <= yvalues.get(p.getName()); i++) {
+						loc.add(0, 1, 0);
+						Block blockAtLoc = loc.getBlock();
+						if (blockAtLoc.getType().equals(Material.AIR)) {
+							blockAtLoc.setType(Material.BARRIER);
+						}
 					}
 				}
 			}
