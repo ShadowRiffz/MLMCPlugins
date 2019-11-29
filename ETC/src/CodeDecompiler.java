@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class CodeDecompiler {
@@ -13,6 +12,7 @@ public class CodeDecompiler {
 		try {
 			Scanner scan = new Scanner(file);
 			writer = new BufferedWriter(new FileWriter("C:\\Users\\Alex\\Desktop\\decompiled.txt"));
+			System.out.println(binaryToDecimal("11111"));
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
 				String opcode = line.substring(0, 4);
@@ -33,7 +33,7 @@ public class CodeDecompiler {
 					break;
 				case "0011":
 					code += "Branch ";
-					type = "I";
+					type = "B";
 					break;
 				case "0100":
 					code += "Get/Set ";
@@ -86,7 +86,7 @@ public class CodeDecompiler {
 					String imm1 = line.substring(4, 9);
 					code += binaryToDecimal(imm1);
 					break;
-				case "X":
+				case "B":
 					String imm2 = line.substring(5, 9);
 					if (line.charAt(4) == '1') {
 						code += -binaryToDecimal(imm2);
@@ -95,17 +95,16 @@ public class CodeDecompiler {
 						code += binaryToDecimal(imm2);
 					}
 					break;
+				case "X":
+					String imm = line.substring(4, 8);
+					code += binaryToDecimal(imm) + " ";
+					code += line.charAt(8);
+					break;
 				}
 				
 				
 				if (type != "") {
-					if (code.length() > 9) {
-						writer.append("Error at " + line + "\n");
-					}
-					else {
-						System.out.println(code);
-						writer.append(code + "\n");
-					}
+					writer.append(code + "\n");
 				}
 			}
 			writer.close();
@@ -123,7 +122,7 @@ public class CodeDecompiler {
 		char[] bins = bin.toCharArray();
 		int dec = 0;
 		for (int i = 0; i < bins.length; i++) {
-			dec += ((int) bins[i]) * (Math.pow(2, bins.length - i - 1));
+			dec += Character.getNumericValue(bins[i]) * (Math.pow(2, bins.length - i - 1));
 		}
 		return dec;
 	}

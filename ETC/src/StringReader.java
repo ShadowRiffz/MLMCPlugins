@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class StringReader {
@@ -12,7 +11,7 @@ public class StringReader {
 		BufferedWriter writer;
 		try {
 			Scanner scan = new Scanner(file);
-			writer = new BufferedWriter(new FileWriter("C:\\Users\\Alex\\Desktop\\machine code.txt"));
+			writer = new BufferedWriter(new FileWriter("C:\\Users\\Alex\\Desktop\\machine_code.txt"));
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
 				line = line.replace("\t", " ");
@@ -36,7 +35,7 @@ public class StringReader {
 						break;
 					case "Branch":
 						code += "0011";
-						type = "I";
+						type = "B";
 						break;
 					case "Get/Set":
 						code += "0100";
@@ -86,6 +85,14 @@ public class StringReader {
 						break;
 					case "I":
 						code += convertToBinary(arguments[1], 5);
+						break;
+					case "B":
+						if (arguments[1].charAt(0) == '-') {
+							code += "1" + convertToBinary(arguments[1].substring(1), 4);
+						}
+						else {
+							code += "0" + convertToBinary(arguments[1], 4);
+						}
 						break;
 					case "X":
 						code += convertToBinary(arguments[1], 4);
