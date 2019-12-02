@@ -12,7 +12,6 @@ public class CodeDecompiler {
 		try {
 			Scanner scan = new Scanner(file);
 			writer = new BufferedWriter(new FileWriter("C:\\Users\\Alex\\Desktop\\decompiled.txt"));
-			System.out.println(binaryToDecimal("11111"));
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
 				String opcode = line.substring(0, 4);
