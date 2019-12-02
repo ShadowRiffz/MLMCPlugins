@@ -163,7 +163,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		System.out.println(e.getPlayer().getName());
 		if (p.hasPermission("tdeleter.admin")) {
 			if (deletableTowns.size() > 0) {
 				String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
