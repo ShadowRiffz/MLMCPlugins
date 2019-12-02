@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.conditions.MobsInRadiusCondition;
 
@@ -38,6 +39,15 @@ public class Main extends JavaPlugin implements Listener {
 	    // Get command listener
 	    this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
+
+	    // Temporarily reload mythicmobs because dev build doesn't load properly
+		BukkitRunnable reload = new BukkitRunnable() {
+			public void run() {
+				getServer().dispatchCommand(getServer().getConsoleSender(), "mm reload");
+				log.info("Reloading MM via command!");
+			}
+		};
+		reload.runTaskLater(this, 200L);
 	}
 	
 	public void onDisable(){
@@ -105,17 +115,4 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	/*
-	 * Registers all of the custom drops when MythicDropLoadEvent is called
-	 */
-	/*@EventHandler
-	public void onMythicDropLoad(MythicDropLoadEvent event)	{
-		log.info("MythicDropLoadEvent called for drop " + event.getDropName());
-
-		if(event.getDropName().equalsIgnoreCase("SPECIAL"))	{
-			Drop drop = new SpecialItem(event.getConfig());
-			event.register(drop);
-			log.info("-- Registered SPECIAL drop!");
-		}
-	}*/
 }
