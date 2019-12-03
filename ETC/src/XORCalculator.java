@@ -51,7 +51,7 @@ public class XORCalculator {
 				rp1 = getBit(p1 ^ cp1);
 				rp16 = getBit(p16 ^ cp16);
 				
-				System.out.println("b[" + i + "]: " + rp8 + " " + rp4 + " " + rp2 + " " + rp1 + " " + rp16);
+				System.out.println("b[" + i + "]: " + rp8 + " " + rp4 + " " + rp2 + " " + rp1);
 				corruptWord[i] = !corruptWord[i];
 			}
 		}
@@ -82,7 +82,7 @@ public class XORCalculator {
 					rp1 = getBit(p1 ^ cp1);
 					rp16 = getBit(p16 ^ cp16);
 					
-					System.out.println("b[" + i + "], b[ " + j + "]: " + rp8 + " " + rp4 + " " + rp2 + " " + rp1 + " " + rp16);
+					System.out.println("b[" + i + "], b[ " + j + "]: " + rp8 + " " + rp4 + " " + rp2 + " " + rp1);
 					corruptWord[i] = !corruptWord[i];
 					corruptWord[j] = !corruptWord[j];
 				}
