@@ -28,6 +28,7 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 1 && args[0].equalsIgnoreCase("confirm") && p.hasPermission("tdeleter.admin")) {
 			if (this.main.deletableTowns.size() > 0) {
 				this.main.deleteTowns();
+				this.main.deletableTowns.clear();
 				return true;
 			}
 			else {

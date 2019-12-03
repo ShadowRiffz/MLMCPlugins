@@ -128,6 +128,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		
 		// If there are less than 5 towns that can be deleted, delete them; otherwise wait for confirmation
+		Bukkit.getServer().getLogger().info("Found " + deletableTowns.size() + " deletable towns");
 		if (deletableTowns.size() < 5) {
 			deleteTowns();
 		}
@@ -163,15 +164,20 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if (p.hasPermission("tdeleter.admin")) {
-			if (deletableTowns.size() > 0) {
-				String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
-				for (Town town : deletableTowns) {
-					msg += town.getName() + " ";
+		BukkitRunnable msg = new BukkitRunnable() {
+			public void run() {
+				if (p.hasPermission("tdeleter.admin")) {
+					if (deletableTowns.size() > 0) {
+						String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+						for (Town town : deletableTowns) {
+							msg += town.getName() + " ";
+						}
+						p.sendMessage(msg);
+						p.sendMessage("§4[§c§lMLMC§4] §7Type §e/tdelete confirm §7to delete all listed towns.");
+					}
 				}
-				p.sendMessage(msg);
-				p.sendMessage("§4[§c§lMLMC§4] §7Type §e/tdelete confirm §7to delete all listed towns.");
 			}
-		}
+		};
+		msg.runTaskLater(this, 60L);
 	}
 }
