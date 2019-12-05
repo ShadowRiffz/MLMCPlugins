@@ -15,11 +15,11 @@ public class StringReader {
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
 				line = line.replace("\t", " ");
-				System.out.println("Line: " + line);
 				String[] arguments = line.split(" ");
+				System.out.println(line);
 				String code = "";
 				String type = "";
-				if (!arguments[0].contains("--")) {
+				if (!arguments[0].contains("-")) {
 					switch (arguments[0]) {
 					case "Add":
 						code += "0000";
@@ -69,6 +69,18 @@ public class StringReader {
 						code += "1011";
 						type = "R";
 						break;
+					case "FlipBit":
+						code += "1100";
+						type = "I";
+						break;
+					case "BranchRegOff":
+						code += "1101";
+						type = "R";
+						break;
+					case "LTE":
+						code += "1110";
+						type = "R";
+						break;
 					case "Reset":
 						code += "1111";
 						type = "R";
@@ -98,16 +110,18 @@ public class StringReader {
 						code += convertToBinary(arguments[1], 4);
 						code += arguments[2];
 						break;
+					default:
+						code = "Error!! making sure writer sees";
+						break;
 					}
 					
 				}
 				
 				if (type != "") {
-					if (code.length() > 9) {
+					if (code.length() != 9) {
 						writer.append("Error at " + line + "\n");
 					}
 					else {
-						System.out.println(code);
 						writer.append(code + "\n");
 					}
 				}
@@ -140,7 +154,6 @@ public class StringReader {
 	}
 	
 	static String convertToBinary(String immediate, int length) {
-		System.out.println(immediate);
 		int num = Integer.parseInt(immediate);
 		String binString = null;
 		if (num < 0) {

@@ -28,13 +28,26 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 1 && args[0].equalsIgnoreCase("confirm") && p.hasPermission("tdeleter.admin")) {
 			if (this.main.deletableTowns.size() > 0) {
 				this.main.deleteTowns();
-				this.main.deletableTowns.clear();
 				return true;
 			}
 			else {
 				p.sendMessage("§4[§c§lMLMC§4] §7No towns can currently be deleted! Try §e/tdelete sweep§7?");
 				return true;
 			}
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("list") && p.hasPermission("tdeleter.admin")) {
+			String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+			for (Town town : main.deletableTowns) {
+				msg += town.getName() + " ";
+			}
+			p.sendMessage(msg);
+			return true;
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("debug") && p.hasPermission("tdeleter.admin")) {
+			main.debug = !main.debug;
+			String msg = "§4[§c§lMLMC§4] §7Debug is now §e" + main.debug;
+			p.sendMessage(msg);
+			return true;
 		}
 		else if (args.length == 1 && p.hasPermission("tdeleter.admin")) {
 			try {
@@ -48,6 +61,7 @@ public class Commands implements CommandExecutor {
 						e.printStackTrace();
 					}
 					TownyUniverse.getDataSource().removeTown(town);
+					main.deletableTowns.remove(town);
 					Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
 				}
 			}

@@ -14,6 +14,7 @@ public class CodeDecompiler {
 			writer = new BufferedWriter(new FileWriter("C:\\Users\\Alex\\Desktop\\decompiled.txt"));
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
+				System.out.println(line);
 				String opcode = line.substring(0, 4);
 				String code = "";
 				String type = "";
@@ -64,6 +65,18 @@ public class CodeDecompiler {
 					break;
 				case "1011":
 					code += "BranchReg ";
+					type = "R";
+					break;
+				case "1100":
+					code += "FlipBit ";
+					type = "I";
+					break;
+				case "1101":
+					code += "BranchRegOff ";
+					type = "R";
+					break;
+				case "1110":
+					code += "LessThanEqual ";
 					type = "R";
 					break;
 				case "1111":

@@ -18,6 +18,7 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public List<Town> deletableTowns = new ArrayList<Town>();
+	public boolean debug = false;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoTownDeleter Enabled");
@@ -121,6 +122,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		deletableTowns.clear();
 		List<Town> towns = TownyUniverse.getDataSource().getTowns();
 		for (Town town : towns) {
+			if (debug) {
+				Bukkit.getServer().getLogger().info("Checking if " + town.getName() + " can be deleted");
+			}
 			// Make list of towns that can be deleted
 			if (checkTownInactive(town)) {
 				deletableTowns.add(town);
@@ -129,6 +133,11 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		// If there are less than 5 towns that can be deleted, delete them; otherwise wait for confirmation
 		Bukkit.getServer().getLogger().info("Found " + deletableTowns.size() + " deletable towns");
+		if (debug) {
+			for (Town town : deletableTowns) {
+				Bukkit.getServer().getLogger().info(town.getName() + " can be deleted");
+			}
+		}
 		if (deletableTowns.size() < 5) {
 			deleteTowns();
 		}
