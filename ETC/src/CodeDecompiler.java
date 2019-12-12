@@ -76,7 +76,7 @@ public class CodeDecompiler {
 					type = "R";
 					break;
 				case "1110":
-					code += "LessThanEqual ";
+					code += "LTE ";
 					type = "R";
 					break;
 				case "1111":

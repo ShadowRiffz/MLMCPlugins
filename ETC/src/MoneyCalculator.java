@@ -12,9 +12,9 @@ public class MoneyCalculator {
 			while (scan.hasNext()) {
 				String line = scan.nextLine();
 				String[] arguments = line.split(" ");
-				if (arguments[0].contains("/eco")) {
-					String player = arguments[2];
-					int amount = Integer.parseInt(arguments[3]);
+				if (arguments[4].contains("/eco")) {
+					String player = arguments[6];
+					int amount = Integer.parseInt(arguments[7]);
 					if (players.containsKey(player)) {
 						int newTotal = players.get(player) + amount;
 						players.put(player, newTotal);
