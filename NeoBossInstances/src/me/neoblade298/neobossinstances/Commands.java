@@ -111,9 +111,9 @@ public class Commands implements CommandExecutor {
 		    	for (String boss : main.cooldowns.keySet()) {
 		    		if (main.cooldowns.get(boss).containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
 		    			main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
-						sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns for player!");
 		    		}
 		    	}
+				sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns for player!");
 		    	return true;
 		    }
 		    // /boss resetallcds
@@ -221,7 +221,7 @@ public class Commands implements CommandExecutor {
 		    	Player p = (Player) sender;
 		    	String name = WordUtils.capitalize(args[1]);
 		    	if (name.equalsIgnoreCase("all")) {
-		    		for (String boss : main.cooldowns.keySet()) {
+		    		for (String boss : main.bossNames) {
 		    			main.getCooldown(boss, p);
 		    		}
 	    			return true;

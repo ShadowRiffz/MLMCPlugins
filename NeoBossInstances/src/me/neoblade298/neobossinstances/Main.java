@@ -58,6 +58,7 @@ public class Main extends JavaPlugin implements Listener {
 	// payload is last fought
 	public HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
 	public HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
+	public ArrayList<String> bossNames = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 
@@ -96,6 +97,7 @@ public class Main extends JavaPlugin implements Listener {
 				for (String boss : bosses.getKeys(false)) {
 					HashMap<String, Long> cds = new HashMap<String, Long>();
 					cooldowns.put(boss, cds);
+					bossNames.add(boss);
 					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
 					while (rs.next()) {
 						cds.put(rs.getString(1), rs.getLong(3));
@@ -112,9 +114,10 @@ public class Main extends JavaPlugin implements Listener {
 			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
 			int cooldown = bossSection.getInt("Cooldown");
 			String cmd = bossSection.getString("Command");
+			String displayName = bossSection.getString("Display-Name");
 			
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
-			bossInfo.put(boss, new Boss(loc, cmd, cooldown));
+			bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName));
 		}
 
 		Bukkit.getServer().getLogger().info("NeoBossInstances Enabled");
@@ -310,7 +313,6 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			pex.getUser(p).setPermissions(permList);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -351,22 +353,22 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public boolean getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
+			int cooldown = bossInfo.get(name).getCooldown() * 1000;
+			String displayName = bossInfo.get(name).getDisplayName();
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
-				int cooldown = bossInfo.get(name).getCooldown() * 1000;
-				
 				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7is off cooldown!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 6000;
 					temp /= 10;
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7has §c" + temp + " §7minutes remaining!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
 				}
 			}
 			else {
-    			p.sendMessage("§4[§c§lBosses§4] §l" + name + " §7is off cooldown!");
+    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 			}
 			return true;
 		}
