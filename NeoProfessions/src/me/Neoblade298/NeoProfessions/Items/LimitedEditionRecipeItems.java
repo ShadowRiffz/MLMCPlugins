@@ -258,7 +258,7 @@ public class LimitedEditionRecipeItems {
 	public ArrayList<ItemStack> getCandyCaneRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.RED_DYE, 4));
-		recipe.add(new ItemStack(Material.BONE_MEAL, 2));
+		recipe.add(new ItemStack(Material.WHITE_DYE, 2));
 		recipe.add(new ItemStack(Material.SUGAR, 3));
 		return recipe;
 	}
