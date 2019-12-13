@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
+import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class IngredientRecipeItems {
@@ -16,6 +17,28 @@ public class IngredientRecipeItems {
 	public IngredientRecipeItems() {
 		util = new Util();
 	}
+	
+	String BASE64_R1 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk0Y2M3MjVlM2VjNDJkOTc0NjQwNDMxODBiNmEyYTZiNmYwZGU4OGNkZjY0NmM2NDk0NTIwODM2YTQ4YThiNyJ9fX0";
+	String BASE64_R2 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTYxYTkxOGMwYzQ5YmE4ZDA1M2U1MjJjYjkxYWJjNzQ2ODkzNjdiNGQ4YWEwNmJmYzFiYTkxNTQ3MzA5ODVmZiJ9fX0";
+	String BASE64_R3 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzk4NDcyM2Q0NzhhNzliYWQ1ZWI3OTY5ZjgzOWJiZGQxYWY3MzgyNGJjODhkMGJkZGFjZDFlZjgxNzYyNWMwMCJ9fX0";
+	String BASE64_R4 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTE5OTdkYTY0MDQzYjI4NDgyMjExNTY0M2E2NTRmZGM0ZThhNzIyNjY2NGI0OGE0ZTFkYmI1NTdiNWMwZmUxNCJ9fX0";
+	String BASE64_R5 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTg5NTBkMWEwYjhjY2YwNjNlNzUxOWZlMzY5Y2FkMTVjY2UzMjA1NmZhNDcyYTk5YWEzMGI1ZmI0NDhmZjYxNCJ9fX0";
+	String BASE64_R6 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzhiNzUyZTUyMzJiMDM5YjFlNzVlNDU0MTgzYTE5MmQ0MDU3YjdjYTgzMmY3YzI0YTVmZDg2Nzk2OWNiNGQifX19";
+	String BASE64_R7 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjY2YjE5ZjdkNjM1ZDAzNDczODkxZGYzMzAxN2M1NDkzNjMyMDlhOGY2MzI4YTg1NDJjMjEzZDA4NTI1ZSJ9fX0";
+	String BASE64_R8 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTU3ZmQ1NmNhMTU5Nzg3NzkzMjRkZjUxOTM1NGI2NjM5YThkOWJjMTE5MmM3YzNkZTkyNWEzMjliYWVmNmMifX19";
+	String BASE64_R9 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjBlMWE1YWFkZjNmYTc1NjcyNGMyZjkxNmVhOWM1MmFjNzlmOGIxM2EyY2ZmZTkxNDg1MjFlZTNjYmJmYSJ9fX0";
+	String BASE64_R10 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19";
+	String BASE64_R11 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmUxYzdhYzQzNmMwZTQ5NzJkMDkzYThmNjMzMDY0MDllM2ZhNTMyMWRiNGJmMTA2ZjRlZjFkODBjYzM2MDc3NCJ9fX0";
+	String BASE64_R12 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjliZTgzOTA1OTY4ZTJlMzQwZjY2YTRkNzM4OTUyYTJkMTUxMjEyYmUyNDhiNjM0ZWJkNzNiZGU2Njc1MzIifX19";
+	String BASE64_R13 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmRjNTVmNDNlM2Q4NDIwOTc1MTg5YTcwZmVhNGRmNzc5MWU0ZTEwMGI0MTYzZDYxNWI5YzBkMjBiMWRmYjJiZSJ9fX0";
+	String BASE64_R14 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmNlMDM2ZTMyN2NiOWQ0ZDhmZWYzNjg5N2E4OTYyNGI1ZDliMThmNzA1Mzg0Y2UwZDdlZDFlMWZjN2Y1NiJ9fX0";
+	String BASE64_R15 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhNGM3M2QyMWJiM2JlMzM5YWI5NzM3ZTQ4NmNhMTA1NmJmZjhkOTg4M2I5NzM5MGViMzI2OTFmNDk2OSJ9fX0";
+	String BASE64_R16 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzZjMDFiZmZlY2ZkYWI2ZDNjMGYxYTdjNmRmNmFhMTkzNmYyYWE3YTUxYjU0YTRkMzIzZTFjYWNiYzUzOSJ9fX0";
+	String BASE64_R17 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ1NjZiYzczZGE4ZjA0YTc0YTE4MGJjM2VhMTk3ZThlNGI2YTEzZmI4ZDZhMTU2MGMwZjlhMmFjMThmNTQ4ZSJ9fX0";
+	String BASE64_R18 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDI3NDIzZDVjY2U0YTQ3MmE3NjBjZTVlODYyY2EzNWY3MDU4ZDU4N2I3ZWFiNjllYmVjOTIwYzc3M2U3MzA3In19fQ";
+	String BASE64_R19 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjljMmRkZjJiZDc0YTQ2NTVlOGYwMTUzYTc0NTNlNjdkYjJhMjFkYmZhYzY3NTY3ODk0ODFhZGJlYzQ4M2EifX19";
+	String BASE64_R20 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWViZjRiZDhkMjE2OWYxMDI3MzhiZmUyYmY3Y2ZlZDY5NTc3YjdjZjY3MjFhZmI3YTYyNGE4NTcwM2JiZDRiIn19fQ";
+	String BASE64_R21 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmIzMWE4MTEyNWI1M2VjOGZmMTFkMDlkYjM3YTJkZDQ0MmM0MjdiNWMzNmQ0YzZiYTVjMTlkY2QwMmU2MzEifX19";
 
 	// Ingredients
 	public ArrayList<ItemStack> getIngredients() {
@@ -45,7 +68,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getSalt() {
-		ItemStack item = new ItemStack(Material.SUGAR);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eSalt");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -56,7 +79,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getSpices() {
-		ItemStack item = new ItemStack(Material.WHEAT_SEEDS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R2);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eSpices");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -67,7 +90,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getGreens() {
-		ItemStack item = new ItemStack(Material.GREEN_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R3);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eGreens");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -78,7 +101,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getToast() {
-		ItemStack item = new ItemStack(Material.BREAD);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R4);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eToast");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -89,7 +112,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getOil() {
-		ItemStack item = new ItemStack(Material.SPLASH_POTION);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R5);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eOil");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -100,7 +123,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getTomato() {
-		ItemStack item = new ItemStack(Material.APPLE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R6);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eTomato");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -111,7 +134,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getButter() {
-		ItemStack item = new ItemStack(Material.YELLOW_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R7);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eButter");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -122,7 +145,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getLemon() {
-		ItemStack item = new ItemStack(Material.GLISTERING_MELON_SLICE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R8);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eLemon");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -133,7 +156,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getCorn() {
-		ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R9);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eCorn");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -144,7 +167,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getHoney() {
-		ItemStack item = new ItemStack(Material.YELLOW_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R10);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eHoney");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -155,7 +178,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getYeast() {
-		ItemStack item = new ItemStack(Material.MELON_SEEDS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R11);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eYeast");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -166,7 +189,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getBeetrootSauce() {
-		ItemStack item = new ItemStack(Material.BEETROOT_SOUP);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R12);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eBeetroot Sauce");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -177,7 +200,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getPasta() {
-		ItemStack item = new ItemStack(Material.BEETROOT_SEEDS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R13);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§ePasta");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -188,7 +211,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getOnion() {
-		ItemStack item = new ItemStack(Material.BEETROOT);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R14);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eOnion");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -199,7 +222,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getHops() {
-		ItemStack item = new ItemStack(Material.COCOA_BEANS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R15);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eHops");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -210,7 +233,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getCheese() {
-		ItemStack item = new ItemStack(Material.ORANGE_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R16);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eCheese");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -221,7 +244,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getTortilla() {
-		ItemStack item = new ItemStack(Material.COOKIE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R17);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eTortilla");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -232,7 +255,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getExoticGreens() {
-		ItemStack item = new ItemStack(Material.GREEN_DYE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R18);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eExotic Greens");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -243,7 +266,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getRice() {
-		ItemStack item = new ItemStack(Material.PUMPKIN_SEEDS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R19);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§eRice");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -254,7 +277,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getPopcorn() {
-		ItemStack item = new ItemStack(Material.BEETROOT_SEEDS);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R20);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§ePopcorn");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -265,7 +288,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getPepper() {
-		ItemStack item = new ItemStack(Material.SUGAR_CANE);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R21);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§ePeppers");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -276,7 +299,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getVodka() {
-		ItemStack item = new ItemStack(Material.POTION);
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R1);
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		meta.setColor(Color.fromRGB(255, 255, 255));
 		meta.setDisplayName("§eVodka");
