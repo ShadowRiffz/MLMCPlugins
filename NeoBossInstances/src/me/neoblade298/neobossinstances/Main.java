@@ -61,6 +61,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ArrayList<String> bossNames = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
+	HashMap<String, ArrayList<Player>> activeRaids = new HashMap<String, ArrayList<Player>>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -109,15 +110,22 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 
-		// Populate boss information
+		// Populate boss and raid  information
 		for (String boss : bosses.getKeys(false)) {
 			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
 			int cooldown = bossSection.getInt("Cooldown");
 			String cmd = bossSection.getString("Command");
 			String displayName = bossSection.getString("Display-Name");
+			boolean isRaid = bossSection.getBoolean("Is-Raid");
+			int timeLimit = bossSection.getInt("Time-Limit");
 			
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
-			bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName));
+			if (isRaid) {
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit));
+			}
+			else {
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName));
+			}
 		}
 
 		Bukkit.getServer().getLogger().info("NeoBossInstances Enabled");
@@ -200,25 +208,59 @@ public class Main extends JavaPlugin implements Listener {
 							boss = rs.getString(2);
 	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
-    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
-    				    			public void run() {
-    		    						p.setHealth(p.getMaxHealth());
-    		    						// Only spawn boss if it hasn't been spawned before
-    		    						if (!activeBosses.contains(boss)) {
-    		    							activeBosses.add(boss);
-        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+	    						// Handle raid starts
+	    						if (bossInfo.get(boss).isRaid()) {
+	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
+	    				    			public void run() {
+	    		    						p.setHealth(p.getMaxHealth());
+	    		    						if (activeRaids.containsKey(boss)) {
+	    		    							ArrayList<Player> raid = new ArrayList<Player>();
+	    		    							raid.add(p);
+	    		    							activeRaids.put(boss, raid);
+	    		    						}
+	    		    						else {
+	    		    							activeRaids.get(boss).add(p);
+	    		    						}
 
-    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
-    		    				    			public void run() {
-    		    				    				activeBosses.remove(boss);
-    		    				    			}
-    		    				    		};
-    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
-    		    						}
-    				    			}
-    				    		};
-    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
-    				    		this.cancel();
+	    		    						// Only start timer if it hasn't already been started
+	    		    						if (!activeBosses.contains(boss)) {
+	    		    							scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
+	    		    							activeBosses.add(boss);
+
+	    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
+	    		    				    			public void run() {
+	    		    				    				activeBosses.remove(boss);
+	    		    				    			}
+	    		    				    		};
+	    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
+	    		    						}
+	    				    			}
+	    				    		};
+	    				    		startRaid.runTaskLater(main, 60);
+	    				    		this.cancel();
+	    						}
+	    						// Handle regular boss
+	    						else {
+	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
+	    				    			public void run() {
+	    		    						p.setHealth(p.getMaxHealth());
+	    		    						// Only spawn boss if it hasn't been spawned before
+	    		    						if (!activeBosses.contains(boss)) {
+	    		    							activeBosses.add(boss);
+	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+
+	    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
+	    		    				    			public void run() {
+	    		    				    				activeBosses.remove(boss);
+	    		    				    			}
+	    		    				    		};
+	    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
+	    		    						}
+	    				    			}
+	    				    		};
+	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
+	    				    		this.cancel();
+	    						}
 	    					}
 	    					// Retried 3 times, time to teleport them out
 	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
@@ -246,6 +288,46 @@ public class Main extends JavaPlugin implements Listener {
     		};
     		sendPlayer.runTaskTimer(this, 60L, 60L);
 		}
+	}
+	
+	public void scheduleTimer(int time, String boss) {
+		int ticks = time * 20;
+		// 30 minute warning
+		if (time > 1800) {
+			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
+		}
+		// 15 minute warning
+		if (time > 900) {
+			scheduleWarning(ticks, 18000, "§e15 §cminutes", boss);
+		}
+		scheduleWarning(ticks, 6000, "§e5 §cminutes", boss);
+		scheduleWarning(ticks, 3600, "§e3 §cminutes", boss);
+		scheduleWarning(ticks, 2400, "§e2 §cminutes", boss);
+		scheduleWarning(ticks, 1200, "§e1 §cminute", boss);
+
+		BukkitRunnable kickPlayer = new BukkitRunnable() {
+			public void run() {
+				if (activeRaids.containsKey(boss)) {
+    				for (Player p : activeRaids.get(boss)) {
+    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
+    				}
+				}
+			}
+		};
+		kickPlayer.runTaskLater(main, ticks);
+	}
+	
+	public void scheduleWarning(int ticks, int timeToWarn, String time, String boss) {
+		BukkitRunnable warnPlayer = new BukkitRunnable() {
+			public void run() {
+				if (activeRaids.containsKey(boss)) {
+    				for (Player p : activeRaids.get(boss)) {
+    					p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
+    				}
+				}
+			}
+		};
+		warnPlayer.runTaskLater(main, ticks - timeToWarn);
 	}
 	
 	public String findInstance(String boss) {
@@ -320,6 +402,13 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void handleLeave(Player p) {
 		pex.getUser(p).setPermissions(new ArrayList<String>());
+		// Remove player from all raids
+		for (String boss : activeRaids.keySet()) {
+			activeRaids.get(boss).remove(p);
+			if (activeRaids.get(boss).size() == 0) {
+				activeRaids.remove(boss);
+			}
+		}
     	// Delete player from all fights
 		String uuid = p.getUniqueId().toString();
 		try {
@@ -332,7 +421,6 @@ public class Main extends JavaPlugin implements Listener {
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		pex.getUser(p).setPermissions(new ArrayList<String>());
 		
 		BukkitRunnable handle = new BukkitRunnable() {
 			public void run() {
