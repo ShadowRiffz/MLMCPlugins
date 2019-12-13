@@ -226,6 +226,7 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						if (!activeBosses.contains(boss)) {
 	    		    							scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
 	    		    							activeBosses.add(boss);
+	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
 
 	    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
 	    		    				    			public void run() {
