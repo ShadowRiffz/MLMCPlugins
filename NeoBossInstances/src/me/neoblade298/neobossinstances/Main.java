@@ -213,7 +213,7 @@ public class Main extends JavaPlugin implements Listener {
 	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
 	    				    			public void run() {
 	    		    						p.setHealth(p.getMaxHealth());
-	    		    						if (activeRaids.containsKey(boss)) {
+	    		    						if (!activeRaids.containsKey(boss)) {
 	    		    							ArrayList<Player> raid = new ArrayList<Player>();
 	    		    							raid.add(p);
 	    		    							activeRaids.put(boss, raid);
