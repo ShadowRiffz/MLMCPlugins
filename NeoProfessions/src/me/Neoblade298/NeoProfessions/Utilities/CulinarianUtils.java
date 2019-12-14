@@ -16,7 +16,7 @@ import net.milkbowl.vault.economy.Economy;
 public class CulinarianUtils {
 	
 	static final int CRAFT_COST = 1;
-	static final int NUM_PER_CRAFT = 4;
+	static final int NUM_PER_CRAFT = 3;
 	static Random gen = new Random();
 	Util util;
 	
