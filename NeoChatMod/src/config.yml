@@ -1,0 +1,45 @@
+punish-command: pmute %player% Said banned word!
+mute-tutorial: true
+
+banned-words:
+  - nigger
+  - niggers
+  - nigs
+  - n1gs
+  - n!g
+  - n!gs
+  - nigga
+  - niggas
+  - n1ggas
+  - n1gga
+  - n1gger
+  - n1ggers
+  - nigg3rs
+  - nigg3r
+  - n1gg3r
+  - n1gg3rs
+  - n!ggers
+  - n!gger
+  - n!gg3r
+  - n!gg3rs
+  - nigglet
+  - nigglets
+  - n!gglet
+  - n!gglets
+  - niggl3t
+  - niggl3ts
+  - n!ggl3t
+  - n!ggl3ts
+  - n1gglet
+  - n1gglets
+  - n1ggl3t
+  - n1ggl3ts
+  - n1gg4
+  - n.i.g.g.e.r
+  - n.i.g.g.a
+  - neggers
+  - negga
+  - n3gga
+  - n3gg4
+  - negger
+  - ANARCHYMC.EU
