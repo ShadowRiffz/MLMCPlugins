@@ -71,6 +71,7 @@ public class Main extends JavaPlugin implements Listener {
 					p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
 				}
 			}
+			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
 			e.setCancelled(true);
 		}
 		
