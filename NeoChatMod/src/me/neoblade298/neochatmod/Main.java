@@ -2,6 +2,7 @@ package me.neoblade298.neochatmod;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -10,8 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.palmergames.bukkit.TownyChat.events.AsyncChatHookEvent;
 
 public class Main extends JavaPlugin implements Listener {
 	File file = null;
@@ -43,8 +45,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		// Load banned words
 		bannedWords = (ArrayList<String>) getConfig().getStringList("banned-words");
-		for (String word : bannedWords) {
-			word.toUpperCase();
+		
+		for (int i = 0; i < bannedWords.size(); i++) {
+			bannedWords.set(i, bannedWords.get(i).toUpperCase());
 		}
 	}
 
@@ -53,8 +56,8 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled=true)
-	public void onChat(AsyncPlayerChatEvent e) {
-		String msg = e.getMessage().toUpperCase();
+	public void onChat(AsyncChatHookEvent e) {
+		String msg = e.getMessage();
 		double x = e.getPlayer().getLocation().getX();
 		double z = e.getPlayer().getLocation().getZ();
 		World w = e.getPlayer().getWorld();
@@ -63,18 +66,31 @@ public class Main extends JavaPlugin implements Listener {
 		if (w.getName().equalsIgnoreCase("Argyll") &&
 			(X_BOUND_1 <= x && x <= X_BOUND_2) &&
 			(Z_BOUND_1 <= z && z <= Z_BOUND_2)) {
+			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+				if (p.hasPermission("mycommand.staff")) {
+					p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+				}
+			}
 			e.setCancelled(true);
-			return;
 		}
 		
 		// Check if it contained a curse word
 		for (String word : bannedWords) {
-			if (msg.contains(word)) {
+			if (msg.toUpperCase().contains(word)) {
 				e.setCancelled(true);
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), punishCmd.replaceAll("%player%", e.getPlayer().getName()));
+				try {
+					Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), punishCmd.replaceAll("%player%", e.getPlayer().getName()))).get();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("mycommand.staff")) {
-						p.sendMessage("§4[§c§lMLMC§4] §e" + e.getPlayer().getName() + " §cwas punished for saying: §7" + msg);
+						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7was punished for saying: §c" + msg);
 					}
 				}
 				return;

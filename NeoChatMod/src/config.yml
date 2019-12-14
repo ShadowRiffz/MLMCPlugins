@@ -1,4 +1,4 @@
-punish-command: pmute %player% Said banned word!
+punish-command: banmanager:mute %player% Said banned word!
 mute-tutorial: true
 
 banned-words:
@@ -6,8 +6,14 @@ banned-words:
   - niggers
   - nigs
   - n1gs
-  - n!g
   - n!gs
+  - n!gs
+  - nigg
+  - n1gg
+  - n!gg
+  - niggs
+  - n1ggs
+  - n!ggs
   - nigga
   - niggas
   - n1ggas
@@ -43,3 +49,4 @@ banned-words:
   - n3gg4
   - negger
   - ANARCHYMC.EU
+  - testchatmodhello936182354
