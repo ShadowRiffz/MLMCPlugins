@@ -299,7 +299,7 @@ public class IngredientRecipeItems {
 	}
 	
 	public ItemStack getVodka() {
-		ItemStack item = SkullCreator.itemFromBase64(BASE64_R1);
+		ItemStack item = new ItemStack(Material.POTION);
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		meta.setColor(Color.fromRGB(255, 255, 255));
 		meta.setDisplayName("§eVodka");
