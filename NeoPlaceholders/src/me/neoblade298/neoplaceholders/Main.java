@@ -125,10 +125,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				if (online && p != null) {
 					PlayerClass pClass = SkillAPI.getPlayerData(p).getClass("class");
 					if (pClass != null) {
-						double reqExp = pClass.getRequiredExp();
-						double currExp = pClass.getExp();
-						placeholder = pct.format((currExp / reqExp) * 100) + "%";
-						return placeholder;
+						int max = pClass.getData().getMaxLevel();
+						int lvl = pClass.getLevel();
+						if (max != lvl) {
+							double reqExp = pClass.getRequiredExp();
+							double currExp = pClass.getExp();
+							placeholder = pct.format((currExp / reqExp) * 100) + "%";
+							return placeholder;
+						}
 					}
 				}
 				return placeholder;
@@ -146,7 +150,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				if (online && p != null) {
 					PlayerClass pClass = SkillAPI.getPlayerData(p).getClass("class");
 					if (pClass != null) {
-						return pClass.getData().getName();
+						placeholder = pClass.getLevel() + "";
+						return placeholder;
 					}
 				}
 				return placeholder;
