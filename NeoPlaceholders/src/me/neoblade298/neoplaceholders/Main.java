@@ -123,15 +123,18 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				String placeholder = "N/A";
 
 				if (online && p != null) {
-					PlayerClass pClass = SkillAPI.getPlayerData(p).getClass("class");
-					if (pClass != null) {
-						int max = pClass.getData().getMaxLevel();
-						int lvl = pClass.getLevel();
-						if (max != lvl) {
-							double reqExp = pClass.getRequiredExp();
-							double currExp = pClass.getExp();
-							placeholder = pct.format((currExp / reqExp) * 100) + "%";
-							return placeholder;
+					PlayerData pData = SkillAPI.getPlayerData(p);
+					if (pData != null) {
+						PlayerClass pClass = pData.getClass("class");
+						if (pClass != null) {
+							int max = pClass.getData().getMaxLevel();
+							int lvl = pClass.getLevel();
+							if (max != lvl) {
+								double reqExp = pClass.getRequiredExp();
+								double currExp = pClass.getExp();
+								placeholder = pct.format((currExp / reqExp) * 100) + "%";
+								return placeholder;
+							}
 						}
 					}
 				}
@@ -148,10 +151,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				String placeholder = "N/A";
 
 				if (online && p != null) {
-					PlayerClass pClass = SkillAPI.getPlayerData(p).getClass("class");
-					if (pClass != null) {
-						placeholder = pClass.getLevel() + "";
-						return placeholder;
+					PlayerData pData = SkillAPI.getPlayerData(p);
+					if (pData != null) {
+						PlayerClass pClass = pData.getClass("class");
+						if (pClass != null) {
+							placeholder = pClass.getLevel() + "";
+							return placeholder;
+						}
 					}
 				}
 				return placeholder;
@@ -165,11 +171,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
 				String placeholder = "MP";
-
+				
 				if (online && p != null) {
-					PlayerClass pClass = SkillAPI.getPlayerData(p).getClass("class");
-					if (pClass != null) {
-						return pClass.getData().getManaName();
+					PlayerData pData = SkillAPI.getPlayerData(p);
+					if (pData != null) {
+						PlayerClass pClass = pData.getClass("class");
+						if (pClass != null) {
+							placeholder = pClass.getData().getManaName();
+							return placeholder;
+						}
 					}
 				}
 				return placeholder;
