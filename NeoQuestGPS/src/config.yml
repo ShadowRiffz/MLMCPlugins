@@ -1,0 +1,19 @@
+# GPS-Quests configuration
+enabled:
+  citizens-to-interact: true
+  citizens-to-kill: true
+  locations-to-reach: true
+  item-delivery-targets: true
+  
+# Enable GPS for a given quest. Enable the GPS for a
+# specific stage by adding the stage's number to the
+# list of numbers.
+enabled-quests:
+  ExampleQuest:
+  - 1
+  
+# Same as enabled-quests, except specifically choose
+# coordinates for the GPS to point to. Format is
+# [stage #] [x] [y] [z]
+overridden-quests:
+  ExampleQuest: "1 55.0 8.0 124.0"
