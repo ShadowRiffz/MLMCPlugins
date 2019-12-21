@@ -191,26 +191,6 @@ public class Main extends JavaPlugin {
 							.getStoredLocation());
 				}
 			}
-			if ((targetLocations != null) && (!targetLocations.isEmpty())) {
-				int index = 1;
-				String pointName = "quests-" + quester.getPlayer().getUniqueId().toString() + "-" + quest.getName() + "-"
-						+ stage.toString() + "-";
-				Player p = quester.getPlayer();
-				for (Location l : targetLocations) {
-					if ((l.getWorld().getName().equals(p.getWorld().getName())) && (!gpsapi.gpsIsActive(p))) {
-						gpsapi.addPoint(pointName + index, l);
-						index++;
-					}
-				}
-				for (int i = 1; i < targetLocations.size(); i++) {
-					if (!gpsapi.gpsIsActive(quester.getPlayer())) {
-						gpsapi.connect(pointName + i, pointName + (i + 1), true);
-					}
-				}
-				if (!gpsapi.gpsIsActive(quester.getPlayer())) {
-					gpsapi.startGPS(quester.getPlayer(), pointName + (index - 1));
-				}
-			}
 		}
 		
 		/* Unneeded code, maybe bring back later
@@ -239,6 +219,7 @@ public class Main extends JavaPlugin {
 						.getStoredLocation());
 			}
 		}
+		*/
 		if ((targetLocations != null) && (!targetLocations.isEmpty())) {
 			int index = 1;
 			String pointName = "quests-" + quester.getPlayer().getUniqueId().toString() + "-" + quest.getName() + "-"
@@ -259,7 +240,6 @@ public class Main extends JavaPlugin {
 				gpsapi.startGPS(quester.getPlayer(), pointName + (index - 1));
 			}
 		}
-		*/
 		return (targetLocations != null) && (!targetLocations.isEmpty());
 	}
 
