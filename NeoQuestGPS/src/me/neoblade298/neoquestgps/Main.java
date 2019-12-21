@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 		}
 		
 		// Load quests where we override it with a GPS location
-		enabledQuests = new HashMap<String, ArrayList<Integer>>();
+		overriddenQuests = new HashMap<String, QuestOverride>();
 		ConfigurationSection overrideList = this.cfg.getConfigurationSection("overridden-quests");
 		for (String quest : overrideList.getKeys(false)) {
 			overriddenQuests.put(quest, new QuestOverride(overrideList.getString(quest)));
