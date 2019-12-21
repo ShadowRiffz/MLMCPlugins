@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.classes.RPGClass;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
@@ -127,13 +128,16 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					if (pData != null) {
 						PlayerClass pClass = pData.getClass("class");
 						if (pClass != null) {
-							int max = pClass.getData().getMaxLevel();
-							int lvl = pClass.getLevel();
-							if (max != lvl) {
-								double reqExp = pClass.getRequiredExp();
-								double currExp = pClass.getExp();
-								placeholder = pct.format((currExp / reqExp) * 100) + "%";
-								return placeholder;
+							RPGClass rClass = pClass.getData();
+							if (rClass != null) {
+								int max = rClass.getMaxLevel();
+								int lvl = pClass.getLevel();
+								if (max != lvl) {
+									double reqExp = pClass.getRequiredExp();
+									double currExp = pClass.getExp();
+									placeholder = pct.format((currExp / reqExp) * 100) + "%";
+									return placeholder;
+								}
 							}
 						}
 					}
