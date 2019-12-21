@@ -7,13 +7,15 @@ enabled:
   
 # Enable GPS for a given quest. Enable the GPS for a
 # specific stage by adding the stage's number to the
-# list of numbers.
+# list of numbers. Case sensitive quest name!
+# Stage number starts from 0!
 enabled-quests:
   ExampleQuest:
   - 1
   
 # Same as enabled-quests, except specifically choose
 # coordinates for the GPS to point to. Format is
-# [stage #] [x] [y] [z]
+# [stage #] [x] [y] [z]. Case sensitive quest name!
+# Stage number starts from 0!
 overridden-quests:
   ExampleQuest: "1 55.0 8.0 124.0"

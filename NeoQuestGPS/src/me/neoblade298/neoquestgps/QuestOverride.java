@@ -1,25 +1,33 @@
 package me.neoblade298.neoquestgps;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class QuestOverride {
-	private Location loc;
+	private ArrayList<Location> loc;
 	private int stage;
 	
-	public QuestOverride(String input) {
-		String[] params = input.split(" ");
-		this.stage = Integer.parseInt(params[0]);
-		double x = Double.parseDouble(params[1]);
-		double y = Double.parseDouble(params[2]);
-		double z = Double.parseDouble(params[3]);
-		this.loc = new Location(Bukkit.getWorld("Argyll"), x, y, z);
+	public QuestOverride(String stage, ArrayList<String> locations) {
+		System.out.println(stage);
+		this.stage = Integer.parseInt(stage);
+		
+		this.loc = new ArrayList<Location>();
+		
+		for (String location : locations) {
+			String[] params = location.split(" ");
+			double x = Double.parseDouble(params[0]);
+			double y = Double.parseDouble(params[1]);
+			double z = Double.parseDouble(params[2]);
+			this.loc.add(new Location(Bukkit.getWorld("Argyll"), x, y, z));
+		}
 	}
 	
-	public Location getLoc() {
+	public ArrayList<Location> getLocations() {
 		return loc;
 	}
-	public void setLoc(Location loc) {
+	public void setLocations(ArrayList<Location> loc) {
 		this.loc = loc;
 	}
 	public int getStage() {

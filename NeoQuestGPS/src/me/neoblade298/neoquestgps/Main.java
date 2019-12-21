@@ -83,7 +83,6 @@ public class Main extends JavaPlugin {
 			this.reload = true;
 		}
 		this.cfg = getConfig();
-		this.cfg.options().copyDefaults(true);
 		saveConfig();
 
 		this.citizensToInteract = this.cfg.getBoolean("citizens-to-interact", true);
@@ -102,7 +101,11 @@ public class Main extends JavaPlugin {
 		overriddenQuests = new HashMap<String, QuestOverride>();
 		ConfigurationSection overrideList = this.cfg.getConfigurationSection("overridden-quests");
 		for (String quest : overrideList.getKeys(false)) {
-			overriddenQuests.put(quest, new QuestOverride(overrideList.getString(quest)));
+			System.out.println(quest);
+			ConfigurationSection questSec = overrideList.getConfigurationSection(quest);
+			for (String stage : questSec.getKeys(false)) {
+				overriddenQuests.put(quest, new QuestOverride(stage, (ArrayList<String>) questSec.getStringList(stage)));
+			}
 		}
 	}
 
@@ -161,7 +164,7 @@ public class Main extends JavaPlugin {
 		}
 		// First check for overrides
 		if (overriddenQuests.containsKey(quest.getName()) && overriddenQuests.get(quest.getName()).getStage() == stageNum) {
-			targetLocations.add(overriddenQuests.get(quest.getName()).getLoc());
+			targetLocations.addAll(overriddenQuests.get(quest.getName()).getLocations());
 		}
 		
 		// Next check for simple stage enabled quests
@@ -247,16 +250,15 @@ public class Main extends JavaPlugin {
 		Player p = quester.getPlayer();
 		if (gpsapi.gpsIsActive(p)) {
 			gpsapi.stopGPS(p);
-			for (Point point : gpsapi.getAllPoints()) {
-				if (point.getName().startsWith("quests-" + p.getUniqueId().toString() + "-" + quest.getName())) {
-					try {
-						gpsapi.removePoint(point.getName());
-					} catch (ConcurrentModificationException localConcurrentModificationException) {
-					}
+		}
+		for (Point point : gpsapi.getAllPoints()) {
+			if (point.getName().startsWith("quests-" + p.getUniqueId().toString() + "-" + quest.getName())) {
+				try {
+					gpsapi.removePoint(point.getName());
+				} catch (ConcurrentModificationException localConcurrentModificationException) {
 				}
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 }
