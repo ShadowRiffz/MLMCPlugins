@@ -110,7 +110,6 @@ public class Main extends JavaPlugin {
 		overriddenQuests = new HashMap<String, QuestOverride>();
 		ConfigurationSection overrideList = this.cfg.getConfigurationSection("overridden-quests");
 		for (String quest : overrideList.getKeys(false)) {
-			System.out.println(quest);
 			ConfigurationSection questSec = overrideList.getConfigurationSection(quest);
 			for (String stage : questSec.getKeys(false)) {
 				overriddenQuests.put(quest, new QuestOverride(stage, (ArrayList<String>) questSec.getStringList(stage)));
