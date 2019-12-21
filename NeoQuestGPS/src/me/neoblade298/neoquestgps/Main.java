@@ -4,6 +4,7 @@ import com.live.bemmamin.gps.Vars;
 import com.live.bemmamin.gps.api.GPSAPI;
 import com.live.bemmamin.gps.logic.Point;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import me.blackvein.quests.events.quester.QuesterPostStartQuestEvent;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,6 +35,7 @@ public class Main extends JavaPlugin {
 	private static GPSAPI gpsapi;
 	private Quests quests;
 	private boolean reload = false;
+	private File file;
 	private FileConfiguration cfg;
 	public boolean citizensToInteract;
 	public boolean citizensToKill;
@@ -77,13 +80,19 @@ public class Main extends JavaPlugin {
 	}
 
 	private void activate() {
+
+		// Save config if doesn't exist
+		file = new File(getDataFolder(), "config.yml");
+		if (!file.exists()) {
+			saveResource("config.yml", false);
+		}
+		this.cfg = YamlConfiguration.loadConfiguration(file);
+		
 		if (this.reload) {
 			reloadConfig();
 		} else {
 			this.reload = true;
 		}
-		this.cfg = getConfig();
-		saveConfig();
 
 		this.citizensToInteract = this.cfg.getBoolean("citizens-to-interact", true);
 		this.citizensToKill = this.cfg.getBoolean("citizens-to-kill", true);
