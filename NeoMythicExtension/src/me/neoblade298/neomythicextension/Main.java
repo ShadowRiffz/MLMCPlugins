@@ -67,7 +67,6 @@ public class Main extends JavaPlugin implements Listener {
 	 */
 	@EventHandler
 	public void onMythicConditionLoad(MythicConditionLoadEvent event)	{
-		log.info("MythicConditionLoadEvent called for condition " + event.getConditionName());
 
 		if(event.getConditionName().equalsIgnoreCase("hasflag"))	{
 			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
@@ -92,7 +91,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
-		log.info("MythicMechanicLoadEvent called for mechanic " + event.getMechanicName());
 
 		if(event.getMechanicName().equalsIgnoreCase("instancetp"))	{
 			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
