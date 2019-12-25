@@ -1,4 +1,4 @@
-package me.neoblade298.neogear;
+package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import me.neoblade298.neogear.Main;
 
 public class GearConfig {
 	private Main main;

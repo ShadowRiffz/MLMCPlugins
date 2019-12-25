@@ -12,6 +12,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.neoblade298.neogear.objects.Attributes;
+import me.neoblade298.neogear.objects.Enchant;
+import me.neoblade298.neogear.objects.GearConfig;
+import me.neoblade298.neogear.objects.Rarity;
+import me.neoblade298.neogear.objects.RarityBonuses;
+
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	private HashMap<String, HashMap<Integer, GearConfig>> settings;
 	private YamlConfiguration cfg;

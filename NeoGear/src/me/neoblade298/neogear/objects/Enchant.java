@@ -1,4 +1,4 @@
-package me.neoblade298.neogear;
+package me.neoblade298.neogear.objects;
 
 import org.bukkit.enchantments.Enchantment;
 
