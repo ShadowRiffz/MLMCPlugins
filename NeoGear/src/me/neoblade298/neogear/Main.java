@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.neoblade298.neoattrsetter.Commands;
 import me.neoblade298.neogear.objects.Attributes;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
@@ -29,7 +30,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoGear Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+	    this.getCommand("gear").setExecutor(new Commands(this));
 		gen = new Random();
+
 		
 		loadConfigs();
 	}
