@@ -44,7 +44,6 @@ public class Commands implements CommandExecutor{
 					sender.sendMessage("§4§l[§cMLMC§4] §cIncorrect format: level");
 					return true;
 				}
-				
 				int failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
 				if (failures > 0) {
 					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give item, inventory full");
@@ -132,7 +131,7 @@ public class Commands implements CommandExecutor{
 				}
 			}
 		}
-		else if (main.rarities.containsKey(param)) {
+		else if (main.settings.containsKey(param)) {
 			return param;
 		}
 		return null;
