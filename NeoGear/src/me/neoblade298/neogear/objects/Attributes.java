@@ -62,4 +62,35 @@ public class Attributes {
 		this.vitRange = vitRange;
 		this.vitRounded = vitRounded;
 	}
+	
+	public Attributes() {
+		this.strBase = 0;
+		this.strPerLvl = 0;
+		this.strRange = 0;
+		this.strRounded = 0;
+		this.dexBase = 0;
+		this.dexPerLvl = 0;
+		this.dexRange = 0;
+		this.dexRounded = 0;
+		this.intBase = 0;
+		this.intPerLvl = 0;
+		this.intRange = 0;
+		this.intRounded = 0;
+		this.sprBase = 0;
+		this.sprPerLvl = 0;
+		this.sprRange = 0;
+		this.sprRounded = 0;
+		this.prcBase = 0;
+		this.prcPerLvl = 0;
+		this.prcRange = 0;
+		this.prcRounded = 0;
+		this.endBase = 0;
+		this.endPerLvl = 0;
+		this.endRange = 0;
+		this.endRounded = 0;
+		this.vitBase = 0;
+		this.vitPerLvl = 0;
+		this.vitRange = 0;
+		this.vitRounded = 0;
+	}
 }

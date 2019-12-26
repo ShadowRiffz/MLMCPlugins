@@ -8,4 +8,9 @@ public class RarityBonuses {
 		this.attributes = attributes;
 		this.duraBonus = duraBonus;
 	}
+	
+	public RarityBonuses() {
+		this.attributes = new Attributes();
+		this.duraBonus = 0;
+	}
 }

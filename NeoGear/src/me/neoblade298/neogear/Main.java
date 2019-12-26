@@ -115,6 +115,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				if (specificRareSec != null) {
 					rarities.put(rarity, new RarityBonuses(parseAttributes(specificRareSec), specificRareSec.getInt("added-durability")));
 				}
+				else {
+					rarities.put(rarity,  new RarityBonuses());
+				}
 			}
 			
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
