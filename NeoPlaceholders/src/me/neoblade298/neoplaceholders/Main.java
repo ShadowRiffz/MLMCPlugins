@@ -37,7 +37,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				if (online && p != null) {
 					double health = p.getHealth();
 					if (health >= 10000) {
-						placeholder = df10k.format(health / 10000);
+						placeholder = df10k.format(health / 1000);
 					}
 					else if (health >= 1000) {
 						placeholder = df1k.format(health / 1000);
