@@ -91,6 +91,9 @@ public class Main extends JavaPlugin implements Listener {
   
   public void updateBonuses(Player p) {
   	  // Make sure the player has no bonuses already equipped
+	  if (p == null) {
+		  return;
+	  }
 	  if(playerMap.containsKey(p.getName())) {
 		  removeBonuses(p);
 		  resetBonuses(p);
@@ -165,6 +168,9 @@ public class Main extends JavaPlugin implements Listener {
   }
   
   public void resetBonuses(Player p) {
+	  if (p == null) {
+		  return;
+	  }
 	  if(playerMap.containsKey(p.getName())) {
 		  playerMap.remove(p.getName());
 		  if(debug) {
@@ -174,7 +180,10 @@ public class Main extends JavaPlugin implements Listener {
   }
   
   public void removeBonuses(Player p) {
-  	  if(p != null && (p.getWorld().getName().equalsIgnoreCase("Argyll") || p.getWorld().getName().equalsIgnoreCase("ClassPVP"))) {
+	  if (p == null) {
+		  return;
+	  }
+  	  if((p.getWorld().getName().equalsIgnoreCase("Argyll") || p.getWorld().getName().equalsIgnoreCase("ClassPVP"))) {
 		  playerMap.get(p.getName()).removeAttributes(p);
 		  if(debug) {
 			  Bukkit.getPlayer("Neoblade298").sendMessage(p.getName() + " removed their attributes");
