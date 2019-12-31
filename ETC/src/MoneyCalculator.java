@@ -30,6 +30,7 @@ public class MoneyCalculator {
 		}
 		
 		int count = 0;
+		System.out.println();
 		for (String p : players.keySet()) {
 			System.out.println("  - /eco take " + p + " " + players.get(p));
 			count++;
