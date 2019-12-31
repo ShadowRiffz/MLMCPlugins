@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Items;
+package me.Neoblade298.NeoProfessions.Legacy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class BlacksmithItems {
+public class BlacksmithItemsLegacy {
 
 	// Durability
 	public ItemStack getDurabilityItem(int level, String itemtype) {
@@ -72,21 +72,19 @@ public class BlacksmithItems {
 		lore.add("§6Right click to use");
 		lore.add("§cOnly works on quest items");
 		switch(level) {
-			case 10:	lore.add("§7Compatibility: Up to §4Lv 10");
+			case 1:	lore.add("§7Compatibility: Common - §9Rare");
 						 	break;
-			case 20:	lore.add("§7Compatibility: Up to §4Lv 20");
+			case 2: lore.add("§7Compatibility: Common - §6Epic");
 							break;
-			case 30:	lore.add("§7Compatibility: Up to §4Lv 30");
+			case 3: lore.add("§7Compatibility: Common - §bAngelic");
 							break;
-			case 40:	lore.add("§7Compatibility: Up to §4Lv 40");
+			case 4: lore.add("§7Compatibility: Common - §2Mythic");
 							break;
-			case 50:	lore.add("§7Compatibility: Up to §4Lv 50");
+			case 5: lore.add("§7Compatibility: Common - §4§lLegendary");
 							break;
-			case 60:	lore.add("§7Compatibility: Up to §4Lv 60");
-			break;
 		}
 		lore.add("§7Effect: Restores durability of an item");
-		lore.add("§7Potency: §e40%");
+		lore.add("§7Potency: §e" + (20 + (level*5)) + "%");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);

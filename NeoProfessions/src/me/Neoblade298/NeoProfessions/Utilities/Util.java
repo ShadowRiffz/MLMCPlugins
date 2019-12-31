@@ -37,35 +37,18 @@ public class Util {
 			return -1;
 		}
 		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
-		String tier = null;
+		String lv = null;
 		
 		// Find the tier string
 		for(String line : lore) {
 			if(line.contains("Tier:")) {
-				tier = line;
+				lv = line;
 				break;
 			}
 		}
 		
-		if (tier != null) {
-			if(tier.contains("Common") ||
-					tier.contains("Uncommon") ||
-					tier.contains("Rare")) {
-				return 1;
-			}
-			else if(tier.contains("Unique") ||
-					tier.contains("Epic")) {
-				return 2;
-			}
-			else if(tier.contains("Angelic")) {
-				return 3;
-			}
-			else if(tier.contains("Mythic")) {
-				return 4;
-			}
-			else if(tier.contains("Legendary")) {
-				return 5;
-			}
+		if (lv != null) {
+			return Integer.parseInt(lv.split(" ")[2]);
 		}
 		return -1;
 	}

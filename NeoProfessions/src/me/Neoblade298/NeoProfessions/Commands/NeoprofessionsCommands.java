@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,6 +21,7 @@ import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Legacy.Converter;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
@@ -67,19 +70,15 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/neoprofessions level [playername] <amount>");
-				sender.sendMessage("§7- §4/neoprofessions reset [playername]");
-				sender.sendMessage("§7- §4/neoprofessions sober [playername]");
-				sender.sendMessage("§7- §4/neoprofessions repair [playername]");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get essence [level]");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get fragment [level]");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get repair [level]");
+				sender.sendMessage("§7- §4/neoprofessions lore [line (from 0)] [newlore]");
+				sender.sendMessage("§7- §4/neoprofessions removelore [line (from 0)]");
+				sender.sendMessage("§7- §4/neoprofessions {reset/sober/repair} [playername]");
+				sender.sendMessage("§7- §4/neoprofessions <playername> get {essence/repair} [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get ingr [22-24]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get durability [weapon/armor] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get ore [attribute or 1-7] [level] <amount>");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get gem [weapon/armor] [attribute] [level]");
-				sender.sendMessage("§7- §4/neoprofessions <playername> get overload [weapon/armor] [attribute] [level]");
+				sender.sendMessage("§7- §4/neoprofessions <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get [basic/advanced] [charm]");
-				return true;
 			}
 			else {
 				// /neoprofessions level playername
@@ -89,7 +88,39 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
 					}
 				}
-				if (args[0].equalsIgnoreCase("repair")) {
+				else if (args[0].equalsIgnoreCase("lore")) {
+					if (args.length >= 3) {
+						ItemStack item = p.getInventory().getItemInMainHand();
+						ItemMeta meta = item.getItemMeta();
+						ArrayList<String> lore = meta.hasLore() ? (ArrayList<String>) meta.getLore() : new ArrayList<String>();
+						int line = Integer.parseInt(args[1]);
+						String newLore = args[3];
+						for (int i = 4; i < args.length; i++) {
+							newLore += " " + args[i];
+						}
+						while (lore.size() <= line) {
+							if (lore.size() == line) {
+								lore.add(newLore.replaceAll("&", "§"));
+								return true;
+							}
+							else {
+								lore.add("");
+							}
+						}
+						lore.set(line, newLore);
+						return true;
+					}
+				}
+				else if (args[0].equalsIgnoreCase("removelore") && args.length == 1) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					ItemMeta meta = item.getItemMeta();
+					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					lore.remove(Integer.parseInt(args[1]));
+					meta.setLore(lore);
+					item.setItemMeta(meta);
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("repair")) {
 					if (args.length == 2) {
 						Player target = Bukkit.getPlayer(args[1]);
 						ItemStack item = target.getInventory().getItemInMainHand();
@@ -104,7 +135,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
 					}
 				}
-				if (args[0].equalsIgnoreCase("level")) {
+				else if (args[0].equalsIgnoreCase("level")) {
 					if (args.length == 2) {
 						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
 						if (pClass != null) {
@@ -147,9 +178,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("get")) {
 					if(args[1].equalsIgnoreCase("essence")) {
 						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2])));
-					}
-					else if(args[1].equalsIgnoreCase("fragment")) {
-						p.getInventory().addItem(common.getEssenceFragment(Integer.parseInt(args[2])));
 					}
 					else if(args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
@@ -244,9 +272,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						if(args[2].equalsIgnoreCase("essence")) {
 							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3])));
 						}
-						else if(args[2].equalsIgnoreCase("fragment")) {
-							p.getInventory().addItem(common.getEssenceFragment(Integer.parseInt(args[3])));
-						}
 						else if(args[2].equalsIgnoreCase("repair")) {
 							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));
 						}
@@ -335,12 +360,24 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						}
 					}
 				}
-				return true;
 			}
 		}
-		else {
-			util.sendMessage((Player)sender, "&cYou are not an admin!");
+		Player p = null;
+		if(sender instanceof Player) {
+			p = (Player) sender;
+		}
+		
+		if (args.length == 0) {
+			sender.sendMessage("§7- §c/neoprofessions convert");
 			return true;
 		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
+			ItemStack[] inv = p.getInventory().getContents();
+			Converter conv = new Converter(main);
+			for (int i = 0; i < inv.length; i++) {
+				inv[i] = conv.convertItem(inv[i]);
+			}
+		}
+		return true;
 	}
 }

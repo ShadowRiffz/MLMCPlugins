@@ -88,6 +88,10 @@ public class CulinarianCommands implements CommandExecutor {
 						culinarianMethods.assimilate(p);
 						return true;
 					}
+					else if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+						culinarianMethods.assimilateAll(p);
+						return true;
+					}
 					else {
 						util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;

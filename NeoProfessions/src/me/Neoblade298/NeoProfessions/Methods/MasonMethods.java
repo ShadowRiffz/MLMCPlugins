@@ -39,38 +39,38 @@ public class MasonMethods {
 	// Prices
 	static final int BASIC_EXP_GOLD = 5000;
 	static final int BASIC_EXP_ESSENCE = 10;
-	static final int BASIC_EXP_LEVEL = 2;
+	static final int BASIC_EXP_LEVEL = 30;
 	static final int BASIC_DROP_GOLD = 10000;
 	static final int BASIC_DROP_ESSENCE = 16;
-	static final int BASIC_DROP_LEVEL = 3;
+	static final int BASIC_DROP_LEVEL = 40;
 	static final int BASIC_LOOTING_GOLD = 25000;
 	static final int BASIC_LOOTING_ESSENCE = 24;
-	static final int BASIC_LOOTING_LEVEL = 2;
+	static final int BASIC_LOOTING_LEVEL = 30;
 	static final int BASIC_TRAVELER_GOLD = 3000;
 	static final int BASIC_TRAVELER_ESSENCE = 8;
-	static final int BASIC_TRAVELER_LEVEL = 1;
+	static final int BASIC_TRAVELER_LEVEL = 20;
 	static final int BASIC_RECOVERY_GOLD = 10000;
 	static final int BASIC_RECOVERY_ESSENCE = 16;
-	static final int BASIC_RECOVERY_LEVEL = 2;
+	static final int BASIC_RECOVERY_LEVEL = 30;
 
 	static final int ADVANCED_HUNGER_GOLD = 25000;
 	static final int ADVANCED_HUNGER_ESSENCE = 32;
-	static final int ADVANCED_HUNGER_LEVEL = 4;
+	static final int ADVANCED_HUNGER_LEVEL = 50;
 	static final int ADVANCED_EXP_GOLD = 5000;
 	static final int ADVANCED_EXP_ESSENCE = 16;
-	static final int ADVANCED_EXP_LEVEL = 3;
+	static final int ADVANCED_EXP_LEVEL = 40;
 	static final int ADVANCED_DROP_GOLD = 10000;
 	static final int ADVANCED_DROP_ESSENCE = 24;
-	static final int ADVANCED_DROP_LEVEL = 4;
+	static final int ADVANCED_DROP_LEVEL = 50;
 	static final int ADVANCED_LOOTING_GOLD = 50000;
 	static final int ADVANCED_LOOTING_ESSENCE = 36;
-	static final int ADVANCED_LOOTING_LEVEL = 3;
+	static final int ADVANCED_LOOTING_LEVEL = 40;
 	static final int ADVANCED_SECONDCHANCE_GOLD = 5000;
 	static final int ADVANCED_SECONDCHANCE_ESSENCE = 16;
-	static final int ADVANCED_SECONDCHANCE_LEVEL = 3;
+	static final int ADVANCED_SECONDCHANCE_LEVEL = 40;
 	static final int ADVANCED_QUICKEAT_GOLD = 18000;
 	static final int ADVANCED_QUICKEAT_ESSENCE = 18;
-	static final int ADVANCED_QUICKEAT_LEVEL = 3;
+	static final int ADVANCED_QUICKEAT_LEVEL = 40;
 	
 	
 	public MasonMethods(Main main) {
@@ -84,9 +84,10 @@ public class MasonMethods {
 	}
 
 	public void createSlot(Player p, int level) {
+		int perm = (level / 10) - 1;
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			if(p.hasPermission("mason.engrave.tier." + level)) {
+			if(p.hasPermission("mason.engrave.tier." + perm) && perm % 10 == 0) {
 				if(util.getItemLevel(item) >= level) {
 					int numSlots = masonUtils.countSlots(item);
 					if(numSlots < MAX_SLOTS) {

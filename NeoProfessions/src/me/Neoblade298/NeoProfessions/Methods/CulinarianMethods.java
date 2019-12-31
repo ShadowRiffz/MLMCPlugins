@@ -450,6 +450,30 @@ public class CulinarianMethods {
 		}
 	}
 	
+	public void assimilateAll(Player p) {
+		int amount = 0;
+		for (ItemStack origItem : p.getInventory().getContents()) {
+			ItemStack item = origItem.clone();
+			if(!item.getType().equals(Material.AIR)) {
+				if(item.getType().equals(Material.PAPER) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
+					int level = culinarianUtils.getRecipeLevel(item);
+					if(p.hasPermission("culinarian.assimilate." + level)) {
+						if(econ.has(p, ASSIMILATE_COST * item.getAmount())) {
+							amount += item.getAmount();
+							p.getInventory().removeItem(item);
+							p.getInventory().addItem(util.setAmount(common.getEssence(level), item.getAmount()));
+							econ.withdrawPlayer(p, ASSIMILATE_COST * item.getAmount());
+						}
+						else {
+							break;
+						}
+					}
+				}
+			}
+		}
+		util.sendMessage(p, "&7Successfully assimilated §e" + amount + "recipe(s)!");
+	}
+	
 	public void giveSpecial(Player p) {
 		int level = 0;
 		if(p.hasPermission("culinarian.special.5")) {

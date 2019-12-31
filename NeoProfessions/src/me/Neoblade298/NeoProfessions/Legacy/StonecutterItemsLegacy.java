@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Items;
+package me.Neoblade298.NeoProfessions.Legacy;
 
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class StonecutterItems {
+public class StonecutterItemsLegacy {
 	
 	// Constants
 	final int WEAPON_GEM_STR_RANGE = 4;
@@ -28,8 +28,8 @@ public class StonecutterItems {
 	final int OL_ARMOR_GEM_STR_BASE = 2;
 	final int OL_ARMOR_GEM_STR_PER_LVL = 5;
 	final int OL_ARMOR_GEM_VIT_RANGE = 18;
-	final int OL_ARMOR_GEM_VIT_BASE = 50;
-	final int OL_ARMOR_GEM_VIT_PER_LVL = 30;
+	final int OL_ARMOR_GEM_VIT_BASE = 25;
+	final int OL_ARMOR_GEM_VIT_PER_LVL = 20;
 	final int OL_ARMOR_GEM_END_RANGE = 6;
 	final int OL_ARMOR_GEM_END_BASE = 2;
 	final int OL_ARMOR_GEM_END_PER_LVL = 7;
@@ -82,27 +82,23 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		switch (level) {
-			case 10:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Dust");
-						lore.add("§7Level " + level + " " + oreName + " Ore");
-						lore.add("§7Item used for profession crafting");
-						break;
-			case 20:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
+			case 1:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 30:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
+			case 2:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 40:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
+			case 3:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 50:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
+			case 4:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 60:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
+			case 5:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
@@ -158,27 +154,23 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		switch (level) {
-			case 10:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Dust");
-			lore.add("§7Level " + level + " " + oreName + " Ore");
-			lore.add("§7Item used for profession crafting");
-			break;
-			case 20:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
+			case 1:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 30:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
+			case 2:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 40:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
+			case 3:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 50:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
+			case 4:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
-			case 60:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
+			case 5:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
 							lore.add("§7Level " + level + " " + oreName + " Ore");
 							lore.add("§7Item used for profession crafting");
 							break;
@@ -202,13 +194,12 @@ public class StonecutterItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int potency = 0;
 		int duraLost = 0;
-		int lvlDivided = level / 10;
 		if(isOverloaded) {
-			potency = (gen.nextInt(OL_WEAPON_GEM_STR_RANGE) + OL_WEAPON_GEM_STR_BASE + (OL_WEAPON_GEM_STR_PER_LVL * (lvlDivided - 1)));
-			duraLost = OL_WEAPON_DURABILITY_BASE + (OL_WEAPON_DURABILITY_PER_LVL * lvlDivided) + (gen.nextInt(OL_WEAPON_DURABILITY_RANGE) * OL_WEAPON_DURABILITY_MULTIPLIER);
+			potency = (gen.nextInt(OL_WEAPON_GEM_STR_RANGE) + OL_WEAPON_GEM_STR_BASE + (OL_WEAPON_GEM_STR_PER_LVL * (level - 1)));
+			duraLost = OL_WEAPON_DURABILITY_BASE + (OL_WEAPON_DURABILITY_PER_LVL * level) + (gen.nextInt(OL_WEAPON_DURABILITY_RANGE) * OL_WEAPON_DURABILITY_MULTIPLIER);
 		}
 		else {
-			potency = (gen.nextInt(WEAPON_GEM_STR_RANGE) + 1 + (WEAPON_GEM_STR_RANGE * (lvlDivided - 1)));
+			potency = (gen.nextInt(WEAPON_GEM_STR_RANGE) + 1 + (WEAPON_GEM_STR_RANGE * (level - 1)));
 		}
 		switch (attr) {
 		case "strength":
@@ -235,7 +226,7 @@ public class StonecutterItems {
 		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
-			effect += ", lowers durability";
+			effect += ", reduces durability";
 		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
@@ -281,7 +272,7 @@ public class StonecutterItems {
 		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		if(isOverloaded) {
-			effect += ", lowers durability";
+			effect += ", reduces durability";
 		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
@@ -304,37 +295,36 @@ public class StonecutterItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int potency = 0;
 		int duraLost = 0;
-		int lvlDivided = level / 10;
 		if(isOverloaded) {
-			duraLost = OL_ARMOR_DURABILITY_BASE + (OL_ARMOR_DURABILITY_PER_LVL * lvlDivided) + (gen.nextInt(OL_ARMOR_DURABILITY_RANGE) * OL_ARMOR_DURABILITY_MULTIPLIER);
+			duraLost = OL_ARMOR_DURABILITY_BASE + (OL_ARMOR_DURABILITY_PER_LVL * level) + (gen.nextInt(OL_ARMOR_DURABILITY_RANGE) * OL_ARMOR_DURABILITY_MULTIPLIER);
 			switch (attr) {
 			case "strength":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
-				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (level - 1));
 				break;
 			case "dexterity":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
-				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (level - 1));
 				break;
 			case "intelligence":	
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
-				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (level - 1));
 				break;
 			case "spirit":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
-				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (level - 1));
 				break;
 			case "perception":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
-				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_STR_RANGE) + OL_ARMOR_GEM_STR_BASE + (OL_ARMOR_GEM_STR_PER_LVL * (level - 1));
 				break;
 			case "vitality":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Garnet");
-				potency = gen.nextInt(OL_ARMOR_GEM_VIT_RANGE) + OL_ARMOR_GEM_VIT_BASE + (OL_ARMOR_GEM_VIT_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_VIT_RANGE) + OL_ARMOR_GEM_VIT_BASE + (OL_ARMOR_GEM_VIT_PER_LVL * (level - 1));
 				break;
 			case "endurance":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Adamantium");
-				potency = gen.nextInt(OL_ARMOR_GEM_END_RANGE) + OL_ARMOR_GEM_END_BASE + (OL_ARMOR_GEM_END_PER_LVL * (lvlDivided - 1));
+				potency = gen.nextInt(OL_ARMOR_GEM_END_RANGE) + OL_ARMOR_GEM_END_BASE + (OL_ARMOR_GEM_END_PER_LVL * (level - 1));
 				break;
 			}
 		}
@@ -342,31 +332,31 @@ public class StonecutterItems {
 			switch (attr) {
 			case "strength":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (level - 1)) + 1;
 				break;
 			case "dexterity":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (level - 1)) + 1;
 				break;
 			case "intelligence":	
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (level - 1)) + 1;
 				break;
 			case "spirit":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (level - 1)) + 1;
 				break;
 			case "perception":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (level - 1)) + 1;
 				break;
 			case "vitality":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Garnet");
-				potency = gen.nextInt(ARMOR_GEM_VIT_RANGE) + (ARMOR_GEM_VIT_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_VIT_RANGE) + (ARMOR_GEM_VIT_RANGE * (level - 1)) + 1;
 				break;
 			case "endurance":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Adamantium");
-				potency = gen.nextInt(ARMOR_GEM_END_RANGE) + (ARMOR_GEM_END_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_END_RANGE) + (ARMOR_GEM_END_RANGE * (level - 1)) + 1;
 				break;
 			}
 		}
@@ -378,7 +368,7 @@ public class StonecutterItems {
 		}
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
-			effect += ", lowers durability";
+			effect += ", reduces durability";
 		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
@@ -457,7 +447,7 @@ public class StonecutterItems {
 		}
 		String effect = "§7Effect: Increases armor " + attr;
 		if(isOverloaded) {
-			effect += ", lowers durability";
+			effect += ", reduces durability";
 		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
