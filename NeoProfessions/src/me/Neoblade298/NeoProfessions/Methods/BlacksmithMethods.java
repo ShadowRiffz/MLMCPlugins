@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.Methods;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +38,7 @@ public class BlacksmithMethods {
 	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
+	final int LEVEL_INTERVAL = 10;
 	
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -50,13 +50,15 @@ public class BlacksmithMethods {
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
+		int perm = (level / 10) - 1;
+		perm = level == 0 ? 1 : perm;
 		if(slot != -1) {
-			if (p.hasPermission("blacksmith." + item + "." + itemtype + "." + level)) {
-				if(p.getInventory().containsAtLeast(common.getEssence(level), DURABILITY_ESSENCE)) {
-					if(main.getEconomy().has(p, DURABILITY_COST_PER_LVL * level)) {
+			if (p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level, true), DURABILITY_ESSENCE)) {
+					if(main.getEconomy().has(p, DURABILITY_COST_PER_LVL * perm)) {
 						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
-						p.getInventory().removeItem(util.setAmount(common.getEssence(level), DURABILITY_ESSENCE));
-						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * level);
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), DURABILITY_ESSENCE));
+						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * perm);
 						util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
 					}
 					else {
@@ -78,12 +80,14 @@ public class BlacksmithMethods {
 
 	public void createRepairItem(Player p, String item, int level) {
 		int slot = p.getInventory().firstEmpty();
+		int perm = (level / 10) - 1;
+		perm = level == 0 ? 1 : perm;
 		if(slot != -1) {
-			if (p.hasPermission("blacksmith." + item + "." + level)) {
-				if(p.getInventory().containsAtLeast(common.getEssence(level), REPAIR_ESSENCE)) {
+			if (p.hasPermission("blacksmith." + item + "." + perm)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level, true), REPAIR_ESSENCE)) {
 					if(econ.has(p, REPAIR_COST)) {
 						p.getInventory().addItem(util.setAmount(bItems.getRepairItem(level), 2));
-						p.getInventory().removeItem(util.setAmount(common.getEssence(level), REPAIR_ESSENCE));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), REPAIR_ESSENCE));
 						econ.withdrawPlayer(p, REPAIR_COST);
 						util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
 					}
@@ -114,10 +118,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
 								if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE));
 									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
@@ -161,10 +165,10 @@ public class BlacksmithMethods {
 				if(upgradeLevel <= 6) {
 					if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
 						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
 								if(econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE));
 									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
 									util.sendMessage(p, "&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
@@ -203,15 +207,17 @@ public class BlacksmithMethods {
 			String type = util.getItemType(item);
 			if(type != null) {
 				int itemLevel = util.getItemLevel(item);
-				if(itemLevel != -1) {
-					if(p.hasPermission("blacksmith.reforge." + itemLevel)) {
-						if(p.getInventory().containsAtLeast(common.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel)) {
-							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel))) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel), REFORGE_ESSENCE_PER_LVL * itemLevel));
+				int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
+				perm = itemLevel == 0 ? 1 : perm;
+				String rarity = util.getItemRarity(item);
+				if(itemLevel != -1 && rarity != null) {
+					if(p.hasPermission("blacksmith.reforge." + perm)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm)) {
+							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
+								p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm));
 								p.getInventory().removeItem(item);
-								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, itemLevel));
-								ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-								Bukkit.dispatchCommand(console, "mlmctier give " + p.getName() + " " + type);
+								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
+								p.getInventory().addItem(main.neogear.settings.get(rarity).get(itemLevel).generateItem(rarity, itemLevel));
 								util.sendMessage(p, "&7Successfully reforged item!");
 							}
 							else {
@@ -243,12 +249,14 @@ public class BlacksmithMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
 			int itemLevel = util.getItemLevel(item);
+			int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
+			perm = itemLevel == 0 ? 1 : perm;
 			if(itemLevel != -1) {
-				if(p.hasPermission("blacksmith.scrap." + itemLevel)) {
+				if(p.hasPermission("blacksmith.scrap." + perm)) {
 					if(econ.has(p, SCRAP_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, SCRAP_COST);
-						p.getInventory().addItem(common.getEssence(itemLevel));
+						p.getInventory().addItem(common.getEssence(itemLevel, false));
 						util.sendMessage(p, "&cSuccessfully scrapped item!");
 					}
 					else {
@@ -273,12 +281,12 @@ public class BlacksmithMethods {
 		if(!item.getType().equals(Material.AIR)) {
 			item.setAmount(1);
 			int itemLevel = util.getEssenceLevel(item);
-			if(itemLevel >= 2) {
+			if(itemLevel >= 20) {
 				if(p.hasPermission("blacksmith.deconstruct")) {
 					if(econ.has(p, DECONSTRUCT_COST)) {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, DECONSTRUCT_COST);
-						p.getInventory().addItem(util.setAmount(common.getEssence(itemLevel - 1), DECONSTRUCT_AMOUNT));
+						p.getInventory().addItem(util.setAmount(common.getEssence(itemLevel - LEVEL_INTERVAL, false), DECONSTRUCT_AMOUNT));
 						util.sendMessage(p, "&cSuccessfully deconstructed item!");
 					}
 					else {
@@ -290,7 +298,7 @@ public class BlacksmithMethods {
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 2!");
+				util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 20!");
 			}
 		}
 		else {

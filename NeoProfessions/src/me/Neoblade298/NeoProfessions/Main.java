@@ -48,6 +48,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	public MasonListeners masonListeners;
 	public MasonUtils masonUtils;
+	
+	public me.neoblade298.neogear.Main neogear;
 
 	public void onEnable() {
 		super.onEnable();
@@ -79,6 +81,9 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
 		this.getCommand("neoprofessions").setExecutor(new NeoprofessionsCommands(this, blacksmithMethods,
 				stonecutterMethods, culinarianMethods, masonMethods));
+		
+		// NeoGear
+		neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 
 		// Setup Event Listeners
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);

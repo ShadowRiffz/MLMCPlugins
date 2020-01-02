@@ -35,6 +35,7 @@ public class MasonMethods {
 	static final int UNENGRAVE_ESSENCE = 2;
 	static final int UNSLOT_ESSENCE = 4;
 	static final int UNSLOT_GOLD_PER_LVL = 1500;
+	static final int LEVEL_INTERVAL = 10;
 	
 	// Prices
 	static final int BASIC_EXP_GOLD = 5000;
@@ -85,6 +86,7 @@ public class MasonMethods {
 
 	public void createSlot(Player p, int level) {
 		int perm = (level / 10) - 1;
+		perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if(p.hasPermission("mason.engrave.tier." + perm) && perm % 10 == 0) {
@@ -92,10 +94,10 @@ public class MasonMethods {
 					int numSlots = masonUtils.countSlots(item);
 					if(numSlots < MAX_SLOTS) {
 						if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
-							if(p.getInventory().containsAtLeast(common.getEssence(level), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots))) {
+							if(p.getInventory().containsAtLeast(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots))) {
 								if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
 									masonUtils.createSlot(item, level);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(level), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots)));
+									p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots)));
 									econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
 									util.sendMessage(p, "&7Successfully created slot!");
 								}
@@ -167,9 +169,9 @@ public class MasonMethods {
 					item = mItems.getRecoveryCharm();
 					break;
 				}
-				if(p.getInventory().containsAtLeast(common.getEssence(level), essence)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level, true), essence)) {
 					if(econ.has(p, gold)) {
-						p.getInventory().removeItem(util.setAmount(common.getEssence(level), essence));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), essence));
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
 						util.sendMessage(p, "&7Successfully created charm!");
@@ -236,9 +238,9 @@ public class MasonMethods {
 					item = mItems.getQuickEatCharm();
 					break;
 				}
-				if(p.getInventory().containsAtLeast(common.getEssence(level), essence)) {
+				if(p.getInventory().containsAtLeast(common.getEssence(level, true), essence)) {
 					if(econ.has(p, gold)) {
-						p.getInventory().removeItem(util.setAmount(common.getEssence(level), essence));
+						p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), essence));
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
 						util.sendMessage(p, "&7Successfully created charm!");
@@ -266,6 +268,7 @@ public class MasonMethods {
 			if(masonUtils.isSlotAvailable(item, slot)) {
 				if(util.isArmor(item)) {
 					int level = util.getItemLevel(item);
+					level -= level % LEVEL_INTERVAL;
 					if(p.hasPermission("mason.slot.armor." + level)) {
 						listeners.prepItemSlot(p, item, slot);
 					}
@@ -275,6 +278,7 @@ public class MasonMethods {
 				}
 				else if(util.isWeapon(item)) {
 					int level = util.getItemLevel(item);
+					level -= level % LEVEL_INTERVAL;
 					if(p.hasPermission("mason.slot.weapon." + level)) {
 						listeners.prepItemSlot(p, item, slot);
 					}
@@ -300,16 +304,18 @@ public class MasonMethods {
 		if(!item.getType().equals(Material.AIR)) {
 			if(masonUtils.isSlotUsed(item, slot)) {
 				int level = util.getItemLevel(item);
+				int perm = (level / 10) - 1;
+				perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
 				String line = masonUtils.getSlotLine(item, slot);
-				int slottedLevel = Character.getNumericValue(line.charAt(3));
+				int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
 				if(p.hasPermission("mason.unslot." + level)) {
 					if(p.getInventory().firstEmpty() != -1) {
-						if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel), UNSLOT_ESSENCE)) {
-							if(econ.has(p, UNSLOT_GOLD_PER_LVL * level)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE)) {
+							if(econ.has(p, UNSLOT_GOLD_PER_LVL * perm)) {
 								ItemStack returned = masonUtils.parseUnslot(p, slot);
 								if(returned != null) {
-									p.getInventory().removeItem(util.setAmount(common.getEssence(slottedLevel), UNSLOT_ESSENCE));
-									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * level);
+									p.getInventory().removeItem(util.setAmount(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE));
+									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
 									p.getInventory().addItem(returned);
 									util.sendMessage(p, "&cSuccessfully unslotted item!");
 								}
@@ -346,9 +352,9 @@ public class MasonMethods {
 				int level = util.getItemLevel(item);
 				if(level != -1) {
 					if(p.hasPermission("mason.engrave.tier." + level)) {
-						if(p.getInventory().containsAtLeast(common.getEssence(level), UNENGRAVE_ESSENCE)) {
+						if(p.getInventory().containsAtLeast(common.getEssence(level, true), UNENGRAVE_ESSENCE)) {
 							if(econ.has(p, UNENGRAVE_GOLD)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(level), UNENGRAVE_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), UNENGRAVE_ESSENCE));
 								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
 								masonUtils.removeSlotLine(item, slot);
 								util.sendMessage(p, "&7Successfully removed slot!");

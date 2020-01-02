@@ -14,6 +14,7 @@ import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 public class MasonUtils {
 	
 	final int MAX_LEVEL = 5;
+	final int LEVEL_INTERVAL = 10;
 	Util util;
 	BlacksmithItems bItems;
 	StonecutterItems sItems;
@@ -59,8 +60,8 @@ public class MasonUtils {
 		String line = getSlotLine(item, slot);
 		
 		// Parse the line and revert the lore
-		int slotLevel = Character.getNumericValue(line.charAt(1));
-		int slottedLevel = Character.getNumericValue(line.charAt(3));
+		int slotLevel = Character.getNumericValue(line.charAt(1)) * 10;
+		int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
 		int slotType = Character.getNumericValue(line.charAt(5));
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = util.isArmor(item);
@@ -285,9 +286,8 @@ public class MasonUtils {
 			}
 			else {
 				count++;
-				// If the matching slot is empty, return true
 				if(slot == count) {
-					return Integer.parseInt(line.substring(line.indexOf(" ") + 1, line.indexOf(" ") + 2));
+					return Integer.parseInt(line.substring(line.indexOf(" ") + 1, line.indexOf(" ") + 2)) / LEVEL_INTERVAL;
 				}
 			}
 		}
@@ -297,17 +297,7 @@ public class MasonUtils {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		for(String line : lore) {
 			if(line.contains("Level")) {
-				if(line.contains("Level 1")) {
-					return 1;
-				} else if(line.contains("Level 2")) {
-					return 2;
-				} else if(line.contains("Level 3")) {
-					return 3;
-				} else if(line.contains("Level 4")) {
-					return 4;
-				} else if(line.contains("Level 5")) {
-					return 5;
-				}
+				return Integer.parseInt(line.substring(line.indexOf(" ") + 1, line.indexOf(" ") + 2)) / LEVEL_INTERVAL;
 			}
 		}
 		return -1;
@@ -412,8 +402,8 @@ public class MasonUtils {
 		}
 		util.setMaxDurability(itemWithSlot, potency + util.getMaxDurability(itemWithSlot));
 		ItemMeta meta = itemWithSlot.getItemMeta();
-		int slotLevel = getSlotLevel(itemWithSlot, slot);
-		int slottedLevel = getSlottedLevel(itemToSlot);
+		int slotLevel = getSlotLevel(itemWithSlot, slot);	// Slot
+		int slottedLevel = getSlottedLevel(itemToSlot);		// Augment
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(getSlotNum(itemWithSlot, slot), "§" + slotLevel + "§" + slottedLevel + "§0§0§0§0§9Max Durability +" + potency);
 		meta.setLore(lore);

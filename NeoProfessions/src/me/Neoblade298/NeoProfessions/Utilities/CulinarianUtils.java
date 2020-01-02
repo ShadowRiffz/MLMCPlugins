@@ -80,16 +80,16 @@ public class CulinarianUtils {
 		if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			String line = item.getItemMeta().getLore().get(0);
 			if(line.contains("Tier 1") || line.contains("Ingredient")) {
-				return 1;
+				return 10;
 			}
 			else if(line.contains("Tier 2")) {
-				return 2;
+				return 20;
 			}
 			else if(line.contains("Tier 3") || line.contains("Drink")) {
-				return 3;
+				return 30;
 			}
 			else if(line.contains("Limited Edition") || line.contains("Legendary")) {
-				return 4;
+				return 40;
 			}
 		}
 		return -1;

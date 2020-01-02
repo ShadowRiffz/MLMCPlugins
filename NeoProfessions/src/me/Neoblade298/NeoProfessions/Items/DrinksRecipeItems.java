@@ -253,7 +253,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getBlackWidowRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(new ItemStack(Material.INK_SAC));
 		recipe.add(new ItemStack(Material.ICE));
@@ -263,7 +263,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getPinkPantherRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(new ItemStack(Material.PINK_DYE));
 		recipe.add(new ItemStack(Material.APPLE));
@@ -273,7 +273,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getMidnightKissRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.CYAN_DYE));
@@ -282,7 +282,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getMidnightBlueRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getTequila());
 		recipe.add(new ItemStack(Material.LAPIS_LAZULI));
 		recipe.add(new ItemStack(Material.SUGAR));
@@ -291,7 +291,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getGoodAndEvilRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.YELLOW_DYE));
@@ -301,7 +301,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getThorHammerRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(new ItemStack(Material.PURPLE_DYE));
 		recipe.add(new ItemStack(Material.ICE));
@@ -311,7 +311,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getJackFrostRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getHoney());
 		recipe.add(new ItemStack(Material.LIGHT_BLUE_DYE));
@@ -321,7 +321,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getWhiteRussianRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(new ItemStack(Material.BONE_MEAL));
 		recipe.add(new ItemStack(Material.COCOA_BEANS));
@@ -330,7 +330,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getSwampWaterRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getRum());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.LIME_DYE));
@@ -341,7 +341,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getBlueMotorcycleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.LAPIS_LAZULI));
@@ -351,7 +351,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getRedDeathRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getRum());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.ORANGE_DYE));
@@ -361,7 +361,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getBombsicleRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(t2.getLemonade());
 		recipe.add(new ItemStack(Material.LIGHT_BLUE_DYE));
@@ -370,7 +370,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getSweetTartRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getLemon());
 		recipe.add(new ItemStack(Material.PINK_DYE));
@@ -380,7 +380,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getPinaColadaRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getRum());
 		recipe.add(new ItemStack(Material.BONE_MEAL));
 		recipe.add(new ItemStack(Material.APPLE));
@@ -389,7 +389,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getMargaritaOnTheRocksRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getTequila());
 		recipe.add(ingr.getSalt());
 		recipe.add(ingr.getLemon());
@@ -400,7 +400,7 @@ public class DrinksRecipeItems {
 	
 	public ArrayList<ItemStack> getBloodyMaryRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(common.getEssence(2));
+		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
 		recipe.add(ingr.getTomato());
 		recipe.add(ingr.getGreens());

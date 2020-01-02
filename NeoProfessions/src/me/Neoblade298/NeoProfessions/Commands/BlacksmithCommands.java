@@ -166,7 +166,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						if (args[1].equalsIgnoreCase("essence")) {
 							if(StringUtils.isNumeric(args[2])) {
 								if(p.hasPermission("blacksmith.admin")) {
-									p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2])));
+									p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
 									util.sendMessage(p, "&7Successfully spawned Essence!");
 									return true;
 								}

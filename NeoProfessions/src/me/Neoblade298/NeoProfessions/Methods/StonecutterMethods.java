@@ -35,6 +35,7 @@ public class StonecutterMethods {
 	static final int REFINE_ESSENCE_1 = 6;
 	static final int REFINE_ESSENCE_2 = 5;
 	static final int REFINE_ESSENCE_3 = 4;
+	static final int LEVEL_INTERVAL = 10;
 	
 	public StonecutterMethods(Main main) {
 		this.main = main;
@@ -50,10 +51,10 @@ public class StonecutterMethods {
 		if(p.getInventory().firstEmpty() != -1) {
 			if(p.hasPermission("stonecutter.attribute." + attr)) {
 				if(p.hasPermission("stonecutter.gem." + type + "." + level)) {
-					if(p.getInventory().containsAtLeast(common.getEssence(level), GEM_ESSENCE)) {
+					if(p.getInventory().containsAtLeast(common.getEssence(level, true), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(sItems.getOre(attr, level), GEM_ORES)) {
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(level), GEM_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), GEM_ESSENCE));
 								p.getInventory().removeItem(util.setAmount(sItems.getOre(attr, level), GEM_ORES));
 								if(type.equalsIgnoreCase("weapon")) {
 									p.getInventory().addItem(sItems.getWeaponGem(attr, level, false));
@@ -94,10 +95,10 @@ public class StonecutterMethods {
 		if(p.getInventory().firstEmpty() != -1) {
 			if(p.hasPermission("stonecutter.attribute." + attr)) {
 				if(p.hasPermission("stonecutter.overload." + type + "." + level)) {
-					if(p.getInventory().containsAtLeast(common.getEssence(level), GEM_ESSENCE)) {
+					if(p.getInventory().containsAtLeast(common.getEssence(level, true), GEM_ESSENCE)) {
 						if(p.getInventory().containsAtLeast(sItems.getOre(attr, level), GEM_ORES))
 							if(econ.has(p, GEM_COST_PER_LVL * level)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(level), GEM_ESSENCE));
+								p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), GEM_ESSENCE));
 								p.getInventory().removeItem(util.setAmount(sItems.getOre(attr, level), GEM_ORES));
 								if(type.equalsIgnoreCase("weapon")) {
 									p.getInventory().addItem(sItems.getWeaponGem(attr, level, true));
@@ -139,7 +140,7 @@ public class StonecutterMethods {
 			if(slot != -1) {
 				if(stonecutterUtils.isEssence(item)) {
 					int oldLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
-					int level = oldLevel + 1;
+					int level = oldLevel + LEVEL_INTERVAL;
 					
 					// Find essence cost via perms
 					int cost = REFINE_ESSENCE_0;
@@ -164,9 +165,9 @@ public class StonecutterMethods {
 							if(econ.has(p, REFINE_COST)) {
 								
 								// Check if enough essence
-								if(p.getInventory().containsAtLeast(common.getEssence(oldLevel), cost)) {
-									p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel), cost));
-									p.getInventory().addItem(common.getEssence(level));
+								if(p.getInventory().containsAtLeast(common.getEssence(oldLevel, true), cost)) {
+									p.getInventory().removeItem(util.setAmount(common.getEssence(oldLevel, true), cost));
+									p.getInventory().addItem(common.getEssence(level, true));
 									econ.withdrawPlayer(p, REFINE_COST);
 									if (i == repetitions - 1) {
 										util.sendMessage(p, "&7Successfully refined essence!");

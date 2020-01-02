@@ -41,7 +41,7 @@ public class Util {
 		
 		// Find the tier string
 		for(String line : lore) {
-			if(line.contains("Tier:")) {
+			if(line.contains("Level Req:")) {
 				lv = line;
 				break;
 			}
@@ -51,6 +51,21 @@ public class Util {
 			return Integer.parseInt(lv.split(" ")[2]);
 		}
 		return -1;
+	}
+	
+	public String getItemRarity(ItemStack item) {
+		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			return null;
+		}
+		ArrayList<String> lore  = (ArrayList<String>) item.getItemMeta().getLore();
+		
+		// Find the tier string
+		for(String line : lore) {
+			if(line.contains("Tier:")) {
+				return line.split(" ")[1];
+			}
+		}
+		return null;
 	}
 	
 	public String getItemType(ItemStack item) {
@@ -66,32 +81,6 @@ public class Util {
 		}
 		if (desc != null) {
 			desc = ChatColor.stripColor(desc.substring(8));
-			
-			// Edge cases
-			if(desc.equalsIgnoreCase("Common Helmet")) {
-				desc = "Common Reinforced Helmet";
-			}
-			if(desc.equalsIgnoreCase("Common Chestplate")) {
-				desc = "Common Reinforced Chestplate";
-			}
-			if(desc.equalsIgnoreCase("Common Leggings")) {
-				desc = "Common Reinforced Leggings";
-			}
-			if(desc.equalsIgnoreCase("Common Boots")) {
-				desc = "Common Reinforced Boots";
-			}
-			if(desc.equalsIgnoreCase("Uncommon Helmet")) {
-				desc = "Uncommon Reinforced Helmet";
-			}
-			if(desc.equalsIgnoreCase("Uncommon Chestplate")) {
-				desc = "Uncommon Reinforced Chestplate";
-			}
-			if(desc.equalsIgnoreCase("Uncommon Leggings")) {
-				desc = "Uncommon Reinforced Leggings";
-			}
-			if(desc.equalsIgnoreCase("Uncommon Boots")) {
-				desc = "Uncommon Reinforced Boots";
-			}
 		}
 		
 		return desc;

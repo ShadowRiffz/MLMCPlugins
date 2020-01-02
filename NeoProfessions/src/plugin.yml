@@ -3,6 +3,7 @@ author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Main
 version: 1.0
 api-version: 1.14
+depend: [MythicMobs, SkillAPI, NeoGear, Vault]
 commands:
   neoprofessions:
     description: Admin commands

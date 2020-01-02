@@ -177,7 +177,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
 					if(args[1].equalsIgnoreCase("essence")) {
-						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2])));
+						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
 					}
 					else if(args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
@@ -270,7 +270,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					p = Bukkit.getPlayer(args[0]);
 					if (args[1].equalsIgnoreCase("get")) {
 						if(args[2].equalsIgnoreCase("essence")) {
-							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3])));
+							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
 						}
 						else if(args[2].equalsIgnoreCase("repair")) {
 							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));

@@ -122,7 +122,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(2), GARNISH_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(20, true), GARNISH_ESSENCE)) {
 									if(econ.has(p, GARNISH_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -132,7 +132,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(2));
+										p.getInventory().removeItem(common.getEssence(20, true));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, GARNISH_COST);
 										if (i == repetitions - 1) {
@@ -212,7 +212,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(2), PRESERVE_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(20, true), PRESERVE_ESSENCE)) {
 									if(econ.has(p, PRESERVE_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -222,7 +222,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(2));
+										p.getInventory().removeItem(common.getEssence(20, true));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, PRESERVE_COST);
 										if (i == repetitions - 1) {
@@ -302,7 +302,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(p.getInventory().containsAtLeast(common.getEssence(2), SPICE_ESSENCE)) {
+								if(p.getInventory().containsAtLeast(common.getEssence(20, true), SPICE_ESSENCE)) {
 									if(econ.has(p, SPICE_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -312,7 +312,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										p.getInventory().removeItem(common.getEssence(2));
+										p.getInventory().removeItem(common.getEssence(20, true));
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, SPICE_COST);
 										if (i == repetitions - 1) {
@@ -371,7 +371,7 @@ public class CulinarianMethods {
 							repetitions = oldItem.getAmount();
 						}
 						for (int i = 0; i < repetitions; i++) {
-							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel), REMEDY_ESSENCE)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(foodLevel, true), REMEDY_ESSENCE)) {
 								if(econ.has(p, REMEDY_COST)) {
 									ItemStack item = oldItem.clone();
 									ItemMeta meta = item.getItemMeta();
@@ -380,7 +380,7 @@ public class CulinarianMethods {
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
-									p.getInventory().removeItem(common.getEssence(foodLevel));
+									p.getInventory().removeItem(common.getEssence(foodLevel, true));
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, REMEDY_COST);
 									if (i == repetitions - 1) {
@@ -425,7 +425,7 @@ public class CulinarianMethods {
 					if(p.hasPermission("culinarian.assimilate." + level)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
 							p.getInventory().removeItem(util.setAmount(item, 1));
-							p.getInventory().addItem(common.getEssence(level));
+							p.getInventory().addItem(common.getEssence(level, false));
 							econ.withdrawPlayer(p, ASSIMILATE_COST);
 							util.sendMessage(p, "&7Successfully assimilated recipe!");
 						}
@@ -461,7 +461,7 @@ public class CulinarianMethods {
 						if(econ.has(p, ASSIMILATE_COST * item.getAmount())) {
 							amount += item.getAmount();
 							p.getInventory().removeItem(item);
-							p.getInventory().addItem(util.setAmount(common.getEssence(level), item.getAmount()));
+							p.getInventory().addItem(util.setAmount(common.getEssence(level, false), item.getAmount()));
 							econ.withdrawPlayer(p, ASSIMILATE_COST * item.getAmount());
 						}
 						else {
