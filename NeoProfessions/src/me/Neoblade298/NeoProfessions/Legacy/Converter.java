@@ -122,6 +122,7 @@ public class Converter {
 		if (lore.size() > 3) {
 			isOverloaded = true;
 			duraLoss = Integer.parseInt(lore.get(3).split(" ")[2].replaceAll("§e", ""));
+			type = type.substring(0, type.length() - 1);
 		}
 		
 		if (itemType.equalsIgnoreCase("weapon")) {
