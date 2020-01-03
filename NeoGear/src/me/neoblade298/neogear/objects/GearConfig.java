@@ -99,6 +99,9 @@ public class GearConfig {
 		int vitality = attributes.vitBase + (attributes.vitPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.vitRange + 1);
 		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
 				+ main.gen.nextInt(rarityAttrs.vitRange + 1);
+		int regeneration = attributes.rgnBase + (attributes.rgnPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.rgnRange + 1);
+		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
+				+ main.gen.nextInt(rarityAttrs.rgnRange + 1);
 		lore.add("§7Tier: " + main.rarities.get(rarity).displayName);
 		if (level > 0) { lore.add("§7Level Req: " + level); }
 		lore.add("§9[Base Attributes]");
@@ -109,6 +112,7 @@ public class GearConfig {
 		if (perception > 0) { lore.add("§9Perception +" + (perception - (perception % attributes.prcRounded))); }
 		if (endurance > 0) { lore.add("§9Endurance +" + (endurance - (endurance % attributes.endRounded))); }
 		if (vitality > 0) { lore.add("§9Vitality +" + (vitality - (vitality % attributes.vitRounded))); }
+		if (regeneration > 0) { lore.add("§9Regen +" + (regeneration - (regeneration % attributes.vitRounded))); }
 		
 		int durability = duraBase + rarities.get(rarity).duraBonus;
 		lore.add("§7Durability " + durability + " / " + durability);

@@ -178,10 +178,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		int vitLvl = sec.getInt("vit-per-lvl");
 		int vitRange = sec.getInt("vit-range");
 		int vitRounded = sec.getInt("vit-rounded", 1);
+		int rgnBase = sec.getInt("rgn-base");
+		int rgnLvl = sec.getInt("rgn-per-lvl");
+		int rgnRange = sec.getInt("rgn-range");
+		int rgnRounded = sec.getInt("rgn-rounded", 1);
 		
 		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase, intLvl,
 				intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange, prcRounded, endBase,
-				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded);
+				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase, rgnLvl, rgnRange, rgnRounded);
 	}
 	
 	private Attributes overrideAttributes(Attributes current, ConfigurationSection sec) {
@@ -213,10 +217,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		int vitLvl = sec.getInt("vit-per-lvl", -1) != -1 ? sec.getInt("vit-per-lvl", -1) : current.vitPerLvl;
 		int vitRange = sec.getInt("vit-range", -1) != -1 ? sec.getInt("vit-range", -1) : current.vitRange;
 		int vitRounded = sec.getInt("vit-rounded", -1) != -1 ? sec.getInt("vit-rounded", -1) : current.vitRounded;
+		int rgnBase = sec.getInt("rgn-base", -1) != -1 ? sec.getInt("rgn-base", -1) : current.rgnBase;
+		int rgnLvl = sec.getInt("rgn-per-lvl", -1) != -1 ? sec.getInt("rgn-per-lvl", -1) : current.rgnPerLvl;
+		int rgnRange = sec.getInt("rgn-range", -1) != -1 ? sec.getInt("rgn-range", -1) : current.rgnRange;
+		int rgnRounded = sec.getInt("rgn-rounded", -1) != -1 ? sec.getInt("rgn-rounded", -1) : current.rgnRounded;
 
 		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase, intLvl,
 				intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange, prcRounded, endBase,
-				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded);
+				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase, rgnLvl, rgnRange, rgnRounded);
 	}
 	
 	private RarityBonuses overrideRarities(RarityBonuses current, ConfigurationSection sec) {

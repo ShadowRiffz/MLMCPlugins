@@ -29,10 +29,15 @@ public class Attributes {
 	public int vitPerLvl;
 	public int vitRange;
 	public int vitRounded;
+	public int rgnBase;
+	public int rgnPerLvl;
+	public int rgnRange;
+	public int rgnRounded;
 	
 	public Attributes (int strBase, int strPerLvl, int strRange, int strRounded, int dexBase, int dexPerLvl, int dexRange, int dexRounded, int intBase,
 			int intPerLvl, int intRange, int intRounded, int sprBase, int sprPerLvl, int sprRange, int sprRounded, int prcBase, int prcPerLvl, int prcRange,
-			int prcRounded, int endBase, int endPerLvl, int endRange, int endRounded,int vitBase, int vitPerLvl, int vitRange, int vitRounded) {
+			int prcRounded, int endBase, int endPerLvl, int endRange, int endRounded,int vitBase, int vitPerLvl, int vitRange, int vitRounded, int rgnBase,
+			int rgnPerLvl, int rgnRange, int rgnRounded) {
 		this.strBase = strBase;
 		this.strPerLvl = strPerLvl;
 		this.strRange = strRange;
