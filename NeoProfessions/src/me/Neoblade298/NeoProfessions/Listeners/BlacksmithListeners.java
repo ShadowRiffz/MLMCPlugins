@@ -86,7 +86,8 @@ public class BlacksmithListeners implements Listener{
 				}
 			}
 			else {
-	  		util.sendMessage(p, "&cRepair kits only work on quest items!");
+		  		selectedRepair.remove(p);
+				util.sendMessage(p, "&cRepair kits only work on quest items!");
 			}
 		}
 	}

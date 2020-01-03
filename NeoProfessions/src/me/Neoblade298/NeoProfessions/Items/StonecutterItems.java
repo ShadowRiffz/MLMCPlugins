@@ -33,9 +33,9 @@ public class StonecutterItems {
 	final int OL_ARMOR_GEM_END_RANGE = 6;
 	final int OL_ARMOR_GEM_END_BASE = 2;
 	final int OL_ARMOR_GEM_END_PER_LVL = 7;
-	final int OL_WEAPON_DURABILITY_BASE = 155;
+	final int OL_WEAPON_DURABILITY_BASE = 105;
 	final int OL_WEAPON_DURABILITY_PER_LVL = 50;
-	final int OL_WEAPON_DURABILITY_RANGE = 10;
+	final int OL_WEAPON_DURABILITY_RANGE = 5;
 	final int OL_WEAPON_DURABILITY_MULTIPLIER = 5;
 	final int OL_ARMOR_DURABILITY_BASE = 55;
 	final int OL_ARMOR_DURABILITY_PER_LVL = 25;

@@ -88,6 +88,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
 					}
 				}
+				else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
+					ItemStack[] inv = p.getInventory().getStorageContents();
+					Converter conv = new Converter(main);
+					for (int i = 0; i < inv.length; i++) {
+						if (inv[i] != null) {
+							int amt = inv[i].getAmount();
+							inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+						}
+					}
+					p.getInventory().setStorageContents(inv);
+				}
 				else if (args[0].equalsIgnoreCase("lore")) {
 					if (args.length >= 3) {
 						ItemStack item = p.getInventory().getItemInMainHand();
@@ -372,11 +383,15 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemStack[] inv = p.getInventory().getContents();
+			ItemStack[] inv = p.getInventory().getStorageContents();
 			Converter conv = new Converter(main);
 			for (int i = 0; i < inv.length; i++) {
-				inv[i] = conv.convertItem(inv[i]);
+				if (inv[i] != null) {
+					int amt = inv[i].getAmount();
+					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+				}
 			}
+			p.getInventory().setStorageContents(inv);
 		}
 		return true;
 	}
