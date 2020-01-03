@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Legacy;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,6 +12,7 @@ import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class Converter {
 	Main main;
@@ -19,6 +21,7 @@ public class Converter {
 	MasonItems mItems;
 	MasonItemsLegacy oldMItems;
 	CommonItems cItems;
+	Util util;
 	
 	
 	public Converter(Main main) {
@@ -28,6 +31,7 @@ public class Converter {
 		mItems = new MasonItems();
 		oldMItems = new MasonItemsLegacy();
 		cItems = new CommonItems();
+		util = new Util();
 	}
 
 	public ItemStack convertItem(ItemStack item) {
@@ -168,5 +172,44 @@ public class Converter {
 			return mItems.getTravelerCharm();
 		}
 		return null;
+	}
+	
+	private ItemStack convertGear(ItemStack item, ItemMeta meta, ArrayList<String> lore) {
+		// First change durability
+		if (util.isWeapon(item)) {
+			util.setMaxDurability(item, 1400);
+		}
+		else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
+			util.setMaxDurability(item, 900);
+		}
+		else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
+			util.setMaxDurability(item, 700);
+		}
+		
+		String oldRarity = ChatColor.stripColor(lore.get(0).split(" ")[1]);
+		int newLevel = 10;
+		
+		switch (oldRarity) {
+		case "uncommon":
+			newLevel = 15;
+			break;
+		case "rare":
+			newLevel = 20;
+			break;
+		case "unique":
+			newLevel = 25;
+			break;
+		case "epic":
+			newLevel = 30;
+			break;
+		case "angelic":
+			newLevel = 40;
+			break;
+		case "mythic":
+			newLevel = 50;
+			break;
+		}
+		lore.add(1, "§7Level Req: " + newLevel);
+		return item;
 	}
 }
