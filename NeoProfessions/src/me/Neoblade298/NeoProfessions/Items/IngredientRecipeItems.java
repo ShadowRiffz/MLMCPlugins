@@ -349,7 +349,7 @@ public class IngredientRecipeItems {
 		recipe.add(new ItemStack(Material.WHEAT_SEEDS));
 		recipe.add(new ItemStack(Material.SUGAR));
 		recipe.add(new ItemStack(Material.REDSTONE));
-		recipe.add(new ItemStack(Material.GREEN_DYE));
+		recipe.add(new ItemStack(Material.COCOA_BEANS));
 		return recipe;
 	}
 	
