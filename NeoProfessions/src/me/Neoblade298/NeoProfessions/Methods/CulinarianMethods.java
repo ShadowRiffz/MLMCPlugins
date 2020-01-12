@@ -614,6 +614,9 @@ public class CulinarianMethods {
 			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
 				culinarianUtils.craftRecipeMax(p, econ, ingr.getTequilaRecipe(), ingr.getTequila(), false, "Tequila");
 			}
+			else if(recipe.equalsIgnoreCase("grapes")) {
+				culinarianUtils.craftRecipeMax(p, econ, ingr.getGrapesRecipe(), ingr.getGrapes(), false, "Grapes");
+			}
 		}
 		else {
 			util.sendMessage(p, "&cYou do not yet have the required skill!");
@@ -693,6 +696,9 @@ public class CulinarianMethods {
 			}
 			else if(recipe.equalsIgnoreCase("tequila") && p.hasPermission("culinarian.craft.3")) {
 				culinarianUtils.craftRecipe(p, econ, amount, ingr.getTequilaRecipe(), ingr.getTequila(), false, "Tequila");
+			}
+			else if(recipe.equalsIgnoreCase("grapes")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getGrapesRecipe(), ingr.getGrapes(), false, "Grapes");
 			}
 		}
 		else {
