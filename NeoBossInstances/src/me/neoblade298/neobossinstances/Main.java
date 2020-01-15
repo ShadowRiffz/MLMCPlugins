@@ -392,6 +392,7 @@ public class Main extends JavaPlugin implements Listener {
 			permList.add("deluxechat.bungee.chat");
 			permList.add("essentials.msg");
 			permList.add("multiverse.portal.access.*");
+			permList.add("serversigns.use");
 			if (isDebug) {
 				System.out.println(p.getName() + " " + permList);
 			}
