@@ -55,8 +55,17 @@ public class GearConfig {
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
 		
-		// Display
-		String prefix = prefixes.get(main.gen.nextInt(prefixes.size()));
+		// Decide Prefix
+		String prefix;
+		ArrayList<String> rarityPrefixes = rarities.get(rarity).prefixes;
+		if (rarityPrefixes.size() != 0) {
+			prefix = rarityPrefixes.get(main.gen.nextInt(rarityPrefixes.size()));
+		}
+		else {
+			prefix = prefixes.get(main.gen.nextInt(prefixes.size()));
+		}
+		
+		// Rest of display
 		String display = displayNames.get(main.gen.nextInt(displayNames.size()));
 		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
 		

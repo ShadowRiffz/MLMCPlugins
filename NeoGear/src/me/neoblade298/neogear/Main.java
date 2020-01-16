@@ -113,7 +113,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			for (String rarity : this.rarities.keySet()) {
 				ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
 				if (specificRareSec != null) {
-					rarities.put(rarity, new RarityBonuses(parseAttributes(specificRareSec), specificRareSec.getInt("added-durability")));
+					rarities.put(rarity, new RarityBonuses(parseAttributes(specificRareSec), specificRareSec.getInt("added-durability"),
+							(ArrayList<String>) specificRareSec.getStringList("prefixes")));
 				}
 				else {
 					rarities.put(rarity,  new RarityBonuses());
@@ -231,7 +232,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		Attributes currAttr = current.attributes;
 		Attributes newAttr = overrideAttributes(currAttr, sec);
 		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1) : current.duraBonus;
-		return new RarityBonuses(newAttr, addedDura);
+		ArrayList<String> currPrefixes = current.prefixes;
+		ArrayList<String> newPrefixes = (ArrayList<String>) sec.getStringList("prefixes");
+		ArrayList<String> changedPrefixes = currPrefixes;
+		if (newPrefixes != null) {
+			changedPrefixes = currPrefixes.equals(newPrefixes) ? currPrefixes : newPrefixes;
+		}
+		
+		return new RarityBonuses(newAttr, addedDura, changedPrefixes);
 	}
 	
 	private void overrideLevel(int level, GearConfig conf, ConfigurationSection sec) {
