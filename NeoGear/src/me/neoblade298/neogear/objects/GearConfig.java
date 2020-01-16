@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,6 +56,11 @@ public class GearConfig {
 		ItemStack item = new ItemStack(material);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
+		
+		// If item is a shield, give it damage
+		if (material.equals(Material.SHIELD)) {
+			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("Shield", 4, AttributeModifier.Operation.ADD_NUMBER));
+		}
 		
 		// Decide Prefix
 		String prefix;
