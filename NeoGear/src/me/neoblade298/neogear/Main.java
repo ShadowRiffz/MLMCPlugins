@@ -114,7 +114,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
 				if (specificRareSec != null) {
 					rarities.put(rarity, new RarityBonuses(parseAttributes(specificRareSec), specificRareSec.getInt("added-durability"),
-							(ArrayList<String>) specificRareSec.getStringList("prefixes")));
+							(ArrayList<String>) specificRareSec.getStringList("prefix")));
 				}
 				else {
 					rarities.put(rarity,  new RarityBonuses());
@@ -233,7 +233,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		Attributes newAttr = overrideAttributes(currAttr, sec);
 		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1) : current.duraBonus;
 		ArrayList<String> currPrefixes = current.prefixes;
-		ArrayList<String> newPrefixes = (ArrayList<String>) sec.getStringList("prefixes");
+		ArrayList<String> newPrefixes = (ArrayList<String>) sec.getStringList("prefix");
 		ArrayList<String> changedPrefixes = currPrefixes;
 		if (newPrefixes != null) {
 			changedPrefixes = currPrefixes.equals(newPrefixes) ? currPrefixes : newPrefixes;
