@@ -134,7 +134,7 @@ public class GearConfig {
 		if (perception > 0) { lore.add("§9Perception +" + (perception - (perception % attributes.prcRounded))); }
 		if (endurance > 0) { lore.add("§9Endurance +" + (endurance - (endurance % attributes.endRounded))); }
 		if (vitality > 0) { lore.add("§9Vitality +" + (vitality - (vitality % attributes.vitRounded))); }
-		if (regeneration > 0) { lore.add("§9Regen +" + (regeneration - (regeneration % attributes.vitRounded))); }
+		if (regeneration > 0) { lore.add("§9Regen +" + (regeneration - (regeneration % attributes.rgnRounded))); }
 		
 		int durability = duraBase + rarities.get(rarity).duraBonus;
 		lore.add("§7Durability " + durability + " / " + durability);

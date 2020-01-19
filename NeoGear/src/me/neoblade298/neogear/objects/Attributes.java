@@ -66,6 +66,10 @@ public class Attributes {
 		this.vitPerLvl = vitPerLvl;
 		this.vitRange = vitRange;
 		this.vitRounded = vitRounded;
+		this.rgnBase = rgnBase;
+		this.rgnPerLvl = rgnPerLvl;
+		this.rgnRange = rgnRange;
+		this.rgnRounded = rgnRounded;
 	}
 	
 	public Attributes() {
