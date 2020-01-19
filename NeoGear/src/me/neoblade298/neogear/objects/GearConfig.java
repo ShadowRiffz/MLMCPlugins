@@ -123,7 +123,7 @@ public class GearConfig {
 		int regeneration = attributes.rgnBase + (attributes.rgnPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.rgnRange + 1);
 		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
 				+ main.gen.nextInt(rarityAttrs.rgnRange + 1);
-		lore.add("§7Tier: " + main.rarities.get(rarity).displayName + " " + StringUtils.capitalize(name));
+		lore.add("§7Tier: " + main.rarities.get(rarity).displayName + " " + this.display);
 		if (level > 0) { lore.add("§7Level Req: " + level); }
 		lore.add("§9[Base Attributes]");
 		if (strength > 0) { lore.add("§9Strength +" + (strength - (strength % attributes.strRounded))); }
