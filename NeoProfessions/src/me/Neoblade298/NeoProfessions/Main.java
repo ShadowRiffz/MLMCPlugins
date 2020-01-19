@@ -127,7 +127,7 @@ public class Main extends JavaPlugin implements Listener {
 									}
 								}
 								if (charmLine != null) {
-									p.setFoodLevel(18);
+									p.setFoodLevel(19);
 								}
 							}
 						}
