@@ -1,6 +1,7 @@
 package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -80,6 +81,12 @@ public class GearConfig {
 		String display = displayNames.get(main.gen.nextInt(displayNames.size()));
 		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
 		
+		// Add required enchantments (they show up at the top)
+		for (Enchant enchant : requiredEnchants) {
+			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
+			meta.addEnchant(enchant.enchantment, lv, true);
+		}
+		
 		// Add optional enchantments (they show up at the bottom)
 		int optEnchantNum = enchantmentMin + main.gen.nextInt(enchantmentMax - enchantmentMin + 1);
 		ArrayList<Enchant> optEnchants = new ArrayList<Enchant>();
@@ -89,13 +96,6 @@ public class GearConfig {
 			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
 			meta.addEnchant(enchant.enchantment, lv, true);
 			optEnchants.remove(enchant);
-		}
-		
-		// Add required enchantments (they show up at the top)
-		for (int i = requiredEnchants.size() - 1; i >= 0; i--) {
-			Enchant enchant = requiredEnchants.get(i);
-			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
-			meta.addEnchant(enchant.enchantment, lv, true);
 		}
 		
 		// Lore
