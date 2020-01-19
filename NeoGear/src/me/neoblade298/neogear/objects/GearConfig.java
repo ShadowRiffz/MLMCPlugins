@@ -17,6 +17,7 @@ import me.neoblade298.neogear.Main;
 public class GearConfig {
 	private Main main;
 	public String name;
+	public String display;
 	public Material material;
 	public ArrayList<String> prefixes;
 	public ArrayList<String> displayNames;
@@ -28,7 +29,7 @@ public class GearConfig {
 	public Attributes attributes;
 	public HashMap<String, RarityBonuses> rarities;
 	
-	public GearConfig(Main main, String name, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
+	public GearConfig(Main main, String name, String display, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
 			ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, int enchantmentMin, int enchantmentMax, Attributes attributes,
 			HashMap<String, RarityBonuses> rarities) {
 		
@@ -42,6 +43,7 @@ public class GearConfig {
 		
 		this.main = main;
 		this.name = name;
+		this.display = display;
 		this.material = material;
 		this.prefixes = prefixes;
 		this.displayNames = displayNames;

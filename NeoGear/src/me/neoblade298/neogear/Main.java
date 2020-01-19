@@ -89,6 +89,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		for (File file : gearFolder.listFiles()) {
 			YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
 			String name = gearCfg.getString("name");
+			String display = gearCfg.getString("display");
 			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
 			
 			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
@@ -125,7 +126,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			if (overrideSec != null) {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, material, prefixes, displayNames, duraMinBase, reqEnchList, optEnchList,
+					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames, duraMinBase, reqEnchList, optEnchList,
 							enchMin, enchMax, attributes, rarities);
 	
 					// Level override
