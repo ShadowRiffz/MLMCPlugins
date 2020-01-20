@@ -29,7 +29,7 @@ public class Commands implements CommandExecutor{
 			if (args.length == 4 && args[0].equalsIgnoreCase("get") && sender instanceof Player) {
 				Player p = (Player) sender;
 				String rarity = selectRarity(args[1]);
-				String type = selectType(args[2]);
+				String type = selectType(args[2], p);
 				int lvl = selectLevel(args[3], (Player) sender);
 				
 				if (rarity == null) {
@@ -57,7 +57,7 @@ public class Commands implements CommandExecutor{
 			else if (args.length == 5 && args[0].equalsIgnoreCase("give")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				String rarity = selectRarity(args[2]);
-				String type = selectType(args[3]);
+				String type = selectType(args[3], Bukkit.getPlayer(args[1]));
 				int lvl = selectLevel(args[4], p);
 
 				if (p == null) {
@@ -90,9 +90,9 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4§l[§cMLMC§4] §7Successfully reloaded");
 			}
 			else {
-				sender.sendMessage("§4§l[§cMLMC§4] §c/gear get {rarity/set} {type/set} {lvl/auto/range} §7- Spawns you gear");
+				sender.sendMessage("§4§l[§cMLMC§4] §c/gear get {rarity/set} {type/set/auto} {lvl/auto/range} §7- Spawns you gear");
 				sender.sendMessage("§4§l[§cMLMC§4] §c/gear give [player] {rarity/set} {type/set} {lvl/auto/range} §7- Spawns a player gear");
-				sender.sendMessage("§4§l[§cMLMC§4] §7{auto} gives gear according to the player's level, {range} is formatted as lvl:lvl");
+				sender.sendMessage("§4§l[§cMLMC§4] §7{auto} gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
 				sender.sendMessage("§4§l[§cMLMC§4] §7Add :lvl to {auto} if you want to set a max level to the gear (auto:30)");
 				sender.sendMessage("§4§l[§cMLMC§4] §c/gear reload §7- Reloads config");
 			}
@@ -120,7 +120,7 @@ public class Commands implements CommandExecutor{
 		return null;
 	}
 	
-	private String selectType(String param) {
+	private String selectType(String param, Player p) {
 		if (main.itemSets.containsKey(param)) {
 			double selector = main.gen.nextDouble();
 			for (String item : main.itemSets.get(param)) {
@@ -133,6 +133,19 @@ public class Commands implements CommandExecutor{
 		}
 		else if (main.settings.containsKey(param)) {
 			return param;
+		}
+		else if (param.equalsIgnoreCase("auto")) {
+			String pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
+			if (main.itemSets.containsKey(pClass)) {
+				double selector = main.gen.nextDouble();
+				for (String item : main.itemSets.get(param)) {
+					String[] iParams = item.split(":");
+					selector -= Double.parseDouble(iParams[1]);
+					if (selector < 0) {
+						return iParams[0];
+					}
+				}
+			}
 		}
 		return null;
 	}
