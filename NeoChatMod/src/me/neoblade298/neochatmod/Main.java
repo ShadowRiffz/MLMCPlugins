@@ -61,11 +61,13 @@ public class Main extends JavaPlugin implements Listener {
 		double x = e.getPlayer().getLocation().getX();
 		double z = e.getPlayer().getLocation().getZ();
 		World w = e.getPlayer().getWorld();
+		Player sender = e.getPlayer();
 		
 		// Check if they're in the tutorial world
 		if (w.getName().equalsIgnoreCase("Argyll") &&
 			(X_BOUND_1 <= x && x <= X_BOUND_2) &&
-			(Z_BOUND_1 <= z && z <= Z_BOUND_2)) {
+			(Z_BOUND_1 <= z && z <= Z_BOUND_2) &&
+			!sender.hasPermission("mycommand.staff")) {
 			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 				if (p.hasPermission("mycommand.staff")) {
 					p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
