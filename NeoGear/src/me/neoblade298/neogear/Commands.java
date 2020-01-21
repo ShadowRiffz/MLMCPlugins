@@ -122,29 +122,22 @@ public class Commands implements CommandExecutor{
 	
 	private String selectType(String param, Player p) {
 		if (main.itemSets.containsKey(param)) {
-			double selector = main.gen.nextDouble();
-			for (String item : main.itemSets.get(param)) {
-				String[] iParams = item.split(":");
-				selector -= Double.parseDouble(iParams[1]);
-				if (selector < 0) {
-					return iParams[0];
-				}
-			}
+			// return main.itemSets.get(param).get(main.gen.nextInt(main.itemSets.get(param).size()));
+			// First get the max possible weight
+			return main.itemSets.get(param).pickItem();
 		}
 		else if (main.settings.containsKey(param)) {
 			return param;
 		}
 		else if (param.equalsIgnoreCase("auto")) {
-			String pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
-			if (main.itemSets.containsKey(pClass)) {
-				double selector = main.gen.nextDouble();
-				for (String item : main.itemSets.get(param)) {
-					String[] iParams = item.split(":");
-					selector -= Double.parseDouble(iParams[1]);
-					if (selector < 0) {
-						return iParams[0];
-					}
+			if (p.hasPermission("filters.neogear")) {
+				String pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
+				if (main.itemSets.containsKey(pClass)) {
+					return main.itemSets.get(pClass).pickItem();
 				}
+			}
+			else {
+				return main.itemSets.get("random").pickItem();
 			}
 		}
 		return null;

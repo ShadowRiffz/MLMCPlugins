@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.neoblade298.neogear.objects.Attributes;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
+import me.neoblade298.neogear.objects.ItemSet;
 import me.neoblade298.neogear.objects.Rarity;
 import me.neoblade298.neogear.objects.RarityBonuses;
 
@@ -25,7 +26,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public int lvlInterval;
 	public HashMap<String, Rarity> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
-	public HashMap<String, ArrayList<String>> itemSets;
+	public HashMap<String, ItemSet> itemSets;
 	public Random gen;
 	
 	public void onEnable() {
@@ -73,10 +74,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		
 		// Item sets
-		this.itemSets = new HashMap<String, ArrayList<String>>();
+		this.itemSets = new HashMap<String, ItemSet>();
 		ConfigurationSection itemSets = this.cfg.getConfigurationSection("item-sets");
 		for (String set : itemSets.getKeys(false)) {
-			this.itemSets.put(set, (ArrayList<String>) itemSets.getStringList(set));
+			ArrayList<String> setContents = (ArrayList<String>) itemSets.getStringList(set);
+			ItemSet itemset = new ItemSet(this, setContents);
+			this.itemSets.put(set, itemset);
 		}
 		
 		// Set up gear folder
