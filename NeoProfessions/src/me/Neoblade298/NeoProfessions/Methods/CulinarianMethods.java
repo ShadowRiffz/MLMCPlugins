@@ -422,7 +422,8 @@ public class CulinarianMethods {
 			if(slot != -1) {
 				if(item.getType().equals(Material.PAPER) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
 					int level = culinarianUtils.getRecipeLevel(item);
-					if(p.hasPermission("culinarian.assimilate." + level)) {
+					int perm = level / 10;
+					if(p.hasPermission("culinarian.assimilate." + perm)) {
 						if(econ.has(p, ASSIMILATE_COST)) {
 							p.getInventory().removeItem(util.setAmount(item, 1));
 							p.getInventory().addItem(common.getEssence(level, false));
@@ -457,7 +458,8 @@ public class CulinarianMethods {
 			if(!item.getType().equals(Material.AIR)) {
 				if(item.getType().equals(Material.PAPER) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains(("#"))) {
 					int level = culinarianUtils.getRecipeLevel(item);
-					if(p.hasPermission("culinarian.assimilate." + level)) {
+					int perm = level / 10;
+					if(p.hasPermission("culinarian.assimilate." + perm)) {
 						if(econ.has(p, ASSIMILATE_COST * item.getAmount())) {
 							amount += item.getAmount();
 							p.getInventory().removeItem(item);

@@ -32,6 +32,18 @@ public class Util {
 		return -1;
 	}
 	
+	public boolean isGearReworked(ItemStack item) {
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+			for(String line : lore) {
+				if (line.contains("Level Req")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public int getItemLevel(ItemStack item) {
 		if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return -1;

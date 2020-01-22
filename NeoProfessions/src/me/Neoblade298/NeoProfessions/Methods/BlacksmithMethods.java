@@ -112,37 +112,42 @@ public class BlacksmithMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
 			if(item.containsEnchantment(Enchantment.DURABILITY)) {
-				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
-				int upgradeLevel = enchLevel + 1;
-				int itemLevel = util.getItemLevel(item);
-				if(upgradeLevel <= 6) {
-					if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
-						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
-								if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
-									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE));
-									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
-									util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
+				if (util.isGearReworked(item)) {
+					int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
+					int upgradeLevel = enchLevel + 1;
+					int itemLevel = util.getItemLevel(item);
+					if(upgradeLevel <= 6) {
+						if(p.hasPermission("blacksmith.upgrade.unbreaking." + upgradeLevel)) {
+							if(itemLevel != -1) {
+								if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
+									if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
+										item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
+										p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE));
+										econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
+										util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
+									}
+									else {
+										util.sendMessage(p, "&cYou lack the gold to create this!");
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									util.sendMessage(p, "&cYou lack the materials to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the materials to create this!");
+								util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+							util.sendMessage(p, "&cYou do not yet have the required skill!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
+					util.sendMessage(p, "&cItem is no longer supported by the server!");
 				}
 			}
 			else {
@@ -159,37 +164,42 @@ public class BlacksmithMethods {
 		if(!item.getType().equals(Material.AIR)) {
 			System.out.println(item);
 			if(item.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
-				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
-				int upgradeLevel = enchLevel + 1;
-				int itemLevel = util.getItemLevel(item);
-				if(upgradeLevel <= 6) {
-					if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
-						if(itemLevel != -1) {
-							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
-								if(econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
-									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE));
-									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
-									util.sendMessage(p, "&7Successfully upgraded protection to level " + upgradeLevel + "!");
+				if (util.isGearReworked(item)) {
+					int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
+					int upgradeLevel = enchLevel + 1;
+					int itemLevel = util.getItemLevel(item);
+					if(upgradeLevel <= 6) {
+						if(p.hasPermission("blacksmith.upgrade.protection." + upgradeLevel)) {
+							if(itemLevel != -1) {
+								if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
+									if(econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
+										item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
+										p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE));
+										econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
+										util.sendMessage(p, "&7Successfully upgraded protection to level " + upgradeLevel + "!");
+									}
+									else {
+										util.sendMessage(p, "&cYou lack the gold to create this!");
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									util.sendMessage(p, "&cYou lack the materials to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the materials to create this!");
+								util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+							util.sendMessage(p, "&cYou do not yet have the required skill!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cCannot upgrade protection any further!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cCannot upgrade protection any further!");
+					util.sendMessage(p, "&cItem is no longer supported by the server!");
 				}
 			}
 			else {
