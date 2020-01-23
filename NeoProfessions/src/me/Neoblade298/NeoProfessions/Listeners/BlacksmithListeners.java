@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -27,23 +26,6 @@ public class BlacksmithListeners implements Listener {
 		this.main = main;
 		blacksmithUtils = new BlacksmithUtils();
 		util = new Util();
-	}
-
-	@EventHandler
-	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
-		ItemStack[] arrayOfItemStack;
-		int j = (arrayOfItemStack = e.getInventory().getContents()).length;
-		for (int i = 0; i < j; i++) {
-			ItemStack item = arrayOfItemStack[i];
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				for (String line : item.getItemMeta().getLore()) {
-					if (line.contains("Tier")) {
-						e.setResult(null);
-						return;
-					}
-				}
-			}
-		}
 	}
 
 	@EventHandler

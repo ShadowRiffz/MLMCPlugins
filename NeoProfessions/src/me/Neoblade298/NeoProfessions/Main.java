@@ -19,6 +19,7 @@ import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
+import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Listeners.SkillapiListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
@@ -48,6 +49,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	public MasonListeners masonListeners;
 	public MasonUtils masonUtils;
+
+	public GeneralListeners generalListeners;
 	
 	public me.neoblade298.neogear.Main neogear;
 
@@ -67,6 +70,7 @@ public class Main extends JavaPlugin implements Listener {
 		masonListeners = new MasonListeners(this);
 		masonUtils = new MasonUtils();
 		culinarianListeners = new CulinarianListeners(this);
+		generalListeners = new GeneralListeners(this);
 
 		// Connect method classes to main
 		blacksmithMethods = new BlacksmithMethods(this);

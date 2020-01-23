@@ -214,32 +214,37 @@ public class BlacksmithMethods {
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
-			String type = util.getItemType(item);
-			if(type != null) {
-				int itemLevel = util.getItemLevel(item);
-				int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
-				perm = itemLevel == 0 ? 1 : perm;
-				String rarity = util.getItemRarity(item);
-				if(itemLevel != -1 && rarity != null) {
-					if(p.hasPermission("blacksmith.reforge." + perm)) {
-						if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm)) {
-							if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm));
-								p.getInventory().removeItem(item);
-								econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
-								p.getInventory().addItem(main.neogear.settings.get(rarity).get(itemLevel).generateItem(rarity, itemLevel));
-								util.sendMessage(p, "&7Successfully reforged item!");
+			if (util.isGearReworked(item)) {
+				String type = util.getItemType(item);
+				if(type != null) {
+					int itemLevel = util.getItemLevel(item);
+					int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
+					perm = itemLevel == 0 ? 1 : perm;
+					String rarity = util.getItemRarity(item);
+					if(itemLevel != -1 && rarity != null) {
+						if(p.hasPermission("blacksmith.reforge." + perm)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm)) {
+								if(econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
+									p.getInventory().removeItem(util.setAmount(common.getEssence(itemLevel, true), REFORGE_ESSENCE_PER_LVL * perm));
+									p.getInventory().removeItem(item);
+									econ.withdrawPlayer(p,  REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
+									p.getInventory().addItem(main.neogear.settings.get(rarity).get(itemLevel).generateItem(rarity, itemLevel));
+									util.sendMessage(p, "&7Successfully reforged item!");
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the gold to create this!");
+								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to create this!");
+								util.sendMessage(p, "&cYou lack the materials to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to create this!");
+							util.sendMessage(p, "&cYou do not yet have the required skill!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cYou cannot reforge non-quest items!");
 					}
 				}
 				else {
@@ -247,7 +252,7 @@ public class BlacksmithMethods {
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
@@ -258,27 +263,32 @@ public class BlacksmithMethods {
 	public void scrapItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
-			int itemLevel = util.getItemLevel(item);
-			int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
-			perm = itemLevel == 0 ? 1 : perm;
-			if(itemLevel != -1) {
-				if(p.hasPermission("blacksmith.scrap." + perm)) {
-					if(econ.has(p, SCRAP_COST)) {
-						p.getInventory().removeItem(item);
-						econ.withdrawPlayer(p, SCRAP_COST);
-						p.getInventory().addItem(common.getEssence(itemLevel, false));
-						util.sendMessage(p, "&cSuccessfully scrapped item!");
+			if (util.isGearReworked(item)) {
+				int itemLevel = util.getItemLevel(item);
+				int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
+				perm = itemLevel == 0 ? 1 : perm;
+				if(itemLevel != -1) {
+					if(p.hasPermission("blacksmith.scrap." + perm)) {
+						if(econ.has(p, SCRAP_COST)) {
+							p.getInventory().removeItem(item);
+							econ.withdrawPlayer(p, SCRAP_COST);
+							p.getInventory().addItem(common.getEssence(itemLevel, false));
+							util.sendMessage(p, "&cSuccessfully scrapped item!");
+						}
+						else {
+							util.sendMessage(p, "&cYou lack the gold to scrap this!");
+						}
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to scrap this!");
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou cannot scrap non-quest items!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou cannot scrap non-quest items!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
@@ -289,26 +299,31 @@ public class BlacksmithMethods {
 	public void deconstructItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand().clone();
 		if(!item.getType().equals(Material.AIR)) {
-			item.setAmount(1);
-			int itemLevel = util.getEssenceLevel(item);
-			if(itemLevel >= 20) {
-				if(p.hasPermission("blacksmith.deconstruct")) {
-					if(econ.has(p, DECONSTRUCT_COST)) {
-						p.getInventory().removeItem(item);
-						econ.withdrawPlayer(p, DECONSTRUCT_COST);
-						p.getInventory().addItem(util.setAmount(common.getEssence(itemLevel - LEVEL_INTERVAL, false), DECONSTRUCT_AMOUNT));
-						util.sendMessage(p, "&cSuccessfully deconstructed item!");
+			if (util.isGearReworked(item)) {
+				item.setAmount(1);
+				int itemLevel = util.getEssenceLevel(item);
+				if(itemLevel >= 20) {
+					if(p.hasPermission("blacksmith.deconstruct")) {
+						if(econ.has(p, DECONSTRUCT_COST)) {
+							p.getInventory().removeItem(item);
+							econ.withdrawPlayer(p, DECONSTRUCT_COST);
+							p.getInventory().addItem(util.setAmount(common.getEssence(itemLevel - LEVEL_INTERVAL, false), DECONSTRUCT_AMOUNT));
+							util.sendMessage(p, "&cSuccessfully deconstructed item!");
+						}
+						else {
+							util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
+						}
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 20!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 20!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {

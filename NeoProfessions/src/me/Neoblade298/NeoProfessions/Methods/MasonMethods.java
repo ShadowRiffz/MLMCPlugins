@@ -89,40 +89,45 @@ public class MasonMethods {
 		perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			if(p.hasPermission("mason.engrave.tier." + perm) && perm % 10 == 0) {
-				if(util.getItemLevel(item) >= level) {
-					int numSlots = masonUtils.countSlots(item);
-					if(numSlots < MAX_SLOTS) {
-						if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
-							if(p.getInventory().containsAtLeast(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots))) {
-								if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
-									masonUtils.createSlot(item, level);
-									p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots)));
-									econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
-									util.sendMessage(p, "&7Successfully created slot!");
+			if (util.isGearReworked(item)) {
+				if(p.hasPermission("mason.engrave.tier." + perm) && perm % 10 == 0) {
+					if(util.getItemLevel(item) >= level) {
+						int numSlots = masonUtils.countSlots(item);
+						if(numSlots < MAX_SLOTS) {
+							if (p.hasPermission(("mason.engrave.max."  + (numSlots + 1)))) {
+								if(p.getInventory().containsAtLeast(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots))) {
+									if(econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
+										masonUtils.createSlot(item, level);
+										p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots)));
+										econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
+										util.sendMessage(p, "&7Successfully created slot!");
+									}
+									else {
+										util.sendMessage(p, "&cYou lack the gold to create this!");
+									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									util.sendMessage(p, "&cYou lack the materials to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the materials to create this!");
+								util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
+							util.sendMessage(p, "&cThis item cannot have any more slots!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cThis item cannot have any more slots!");
+						util.sendMessage(p, "&cThis item is not capable of holding a slot of this level!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis item is not capable of holding a slot of this level!");
+					util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
@@ -265,33 +270,38 @@ public class MasonMethods {
 	public void slot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
-			if(masonUtils.isSlotAvailable(item, slot)) {
-				if(util.isArmor(item)) {
-					int level = util.getItemLevel(item);
-					level -= level % LEVEL_INTERVAL;
-					if(p.hasPermission("mason.slot.armor." + level)) {
-						listeners.prepItemSlot(p, item, slot);
+			if (util.isGearReworked(item)) {
+				if(masonUtils.isSlotAvailable(item, slot)) {
+					if(util.isArmor(item)) {
+						int level = util.getItemLevel(item);
+						level -= level % LEVEL_INTERVAL;
+						if(p.hasPermission("mason.slot.armor." + level)) {
+							listeners.prepItemSlot(p, item, slot);
+						}
+						else {
+							util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						}
+					}
+					else if(util.isWeapon(item)) {
+						int level = util.getItemLevel(item);
+						level -= level % LEVEL_INTERVAL;
+						if(p.hasPermission("mason.slot.weapon." + level)) {
+							listeners.prepItemSlot(p, item, slot);
+						}
+						else {
+							util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
-					}
-				}
-				else if(util.isWeapon(item)) {
-					int level = util.getItemLevel(item);
-					level -= level % LEVEL_INTERVAL;
-					if(p.hasPermission("mason.slot.weapon." + level)) {
-						listeners.prepItemSlot(p, item, slot);
-					}
-					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						util.sendMessage(p, "&cThis item cannot be slotted!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis item cannot be slotted!");
+					util.sendMessage(p, "&cThis slot is unavailable!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis slot is unavailable!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
@@ -302,42 +312,47 @@ public class MasonMethods {
 	public void unslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
-			if(masonUtils.isSlotUsed(item, slot)) {
-				int level = util.getItemLevel(item);
-				int perm = (level / 10) - 1;
-				perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
-				String line = masonUtils.getSlotLine(item, slot);
-				int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
-				if(p.hasPermission("mason.unslot." + level)) {
-					if(p.getInventory().firstEmpty() != -1) {
-						if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE)) {
-							if(econ.has(p, UNSLOT_GOLD_PER_LVL * perm)) {
-								ItemStack returned = masonUtils.parseUnslot(p, slot);
-								if(returned != null) {
-									p.getInventory().removeItem(util.setAmount(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE));
-									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
-									p.getInventory().addItem(returned);
-									util.sendMessage(p, "&cSuccessfully unslotted item!");
+			if (util.isGearReworked(item)) {
+				if(masonUtils.isSlotUsed(item, slot)) {
+					int level = util.getItemLevel(item);
+					int perm = (level / 10) - 1;
+					perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
+					String line = masonUtils.getSlotLine(item, slot);
+					int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
+					if(p.hasPermission("mason.unslot." + level)) {
+						if(p.getInventory().firstEmpty() != -1) {
+							if(p.getInventory().containsAtLeast(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE)) {
+								if(econ.has(p, UNSLOT_GOLD_PER_LVL * perm)) {
+									ItemStack returned = masonUtils.parseUnslot(p, slot);
+									if(returned != null) {
+										p.getInventory().removeItem(util.setAmount(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE));
+										econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
+										p.getInventory().addItem(returned);
+										util.sendMessage(p, "&cSuccessfully unslotted item!");
+									}
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the gold to do this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to do this!");
+								util.sendMessage(p, "&cYou lack the materials to do this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to do this!");
+							util.sendMessage(p, "&cYour inventory is full!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYour inventory is full!");
+						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+					util.sendMessage(p, "&cThis slot is unused or does not exist!!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis slot is unused or does not exist!!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
@@ -348,35 +363,40 @@ public class MasonMethods {
 	public void removeSlot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if(!item.getType().equals(Material.AIR)) {
-			if(masonUtils.isSlotAvailable(item, slot)) {
-				int level = util.getItemLevel(item);
-				if(level != -1) {
-					if(p.hasPermission("mason.engrave.tier." + level)) {
-						if(p.getInventory().containsAtLeast(common.getEssence(level, true), UNENGRAVE_ESSENCE)) {
-							if(econ.has(p, UNENGRAVE_GOLD)) {
-								p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), UNENGRAVE_ESSENCE));
-								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
-								masonUtils.removeSlotLine(item, slot);
-								util.sendMessage(p, "&7Successfully removed slot!");
+			if (util.isGearReworked(item)) {
+				if(masonUtils.isSlotAvailable(item, slot)) {
+					int level = util.getItemLevel(item);
+					if(level != -1) {
+						if(p.hasPermission("mason.engrave.tier." + level)) {
+							if(p.getInventory().containsAtLeast(common.getEssence(level, true), UNENGRAVE_ESSENCE)) {
+								if(econ.has(p, UNENGRAVE_GOLD)) {
+									p.getInventory().removeItem(util.setAmount(common.getEssence(level, true), UNENGRAVE_ESSENCE));
+									econ.withdrawPlayer(p, UNENGRAVE_GOLD);
+									masonUtils.removeSlotLine(item, slot);
+									util.sendMessage(p, "&7Successfully removed slot!");
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the gold to do this!");
+								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to do this!");
+								util.sendMessage(p, "&cYou lack the materials to do this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to do this!");
+							util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						util.sendMessage(p, "&cInvalid item!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid item!");
+					util.sendMessage(p, "&cSlot either doesn't exist or is in use!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cSlot either doesn't exist or is in use!");
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
 		}
 		else {
