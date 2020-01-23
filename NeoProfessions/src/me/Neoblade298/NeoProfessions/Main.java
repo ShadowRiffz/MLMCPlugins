@@ -39,6 +39,10 @@ public class Main extends JavaPlugin implements Listener {
 	private Permission perms;
 	private Chat chat;
 
+	static String sqlUser = "neoblade298";
+	static String sqlPass = "7H56480g09&Z01pz";
+	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
+
 	public BlacksmithMethods blacksmithMethods;
 	public MasonMethods masonMethods;
 	public StonecutterMethods stonecutterMethods;
