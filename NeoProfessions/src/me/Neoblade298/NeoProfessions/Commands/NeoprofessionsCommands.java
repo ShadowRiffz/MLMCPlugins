@@ -61,13 +61,86 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
+
+		Player p = null;
+		if(sender instanceof Player) {
+			p = (Player) sender;
+		}
+		
+		if (args.length == 0) {
+			sender.sendMessage("§7- §c/neoprofessions convert");
+			sender.sendMessage("§7- §c/neoprofessions pay [player] [essence/oretype] [level] [amount]");
+			sender.sendMessage("§7- §c/neoprofessions liquidate §7- Virtualizes all ore and essence in inventory");
+			sender.sendMessage("§7- §c/neoprofessions solidify [essence/oretype] [amount] §7- Turns ore/essence into an item in inventory");
+			sender.sendMessage("§7- §c/neoprofessions balance <player> [essence/oretype] [amount]");
+			return true;
+		}
+		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
+			if (Bukkit.getPlayer(args[1]) == null) {
+				util.sendMessage(p, "&cPlayer must be online!");
+				return true;
+			}
+			if (main.cManager.validType(args[2])) {
+				util.sendMessage(p, "&cInvalid type!");
+				return true;
+			}
+			int level = Integer.parseInt(args[3]);
+			if (level <= 60 && level > 0 && level % 5 == 0) {
+				util.sendMessage(p, "&cInvalid level!");
+				return true;
+			}
+			int amount = Integer.parseInt(args[4]);
+			if (amount < 0 && amount <= 99999) {
+				util.sendMessage(p, "&cInvalid amount!");
+				return true;
+			}
+			Player recipient = Bukkit.getPlayer(args[1]);
+			main.cManager.add(recipient, args[2], level, amount);
+			main.cManager.subtract(p, args[2], level, amount);
+			util.sendMessage(p, "&7Success!");
+			return true;
+		}
+		else if (args.length == 4 && args[0].equalsIgnoreCase("balance")) {
+			if (Bukkit.getPlayer(args[1]) == null) {
+				util.sendMessage(p, "&cPlayer must be online!");
+				return true;
+			}
+			if (main.cManager.validType(args[2])) {
+				util.sendMessage(p, "&cInvalid type!");
+				return true;
+			}
+			int level = Integer.parseInt(args[3]);
+			if (level <= 60 && level > 0 && level % 5 == 0) {
+				util.sendMessage(p, "&cInvalid level!");
+				return true;
+			}
+			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(Bukkit.getPlayer(args[1]), args[2], level));
+		}
+		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
+			if (main.cManager.validType(args[1])) {
+				util.sendMessage(p, "&cInvalid type!");
+				return true;
+			}
+			int level = Integer.parseInt(args[2]);
+			if (level <= 60 && level > 0 && level % 5 == 0) {
+				util.sendMessage(p, "&cInvalid level!");
+				return true;
+			}
+			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
+			ItemStack[] inv = p.getInventory().getStorageContents();
+			Converter conv = new Converter(main);
+			for (int i = 0; i < inv.length; i++) {
+				if (inv[i] != null) {
+					int amt = inv[i].getAmount();
+					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+				}
+			}
+			p.getInventory().setStorageContents(inv);
+		}
 		
 		if(sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
-			Player p = null;
-			if(sender instanceof Player) {
-				p = (Player) sender;
-			}
-			
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/neoprofessions level [playername] <amount>");
 				sender.sendMessage("§7- §4/neoprofessions lore [line (from 0)] [newlore]");
@@ -79,8 +152,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/neoprofessions <playername> get ore [attribute or 1-7] [level] <amount>");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/neoprofessions <playername> get [basic/advanced] [charm]");
+				sender.sendMessage("§7- §4/neoprofessions <playername> add [essence/oretype] [level] [amount]");
 			}
 			else {
+				// /neoprofessions add [essence/oretype] [level] [amount]
+				if (args[0].equalsIgnoreCase("add")) {
+					this.main.cManager.add(p, args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				}
 				// /neoprofessions level playername
 				if (args[0].equalsIgnoreCase("sober")) {
 					if (args.length == 2) {
@@ -280,6 +358,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				else {
 					p = Bukkit.getPlayer(args[0]);
 					if (args[1].equalsIgnoreCase("get")) {
+						if (args[0].equalsIgnoreCase("add")) {
+							this.main.cManager.add(p, args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+						}
 						if(args[2].equalsIgnoreCase("essence")) {
 							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
 						}
@@ -372,26 +453,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 				}
 			}
-		}
-		Player p = null;
-		if(sender instanceof Player) {
-			p = (Player) sender;
-		}
-		
-		if (args.length == 0) {
-			sender.sendMessage("§7- §c/neoprofessions convert");
-			return true;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemStack[] inv = p.getInventory().getStorageContents();
-			Converter conv = new Converter(main);
-			for (int i = 0; i < inv.length; i++) {
-				if (inv[i] != null) {
-					int amt = inv[i].getAmount();
-					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
-				}
-			}
-			p.getInventory().setStorageContents(inv);
 		}
 		return true;
 	}
