@@ -82,4 +82,21 @@ public class CurrencyManager {
 			}
 		}
 	}
+	
+	public void add(Player p, String type, int level, int amount) {
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		int newAmount = typeCurrency.get(level) + amount;
+		typeCurrency.put(level, newAmount);
+	}
+	
+	public void subtract(Player p, String type, int level, int amount) {
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		int newAmount = typeCurrency.get(level) - amount;
+		typeCurrency.put(level, newAmount);
+	}
+	
+	public boolean hasEnough(Player p, String type, int level, int compare) {
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		return typeCurrency.get(level) >= compare;
+	}
 }

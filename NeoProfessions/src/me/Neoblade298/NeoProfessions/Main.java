@@ -56,6 +56,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	public GeneralListeners generalListeners;
 	
+	public CurrencyManager cManager;
+	
 	public me.neoblade298.neogear.Main neogear;
 
 	public void onEnable() {
@@ -92,6 +94,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		// NeoGear
 		neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
+		
+		// Currencies
+		cManager = new CurrencyManager(this);
 
 		// Setup Event Listeners
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
