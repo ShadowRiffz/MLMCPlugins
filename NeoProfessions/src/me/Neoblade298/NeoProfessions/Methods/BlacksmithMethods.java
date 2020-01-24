@@ -40,7 +40,7 @@ public class BlacksmithMethods {
 	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
-	final int LEVEL_INTERVAL = 10;
+	final int LEVEL_INTERVAL = 5;
 
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -54,7 +54,6 @@ public class BlacksmithMethods {
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
 		int perm = (level / 10) - 1;
-		perm = level == 0 ? 1 : perm;
 		if (slot != -1) {
 			if (p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
@@ -80,7 +79,6 @@ public class BlacksmithMethods {
 	public void createRepairItem(Player p, String item, int level) {
 		int slot = p.getInventory().firstEmpty();
 		int perm = (level / 10) - 1;
-		perm = level == 0 ? 1 : perm;
 		if (slot != -1) {
 			if (p.hasPermission("blacksmith." + item + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, REPAIR_ESSENCE)) {
@@ -157,7 +155,6 @@ public class BlacksmithMethods {
 	public void upgradeProtection(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (!item.getType().equals(Material.AIR)) {
-			System.out.println(item);
 			if (item.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
 				if (util.isGearReworked(item)) {
 					int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
@@ -206,8 +203,7 @@ public class BlacksmithMethods {
 				String type = util.getItemType(item);
 				if (type != null) {
 					int itemLevel = util.getItemLevel(item);
-					int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
-					perm = itemLevel == 0 ? 1 : perm;
+					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
 						if (p.hasPermission("blacksmith.reforge." + perm)) {
@@ -247,8 +243,7 @@ public class BlacksmithMethods {
 		if (!item.getType().equals(Material.AIR)) {
 			if (util.isGearReworked(item)) {
 				int itemLevel = util.getItemLevel(item);
-				int perm = ((itemLevel + (itemLevel % 10)) / 10) - 1;
-				perm = itemLevel == 0 ? 1 : perm;
+				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
 				if (itemLevel != -1) {
 					if (p.hasPermission("blacksmith.scrap." + perm)) {
 						if (econ.has(p, SCRAP_COST)) {
@@ -279,7 +274,7 @@ public class BlacksmithMethods {
 			if (util.isGearReworked(item)) {
 				item.setAmount(1);
 				int itemLevel = util.getEssenceLevel(item);
-				if (itemLevel >= 5) {
+				if (itemLevel >= 10) {
 					if (p.hasPermission("blacksmith.deconstruct")) {
 						if (econ.has(p, DECONSTRUCT_COST)) {
 							p.getInventory().removeItem(item);
