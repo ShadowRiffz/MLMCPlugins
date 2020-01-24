@@ -1,6 +1,8 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.util.Iterator;
+import java.util.Properties;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -42,6 +44,7 @@ public class Main extends JavaPlugin implements Listener {
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
+	static Properties properties = new Properties();
 
 	public BlacksmithMethods blacksmithMethods;
 	public MasonMethods masonMethods;
@@ -76,7 +79,6 @@ public class Main extends JavaPlugin implements Listener {
 		masonListeners = new MasonListeners(this);
 		masonUtils = new MasonUtils();
 		culinarianListeners = new CulinarianListeners(this);
-		generalListeners = new GeneralListeners(this);
 
 		// Connect method classes to main
 		blacksmithMethods = new BlacksmithMethods(this);
@@ -102,6 +104,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(masonListeners, this);
 		getServer().getPluginManager().registerEvents(culinarianListeners, this);
+		getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
 		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
 
 		// Setup recipes (make sure the recipes haven't been added before)
@@ -148,10 +151,21 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}, 0, 20L);
+		
+		// SQL
+		properties.setProperty("useSSL", "false");
+		properties.setProperty("user", sqlUser);
+		properties.setProperty("password", sqlPass);
+		properties.setProperty("useSSL", "false");
 	}
 
 	public void onDisable() {
 		super.onDisable();
+		try {
+			cManager.cleanup();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
 	}
 

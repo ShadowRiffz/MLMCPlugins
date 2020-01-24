@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class CurrencyManager {
 	// UUID, essence/oretype, amount
 	private HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
-	private static String[] types = {"essence", "ruby", "amethyst", "sapphire", "topaz", "garnet", "adamantium"};
+	private static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	
 	public CurrencyManager(Main main) {
 		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
@@ -20,12 +20,17 @@ public class CurrencyManager {
 	}
 	
 	public void initPlayer(Player p) throws Exception {
+		// Check if player exists already
+		if (currencies.containsKey(p.getUniqueId())) {
+			return;
+		}
+		
 		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = new HashMap<String, HashMap<Integer, Integer>>();
 		currencies.put(p.getUniqueId(), playerCurrencies);
 		
 		// Check if player exists on SQL
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		Connection con = DriverManager.getConnection(Main.connection, Main.properties);
 		Statement stmt = con.createStatement();
 		ResultSet rs;
 		rs = stmt.executeQuery("SELECT * FROM neoprofessions_currency WHERE UUID = '" + p.getUniqueId() + "';");
@@ -35,8 +40,8 @@ public class CurrencyManager {
 				HashMap<Integer, Integer> typeCurrencies = new HashMap<Integer, Integer>();
 				playerCurrencies.put(type, typeCurrencies);
 				String vals[] = rs.getString(i).split(":");
-				for (int j = 5; i <= 60; i += 5) {
-					typeCurrencies.put(j, Integer.parseInt(vals[i]));
+				for (int j = 5; j <= 60; j += 5) {
+					typeCurrencies.put(j, Integer.parseInt(vals[(j/5)-1]));
 				}
 			}
 		}
@@ -46,7 +51,7 @@ public class CurrencyManager {
 			for (int i = 1; i < types.length; i++) {
 				init += ", '0:0:0:0:0:0:0:0:0:0:0:0'";
 			}
-			int post = stmt.executeUpdate("INSERT INTO neoprofessions_currency "
+			stmt.executeUpdate("INSERT INTO neoprofessions_currency "
 					+ "(`uuid`, `essence`, `ruby`, `amethyst`, `sapphire`, `emerald`, `topaz`, `garnet`, `adamantium`) "
 					+ "VALUES ('" + p.getUniqueId() + "', " + init + ");");
 			for (String type : types) {
@@ -56,11 +61,23 @@ public class CurrencyManager {
 					typeCurrencies.put(i, 0);
 				}
 			}
-			if (post == 0) {
-				throw new Exception("Failed to post");
-			}
 		}
 		con.close();
+	}
+	
+	public void savePlayer(Player p) throws Exception {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		Statement stmt = con.createStatement();
+		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
+		for (String type : types) {
+			HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type);
+			String sqlString = "" + typeCurrencies.get(5);
+			for (int i = 10; i <= 60; i += 5) {
+				sqlString += ":" + typeCurrencies.get(i);
+			}
+			stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + p.getUniqueId() + "';");
+		}
 	}
 	
 	public void cleanup() throws Exception {
@@ -73,18 +90,15 @@ public class CurrencyManager {
 				HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type);
 				String sqlString = "" + typeCurrencies.get(5);
 				for (int i = 10; i <= 60; i += 5) {
-					sqlString = ":" + typeCurrencies.get(i);
+					sqlString += ":" + typeCurrencies.get(i);
 				}
-				int post = stmt.executeUpdate("UPDATE neoprofessions_currency SET '" + type + "' = '" + sqlString + "' WHERE uuid = '" + uuid + "');");
-				if (post == 0) {
-					throw new Exception("Failed to update");
-				}
+				stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + uuid + "';");
 			}
 		}
 	}
 	
 	public void add(Player p, String type, int level, int amount) {
-		if (level <= 60 && level > 0 && level % 5 == 0) {
+		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return;
 		}
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
@@ -93,7 +107,7 @@ public class CurrencyManager {
 	}
 	
 	public void subtract(Player p, String type, int level, int amount) {
-		if (level <= 60 && level > 0 && level % 5 == 0) {
+		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return;
 		}
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
@@ -102,14 +116,14 @@ public class CurrencyManager {
 	}
 	
 	public int get(Player p, String type, int level) {
-		if (level <= 60 && level > 0 && level % 5 == 0) {
+		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return -1;
 		}
 		return currencies.get(p.getUniqueId()).get(type).get(level);
 	}
 	
 	public boolean hasEnough(Player p, String type, int level, int compare) {
-		if (level <= 60 && level > 0 && level % 5 == 0) {
+		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return false;
 		}
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
