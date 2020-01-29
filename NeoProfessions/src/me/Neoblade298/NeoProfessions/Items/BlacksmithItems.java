@@ -22,15 +22,15 @@ public class BlacksmithItems {
 		
 		if(itemtype.equals("armor")) {
 			lore.add("§7Effect: Increases armor max durability");
-			int offset = 5 + (25 * (level-1));
+			int offset = 5 + (25 * ((level / 5) - 1)); // 12?
 			lore.add("§7Potency: §e" + ((int)(Math.random() * 5) * 5 + offset));
 		}
 		if(itemtype.equals("weapon")) {
 			lore.add("§7Effect: Increases weapon max durability");
-			int offset = 5 + (50 * (level-1));
+			int offset = 5 + (50 * ((level / 5) - 1)); // 24?
 			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) * 5 + offset));
 		}
-		meta.setLore(lore);
+		meta.setLore(lore);	
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		
