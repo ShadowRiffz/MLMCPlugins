@@ -21,7 +21,6 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		Bukkit.getServer().getLogger().info("NeoSlowLogin Disabled");
-		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	@EventHandler
