@@ -388,6 +388,7 @@ public class Main extends JavaPlugin implements Listener {
 				permList.add(rs.getString(1));
 			}
 			
+			permList.add("essentials.list");
 			permList.add("chatformat.default");
 			permList.add("parties.user.chat");
 			permList.add("deluxechat.bungee.chat");
