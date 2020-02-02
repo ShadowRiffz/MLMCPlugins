@@ -79,21 +79,23 @@ public class GearConfig {
 		String display = displayNames.get(main.gen.nextInt(displayNames.size()));
 		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
 		
-		// Add required enchantments (they show up at the top)
+		// Add required enchantments
 		for (Enchant enchant : requiredEnchants) {
 			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
 			meta.addEnchant(enchant.enchantment, lv, true);
 		}
 		
-		// Add optional enchantments (they show up at the bottom)
-		int optEnchantNum = enchantmentMin + main.gen.nextInt(enchantmentMax - enchantmentMin + 1);
-		ArrayList<Enchant> optEnchants = new ArrayList<Enchant>();
-		optEnchants.addAll(optionalEnchants);
-		for (int i = 0; i < optEnchantNum; i++) {
-			Enchant enchant = optEnchants.get(main.gen.nextInt(optEnchants.size()));
-			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
-			meta.addEnchant(enchant.enchantment, lv, true);
-			optEnchants.remove(enchant);
+		// Add optional enchantments
+		if (enchantmentMax > 0) {
+			int optEnchantNum = enchantmentMin + main.gen.nextInt(enchantmentMax - enchantmentMin);
+			ArrayList<Enchant> optEnchants = new ArrayList<Enchant>();
+			optEnchants.addAll(optionalEnchants);
+			for (int i = 0; i < optEnchantNum; i++) {
+				Enchant enchant = optEnchants.get(main.gen.nextInt(optEnchants.size()));
+				int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
+				meta.addEnchant(enchant.enchantment, lv, true);
+				optEnchants.remove(enchant);
+			}
 		}
 		
 		// Lore
