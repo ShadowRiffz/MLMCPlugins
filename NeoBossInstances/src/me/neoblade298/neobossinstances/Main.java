@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -52,6 +53,7 @@ public class Main extends JavaPlugin implements Listener {
 	// payload is last fought
 	public HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
 	public HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
+	public HashMap<String, Long> dropCooldown = new HashMap<String, Long>();
 	public ArrayList<String> bossNames = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
@@ -433,6 +435,16 @@ public class Main extends JavaPlugin implements Listener {
 			Player p = e.getPlayer();
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
+		}
+	}
+	
+	@EventHandler
+	public void onDrop(PlayerDropItemEvent e) {
+		String p = e.getPlayer().getName();
+		if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
+			e.setCancelled(true);
+			dropCooldown.put(p, System.currentTimeMillis());
+			e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
 		}
 	}
 }
