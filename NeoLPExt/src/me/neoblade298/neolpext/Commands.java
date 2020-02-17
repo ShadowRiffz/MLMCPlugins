@@ -3,13 +3,11 @@ package me.neoblade298.neolpext;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import net.luckperms.api.node.Node;
