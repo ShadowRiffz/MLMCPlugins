@@ -2,7 +2,8 @@ name: NeoMythicExtension
 author: Neoblade298
 main: me.neoblade298.neomythicextension.Main
 version: 1.00
-depend: [MythicMobs,NeoBossInstances]
+depend: [MythicMobs]
+softdepend: [NeoBossInstances]
 api-version: 1.14
 commands:
   nme:
