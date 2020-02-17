@@ -55,9 +55,10 @@ public class Commands implements CommandExecutor{
 		if (args.length == 4) {
 			if (args[0].equalsIgnoreCase("removelength")) {
 				User user = mngr.getUser(args[1]);
+				int len = Integer.parseInt(args[3]);
 				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
 				.filter(e -> e.getKey().startsWith(args[2]))
-				.filter(e -> e.getKey().length() == Integer.parseInt(args[3]))
+				.filter(e -> e.getKey().length() == len)
 				.collect(Collectors.toList());
 				
 				for (Node perm : removables) {
