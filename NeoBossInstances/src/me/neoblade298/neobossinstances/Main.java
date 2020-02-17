@@ -440,11 +440,13 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
-		String p = e.getPlayer().getName();
-		if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
-			e.setCancelled(true);
-			dropCooldown.put(p, System.currentTimeMillis());
-			e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
+		if (isInstance) {
+			String p = e.getPlayer().getName();
+			if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
+				e.setCancelled(true);
+				dropCooldown.put(p, System.currentTimeMillis());
+				e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
+			}
 		}
 	}
 }
