@@ -3,7 +3,7 @@ author: Neoblade298
 main: me.neoblade298.neobossinstances.Main
 api-version: 1.14
 version: 1.0
-depend: [SkillAPI, PermissionsEx]
+depend: [SkillAPI, LuckPerms]
 softdepend: [Multiverse-Core]
 commands:
   boss:

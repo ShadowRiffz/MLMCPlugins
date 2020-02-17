@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,9 +27,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 public class Main extends JavaPlugin implements Listener {
 
 	// Config items
@@ -45,8 +41,6 @@ public class Main extends JavaPlugin implements Listener {
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
 	boolean isDebug = false;
-	
-	PermissionManager pex = null;
 	
 	// SQL
 	static String sqlUser = "neoblade298";
@@ -85,8 +79,6 @@ public class Main extends JavaPlugin implements Listener {
 
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
-		
-		pex = PermissionsEx.getPermissionManager();
 
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
@@ -192,10 +184,6 @@ public class Main extends JavaPlugin implements Listener {
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
     					Statement stmt = con.createStatement();
     					ResultSet rs;
-    					// Only initialize perms once
-    					if (count == 0) {
-    						initPermissions(p, con, uuid);
-    					}
 
         				if (count > 3) {
         					this.cancel();
@@ -265,7 +253,7 @@ public class Main extends JavaPlugin implements Listener {
 	    					}
 	    					// Retried 3 times, time to teleport them out
 	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
-	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
+	    		    			p.sendMessage("ï¿½4[ï¿½cï¿½lBossesï¿½4] ï¿½7Something went wrong! Could not teleport you to boss.");
 					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 					    			public void run() {
 		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
@@ -295,16 +283,16 @@ public class Main extends JavaPlugin implements Listener {
 		int ticks = time * 20;
 		// 30 minute warning
 		if (time > 1800) {
-			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
+			scheduleWarning(ticks, 36000, "ï¿½e30 ï¿½cminutes", boss);
 		}
 		// 15 minute warning
 		if (time > 900) {
-			scheduleWarning(ticks, 18000, "§e15 §cminutes", boss);
+			scheduleWarning(ticks, 18000, "ï¿½e15 ï¿½cminutes", boss);
 		}
-		scheduleWarning(ticks, 6000, "§e5 §cminutes", boss);
-		scheduleWarning(ticks, 3600, "§e3 §cminutes", boss);
-		scheduleWarning(ticks, 2400, "§e2 §cminutes", boss);
-		scheduleWarning(ticks, 1200, "§e1 §cminute", boss);
+		scheduleWarning(ticks, 6000, "ï¿½e5 ï¿½cminutes", boss);
+		scheduleWarning(ticks, 3600, "ï¿½e3 ï¿½cminutes", boss);
+		scheduleWarning(ticks, 2400, "ï¿½e2 ï¿½cminutes", boss);
+		scheduleWarning(ticks, 1200, "ï¿½e1 ï¿½cminute", boss);
 
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {
@@ -323,7 +311,7 @@ public class Main extends JavaPlugin implements Listener {
 			public void run() {
 				if (activeRaids.containsKey(boss)) {
     				for (Player p : activeRaids.get(boss)) {
-    					p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
+    					p.sendMessage("ï¿½4[ï¿½cï¿½lMLMCï¿½4] " + time + " remaining!");
     				}
 				}
 			}
@@ -351,60 +339,7 @@ public class Main extends JavaPlugin implements Listener {
 		return null;
 	}
 	
-	public void initPermissions(Player p, Connection con, String uuid) {
-		Statement stmt;
-		try {
-			stmt = con.createStatement();
-			ResultSet rs;
-			ArrayList<String> permList = new ArrayList<String>();
-			
-			// Add collections
-			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'collections.%';");
-			while (rs.next()) {
-				permList.add(rs.getString(1));
-			}
-			
-			// Add bossinstance perms
-			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'bossinstances.%';");
-			while (rs.next()) {
-				permList.add(rs.getString(1));
-			}
-			
-			// Add drop perms
-			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'drop.%';");
-			while (rs.next()) {
-				permList.add(rs.getString(1));
-			}
-			
-			// Add party perms
-			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE 'parties.%';");
-			while (rs.next()) {
-				permList.add(rs.getString(1));
-			}
-			
-			// Add *
-			rs = stmt.executeQuery("SELECT permission FROM MLMC.permissions WHERE name LIKE '%" + uuid + "%' AND permission LIKE '*';");
-			while (rs.next()) {
-				permList.add(rs.getString(1));
-			}
-			
-			permList.add("chatformat.default");
-			permList.add("deluxechat.bungee.chat");
-			permList.add("essentials.msg");
-			permList.add("multiverse.portal.access.*");
-			permList.add("serversigns.use");
-			if (isDebug) {
-				System.out.println(p.getName() + " " + permList);
-			}
-			pex.getUser(p).setPermissions(permList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
 	public void handleLeave(Player p) {
-		pex.getUser(p).setPermissions(new ArrayList<String>());
 		// Remove player from all raids
 		for (String boss : activeRaids.keySet()) {
 			activeRaids.get(boss).remove(p);
@@ -450,21 +385,21 @@ public class Main extends JavaPlugin implements Listener {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
+	    			p.sendMessage("ï¿½4[ï¿½cï¿½lBossesï¿½4] ï¿½l" + displayName + " ï¿½7is off cooldown!");
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 6000;
 					temp /= 10;
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
+	    			p.sendMessage("ï¿½4[ï¿½cï¿½lBossesï¿½4] ï¿½l" + displayName + " ï¿½7has ï¿½c" + temp + " ï¿½7minutes remaining!");
 				}
 			}
 			else {
-    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
+    			p.sendMessage("ï¿½4[ï¿½cï¿½lBossesï¿½4] ï¿½l" + displayName + " ï¿½7is off cooldown!");
 			}
 			return true;
 		}
 		else {
-			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
+			p.sendMessage("ï¿½4[ï¿½cï¿½lBossesï¿½4] ï¿½7Invalid boss name!");
 			return true;
 		}
 	}
