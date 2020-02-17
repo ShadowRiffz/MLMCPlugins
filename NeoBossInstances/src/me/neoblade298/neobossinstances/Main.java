@@ -253,7 +253,7 @@ public class Main extends JavaPlugin implements Listener {
 	    					}
 	    					// Retried 3 times, time to teleport them out
 	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
-	    		    			p.sendMessage("�4[�c�lBosses�4] �7Something went wrong! Could not teleport you to boss.");
+	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
 					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 					    			public void run() {
 		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
@@ -283,16 +283,16 @@ public class Main extends JavaPlugin implements Listener {
 		int ticks = time * 20;
 		// 30 minute warning
 		if (time > 1800) {
-			scheduleWarning(ticks, 36000, "�e30 �cminutes", boss);
+			scheduleWarning(ticks, 36000, "�e30 §cminutes", boss);
 		}
 		// 15 minute warning
 		if (time > 900) {
-			scheduleWarning(ticks, 18000, "�e15 �cminutes", boss);
+			scheduleWarning(ticks, 18000, "�e15 §cminutes", boss);
 		}
-		scheduleWarning(ticks, 6000, "�e5 �cminutes", boss);
-		scheduleWarning(ticks, 3600, "�e3 �cminutes", boss);
-		scheduleWarning(ticks, 2400, "�e2 �cminutes", boss);
-		scheduleWarning(ticks, 1200, "�e1 �cminute", boss);
+		scheduleWarning(ticks, 6000, "�e5 §cminutes", boss);
+		scheduleWarning(ticks, 3600, "�e3 §cminutes", boss);
+		scheduleWarning(ticks, 2400, "�e2 §cminutes", boss);
+		scheduleWarning(ticks, 1200, "�e1 §cminute", boss);
 
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {
@@ -311,7 +311,7 @@ public class Main extends JavaPlugin implements Listener {
 			public void run() {
 				if (activeRaids.containsKey(boss)) {
     				for (Player p : activeRaids.get(boss)) {
-    					p.sendMessage("�4[�c�lMLMC�4] " + time + " remaining!");
+    					p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
     				}
 				}
 			}
@@ -385,21 +385,21 @@ public class Main extends JavaPlugin implements Listener {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("�4[�c�lBosses�4] �l" + displayName + " �7is off cooldown!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 6000;
 					temp /= 10;
-	    			p.sendMessage("�4[�c�lBosses�4] �l" + displayName + " �7has �c" + temp + " �7minutes remaining!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
 				}
 			}
 			else {
-    			p.sendMessage("�4[�c�lBosses�4] �l" + displayName + " �7is off cooldown!");
+    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 			}
 			return true;
 		}
 		else {
-			p.sendMessage("�4[�c�lBosses�4] �7Invalid boss name!");
+			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
 			return true;
 		}
 	}
