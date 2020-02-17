@@ -1,0 +1,11 @@
+name: NeoLPExt
+main: me.neoblade298.neolpext.Main
+author: [Neoblade298]
+depend: [LuckPerms]
+version: 1.0
+api-version: 1.14
+commands:
+   lpext:
+      description: Extension command for luckperms
+      usage: /lpext
+      permission: lpext.admin
