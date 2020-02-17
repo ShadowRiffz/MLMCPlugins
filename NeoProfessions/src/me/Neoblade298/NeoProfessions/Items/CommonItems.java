@@ -15,20 +15,7 @@ public class CommonItems {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
 		level = roundUp ? level + ((level % 10 == 0 ? 0 : 10) - level % 10) : level - (level % 10);
-		switch (level) {
-		case 10:	meta.setDisplayName("§4[Lv " + level + "] §cFractured Essence");
-					break;
-		case 20:	meta.setDisplayName("§4[Lv " + level + "] §cDull Essence");
-						break;
-		case 30:	meta.setDisplayName("§4[Lv " + level + "] §cMinor Essence");
-						break;
-		case 40:	meta.setDisplayName("§4[Lv " + level + "] §cPotent Essence");
-						break;
-		case 50:	meta.setDisplayName("§4[Lv " + level + "] §cSublime Essence");
-						break;
-		case 60:	meta.setDisplayName("§4[Lv " + level + "] §cPure Essence");
-						break;
-		}
+		meta.setDisplayName("§4[Lv " + level + "] §cEssence");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
 		lore.add("§7Level " + level + " Essence");

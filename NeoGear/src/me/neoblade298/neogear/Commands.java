@@ -147,7 +147,7 @@ public class Commands implements CommandExecutor{
 		int level = -1;
 		if (StringUtils.isNumeric(param)) {
 			int temp = Integer.parseInt(param);
-			if (temp <= main.lvlMax && temp >= 0) {
+			if (temp <= main.lvlMax + main.lvlInterval - 1 && temp >= 0) {
 				return temp - (temp % main.lvlInterval);	// Round to level interval
 			}
 		}

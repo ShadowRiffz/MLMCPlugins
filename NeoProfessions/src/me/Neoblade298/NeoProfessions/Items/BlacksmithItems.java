@@ -22,13 +22,13 @@ public class BlacksmithItems {
 		
 		if(itemtype.equals("armor")) {
 			lore.add("§7Effect: Increases armor max durability");
-			int offset = 5 + (25 * ((level / 5) - 1)); // 12?
-			lore.add("§7Potency: §e" + ((int)(Math.random() * 5) * 5 + offset));
+			int offset = (10 * ((level / 5) - 1)) + 1;
+			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) + offset));
 		}
 		if(itemtype.equals("weapon")) {
 			lore.add("§7Effect: Increases weapon max durability");
-			int offset = 5 + (50 * ((level / 5) - 1)); // 24?
-			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) * 5 + offset));
+			int offset = (20 * ((level / 5) - 1));
+			lore.add("§7Potency: §e" + ((int)(Math.random() * 20) + offset));
 		}
 		meta.setLore(lore);	
 		item.setItemMeta(meta);
@@ -71,20 +71,7 @@ public class BlacksmithItems {
 
 		lore.add("§6Right click to use");
 		lore.add("§cOnly works on quest items");
-		switch(level) {
-			case 10:	lore.add("§7Compatibility: Up to §4Lv 10");
-						 	break;
-			case 20:	lore.add("§7Compatibility: Up to §4Lv 20");
-							break;
-			case 30:	lore.add("§7Compatibility: Up to §4Lv 30");
-							break;
-			case 40:	lore.add("§7Compatibility: Up to §4Lv 40");
-							break;
-			case 50:	lore.add("§7Compatibility: Up to §4Lv 50");
-							break;
-			case 60:	lore.add("§7Compatibility: Up to §4Lv 60");
-			break;
-		}
+		lore.add("§7Compatibility: Up to §4Lv " + level);
 		lore.add("§7Effect: Restores durability of an item");
 		lore.add("§7Potency: §e40%");
 		meta.setLore(lore);

@@ -4,6 +4,7 @@ package me.Neoblade298.NeoProfessions.Items;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
@@ -17,11 +18,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class StonecutterItems {
 	
 	// Constants
-	final int WEAPON_GEM_STR_RANGE = 4;
+	final int WEAPON_GEM_STR_RANGE = 2;
 	final int ARMOR_GEM_STR_RANGE = 2;
 	final int ARMOR_GEM_END_RANGE = 3;
 	final int ARMOR_GEM_VIT_RANGE = 9;
-	final int OL_WEAPON_GEM_STR_RANGE = 7;
+	final int OL_WEAPON_GEM_STR_RANGE = 2;
 	final int OL_WEAPON_GEM_STR_BASE = 4;
 	final int OL_WEAPON_GEM_STR_PER_LVL = 10;
 	final int OL_ARMOR_GEM_STR_RANGE = 4;
@@ -81,32 +82,9 @@ public class StonecutterItems {
 				break;
 		}
 		ArrayList<String> lore = new ArrayList<String>();
-		switch (level) {
-			case 10:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Dust");
-						lore.add("§7Level " + level + " " + oreName + " Ore");
-						lore.add("§7Item used for profession crafting");
-						break;
-			case 20:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 30:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 40:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 50:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 60:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-		}
+		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
+		lore.add("§7Level " + level + " " + StringUtils.capitalize(type) + " Ore");
+		lore.add("§7Item used for profession crafting");
 		meta.setEffect(fe.build());
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -122,67 +100,53 @@ public class StonecutterItems {
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
 		Builder fe = FireworkEffect.builder();
 		String oreName = null;
+		String type = null;
 		switch (random) {
 			case 1:
 				oreName = "Ruby";
+				type = "Strength";
 				fe.withColor(Color.BLACK, Color.RED);
 				break;
 			case 2:
 				oreName = "Amethyst";
+				type = "Dexterity";
 				fe.withColor(Color.GRAY, Color.PURPLE);
 				break;
 			case 3:	
 				oreName = "Sapphire";
+				type = "Intelligence";
 				fe.withColor(Color.BLUE);
 				break;
 			case 4:
 				oreName = "Emerald";
+				type = "Spirit";
 				fe.withColor(Color.LIME, Color.LIME, Color.GREEN);
 				break;
 			case 5:
 				oreName = "Topaz";
+				type = "Perception";
 				fe.withColor(Color.YELLOW, Color.ORANGE);
 				break;
 			case 6:
 				oreName = "Garnet";
+				type = "Vitality";
 				fe.withColor(Color.GRAY, Color.BLACK);
 				break;
 			case 7:
 				oreName = "Adamantium";
+				type = "Endurance";
 				fe.withColor(Color.BLACK, Color.RED);
 				break;
 			default:
 				oreName = "Adamantium";
+				type = "Endurance";
 				fe.withColor(Color.BLACK, Color.RED);
 				break;
 		}
 		ArrayList<String> lore = new ArrayList<String>();
-		switch (level) {
-			case 10:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Dust");
-			lore.add("§7Level " + level + " " + oreName + " Ore");
-			lore.add("§7Item used for profession crafting");
-			break;
-			case 20:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Fragment");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 30:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Shard");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 40:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 50:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Cluster");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-			case 60:	meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Gem");
-							lore.add("§7Level " + level + " " + oreName + " Ore");
-							lore.add("§7Item used for profession crafting");
-							break;
-		}
+		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
+		lore.add("§7Level " + level + " " + type + " Ore");
+		lore.add("§7Item used for profession crafting");
 		meta.setEffect(fe.build());
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -202,7 +166,7 @@ public class StonecutterItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int potency = 0;
 		int duraLost = 0;
-		int lvlDivided = level / 10;
+		int lvlDivided = level / 5;
 		if(isOverloaded) {
 			potency = (gen.nextInt(OL_WEAPON_GEM_STR_RANGE) + OL_WEAPON_GEM_STR_BASE + (OL_WEAPON_GEM_STR_PER_LVL * (lvlDivided - 1)));
 			duraLost = OL_WEAPON_DURABILITY_BASE + (OL_WEAPON_DURABILITY_PER_LVL * lvlDivided) + (gen.nextInt(OL_WEAPON_DURABILITY_RANGE) * OL_WEAPON_DURABILITY_MULTIPLIER);

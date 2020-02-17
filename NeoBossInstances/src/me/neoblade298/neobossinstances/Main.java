@@ -283,16 +283,16 @@ public class Main extends JavaPlugin implements Listener {
 		int ticks = time * 20;
 		// 30 minute warning
 		if (time > 1800) {
-			scheduleWarning(ticks, 36000, "�e30 §cminutes", boss);
+			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
 		}
 		// 15 minute warning
 		if (time > 900) {
-			scheduleWarning(ticks, 18000, "�e15 §cminutes", boss);
+			scheduleWarning(ticks, 18000, "§e15 §cminutes", boss);
 		}
-		scheduleWarning(ticks, 6000, "�e5 §cminutes", boss);
-		scheduleWarning(ticks, 3600, "�e3 §cminutes", boss);
-		scheduleWarning(ticks, 2400, "�e2 §cminutes", boss);
-		scheduleWarning(ticks, 1200, "�e1 §cminute", boss);
+		scheduleWarning(ticks, 6000, "§e5 §cminutes", boss);
+		scheduleWarning(ticks, 3600, "§e3 §cminutes", boss);
+		scheduleWarning(ticks, 2400, "§e2 §cminutes", boss);
+		scheduleWarning(ticks, 1200, "§e1 §cminute", boss);
 
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {

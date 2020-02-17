@@ -3,6 +3,8 @@ package me.neoblade298.neoinfinitybow;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.AbstractArrow.PickupStatus;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -34,6 +36,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			if (bow.getEnchantmentLevel(Enchantment.ARROW_INFINITE) > 0) {
 				Player p = (Player) e.getEntity();
 				p.getInventory().addItem(new ItemStack(Material.ARROW));
+				Arrow arrow = (Arrow) e.getProjectile();
+				arrow.setPickupStatus(PickupStatus.DISALLOWED);
 				return;
 			}
 		}

@@ -132,7 +132,7 @@ public class Commands implements CommandExecutor {
 					
 					// First clear all the cooldowns on the SQL currently
 					int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
-					sender.sendMessage("§4[§c§lBosses§4] §7Deleted �e" + deleted + " §7instances!");
+					sender.sendMessage("§4[§c§lBosses§4] §7Deleted §e" + deleted + " §7instances!");
 					con.close();
 				}
 				catch (Exception e) {
@@ -150,7 +150,7 @@ public class Commands implements CommandExecutor {
 		    // /boss debug
 		    else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 		    	main.isDebug = !main.isDebug;
-				sender.sendMessage("§4[§c§lBosses§4] §7Set debug to �e" + main.isDebug + "§7!");
+				sender.sendMessage("§4[§c§lBosses§4] §7Set debug to §e" + main.isDebug + "§7!");
 		    	return true;
 		    }
 	    	// /boss instances
@@ -167,12 +167,12 @@ public class Commands implements CommandExecutor {
 							
 							// Empty instance
 							if (!rs.next()) {
-								sender.sendMessage("�e" + instance + "§7: Empty");
+								sender.sendMessage("§e" + instance + "§7: Empty");
 							}
 							else {
-								String temp = "�e" + instance + "§7: �e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
+								String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
 								while (rs.next()) {
-									temp += "§7, �e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
+									temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4" + rs.getString(2) + "§7)";
 								}
 								if (temp != null) {
 									sender.sendMessage(temp);
@@ -212,7 +212,7 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 	    else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
-	    	sender.sendMessage("§4[§c§lBosses§4] �e" + args[1] + "§7 saved!");
+	    	sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
 	    	SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 	    	return true;
 	    }
@@ -251,12 +251,12 @@ public class Commands implements CommandExecutor {
 							
 							// Empty instance
 							if (!rs.next()) {
-								p.sendMessage("�e" + instance + "§7: Empty");
+								p.sendMessage("§e" + instance + "§7: Empty");
 							}
 							else {
-								String temp = "�e" + instance + "§7: �e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
+								String temp = "§e" + instance + "§7: §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								while (rs.next()) {
-									temp += "§7, �e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
+									temp += "§7, §e" + Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								}
 								if (temp != null) {
 									p.sendMessage(temp);
