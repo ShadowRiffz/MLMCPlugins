@@ -304,77 +304,77 @@ public class BlacksmithMethods {
 
 		// Clean out perms
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.professed");
+				"lp user " + name + " permission unset blacksmith.professed");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.profess.account");
+				"lp user " + name + " permission unset blacksmith.profess.account");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.weapon.1");
+				"lp user " + name + " permission unset blacksmith.durability.weapon.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.weapon.2");
+				"lp user " + name + " permission unset blacksmith.durability.weapon.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.weapon.3");
+				"lp user " + name + " permission unset blacksmith.durability.weapon.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.weapon.4");
+				"lp user " + name + " permission unset blacksmith.durability.weapon.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.weapon.5");
+				"lp user " + name + " permission unset blacksmith.durability.weapon.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.armor.1");
+				"lp user " + name + " permission unset blacksmith.durability.armor.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.armor.2");
+				"lp user " + name + " permission unset blacksmith.durability.armor.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.armor.3");
+				"lp user " + name + " permission unset blacksmith.durability.armor.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.armor.4");
+				"lp user " + name + " permission unset blacksmith.durability.armor.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.durability.armor.5");
+				"lp user " + name + " permission unset blacksmith.durability.armor.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.repair.1");
+				"lp user " + name + " permission unset blacksmith.repair.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.repair.2");
+				"lp user " + name + " permission unset blacksmith.repair.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.repair.3");
+				"lp user " + name + " permission unset blacksmith.repair.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.repair.4");
+				"lp user " + name + " permission unset blacksmith.repair.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.repair.5");
+				"lp user " + name + " permission unset blacksmith.repair.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.unbreaking.3");
+				"lp user " + name + " permission unset blacksmith.upgrade.unbreaking.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.unbreaking.4");
+				"lp user " + name + " permission unset blacksmith.upgrade.unbreaking.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.unbreaking.5");
+				"lp user " + name + " permission unset blacksmith.upgrade.unbreaking.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.unbreaking.6");
+				"lp user " + name + " permission unset blacksmith.upgrade.unbreaking.6");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.protection.3");
+				"lp user " + name + " permission unset blacksmith.upgrade.protection.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.protection.4");
+				"lp user " + name + " permission unset blacksmith.upgrade.protection.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.protection.5");
+				"lp user " + name + " permission unset blacksmith.upgrade.protection.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.upgrade.protection.6");
+				"lp user " + name + " permission unset blacksmith.upgrade.protection.6");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.reforge.1");
+				"lp user " + name + " permission unset blacksmith.reforge.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.reforge.2");
+				"lp user " + name + " permission unset blacksmith.reforge.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.reforge.3");
+				"lp user " + name + " permission unset blacksmith.reforge.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.reforge.4");
+				"lp user " + name + " permission unset blacksmith.reforge.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.reforge.5");
+				"lp user " + name + " permission unset blacksmith.reforge.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.scrap.1");
+				"lp user " + name + " permission unset blacksmith.scrap.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.scrap.2");
+				"lp user " + name + " permission unset blacksmith.scrap.2");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.scrap.3");
+				"lp user " + name + " permission unset blacksmith.scrap.3");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.scrap.4");
+				"lp user " + name + " permission unset blacksmith.scrap.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.scrap.5");
+				"lp user " + name + " permission unset blacksmith.scrap.5");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-				"pex user " + name + " remove blacksmith.deconstruct");
+				"lp user " + name + " permission unset blacksmith.deconstruct");
 
 		// Reset profession
 		SkillAPI.getPlayerData(p).reset("profession");

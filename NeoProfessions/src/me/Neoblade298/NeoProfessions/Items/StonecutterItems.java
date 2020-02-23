@@ -18,30 +18,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class StonecutterItems {
 	
 	// Constants
-	final int WEAPON_GEM_STR_RANGE = 2;
-	final int ARMOR_GEM_STR_RANGE = 2;
-	final int ARMOR_GEM_END_RANGE = 3;
-	final int ARMOR_GEM_VIT_RANGE = 9;
-	final int OL_WEAPON_GEM_STR_RANGE = 2;
-	final int OL_WEAPON_GEM_STR_BASE = 4;
-	final int OL_WEAPON_GEM_STR_PER_LVL = 10;
-	final int OL_ARMOR_GEM_STR_RANGE = 4;
-	final int OL_ARMOR_GEM_STR_BASE = 2;
-	final int OL_ARMOR_GEM_STR_PER_LVL = 5;
-	final int OL_ARMOR_GEM_VIT_RANGE = 18;
-	final int OL_ARMOR_GEM_VIT_BASE = 50;
-	final int OL_ARMOR_GEM_VIT_PER_LVL = 30;
-	final int OL_ARMOR_GEM_END_RANGE = 6;
-	final int OL_ARMOR_GEM_END_BASE = 2;
-	final int OL_ARMOR_GEM_END_PER_LVL = 7;
-	final int OL_WEAPON_DURABILITY_BASE = 105;
-	final int OL_WEAPON_DURABILITY_PER_LVL = 50;
-	final int OL_WEAPON_DURABILITY_RANGE = 5;
-	final int OL_WEAPON_DURABILITY_MULTIPLIER = 5;
-	final int OL_ARMOR_DURABILITY_BASE = 55;
-	final int OL_ARMOR_DURABILITY_PER_LVL = 25;
-	final int OL_ARMOR_DURABILITY_RANGE = 5;
-	final int OL_ARMOR_DURABILITY_MULTIPLIER = 5;
+	final int WEAPON_GEM_STR_BASE = 4;
+	final int WEAPON_GEM_STR_PER_LVL = 2;
+	final int ARMOR_GEM_STR_PER_LVL = 1;
+	final int ARMOR_GEM_STR_BASE = 2;
+	final int ARMOR_GEM_VIT_PER_LVL = 7;
+	final int ARMOR_GEM_VIT_BASE = 0;
+	final int ARMOR_GEM_END_PER_LVL = 1;
+	final int ARMOR_GEM_END_BASE = 2;
+	final int OL_WEAPON_GEM_STR_RANGE = 3;
+	final int OL_ARMOR_GEM_STR_RANGE = 2;
+	final int OL_ARMOR_GEM_STR_BASE = 1;
+	final int OL_ARMOR_GEM_STR_PER_LVL = 2;
+	final int OL_ARMOR_GEM_VIT_RANGE = 15;
+	final int OL_ARMOR_GEM_VIT_BASE = 20; // set to 200 max or something
+	final int OL_ARMOR_GEM_VIT_PER_LVL = 15;
+	final int OL_ARMOR_GEM_END_RANGE = 3;
+	final int OL_ARMOR_GEM_END_BASE = 1;
+	final int OL_ARMOR_GEM_END_PER_LVL = 3;
+	final int OL_WEAPON_DURABILITY_BASE = 400;
+	final int OL_ARMOR_DURABILITY_BASE = 200;
 	
 	Random gen = new Random();
 	
@@ -168,11 +164,11 @@ public class StonecutterItems {
 		int duraLost = 0;
 		int lvlDivided = level / 5;
 		if(isOverloaded) {
-			potency = (gen.nextInt(OL_WEAPON_GEM_STR_RANGE) + OL_WEAPON_GEM_STR_BASE + (OL_WEAPON_GEM_STR_PER_LVL * (lvlDivided - 1)));
-			duraLost = OL_WEAPON_DURABILITY_BASE + (OL_WEAPON_DURABILITY_PER_LVL * lvlDivided) + (gen.nextInt(OL_WEAPON_DURABILITY_RANGE) * OL_WEAPON_DURABILITY_MULTIPLIER);
+			potency = gen.nextInt(OL_WEAPON_GEM_STR_RANGE) + 1 + (OL_WEAPON_GEM_STR_RANGE * (lvlDivided - 1));
+			duraLost = OL_WEAPON_DURABILITY_BASE;
 		}
 		else {
-			potency = (gen.nextInt(WEAPON_GEM_STR_RANGE) + 1 + (WEAPON_GEM_STR_RANGE * (lvlDivided - 1)));
+			potency = WEAPON_GEM_STR_BASE + (WEAPON_GEM_STR_PER_LVL * (lvlDivided - 1));
 		}
 		switch (attr) {
 		case "strength":
@@ -198,9 +194,6 @@ public class StonecutterItems {
 			lore.add("§7Level " + level + " Gem Augment");
 		}
 		String effect = "§7Effect: Increases weapon " + attr;
-		if(isOverloaded) {
-			effect += ", lowers durability";
-		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
@@ -270,7 +263,7 @@ public class StonecutterItems {
 		int duraLost = 0;
 		int lvlDivided = level / 10;
 		if(isOverloaded) {
-			duraLost = OL_ARMOR_DURABILITY_BASE + (OL_ARMOR_DURABILITY_PER_LVL * lvlDivided) + (gen.nextInt(OL_ARMOR_DURABILITY_RANGE) * OL_ARMOR_DURABILITY_MULTIPLIER);
+			duraLost = OL_ARMOR_DURABILITY_BASE;
 			switch (attr) {
 			case "strength":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
@@ -306,31 +299,31 @@ public class StonecutterItems {
 			switch (attr) {
 			case "strength":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Ruby");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_STR_BASE;
 				break;
 			case "dexterity":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Amethyst");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_STR_BASE;
 				break;
 			case "intelligence":	
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Sapphire");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_STR_BASE;
 				break;
 			case "spirit":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Emerald");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_STR_BASE;
 				break;
 			case "perception":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Topaz");
-				potency = gen.nextInt(ARMOR_GEM_STR_RANGE) + (ARMOR_GEM_STR_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_STR_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_STR_BASE;
 				break;
 			case "vitality":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Garnet");
-				potency = gen.nextInt(ARMOR_GEM_VIT_RANGE) + (ARMOR_GEM_VIT_RANGE * (lvlDivided - 1)) + 1;
+				potency = gen.nextInt(ARMOR_GEM_VIT_BASE) + 1 + (ARMOR_GEM_VIT_PER_LVL * (lvlDivided - 1));
 				break;
 			case "endurance":
 				meta.setDisplayName("§4[Lv " + level + "] §cRefined Adamantium");
-				potency = gen.nextInt(ARMOR_GEM_END_RANGE) + (ARMOR_GEM_END_RANGE * (lvlDivided - 1)) + 1;
+				potency = (ARMOR_GEM_END_PER_LVL * (lvlDivided - 1)) + ARMOR_GEM_END_BASE;
 				break;
 			}
 		}
@@ -341,9 +334,6 @@ public class StonecutterItems {
 			lore.add("§7Level " + level + " Gem Augment");
 		}
 		String effect = "§7Effect: Increases armor " + attr;
-		if(isOverloaded) {
-			effect += ", lowers durability";
-		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
@@ -420,9 +410,6 @@ public class StonecutterItems {
 			lore.add("§7Level " + level + " Gem Augment");
 		}
 		String effect = "§7Effect: Increases armor " + attr;
-		if(isOverloaded) {
-			effect += ", lowers durability";
-		}
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
