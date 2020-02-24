@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
 
+import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
@@ -24,6 +25,7 @@ public class MasonMethods {
 	Util util;
 	CommonItems common;
 	MasonItems mItems;
+	CurrencyManager cm;
 	
 	// Constants
 	static final int MAX_SLOTS = 3;
@@ -35,7 +37,7 @@ public class MasonMethods {
 	static final int UNENGRAVE_ESSENCE = 2;
 	static final int UNSLOT_ESSENCE = 4;
 	static final int UNSLOT_GOLD_PER_LVL = 1500;
-	static final int LEVEL_INTERVAL = 10;
+	static final int LEVEL_INTERVAL = 5;
 	
 	// Prices
 	static final int BASIC_EXP_GOLD = 5000;
@@ -82,15 +84,15 @@ public class MasonMethods {
 		mItems = new MasonItems();
 		common = new CommonItems();
 		util = new Util();
+		cm = main.cManager;
 	}
 
 	public void createSlot(Player p, int level) {
-		int perm = (level / 10) - 1;
-		perm = perm == 0 ? 1 : perm;	// perm 1 is for both lv 10 and 20
+		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
-				if(p.hasPermission("mason.engrave.tier." + perm) && perm % 10 == 0) {
+				if(p.hasPermission("mason.engrave.tier." + perm)) {
 					if(util.getItemLevel(item) >= level) {
 						int numSlots = masonUtils.countSlots(item);
 						if(numSlots < MAX_SLOTS) {
@@ -274,8 +276,8 @@ public class MasonMethods {
 				if(masonUtils.isSlotAvailable(item, slot)) {
 					if(util.isArmor(item)) {
 						int level = util.getItemLevel(item);
-						level -= level % LEVEL_INTERVAL;
-						if(p.hasPermission("mason.slot.armor." + level)) {
+						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+						if(p.hasPermission("mason.slot.armor." + perm)) {
 							listeners.prepItemSlot(p, item, slot);
 						}
 						else {
@@ -284,8 +286,8 @@ public class MasonMethods {
 					}
 					else if(util.isWeapon(item)) {
 						int level = util.getItemLevel(item);
-						level -= level % LEVEL_INTERVAL;
-						if(p.hasPermission("mason.slot.weapon." + level)) {
+						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+						if(p.hasPermission("mason.slot.weapon." + perm)) {
 							listeners.prepItemSlot(p, item, slot);
 						}
 						else {
@@ -408,35 +410,7 @@ public class MasonMethods {
 		String name = p.getName();
 		
 		// Clean out perms
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.professed");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.profess.account");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.tier.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.tier.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.tier.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.tier.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.tier.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.max.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.max.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.max.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.max.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.engrave.max.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.armor.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.armor.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.armor.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.armor.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.armor.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.weapon.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.weapon.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.weapon.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.weapon.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.slot.weapon.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.unslot.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.unslot.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.unslot.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.unslot.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.unslot.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.charm.basic");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset mason.charm.advanced");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + name + " mason.");
 		
 		// Reset profession
 		SkillAPI.getPlayerData(p).reset("profession");

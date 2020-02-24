@@ -1417,26 +1417,7 @@ public class CulinarianMethods {
 		String name = p.getName();
 		
 		// Clean out perms
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.professed");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.profess.account");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.spice.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.spice.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.spice.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.garnish.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.garnish.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.garnish.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.preserve.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.preserve.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.preserve.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.assimilate.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.assimilate.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.assimilate.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.craft.1");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.craft.2");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.craft.3");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.craft.4");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.craft.5");
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + name + " permission unset culinarian.bartender");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + name + " culinarian.");
 		
 		// Reset profession
 		SkillAPI.getPlayerData(p).reset("profession");
