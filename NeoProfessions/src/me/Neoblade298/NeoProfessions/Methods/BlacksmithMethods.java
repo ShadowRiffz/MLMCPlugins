@@ -53,9 +53,9 @@ public class BlacksmithMethods {
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
-		int perm = (level / 10) - 1;
+		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 		if (slot != -1) {
-			if (perm == 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
+			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
 					if (main.getEconomy().has(p, DURABILITY_COST_PER_LVL * perm)) {
 						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
@@ -78,9 +78,9 @@ public class BlacksmithMethods {
 
 	public void createRepairItem(Player p, String item, int level) {
 		int slot = p.getInventory().firstEmpty();
-		int perm = (level / 10) - 1;
+		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 		if (slot != -1) {
-			if (p.hasPermission("blacksmith." + item + "." + perm)) {
+			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, REPAIR_ESSENCE)) {
 					if (econ.has(p, REPAIR_COST)) {
 						p.getInventory().addItem(util.setAmount(bItems.getRepairItem(level), 2));
@@ -206,7 +206,7 @@ public class BlacksmithMethods {
 					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
-						if (p.hasPermission("blacksmith.reforge." + perm)) {
+						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
 							if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
 								if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
 									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
@@ -245,7 +245,7 @@ public class BlacksmithMethods {
 				int itemLevel = util.getItemLevel(item);
 				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
 				if (itemLevel != -1) {
-					if (p.hasPermission("blacksmith.scrap." + perm)) {
+					if (perm <= 0 || p.hasPermission("blacksmith.scrap." + perm)) {
 						if (econ.has(p, SCRAP_COST)) {
 							p.getInventory().removeItem(item);
 							econ.withdrawPlayer(p, SCRAP_COST);
