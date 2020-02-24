@@ -209,7 +209,7 @@ public class BlacksmithMethods {
 						if (p.hasPermission("blacksmith.reforge." + perm)) {
 							if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
 								if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
-									cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
+									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
 									p.getInventory().removeItem(item);
 									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
 									p.getInventory().addItem(main.neogear.settings.get(rarity).get(itemLevel)
@@ -249,7 +249,7 @@ public class BlacksmithMethods {
 						if (econ.has(p, SCRAP_COST)) {
 							p.getInventory().removeItem(item);
 							econ.withdrawPlayer(p, SCRAP_COST);
-							p.getInventory().addItem(common.getEssence(itemLevel, false));
+							cm.add(p, "essence", itemLevel, 1);
 							util.sendMessage(p, "&cSuccessfully scrapped item!");
 						} else {
 							util.sendMessage(p, "&cYou lack the gold to scrap this!");
