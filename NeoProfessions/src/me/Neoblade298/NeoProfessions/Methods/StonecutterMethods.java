@@ -35,7 +35,7 @@ public class StonecutterMethods {
 	static final int REFINE_ESSENCE_1 = 6;
 	static final int REFINE_ESSENCE_2 = 5;
 	static final int REFINE_ESSENCE_3 = 4;
-	static final int LEVEL_INTERVAL = 10;
+	static final int LEVEL_INTERVAL = 5;
 	
 	public StonecutterMethods(Main main) {
 		this.main = main;
