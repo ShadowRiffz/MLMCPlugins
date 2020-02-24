@@ -13,8 +13,7 @@ import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 
 public class MasonUtils {
 	
-	final int MAX_LEVEL = 5;
-	final int LEVEL_INTERVAL = 10;
+	final int LEVEL_INTERVAL = 5;
 	Util util;
 	BlacksmithItems bItems;
 	StonecutterItems sItems;
