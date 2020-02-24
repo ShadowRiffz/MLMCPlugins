@@ -96,12 +96,11 @@ public class MasonMethods {
 						int numSlots = masonUtils.countSlots(item);
 						if (numSlots < MAX_SLOTS) {
 							if (p.hasPermission(("mason.engrave.max." + (numSlots + 1)))) {
-								if (p.getInventory().containsAtLeast(common.getEssence(level, true),
-										ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots))) {
+								int essCost = ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots);
+								if (cm.hasEnough(p, "essence", level, essCost)) {
 									if (econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
 										masonUtils.createSlot(item, level);
-										p.getInventory().removeItem(util.setAmount(common.getEssence(level, true),
-												ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots)));
+										cm.subtract(p, "essence", level, essCost);
 										econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
 										util.sendMessage(p, "&7Successfully created slot!");
 									} else {
@@ -300,13 +299,11 @@ public class MasonMethods {
 					int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
 					if (p.hasPermission("mason.unslot." + level)) {
 						if (p.getInventory().firstEmpty() != -1) {
-							if (p.getInventory().containsAtLeast(common.getEssence(slottedLevel, true),
-									UNSLOT_ESSENCE)) {
+							if (cm.hasEnough(p, "essence", level, UNSLOT_ESSENCE)) {
 								if (econ.has(p, UNSLOT_GOLD_PER_LVL * perm)) {
 									ItemStack returned = masonUtils.parseUnslot(p, slot);
 									if (returned != null) {
-										p.getInventory().removeItem(
-												util.setAmount(common.getEssence(slottedLevel, true), UNSLOT_ESSENCE));
+										cm.subtract(p, "essence", level, UNSLOT_ESSENCE);
 										econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
 										p.getInventory().addItem(returned);
 										util.sendMessage(p, "&cSuccessfully unslotted item!");
@@ -343,10 +340,9 @@ public class MasonMethods {
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 					if (level != -1) {
 						if (p.hasPermission("mason.engrave.tier." + perm)) {
-							if (p.getInventory().containsAtLeast(common.getEssence(level, true), UNENGRAVE_ESSENCE)) {
+							if (cm.hasEnough(p, "essence", level, UNENGRAVE_ESSENCE)) {
 								if (econ.has(p, UNENGRAVE_GOLD)) {
-									p.getInventory().removeItem(
-											util.setAmount(common.getEssence(level, true), UNENGRAVE_ESSENCE));
+									cm.subtract(p, "essence", level, UNENGRAVE_ESSENCE);
 									econ.withdrawPlayer(p, UNENGRAVE_GOLD);
 									masonUtils.removeSlotLine(item, slot);
 									util.sendMessage(p, "&7Successfully removed slot!");
