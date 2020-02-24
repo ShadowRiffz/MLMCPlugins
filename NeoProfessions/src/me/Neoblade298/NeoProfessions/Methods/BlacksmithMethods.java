@@ -55,7 +55,7 @@ public class BlacksmithMethods {
 		int slot = p.getInventory().firstEmpty();
 		int perm = (level / 10) - 1;
 		if (slot != -1) {
-			if (p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
+			if (perm == 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
 					if (main.getEconomy().has(p, DURABILITY_COST_PER_LVL * perm)) {
 						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
@@ -308,6 +308,8 @@ public class BlacksmithMethods {
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 				"lp user " + name + " permission unset blacksmith.profess.account");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+				"lp user " + name + " permission unset blacksmith.durability.weapon.0");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 				"lp user " + name + " permission unset blacksmith.durability.weapon.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 				"lp user " + name + " permission unset blacksmith.durability.weapon.2");
@@ -317,6 +319,8 @@ public class BlacksmithMethods {
 				"lp user " + name + " permission unset blacksmith.durability.weapon.4");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 				"lp user " + name + " permission unset blacksmith.durability.weapon.5");
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+				"lp user " + name + " permission unset blacksmith.durability.armor.0");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 				"lp user " + name + " permission unset blacksmith.durability.armor.1");
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
