@@ -48,8 +48,15 @@ public class StonecutterCommands implements CommandExecutor {
 						if(args[2].equalsIgnoreCase("weapon")) {
 							if(stonecutterUtils.isWeaponAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
-									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
-									return true;
+									int level = Integer.parseInt(args[3]);
+									if (level % 5 == 0 && level > 0 && level <= 60) {
+										stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
+										return true;
+									}
+									else {
+										util.sendMessage(p, "&cInvalid level!");
+										return true;
+									}
 								}
 								else {
 									util.sendMessage(p, "&cInvalid gem level!");
@@ -64,8 +71,15 @@ public class StonecutterCommands implements CommandExecutor {
 						else if(args[2].equalsIgnoreCase("armor")) {
 							if(stonecutterUtils.isArmorAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
-									stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
-									return true;
+									int level = Integer.parseInt(args[3]);
+									if (level % 5 == 0 && level > 0 && level <= 60) {
+										stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
+										return true;
+									}
+									else {
+										util.sendMessage(p, "&cInvalid level!");
+										return true;
+									}
 								}
 								else {
 									util.sendMessage(p, "&cInvalid gem level!");
@@ -86,8 +100,15 @@ public class StonecutterCommands implements CommandExecutor {
 						if(args[2].equalsIgnoreCase("weapon")) {
 							if(stonecutterUtils.isWeaponAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
-									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
-									return true;
+									int level = Integer.parseInt(args[3]);
+									if (level % 5 == 0 && level > 0 && level <= 60) {
+										stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
+										return true;
+									}
+									else {
+										util.sendMessage(p, "&cInvalid level!");
+										return true;
+									}
 								}
 								else {
 									util.sendMessage(p, "&cInvalid gem level!");
@@ -102,8 +123,15 @@ public class StonecutterCommands implements CommandExecutor {
 						else if(args[2].equalsIgnoreCase("armor")) {
 							if(stonecutterUtils.isArmorAttribute(args[3])) {
 								if(StringUtils.isNumeric(args[4])) {
-									stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
-									return true;
+									int level = Integer.parseInt(args[3]);
+									if (level % 5 == 0 && level > 0 && level <= 60) {
+										stonecutterMethods.createOverloadedGem(p, args[3], args[2], Integer.parseInt(args[4]));
+										return true;
+									}
+									else {
+										util.sendMessage(p, "&cInvalid level!");
+										return true;
+									}
 								}
 								else {
 									util.sendMessage(p, "&cInvalid gem level!");

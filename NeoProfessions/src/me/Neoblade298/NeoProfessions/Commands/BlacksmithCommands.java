@@ -63,8 +63,15 @@ public class BlacksmithCommands implements CommandExecutor {
 						if(args[1].equalsIgnoreCase("durability")) {
 							if (args[2].equalsIgnoreCase("weapon") || args[2].equalsIgnoreCase("armor")) {
 								if(StringUtils.isNumeric(args[3])) {
-									blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
-									return true;
+									int level = Integer.parseInt(args[3]);
+									if (level % 5 == 0 && level > 0 && level <= 60) {
+										blacksmithMethods.createDurabilityItem(p, args[1].toLowerCase(), args[2].toLowerCase(), Integer.parseInt(args[3]));
+										return true;
+									}
+									else {
+										util.sendMessage(p, "&cInvalid level!");
+										return true;
+									}
 								}
 								else {
 									util.sendMessage(p, "&cInvalid level!");
@@ -85,8 +92,15 @@ public class BlacksmithCommands implements CommandExecutor {
 						// repair: args[0] = create, args[1] = repair, args[2] = level
 						if(args[1].equalsIgnoreCase("repair")) {
 							if(StringUtils.isNumeric(args[2])) {
-								blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
-								return true;
+								int level = Integer.parseInt(args[3]);
+								if (level % 5 == 0 && level > 0 && level <= 60) {
+									blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
+									return true;
+								}
+								else {
+									util.sendMessage(p, "&cInvalid level!");
+									return true;
+								}
 							}
 							else {
 								util.sendMessage(p, "&cInvalid level!");
