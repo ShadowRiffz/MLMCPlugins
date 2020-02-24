@@ -47,7 +47,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/blacksmith upgrade protection");
 				util.sendMessage(p, "&7- &c/blacksmith reforge");
 				util.sendMessage(p, "&7- &c/blacksmith scrap");
-				util.sendMessage(p, "&7- &c/blacksmith deconstruct");
+				util.sendMessage(p, "&7- &c/blacksmith deconstruct [level] [amount]");
 				if(sender.hasPermission("blacksmith.admin")) {
 					util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
 					util.sendMessage(p, "&7- &4/blacksmith get repair [level]");
@@ -164,9 +164,23 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 				}
 				else if(args[0].equalsIgnoreCase("deconstruct")) {
-					if(args.length == 1) {
-						blacksmithMethods.deconstructItem(p);
-						return true;
+					if(args.length == 3) {
+						if (StringUtils.isNumeric(args[1]) && StringUtils.isNumeric(args[2])) {
+							int level = Integer.parseInt(args[1]);
+							int amount = Integer.parseInt(args[2]);
+							if (level % 5 == 0 && level > 0 && level <= 60) {
+								blacksmithMethods.deconstructItem(p, level, amount);
+								return true;
+							}
+							else {
+								util.sendMessage(p, "&cInvalid level!");
+								return true;
+							}
+						}
+						else {
+							util.sendMessage(p, "&cInvalid argument!");
+							return true;
+						}
 					}
 					else {
 						util.sendMessage(p, "&cIncorrect number of arguments!");

@@ -268,34 +268,26 @@ public class BlacksmithMethods {
 		}
 	}
 
-	public void deconstructItem(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand().clone();
-		if (!item.getType().equals(Material.AIR)) {
-			if (util.isGearReworked(item)) {
-				item.setAmount(1);
-				int itemLevel = util.getEssenceLevel(item);
-				if (itemLevel >= 10) {
-					if (p.hasPermission("blacksmith.deconstruct")) {
-						if (econ.has(p, DECONSTRUCT_COST)) {
-							p.getInventory().removeItem(item);
-							econ.withdrawPlayer(p, DECONSTRUCT_COST);
-							p.getInventory().addItem(util.setAmount(
-									common.getEssence(itemLevel - LEVEL_INTERVAL, false), DECONSTRUCT_AMOUNT));
-							util.sendMessage(p, "&cSuccessfully deconstructed item!");
-						} else {
-							util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
-						}
+	public void deconstructItem(Player p, int level, int amount) {
+		if (level >= 10) {
+			if (cm.hasEnough(p, "essence", level, amount)) {
+				if (p.hasPermission("blacksmith.deconstruct")) {
+					if (econ.has(p, DECONSTRUCT_COST)) {
+						econ.withdrawPlayer(p, DECONSTRUCT_COST);
+						cm.subtract(p, "essence", level, amount);
+						cm.add(p, "essence", level - LEVEL_INTERVAL, amount * DECONSTRUCT_AMOUNT);
+						util.sendMessage(p, "&cSuccessfully deconstructed!");
 					} else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
 					}
 				} else {
-					util.sendMessage(p, "&cYou can only deconstruct essences, and they must be at least level 10!");
+					util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			} else {
-				util.sendMessage(p, "&cItem is no longer supported by the server!");
+				util.sendMessage(p, "&cYou do not have enough essence!");
 			}
 		} else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			util.sendMessage(p, "&cDeconstructed essences must be at least level 10!");
 		}
 	}
 
