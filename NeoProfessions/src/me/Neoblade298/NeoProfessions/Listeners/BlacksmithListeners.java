@@ -68,11 +68,16 @@ public class BlacksmithListeners implements Listener {
 			if (itemLevel != -1) {
 				if (itemLevel <= repairLevel) {
 					if (p.getInventory().containsAtLeast(repair, 1)) {
-						p.getInventory().removeItem(util.setAmount(repair.clone(), 1));
-						selectedRepair.remove(p);
-						util.setCurrentDurability(item,
-								util.getCurrentDurability(item) + (int) (percentage * util.getMaxDurability(item)));
-						util.sendMessage(p, "&7Successfully repaired item!");
+						if (item.getAmount() == 1) {
+							p.getInventory().removeItem(util.setAmount(repair.clone(), 1));
+							selectedRepair.remove(p);
+							util.setCurrentDurability(item,
+									util.getCurrentDurability(item) + (int) (percentage * util.getMaxDurability(item)));
+							util.sendMessage(p, "&7Successfully repaired item!");
+						}
+						else {
+							util.sendMessage(p, "&cCannot repair more than one item at once!");
+						}
 					} else {
 						util.sendMessage(p, "&cSomething went wrong! Please try again.");
 					}
