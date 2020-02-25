@@ -11,7 +11,7 @@ import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 
-public class MasonUtils {
+public class MasonUtilsLegacy {
 	
 	final int LEVEL_INTERVAL = 5;
 	Util util;
@@ -19,7 +19,7 @@ public class MasonUtils {
 	StonecutterItems sItems;
 	MasonItems mItems;
 	
-	public MasonUtils() {
+	public MasonUtilsLegacy() {
 		util = new Util();
 		bItems = new BlacksmithItems();
 		sItems = new StonecutterItems();
@@ -59,10 +59,9 @@ public class MasonUtils {
 		String line = getSlotLine(item, slot);
 		
 		// Parse the line and revert the lore
-		// chars 1 3 5 = slotLevel, chars 7 9 11 = slottedLevel, char 13 = slotType
-		int slotLevel = Integer.parseInt(line.substring(1,2) + line.substring(3,4) + line.substring(5,6));
-		int slottedLevel = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
-		int slotType = Character.getNumericValue(line.charAt(13));
+		int slotLevel = Character.getNumericValue(line.charAt(1)) * 10;
+		int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
+		int slotType = Character.getNumericValue(line.charAt(5));
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = util.isArmor(item);
 		int potency = -1;
