@@ -177,7 +177,7 @@ public class MasonListeners implements Listener {
 			e.setCancelled(true);
 			int slot = slotNum.get(p);
 			ItemStack itemWithSlot = slotItem.get(p);
-			int slotLevel = masonUtils.getSlotLevel(itemWithSlot, slot);
+			int slotLevel = masonUtils.getSlotLevel(slot, itemWithSlot);
 			slotNum.remove(p);
 			slotItem.remove(p);
 
