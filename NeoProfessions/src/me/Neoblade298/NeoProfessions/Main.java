@@ -1,11 +1,13 @@
 package me.Neoblade298.NeoProfessions;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -36,10 +38,12 @@ import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin implements Listener {
 	public boolean debug = false;
+	public boolean isInstance = false;
 
 	private Economy econ;
 	private Permission perms;
 	private Chat chat;
+	private YamlConfiguration cfg;
 
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
@@ -76,51 +80,61 @@ public class Main extends JavaPlugin implements Listener {
 		this.setupPermissions();
 		this.setupChat();
 		
-		// Currency
-		cManager = new CurrencyManager(this);
-		
-		// NeoGear
-		neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
-
-		masonListeners = new MasonListeners(this);
-		masonUtils = new MasonUtils();
-		culinarianListeners = new CulinarianListeners(this);
-
-		// Connect method classes to main
-		blacksmithMethods = new BlacksmithMethods(this);
-		masonMethods = new MasonMethods(this);
-		stonecutterMethods = new StonecutterMethods(this);
-		culinarianMethods = new CulinarianMethods(this);
-
-		// Command listeners for all classes
-		this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
-		this.getCommand("mason").setExecutor(new MasonCommands(this));
-		this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
-		this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
-		this.getCommand("neoprofessions").setExecutor(new NeoprofessionsCommands(this, blacksmithMethods,
-				stonecutterMethods, culinarianMethods, masonMethods));
-		
-		
-		// Setup Event Listeners
-		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
-		getServer().getPluginManager().registerEvents(masonListeners, this);
-		getServer().getPluginManager().registerEvents(culinarianListeners, this);
-		getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
-		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
-
-		// Setup recipes (make sure the recipes haven't been added before)
-		culinarianRecipes = new CulinarianRecipes(this);
-		Iterator<Recipe> iter = getServer().recipeIterator();
-		boolean canAdd = true;
-		while (iter.hasNext()) {
-			Recipe r = iter.next();
-			if (r instanceof ShapedRecipe && ((ShapedRecipe) r).getKey().getKey().equalsIgnoreCase("Vodka")) {
-				canAdd = false;
-			}
+		// Configuration// Save config if doesn't exist
+		File file = new File(getDataFolder(), "config.yml");
+		if (!file.exists()) {
+			saveResource("config.yml", false);
 		}
-		if (canAdd) {
-			for (Recipe recipe : culinarianRecipes.getRecipes()) {
-				Bukkit.addRecipe(recipe);
+		this.cfg = YamlConfiguration.loadConfiguration(file);
+		isInstance = cfg.getBoolean("is-instance");
+
+		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
+		if (!isInstance) {
+			// Currency
+			cManager = new CurrencyManager(this);
+			
+			// NeoGear
+			neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
+	
+			masonListeners = new MasonListeners(this);
+			masonUtils = new MasonUtils();
+			culinarianListeners = new CulinarianListeners(this);
+	
+			// Connect method classes to main
+			blacksmithMethods = new BlacksmithMethods(this);
+			masonMethods = new MasonMethods(this);
+			stonecutterMethods = new StonecutterMethods(this);
+			culinarianMethods = new CulinarianMethods(this);
+	
+			// Command listeners for all classes
+			this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
+			this.getCommand("mason").setExecutor(new MasonCommands(this));
+			this.getCommand("stonecutter").setExecutor(new StonecutterCommands(this));
+			this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
+			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this, blacksmithMethods,
+					stonecutterMethods, culinarianMethods, masonMethods));
+			
+			
+			// Setup Event Listeners
+			getServer().getPluginManager().registerEvents(masonListeners, this);
+			getServer().getPluginManager().registerEvents(culinarianListeners, this);
+			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
+			getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
+	
+			// Setup recipes (make sure the recipes haven't been added before)
+			culinarianRecipes = new CulinarianRecipes(this);
+			Iterator<Recipe> iter = getServer().recipeIterator();
+			boolean canAdd = true;
+			while (iter.hasNext()) {
+				Recipe r = iter.next();
+				if (r instanceof ShapedRecipe && ((ShapedRecipe) r).getKey().getKey().equalsIgnoreCase("Vodka")) {
+					canAdd = false;
+				}
+			}
+			if (canAdd) {
+				for (Recipe recipe : culinarianRecipes.getRecipes()) {
+					Bukkit.addRecipe(recipe);
+				}
 			}
 		}
 

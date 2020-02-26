@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Utilities;
+package me.Neoblade298.NeoProfessions.Legacy;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class MasonUtilsLegacy {
 	

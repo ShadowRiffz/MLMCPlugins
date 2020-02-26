@@ -35,7 +35,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	    this.getCommand("gear").setExecutor(new Commands(this));
 		gen = new Random();
 
-		
 		loadConfigs();
 	}
 	

@@ -5,9 +5,9 @@ version: 1.0
 api-version: 1.14
 depend: [MythicMobs, SkillAPI, NeoGear, Vault]
 commands:
-  neoprofessions:
+  prof:
     description: Admin commands
-    usage: /neoprofessions [args]
+    usage: /prof [args]
   blacksmith:
     description: Base command for blacksmiths
     usage: /blacksmith [args]
