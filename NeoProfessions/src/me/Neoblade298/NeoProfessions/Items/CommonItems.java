@@ -14,7 +14,7 @@ public class CommonItems {
 	public ItemStack getEssence(int level, boolean roundUp) {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
-		level = roundUp ? level + ((level % 10 == 0 ? 0 : 10) - level % 10) : level - (level % 10);
+		level = roundUp ? level + ((level % 5 == 0 ? 0 : 5) - level % 5) : level - (level % 5);
 		meta.setDisplayName("§4[Lv " + level + "] §cEssence");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();

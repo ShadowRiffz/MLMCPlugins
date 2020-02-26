@@ -73,7 +73,7 @@ public class MasonCommands implements CommandExecutor {
 					}
 					else if(args[1].equalsIgnoreCase("slot")) {
 						if(StringUtils.isNumeric(args[2])) {
-							int level = Integer.parseInt(args[3]);
+							int level = Integer.parseInt(args[2]);
 							if (level % 5 == 0 && level > 0 && level <= 60) {
 								masonMethods.createSlot(p, Integer.parseInt(args[2]));
 								return true;
