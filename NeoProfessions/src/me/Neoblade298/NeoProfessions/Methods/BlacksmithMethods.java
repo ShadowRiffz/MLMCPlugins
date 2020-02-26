@@ -12,6 +12,7 @@ import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithMethods {
@@ -214,7 +215,7 @@ public class BlacksmithMethods {
 									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
 									p.getInventory().removeItem(item);
 									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
-									p.getInventory().addItem(neogear.settings.get(rarity).get(itemLevel)
+									p.getInventory().addItem(neogear.settings.get(type).get(itemLevel)
 											.generateItem(rarity, itemLevel));
 									util.sendMessage(p, "&7Successfully reforged item!");
 								} else {
