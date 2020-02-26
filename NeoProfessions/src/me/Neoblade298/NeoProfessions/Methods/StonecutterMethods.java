@@ -144,6 +144,7 @@ public class StonecutterMethods {
 					cm.subtract(p, type, oldLevel, cost * amount);
 					cm.add(p, type, level, amount);
 					econ.withdrawPlayer(p, REFINE_COST);
+					util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
 				} else {
 					util.sendMessage(p, "&cYou lack the materials to refine this!");
 					return;

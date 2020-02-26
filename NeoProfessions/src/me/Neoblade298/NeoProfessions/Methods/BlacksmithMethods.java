@@ -22,6 +22,7 @@ public class BlacksmithMethods {
 	CommonItems common;
 	BlacksmithItems bItems;
 	CurrencyManager cm;
+	me.neoblade298.neogear.Main neogear;
 
 	// Constants
 	final int DURABILITY_COST_PER_LVL = 4000;
@@ -49,6 +50,7 @@ public class BlacksmithMethods {
 		common = new CommonItems();
 		bItems = new BlacksmithItems();
 		cm = main.cManager;
+		neogear = main.neogear;
 	}
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
@@ -212,7 +214,7 @@ public class BlacksmithMethods {
 									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
 									p.getInventory().removeItem(item);
 									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
-									p.getInventory().addItem(main.neogear.settings.get(rarity).get(itemLevel)
+									p.getInventory().addItem(neogear.settings.get(rarity).get(itemLevel)
 											.generateItem(rarity, itemLevel));
 									util.sendMessage(p, "&7Successfully reforged item!");
 								} else {
