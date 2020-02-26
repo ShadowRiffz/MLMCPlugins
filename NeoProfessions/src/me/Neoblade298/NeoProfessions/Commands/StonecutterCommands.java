@@ -47,7 +47,7 @@ public class StonecutterCommands implements CommandExecutor {
 						if (args[2].equalsIgnoreCase("weapon")) {
 							if (stonecutterUtils.isWeaponAttribute(args[3])) {
 								if (StringUtils.isNumeric(args[4])) {
-									int level = Integer.parseInt(args[3]);
+									int level = Integer.parseInt(args[4]);
 									if (level % 5 == 0 && level > 0 && level <= 60) {
 										stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
 										return true;
@@ -66,7 +66,7 @@ public class StonecutterCommands implements CommandExecutor {
 						} else if (args[2].equalsIgnoreCase("armor")) {
 							if (stonecutterUtils.isArmorAttribute(args[3])) {
 								if (StringUtils.isNumeric(args[4])) {
-									int level = Integer.parseInt(args[3]);
+									int level = Integer.parseInt(args[4]);
 									if (level % 5 == 0 && level > 0 && level <= 60) {
 										stonecutterMethods.createGem(p, args[3], args[2], Integer.parseInt(args[4]));
 										return true;
@@ -90,7 +90,7 @@ public class StonecutterCommands implements CommandExecutor {
 						if (args[2].equalsIgnoreCase("weapon")) {
 							if (stonecutterUtils.isWeaponAttribute(args[3])) {
 								if (StringUtils.isNumeric(args[4])) {
-									int level = Integer.parseInt(args[3]);
+									int level = Integer.parseInt(args[4]);
 									if (level % 5 == 0 && level > 0 && level <= 60) {
 										stonecutterMethods.createOverloadedGem(p, args[3], args[2],
 												Integer.parseInt(args[4]));
@@ -110,7 +110,7 @@ public class StonecutterCommands implements CommandExecutor {
 						} else if (args[2].equalsIgnoreCase("armor")) {
 							if (stonecutterUtils.isArmorAttribute(args[3])) {
 								if (StringUtils.isNumeric(args[4])) {
-									int level = Integer.parseInt(args[3]);
+									int level = Integer.parseInt(args[4]);
 									if (level % 5 == 0 && level > 0 && level <= 60) {
 										stonecutterMethods.createOverloadedGem(p, args[3], args[2],
 												Integer.parseInt(args[4]));

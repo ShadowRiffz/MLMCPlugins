@@ -75,6 +75,9 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		this.setupPermissions();
 		this.setupChat();
+		
+		// Currencies
+		cManager = new CurrencyManager(this);
 
 		masonListeners = new MasonListeners(this);
 		masonUtils = new MasonUtils();
@@ -97,9 +100,6 @@ public class Main extends JavaPlugin implements Listener {
 		// NeoGear
 		neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 		
-		// Currencies
-		cManager = new CurrencyManager(this);
-
 		// Setup Event Listeners
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(masonListeners, this);

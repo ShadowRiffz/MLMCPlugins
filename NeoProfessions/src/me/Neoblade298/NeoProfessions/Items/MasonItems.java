@@ -16,13 +16,13 @@ public class MasonItems {
 		int level = 30;
 		if(isAdvanced) {
 			meta.setDisplayName("§4[Lv 40] §cAdvanced Exp Charm");
-			lore.add("§7Level 3 Advanced Exp Charm");
+			lore.add("§7Level 40 Advanced Exp Charm");
 			lore.add("§7Effect: Raises Exp gained by 2x");
 			level = 40;
 		}
 		else {
 			meta.setDisplayName("§4[Lv 30] §cExp Charm");
-			lore.add("§7Level 2 Exp Charm");
+			lore.add("§7Level 30 Exp Charm");
 			lore.add("§7Effect: Raises Exp gained by 1.5x");
 		}
 		meta.setLore(lore);

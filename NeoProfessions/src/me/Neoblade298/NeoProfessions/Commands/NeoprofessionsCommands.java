@@ -139,6 +139,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			p.getInventory().setStorageContents(inv);
 		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
+			ItemStack[] inv = p.getInventory().getStorageContents();
+			Converter conv = new Converter(main);
+			for (int i = 0; i < inv.length; i++) {
+				if (inv[i] != null) {
+					int amt = inv[i].getAmount();
+					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+				}
+			}
+			p.getInventory().setStorageContents(inv);
+		}
 		
 		if(sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
