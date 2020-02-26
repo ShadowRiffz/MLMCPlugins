@@ -52,7 +52,7 @@ public class StonecutterMethods {
 				int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 				if (p.hasPermission("stonecutter.gem." + type + "." + perm)) {
 					if (cm.hasEnough(p, "essence", level, GEM_ESSENCE)) {
-						if (cm.hasEnough(p, attr, level, GEM_ORES)) {
+						if (cm.hasEnough(p, ore, level, GEM_ORES)) {
 							if (econ.has(p, GEM_COST_PER_LVL * level)) {
 								cm.subtract(p, "essence", level, GEM_ESSENCE);
 								cm.subtract(p, ore, level, GEM_ORES);
@@ -91,7 +91,7 @@ public class StonecutterMethods {
 				int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 				if (p.hasPermission("stonecutter.overload." + type + "." + perm)) {
 					if (cm.hasEnough(p, "essence", level, GEM_ESSENCE)) {
-						if (cm.hasEnough(p, attr, level, GEM_ORES)) {
+						if (cm.hasEnough(p, ore, level, GEM_ORES)) {
 							if (econ.has(p, GEM_COST_PER_LVL * level)) {
 								cm.subtract(p, "essence", level, GEM_ESSENCE);
 								cm.subtract(p, ore, level, GEM_ORES);
