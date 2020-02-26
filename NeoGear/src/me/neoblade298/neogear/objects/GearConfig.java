@@ -127,7 +127,7 @@ public class GearConfig {
 		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
 				+ main.gen.nextInt(rarityAttrs.vitRange + 1);
 		lore.add("§7Tier: " + main.rarities.get(rarity).displayName + " " + this.display);
-		if (level > 0) { lore.add("§7Level Req: " + level); }
+		lore.add("§7Level Req: " + level);
 		lore.add("§9[Base Attributes]");
 		if (strength > 0) { lore.add("§9Strength +" + (strength - (strength % attributes.strRounded))); }
 		if (dexterity > 0) { lore.add("§9Dexterity +" + (dexterity - (dexterity % attributes.dexRounded))); }
