@@ -150,6 +150,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			p.getInventory().setStorageContents(inv);
 		}
+		// /neoprofessions liquidate [type] [level] [amount]
+		else if (args.length == 3)
 		
 		if(sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {

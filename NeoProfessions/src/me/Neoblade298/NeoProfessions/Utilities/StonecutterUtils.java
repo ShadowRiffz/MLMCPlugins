@@ -51,4 +51,24 @@ public class StonecutterUtils {
 		}
 		return null;
 	}
+	
+	public String getOreFromAttribute(String attr) {
+		switch (attr) {
+		case "strength":
+			return "ruby";
+		case "dexterity":
+			return "amethyst";
+		case "intelligence":
+			return "sapphire";
+		case "spirit":
+			return "emerald";
+		case "perception":
+			return "topaz";
+		case "endurance":
+			return "adamantium";
+		case "vitality":
+			return "garnet";
+		}
+		return null;
+	}
 }

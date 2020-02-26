@@ -138,4 +138,11 @@ public class CurrencyManager {
 		}
 		return false;
 	}
+	
+	public boolean containsKey(String key) {
+		for (String type : types) {
+			if (type.equalsIgnoreCase(key)) return true;
+		}
+		return false;
+	}
 }
