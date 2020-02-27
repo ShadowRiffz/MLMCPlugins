@@ -1,8 +1,8 @@
 package me.Neoblade298.NeoProfessions.Legacy;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
-import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,20 +41,19 @@ public class Converter {
 			String idLine = meta.getLore().get(0);
 			
 			if (idLine.contains("Right click")) {	// Repair kit
-				System.out.println("Converted repair");
-				return convertRepairKit(lore);
+				return convertRepairKit(lore, item.getAmount());
 			}
 			else if (idLine.contains("Durability")) {
-				return convertDurabilityItem(lore);
+				return convertDurabilityItem(lore, item.getAmount());
 			}
 			else if (idLine.contains("Essence")) {
-				return convertEssence(lore);
+				return convertEssence(lore, item.getAmount());
 			}
 			else if (idLine.contains("Ore")) {
-				return convertOre(lore);
+				return convertOre(lore, item.getAmount());
 			}
 			else if (idLine.contains("Gem")) {
-				return convertGem(lore);
+				return convertGem(lore, item.getAmount());
 			}
 			else if (idLine.contains("Charm")) {
 				return convertCharm(item, lore);
@@ -63,28 +62,28 @@ public class Converter {
 		return item;
 	}
 	
-	private ItemStack convertRepairKit(ArrayList<String> lore) {
+	private ItemStack convertRepairKit(ArrayList<String> lore, int amount) {
 		int potency = Integer.parseInt(lore.get(4).split(" ")[1].substring(2,4));
 		int oldLevel = ((potency % 25) / 5) + 1;
 		int newLevel = (oldLevel + 1) * 10;
 		return bItems.getRepairItem(newLevel);
 	}
 	
-	private ItemStack convertDurabilityItem(ArrayList<String> lore) {
+	private ItemStack convertDurabilityItem(ArrayList<String> lore, int amount) {
 		String type = lore.get(1).split(" ")[2];
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
 		int potency = Integer.parseInt(lore.get(2).split(" ")[1].replaceAll("§e", ""));
-		return bItems.getDurabilityItem(newLevel, type, potency);
+		return util.setAmount(bItems.getDurabilityItem(newLevel, type, potency), amount);
 	}
 	
-	private ItemStack convertEssence(ArrayList<String> lore) {
+	private ItemStack convertEssence(ArrayList<String> lore, int amount) {
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1]);
 		int newLevel = (oldLevel + 1) * 10;
-		return cItems.getEssence(newLevel, true);
+		return util.setAmount(cItems.getEssence(newLevel, true), amount);
 	}
 	
-	private ItemStack convertOre(ArrayList<String> lore) {
+	private ItemStack convertOre(ArrayList<String> lore, int amount) {
 		String oreName = lore.get(0).split(" ")[2].replaceAll("§e", "");
 		String type = null;
 		switch (oreName) {
@@ -112,64 +111,61 @@ public class Converter {
 		}
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
-		return sItems.getOre(type, newLevel);
+		return util.setAmount(sItems.getOre(type, newLevel), amount);
 	}
 	
-	private ItemStack convertGem(ArrayList<String> lore) {
+	private ItemStack convertGem(ArrayList<String> lore, int amount) {
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
 		String itemType = lore.get(1).split(" ")[2];
 		String type = lore.get(1).split(" ")[3];
-		int potency = Integer.parseInt(lore.get(2).split(" ")[1].replaceAll("§e", ""));
 		boolean isOverloaded = false;
-		int duraLoss = 0;
 		if (lore.size() > 3) {
 			isOverloaded = true;
-			duraLoss = Integer.parseInt(lore.get(3).split(" ")[2].replaceAll("§e", ""));
 			type = type.substring(0, type.length() - 1);
 		}
 		
 		if (itemType.equalsIgnoreCase("weapon")) {
-			return sItems.getWeaponGem(type, newLevel, isOverloaded, potency, duraLoss);
+			return util.setAmount(sItems.getWeaponGem(type, newLevel, isOverloaded), amount);
 		}
 		else {
-			return sItems.getArmorGem(type, newLevel, isOverloaded, potency, duraLoss);
+			return util.setAmount(sItems.getArmorGem(type, newLevel, isOverloaded), amount);
 		}
 	}
 	
 	private ItemStack convertCharm(ItemStack item, ArrayList<String> lore) {
 		if (item.isSimilar(oldMItems.getDropCharm(false))) {
-			return mItems.getDropCharm(false);
+			return util.setAmount(mItems.getDropCharm(false), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getDropCharm(true))) {
-			return mItems.getDropCharm(true);
+			return util.setAmount(mItems.getDropCharm(true), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getExpCharm(false))) {
-			return mItems.getExpCharm(false);
+			return util.setAmount(mItems.getExpCharm(false), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getExpCharm(true))) {
-			return mItems.getExpCharm(true);
+			return util.setAmount(mItems.getExpCharm(true), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getHungerCharm())) {
-			return mItems.getHungerCharm();
+			return util.setAmount(mItems.getHungerCharm(), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getLootingCharm(false))) {
-			return mItems.getLootingCharm(false);
+			return util.setAmount(mItems.getLootingCharm(false), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getLootingCharm(true))) {
-			return mItems.getLootingCharm(true);
+			return util.setAmount(mItems.getLootingCharm(true), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getQuickEatCharm())) {
-			return mItems.getQuickEatCharm();
+			return util.setAmount(mItems.getQuickEatCharm(), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getRecoveryCharm())) {
-			return mItems.getRecoveryCharm();
+			return util.setAmount(mItems.getRecoveryCharm(), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getSecondChanceCharm())) {
-			return mItems.getSecondChanceCharm();
+			return util.setAmount(mItems.getSecondChanceCharm(), item.getAmount());
 		}
 		else if (item.isSimilar(oldMItems.getTravelerCharm())) {
-			return mItems.getTravelerCharm();
+			return util.setAmount(mItems.getTravelerCharm(), item.getAmount());
 		}
 		return null;
 	}
@@ -186,30 +182,43 @@ public class Converter {
 			util.setMaxDurability(item, 700);
 		}
 		
-		String oldRarity = ChatColor.stripColor(lore.get(0).split(" ")[1]);
-		int newLevel = 10;
+		String oldRarity = util.getItemRarity(item);
+		String oldTier = util.getItemType(item);
+		int newLevel = 0;
 		
 		switch (oldRarity) {
-		case "uncommon":
-			newLevel = 15;
-			break;
 		case "rare":
-			newLevel = 20;
+			newLevel = 5;
 			break;
 		case "unique":
-			newLevel = 25;
+			newLevel = 10;
 			break;
 		case "epic":
-			newLevel = 30;
+			newLevel = 25;
 			break;
 		case "angelic":
-			newLevel = 40;
+			newLevel = 45;
 			break;
 		case "mythic":
-			newLevel = 50;
+			newLevel = 60;
 			break;
 		}
 		lore.add(1, "§7Level Req: " + newLevel);
+		
+		ListIterator<String> iter = lore.listIterator();
+		while (iter.hasNext()) {
+			String line = iter.next();
+			if (line.contains("Strength") && oldTier.equals("Bow")) {
+				iter.remove();
+			}
+			if (line.contains("Endurance") && oldTier.equals("Infused")) {
+				iter.remove();
+			}
+			if (line.contains("Tier:")) {
+				iter.remove();
+				iter.add("//TODO");
+			}
+		}
 		return item;
 	}
 }
