@@ -74,11 +74,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
-			sender.sendMessage("§7- §c/prof convert");
+			// sender.sendMessage("§7- §c/prof convert");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
-			sender.sendMessage("§7- §c/prof liquidate §7- Virtualizes all ore and essence in inventory");
+			sender.sendMessage("§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
 			sender.sendMessage(
-					"§7- §c/prof solidify [essence/oretype] [amount] §7- Turns ore/essence into an item in inventory");
+					"§7- §c/prof solidify [essence/oretype] [level] [amount] §7- Turns ore/essence into an item in inventory");
 			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
@@ -148,17 +148,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			p.getInventory().setStorageContents(inv);
 		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemStack[] inv = p.getInventory().getStorageContents();
-			Converter conv = new Converter(main);
-			for (int i = 0; i < inv.length; i++) {
-				if (inv[i] != null) {
-					int amt = inv[i].getAmount();
-					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
-				}
-			}
-			p.getInventory().setStorageContents(inv);
-		}
 		// /prof solidify [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("solidify")) {
 			if (cm.containsKey(args[1])) {
@@ -167,18 +156,18 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					int amount = Integer.parseInt(args[3]);
 					if (level % 5 == 0 && level > 0 && level <= 60) {
 						if (cm.hasEnough(p, args[1], level, amount)) {
-							HashMap<Integer, ItemStack> result = p.getInventory().addItem(common.getEssence(level, false));
+							HashMap<Integer, ItemStack> result = p.getInventory().addItem(util.setAmount(common.getEssence(level, false), amount));
 							if (!result.isEmpty()) {
 								int notAdded = 0;
 								for (Entry<Integer, ItemStack> item : result.entrySet()) {
 									notAdded += item.getValue().getAmount();
 								}
-								cm.add(p, args[1], level, amount - notAdded);
+								cm.subtract(p, args[1], level, amount - notAdded);
 								util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7essence!");
 								return true;
 							}
 							else {
-								cm.add(p, args[1], level, amount);
+								cm.subtract(p, args[1], level, amount);
 								util.sendMessage(p, "&7Solidified &e" + amount + " &7essence!");
 								return true;
 							}
@@ -223,7 +212,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							}
 							else {
 								cm.add(p, args[1], level, amount);
-								util.sendMessage(p, "&7Solidified &e" + amount + " &7essence!");
+								util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
 								return true;
 							}
 						}
