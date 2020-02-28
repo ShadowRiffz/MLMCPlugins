@@ -12,7 +12,6 @@ import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithMethods {
@@ -204,7 +203,35 @@ public class BlacksmithMethods {
 		if (!item.getType().equals(Material.AIR)) {
 			if (util.isGearReworked(item)) {
 				String type = util.getItemType(item);
+				
 				if (type != null) {
+					// Fix type
+					switch (type) {
+					case "reinforcedhelmet":
+						type = "rhelmet";
+						break;
+					case "reinforcedchestplate":
+						type = "rchestplate";
+						break;
+					case "reinforcedleggings":
+						type = "rleggings";
+						break;
+					case "reinforcedboots":
+						type = "rboots";
+						break;
+					case "infusedhelmet":
+						type = "ihelmet";
+						break;
+					case "infusedchestplate":
+						type = "ichestplate";
+						break;
+					case "infusedleggings":
+						type = "ileggings";
+						break;
+					case "infusedboots":
+						type = "iboots";
+						break;
+					}
 					int itemLevel = util.getItemLevel(item);
 					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
 					String rarity = util.getItemRarity(item);

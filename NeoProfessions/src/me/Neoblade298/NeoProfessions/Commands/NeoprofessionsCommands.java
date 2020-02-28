@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Damageable;
 
@@ -137,17 +138,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
 		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemStack[] inv = p.getInventory().getStorageContents();
-			Converter conv = new Converter(main);
-			for (int i = 0; i < inv.length; i++) {
-				if (inv[i] != null) {
-					int amt = inv[i].getAmount();
-					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
-				}
-			}
-			p.getInventory().setStorageContents(inv);
-		}
+
 		// /prof solidify [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("solidify")) {
 			if (cm.containsKey(args[1])) {
@@ -236,13 +227,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 		}
-		else {
-			util.sendMessage(p, "&cInvalid command!");
-			return true;
+		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
+			ItemStack[] inv = p.getInventory().getStorageContents();
+			Converter conv = new Converter(main);
+			for (int i = 0; i < inv.length; i++) {
+				if (inv[i] != null) {
+					int amt = inv[i].getAmount();
+					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+				}
+			}
+			p.getInventory().setStorageContents(inv);
 		}
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
+				System.out.println("Got 0");
 				sender.sendMessage("§7- §4/prof level [playername] <amount>");
 				sender.sendMessage("§7- §4/prof lore [line (from 0)] [newlore]");
 				sender.sendMessage("§7- §4/prof removelore [line (from 0)]");
@@ -269,16 +268,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
 					}
 				}
-				else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-					ItemStack[] inv = p.getInventory().getStorageContents();
+				else if (args.length == 1 && args[0].equalsIgnoreCase("convertgear")) {
+					PlayerInventory pInv = p.getInventory();
+					ItemStack[] inv = pInv.getArmorContents();
 					Converter conv = new Converter(main);
 					for (int i = 0; i < inv.length; i++) {
-						if (inv[i] != null) {
-							int amt = inv[i].getAmount();
-							inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+						if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
+							inv[i] = conv.convertGear(inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
 						}
 					}
-					p.getInventory().setStorageContents(inv);
+					pInv.setArmorContents(inv);
+					ItemStack item = pInv.getItemInMainHand();
+					if (item != null) pInv.setItemInMainHand(conv.convertGear(item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					item = pInv.getItemInOffHand();
+					if (item != null) pInv.setItemInOffHand(conv.convertGear(item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					return true;
 				}
 				else if (args[0].equalsIgnoreCase("lore")) {
 					if (args.length >= 3) {
@@ -562,6 +566,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 			}
 		}
+		util.sendMessage(p, "&cInvalid command!");
 		return true;
 	}
 }

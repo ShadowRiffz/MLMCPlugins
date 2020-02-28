@@ -41,19 +41,19 @@ public class Converter {
 			String idLine = meta.getLore().get(0);
 			
 			if (idLine.contains("Right click")) {	// Repair kit
-				return convertRepairKit(lore, item.getAmount());
+				return convertRepairKit(lore);
 			}
 			else if (idLine.contains("Durability")) {
-				return convertDurabilityItem(lore, item.getAmount());
+				return convertDurabilityItem(lore);
 			}
 			else if (idLine.contains("Essence")) {
-				return convertEssence(lore, item.getAmount());
+				return convertEssence(lore);
 			}
 			else if (idLine.contains("Ore")) {
-				return convertOre(lore, item.getAmount());
+				return convertOre(lore);
 			}
 			else if (idLine.contains("Gem")) {
-				return convertGem(lore, item.getAmount());
+				return convertGem(lore);
 			}
 			else if (idLine.contains("Charm")) {
 				return convertCharm(item, lore);
@@ -62,28 +62,28 @@ public class Converter {
 		return item;
 	}
 	
-	private ItemStack convertRepairKit(ArrayList<String> lore, int amount) {
+	private ItemStack convertRepairKit(ArrayList<String> lore) {
 		int potency = Integer.parseInt(lore.get(4).split(" ")[1].substring(2,4));
 		int oldLevel = ((potency % 25) / 5) + 1;
 		int newLevel = (oldLevel + 1) * 10;
 		return bItems.getRepairItem(newLevel);
 	}
 	
-	private ItemStack convertDurabilityItem(ArrayList<String> lore, int amount) {
+	private ItemStack convertDurabilityItem(ArrayList<String> lore) {
 		String type = lore.get(1).split(" ")[2];
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
 		int potency = Integer.parseInt(lore.get(2).split(" ")[1].replaceAll("§e", ""));
-		return util.setAmount(bItems.getDurabilityItem(newLevel, type, potency), amount);
+		return bItems.getDurabilityItem(newLevel, type, potency);
 	}
 	
-	private ItemStack convertEssence(ArrayList<String> lore, int amount) {
+	private ItemStack convertEssence(ArrayList<String> lore) {
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1]);
 		int newLevel = (oldLevel + 1) * 10;
-		return util.setAmount(cItems.getEssence(newLevel, true), amount);
+		return cItems.getEssence(newLevel, true);
 	}
 	
-	private ItemStack convertOre(ArrayList<String> lore, int amount) {
+	private ItemStack convertOre(ArrayList<String> lore) {
 		String oreName = lore.get(0).split(" ")[2].replaceAll("§e", "");
 		String type = null;
 		switch (oreName) {
@@ -111,10 +111,10 @@ public class Converter {
 		}
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
-		return util.setAmount(sItems.getOre(type, newLevel), amount);
+		return sItems.getOre(type, newLevel);
 	}
 	
-	private ItemStack convertGem(ArrayList<String> lore, int amount) {
+	private ItemStack convertGem(ArrayList<String> lore) {
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
 		String itemType = lore.get(1).split(" ")[2];
@@ -126,97 +126,131 @@ public class Converter {
 		}
 		
 		if (itemType.equalsIgnoreCase("weapon")) {
-			return util.setAmount(sItems.getWeaponGem(type, newLevel, isOverloaded), amount);
+			return sItems.getWeaponGem(type, newLevel, isOverloaded);
 		}
 		else {
-			return util.setAmount(sItems.getArmorGem(type, newLevel, isOverloaded), amount);
+			return sItems.getArmorGem(type, newLevel, isOverloaded);
 		}
 	}
 	
 	private ItemStack convertCharm(ItemStack item, ArrayList<String> lore) {
 		if (item.isSimilar(oldMItems.getDropCharm(false))) {
-			return util.setAmount(mItems.getDropCharm(false), item.getAmount());
+			return mItems.getDropCharm(false);
 		}
 		else if (item.isSimilar(oldMItems.getDropCharm(true))) {
-			return util.setAmount(mItems.getDropCharm(true), item.getAmount());
+			return mItems.getDropCharm(true);
 		}
 		else if (item.isSimilar(oldMItems.getExpCharm(false))) {
-			return util.setAmount(mItems.getExpCharm(false), item.getAmount());
+			return mItems.getExpCharm(false);
 		}
 		else if (item.isSimilar(oldMItems.getExpCharm(true))) {
-			return util.setAmount(mItems.getExpCharm(true), item.getAmount());
+			return mItems.getExpCharm(true);
 		}
 		else if (item.isSimilar(oldMItems.getHungerCharm())) {
-			return util.setAmount(mItems.getHungerCharm(), item.getAmount());
+			return mItems.getHungerCharm();
 		}
 		else if (item.isSimilar(oldMItems.getLootingCharm(false))) {
-			return util.setAmount(mItems.getLootingCharm(false), item.getAmount());
+			return mItems.getLootingCharm(false);
 		}
 		else if (item.isSimilar(oldMItems.getLootingCharm(true))) {
-			return util.setAmount(mItems.getLootingCharm(true), item.getAmount());
+			return mItems.getLootingCharm(true);
 		}
 		else if (item.isSimilar(oldMItems.getQuickEatCharm())) {
-			return util.setAmount(mItems.getQuickEatCharm(), item.getAmount());
+			return mItems.getQuickEatCharm();
 		}
 		else if (item.isSimilar(oldMItems.getRecoveryCharm())) {
-			return util.setAmount(mItems.getRecoveryCharm(), item.getAmount());
+			return mItems.getRecoveryCharm();
 		}
 		else if (item.isSimilar(oldMItems.getSecondChanceCharm())) {
-			return util.setAmount(mItems.getSecondChanceCharm(), item.getAmount());
+			return mItems.getSecondChanceCharm();
 		}
 		else if (item.isSimilar(oldMItems.getTravelerCharm())) {
-			return util.setAmount(mItems.getTravelerCharm(), item.getAmount());
+			return mItems.getTravelerCharm();
 		}
 		return null;
 	}
 	
-	private ItemStack convertGear(ItemStack item, ItemMeta meta, ArrayList<String> lore) {
-		// First change durability
-		if (util.isWeapon(item)) {
-			util.setMaxDurability(item, 1400);
-		}
-		else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
-			util.setMaxDurability(item, 900);
-		}
-		else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
-			util.setMaxDurability(item, 700);
-		}
-		
-		String oldRarity = util.getItemRarity(item);
-		String oldTier = util.getItemType(item);
-		int newLevel = 0;
-		
-		switch (oldRarity) {
-		case "rare":
-			newLevel = 5;
-			break;
-		case "unique":
-			newLevel = 10;
-			break;
-		case "epic":
-			newLevel = 25;
-			break;
-		case "angelic":
-			newLevel = 45;
-			break;
-		case "mythic":
-			newLevel = 60;
-			break;
-		}
-		lore.add(1, "§7Level Req: " + newLevel);
-		
-		ListIterator<String> iter = lore.listIterator();
-		while (iter.hasNext()) {
-			String line = iter.next();
-			if (line.contains("Strength") && oldTier.equals("Bow")) {
-				iter.remove();
+	public ItemStack convertGear(ItemStack item, ItemMeta meta, ArrayList<String> lore) {
+		if (item != null) {
+			
+			String oldRarity = util.getItemRarity(item);
+			String oldType = util.getItemType(item);
+			int newLevel = 0;
+			
+
+			// Fix type
+			switch (oldType) {
+			case "reinforcedhelmet":
+				oldType = "Reinforced Helmet";
+				break;
+			case "reinforcedchestplate":
+				oldType = "Reinforced Chestplate";
+				break;
+			case "reinforcedleggings":
+				oldType = "Reinforced Leggings";
+				break;
+			case "reinforcedboots":
+				oldType = "Reinforced Boots";
+				break;
+			case "infusedhelmet":
+				oldType = "Infused Helmet";
+				break;
+			case "infusedchestplate":
+				oldType = "Infused Chestplate";
+				break;
+			case "infusedleggings":
+				oldType = "Infused Leggings";
+				break;
+			case "infusedboots":
+				oldType = "Infused Boots";
+				break;
 			}
-			if (line.contains("Endurance") && oldTier.equals("Infused")) {
-				iter.remove();
+			
+			switch (oldRarity) {
+			case "rare":
+				newLevel = 5;
+				break;
+			case "unique":
+				newLevel = 10;
+				break;
+			case "epic":
+				newLevel = 25;
+				break;
+			case "angelic":
+				newLevel = 45;
+				break;
+			case "mythic":
+				newLevel = 60;
+				break;
 			}
-			if (line.contains("Tier:")) {
-				iter.remove();
-				iter.add("//TODO");
+			lore.add(1, "§7Level Req: " + newLevel);
+			
+			ListIterator<String> iter = lore.listIterator();
+			while (iter.hasNext()) {
+				String line = iter.next();
+				if (line.contains("Strength") && oldType.equals("bow")) {
+					iter.remove();
+				}
+				if (line.contains("Endurance") && oldType.contains("infused")) {
+					iter.remove();
+				}
+				if (line.contains("Tier:")) {
+					iter.remove();
+					iter.add("§7Tier: §9Rare " + oldType);
+				}
+			}
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+
+			// Change durability
+			if (util.isWeapon(item)) {
+				util.setMaxDurability(item, 1400);
+			}
+			else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
+				util.setMaxDurability(item, 900);
+			}
+			else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
+				util.setMaxDurability(item, 700);
 			}
 		}
 		return item;

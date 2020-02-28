@@ -87,7 +87,13 @@ public class Util {
 		// Find the tier string
 		for(String line : lore) {
 			if(line.contains("Tier:")) {
-				return ChatColor.stripColor(line.split(" ")[2]).toLowerCase();
+				String[] strings = line.split(" ");
+				if (strings.length == 4) {
+					return ChatColor.stripColor(strings[2] + strings[3]).toLowerCase();
+				}
+				else {
+					return ChatColor.stripColor(strings[2]).toLowerCase();
+				}
 			}
 		}
 		
