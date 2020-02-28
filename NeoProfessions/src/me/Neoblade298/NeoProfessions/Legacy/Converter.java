@@ -20,6 +20,7 @@ public class Converter {
 	StonecutterItems sItems;
 	MasonItems mItems;
 	MasonItemsLegacy oldMItems;
+	MasonMethodsLegacy mMethods;
 	CommonItems cItems;
 	Util util;
 	
@@ -30,6 +31,7 @@ public class Converter {
 		sItems = new StonecutterItems();
 		mItems = new MasonItems();
 		oldMItems = new MasonItemsLegacy();
+		mMethods = new MasonMethodsLegacy(main);
 		cItems = new CommonItems();
 		util = new Util();
 	}
@@ -238,6 +240,7 @@ public class Converter {
 					iter.remove();
 					iter.add("§7Tier: §9Rare " + oldType);
 				}
+				mMethods.unslot
 			}
 			meta.setLore(lore);
 			item.setItemMeta(meta);
