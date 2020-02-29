@@ -184,45 +184,52 @@ public class MasonListeners implements Listener {
 			String slotType = masonUtils.slotType(itemToSlot);
 			if (p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if (slotType != null) {
-					if (masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
-						int level = util.getItemLevel(itemWithSlot);
-						if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
-							if (econ.has(p, SLOT_GOLD)) {
-								boolean success = false;
-								switch (slotType) {
-								case "durability":
-									success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-									break;
-								case "attribute":
-									success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-									break;
-								case "overload":
-									success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-									break;
-								case "charm":
-									success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-									break;
-								}
-								if (success) {
-									p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
-									cm.subtract(p, "essence", level, SLOT_ESSENCE);
-									econ.withdrawPlayer(p, SLOT_GOLD);
-									util.sendMessage(p, "&cSuccessfully slotted item!");
+					if (masonUtils.isGearReworked(itemToSlot)) {
+						if (masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
+							int level = util.getItemLevel(itemWithSlot);
+							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
+								if (econ.has(p, SLOT_GOLD)) {
+									boolean success = false;
+									switch (slotType) {
+									case "durability":
+										success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+										break;
+									case "attribute":
+										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+										break;
+									case "overload":
+										success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+										break;
+									case "charm":
+										success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+										break;
+									}
+									if (success) {
+										p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+										cm.subtract(p, "essence", level, SLOT_ESSENCE);
+										econ.withdrawPlayer(p, SLOT_GOLD);
+										util.sendMessage(p, "&cSuccessfully slotted item!");
+									} else {
+										util.sendMessage(p, "&cFailed to slot item!");
+									}
 								} else {
-									util.sendMessage(p, "&cFailed to slot item!");
+									util.sendMessage(p, "&cYou lack the gold to do this!");
+									slotItem.remove(p);
+									slotNum.remove(p);
 								}
 							} else {
-								util.sendMessage(p, "&cYou lack the gold to do this!");
+								util.sendMessage(p, "&cYou lack the materials to do this!");
 								slotItem.remove(p);
 								slotNum.remove(p);
 							}
 						} else {
-							util.sendMessage(p, "&cYou lack the materials to do this!");
+							util.sendMessage(p, "&cThis item is too high level for this slot!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
-					} else {
-						util.sendMessage(p, "&cThis item is too high level for this slot!");
+					}
+					else {
+						util.sendMessage(p, "&cItem is no longer supported by the server!");
 						slotItem.remove(p);
 						slotNum.remove(p);
 					}

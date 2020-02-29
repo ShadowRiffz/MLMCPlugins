@@ -53,6 +53,93 @@ public class MasonUtilsLegacy {
 		item.setItemMeta(meta);
 	}
 	
+	public ItemStack parseUnslot(ItemStack item, int slot) {
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		String line = getSlotLine(item, slot);
+		
+		// Parse the line and revert the lore
+		int slotLevel = Character.getNumericValue(line.charAt(1)) * 10;
+		int slottedLevel = Character.getNumericValue(line.charAt(3)) * 10;
+		int slotType = Character.getNumericValue(line.charAt(5));
+		String attr = getSlotLineAttribute(line);
+		boolean isArmor = util.isArmor(item);
+		int potency = -1;
+		int durabilityLoss = -1;
+		lore.set(getSlotNum(item, slot), "§8(Lv " + slotLevel + " Slot)");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		
+		switch (slotType) {
+		case 0:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			if(util.getMaxDurability(item) > potency) {
+				util.setMaxDurability(item, util.getMaxDurability(item) - potency);
+				if(isArmor) {
+					return bItems.getDurabilityItem(slottedLevel, "armor", potency);
+				} else {
+					return bItems.getDurabilityItem(slottedLevel, "weapon", potency);
+				}
+			}
+		case 1:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			if(isArmor) {
+				return sItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+			} else {
+				return sItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+			}
+		case 2:
+			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
+			durabilityLoss = Integer.parseInt(line.substring(7,8) + line.substring(9,10) + line.substring(11,12));
+			util.setMaxDurability(item, util.getMaxDurability(item) + durabilityLoss);
+			if(isArmor) {
+				return sItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+			} else {
+				return sItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+			}
+		case 3:
+			if(line.contains("Advanced")) {
+				if(line.contains("Exp")) {
+					return mItems.getExpCharm(true);
+				}
+				else if(line.contains("Drop")) {
+					return mItems.getDropCharm(true);
+				}
+				else if(line.contains("Looting")) {
+					return mItems.getLootingCharm(true);
+				}
+			}
+			else {
+				if(line.contains("Exp")) {
+					return mItems.getExpCharm(false);
+				}
+				else if(line.contains("Drop")) {
+					return mItems.getDropCharm(false);
+				}
+				else if(line.contains("Looting")) {
+					return mItems.getLootingCharm(false);
+				}
+				else if(line.contains("Recovery")) {
+					return mItems.getRecoveryCharm();
+				}
+				else if(line.contains("Traveler")) {
+					return mItems.getTravelerCharm();
+				}
+				else if(line.contains("Second Chance")) {
+					return mItems.getSecondChanceCharm();
+				}
+				else if(line.contains("Hunger")) {
+					return mItems.getHungerCharm();
+				}
+				else if(line.contains("Quick Eat")) {
+					return mItems.getQuickEatCharm();
+				}
+			}
+			break;
+		}
+		return null;
+	}
+	
 	public ItemStack parseUnslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		ItemMeta meta = item.getItemMeta();

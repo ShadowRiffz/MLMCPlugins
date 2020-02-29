@@ -18,7 +18,7 @@ public class CommonItems {
 		meta.setDisplayName("§4[Lv " + level + "] §cEssence");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level + " Essence");
+		lore.add("§0§7Level " + level + " Essence");
 		lore.add("§7Item used for profession crafting");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

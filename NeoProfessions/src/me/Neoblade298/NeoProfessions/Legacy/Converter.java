@@ -21,6 +21,7 @@ public class Converter {
 	MasonItems mItems;
 	MasonItemsLegacy oldMItems;
 	MasonMethodsLegacy mMethods;
+	MasonUtilsLegacy mUtils;
 	CommonItems cItems;
 	Util util;
 	
@@ -31,7 +32,7 @@ public class Converter {
 		sItems = new StonecutterItems();
 		mItems = new MasonItems();
 		oldMItems = new MasonItemsLegacy();
-		mMethods = new MasonMethodsLegacy(main);
+		mUtils = new MasonUtilsLegacy();
 		cItems = new CommonItems();
 		util = new Util();
 	}
@@ -227,6 +228,17 @@ public class Converter {
 			}
 			lore.add(1, "§7Level Req: " + newLevel);
 			
+			// Remove slots
+			for (int i = 1; i <= 3; i++) {
+				if (mUtils.isSlotUsed(item, i)) {
+					int num = mUtils.getSlotNum(item, i);
+					mUtils.parseUnslot(item, i);
+				}
+				else if (mUtils.isSlotAvailable(item, i)) {
+					
+				}
+			}
+			
 			ListIterator<String> iter = lore.listIterator();
 			while (iter.hasNext()) {
 				String line = iter.next();
@@ -240,7 +252,6 @@ public class Converter {
 					iter.remove();
 					iter.add("§7Tier: §9Rare " + oldType);
 				}
-				mMethods.unslot
 			}
 			meta.setLore(lore);
 			item.setItemMeta(meta);
