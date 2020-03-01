@@ -233,7 +233,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			for (int i = 0; i < inv.length; i++) {
 				if (inv[i] != null) {
 					int amt = inv[i].getAmount();
-					inv[i] = util.setAmount(conv.convertItem(inv[i]), amt);
+					inv[i] = util.setAmount(conv.convertItem(p, inv[i]), amt);
 				}
 			}
 			p.getInventory().setStorageContents(inv);
@@ -274,14 +274,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					Converter conv = new Converter(main);
 					for (int i = 0; i < inv.length; i++) {
 						if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-							inv[i] = conv.convertGear(inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
+							inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
 						}
 					}
 					pInv.setArmorContents(inv);
 					ItemStack item = pInv.getItemInMainHand();
-					if (item != null) pInv.setItemInMainHand(conv.convertGear(item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					if (item != null) pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
 					item = pInv.getItemInOffHand();
-					if (item != null) pInv.setItemInOffHand(conv.convertGear(item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					if (item != null) pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("lore")) {

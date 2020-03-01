@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -24,6 +26,7 @@ public class Converter {
 	MasonUtilsLegacy mUtils;
 	CommonItems cItems;
 	Util util;
+	CurrencyManager cm;
 	
 	
 	public Converter(Main main) {
@@ -35,9 +38,10 @@ public class Converter {
 		mUtils = new MasonUtilsLegacy();
 		cItems = new CommonItems();
 		util = new Util();
+		cm = main.cManager;
 	}
 
-	public ItemStack convertItem(ItemStack item) {
+	public ItemStack convertItem(Player p, ItemStack item) {
 		if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getEnchantmentLevel(Enchantment.DURABILITY) < 10) {
 			ItemMeta meta = item.getItemMeta();
 			ArrayList<String> lore = (ArrayList<String>) meta.getLore();
@@ -50,10 +54,10 @@ public class Converter {
 				return convertDurabilityItem(lore);
 			}
 			else if (idLine.contains("Essence")) {
-				return convertEssence(lore);
+				return convertEssence(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Ore")) {
-				return convertOre(lore);
+				return convertOre(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Gem")) {
 				return convertGem(lore);
@@ -80,41 +84,19 @@ public class Converter {
 		return bItems.getDurabilityItem(newLevel, type, potency);
 	}
 	
-	private ItemStack convertEssence(ArrayList<String> lore) {
+	private ItemStack convertEssence(Player p, ArrayList<String> lore, int amt) {
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1]);
 		int newLevel = (oldLevel + 1) * 10;
-		return cItems.getEssence(newLevel, true);
+		cm.add(p, "essence", newLevel, amt);
+		return null;
 	}
 	
-	private ItemStack convertOre(ArrayList<String> lore) {
+	private ItemStack convertOre(Player p, ArrayList<String> lore, int amt) {
 		String oreName = lore.get(0).split(" ")[2].replaceAll("§e", "");
-		String type = null;
-		switch (oreName) {
-		case "Ruby": 
-			type = "strength";
-			break;
-		case "Amethyst":
-			type = "dexterity";
-			break;
-		case "Sapphire":
-			type = "intelligence";
-			break;
-		case "Emerald":
-			type = "spirit";
-			break;
-		case "Topaz":
-			type = "perception";
-			break;
-		case "Garnet":
-			type = "vitality";
-			break;
-		case "Adamantium":
-			type = "endurance";
-			break;
-		}
 		int oldLevel = Integer.parseInt(lore.get(0).split(" ")[1].replaceAll("§e", ""));
 		int newLevel = (oldLevel + 1) * 10;
-		return sItems.getOre(type, newLevel);
+		cm.add(p, oreName.toLowerCase(), newLevel, amt);
+		return null;
 	}
 	
 	private ItemStack convertGem(ArrayList<String> lore) {
@@ -173,7 +155,7 @@ public class Converter {
 		return null;
 	}
 	
-	public ItemStack convertGear(ItemStack item, ItemMeta meta, ArrayList<String> lore) {
+	public ItemStack convertGear(Player p, ItemStack item, ItemMeta meta, ArrayList<String> lore) {
 		if (item != null) {
 			
 			String oldRarity = util.getItemRarity(item);
@@ -229,44 +211,74 @@ public class Converter {
 			lore.add(1, "§7Level Req: " + newLevel);
 			
 			// Remove slots
+			ArrayList<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
 			for (int i = 1; i <= 3; i++) {
 				if (mUtils.isSlotUsed(item, i)) {
 					int num = mUtils.getSlotNum(item, i);
-					mUtils.parseUnslot(item, i);
+					itemsToReturn.add(mUtils.parseUnslot(item, i));
+					lore.set(num, convertLevel(lore.get(num)));
 				}
 				else if (mUtils.isSlotAvailable(item, i)) {
-					
+					int num = mUtils.getSlotNum(item, i);
+					lore.set(num, convertLevel(lore.get(num)));
 				}
 			}
 			
-			ListIterator<String> iter = lore.listIterator();
-			while (iter.hasNext()) {
-				String line = iter.next();
-				if (line.contains("Strength") && oldType.equals("bow")) {
-					iter.remove();
-				}
-				if (line.contains("Endurance") && oldType.contains("infused")) {
-					iter.remove();
-				}
-				if (line.contains("Tier:")) {
-					iter.remove();
-					iter.add("§7Tier: §9Rare " + oldType);
-				}
+			// Check if sufficient inventory spaces
+			ItemStack[] inv = p.getInventory().getStorageContents();
+			int empty = 0;
+			for (int i = 0; i < inv.length; i++) {
+				if (inv[i] == null) empty++;
 			}
-			meta.setLore(lore);
-			item.setItemMeta(meta);
+			
+			if (empty >= itemsToReturn.size()) {
+				ListIterator<String> iter = lore.listIterator();
+				while (iter.hasNext()) {
+					String line = iter.next();
+					if (line.contains("Strength") && oldType.equals("bow")) {
+						iter.remove();
+					}
+					if (line.contains("Endurance") && oldType.contains("infused")) {
+						iter.remove();
+					}
+					if (line.contains("Tier:")) {
+						iter.remove();
+						iter.add("§7Tier: §9Rare " + oldType);
+					}
+				}
+				meta.setLore(lore);
+				item.setItemMeta(meta);
 
-			// Change durability
-			if (util.isWeapon(item)) {
-				util.setMaxDurability(item, 1400);
-			}
-			else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
-				util.setMaxDurability(item, 900);
-			}
-			else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
-				util.setMaxDurability(item, 700);
+				// Change durability
+				if (util.isWeapon(item)) {
+					util.setMaxDurability(item, 1400);
+				}
+				else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
+					util.setMaxDurability(item, 900);
+				}
+				else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
+					util.setMaxDurability(item, 700);
+				}
 			}
 		}
 		return item;
+	}
+	
+	private String convertLevel(String line) {
+		String args[] = line.split(" ");
+		switch (args[1]) {
+			case "1": args[1] = "5"; break;
+			case "2": args[1] = "10"; break;
+			case "3": args[1] = "20"; break;
+			case "4": args[1] = "45"; break;
+			case "5": args[1] = "60"; break;
+		}
+		String returned = args[0];
+		for (int i = 1; i < args.length - 1; i++) {
+			returned += args[i];
+			returned += " ";
+		}
+		returned += args[args.length - 1];
+		return returned;
 	}
 }
