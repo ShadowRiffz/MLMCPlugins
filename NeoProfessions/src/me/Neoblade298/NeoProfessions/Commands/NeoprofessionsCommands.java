@@ -470,7 +470,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					// /prof player add [essence/oretype] [level] [amount]
 					if (args[1].equalsIgnoreCase("add")) {
 						this.main.cManager.add(p, args[2], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL), Integer.parseInt(args[4]));
-						util.sendMessage(p, "&7Success!");
 					}
 					if (args[1].equalsIgnoreCase("get")) {
 						if (args[2].equalsIgnoreCase("essence")) {
