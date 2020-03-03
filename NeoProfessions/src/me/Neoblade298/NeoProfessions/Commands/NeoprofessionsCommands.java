@@ -36,6 +36,7 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class NeoprofessionsCommands implements CommandExecutor {
 
+	private static final int LEVEL_INTERVAL = 5;
 	Main main;
 	BlacksmithMethods blacksmithMethods;
 	StonecutterMethods stonecutterMethods;
@@ -241,7 +242,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				System.out.println("Got 0");
 				sender.sendMessage("§7- §4/prof level [playername] <amount>");
 				sender.sendMessage("§7- §4/prof lore [line (from 0)] [newlore]");
 				sender.sendMessage("§7- §4/prof removelore [line (from 0)]");
@@ -258,7 +258,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				// /prof add [essence/oretype] [level] [amount]
 				if (args[0].equalsIgnoreCase("add")) {
-					this.main.cManager.add(p, args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL), Integer.parseInt(args[3]));
 					util.sendMessage(p, "&7Success!");
 				}
 				// /prof level playername
@@ -468,7 +468,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				else {
 					p = Bukkit.getPlayer(args[0]);
 					if (args[1].equalsIgnoreCase("add")) {
-						this.main.cManager.add(p, args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+						this.main.cManager.add(p, args[0], util.roundToLevel(Integer.parseInt(args[1]), LEVEL_INTERVAL), Integer.parseInt(args[2]));
 						util.sendMessage(p, "&7Success!");
 					}
 					if (args[1].equalsIgnoreCase("get")) {

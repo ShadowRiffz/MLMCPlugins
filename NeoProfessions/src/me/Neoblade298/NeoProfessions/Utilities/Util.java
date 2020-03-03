@@ -212,4 +212,8 @@ public class Util {
 			}
 		}
 	}
+	
+	public int roundToLevel(int toRound, int levelInterval) {
+		return toRound - (toRound % levelInterval);
+	}
 }
