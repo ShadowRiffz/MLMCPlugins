@@ -567,7 +567,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 			}
 		}
-		util.sendMessage(p, "&cInvalid command!");
 		return true;
 	}
 }
