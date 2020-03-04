@@ -59,7 +59,6 @@ public class MasonUtilsLegacy {
 		String line = getSlotLine(item, slot);
 
 		// Parse the line and revert the lore
-		System.out.println(line);
 		int slotLevel = Character.getNumericValue(line.charAt(1));
 		int slottedLevel = Character.getNumericValue(line.charAt(3));
 		int slotType = Character.getNumericValue(line.charAt(5));

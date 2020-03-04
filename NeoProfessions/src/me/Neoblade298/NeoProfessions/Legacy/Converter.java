@@ -217,12 +217,10 @@ public class Converter {
 							int num = mUtils.getSlotNum(item, i);
 							itemsToReturn.add(mUtils.parseUnslot(item, i, false));
 							slotsToParse.add(i);
-							System.out.println("test1: " + lore.get(num));
 							lore.set(num, convertLevel(lore.get(num)));
 						}
 						else if (mUtils.isSlotAvailable(item, i)) {
 							int num = mUtils.getSlotNum(item, i);
-							System.out.println("test2: " + lore.get(num));
 							lore.set(num, convertLevel(lore.get(num)));
 						}
 					}
