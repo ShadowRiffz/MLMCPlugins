@@ -237,7 +237,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			for (int i = 0; i < inv.length; i++) {
 				if (inv[i] != null) {
 					int amt = inv[i].getAmount();
-					inv[i] = util.setAmount(conv.convertItem(p, inv[i]), amt);
+					ItemStack item = conv.convertItem(p, inv[i]);
+					if (item != null) inv[i] = util.setAmount(conv.convertItem(p, inv[i]), amt);
+					else inv[i] = null;
 				}
 			}
 			p.getInventory().setStorageContents(inv);

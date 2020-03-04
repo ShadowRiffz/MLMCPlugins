@@ -48,24 +48,31 @@ public class Converter {
 			String idLine = meta.getLore().get(0);
 			
 			if (idLine.contains("Right click")) {	// Repair kit
+				System.out.println("1");
 				return convertRepairKit(lore);
 			}
 			else if (idLine.contains("Durability")) {
+				System.out.println("2");
 				return convertDurabilityItem(lore);
 			}
 			else if (idLine.contains("Essence")) {
+				System.out.println("3");
 				return convertEssence(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Ore")) {
+				System.out.println("4");
 				return convertOre(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Gem")) {
+				System.out.println("5");
 				return convertGem(lore);
 			}
 			else if (idLine.contains("Charm")) {
+				System.out.println("6");
 				return convertCharm(item, lore);
 			}
 		}
+		System.out.println("Fail");
 		return item;
 	}
 	
