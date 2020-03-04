@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -287,9 +288,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					pInv.setArmorContents(inv);
 					ItemStack item = pInv.getItemInMainHand();
-					if (item != null) pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					if (!item.getType().equals(Material.AIR)) 
+						pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
 					item = pInv.getItemInOffHand();
-					if (item != null) pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+					if (!item.getType().equals(Material.AIR)) 
+						pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("lore")) {

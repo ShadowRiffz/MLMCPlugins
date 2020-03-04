@@ -48,31 +48,24 @@ public class Converter {
 			String idLine = meta.getLore().get(0);
 			
 			if (idLine.contains("Right click")) {	// Repair kit
-				System.out.println("1");
 				return convertRepairKit(lore);
 			}
 			else if (idLine.contains("Durability")) {
-				System.out.println("2");
 				return convertDurabilityItem(lore);
 			}
 			else if (idLine.contains("Essence")) {
-				System.out.println("3");
 				return convertEssence(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Ore")) {
-				System.out.println("4");
 				return convertOre(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Gem")) {
-				System.out.println("5");
 				return convertGem(lore);
 			}
 			else if (idLine.contains("Charm")) {
-				System.out.println("6");
 				return convertCharm(item, lore);
 			}
 		}
-		System.out.println("Fail");
 		return item;
 	}
 	
@@ -164,11 +157,10 @@ public class Converter {
 	
 	public ItemStack convertGear(Player p, ItemStack item, ItemMeta meta, ArrayList<String> lore) {
 		if (item != null) {
-			if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			if (item.hasItemMeta() && item.getItemMeta().hasLore() && !util.isGearReworked(item)) {
 				String oldRarity = util.getItemRarity(item);
 				String oldType = util.getItemType(item);
 				int newLevel = 0;
-				
 	
 				// Fix type
 				switch (oldType) {
@@ -215,23 +207,27 @@ public class Converter {
 					newLevel = 60;
 					break;
 				}
-				lore.add(1, "§7Level Req: " + newLevel);
 				
 				// Remove slots
 				ArrayList<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
 				ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
 				for (int i = 1; i <= 3; i++) {
-					if (mUtils.isSlotUsed(item, i)) {
-						int num = mUtils.getSlotNum(item, i);
-						itemsToReturn.add(mUtils.parseUnslot(item, i, false));
-						slotsToParse.add(i);
-						lore.set(num, convertLevel(lore.get(num)));
-					}
-					else if (mUtils.isSlotAvailable(item, i)) {
-						int num = mUtils.getSlotNum(item, i);
-						lore.set(num, convertLevel(lore.get(num)));
+					if (mUtils.doesSlotExist(item, i)) {
+						if (mUtils.isSlotUsed(item, i)) {
+							int num = mUtils.getSlotNum(item, i);
+							itemsToReturn.add(mUtils.parseUnslot(item, i, false));
+							slotsToParse.add(i);
+							System.out.println("test1: " + lore.get(num));
+							lore.set(num, convertLevel(lore.get(num)));
+						}
+						else if (mUtils.isSlotAvailable(item, i)) {
+							int num = mUtils.getSlotNum(item, i);
+							System.out.println("test2: " + lore.get(num));
+							lore.set(num, convertLevel(lore.get(num)));
+						}
 					}
 				}
+				lore.add(1, "§7Level Req: " + newLevel);
 				
 				// Check if sufficient inventory spaces
 				ItemStack[] inv = p.getInventory().getStorageContents();
@@ -244,10 +240,10 @@ public class Converter {
 					ListIterator<String> iter = lore.listIterator();
 					while (iter.hasNext()) {
 						String line = iter.next();
-						if (line.contains("Strength") && oldType.equals("bow")) {
+						if (line.contains("§9Strength") && oldType.equals("bow")) {
 							iter.remove();
 						}
-						if (line.contains("Endurance") && oldType.contains("infused")) {
+						if (line.contains("§9Endurance") && oldType.contains("infused")) {
 							iter.remove();
 						}
 						if (line.contains("Tier:")) {
@@ -259,7 +255,7 @@ public class Converter {
 					item.setItemMeta(meta);
 					// Parse slots
 					for (int i : slotsToParse) {
-						itemsToReturn.add(mUtils.parseUnslot(item, i, true));
+						mUtils.parseUnslot(item, i, true);
 					}
 	
 					// Change durability
