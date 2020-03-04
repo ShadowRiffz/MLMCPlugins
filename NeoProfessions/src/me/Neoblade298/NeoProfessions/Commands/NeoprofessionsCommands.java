@@ -126,6 +126,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(Bukkit.getPlayer(args[1]), args[2], level));
+			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
 			if (!main.cManager.validType(args[1])) {
@@ -138,6 +139,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
+			return true;
 		}
 
 		// /prof solidify [type] [level] [amount]
@@ -186,6 +188,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 		// /prof liquidate [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("liquidate")) {
+			
 			if (cm.containsKey(args[1])) {
 				if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
 					int level = Integer.parseInt(args[2]);
@@ -238,6 +241,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 			}
 			p.getInventory().setStorageContents(inv);
+			return true;
 		}
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
@@ -260,12 +264,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("add")) {
 					this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL), Integer.parseInt(args[3]));
 					util.sendMessage(p, "&7Success!");
+					return true;
 				}
 				// /prof level playername
 				else if (args[0].equalsIgnoreCase("sober")) {
 					if (args.length == 2) {
 						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
+						return true;
 					}
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("convertgear")) {
@@ -330,6 +336,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							util.setCurrentDurability(item, util.getMaxDurability(item));
 						}
 						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
+						return true;
 					}
 				}
 				else if (args[0].equalsIgnoreCase("level")) {
@@ -343,6 +350,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
+						return true;
 					}
 					else if (args.length == 3) {
 						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
@@ -355,6 +363,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 										"&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
+						return true;
 					}
 				}
 				else if (args[0].equalsIgnoreCase("reset")) {
@@ -362,17 +371,22 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (pClass != null) {
 						if (pClass.getData().getName().equalsIgnoreCase("Blacksmith")) {
 							blacksmithMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+							return true;
 						}
 						else if (pClass.getData().getName().equalsIgnoreCase("Stonecutter")) {
 							stonecutterMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+							return true;
 						}
 						else if (pClass.getData().getName().equalsIgnoreCase("Culinarian")) {
 							culinarianMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+							return true;
 						}
 						else if (pClass.getData().getName().equalsIgnoreCase("Mason")) {
 							masonMethods.resetPlayer(Bukkit.getPlayer(args[1]));
+							return true;
 						}
 					}
+					return true;
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
 					if (args[1].equalsIgnoreCase("essence")) {
@@ -464,6 +478,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(mItems.getQuickEatCharm());
 						}
 					}
+					return true;
 				}
 				else {
 					p = Bukkit.getPlayer(args[0]);
@@ -563,6 +578,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							}
 						}
 					}
+					return true;
 				}
 			}
 		}

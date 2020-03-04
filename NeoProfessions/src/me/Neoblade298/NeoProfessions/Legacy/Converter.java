@@ -212,10 +212,12 @@ public class Converter {
 			
 			// Remove slots
 			ArrayList<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
+			ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
 			for (int i = 1; i <= 3; i++) {
 				if (mUtils.isSlotUsed(item, i)) {
 					int num = mUtils.getSlotNum(item, i);
-					itemsToReturn.add(mUtils.parseUnslot(item, i));
+					itemsToReturn.add(mUtils.parseUnslot(item, i, false));
+					slotsToParse.add(i);
 					lore.set(num, convertLevel(lore.get(num)));
 				}
 				else if (mUtils.isSlotAvailable(item, i)) {
@@ -248,6 +250,10 @@ public class Converter {
 				}
 				meta.setLore(lore);
 				item.setItemMeta(meta);
+				// Parse slots
+				for (int i : slotsToParse) {
+					itemsToReturn.add(mUtils.parseUnslot(item, i, true));
+				}
 
 				// Change durability
 				if (util.isWeapon(item)) {
