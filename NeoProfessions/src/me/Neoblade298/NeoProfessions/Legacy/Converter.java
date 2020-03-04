@@ -272,6 +272,11 @@ public class Converter {
 					else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
 						util.setMaxDurability(item, 700);
 					}
+					
+					// Give slots back
+					for (ItemStack toReturn : itemsToReturn) {
+						p.getInventory().addItem(toReturn);
+					}
 				}
 			}
 		}
