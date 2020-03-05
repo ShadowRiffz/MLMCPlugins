@@ -213,6 +213,7 @@ public class Converter {
 				ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
 				for (int i = 1; i <= 3; i++) {
 					if (mUtils.doesSlotExist(item, i)) {
+						System.out.println("Slot " + i + " exists");
 						if (mUtils.isSlotUsed(item, i)) {
 							int num = mUtils.getSlotNum(item, i);
 							itemsToReturn.add(mUtils.parseUnslot(item, i, false));

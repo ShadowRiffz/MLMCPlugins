@@ -337,7 +337,7 @@ public class MasonUtilsLegacy {
 				}
 			}
 			else {
-				if (line.contains("+")) {
+				if (line.contains("+") || line.contains("Charm")) {
 					count++;
 					// If the matching slot is empty, return true
 					if (slot == count) {
