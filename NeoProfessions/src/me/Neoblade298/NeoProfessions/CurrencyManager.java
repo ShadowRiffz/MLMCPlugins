@@ -9,14 +9,17 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.Utilities.Util;
+
 public class CurrencyManager {
 	// UUID, essence/oretype, amount
 	private HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
 	private static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
+	private Util util;
 	
 	public CurrencyManager(Main main) {
 		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
-		
+		util = new Util();
 	}
 	
 	public void initPlayer(Player p) throws Exception {
@@ -104,6 +107,7 @@ public class CurrencyManager {
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
 		int newAmount = typeCurrency.get(level) + amount;
 		typeCurrency.put(level, newAmount);
+		util.sendMessage(p, "&7You gained &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
 	public void subtract(Player p, String type, int level, int amount) {
@@ -113,6 +117,7 @@ public class CurrencyManager {
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
 		int newAmount = typeCurrency.get(level) - amount;
 		typeCurrency.put(level, newAmount);
+		util.sendMessage(p, "&7You lost &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
 	public int get(Player p, String type, int level) {
