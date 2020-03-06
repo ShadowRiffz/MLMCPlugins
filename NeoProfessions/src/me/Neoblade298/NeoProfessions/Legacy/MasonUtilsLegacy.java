@@ -53,13 +53,13 @@ public class MasonUtilsLegacy {
 		item.setItemMeta(meta);
 	}
 
-	public ItemStack parseUnslot(ItemStack item, int slot, boolean revertLore) {
+	public ItemStack parseUnslot(ItemStack item, int slot) {
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		String line = getSlotLine(item, slot);
 
 		// Parse the line and revert the lore
-		int slotLevel = Character.getNumericValue(line.charAt(1));
+		int slotLevel = (Character.getNumericValue(line.charAt(1)) + 1) * 10;
 		int slottedLevel = Character.getNumericValue(line.charAt(3));
 		int slotType = Character.getNumericValue(line.charAt(5));
 		String attr = getSlotLineAttribute(line);
@@ -67,10 +67,8 @@ public class MasonUtilsLegacy {
 		int potency = -1;
 		int durabilityLoss = -1;
 		lore.set(getSlotNum(item, slot), "§8(Lv " + slotLevel + " Slot)");
-		if (revertLore) {
-			meta.setLore(lore);
-			item.setItemMeta(meta);
-		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 
 		switch (slotType) {
 		case 0:

@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Legacy;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -213,10 +214,8 @@ public class Converter {
 				ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
 				for (int i = 1; i <= 3; i++) {
 					if (mUtils.doesSlotExist(item, i)) {
-						System.out.println("Slot " + i + " exists");
 						if (mUtils.isSlotUsed(item, i)) {
 							int num = mUtils.getSlotNum(item, i);
-							itemsToReturn.add(mUtils.parseUnslot(item, i, false));
 							slotsToParse.add(i);
 							lore.set(num, convertLevel(lore.get(num)));
 						}
@@ -247,25 +246,28 @@ public class Converter {
 						}
 						if (line.contains("Tier:")) {
 							iter.remove();
-							iter.add("§7Tier: §9Rare " + oldType);
+							iter.add("§7Tier: §9Rare " + StringUtils.capitalize(oldType));
 						}
 					}
 					meta.setLore(lore);
 					item.setItemMeta(meta);
 					// Parse slots
 					for (int i : slotsToParse) {
-						mUtils.parseUnslot(item, i, true);
+						itemsToReturn.add(mUtils.parseUnslot(item, i));
 					}
 	
 					// Change durability
 					if (util.isWeapon(item)) {
 						util.setMaxDurability(item, 1400);
+						util.setCurrentDurability(item, 1400);
 					}
 					else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
 						util.setMaxDurability(item, 900);
+						util.setCurrentDurability(item, 900);
 					}
 					else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
 						util.setMaxDurability(item, 700);
+						util.setCurrentDurability(item, 700);
 					}
 					
 					// Give slots back
