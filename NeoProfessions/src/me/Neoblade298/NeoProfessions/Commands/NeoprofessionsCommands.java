@@ -77,7 +77,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
-			// sender.sendMessage("§7- §c/prof convert");
+			sender.sendMessage("§7- §c/prof convert §7- Converts all items in inventory from old to new system.");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
 			sender.sendMessage("§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
 			sender.sendMessage(
@@ -278,22 +278,67 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("convertgear")) {
-					PlayerInventory pInv = p.getInventory();
-					ItemStack[] inv = pInv.getArmorContents();
-					Converter conv = new Converter(main);
-					for (int i = 0; i < inv.length; i++) {
-						if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-							inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
+					if (!p.hasPermission("neoprofessions.convert.1")) {
+						PlayerInventory pInv = p.getInventory();
+						ItemStack[] inv = pInv.getArmorContents();
+						Converter conv = new Converter(main);
+						for (int i = 0; i < inv.length; i++) {
+							if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
+								inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
+							}
 						}
+						pInv.setArmorContents(inv);
+						ItemStack item = pInv.getItemInMainHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						item = pInv.getItemInOffHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set neoprofessions.convert.1");
+						return true;
 					}
-					pInv.setArmorContents(inv);
-					ItemStack item = pInv.getItemInMainHand();
-					if (!item.getType().equals(Material.AIR)) 
-						pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
-					item = pInv.getItemInOffHand();
-					if (!item.getType().equals(Material.AIR)) 
-						pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
-					return true;
+					else if (!p.hasPermission("neoprofessions.convert.2") && p.hasPermission("skillapi.account.diamond")) {
+						PlayerInventory pInv = p.getInventory();
+						ItemStack[] inv = pInv.getArmorContents();
+						Converter conv = new Converter(main);
+						for (int i = 0; i < inv.length; i++) {
+							if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
+								inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
+							}
+						}
+						pInv.setArmorContents(inv);
+						ItemStack item = pInv.getItemInMainHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						item = pInv.getItemInOffHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set neoprofessions.convert.2");
+						return true;
+					}
+					else if (!p.hasPermission("neoprofessions.convert.3") && p.hasPermission("class.account.unlocked.3")) {
+						PlayerInventory pInv = p.getInventory();
+						ItemStack[] inv = pInv.getArmorContents();
+						Converter conv = new Converter(main);
+						for (int i = 0; i < inv.length; i++) {
+							if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
+								inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(), (ArrayList<String>) inv[i].getItemMeta().getLore());
+							}
+						}
+						pInv.setArmorContents(inv);
+						ItemStack item = pInv.getItemInMainHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						item = pInv.getItemInOffHand();
+						if (!item.getType().equals(Material.AIR)) 
+							pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(), (ArrayList<String>) item.getItemMeta().getLore()));
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set neoprofessions.convert.3");
+						return true;
+					}
+					else {
+						util.sendMessage(p, "&cYou are out of gear conversions!");
+						return true;
+					}
 				}
 				else if (args[0].equalsIgnoreCase("lore")) {
 					if (args.length >= 3) {
