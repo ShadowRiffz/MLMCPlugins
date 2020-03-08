@@ -49,7 +49,6 @@ public class StonecutterItemsLegacy {
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
 		Builder fe = FireworkEffect.builder();
 		String oreName = null;
-		type = type.toLowerCase();
 		switch (type) {
 			case "strength":
 				oreName = "Ruby";
@@ -144,10 +143,6 @@ public class StonecutterItemsLegacy {
 				fe.withColor(Color.GRAY, Color.BLACK);
 				break;
 			case 7:
-				oreName = "Adamantium";
-				fe.withColor(Color.BLACK, Color.RED);
-				break;
-			default:
 				oreName = "Adamantium";
 				fe.withColor(Color.BLACK, Color.RED);
 				break;

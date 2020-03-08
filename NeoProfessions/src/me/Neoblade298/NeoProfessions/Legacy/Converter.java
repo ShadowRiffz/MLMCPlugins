@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -108,13 +109,14 @@ public class Converter {
 		boolean isOverloaded = false;
 		if (lore.size() > 3) {
 			isOverloaded = true;
-			type = type.substring(0, type.length() - 1);
+			if (lore.get(1).split(" ").length > 4) type = type.substring(0, type.length() - 1);
 		}
 		
 		if (itemType.equalsIgnoreCase("weapon")) {
 			return sItems.getWeaponGem(type, newLevel, isOverloaded);
 		}
 		else {
+			System.out.println("Here: " + type + " " + newLevel + " " + isOverloaded);
 			return sItems.getArmorGem(type, newLevel, isOverloaded);
 		}
 	}
@@ -157,122 +159,124 @@ public class Converter {
 	}
 	
 	public ItemStack convertGear(Player p, ItemStack item, ItemMeta meta, ArrayList<String> lore) {
-		if (item != null) {
+		if (item != null && !item.getType().equals(Material.AIR)) {
 			if (item.hasItemMeta() && item.getItemMeta().hasLore() && !util.isGearReworked(item)) {
 				String oldRarity = util.getItemRarity(item);
 				String oldType = util.getItemType(item);
 				int newLevel = 0;
 	
 				// Fix type
-				switch (oldType) {
-				case "reinforcedhelmet":
-					oldType = "Reinforced Helmet";
-					break;
-				case "reinforcedchestplate":
-					oldType = "Reinforced Chestplate";
-					break;
-				case "reinforcedleggings":
-					oldType = "Reinforced Leggings";
-					break;
-				case "reinforcedboots":
-					oldType = "Reinforced Boots";
-					break;
-				case "infusedhelmet":
-					oldType = "Infused Helmet";
-					break;
-				case "infusedchestplate":
-					oldType = "Infused Chestplate";
-					break;
-				case "infusedleggings":
-					oldType = "Infused Leggings";
-					break;
-				case "infusedboots":
-					oldType = "Infused Boots";
-					break;
-				}
-				
-				switch (oldRarity) {
-				case "rare":
-					newLevel = 5;
-					break;
-				case "unique":
-					newLevel = 10;
-					break;
-				case "epic":
-					newLevel = 25;
-					break;
-				case "angelic":
-					newLevel = 45;
-					break;
-				case "mythic":
-					newLevel = 60;
-					break;
-				}
-				
-				// Remove slots
-				ArrayList<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
-				ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
-				for (int i = 1; i <= 3; i++) {
-					if (mUtils.doesSlotExist(item, i)) {
-						if (mUtils.isSlotUsed(item, i)) {
-							int num = mUtils.getSlotNum(item, i);
-							slotsToParse.add(i);
-							lore.set(num, convertLevel(lore.get(num)));
-						}
-						else if (mUtils.isSlotAvailable(item, i)) {
-							int num = mUtils.getSlotNum(item, i);
-							lore.set(num, convertLevel(lore.get(num)));
-						}
-					}
-				}
-				lore.add(1, "§7Level Req: " + newLevel);
-				
-				// Check if sufficient inventory spaces
-				ItemStack[] inv = p.getInventory().getStorageContents();
-				int empty = 0;
-				for (int i = 0; i < inv.length; i++) {
-					if (inv[i] == null) empty++;
-				}
-				
-				if (empty >= itemsToReturn.size()) {
-					ListIterator<String> iter = lore.listIterator();
-					while (iter.hasNext()) {
-						String line = iter.next();
-						if (line.contains("§9Strength") && oldType.equals("bow")) {
-							iter.remove();
-						}
-						if (line.contains("§9Endurance") && oldType.contains("infused")) {
-							iter.remove();
-						}
-						if (line.contains("Tier:")) {
-							iter.remove();
-							iter.add("§7Tier: §9Rare " + StringUtils.capitalize(oldType));
-						}
-					}
-					meta.setLore(lore);
-					item.setItemMeta(meta);
-					// Parse slots
-					for (int i : slotsToParse) {
-						itemsToReturn.add(mUtils.parseUnslot(item, i));
-					}
-	
-					// Change durability
-					if (util.isWeapon(item)) {
-						util.setMaxDurability(item, 1400);
-						util.setCurrentDurability(item, 1400);
-					}
-					else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
-						util.setMaxDurability(item, 900);
-						util.setCurrentDurability(item, 900);
-					}
-					else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
-						util.setMaxDurability(item, 700);
-						util.setCurrentDurability(item, 700);
+				if (oldType != null) {
+					switch (oldType) {
+					case "reinforcedhelmet":
+						oldType = "Reinforced Helmet";
+						break;
+					case "reinforcedchestplate":
+						oldType = "Reinforced Chestplate";
+						break;
+					case "reinforcedleggings":
+						oldType = "Reinforced Leggings";
+						break;
+					case "reinforcedboots":
+						oldType = "Reinforced Boots";
+						break;
+					case "infusedhelmet":
+						oldType = "Infused Helmet";
+						break;
+					case "infusedchestplate":
+						oldType = "Infused Chestplate";
+						break;
+					case "infusedleggings":
+						oldType = "Infused Leggings";
+						break;
+					case "infusedboots":
+						oldType = "Infused Boots";
+						break;
 					}
 					
-					// Give slots back
-					for (ItemStack toReturn : itemsToReturn) {
-						p.getInventory().addItem(toReturn);
+					switch (oldRarity) {
+					case "rare":
+						newLevel = 5;
+						break;
+					case "unique":
+						newLevel = 10;
+						break;
+					case "epic":
+						newLevel = 25;
+						break;
+					case "angelic":
+						newLevel = 45;
+						break;
+					case "mythic":
+						newLevel = 60;
+						break;
+					}
+					
+					// Remove slots
+					ArrayList<ItemStack> itemsToReturn = new ArrayList<ItemStack>();
+					ArrayList<Integer> slotsToParse = new ArrayList<Integer>();
+					for (int i = 1; i <= 3; i++) {
+						if (mUtils.doesSlotExist(item, i)) {
+							if (mUtils.isSlotUsed(item, i)) {
+								int num = mUtils.getSlotNum(item, i);
+								slotsToParse.add(i);
+								lore.set(num, convertLevel(lore.get(num)));
+							}
+							else if (mUtils.isSlotAvailable(item, i)) {
+								int num = mUtils.getSlotNum(item, i);
+								lore.set(num, convertLevel(lore.get(num)));
+							}
+						}
+					}
+					lore.add(1, "§7Level Req: " + newLevel);
+					
+					// Check if sufficient inventory spaces
+					ItemStack[] inv = p.getInventory().getStorageContents();
+					int empty = 0;
+					for (int i = 0; i < inv.length; i++) {
+						if (inv[i] == null) empty++;
+					}
+					
+					if (empty >= itemsToReturn.size()) {
+						ListIterator<String> iter = lore.listIterator();
+						while (iter.hasNext()) {
+							String line = iter.next();
+							if (line.contains("§9Strength") && oldType.equals("bow")) {
+								iter.remove();
+							}
+							if (line.contains("§9Endurance") && oldType.contains("infused")) {
+								iter.remove();
+							}
+							if (line.contains("Tier:")) {
+								iter.remove();
+								iter.add("§7Tier: §9Rare " + StringUtils.capitalize(oldType));
+							}
+						}
+						meta.setLore(lore);
+						item.setItemMeta(meta);
+						// Parse slots
+						for (int i : slotsToParse) {
+							itemsToReturn.add(mUtils.parseUnslot(item, i));
+						}
+		
+						// Change durability
+						if (util.isWeapon(item)) {
+							util.setMaxDurability(item, 1400);
+							util.setCurrentDurability(item, 1400);
+						}
+						else if (util.isArmor(item) && lore.get(0).contains("Reinforced")) { 
+							util.setMaxDurability(item, 900);
+							util.setCurrentDurability(item, 900);
+						}
+						else if (util.isArmor(item) && lore.get(0).contains("Infused")) { 
+							util.setMaxDurability(item, 700);
+							util.setCurrentDurability(item, 700);
+						}
+						
+						// Give slots back
+						for (ItemStack toReturn : itemsToReturn) {
+							p.getInventory().addItem(toReturn);
+						}
 					}
 				}
 			}

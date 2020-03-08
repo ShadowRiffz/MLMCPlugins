@@ -150,4 +150,11 @@ public class CurrencyManager {
 		}
 		return false;
 	}
+	
+	public boolean containsPlayer(Player p) {
+		if (currencies.containsKey(p.getUniqueId())) {
+			return true;
+		}
+		return false;
+	}
 }
