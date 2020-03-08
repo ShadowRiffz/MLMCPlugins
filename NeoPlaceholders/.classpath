@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="src/SkillAPI.jar"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/MVdWPlaceholderAPI.jar"/>
+	<classpathentry kind="lib" path="src/me/neoblade298/neoplaceholders/NeoProfessions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

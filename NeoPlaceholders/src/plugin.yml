@@ -3,4 +3,4 @@ author: Neoblade298
 main: me.neoblade298.neoplaceholders.Main
 version: 1.00
 api-version: 1.14
-depend: [MVdWPlaceholderAPI, SkillAPI]
+depend: [MVdWPlaceholderAPI, SkillAPI, NeoProfessions]
