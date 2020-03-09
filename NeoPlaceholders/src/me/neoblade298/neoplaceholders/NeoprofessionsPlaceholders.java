@@ -1,42 +1,60 @@
 package me.neoblade298.neoplaceholders;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import be.maximvdw.placeholderapi.PlaceholderAPI;
-import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
-import be.maximvdw.placeholderapi.PlaceholderReplacer;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-public class NeoprofessionsPlaceholders {
-	private Main main;
+public class NeoprofessionsPlaceholders extends PlaceholderExpansion {
 	private me.Neoblade298.NeoProfessions.Main plugin;
-	private String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
+
+    @Override
+    public boolean canRegister(){
+        return Bukkit.getPluginManager().getPlugin("NeoProfessions") != null;
+    }
+    
+    @Override
+    public boolean register(){
+    	if (!canRegister()) return false;
+    	plugin = (me.Neoblade298.NeoProfessions.Main) Bukkit.getPluginManager().getPlugin("NeoProfessions");
+    	if (plugin == null) return false;
+    	return super.register();
+    }
+
+	@Override
+	public String getAuthor() {
+		return "Neoblade298";
+	}
+
+	@Override
+	public String getIdentifier() {
+		// TODO Auto-generated method stub
+		return "professions";
+	}
+
+    @Override
+    public String getRequiredPlugin(){
+        return "NeoProfessions";
+    }
+    
+	@Override
+	public String getVersion() {
+		// TODO Auto-generated method stub
+		return "1.0.0";
+	}
 	
-	public NeoprofessionsPlaceholders (Main main) {
-		this.main = main;
-		plugin = (me.Neoblade298.NeoProfessions.Main) Bukkit.getPluginManager().getPlugin("Neoprofessions");
-	}
-
-	public void registerPlaceholders() {
-
-		for (int i = 5; i <= 60; i += 5) {
-			final int j = i;
-			for (String type : types) {
-				PlaceholderAPI.registerPlaceholder(this.main, "professions_" + type + "_" + i, new PlaceholderReplacer() {
-					@Override
-					public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-						boolean online = e.isOnline();
-						Player p = e.getPlayer();
-						String placeholder = "Loading...";
+	@Override
+	public String onPlaceholderRequest(Player p, String identifier) {
+		if (p == null) return "Loading...";
 		
-						if (online && p != null && plugin.cManager.containsPlayer(p)) {
-							return "" + plugin.cManager.get(p, type, j);
-						}
-						return placeholder;
-					}
-				});
-			}
-		}
+		String args[] = identifier.split("_");
+		
+		if (args.length != 2) return "Invalid placeholder";
+		if (!plugin.cManager.containsKey(args[0])) return "Invalid placeholder";
+		if (!StringUtils.isNumeric(args[1])) return "Invalid placeholder";
+		int lvl = Integer.parseInt(args[1]);
+		if (!(lvl % 5 == 0 && lvl >= 5 && lvl <= 60)) return "Invalid placeholder";
+		return "" + plugin.cManager.get(p, args[0], lvl);
 	}
-
 }
