@@ -251,6 +251,14 @@ public class Converter {
 								iter.remove();
 								iter.add("§7Tier: §9Rare " + StringUtils.capitalize(oldType));
 							}
+							if (line.contains("Slot")) {
+								String args[] = line.split(" ");
+								int lvl = Integer.parseInt(args[1]);
+								if (lvl <= 5) {
+									iter.remove();
+									iter.add("§7(Lv " + (lvl + 1) * 10 + " Slot)");
+								}
+							}
 						}
 						meta.setLore(lore);
 						item.setItemMeta(meta);
