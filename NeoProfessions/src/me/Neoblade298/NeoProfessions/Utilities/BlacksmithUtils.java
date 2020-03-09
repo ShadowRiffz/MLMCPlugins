@@ -45,13 +45,28 @@ public class BlacksmithUtils {
 	}
 
 	public boolean canRepair(ItemStack item) {
-		// Check if the item is a quest item
+		boolean isGear = false;
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			//if (util.getItemLevel(item) != -1) {
+			for (String line : item.getItemMeta().getLore()) {
+				if (line.contains("Tier:")) {
+					isGear = true;
+					break;
+				}
+			}
+		}
+		
+		
+		if (isGear) {
+			if (util.getItemLevel(item) != -1) {
 				if (item.getType().getMaxDurability() > 0) {
 					return true;
 				}
-			//}
+			}
+		}
+		else {
+			if (item.getType().getMaxDurability() > 0) {
+				return true;
+			}
 		}
 		return false;
 	}

@@ -418,13 +418,16 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ItemStack item = target.getInventory().getItemInMainHand();
 						Util util = new Util();
 						BlacksmithUtils bUtils = new BlacksmithUtils();
-						ItemMeta im = item.getItemMeta();
-						((Damageable) im).setDamage(0);
-						item.setItemMeta(im);
 						if (bUtils.canRepair(item)) {
+							ItemMeta im = item.getItemMeta();
+							((Damageable) im).setDamage(0);
+							item.setItemMeta(im);
 							util.setCurrentDurability(item, util.getMaxDurability(item));
+							util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
 						}
-						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
+						else {
+							util.sendMessage(Bukkit.getPlayer(args[1]), "&cItem no longer supported by server!");
+						}
 						return true;
 					}
 				}
