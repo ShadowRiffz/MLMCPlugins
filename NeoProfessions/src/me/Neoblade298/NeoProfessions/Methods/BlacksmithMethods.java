@@ -233,7 +233,7 @@ public class BlacksmithMethods {
 						break;
 					}
 					int itemLevel = util.getItemLevel(item);
-					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
+					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
 						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
@@ -273,14 +273,14 @@ public class BlacksmithMethods {
 		if (!item.getType().equals(Material.AIR)) {
 			if (util.isGearReworked(item)) {
 				int itemLevel = util.getItemLevel(item);
-				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 1;
+				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
 				if (itemLevel != -1) {
 					if (perm <= 0 || p.hasPermission("blacksmith.scrap." + perm)) {
 						if (econ.has(p, SCRAP_COST)) {
 							p.getInventory().removeItem(item);
 							econ.withdrawPlayer(p, SCRAP_COST);
 							cm.add(p, "essence", itemLevel, 1);
-							util.sendMessage(p, "&cSuccessfully scrapped item!");
+							util.sendMessage(p, "&7Successfully scrapped item!");
 						} else {
 							util.sendMessage(p, "&cYou lack the gold to scrap this!");
 						}
