@@ -306,7 +306,7 @@ public class MasonMethods {
 										cm.subtract(p, "essence", slottedLevel, UNSLOT_ESSENCE);
 										econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
 										p.getInventory().addItem(returned);
-										util.sendMessage(p, "&cSuccessfully unslotted item!");
+										util.sendMessage(p, "&7Successfully unslotted item!");
 									}
 								} else {
 									util.sendMessage(p, "&cYou lack the gold to do this!");

@@ -306,7 +306,7 @@ public class BlacksmithMethods {
 						econ.withdrawPlayer(p, DECONSTRUCT_COST);
 						cm.subtract(p, "essence", level, amount);
 						cm.add(p, "essence", level - LEVEL_INTERVAL, amount * DECONSTRUCT_AMOUNT);
-						util.sendMessage(p, "&cSuccessfully deconstructed!");
+						util.sendMessage(p, "&7Successfully deconstructed!");
 					} else {
 						util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
 					}

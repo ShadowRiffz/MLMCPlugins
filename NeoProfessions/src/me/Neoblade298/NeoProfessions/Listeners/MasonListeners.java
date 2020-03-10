@@ -208,7 +208,7 @@ public class MasonListeners implements Listener {
 										p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
 										cm.subtract(p, "essence", level, SLOT_ESSENCE);
 										econ.withdrawPlayer(p, SLOT_GOLD);
-										util.sendMessage(p, "&cSuccessfully slotted item!");
+										util.sendMessage(p, "&7Successfully slotted item!");
 									} else {
 										util.sendMessage(p, "&cFailed to slot item!");
 									}
