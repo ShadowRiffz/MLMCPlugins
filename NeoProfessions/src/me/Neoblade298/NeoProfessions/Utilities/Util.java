@@ -120,7 +120,9 @@ public class Util {
 				mat.equals(Material.IRON_HOE) ||
 				mat.equals(Material.DIAMOND_HOE) ||
 				mat.equals(Material.SHIELD) ||
-				mat.equals(Material.BOW);
+				mat.equals(Material.BOW) ||
+				mat.equals(Material.CROSSBOW) ||
+				mat.equals(Material.TRIDENT);
 	}
 
 	
