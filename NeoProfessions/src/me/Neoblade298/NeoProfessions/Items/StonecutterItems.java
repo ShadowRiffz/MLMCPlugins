@@ -91,6 +91,56 @@ public class StonecutterItems {
 		return item;
 	}
 	
+	public ItemStack getOreSolidify(String type, int level) {
+		ItemStack item = new ItemStack(Material.FIREWORK_STAR);
+		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();
+		Builder fe = FireworkEffect.builder();
+		String oreName = null;
+		type = type.toLowerCase();
+		switch (type) {
+			case "ruby":
+				oreName = "Ruby";
+				fe.withColor(Color.BLACK, Color.RED);
+				break;
+			case "amethyst":
+				oreName = "Amethyst";
+				fe.withColor(Color.GRAY, Color.PURPLE);
+				break;
+			case "sapphire":	
+				oreName = "Sapphire";
+				fe.withColor(Color.BLUE);
+				break;
+			case "emerald":
+				oreName = "Emerald";
+				fe.withColor(Color.LIME, Color.LIME, Color.GREEN);
+				break;
+			case "topaz":
+				oreName = "Topaz";
+				fe.withColor(Color.YELLOW, Color.ORANGE);
+				break;
+			case "garnet":
+				oreName = "Garnet";
+				fe.withColor(Color.GRAY, Color.BLACK);
+				break;
+			case "adamantium":
+				oreName = "Adamantium";
+				fe.withColor(Color.BLACK, Color.RED);
+				break;
+		}
+		ArrayList<String> lore = new ArrayList<String>();
+		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
+		lore.add("§0§7Level " + level + " " + StringUtils.capitalize(type) + " Ore");
+		lore.add("§7Item used for profession crafting");
+		meta.setEffect(fe.build());
+		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
+		return item;
+	}
+	
 	public ItemStack getOre(int random, int level) {
 		ItemStack item = new ItemStack(Material.FIREWORK_STAR);
 		FireworkEffectMeta meta = (FireworkEffectMeta) item.getItemMeta();

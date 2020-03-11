@@ -152,20 +152,25 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					int amount = Integer.parseInt(args[3]);
 					if (level % 5 == 0 && level > 0 && level <= 60) {
 						if (cm.hasEnough(p, args[1], level, amount)) {
-							HashMap<Integer, ItemStack> result = p.getInventory()
-									.addItem(util.setAmount(common.getEssence(level, false), amount));
+							HashMap<Integer, ItemStack> result = null;
+							if (args[1].equalsIgnoreCase("essence")) {
+								result = p.getInventory().addItem(util.setAmount(common.getEssence(level, false), amount));
+							}
+							else {
+								result = p.getInventory().addItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
+							}
 							if (!result.isEmpty()) {
 								int notAdded = 0;
 								for (Entry<Integer, ItemStack> item : result.entrySet()) {
 									notAdded += item.getValue().getAmount();
 								}
 								cm.subtract(p, args[1], level, amount - notAdded);
-								util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7essence!");
+								util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
 								return true;
 							}
 							else {
 								cm.subtract(p, args[1], level, amount);
-								util.sendMessage(p, "&7Solidified &e" + amount + " &7essence!");
+								util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
 								return true;
 							}
 						}

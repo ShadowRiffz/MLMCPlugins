@@ -416,6 +416,7 @@ public class MasonUtils {
 	
 	public boolean isGearReworked(ItemStack item) {
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			System.out.println(item.getItemMeta().getLore().get(0).toCharArray());
 			return item.getItemMeta().getLore().get(0).charAt(1) == '0';
 		}
 		return false;
