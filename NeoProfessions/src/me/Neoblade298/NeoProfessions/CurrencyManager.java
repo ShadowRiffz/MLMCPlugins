@@ -81,6 +81,7 @@ public class CurrencyManager {
 			}
 			stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + p.getUniqueId() + "';");
 		}
+		currencies.remove(p.getUniqueId());
 	}
 	
 	public void cleanup() throws Exception {
