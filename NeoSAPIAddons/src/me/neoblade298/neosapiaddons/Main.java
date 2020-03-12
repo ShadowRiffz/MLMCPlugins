@@ -52,7 +52,8 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
     @Override
     public List<CustomEffectComponent> getComponents() {
         return ImmutableList.of(
-            new ValueMaxMechanic()   
+            new ValueMaxMechanic(),
+            new SpawnMythicmobMechanic()
         );
     }
 }
