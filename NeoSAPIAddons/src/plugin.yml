@@ -4,6 +4,7 @@
  description: Various commands and skills that SkillAPI is too bad to do by itself
  author: Neoblade298
  depend: [SkillAPI]
+ softdepend: [MythicMobs]
  main: me.neoblade298.neosapiaddons.Main
  commands: 
   neosapiaddons:
