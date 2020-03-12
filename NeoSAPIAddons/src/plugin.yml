@@ -1,7 +1,9 @@
  name: NeoSAPIAddons
+ api-version: 1.14
  version: 1.0
- description: Various commands that SkillAPI is too bad to do by itself
+ description: Various commands and skills that SkillAPI is too bad to do by itself
  author: Neoblade298
+ depend: [SkillAPI]
  main: me.neoblade298.neosapiaddons.Main
  commands: 
   neosapiaddons:
