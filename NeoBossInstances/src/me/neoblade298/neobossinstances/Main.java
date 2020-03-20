@@ -57,7 +57,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ArrayList<String> bossNames = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
-	HashMap<String, ArrayList<Player>> activeRaids = new HashMap<String, ArrayList<Player>>();
+	public HashMap<String, ArrayList<Player>> activeFights = new HashMap<String, ArrayList<Player>>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -198,19 +198,20 @@ public class Main extends JavaPlugin implements Listener {
 							boss = rs.getString(2);
 	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
+	    						if (!activeFights.containsKey(boss)) {
+	    							ArrayList<Player> players = new ArrayList<Player>();
+	    							players.add(p);
+	    							activeFights.put(boss, players);
+	    						}
+	    						else {
+	    							activeFights.get(boss).add(p);
+	    						}
+	    						
 	    						// Handle raid starts
 	    						if (bossInfo.get(boss).isRaid()) {
 	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
 	    				    			public void run() {
 	    		    						p.setHealth(p.getMaxHealth());
-	    		    						if (!activeRaids.containsKey(boss)) {
-	    		    							ArrayList<Player> raid = new ArrayList<Player>();
-	    		    							raid.add(p);
-	    		    							activeRaids.put(boss, raid);
-	    		    						}
-	    		    						else {
-	    		    							activeRaids.get(boss).add(p);
-	    		    						}
 
 	    		    						// Only start timer if it hasn't already been started
 	    		    						if (!activeBosses.contains(boss)) {
@@ -255,7 +256,7 @@ public class Main extends JavaPlugin implements Listener {
 	    					}
 	    					// Retried 3 times, time to teleport them out
 	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
-	    		    			p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Something went wrong! Could not teleport you to boss.");
+	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
 					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
 					    			public void run() {
 		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
@@ -285,21 +286,21 @@ public class Main extends JavaPlugin implements Listener {
 		int ticks = time * 20;
 		// 30 minute warning
 		if (time > 1800) {
-			scheduleWarning(ticks, 36000, "Â§e30 Â§cminutes", boss);
+			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
 		}
 		// 15 minute warning
 		if (time > 900) {
-			scheduleWarning(ticks, 18000, "Â§e15 Â§cminutes", boss);
+			scheduleWarning(ticks, 18000, "§e15 §cminutes", boss);
 		}
-		scheduleWarning(ticks, 6000, "Â§e5 Â§cminutes", boss);
-		scheduleWarning(ticks, 3600, "Â§e3 Â§cminutes", boss);
-		scheduleWarning(ticks, 2400, "Â§e2 Â§cminutes", boss);
-		scheduleWarning(ticks, 1200, "Â§e1 Â§cminute", boss);
+		scheduleWarning(ticks, 6000, "§e5 §cminutes", boss);
+		scheduleWarning(ticks, 3600, "§e3 §cminutes", boss);
+		scheduleWarning(ticks, 2400, "§e2 §cminutes", boss);
+		scheduleWarning(ticks, 1200, "§e1 §cminute", boss);
 
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {
-				if (activeRaids.containsKey(boss)) {
-    				for (Player p : activeRaids.get(boss)) {
+				if (activeFights.containsKey(boss)) {
+    				for (Player p : activeFights.get(boss)) {
     					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
     				}
 				}
@@ -311,9 +312,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void scheduleWarning(int ticks, int timeToWarn, String time, String boss) {
 		BukkitRunnable warnPlayer = new BukkitRunnable() {
 			public void run() {
-				if (activeRaids.containsKey(boss)) {
-    				for (Player p : activeRaids.get(boss)) {
-    					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] " + time + " remaining!");
+				if (activeFights.containsKey(boss)) {
+    				for (Player p : activeFights.get(boss)) {
+    					p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
     				}
 				}
 			}
@@ -343,10 +344,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void handleLeave(Player p) {
 		// Remove player from all raids
-		for (String boss : activeRaids.keySet()) {
-			activeRaids.get(boss).remove(p);
-			if (activeRaids.get(boss).size() == 0) {
-				activeRaids.remove(boss);
+		for (String boss : activeFights.keySet()) {
+			activeFights.get(boss).remove(p);
+			if (activeFights.get(boss).size() == 0) {
+				activeFights.remove(boss);
 			}
 		}
     	// Delete player from all fights
@@ -387,21 +388,21 @@ public class Main extends JavaPlugin implements Listener {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§l" + displayName + " Â§7is off cooldown!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 6000;
 					temp /= 10;
-	    			p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§l" + displayName + " Â§7has Â§c" + temp + " Â§7minutes remaining!");
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
 				}
 			}
 			else {
-    			p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§l" + displayName + " Â§7is off cooldown!");
+    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
 			}
 			return true;
 		}
 		else {
-			p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Invalid boss name!");
+			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
 			return true;
 		}
 	}
@@ -444,7 +445,7 @@ public class Main extends JavaPlugin implements Listener {
 			String p = e.getPlayer().getName();
 			if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
 				e.setCancelled(true);
-				e.getPlayer().sendMessage("Â§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
+				e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
 			}
 			dropCooldown.put(p, System.currentTimeMillis());
 		}
