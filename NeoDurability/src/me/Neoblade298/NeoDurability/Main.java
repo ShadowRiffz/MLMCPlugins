@@ -285,7 +285,6 @@ public class Main extends JavaPlugin implements Listener {
 							return;
 						}
 						if (i == 0) {
-							System.out.println("Got here");
 							player.getInventory().setItemInMainHand(null);
 							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							return;
