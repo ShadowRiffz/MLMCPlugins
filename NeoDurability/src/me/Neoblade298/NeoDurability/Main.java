@@ -281,7 +281,6 @@ public class Main extends JavaPlugin implements Listener {
 					double dM = Integer.parseInt(numbers[1].trim());
 
 					d -= 1;
-					System.out.println("Durability: " + d + ", i = " + i);
 					if (d <= 0) {
 						if (i == 1) {
 							player.getInventory().setBoots(null);
