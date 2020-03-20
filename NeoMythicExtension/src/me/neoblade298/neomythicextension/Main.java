@@ -13,6 +13,7 @@ import com.gmail.berndivader.mythicmobsext.conditions.MobsInRadiusCondition;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
@@ -21,8 +22,10 @@ import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
+import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
+import me.neoblade298.neomythicextension.targeters.InstanceTargeter;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -92,6 +95,15 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
+	public void onMythicTargeterLoad(MythicTargeterLoadEvent event) {
+
+		if(event.getTargeterName().equalsIgnoreCase("instance"))	{
+			InstanceTargeter targeter = new InstanceTargeter(event.getConfig());
+			event.register(targeter);
+		}
+	}
+	
+	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
 
 		if(event.getMechanicName().equalsIgnoreCase("instancetp"))	{
@@ -121,6 +133,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if(event.getMechanicName().equalsIgnoreCase("flag"))	{
 			FlagMechanic mechanic = new FlagMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if(event.getMechanicName().equalsIgnoreCase("removeflag"))	{
+			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}
