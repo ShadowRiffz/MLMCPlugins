@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public class Main extends JavaPlugin implements Listener {
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoDurability Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+
 	}
 
 	public void onDisable() {
@@ -244,6 +246,8 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void reduceDurability(ItemStack item, Player player, int i) {
+		BukkitRunnable removeCrossbowMain = null;
+		BukkitRunnable removeCrossbowOff = null;
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasEnchant(Enchantment.DURABILITY))) {
 			Random rand = new Random();
 			double ench = item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
@@ -251,6 +255,20 @@ public class Main extends JavaPlugin implements Listener {
 			if (chance - (ench * 0.05) <= 0) {
 				return;
 			}
+		}
+		if (item.getType().equals(Material.CROSSBOW)) {
+			removeCrossbowMain = new BukkitRunnable() {
+				public void run() {
+					player.getInventory().setItemInMainHand(null);
+					player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+				}
+			};
+			removeCrossbowOff = new BukkitRunnable() {
+				public void run() {
+					player.getInventory().setItemInOffHand(null);
+					player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+				}
+			};
 		}
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
 			ItemMeta im = item.getItemMeta();
@@ -263,6 +281,7 @@ public class Main extends JavaPlugin implements Listener {
 					double dM = Integer.parseInt(numbers[1].trim());
 
 					d -= 1;
+					System.out.println("Durability: " + d + ", i = " + i);
 					if (d <= 0) {
 						if (i == 1) {
 							player.getInventory().setBoots(null);
@@ -285,13 +304,23 @@ public class Main extends JavaPlugin implements Listener {
 							return;
 						}
 						if (i == 0) {
-							player.getInventory().setItemInMainHand(null);
-							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+							if (item.getType().equals(Material.CROSSBOW)) {
+								removeCrossbowMain.runTaskLater(this, 1L);
+							}
+							else {
+								player.getInventory().setItemInMainHand(null);
+								player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+							}
 							return;
 						}
 						if (i == 5) {
-							player.getInventory().setItemInOffHand(null);
-							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+							if (item.getType().equals(Material.CROSSBOW)) {
+								removeCrossbowOff.runTaskLater(this, 1L);
+							}
+							else {
+								player.getInventory().setItemInOffHand(null);
+								player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
+							}
 							return;
 						}
 					}
