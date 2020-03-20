@@ -14,12 +14,12 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import me.neoblade298.neobossinstances.Main;
 
-public class InstanceTargeter extends IEntitySelector {
+public class PlayersInBossTargeter extends IEntitySelector {
 
 	protected final String boss;
 	protected final me.neoblade298.neobossinstances.Main nbi;
 
-	public InstanceTargeter(MythicLineConfig config) {
+	public PlayersInBossTargeter(MythicLineConfig config) {
 		super(config);
         this.boss = config.getString(new String[] {"boss", "b"}, "Ratface");
         this.nbi = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
