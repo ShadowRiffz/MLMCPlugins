@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Util {
-	public void sendMessage(Player p, String m) {
+	public void sendMessage(CommandSender p, String m) {
 		String message = "&4[&c&lMLMC&4] " + m;
 		p.sendMessage(message.replaceAll("&", "§"));
 	}

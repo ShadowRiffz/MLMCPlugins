@@ -374,7 +374,7 @@ public class CulinarianMethods {
 							repetitions = oldItem.getAmount();
 						}
 						for (int i = 0; i < repetitions; i++) {
-							if(cm.hasEnough(p, "essence", 20, REMEDY_ESSENCE)) {
+							if(cm.hasEnough(p, "essence", foodLevel, REMEDY_ESSENCE)) {
 								if(econ.has(p, REMEDY_COST)) {
 									ItemStack item = oldItem.clone();
 									ItemMeta meta = item.getItemMeta();

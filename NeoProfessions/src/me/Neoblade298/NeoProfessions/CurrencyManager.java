@@ -14,7 +14,7 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 public class CurrencyManager {
 	// UUID, essence/oretype, amount
 	private HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
-	private static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
+	public static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	private Util util;
 	
 	public CurrencyManager(Main main) {

@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -202,7 +203,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					int level = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					if (level % 5 == 0 && level > 0 && level <= 60) {
-						if (p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
+						if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
 							HashMap<Integer, ItemStack> result = p.getInventory()
 									.removeItem(util.setAmount(common.getEssence(level, false), amount));
 							if (!result.isEmpty()) {
@@ -217,6 +218,24 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							else {
 								cm.add(p, args[1], level, amount);
 								util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
+								return true;
+							}
+						}
+						else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOre(args[1], level), amount)) {
+							HashMap<Integer, ItemStack> result = p.getInventory()
+									.removeItem(util.setAmount(sItems.getOre(args[1], level), amount));
+							if (!result.isEmpty()) {
+								int notAdded = 0;
+								for (Entry<Integer, ItemStack> item : result.entrySet()) {
+									notAdded += item.getValue().getAmount();
+								}
+								cm.add(p, args[1], level, amount - notAdded);
+								util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+								return true;
+							}
+							else {
+								cm.add(p, args[1], level, amount);
+								util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
 								return true;
 							}
 						}
@@ -371,10 +390,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				// /prof add [essence/oretype] [level] [amount]
 				if (args[0].equalsIgnoreCase("add")) {
-					this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
-							Integer.parseInt(args[3]));
-					util.sendMessage(p, "&7Success!");
-					return true;
+					if (args[1].equalsIgnoreCase("randomore")) {
+						Random gen = new Random();
+						this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
+								Integer.parseInt(args[3]));
+						util.sendMessage(sender, "&7Success!");
+						return true;
+					}
+					else {
+						this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
+								Integer.parseInt(args[3]));
+						util.sendMessage(sender, "&7Success!");
+						return true;
+					}
 				}
 				// /prof level playername
 				else if (args[0].equalsIgnoreCase("sober")) {
