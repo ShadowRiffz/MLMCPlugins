@@ -3,6 +3,7 @@ package me.neoblade298.neobossinstances;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -88,11 +89,12 @@ public class Commands implements CommandExecutor {
 	    					if (main.isDebug) {
 	    						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 	    					}
+							stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','" + instance + "');");
 	    					con.close();
 	    				}
-	    				catch (Exception e) {
-	    					e.printStackTrace();
+	    				catch (SQLException e) {
+    						e.printStackTrace();
 	    				}
 	    			}
 	    		};
