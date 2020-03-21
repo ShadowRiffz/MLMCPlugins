@@ -218,13 +218,6 @@ public class Main extends JavaPlugin implements Listener {
 	    		    							scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-
-	    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
-	    		    				    			public void run() {
-	    		    				    				activeBosses.remove(boss);
-	    		    				    			}
-	    		    				    		};
-	    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
 	    		    						}
 	    				    			}
 	    				    		};
@@ -236,17 +229,11 @@ public class Main extends JavaPlugin implements Listener {
 	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
 	    				    			public void run() {
 	    		    						p.setHealth(p.getMaxHealth());
+	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss)) {
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-
-	    		    				    		BukkitRunnable deactivateBoss = new BukkitRunnable() {
-	    		    				    			public void run() {
-	    		    				    				activeBosses.remove(boss);
-	    		    				    			}
-	    		    				    		};
-	    		    				    		deactivateBoss.runTaskLater(main, cmdDelay * 20);
 	    		    						}
 	    				    			}
 	    				    		};
@@ -348,6 +335,7 @@ public class Main extends JavaPlugin implements Listener {
 			activeFights.get(boss).remove(p);
 			if (activeFights.get(boss).size() == 0) {
 				activeFights.remove(boss);
+				activeBosses.remove(boss);
 			}
 		}
     	// Delete player from all fights
