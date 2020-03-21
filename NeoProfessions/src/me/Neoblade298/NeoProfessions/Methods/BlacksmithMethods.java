@@ -303,7 +303,7 @@ public class BlacksmithMethods {
 			if (cm.hasEnough(p, "essence", level, amount)) {
 				if (p.hasPermission("blacksmith.deconstruct")) {
 					if (econ.has(p, DECONSTRUCT_COST)) {
-						econ.withdrawPlayer(p, DECONSTRUCT_COST);
+						econ.withdrawPlayer(p, DECONSTRUCT_COST * amount);
 						cm.subtract(p, "essence", level, amount);
 						cm.add(p, "essence", level - LEVEL_INTERVAL, amount * DECONSTRUCT_AMOUNT);
 						util.sendMessage(p, "&7Successfully deconstructed!");
