@@ -221,9 +221,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 								return true;
 							}
 						}
-						else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOre(args[1], level), amount)) {
+						else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
 							HashMap<Integer, ItemStack> result = p.getInventory()
-									.removeItem(util.setAmount(sItems.getOre(args[1], level), amount));
+									.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
 							if (!result.isEmpty()) {
 								int notAdded = 0;
 								for (Entry<Integer, ItemStack> item : result.entrySet()) {
