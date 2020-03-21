@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -49,15 +49,15 @@ public class Main extends JavaPlugin implements Listener {
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
 
 	// Databases
-	// Cooldowns: Key is boss name, payload is hashmap where key is playername and
+	// Cooldowns: Key is boss name, payload is ConcurrentHashMap where key is playername and
 	// payload is last fought
-	public HashMap<String, HashMap<String, Long>> cooldowns = new HashMap<String, HashMap<String, Long>>();
-	public HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
-	public HashMap<String, Long> dropCooldown = new HashMap<String, Long>();
+	public ConcurrentHashMap<String, ConcurrentHashMap<String, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>();
+	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
+	public ConcurrentHashMap<String, Long> dropCooldown = new ConcurrentHashMap<String, Long>();
 	public ArrayList<String> bossNames = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
-	public HashMap<String, ArrayList<Player>> activeFights = new HashMap<String, ArrayList<Player>>();
+	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -90,7 +90,7 @@ public class Main extends JavaPlugin implements Listener {
 				ResultSet rs;
 				
 				for (String boss : bosses.getKeys(false)) {
-					HashMap<String, Long> cds = new HashMap<String, Long>();
+					ConcurrentHashMap<String, Long> cds = new ConcurrentHashMap<String, Long>();
 					cooldowns.put(boss, cds);
 					bossNames.add(boss);
 					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
@@ -126,7 +126,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void onDisable() {
-		// If not instance, save cooldowns from hashmap to SQL
+		// If not instance, save cooldowns from ConcurrentHashMap to SQL
 		// Only save cooldowns that still matter (still on cooldown)
 		if (!isInstance) {
 			try {
@@ -136,10 +136,10 @@ public class Main extends JavaPlugin implements Listener {
 				// First clear all the cooldowns on the SQL currently
 				stmt.executeUpdate("delete from neobossinstances_cds;");
 				
-				// Then add the cooldowns from the hashmap into SQL
+				// Then add the cooldowns from the ConcurrentHashMap into SQL
 				for (String boss : cooldowns.keySet()) {
 					int cooldown = bossInfo.get(boss).getCooldown();
-					HashMap<String, Long> lastFought = cooldowns.get(boss);
+					ConcurrentHashMap<String, Long> lastFought = cooldowns.get(boss);
 					for (String uuid : lastFought.keySet()) {
 						// Only add to the cooldown list if it's still relevant
 						if ((System.currentTimeMillis() - lastFought.get(uuid)) < (cooldown * 1000)) {
@@ -236,7 +236,7 @@ public class Main extends JavaPlugin implements Listener {
 	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
 	    				    			public void run() {
 	    		    						p.setHealth(p.getMaxHealth());
-	    		    						// Only spawn boss if it hasn't been spawned before
+	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss)) {
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
