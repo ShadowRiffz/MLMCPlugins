@@ -395,6 +395,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
+		return activeFights;
+	}
+	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
