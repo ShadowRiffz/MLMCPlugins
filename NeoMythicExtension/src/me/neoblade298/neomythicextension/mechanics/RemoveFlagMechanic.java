@@ -12,7 +12,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class RemoveFlagMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	protected final int duration;
 	protected final String flag;
 
 	public RemoveFlagMechanic(MythicLineConfig config) {
@@ -21,7 +20,6 @@ public class RemoveFlagMechanic extends SkillMechanic implements ITargetedEntity
         this.setTargetsCreativePlayers(false);
         
         this.flag = config.getString(new String[] {"flag", "f"}, "stun");
-        this.duration = config.getInteger(new String[] {"duration", "d"}, 20);
 	}
 	
 	@Override
