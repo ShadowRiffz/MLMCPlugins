@@ -28,8 +28,8 @@ public class PlayersInBossTargeter extends IEntitySelector {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata arg0) {
 		HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
-		if (nbi.activeFights.containsKey(this.boss)) {
-			ArrayList<Player> players = nbi.activeFights.get(this.boss);
+		if (nbi.getActiveFights().containsKey(this.boss)) {
+			ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
 			for (Player p : players) {
 				AbstractPlayer ap = BukkitAdapter.adapt(p);
 				targets.add(ap);
