@@ -1,6 +1,6 @@
 package me.neoblade298.neomythicextension;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -30,16 +30,16 @@ import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
 public class Main extends JavaPlugin implements Listener {
 
 	private Logger log;
-	public HashMap<String, Integer> globalscores;
-	// Hashmap of objectives which leads to hashmap of uuids to integers
-	public HashMap<String, HashMap<String, Integer>> scores;
+	public ConcurrentHashMap<String, Integer> globalscores;
+	// ConcurrentHashMap of objectives which leads to ConcurrentHashMap of uuids to integers
+	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
 	 
 	@Override
 	public void onEnable() {
 		log = this.getLogger();
 		Bukkit.getPluginManager().registerEvents(this, this);
-		globalscores = new HashMap<String, Integer>();
-		scores = new HashMap<String, HashMap<String, Integer>>();
+		globalscores = new ConcurrentHashMap<String, Integer>();
+		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 
 	    // Get command listener
 	    this.getCommand("nme").setExecutor(new Commands(this));

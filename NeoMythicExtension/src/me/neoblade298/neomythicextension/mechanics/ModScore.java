@@ -1,6 +1,6 @@
 package me.neoblade298.neomythicextension.mechanics;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -27,18 +27,17 @@ public class ModScore extends SkillMechanic implements ITargetedEntitySkill {
         this.value = config.getInteger(new String[] {"value", "v"}, 1);
 	}
 
-    // CURRENTLY UNUSED MECHANIC
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		String uuid = target.getBukkitEntity().getUniqueId().toString();
 		
 		// Check if this objective already exists
-		HashMap<String, Integer> objScores = null;
+		ConcurrentHashMap<String, Integer> objScores = null;
 		if (nme.scores.containsKey(objective)) {
 			objScores = nme.scores.get(objective);
 		}
 		else {
-			objScores = new HashMap<String, Integer>();
+			objScores = new ConcurrentHashMap<String, Integer>();
 			nme.scores.put(objective, objScores);
 		}
 
