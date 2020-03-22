@@ -190,84 +190,127 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4[§c§lBosses§4] §7Reset active fights!");
 				return true;
 			}
+		}
 
-			if (args.length == 0) {
-				sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
-				sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
-				sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
-				sender.sendMessage("§c/boss instances [boss] §7- Shows instances for boss");
-				sender.sendMessage("§c/boss instances §7- Shows all players in instances");
-				sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
-				if (sender.hasPermission("bossinstances.admin")) {
-					sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
-					sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
-					sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
-					sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
-					sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
-					sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
-					sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
-					sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
-					sender.sendMessage(
-							"§4/boss active §7- Debug, returns list of who's in what fights (ONLY INSTANCE)");
-					sender.sendMessage(
-							"§4/boss resetactive §7- Resets local active fights");
+		if (args.length == 0) {
+			sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
+			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
+			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
+			sender.sendMessage("§c/boss instances [boss] §7- Shows instances for boss");
+			sender.sendMessage("§c/boss instances §7- Shows all players in instances");
+			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
+			if (sender.hasPermission("bossinstances.admin")) {
+				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
+				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
+				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
+				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
+				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
+				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
+				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
+				sender.sendMessage(
+						"§4/boss active §7- Debug, returns list of who's in what fights (ONLY INSTANCE)");
+				sender.sendMessage(
+						"§4/boss resetactive §7- Resets local active fights");
+			}
+			return true;
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
+			sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
+			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+			return true;
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
+			if (!main.isInstance) {
+				Player p = (Player) sender;
+				String name = WordUtils.capitalize(args[1]);
+				if (name.equalsIgnoreCase("all")) {
+					for (String boss : main.bossNames) {
+						main.getCooldown(boss, p);
+					}
+					return true;
 				}
+				else {
+					return main.getCooldown(name, p);
+				}
+			}
+			else {
+				sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
+			}
+			return true;
+		}
+		else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return")) {
+			if (args.length == 1 && sender instanceof Player) {
+				Player p = (Player) sender;
+				SkillAPI.saveSingle(p);
+				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
+				BukkitRunnable sendBack = new BukkitRunnable() {
+					public void run() {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								main.returnCommand.replaceAll("%player%", p.getName()));
+					}
+				};
+				sendBack.runTaskLater(main, 20L);
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
-				sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
+			else {
 				SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
+				BukkitRunnable sendBack = new BukkitRunnable() {
+					public void run() {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								main.returnCommand.replaceAll("%player%", args[1]));
+					}
+				};
+				sendBack.runTaskLater(main, 20L);
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
-				if (!main.isInstance) {
-					Player p = (Player) sender;
-					String name = WordUtils.capitalize(args[1]);
-					if (name.equalsIgnoreCase("all")) {
-						for (String boss : main.bossNames) {
-							main.getCooldown(boss, p);
+		}
+		// /boss instances
+		else if (args.length == 1 && args[0].equalsIgnoreCase("instances")) {
+			if (!main.isInstance) {
+				try {
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Statement stmt = con.createStatement();
+					ResultSet rs;
+
+					// Find available instance
+					for (String instance : main.instanceNames) {
+						rs = stmt.executeQuery(
+								"SELECT * FROM neobossinstances_fights WHERE instance = '" + instance + "';");
+
+						// Empty instance
+						if (!rs.next()) {
+							sender.sendMessage("§e" + instance + "§7: Empty");
 						}
-						return true;
+						else {
+							String temp = "§e" + instance + "§7: §e"
+									+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4"
+									+ rs.getString(2) + "§7)";
+							while (rs.next()) {
+								temp += "§7, §e"
+										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName()
+										+ " §7(§4" + rs.getString(2) + "§7)";
+							}
+							if (temp != null) {
+								sender.sendMessage(temp);
+							}
+						}
 					}
-					else {
-						return main.getCooldown(name, p);
-					}
-				}
-				else {
-					sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
-				}
-				return true;
-			}
-			else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return")) {
-				if (args.length == 1 && sender instanceof Player) {
-					Player p = (Player) sender;
-					SkillAPI.saveSingle(p);
-					sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
-					BukkitRunnable sendBack = new BukkitRunnable() {
-						public void run() {
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-									main.returnCommand.replaceAll("%player%", p.getName()));
-						}
-					};
-					sendBack.runTaskLater(main, 20L);
-					return true;
-				}
-				else {
-					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-					sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
-					BukkitRunnable sendBack = new BukkitRunnable() {
-						public void run() {
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-									main.returnCommand.replaceAll("%player%", args[1]));
-						}
-					};
-					sendBack.runTaskLater(main, 20L);
-					return true;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			// /boss instances
-			else if (args.length == 1 && args[0].equalsIgnoreCase("instances")) {
-				if (!main.isInstance) {
+			else {
+				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
+			}
+			return true;
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("instances") && sender instanceof Player) {
+			if (!main.isInstance) {
+				Player p = (Player) sender;
+				String name = WordUtils.capitalize(args[1]);
+				if (main.cooldowns.keySet().contains(name)) {
 					try {
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
@@ -275,24 +318,22 @@ public class Commands implements CommandExecutor {
 
 						// Find available instance
 						for (String instance : main.instanceNames) {
-							rs = stmt.executeQuery(
-									"SELECT * FROM neobossinstances_fights WHERE instance = '" + instance + "';");
+							rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + name
+									+ "' AND instance = '" + instance + "';");
 
 							// Empty instance
 							if (!rs.next()) {
-								sender.sendMessage("§e" + instance + "§7: Empty");
+								p.sendMessage("§e" + instance + "§7: Empty");
 							}
 							else {
 								String temp = "§e" + instance + "§7: §e"
-										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4"
-										+ rs.getString(2) + "§7)";
+										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								while (rs.next()) {
 									temp += "§7, §e"
-											+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName()
-											+ " §7(§4" + rs.getString(2) + "§7)";
+											+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								}
 								if (temp != null) {
-									sender.sendMessage(temp);
+									p.sendMessage(temp);
 								}
 							}
 						}
@@ -301,54 +342,13 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				else {
-					sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
+					p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
 				}
-				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("instances") && sender instanceof Player) {
-				if (!main.isInstance) {
-					Player p = (Player) sender;
-					String name = WordUtils.capitalize(args[1]);
-					if (main.cooldowns.keySet().contains(name)) {
-						try {
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-							Statement stmt = con.createStatement();
-							ResultSet rs;
-
-							// Find available instance
-							for (String instance : main.instanceNames) {
-								rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + name
-										+ "' AND instance = '" + instance + "';");
-
-								// Empty instance
-								if (!rs.next()) {
-									p.sendMessage("§e" + instance + "§7: Empty");
-								}
-								else {
-									String temp = "§e" + instance + "§7: §e"
-											+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
-									while (rs.next()) {
-										temp += "§7, §e"
-												+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
-									}
-									if (temp != null) {
-										p.sendMessage(temp);
-									}
-								}
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					else {
-						p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
-					}
-				}
-				else {
-					sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
-				}
-				return true;
+			else {
+				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
 			}
+			return true;
 		}
 		return false;
 	}
