@@ -331,7 +331,11 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeave(Player p) {
-		// Remove player from all raids
+    	// Remove all scoreboard tags
+    	for (String tag : p.getScoreboardTags()) {
+    		p.removeScoreboardTag(tag);
+    	}
+		// Remove player from all fights locally
 		for (String boss : activeFights.keySet()) {
 			activeFights.get(boss).remove(p);
 			if (activeFights.get(boss).size() == 0) {
@@ -339,7 +343,7 @@ public class Main extends JavaPlugin implements Listener {
 				activeBosses.remove(boss);
 			}
 		}
-    	// Delete player from all fights
+    	// Delete player from all fights in sql
 		String uuid = p.getUniqueId().toString();
 		try {
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
