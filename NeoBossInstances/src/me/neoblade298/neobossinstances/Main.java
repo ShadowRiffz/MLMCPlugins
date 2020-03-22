@@ -322,11 +322,12 @@ public class Main extends JavaPlugin implements Listener {
 					return instance;
 				}
 			}
+			return "Not found";
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return "Failed to connect";
 	}
 	
 	public void handleLeave(Player p) {

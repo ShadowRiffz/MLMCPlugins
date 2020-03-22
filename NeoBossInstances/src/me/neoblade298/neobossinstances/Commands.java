@@ -36,7 +36,7 @@ public class Commands implements CommandExecutor {
 
 				// Find an open instance
 				String instance = main.findInstance(boss);
-				if (instance != null) {
+				if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 
@@ -67,8 +67,11 @@ public class Commands implements CommandExecutor {
 					};
 					addSql.runTaskLater(main, 40L);
 				}
+				else if (instance.equalsIgnoreCase("Not found")) {
+					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
+				}
 				else {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances!");
+					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Failed to connect!");
 				}
 				return true;
 			}
