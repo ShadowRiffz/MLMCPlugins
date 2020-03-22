@@ -468,7 +468,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args.length == 2) {
 						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
 						if (pClass != null) {
-							if (pClass.getLevel() <= 60) {
+							if (pClass.getLevel() < 60) {
 								pClass.setLevel(pClass.getLevel() + 1);
 								pClass.setPoints(pClass.getPoints() + 2);
 								util.sendMessage(Bukkit.getPlayer(args[1]),
