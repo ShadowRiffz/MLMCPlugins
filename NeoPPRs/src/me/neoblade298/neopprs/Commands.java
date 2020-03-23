@@ -32,7 +32,7 @@ public class Commands implements CommandExecutor {
 			String author = p.getName();
 			if(args.length == 0) {
 				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
-				p.sendMessage("§c/ppr create [name]§7- Puts you into PPR creation mode");
+				p.sendMessage("§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
 				p.sendMessage("§c/ppr offense §7- Sets offense for PPR");
 				p.sendMessage("§c/ppr action §7- Sets action for PPR");
 				p.sendMessage("§c/ppr desc §7- Sets description for PPR");
@@ -52,16 +52,41 @@ public class Commands implements CommandExecutor {
 					p.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
 				}
 				if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
-					if (Main.pprs.containsKey(author)) {
-						p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+					if (args.length == 2) {
+						if (Main.pprs.containsKey(author)) {
+							p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+						}
+						else {
+							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							PPR ppr = new PPR(Main.nextPPR, author);
+							Main.nextPPR++;
+							Main.pprs.put(author, ppr);
+							Main.isModifying.put(author, false);
+							ppr.setUser(args[1]);
+							ppr.preview(p);
+						}
 					}
-					else {
+					else if (args.length == 3 && args[2].equalsIgnoreCase("xray")) {
 						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
 						PPR ppr = new PPR(Main.nextPPR, author);
 						Main.nextPPR++;
 						Main.pprs.put(author, ppr);
 						Main.isModifying.put(author, false);
 						ppr.setUser(args[1]);
+						ppr.setOffense("Xray");
+						ppr.setAction("Banned");
+						ppr.preview(p);
+					}
+					else if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
+						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+						PPR ppr = new PPR(Main.nextPPR, author);
+						Main.nextPPR++;
+						Main.pprs.put(author, ppr);
+						Main.isModifying.put(author, false);
+						ppr.setUser(args[1]);
+						ppr.setOffense("Racism");
+						ppr.setAction("Banned");
+						ppr.setDescription("Said the n-word");
 						ppr.preview(p);
 					}
 				}
