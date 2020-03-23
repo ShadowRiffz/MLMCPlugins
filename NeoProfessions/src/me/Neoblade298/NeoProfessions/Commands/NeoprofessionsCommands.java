@@ -374,7 +374,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/prof level [playername] <amount>");
+				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
 				sender.sendMessage("§7- §4/prof lore [line (from 0)] [newlore]");
 				sender.sendMessage("§7- §4/prof removelore [line (from 0)]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
@@ -485,8 +485,20 @@ public class NeoprofessionsCommands implements CommandExecutor {
 								pClass.setLevel(pClass.getLevel() + levels);
 								pClass.setPoints(pClass.getPoints() + (2 * levels));
 								util.sendMessage(Bukkit.getPlayer(args[1]),
-										"&4[&c&lMLMC&4] &7Your profession level is now &e" + pClass.getLevel() + "&7!");
+										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
+						}
+						return true;
+					}
+				}
+				else if (args[0].equalsIgnoreCase("points")) {
+					if (args.length == 3) {
+						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
+						int points = Integer.parseInt(args[2]);
+						if (pClass != null) {
+							pClass.setPoints(pClass.getPoints() + points);
+							util.sendMessage(Bukkit.getPlayer(args[1]),
+									"&7You gained &e" + pClass.getLevel() + "profession points&7!");
 						}
 						return true;
 					}
