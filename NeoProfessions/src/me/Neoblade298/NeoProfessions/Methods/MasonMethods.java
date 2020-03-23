@@ -253,38 +253,44 @@ public class MasonMethods {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public void slot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if (!item.getType().equals(Material.AIR)) {
-			if (util.isGearReworked(item)) {
-				if (masonUtils.isSlotAvailable(item, slot)) {
-					if (util.isArmor(item)) {
-						int level = util.getItemLevel(item);
-						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-						if (p.hasPermission("mason.slot.armor." + perm)) {
-							listeners.prepItemSlot(p, item, slot);
+		if (false) {
+			if (!item.getType().equals(Material.AIR)) {
+				if (util.isGearReworked(item)) {
+					if (masonUtils.isSlotAvailable(item, slot)) {
+						if (util.isArmor(item)) {
+							int level = util.getItemLevel(item);
+							int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+							if (p.hasPermission("mason.slot.armor." + perm)) {
+								listeners.prepItemSlot(p, item, slot);
+							} else {
+								util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+							}
+						} else if (util.isWeapon(item)) {
+							int level = util.getItemLevel(item);
+							int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+							if (p.hasPermission("mason.slot.weapon." + perm)) {
+								listeners.prepItemSlot(p, item, slot);
+							} else {
+								util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+							}
 						} else {
-							util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
-						}
-					} else if (util.isWeapon(item)) {
-						int level = util.getItemLevel(item);
-						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-						if (p.hasPermission("mason.slot.weapon." + perm)) {
-							listeners.prepItemSlot(p, item, slot);
-						} else {
-							util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+							util.sendMessage(p, "&cThis item cannot be slotted!");
 						}
 					} else {
-						util.sendMessage(p, "&cThis item cannot be slotted!");
+						util.sendMessage(p, "&cThis slot is unavailable!");
 					}
 				} else {
-					util.sendMessage(p, "&cThis slot is unavailable!");
+					util.sendMessage(p, "&cItem is no longer supported by the server!");
 				}
 			} else {
-				util.sendMessage(p, "&cItem is no longer supported by the server!");
+				util.sendMessage(p, "&cMain hand is empty!");
 			}
-		} else {
-			util.sendMessage(p, "&cMain hand is empty!");
+		}
+		else {
+			util.sendMessage(p, "&cItem slotting is currently disabled due to a glitch!");
 		}
 	}
 
