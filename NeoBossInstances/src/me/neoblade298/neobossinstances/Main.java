@@ -176,6 +176,10 @@ public class Main extends JavaPlugin implements Listener {
 			Player p = e.getPlayer();
 			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
+	    	// Remove all scoreboard tags
+	    	for (String tag : p.getScoreboardTags()) {
+	    		p.removeScoreboardTag(tag);
+	    	}
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
     			int count = 0;
     			
