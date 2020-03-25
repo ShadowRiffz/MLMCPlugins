@@ -47,6 +47,8 @@ public class Main extends JavaPlugin implements Listener {
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
+	
+	static String clearScoreboardCmd = "scoreboard players reset %player%";
 
 	// Databases
 	// Cooldowns: Key is boss name, payload is ConcurrentHashMap where key is playername and
@@ -177,14 +179,7 @@ public class Main extends JavaPlugin implements Listener {
 			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
 	    	// Remove all scoreboard tags
-			if (p.getScoreboardTags() != null) {
-		    	for (String tag : p.getScoreboardTags()) {
-		    		p.removeScoreboardTag(tag);
-		    	}
-			}
-			else {
-				System.out.println("No scoreboard tags");
-			}
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), clearScoreboardCmd.replaceAll("%player%", p.getName()));
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
     			int count = 0;
     			
@@ -348,6 +343,7 @@ public class Main extends JavaPlugin implements Listener {
 				activeBosses.remove(boss);
 			}
 		}
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), clearScoreboardCmd.replaceAll("%player%", p.getName()));
     	// Delete player from all fights in sql
 		String uuid = p.getUniqueId().toString();
 		try {
