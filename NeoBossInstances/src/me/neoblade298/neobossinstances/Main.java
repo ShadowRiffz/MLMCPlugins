@@ -335,10 +335,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeave(Player p) {
-    	// Remove all scoreboard tags
-    	for (String tag : p.getScoreboardTags()) {
-    		p.removeScoreboardTag(tag);
-    	}
 		// Remove player from all fights locally
 		for (String boss : activeFights.keySet()) {
 			activeFights.get(boss).remove(p);
