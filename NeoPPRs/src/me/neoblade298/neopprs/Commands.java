@@ -51,7 +51,7 @@ public class Commands implements CommandExecutor {
 					p.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
 					p.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
 				}
-				if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
+				if (args.length > 1 && args[0].equalsIgnoreCase("create")) {
 					if (args.length == 2) {
 						if (Main.pprs.containsKey(author)) {
 							p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
