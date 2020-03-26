@@ -644,8 +644,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					p = Bukkit.getPlayer(args[0]);
 					// /prof player add [essence/oretype] [level] [amount]
 					if (args[1].equalsIgnoreCase("add")) {
-						this.main.cManager.add(p, args[2], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
-								Integer.parseInt(args[4]));
+						if (args[2].equalsIgnoreCase("randomore")) {
+							Random gen = new Random();
+							this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
+									Integer.parseInt(args[4]));
+							util.sendMessage(sender, "&7Success!");
+							return true;
+						}
+						else {
+							this.main.cManager.add(p, args[2], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
+									Integer.parseInt(args[4]));
+							util.sendMessage(sender, "&7Success!");
+							return true;
+						}
 					}
 					if (args[1].equalsIgnoreCase("get")) {
 						if (args[2].equalsIgnoreCase("essence")) {
