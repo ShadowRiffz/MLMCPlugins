@@ -90,11 +90,13 @@ public class GearConfig {
 			int optEnchantNum = enchantmentMin + main.gen.nextInt(enchantmentMax - enchantmentMin);
 			ArrayList<Enchant> optEnchants = new ArrayList<Enchant>();
 			optEnchants.addAll(optionalEnchants);
-			for (int i = 0; i < optEnchantNum; i++) {
-				Enchant enchant = optEnchants.get(main.gen.nextInt(optEnchants.size()));
-				int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
-				meta.addEnchant(enchant.enchantment, lv, true);
-				optEnchants.remove(enchant);
+			if (optEnchants.size() > 0) {
+				for (int i = 0; i < optEnchantNum; i++) {
+					Enchant enchant = optEnchants.get(main.gen.nextInt(optEnchants.size()));
+					int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
+					meta.addEnchant(enchant.enchantment, lv, true);
+					optEnchants.remove(enchant);
+				}
 			}
 		}
 		
