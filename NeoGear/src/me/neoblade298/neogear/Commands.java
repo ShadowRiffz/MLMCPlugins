@@ -16,6 +16,7 @@ public class Commands implements CommandExecutor{
 	
 	Main main;
 	ArrayList<String> validAttrs;
+	private static final String DEFAULT_SET = "random";
 	
 	public Commands(Main main) {
 		this.main = main;
@@ -77,9 +78,15 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				
-				int failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+				int failures = 1;
+				try {
+					failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+				}
+				catch (Exception e) {
+					System.out.println("[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
+				}
 				if (failures > 0) {
-					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give item, inventory full");
+					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give item");
 				}
 				else {
 					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned item");
@@ -131,13 +138,20 @@ public class Commands implements CommandExecutor{
 		}
 		else if (param.equalsIgnoreCase("auto")) {
 			if (p.hasPermission("filters.neogear")) {
-				String pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
+				String pClass = null;
+				try {
+					pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
+				}
+				catch (Exception e) {
+					System.out.println("[NeoGear] Failed to get player class of " + p.getName() + ", defaulting to " + DEFAULT_SET);
+					pClass = DEFAULT_SET;
+				}
 				if (main.itemSets.containsKey(pClass)) {
 					return main.itemSets.get(pClass).pickItem();
 				}
 			}
 			else {
-				return main.itemSets.get("random").pickItem();
+				return main.itemSets.get(DEFAULT_SET).pickItem();
 			}
 		}
 		return null;
