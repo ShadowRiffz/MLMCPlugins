@@ -92,7 +92,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						// repair: args[0] = create, args[1] = repair, args[2] = level
 						if(args[1].equalsIgnoreCase("repair")) {
 							if(StringUtils.isNumeric(args[2])) {
-								int level = Integer.parseInt(args[3]);
+								int level = Integer.parseInt(args[2]);
 								if (level % 5 == 0 && level > 0 && level <= 60) {
 									blacksmithMethods.createRepairItem(p, args[1].toLowerCase(), Integer.parseInt(args[2]));
 									return true;
