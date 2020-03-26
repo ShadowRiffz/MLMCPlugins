@@ -154,7 +154,7 @@ public class Commands implements CommandExecutor{
 				return main.itemSets.get(DEFAULT_SET).pickItem();
 			}
 		}
-		return null;
+		return main.itemSets.get(DEFAULT_SET).pickItem();
 	}
 	
 	private int selectLevel(String param, Player p) {
