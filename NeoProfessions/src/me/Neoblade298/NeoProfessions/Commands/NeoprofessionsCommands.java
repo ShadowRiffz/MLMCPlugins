@@ -108,8 +108,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			Player recipient = Bukkit.getPlayer(args[1]);
 			main.cManager.add(recipient, args[2], level, amount);
 			main.cManager.subtract(p, args[2], level, amount);
-			util.sendMessage(recipient,
-					"&7You paid you &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
+			util.sendMessage(p,
+					"&7You paid &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
 			util.sendMessage(recipient,
 					"&e" + p.getName() + "&7 has paid you &e" + amount + " Lv " + level + " " + args[2]);
 			return true;
