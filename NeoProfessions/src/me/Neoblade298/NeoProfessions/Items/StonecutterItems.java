@@ -287,9 +287,6 @@ public class StonecutterItems {
 			lore.add("񖶋Level " + level + " Gem Augment");
 		}
 		String effect = "�7Effect: Increases weapon " + attr;
-		if(isOverloaded) {
-			effect += ", lowers durability";
-		}
 		lore.add(effect);
 		lore.add("�7Potency: " + potency);
 		if(isOverloaded) {

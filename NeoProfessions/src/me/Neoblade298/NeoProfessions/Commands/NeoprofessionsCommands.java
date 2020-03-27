@@ -375,9 +375,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
+				sender.sendMessage("§7- §4/prof viewname [line (from 0)]");
 				sender.sendMessage("§7- §4/prof viewlore [line (from 0)]");
-				sender.sendMessage("§7- §4/prof lore [line (from 0)] [newlore]");
-				sender.sendMessage("§7- §4/prof removelore [line (from 0)]");
+				sender.sendMessage("§7- §4/prof addlore/removelore/setlore [line (from 0)] [lore]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
 				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
 				sender.sendMessage("§7- §4/prof <playername> get ingr [22-24]");
@@ -413,7 +413,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						return true;
 					}
 				}
-				else if (args[0].equalsIgnoreCase("lore")) {
+				else if (args[0].equalsIgnoreCase("setlore")) {
 					if (args.length >= 3) {
 						ItemStack item = p.getInventory().getItemInMainHand();
 						ItemMeta meta = item.getItemMeta();
@@ -425,19 +425,26 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							newLore += " " + args[i];
 						}
 						while (lore.size() <= line) {
-							if (lore.size() == line) {
-								lore.add(newLore.replaceAll("&", "§"));
-								return true;
-							}
-							else {
-								lore.add("");
-							}
+							lore.add("");
 						}
-						lore.set(line, newLore);
+						lore.set(line, newLore.replaceAll("&", "§"));
 						meta.setLore(lore);
 						item.setItemMeta(meta);
 						return true;
 					}
+				}
+				else if (args[0].equalsIgnoreCase("addlore") && args.length >= 3) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					ItemMeta meta = item.getItemMeta();
+					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					String newLore = args[2];
+					for (int i = 3; i < args.length; i++) {
+						newLore += " " + args[i];
+					}
+					lore.add(Integer.parseInt(args[1]), newLore.replaceAll("&", "§"));
+					meta.setLore(lore);
+					item.setItemMeta(meta);
+					return true;
 				}
 				else if (args[0].equalsIgnoreCase("removelore") && args.length == 2) {
 					ItemStack item = p.getInventory().getItemInMainHand();
@@ -453,8 +460,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					ItemMeta meta = item.getItemMeta();
 					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 					sender.sendMessage(lore.get(Integer.parseInt(args[1])).replaceAll("§", ""));
-					meta.setLore(lore);
-					item.setItemMeta(meta);
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("viewname") && args.length == 1) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					sender.sendMessage(item.getItemMeta().getDisplayName().replaceAll("§", ""));
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("repair")) {

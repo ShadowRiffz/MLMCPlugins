@@ -323,7 +323,7 @@ public class MasonUtils {
 					encode += "§0";
 				}
 				for (int i = 0; i < num.length(); i++) {
-					encode += "§" + num.substring(i, i+1);
+					encode += "§" + num.charAt(i);
 				}
 				return encode;
 			}
@@ -404,7 +404,7 @@ public class MasonUtils {
 		String charmLine = item.getItemMeta().getLore().get(0);
 		if (line.contains("max durability")) {
 			return "durability";
-		} else if (line.contains("reduces durability")) {
+		} else if (charmLine.contains("Overloaded")) {
 			return "overload";
 		} else if (line.contains("Increases weapon") || line.contains("Increases armor")) {
 			return "attribute";
