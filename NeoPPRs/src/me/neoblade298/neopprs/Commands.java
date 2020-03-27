@@ -1,7 +1,6 @@
 package me.neoblade298.neopprs;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -19,20 +18,21 @@ import org.bukkit.entity.Player;
 public class Commands implements CommandExecutor {
 	Main main;
 	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy");
-	
+
 	public Commands(Main main) {
 		this.main = main;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neopprs.admin") && sender instanceof Player) {
 			Player p = (Player) sender;
 			String author = p.getName();
-			if(args.length == 0) {
+			if (args.length == 0) {
 				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
-				p.sendMessage("§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
+				p.sendMessage(
+						"§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
 				p.sendMessage("§c/ppr offense §7- Sets offense for PPR");
 				p.sendMessage("§c/ppr action §7- Sets action for PPR");
 				p.sendMessage("§c/ppr desc §7- Sets description for PPR");
@@ -44,7 +44,8 @@ public class Commands implements CommandExecutor {
 				if (args.length == 1 && args[0].equals("2")) {
 					p.sendMessage("§7--- §cNeoPPRs §7(2/2) ---");
 					p.sendMessage("§c/ppr view [player] §7- View all PPRs of player (and alts)");
-					p.sendMessage("§c/ppr modify [PPR ID] §7- Puts the PPR into creation mode, allowing you to modify it");
+					p.sendMessage(
+							"§c/ppr modify [PPR ID] §7- Puts the PPR into creation mode, allowing you to modify it");
 					p.sendMessage("§c/ppr remove [PPR ID] §7- Deletes the specified PPR");
 					p.sendMessage("§c/ppr rename [oldname] [newname] §7- Used for name changes out of convenience");
 					p.sendMessage("§c/ppr alts add [main account] [alt] §7- Declares an alt for a player");
@@ -57,6 +58,7 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
 						}
 						else {
+							main.viewPlayer(p, args[1], true);
 							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
 							PPR ppr = new PPR(Main.nextPPR, author);
 							Main.nextPPR++;
@@ -67,27 +69,39 @@ public class Commands implements CommandExecutor {
 						}
 					}
 					else if (args.length == 3 && args[2].equalsIgnoreCase("xray")) {
-						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
-						PPR ppr = new PPR(Main.nextPPR, author);
-						Main.nextPPR++;
-						Main.pprs.put(author, ppr);
-						Main.isModifying.put(author, false);
-						ppr.setUser(args[1]);
-						ppr.setOffense("Xray");
-						ppr.setAction("Banned");
-						ppr.preview(p);
+						if (Main.pprs.containsKey(author)) {
+							p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+						}
+						else {
+							main.viewPlayer(p, args[1], true);
+							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							PPR ppr = new PPR(Main.nextPPR, author);
+							Main.nextPPR++;
+							Main.pprs.put(author, ppr);
+							Main.isModifying.put(author, false);
+							ppr.setUser(args[1]);
+							ppr.setOffense("Xray");
+							ppr.setAction("Banned");
+							ppr.preview(p);
+						}
 					}
 					else if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
-						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
-						PPR ppr = new PPR(Main.nextPPR, author);
-						Main.nextPPR++;
-						Main.pprs.put(author, ppr);
-						Main.isModifying.put(author, false);
-						ppr.setUser(args[1]);
-						ppr.setOffense("Racism");
-						ppr.setAction("Banned");
-						ppr.setDescription("Said the n-word");
-						ppr.preview(p);
+						if (Main.pprs.containsKey(author)) {
+							p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+						}
+						else {
+							main.viewPlayer(p, args[1], true);
+							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							PPR ppr = new PPR(Main.nextPPR, author);
+							Main.nextPPR++;
+							Main.pprs.put(author, ppr);
+							Main.isModifying.put(author, false);
+							ppr.setUser(args[1]);
+							ppr.setOffense("Racism");
+							ppr.setAction("Banned");
+							ppr.setDescription("Said the n-word");
+							ppr.preview(p);
+						}
 					}
 				}
 				else if (args.length > 1 && args[0].equalsIgnoreCase("offense")) {
@@ -118,7 +132,8 @@ public class Commands implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
 					}
 				}
-				else if (args.length > 1 && (args[0].equalsIgnoreCase("description") || args[0].equalsIgnoreCase("desc"))) {
+				else if (args.length > 1
+						&& (args[0].equalsIgnoreCase("description") || args[0].equalsIgnoreCase("desc"))) {
 					if (Main.pprs.containsKey(author)) {
 						PPR ppr = Main.pprs.get(author);
 						String desc = args[1];
@@ -173,7 +188,7 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("view")) {
-					main.viewPlayer(p, args[1]);
+					main.viewPlayer(p, args[1], false);
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("modify") && StringUtils.isNumeric(args[1])) {
 					if (Main.pprs.containsKey(author)) {
@@ -182,19 +197,19 @@ public class Commands implements CommandExecutor {
 					else {
 						int id = Integer.parseInt(args[1]);
 						PPR ppr = null;
-						try{  
-							Class.forName("com.mysql.jdbc.Driver");
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						try {
+							Connection con = Main.cpds.getConnection();
 							Statement stmt = con.createStatement();
 							ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE id = " + id + ";");
 							while (rs.next()) {
-								ppr = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+								ppr = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+										rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
 							}
 							con.close();
-						}
-						catch(Exception e) {
+						} catch (Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							p.sendMessage(
+									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						if (ppr != null) {
 							p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
@@ -209,9 +224,8 @@ public class Commands implements CommandExecutor {
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
 					int id = Integer.parseInt(args[1]);
-					try{  
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					try {
+						Connection con = Main.cpds.getConnection();
 						Statement stmt = con.createStatement();
 						int deleted = stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
 						if (deleted > 0) {
@@ -221,18 +235,18 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §7No PPRs matching this id were found.");
 						}
 						con.close();
-					}
-					catch(Exception e) {
+					} catch (Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						p.sendMessage(
+								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
 				else if (args.length == 3 && args[0].equalsIgnoreCase("rename")) {
-					try{  
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					try {
+						Connection con = Main.cpds.getConnection();
 						Statement stmt = con.createStatement();
-						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" +  args[2] + "' WHERE upper(username) = '" + args[1].toUpperCase() + "';");
+						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" + args[2]
+								+ "' WHERE upper(username) = '" + args[1].toUpperCase() + "';");
 						if (renamed > 0) {
 							p.sendMessage("§4[§c§lMLMC§4] §7Successful renaming! " + renamed + " PPRs renamed.");
 						}
@@ -240,48 +254,49 @@ public class Commands implements CommandExecutor {
 							p.sendMessage("§4[§c§lMLMC§4] §7No users matching this name found.");
 						}
 						con.close();
-					}
-					catch(Exception e) {
+					} catch (Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						p.sendMessage(
+								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
 				else if (args[0].equalsIgnoreCase("alts")) {
 					if (args[1].equalsIgnoreCase("add") && args.length == 4) {
 						String mainAcc = args[2];
 						String altAcc = args[3];
-						try{  
-							Class.forName("com.mysql.jdbc.Driver");
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						try {
+							Connection con = Main.cpds.getConnection();
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							
+
 							// Get the UUID of the main account
 							String mainuuid = null;
 							if (Main.uuids.containsKey(mainAcc.toUpperCase())) {
 								Main.uuids.get(mainAcc.toUpperCase());
 							}
 							else {
-								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + mainAcc.toUpperCase() + "';");
+								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '"
+										+ mainAcc.toUpperCase() + "';");
 								if (rs.next()) {
 									mainuuid = rs.getString(4);
 									Main.uuids.put(mainAcc.toUpperCase(), mainuuid);
 								}
 							}
-							
+
 							// Get the UUID of the alt account
 							String altuuid = null;
 							if (Main.uuids.containsKey(altAcc.toUpperCase())) {
 								Main.uuids.get(altAcc.toUpperCase());
 							}
 							else {
-								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '" + altAcc.toUpperCase() + "';");
+								rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE upper(username) = '"
+										+ altAcc.toUpperCase() + "';");
 								if (rs.next()) {
 									altuuid = rs.getString(4);
 									Main.uuids.put(altAcc.toUpperCase(), altuuid);
 								}
 							}
-							
+
 							// If either UUID isn't found, just look it up manually
 							if (mainuuid == null) {
 								mainuuid = Bukkit.getServer().getOfflinePlayer(mainAcc).getUniqueId().toString();
@@ -291,34 +306,36 @@ public class Commands implements CommandExecutor {
 								altuuid = Bukkit.getServer().getOfflinePlayer(altAcc).getUniqueId().toString();
 								Main.uuids.put(altAcc.toUpperCase(), altuuid);
 							}
-							
+
 							// Check for duplicate
-							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + mainuuid + "' AND altuuid = '" + altuuid + "';");
+							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + mainuuid
+									+ "' AND altuuid = '" + altuuid + "';");
 							if (rs.next()) {
 								p.sendMessage("§4[§c§lMLMC§4] §cThis alt account was already added!");
 							}
 							else {
-								stmt.executeUpdate("INSERT INTO neopprs_alts VALUES (" + Main.nextAlt + ",'" + p.getName() + "','"
-							+ mainAcc + "','" + mainuuid + "','" + altAcc + "','" + altuuid + "','" + dateformat.format(new Date()) + "')");
+								stmt.executeUpdate("INSERT INTO neopprs_alts VALUES (" + Main.nextAlt + ",'"
+										+ p.getName() + "','" + mainAcc + "','" + mainuuid + "','" + altAcc + "','"
+										+ altuuid + "','" + dateformat.format(new Date()) + "')");
 								Main.nextAlt++;
 								p.sendMessage("§4[§c§lMLMC§4] §7Successfully added alt account!");
 							}
 							con.close();
-						}
-						catch(Exception e) {
+						} catch (Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							p.sendMessage(
+									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
 						String mainAcc = args[2];
 						String altAcc = args[3];
-						
-						try{  
-							Class.forName("com.mysql.jdbc.Driver");
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+
+						try {
+							Connection con = Main.cpds.getConnection();
 							Statement stmt = con.createStatement();
-							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = '" + mainAcc.toUpperCase() + "' AND upper(altname) = '" + altAcc.toUpperCase() + "';");
+							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = '"
+									+ mainAcc.toUpperCase() + "' AND upper(altname) = '" + altAcc.toUpperCase() + "';");
 							if (deleted > 0) {
 								p.sendMessage("§4[§c§lMLMC§4] §7Successfully removed alt account!");
 							}
@@ -326,17 +343,16 @@ public class Commands implements CommandExecutor {
 								p.sendMessage("§4[§c§lMLMC§4] §7No alt accounts matching this were found.");
 							}
 							con.close();
-						}
-						catch(Exception e) {
+						} catch (Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							p.sendMessage(
+									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else if (args.length == 3 && args[1].equalsIgnoreCase("list")) {
 						String user = args[2];
-						try{  
-							Class.forName("com.mysql.jdbc.Driver");
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						try {
+							Connection con = Main.cpds.getConnection();
 							Statement stmt = con.createStatement();
 							ResultSet rs;
 
@@ -346,13 +362,14 @@ public class Commands implements CommandExecutor {
 								Main.uuids.get(user.toUpperCase());
 							}
 							else {
-								rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '" + user.toUpperCase() + "';");
+								rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE upper(username) = '"
+										+ user.toUpperCase() + "';");
 								if (rs.next()) {
 									uuid = rs.getString(4);
 									Main.uuids.put(user.toUpperCase(), uuid);
 								}
 							}
-							
+
 							// Else just look it up manually
 							if (uuid == null) {
 								uuid = Bukkit.getServer().getOfflinePlayer(user).getUniqueId().toString();
@@ -361,7 +378,7 @@ public class Commands implements CommandExecutor {
 
 							ArrayList<String> alts = new ArrayList<String>();
 							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
-							while(rs.next()) {
+							while (rs.next()) {
 								alts.add(rs.getString(5));
 							}
 
@@ -376,10 +393,10 @@ public class Commands implements CommandExecutor {
 							}
 							p.sendMessage(message.substring(0, message.length() - 2));
 							con.close();
-						}
-						catch(Exception e) {
+						} catch (Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							p.sendMessage(
+									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else {

@@ -1,7 +1,6 @@
 package me.neoblade298.neopprs;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -149,8 +148,7 @@ public class PPR {
 	
 	public void post(Player p) {
 		try{  
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Connection con = Main.cpds.getConnection();
 			Statement stmt = con.createStatement();
 			// Post the PPR to SQL
 			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
@@ -182,8 +180,7 @@ public class PPR {
 	}
 	public void modify(Player p) {
 		try{  
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Connection con = Main.cpds.getConnection();
 			Statement stmt = con.createStatement();
 			// Post the PPR to SQL
 			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', uuid = '" + uuid + "', offense = '" + offense + "', action = '" + action + "', description = '"

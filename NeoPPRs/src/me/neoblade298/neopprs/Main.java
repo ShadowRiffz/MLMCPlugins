@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	static HashMap<String, PPR> pprs;
@@ -20,15 +22,21 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
+	static ComboPooledDataSource cpds;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPPRs Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+		cpds = new ComboPooledDataSource();
 		
 		// Get next available IDs from SQL
-		try{  
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
+		try{
+			cpds.setDriverClass("com.mysql.jbdc.Driver");
+			cpds.setJdbcUrl(connection);
+			cpds.setUser(sqlUser);
+			cpds.setPassword(sqlPass);
+			cpds.setMinPoolSize(1);
+			Connection con = cpds.getConnection();
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select MAX(id) from neopprs_pprs");
 			while (rs.next()) {
@@ -67,11 +75,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public void viewPlayer(Player viewer, String user) {
+	public void viewPlayer(Player viewer, String user, boolean creatingPPR) {
 		boolean noError = false;
-		try{  
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		try{
+			Connection con = cpds.getConnection();
 			Statement stmt = con.createStatement();
 			ResultSet rs;
 			
@@ -117,11 +124,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 			else {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
-				noError = true;
+				if (!creatingPPR) {
+					viewer.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
+					noError = true;
+				}
 			}
 			if (!noError) {
-				viewer.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
+				if (!creatingPPR) {
+					viewer.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
+				}
 			}
 			con.close();
 		}
