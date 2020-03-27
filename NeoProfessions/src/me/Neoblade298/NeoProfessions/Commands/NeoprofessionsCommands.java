@@ -375,6 +375,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
+				sender.sendMessage("§7- §4/prof viewlore [line (from 0)]");
 				sender.sendMessage("§7- §4/prof lore [line (from 0)] [newlore]");
 				sender.sendMessage("§7- §4/prof removelore [line (from 0)]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
@@ -419,8 +420,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ArrayList<String> lore = meta.hasLore() ? (ArrayList<String>) meta.getLore()
 								: new ArrayList<String>();
 						int line = Integer.parseInt(args[1]);
-						String newLore = args[3];
-						for (int i = 4; i < args.length; i++) {
+						String newLore = args[2];
+						for (int i = 3; i < args.length; i++) {
 							newLore += " " + args[i];
 						}
 						while (lore.size() <= line) {
@@ -433,14 +434,25 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							}
 						}
 						lore.set(line, newLore);
+						meta.setLore(lore);
+						item.setItemMeta(meta);
 						return true;
 					}
 				}
-				else if (args[0].equalsIgnoreCase("removelore") && args.length == 1) {
+				else if (args[0].equalsIgnoreCase("removelore") && args.length == 2) {
 					ItemStack item = p.getInventory().getItemInMainHand();
 					ItemMeta meta = item.getItemMeta();
 					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 					lore.remove(Integer.parseInt(args[1]));
+					meta.setLore(lore);
+					item.setItemMeta(meta);
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("viewlore") && args.length == 2) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					ItemMeta meta = item.getItemMeta();
+					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					sender.sendMessage(lore.get(Integer.parseInt(args[1])).replaceAll("§", ""));
 					meta.setLore(lore);
 					item.setItemMeta(meta);
 					return true;

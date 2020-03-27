@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Utilities;
+package me.Neoblade298.NeoProfessions.Legacy;
 
 import java.util.ArrayList;
 
@@ -10,8 +10,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class MasonUtils {
+public class MasonUtilsLegacy2 {
 
 	final int LEVEL_INTERVAL = 5;
 	Util util;
@@ -19,7 +20,7 @@ public class MasonUtils {
 	StonecutterItems sItems;
 	MasonItems mItems;
 
-	public MasonUtils() {
+	public MasonUtilsLegacy2() {
 		util = new Util();
 		bItems = new BlacksmithItems();
 		sItems = new StonecutterItems();
@@ -61,8 +62,8 @@ public class MasonUtils {
 		// Parse the line and revert the lore
 		// chars 1 3 5 = slotLevel, chars 7 9 11 = slottedLevel, char 13 = slotType,
 		// chars 15 17 19 = durability loss
-		int slotLevel = Integer.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
-		int slottedLevel = Integer.parseInt("" + line.charAt(7) + line.charAt(9) + line.charAt(11));
+		int slotLevel = Integer.parseInt(line.substring(1, 2) + line.substring(3, 4) + line.substring(5, 6));
+		int slottedLevel = Integer.parseInt(line.substring(7, 8) + line.substring(9, 10) + line.substring(11, 12));
 		int slotType = Character.getNumericValue(line.charAt(13));
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = util.isArmor(item);
@@ -439,7 +440,6 @@ public class MasonUtils {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(getSlotNum(itemWithSlot, slot),
 				slotLevel + slottedLevel + "§0§0§0§0§9Max Durability +" + potency);
-		System.out.println("Slotted: " + (slotLevel + slottedLevel + "§0§0§0§0§9Max Durability +" + potency).replaceAll("§", ""));
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -461,7 +461,6 @@ public class MasonUtils {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(getSlotNum(itemWithSlot, slot),
 				slotLevel + slottedLevel + "§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency);
-		System.out.println("Slotted: " + (slotLevel + slottedLevel + "§1§0§0§0§9" + getAttributeType(itemToSlot) + " +" + potency).replaceAll("§", ""));
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -496,8 +495,6 @@ public class MasonUtils {
 
 		lore.set(getSlotNum(itemWithSlot, slot), slotLevel + slottedLevel + "§2" + encodedDurabilityLoss
 				+ "§c" + getAttributeType(itemToSlot) + " +" + potency);
-		System.out.println("Slotted: " + (slotLevel + slottedLevel + "§2" + encodedDurabilityLoss
-				+ "§c" + getAttributeType(itemToSlot) + " +" + potency).replaceAll("§", ""));
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
@@ -523,7 +520,6 @@ public class MasonUtils {
 		}
 
 		lore.set(getSlotNum(itemWithSlot, slot), slotLevel + slottedLevel + "§3§0§0§0§9" + charm);
-		System.out.println("Slotted: " + (slotLevel + slottedLevel + "§3§0§0§0§9" + charm).replaceAll("§", ""));
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
