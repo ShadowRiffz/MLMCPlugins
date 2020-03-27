@@ -116,7 +116,6 @@ public class Converter {
 			return sItems.getWeaponGem(type, newLevel, isOverloaded);
 		}
 		else {
-			System.out.println("Here: " + type + " " + newLevel + " " + isOverloaded);
 			return sItems.getArmorGem(type, newLevel, isOverloaded);
 		}
 	}

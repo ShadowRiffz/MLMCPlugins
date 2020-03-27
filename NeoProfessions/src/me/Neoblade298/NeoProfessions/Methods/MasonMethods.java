@@ -313,7 +313,6 @@ public class MasonMethods {
 								}
 							} else {
 								util.sendMessage(p, "&cYou lack the materials to do this!");
-								System.out.println("HEre: " + line.replaceAll("§", "") + " , " + slottedLevel);
 							}
 						} else {
 							util.sendMessage(p, "&cYour inventory is full!");
