@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions;
 
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -23,6 +24,16 @@ public class CurrencyManager {
 		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
 		util = new Util();
 		cpds = new ComboPooledDataSource();
+		try {
+			cpds.setDriverClass("com.mysql.jbdc.Driver");
+			cpds.setJdbcUrl(Main.connection);
+			cpds.setUser(Main.sqlUser);
+			cpds.setPassword(Main.sqlPass);
+			cpds.setMinPoolSize(1);
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void initPlayer(Player p) throws Exception {
