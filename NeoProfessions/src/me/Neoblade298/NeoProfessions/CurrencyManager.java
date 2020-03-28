@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -25,12 +26,12 @@ public class CurrencyManager {
 		util = new Util();
 		cpds = new ComboPooledDataSource();
 		try {
-			cpds.setDriverClass("com.mysql.jbdc.Driver");
 			cpds.setJdbcUrl(Main.connection);
 			cpds.setUser(Main.sqlUser);
 			cpds.setPassword(Main.sqlPass);
 			cpds.setMinPoolSize(1);
-		} catch (PropertyVetoException e) {
+			System.out.println("TEST2");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

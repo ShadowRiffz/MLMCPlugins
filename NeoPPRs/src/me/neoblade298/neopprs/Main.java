@@ -31,7 +31,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		// Get next available IDs from SQL
 		try{
-			cpds.setDriverClass("com.mysql.jbdc.Driver");
 			cpds.setJdbcUrl(connection);
 			cpds.setUser(sqlUser);
 			cpds.setPassword(sqlPass);
