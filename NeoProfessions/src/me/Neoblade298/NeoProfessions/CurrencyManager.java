@@ -1,8 +1,6 @@
 package me.Neoblade298.NeoProfessions;
 
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
