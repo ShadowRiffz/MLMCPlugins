@@ -28,7 +28,6 @@ public class CurrencyManager {
 			cpds.setUser(Main.sqlUser);
 			cpds.setPassword(Main.sqlPass);
 			cpds.setMinPoolSize(1);
-			System.out.println("TEST2");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
