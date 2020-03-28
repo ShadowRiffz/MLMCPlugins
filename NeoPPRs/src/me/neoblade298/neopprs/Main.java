@@ -65,6 +65,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoPPRs Disabled");
 	    super.onDisable();
+	    cpds.close();
 	}
 	
 	@EventHandler
