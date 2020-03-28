@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="src/MythicMobs-4.8.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/NeoGear.jar"/>
+	<classpathentry kind="lib" path="src/c3p0-0.9.5.5.jar"/>
+	<classpathentry kind="lib" path="src/mchange-commons-java-0.2.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
