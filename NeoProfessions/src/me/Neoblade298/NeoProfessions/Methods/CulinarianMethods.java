@@ -364,7 +364,9 @@ public class CulinarianMethods {
 					for(String line : oldItem.getItemMeta().getLore()) {
 						if(line.contains("Recipe")) {
 							isFood = true;
-							break;
+						}
+						if (line.contains("Remedies")) {
+							return;
 						}
 					}
 					if(isFood) {
@@ -383,10 +385,10 @@ public class CulinarianMethods {
 									meta.setLore(lore);
 									item.setItemMeta(meta);
 									p.getInventory().addItem(util.setAmount(item, 1));
-									cm.subtract(p, "essence", foodLevel, REMEDY_ESSENCE);
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, REMEDY_COST);
 									if (i == repetitions - 1) {
+										cm.subtract(p, "essence", foodLevel, REMEDY_ESSENCE * (repetitions + 1));
 										util.sendMessage(p, "&7Successfully remedied dish!");
 									}
 								}
