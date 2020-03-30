@@ -1,14 +1,13 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
-
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -17,21 +16,10 @@ public class CurrencyManager {
 	private HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
 	public static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	private Util util;
-	private ComboPooledDataSource cpds;
 	
 	public CurrencyManager(Main main) {
 		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
 		util = new Util();
-		cpds = new ComboPooledDataSource();
-		try {
-			cpds.setJdbcUrl(Main.connection);
-			cpds.setUser(Main.sqlUser);
-			cpds.setPassword(Main.sqlPass);
-			cpds.setMinPoolSize(1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void initPlayer(Player p) throws Exception {
@@ -44,7 +32,8 @@ public class CurrencyManager {
 		currencies.put(p.getUniqueId(), playerCurrencies);
 		
 		// Check if player exists on SQL
-		Connection con = cpds.getConnection();
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(Main.connection, Main.properties);
 		Statement stmt = con.createStatement();
 		ResultSet rs;
 		rs = stmt.executeQuery("SELECT * FROM neoprofessions_currency WHERE UUID = '" + p.getUniqueId() + "';");
@@ -81,7 +70,7 @@ public class CurrencyManager {
 	
 	public void savePlayer(Player p) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = cpds.getConnection();
+		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 		Statement stmt = con.createStatement();
 		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
 		for (String type : types) {
@@ -95,7 +84,8 @@ public class CurrencyManager {
 	}
 	
 	public void cleanup() throws Exception {
-		Connection con = cpds.getConnection();
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 		Statement stmt = con.createStatement();
 		for (UUID uuid : currencies.keySet()) {
 			HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(uuid);
@@ -108,7 +98,6 @@ public class CurrencyManager {
 				stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + uuid + "';");
 			}
 		}
-		cpds.close();
 	}
 	
 	public void add(Player p, String type, int level, int amount) {
