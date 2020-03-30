@@ -32,9 +32,11 @@ public class Commands implements CommandExecutor{
 		
 		// lpext removecontains 
 		if (args.length == 0) {
-			sender.sendMessage("Â§cNeoLPExt (lpext.admin)");
-			sender.sendMessage("Â§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
-			sender.sendMessage("Â§c/lpext removelength [player] [perm prefix] [perm length] - Same as above but perm must be specified length");
+			sender.sendMessage("§cNeoLPExt (lpext.admin)");
+			sender.sendMessage("§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
+			sender.sendMessage("§c/lpext switch [player] [perm prefix] [new perm] - Removes all other prefixes, then adds new perm");
+			sender.sendMessage("§c/lpext removelength [player] [perm prefix] [minlen:maxlen] - Same as removeall but perm must be specified length. Min-max of length separated by :");
+			sender.sendMessage("§c/lpext switchlength [player] [perm prefix] [new perm] [minlen:maxlen] - Same as switch but for specified length");
 			return true;
 		}
 		
@@ -52,18 +54,56 @@ public class Commands implements CommandExecutor{
 			}
 		}
 		
-		if (args.length == 4) {
+		else if (args.length == 4) {
 			if (args[0].equalsIgnoreCase("removelength")) {
 				User user = mngr.getUser(args[1]);
-				int len = Integer.parseInt(args[3]);
+				String[] lengths = args[3].split(":");
+				int minlen = Integer.parseInt(lengths[0]);
+				int maxlen = Integer.parseInt(lengths[1]);
 				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
 				.filter(e -> e.getKey().startsWith(args[2]))
-				.filter(e -> e.getKey().length() == len)
+				.filter(e -> e.getKey().length() >= minlen)
+				.filter(e -> e.getKey().length() <= maxlen)
 				.collect(Collectors.toList());
 				
 				for (Node perm : removables) {
 					user.data().remove(perm);
 				}
+				mngr.saveUser(user);
+			}
+			// lpext switch [player] [perm prefix] [new perm]
+			else if (args[0].equalsIgnoreCase("switch")) {
+				User user = mngr.getUser(args[1]);
+				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+				.filter(e -> e.getKey().startsWith(args[2]))
+				.collect(Collectors.toList());
+				
+				for (Node perm : removables) {
+					user.data().remove(perm);
+				}
+				
+				user.data().add(Node.builder(args[3]).build());
+				mngr.saveUser(user);
+			}
+		}
+		
+		else if (args.length == 5) {
+			// lpext switch [player] [perm prefix] [new perm] [minlen:maxlen]
+			if (args[0].equalsIgnoreCase("switchlength")) {
+				User user = mngr.getUser(args[1]);
+				String[] lengths = args[4].split(":");
+				int minlen = Integer.parseInt(lengths[0]);
+				int maxlen = Integer.parseInt(lengths[1]);
+				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+				.filter(e -> e.getKey().startsWith(args[2]))
+				.filter(e -> e.getKey().length() >= minlen)
+				.filter(e -> e.getKey().length() <= maxlen)
+				.collect(Collectors.toList());
+				
+				for (Node perm : removables) {
+					user.data().remove(perm);
+				}
+				user.data().add(Node.builder(args[3]).build());
 				mngr.saveUser(user);
 			}
 		}
