@@ -45,7 +45,7 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 				msg = msg.replace("_", " ");
 	        }
 	        if (am != null) {
-	        	LivingEntity ent = am.getLivingEntity();
+	        	LivingEntity ent = (LivingEntity) am.getEntity().getBukkitEntity();
 	        	for (String flag : flags) {
 	        		if (FlagManager.hasFlag(ent, flag)) {
 	        			
@@ -57,7 +57,7 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 		        	    		
 		        	    		// If a message was specified, show players in radius the message
 		            	    	if(msg != null) {
-		            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getLivingEntity().getNearbyEntities(40, 40, 40);
+		            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getEntity().getBukkitEntity().getNearbyEntities(40, 40, 40);
 	    	        	    		for(Entity e : near) {
 	    	        	    			if (e instanceof Player) {
 	    	        	    				Player p = (Player) e;

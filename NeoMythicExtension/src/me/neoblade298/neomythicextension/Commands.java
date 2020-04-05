@@ -30,7 +30,7 @@ public class Commands implements CommandExecutor{
 	    if (args.length > 1 && args[0].equalsIgnoreCase("nbc") && (sender.isOp() || sender.hasPermission("mycommand.staff"))) {
 	    	UUID uuid = UUID.fromString(args[1]);
 	        Optional<ActiveMob> am = MythicMobs.inst().getMobManager().getActiveMob(uuid);
-    		ArrayList<Entity> near = (ArrayList<Entity>) am.get().getLivingEntity().getNearbyEntities(40, 40, 40);
+    		ArrayList<Entity> near = (ArrayList<Entity>) am.get().getEntity().getBukkitEntity().getNearbyEntities(40, 40, 40);
     		String msg = "";
     		for (int i = 2; i < args.length; i++) {
     			msg += args[i];
