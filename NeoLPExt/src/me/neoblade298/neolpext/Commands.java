@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
@@ -18,10 +19,12 @@ public class Commands implements CommandExecutor{
 	Main main;
 	UserManager mngr;
 	ArrayList<String> validAttrs;
+	boolean debug;
 	
 	public Commands(Main main, LuckPerms api) {
 		this.main = main;
 		this.mngr = api.getUserManager();
+		debug = false;
 	}
 	
 	@Override
@@ -33,78 +36,102 @@ public class Commands implements CommandExecutor{
 		// lpext removecontains 
 		if (args.length == 0) {
 			sender.sendMessage("§cNeoLPExt (lpext.admin)");
+			sender.sendMessage("§cAll commands have a roughly 20 tick delay");
+			sender.sendMessage("§c/lpext debug - Sends debug to system");
 			sender.sendMessage("§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
 			sender.sendMessage("§c/lpext switch [player] [perm prefix] [new perm] - Removes all other prefixes, then adds new perm");
 			sender.sendMessage("§c/lpext removelength [player] [perm prefix] [minlen:maxlen] - Same as removeall but perm must be specified length. Min-max of length separated by :");
-			sender.sendMessage("§c/lpext switchlength [player] [perm prefix] [new perm] [minlen:maxlen] - Same as switch but for specified length");
+			sender.sendMessage("§c/lpext switchlength [player] [perm prefix] [minlen:maxlen] [new perm] - Same as switch but for specified length");
 			return true;
+		}
+		
+		if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
+			debug = !debug;
+			sender.sendMessage("§cDebug: " + debug);
 		}
 		
 		if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("removeall")) {
-				User user = mngr.getUser(args[1]);
-				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
-				.filter(e -> e.getKey().startsWith(args[2]))
-				.collect(Collectors.toList());
+				BukkitRunnable update = new BukkitRunnable() { public void run() {
+					User user = mngr.getUser(args[1]);
+					ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+					.filter(e -> e.getKey().startsWith(args[2]))
+					.collect(Collectors.toList());
+					
+					for (Node perm : removables) {
+						user.data().remove(perm);
+						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+					}
+					mngr.saveUser(user);
+				}};
+				update.runTaskLaterAsynchronously(main, 20L);
 				
-				for (Node perm : removables) {
-					user.data().remove(perm);
-				}
-				mngr.saveUser(user);
 			}
 		}
 		
 		else if (args.length == 4) {
 			if (args[0].equalsIgnoreCase("removelength")) {
-				User user = mngr.getUser(args[1]);
-				String[] lengths = args[3].split(":");
-				int minlen = Integer.parseInt(lengths[0]);
-				int maxlen = Integer.parseInt(lengths[1]);
-				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
-				.filter(e -> e.getKey().startsWith(args[2]))
-				.filter(e -> e.getKey().length() >= minlen)
-				.filter(e -> e.getKey().length() <= maxlen)
-				.collect(Collectors.toList());
-				
-				for (Node perm : removables) {
-					user.data().remove(perm);
-				}
-				mngr.saveUser(user);
+				BukkitRunnable update = new BukkitRunnable() { public void run() {
+					User user = mngr.getUser(args[1]);
+					String[] lengths = args[3].split(":");
+					int minlen = Integer.parseInt(lengths[0]);
+					int maxlen = Integer.parseInt(lengths[1]);
+					ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+					.filter(e -> e.getKey().startsWith(args[2]))
+					.filter(e -> e.getKey().length() >= minlen)
+					.filter(e -> e.getKey().length() <= maxlen)
+					.collect(Collectors.toList());
+					
+					for (Node perm : removables) {
+						user.data().remove(perm);
+						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+					}
+					mngr.saveUser(user);
+				}};
+				update.runTaskLaterAsynchronously(main, 20L);
 			}
 			// lpext switch [player] [perm prefix] [new perm]
 			else if (args[0].equalsIgnoreCase("switch")) {
-				User user = mngr.getUser(args[1]);
-				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
-				.filter(e -> e.getKey().startsWith(args[2]))
-				.collect(Collectors.toList());
-				
-				for (Node perm : removables) {
-					user.data().remove(perm);
-				}
-				
-				user.data().add(Node.builder(args[3]).build());
-				mngr.saveUser(user);
+				BukkitRunnable update = new BukkitRunnable() { public void run() {
+					User user = mngr.getUser(args[1]);
+					ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+					.filter(e -> e.getKey().startsWith(args[2]))
+					.collect(Collectors.toList());
+					
+					for (Node perm : removables) {
+						user.data().remove(perm);
+						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+					}
+					
+					user.data().add(Node.builder(args[3]).build());
+					mngr.saveUser(user);
+				}};
+				update.runTaskLaterAsynchronously(main, 20L);
 			}
 		}
 		
 		else if (args.length == 5) {
-			// lpext switch [player] [perm prefix] [new perm] [minlen:maxlen]
+			// lpext switchlength [player] [perm prefix] [minlen:maxlen] [new perm]
 			if (args[0].equalsIgnoreCase("switchlength")) {
-				User user = mngr.getUser(args[1]);
-				String[] lengths = args[4].split(":");
-				int minlen = Integer.parseInt(lengths[0]);
-				int maxlen = Integer.parseInt(lengths[1]);
-				ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
-				.filter(e -> e.getKey().startsWith(args[2]))
-				.filter(e -> e.getKey().length() >= minlen)
-				.filter(e -> e.getKey().length() <= maxlen)
-				.collect(Collectors.toList());
-				
-				for (Node perm : removables) {
-					user.data().remove(perm);
-				}
-				user.data().add(Node.builder(args[3]).build());
-				mngr.saveUser(user);
+				BukkitRunnable update = new BukkitRunnable() { public void run() {
+					User user = mngr.getUser(args[1]);
+					String[] lengths = args[3].split(":");
+					int minlen = Integer.parseInt(lengths[0]);
+					int maxlen = Integer.parseInt(lengths[1]);
+					ArrayList<Node> removables = (ArrayList<Node>) user.getNodes().stream()
+					.filter(e -> e.getKey().startsWith(args[2]))
+					.filter(e -> e.getKey().length() >= minlen)
+					.filter(e -> e.getKey().length() <= maxlen)
+					.collect(Collectors.toList());
+					
+					for (Node perm : removables) {
+						user.data().remove(perm);
+						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+					}
+					user.data().add(Node.builder(args[4]).build());
+					mngr.saveUser(user);
+				}};
+				update.runTaskLaterAsynchronously(main, 20L);
 			}
 		}
 		return true;
