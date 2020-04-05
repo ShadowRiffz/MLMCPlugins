@@ -6,9 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class Commands implements CommandExecutor {
 	
@@ -51,16 +51,15 @@ public class Commands implements CommandExecutor {
 		}
 		else if (args.length == 1 && p.hasPermission("tdeleter.admin")) {
 			try {
-				Town town = TownyUniverse.getDataSource().getTown(args[0]);
+				Town town = TownyAPI.getInstance().getDataSource().getTown(args[0]);
 				if (main.checkTownInactive(town, p)) {
 					try {
-						town.setBalance(0, "Town deleted");
+						town.getAccount().setBalance(0, "Town deleted");
 					} catch (EconomyException e) {
-						// TODO Auto-generated catch block
 						Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
 						e.printStackTrace();
 					}
-					TownyUniverse.getDataSource().removeTown(town);
+					TownyAPI.getInstance().getDataSource().removeTown(town);
 					main.deletableTowns.remove(town);
 					Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
 				}
