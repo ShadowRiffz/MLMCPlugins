@@ -389,6 +389,16 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			else {
+				// /prof quickfix
+				if (args[0].equalsIgnoreCase("quickfix")) {
+					ItemStack item = p.getInventory().getItemInMainHand();
+					ItemMeta meta = item.getItemMeta();
+					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					lore.set(0, "§0" + lore.get(0));
+					meta.setLore(lore);
+					item.setItemMeta(meta);
+					return true;
+				}
 				// /prof add [essence/oretype] [level] [amount]
 				if (args[0].equalsIgnoreCase("add")) {
 					if (args[1].equalsIgnoreCase("randomore")) {
