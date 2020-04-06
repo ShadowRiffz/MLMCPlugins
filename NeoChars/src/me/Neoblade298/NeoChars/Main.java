@@ -73,6 +73,10 @@ public class Main extends JavaPlugin implements Listener
   		return;
   	}
   	
+  	if (e.getPlayer().isSneaking()) {
+  		return;
+  	}
+  	
   	Player clicked = (Player) e.getRightClicked();
   	sendPlayerCard(e.getPlayer(), clicked);
   }
