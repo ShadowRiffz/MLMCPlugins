@@ -40,7 +40,7 @@ public class BlacksmithMethods {
 	final int REFORGE_ESSENCE_PER_LVL = 4;
 	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
-	final int DECONSTRUCT_AMOUNT = 2;
+	final int DECONSTRUCT_AMOUNT = 4;
 	final int LEVEL_INTERVAL = 5;
 
 	public BlacksmithMethods(Main main) {
