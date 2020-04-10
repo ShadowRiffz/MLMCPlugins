@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.inventory.meta.Damageable;
 
 import com.sucy.skill.SkillAPI;
@@ -386,6 +389,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/prof <playername> get [basic/advanced] [charm]");
 				sender.sendMessage("§7- §4/prof <playername> add [essence/oretype] [level] [amount]");
+				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
 				return true;
 			}
 			else {
@@ -397,6 +401,22 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					lore.set(0, "§0" + lore.get(0));
 					meta.setLore(lore);
 					item.setItemMeta(meta);
+					return true;
+				}
+				// /prof givepaint [player] R G B
+				if (args[0].equalsIgnoreCase("givepaint")) {
+					ItemStack item = new ItemStack(Material.POTION);
+					PotionMeta meta = (PotionMeta) item.getItemMeta();
+					meta.setDisplayName("§nDye");
+					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					lore.add("§c§lRed: §f" + args[2]);
+					lore.add("§a§lGreen: §f" + args[3]);
+					lore.add("§9§lBlue: §f" + args[4]);
+					meta.setLore(lore);
+					Color color = Color.fromRGB(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+					meta.setColor(color);
+					item.setItemMeta(meta);
+					Bukkit.getPlayer(args[1]).getInventory().addItem(item);
 					return true;
 				}
 				// /prof add [essence/oretype] [level] [amount]
