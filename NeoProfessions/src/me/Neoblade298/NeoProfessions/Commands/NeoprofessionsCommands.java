@@ -407,7 +407,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					ItemStack item = new ItemStack(Material.POTION);
 					PotionMeta meta = (PotionMeta) item.getItemMeta();
 					meta.setDisplayName("§nDye");
-					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+					ArrayList<String> lore = new ArrayList<String>();
 					lore.add("§c§lRed: §f" + args[2]);
 					lore.add("§a§lGreen: §f" + args[3]);
 					lore.add("§9§lBlue: §f" + args[4]);
