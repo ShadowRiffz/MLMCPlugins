@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class EtcPlaceholders extends PlaceholderExpansion {
-	private me.Neoblade298.NeoProfessions.Main plugin;
-
     @Override
     public boolean canRegister(){
         return true;
