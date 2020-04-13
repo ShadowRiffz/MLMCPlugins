@@ -11,7 +11,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		new SkillAPIPlaceholders(this).registerPlaceholders();
 		new NeoprofessionsPlaceholders().register();
-		new EtcPlaceholders().register();
 	}
 
 	public void onDisable() {

@@ -26,10 +26,14 @@ public class NeoprofessionsPlaceholders extends PlaceholderExpansion {
 	public String getAuthor() {
 		return "Neoblade298";
 	}
+	
+    @Override
+    public boolean persist(){
+        return true;
+    }
 
 	@Override
 	public String getIdentifier() {
-		// TODO Auto-generated method stub
 		return "professions";
 	}
 
@@ -40,7 +44,6 @@ public class NeoprofessionsPlaceholders extends PlaceholderExpansion {
     
 	@Override
 	public String getVersion() {
-		// TODO Auto-generated method stub
 		return "1.0.0";
 	}
 	

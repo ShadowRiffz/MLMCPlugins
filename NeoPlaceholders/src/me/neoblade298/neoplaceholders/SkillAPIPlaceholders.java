@@ -26,6 +26,20 @@ public class SkillAPIPlaceholders {
 		DecimalFormat df10k = new DecimalFormat("00.0k");
 		DecimalFormat pct = new DecimalFormat("00.00");
 
+		// Current health placeholder for animatednames
+		PlaceholderAPI.registerPlaceholder(this.main, "MLMCHealth", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "Loading...";
+
+				if (online && p != null) {
+					return "" + (int) p.getHealth();
+				}
+				return placeholder;
+			}
+		});
 		// Current health placeholder
 		PlaceholderAPI.registerPlaceholder(this.main, "CurrentHealth", new PlaceholderReplacer() {
 			@Override
