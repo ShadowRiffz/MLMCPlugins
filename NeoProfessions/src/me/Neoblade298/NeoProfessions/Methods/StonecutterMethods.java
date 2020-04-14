@@ -92,7 +92,7 @@ public class StonecutterMethods {
 				if (p.hasPermission("stonecutter.overload." + type + "." + perm)) {
 					if (cm.hasEnough(p, "essence", level, GEM_ESSENCE)) {
 						if (cm.hasEnough(p, ore, level, GEM_ORES)) {
-							if (econ.has(p, GEM_COST_PER_LVL * level)) {
+							if (econ.has(p, GEM_COST_PER_LVL * perm)) {
 								cm.subtract(p, "essence", level, GEM_ESSENCE);
 								cm.subtract(p, ore, level, GEM_ORES);
 								if (type.equalsIgnoreCase("weapon")) {
@@ -100,7 +100,7 @@ public class StonecutterMethods {
 								} else {
 									p.getInventory().addItem(sItems.getArmorGem(attr, level, true));
 								}
-								econ.withdrawPlayer(p, GEM_COST_PER_LVL * level);
+								econ.withdrawPlayer(p, GEM_COST_PER_LVL * perm);
 								util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
 							} else {
 								util.sendMessage(p, "&cYou lack the gold to create this!");
