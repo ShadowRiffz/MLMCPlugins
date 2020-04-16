@@ -42,6 +42,7 @@ public class Main extends JavaPlugin implements Listener {
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
 	boolean isDebug = false;
+	boolean disableFights = false;
 	
 	// SQL
 	static String sqlUser = "neoblade298";

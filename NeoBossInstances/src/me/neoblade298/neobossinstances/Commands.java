@@ -31,47 +31,52 @@ public class Commands implements CommandExecutor {
 		if (sender.hasPermission("bossinstances.admin") || sender.isOp()) {
 			// /boss tp player nameofboss
 			if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
-				String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-				String boss = WordUtils.capitalize(args[2]);
-
-				// Find an open instance
-				String instance = main.findInstance(boss);
-				if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
-					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-
-					// Wait for everyone to enter, then update sql so the instance still shows as
-					// empty until everyone leaves
-					BukkitRunnable addSql = new BukkitRunnable() {
-						public void run() {
-							Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
-									.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-							try {
-								// Connect
-								Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
-										Main.sqlPass);
-								Statement stmt = con.createStatement();
-
-								if (main.isDebug) {
-									System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-											+ uuid + "','" + boss + "','" + instance + "');");
+				if (main.disableFights) {
+					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+					String boss = WordUtils.capitalize(args[2]);
+	
+					// Find an open instance
+					String instance = main.findInstance(boss);
+					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
+						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+	
+						// Wait for everyone to enter, then update sql so the instance still shows as
+						// empty until everyone leaves
+						BukkitRunnable addSql = new BukkitRunnable() {
+							public void run() {
+								Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
+										.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+								try {
+									// Connect
+									Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
+											Main.sqlPass);
+									Statement stmt = con.createStatement();
+	
+									if (main.isDebug) {
+										System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+												+ uuid + "','" + boss + "','" + instance + "');");
+									}
+									stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
+											+ "','" + instance + "');");
+									con.close();
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-								stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-										+ "','" + instance + "');");
-								con.close();
-							} catch (Exception e) {
-								e.printStackTrace();
 							}
-						}
-					};
-					addSql.runTaskLater(main, 40L);
-				}
-				else if (instance.equalsIgnoreCase("Not found")) {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
+						};
+						addSql.runTaskLater(main, 40L);
+					}
+					else if (instance.equalsIgnoreCase("Not found")) {
+						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
+					}
+					else {
+						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Failed to connect!");
+					}
 				}
 				else {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Failed to connect!");
+					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
 				}
 				return true;
 			}
@@ -103,6 +108,13 @@ public class Commands implements CommandExecutor {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				return true;
+			}
+			// /boss disable
+			else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !main.isInstance) {
+				main.disableFights = !main.disableFights;
+				if (main.disableFights) sender.sendMessage("§4[§c§lBosses§4] §7Boss fights disabled!");
+				else sender.sendMessage("§4[§c§lBosses§4] §7Boss fights enabled!");
 				return true;
 			}
 			// /boss resetcd player boss
@@ -204,6 +216,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
+				sender.sendMessage("§4/boss disable §7- Toggles whether boss fights are enabled");
 				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
 				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
