@@ -1,6 +1,7 @@
 package me.neoblade298.neopprs;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -198,7 +199,7 @@ public class Commands implements CommandExecutor {
 						int id = Integer.parseInt(args[1]);
 						PPR ppr = null;
 						try {
-							Connection con = Main.cpds.getConnection();
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE id = " + id + ";");
 							while (rs.next()) {
@@ -225,7 +226,7 @@ public class Commands implements CommandExecutor {
 				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
 					int id = Integer.parseInt(args[1]);
 					try {
-						Connection con = Main.cpds.getConnection();
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
 						int deleted = stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
 						if (deleted > 0) {
@@ -243,7 +244,7 @@ public class Commands implements CommandExecutor {
 				}
 				else if (args.length == 3 && args[0].equalsIgnoreCase("rename")) {
 					try {
-						Connection con = Main.cpds.getConnection();
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 						Statement stmt = con.createStatement();
 						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" + args[2]
 								+ "' WHERE upper(username) = '" + args[1].toUpperCase() + "';");
@@ -265,7 +266,7 @@ public class Commands implements CommandExecutor {
 						String mainAcc = args[2];
 						String altAcc = args[3];
 						try {
-							Connection con = Main.cpds.getConnection();
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
 
@@ -332,7 +333,7 @@ public class Commands implements CommandExecutor {
 						String altAcc = args[3];
 
 						try {
-							Connection con = Main.cpds.getConnection();
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = '"
 									+ mainAcc.toUpperCase() + "' AND upper(altname) = '" + altAcc.toUpperCase() + "';");
@@ -352,7 +353,7 @@ public class Commands implements CommandExecutor {
 					else if (args.length == 3 && args[1].equalsIgnoreCase("list")) {
 						String user = args[2];
 						try {
-							Connection con = Main.cpds.getConnection();
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
 

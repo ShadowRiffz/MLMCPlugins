@@ -6,9 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="src/mysql-connector.jar"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
-	<classpathentry kind="lib" path="src/c3p0-0.9.5.5.jar"/>
-	<classpathentry kind="lib" path="src/mchange-commons-java-0.2.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
