@@ -30,7 +30,7 @@ public class MasonMethods {
 	// Constants
 	static final int MAX_SLOTS = 3;
 	static final int ENGRAVE_ESSENCE_BASE = 12;
-	static final int ENGRAVE_ESSENCE_PER_SLOT = 6;
+	static final int ENGRAVE_ESSENCE_PER_SLOT = 12;
 	static final int ENGRAVE_GOLD_BASE = 10000;
 	static final int ENGRAVE_GOLD_PER_LVL = 5000;
 	static final int UNENGRAVE_GOLD = 2000;
