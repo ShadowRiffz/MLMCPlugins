@@ -407,8 +407,10 @@ public class MasonUtils {
 			return "durability";
 		} else if (charmLine.contains("Overloaded")) {
 			return "overload";
-		} else if (line.contains("Increases weapon") || line.contains("Increases armor")) {
-			return "attribute";
+		} else if (line.contains("Increases weapon")) {
+			return "wattribute";
+		} else if (line.contains("Increases armor")) {
+			return "aattribute";
 		} else if (charmLine.contains("Charm")) {
 			return "charm";
 		}

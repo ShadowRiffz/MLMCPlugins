@@ -190,38 +190,49 @@ public class MasonListeners implements Listener {
 					if (masonUtils.isGearReworked(itemToSlot)) {
 						if (masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 							int level = util.getItemLevel(itemWithSlot);
-							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
-								if (econ.has(p, SLOT_GOLD)) {
-									boolean success = false;
-									switch (slotType) {
-									case "durability":
-										success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-										break;
-									case "attribute":
-										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-										break;
-									case "overload":
-										success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-										break;
-									case "charm":
-										success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-										break;
-									}
-									if (success) {
-										p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
-										cm.subtract(p, "essence", level, SLOT_ESSENCE);
-										econ.withdrawPlayer(p, SLOT_GOLD);
-										util.sendMessage(p, "&7Successfully slotted item!");
+							if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute")) ||
+									(util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))) {
+								if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
+									if (econ.has(p, SLOT_GOLD)) {
+										boolean success = false;
+										switch (slotType) {
+										case "durability":
+											success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+											break;
+										case "wattribute":
+											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+											break;
+										case "aattribute":
+											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+											break;
+										case "overload":
+											success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+											break;
+										case "charm":
+											success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+											break;
+										}
+										if (success) {
+											p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+											cm.subtract(p, "essence", level, SLOT_ESSENCE);
+											econ.withdrawPlayer(p, SLOT_GOLD);
+											util.sendMessage(p, "&7Successfully slotted item!");
+										} else {
+											util.sendMessage(p, "&cFailed to slot item!");
+										}
 									} else {
-										util.sendMessage(p, "&cFailed to slot item!");
+										util.sendMessage(p, "&cYou lack the gold to do this!");
+										slotItem.remove(p);
+										slotNum.remove(p);
 									}
 								} else {
-									util.sendMessage(p, "&cYou lack the gold to do this!");
+									util.sendMessage(p, "&cYou lack the materials to do this!");
 									slotItem.remove(p);
 									slotNum.remove(p);
 								}
-							} else {
-								util.sendMessage(p, "&cYou lack the materials to do this!");
+							}
+							else {
+								util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 								slotItem.remove(p);
 								slotNum.remove(p);
 							}
