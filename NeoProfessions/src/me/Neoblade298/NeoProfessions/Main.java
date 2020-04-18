@@ -89,6 +89,8 @@ public class Main extends JavaPlugin implements Listener {
 		isInstance = cfg.getBoolean("is-instance");
 
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
+		masonListeners = new MasonListeners(this);
+		getServer().getPluginManager().registerEvents(masonListeners, this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -96,7 +98,6 @@ public class Main extends JavaPlugin implements Listener {
 			// NeoGear
 			neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 	
-			masonListeners = new MasonListeners(this);
 			masonUtils = new MasonUtils();
 			culinarianListeners = new CulinarianListeners(this);
 	
@@ -116,7 +117,6 @@ public class Main extends JavaPlugin implements Listener {
 			
 			
 			// Setup Event Listeners
-			getServer().getPluginManager().registerEvents(masonListeners, this);
 			getServer().getPluginManager().registerEvents(culinarianListeners, this);
 			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
 			getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);

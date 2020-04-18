@@ -150,7 +150,7 @@ public class MasonUtils {
 				if (lore.get(i).contains("Second Chance")) {
 					String line = lore.get(i);
 					int slotLevel = Integer
-							.parseInt(line.substring(1, 2) + line.substring(3, 4) + line.substring(5, 6));
+							.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
 					lore.set(i, "§8(Lv " + slotLevel + " Slot)");
 					meta.setLore(lore);
 					item.setItemMeta(meta);
