@@ -88,9 +88,8 @@ public class Main extends JavaPlugin implements Listener {
 		this.cfg = YamlConfiguration.loadConfiguration(file);
 		isInstance = cfg.getBoolean("is-instance");
 
+		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
-		masonListeners = new MasonListeners(this);
-		getServer().getPluginManager().registerEvents(masonListeners, this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -100,6 +99,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 			masonUtils = new MasonUtils();
 			culinarianListeners = new CulinarianListeners(this);
+			masonListeners = new MasonListeners(this);
 	
 			// Connect method classes to main
 			blacksmithMethods = new BlacksmithMethods(this);
@@ -120,6 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 			getServer().getPluginManager().registerEvents(culinarianListeners, this);
 			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
 			getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
+			getServer().getPluginManager().registerEvents(masonListeners, this);
 	
 			// Setup recipes (make sure the recipes haven't been added before)
 			culinarianRecipes = new CulinarianRecipes(this);
@@ -137,6 +138,7 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
+
 
 		// Setup charm timer
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
