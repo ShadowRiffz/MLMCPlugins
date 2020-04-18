@@ -32,20 +32,25 @@ public class Commands implements CommandExecutor {
 			// /boss tp player nameofboss
 			if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
 				if (!main.disableFights) {
-					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
 					String boss = WordUtils.capitalize(args[2]);
+					Player p = Bukkit.getPlayer(args[1]);
+					String uuid = p.getUniqueId().toString();
 	
 					// Find an open instance
 					String instance = main.findInstance(boss);
 					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						
+						// Only give cooldown if they've beaten the boss before
+						if (p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						}
 	
 						// Wait for everyone to enter, then update sql so the instance still shows as
 						// empty until everyone leaves
 						BukkitRunnable addSql = new BukkitRunnable() {
 							public void run() {
-								Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+								p.teleport(main.mainSpawn);
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
 										.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
 								try {

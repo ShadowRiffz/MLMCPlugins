@@ -115,13 +115,14 @@ public class Main extends JavaPlugin implements Listener {
 			String displayName = bossSection.getString("Display-Name");
 			boolean isRaid = bossSection.getBoolean("Is-Raid");
 			int timeLimit = bossSection.getInt("Time-Limit");
+			String permission = bossSection.getString("Permission");
 			
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			if (isRaid) {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit));
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission));
 			}
 			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName));
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission));
 			}
 		}
 

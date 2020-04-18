@@ -10,21 +10,24 @@ public class Boss {
 	private String displayName = null;
 	private boolean isRaid = false;
 	private int timeLimit = 0;
+	private String permission = null;
 
-	public Boss (Location coords, String cmd, int cooldown, String displayName){
+	public Boss (Location coords, String cmd, int cooldown, String displayName, String permission){
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
+		this.setPermission(permission);
 	}
 
-	public Boss (Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit){
+	public Boss (Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit, String permission){
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
 		this.isRaid = isRaid;
 		this.timeLimit = timeLimit;
+		this.setPermission(permission);
 	}
 	
 	public boolean isRaid() {
@@ -73,5 +76,13 @@ public class Boss {
 	
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 }
