@@ -67,9 +67,9 @@ public class Main extends JavaPlugin implements Listener {
 		if (w.getName().equalsIgnoreCase("Argyll") &&
 			(X_BOUND_1 <= x && x <= X_BOUND_2) &&
 			(Z_BOUND_1 <= z && z <= Z_BOUND_2) &&
-			!sender.hasPermission("mycommand.staff")) {
+			!sender.hasPermission("tutorial.chat.receive")) {
 			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-				if (p.hasPermission("mycommand.staff")) {
+				if (p.hasPermission("tutorial.chat.receive")) {
 					p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
 				}
 			}
@@ -92,7 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 				}
 				
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-					if (p.hasPermission("mycommand.staff")) {
+					if (p.hasPermission("tutorial.staff.receive")) {
 						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7was punished for saying: §c" + msg);
 					}
 				}
