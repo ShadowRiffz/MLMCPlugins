@@ -55,7 +55,7 @@ public class BlacksmithMethods {
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
-		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+		int perm = (level - LEVEL_INTERVAL) / 10;
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
@@ -80,7 +80,7 @@ public class BlacksmithMethods {
 
 	public void createRepairItem(Player p, String item, int level) {
 		int slot = p.getInventory().firstEmpty();
-		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+		int perm = (level - LEVEL_INTERVAL) / 10;
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, REPAIR_ESSENCE)) {
