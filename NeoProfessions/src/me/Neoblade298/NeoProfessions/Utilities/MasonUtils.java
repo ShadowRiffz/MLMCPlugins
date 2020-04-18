@@ -61,6 +61,7 @@ public class MasonUtils {
 		// Parse the line and revert the lore
 		// chars 1 3 5 = slotLevel, chars 7 9 11 = slottedLevel, char 13 = slotType,
 		// chars 15 17 19 = durability loss
+		// slotType: 0 = Durability, 1 = attribute, 2 = overload, 3 = charm
 		int slotLevel = Integer.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
 		int slottedLevel = Integer.parseInt("" + line.charAt(7) + line.charAt(9) + line.charAt(11));
 		int slotType = Character.getNumericValue(line.charAt(13));
