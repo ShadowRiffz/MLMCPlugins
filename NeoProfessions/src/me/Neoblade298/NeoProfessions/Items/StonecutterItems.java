@@ -79,7 +79,7 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
-		lore.add("§0§7Level " + level + " " + StringUtils.capitalize(type) + " Ore");
+		lore.add("§7Level " + level + " " + StringUtils.capitalize(type) + " Ore§0");
 		lore.add("§7Item used for profession crafting");
 		meta.setEffect(fe.build());
 		meta.setLore(lore);
@@ -129,7 +129,7 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
-		lore.add("§0§7Level " + level + " " + StringUtils.capitalize(type) + " Ore");
+		lore.add("§7Level " + level + " " + StringUtils.capitalize(type) + " Ore§0");
 		lore.add("§7Item used for profession crafting");
 		meta.setEffect(fe.build());
 		meta.setLore(lore);
@@ -191,7 +191,7 @@ public class StonecutterItems {
 		}
 		ArrayList<String> lore = new ArrayList<String>();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + oreName + " Ore");
-		lore.add("§0§7Level " + level + " " + type + " Ore");
+		lore.add("§7Level " + level + " " + type + " Ore§0");
 		lore.add("§7Item used for profession crafting");
 		meta.setEffect(fe.build());
 		meta.setLore(lore);
@@ -238,10 +238,10 @@ public class StonecutterItems {
 			break;
 		}
 		if(isOverloaded) {
-			lore.add("§0§7Level " + level + " Overloaded Gem Augment");
+			lore.add("§7Level " + level + " Overloaded Gem Augment§0");
 		}
 		else {
-			lore.add("§0§7Level " + level + " Gem Augment");
+			lore.add("§7Level " + level + " Gem Augment§0");
 		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		lore.add(effect);
@@ -281,10 +281,10 @@ public class StonecutterItems {
 			break;
 		}
 		if(isOverloaded) {
-			lore.add("§0§7Level " + level + " Overloaded Gem Augment");
+			lore.add("§7Level " + level + " Overloaded Gem Augment§0");
 		}
 		else {
-			lore.add("§0§7Level " + level + " Gem Augment");
+			lore.add("§7Level " + level + " Gem Augment§0");
 		}
 		String effect = "§7Effect: Increases weapon " + attr;
 		lore.add(effect);
@@ -375,10 +375,10 @@ public class StonecutterItems {
 			}
 		}
 		if(isOverloaded) {
-			lore.add("§0§7Level " + level + " Overloaded Gem Augment");
+			lore.add("§7Level " + level + " Overloaded Gem Augment§0");
 		}
 		else {
-			lore.add("§0§7Level " + level + " Gem Augment");
+			lore.add("§7Level " + level + " Gem Augment§0");
 		}
 		String effect = "§7Effect: Increases armor " + attr;
 		lore.add(effect);
@@ -451,10 +451,10 @@ public class StonecutterItems {
 			}
 		}
 		if(isOverloaded) {
-			lore.add("§0§7Level " + level + " Overloaded Gem Augment");
+			lore.add("§7Level " + level + " Overloaded Gem Augment§0");
 		}
 		else {
-			lore.add("§0§7Level " + level + " Gem Augment");
+			lore.add("§7Level " + level + " Gem Augment§0");
 		}
 		String effect = "§7Effect: Increases armor " + attr;
 		lore.add(effect);

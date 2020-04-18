@@ -397,7 +397,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					ItemStack item = p.getInventory().getItemInMainHand();
 					ItemMeta meta = item.getItemMeta();
 					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-					lore.set(0, "§0" + lore.get(0));
+					lore.set(0, lore.get(0) + "§0");
 					meta.setLore(lore);
 					item.setItemMeta(meta);
 					return true;

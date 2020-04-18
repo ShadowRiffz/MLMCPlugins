@@ -131,16 +131,13 @@ public class MasonListeners implements Listener {
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
-			System.out.println("Damage entity " + e.getFinalDamage() + " " + p.getHealth());
 			if (e.getFinalDamage() > p.getHealth()) {
-				System.out.println("Death");
 				// First check what charms the player has
 				ItemStack item = p.getInventory().getItemInMainHand();
 				boolean hasChance = false;
 				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 					for (String line : item.getItemMeta().getLore()) {
 						if (line.contains("Second Chance")) {
-							System.out.println("Chanceline!");
 							hasChance = true;
 						}
 					}
@@ -191,7 +188,8 @@ public class MasonListeners implements Listener {
 						if (masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 							int level = util.getItemLevel(itemWithSlot);
 							if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute")) ||
-									(util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))) {
+									(util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute")) ||
+									!(slotType.equalsIgnoreCase("aattribute") || slotType.equalsIgnoreCase("wattribute"))) {
 								if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
 									if (econ.has(p, SLOT_GOLD)) {
 										boolean success = false;
