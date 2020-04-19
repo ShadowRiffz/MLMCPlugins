@@ -41,8 +41,8 @@ public class Commands implements CommandExecutor {
 					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 						
-						// Only give cooldown if they've beaten the boss before
-						if (p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+						// Only give cooldown if they've beaten the boss before or it's a raid
+						if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
 							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 						}
 	

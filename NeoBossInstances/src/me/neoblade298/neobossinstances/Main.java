@@ -403,6 +403,29 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public String getCooldownPlaceholder(String name, Player p) {
+		if (cooldowns.containsKey(name)) {
+			int cooldown = bossInfo.get(name).getCooldown() * 1000;
+			String displayName = bossInfo.get(name).getDisplayName();
+			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
+				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
+				long currTime = System.currentTimeMillis();
+				if (currTime > lastUse + cooldown) {
+	    			return "§aReady!";
+				}
+				else {
+					double temp = (lastUse + cooldown - currTime) / 6000;
+					temp /= 10;
+					return "§c" + temp + " §7minutes remaining!";
+				}
+			}
+			else {
+    			return "§aReady!";
+			}
+		}
+		return "Loading...";
+	}
+	
 	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
 		return activeFights;
 	}
