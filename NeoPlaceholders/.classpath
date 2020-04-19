@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="src/MVdWPlaceholderAPI.jar"/>
 	<classpathentry kind="lib" path="src/me/neoblade298/neoplaceholders/NeoProfessions.jar"/>
 	<classpathentry kind="lib" path="src/PlaceholderAPI-2.10.4.jar"/>
+	<classpathentry kind="lib" path="src/NeoBossInstances.jar"/>
+	<classpathentry kind="lib" path="src/MythicMobs-4.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
