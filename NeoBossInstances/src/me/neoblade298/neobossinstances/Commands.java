@@ -88,13 +88,17 @@ public class Commands implements CommandExecutor {
 			// /boss tp player nameofboss instance
 			else if (args.length == 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
 				if (!main.disableFights) {
-					SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+					Player p = Bukkit.getPlayer(args[1]);
+					SkillAPI.saveSingle(p);
+					String uuid = p.getUniqueId().toString();
 					String boss = WordUtils.capitalize(args[2]);
 					String instance = WordUtils.capitalize(args[3]);
-	
-					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-					Bukkit.getPlayer(args[1]).teleport(main.mainSpawn);
+
+					// Only give cooldown if they've beaten the boss before or it's a raid
+					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+					}
+					p.teleport(main.mainSpawn);
 	
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
 							main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
