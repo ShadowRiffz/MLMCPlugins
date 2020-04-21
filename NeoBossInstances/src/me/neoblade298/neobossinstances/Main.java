@@ -413,9 +413,8 @@ public class Main extends JavaPlugin implements Listener {
 	    			return "§aReady!";
 				}
 				else {
-					double temp = (lastUse + cooldown - currTime) / 6000;
-					temp /= 10;
-					return "§c" + temp + " §7minutes remaining!";
+					double temp = (lastUse + cooldown - currTime) / 1000;
+					return "§c" + temp + "s";
 				}
 			}
 			else {
