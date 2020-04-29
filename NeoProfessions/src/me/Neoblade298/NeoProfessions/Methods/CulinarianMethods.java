@@ -125,7 +125,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(cm.hasEnough(p, "essence", 20, GARNISH_ESSENCE)) {
+								if(cm.hasEnough(p, "essence", 30, GARNISH_ESSENCE)) {
 									if(econ.has(p, GARNISH_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -135,7 +135,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										cm.subtract(p, "essence", 20, GARNISH_ESSENCE);
+										cm.subtract(p, "essence", 30, GARNISH_ESSENCE);
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, GARNISH_COST);
 										if (i == repetitions - 1) {
@@ -215,7 +215,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(cm.hasEnough(p, "essence", 20, PRESERVE_ESSENCE)) {
+								if(cm.hasEnough(p, "essence", 30, PRESERVE_ESSENCE)) {
 									if(econ.has(p, PRESERVE_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -225,7 +225,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										cm.subtract(p, "essence", 20, PRESERVE_ESSENCE);
+										cm.subtract(p, "essence", 30, PRESERVE_ESSENCE);
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, PRESERVE_COST);
 										if (i == repetitions - 1) {
@@ -305,7 +305,7 @@ public class CulinarianMethods {
 								repetitions = oldItem.getAmount();
 							}
 							for (int i = 0; i < repetitions; i++) {
-								if(cm.hasEnough(p, "essence", 20, SPICE_ESSENCE)) {
+								if(cm.hasEnough(p, "essence", 30, SPICE_ESSENCE)) {
 									if(econ.has(p, SPICE_COST)) {
 										ItemStack item = oldItem.clone();
 										ItemMeta meta = item.getItemMeta();
@@ -315,7 +315,7 @@ public class CulinarianMethods {
 										meta.setLore(lore);
 										item.setItemMeta(meta);
 										p.getInventory().addItem(util.setAmount(item, 1));
-										cm.subtract(p, "essence", 20, SPICE_ESSENCE);
+										cm.subtract(p, "essence", 30, SPICE_ESSENCE);
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, SPICE_COST);
 										if (i == repetitions - 1) {
