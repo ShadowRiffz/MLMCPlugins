@@ -32,7 +32,7 @@ public class Commands implements CommandExecutor {
 				// Give gold to each player
 				for (Player player : players) {
 					ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-					String command = "sync console MLMC eco give " + player.getName() + " " + (int) gold;
+					String command = "eco give " + player.getName() + " " + (int) gold;
 					Bukkit.dispatchCommand(console, command);
 					player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
 				}
