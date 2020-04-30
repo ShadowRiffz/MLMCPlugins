@@ -237,19 +237,23 @@ public class BlacksmithMethods {
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
 						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
-							if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
-								if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
-									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
-									p.getInventory().removeItem(item);
-									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
-									p.getInventory().addItem(neogear.settings.get(type).get(itemLevel)
-											.generateItem(rarity, itemLevel));
-									util.sendMessage(p, "&7Successfully reforged item!");
+							if (rarity.equalsIgnoreCase("Artifact")) {
+								if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
+									if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
+										cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
+										p.getInventory().removeItem(item);
+										econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
+										p.getInventory().addItem(neogear.settings.get(type).get(itemLevel)
+												.generateItem(rarity, itemLevel));
+										util.sendMessage(p, "&7Successfully reforged item!");
+									} else {
+										util.sendMessage(p, "&cYou lack the gold to create this!");
+									}
 								} else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									util.sendMessage(p, "&cYou lack the essence to create this!");
 								}
 							} else {
-								util.sendMessage(p, "&cYou lack the essence to create this!");
+								util.sendMessage(p, "&cArtifacts cannot be rerolled!");
 							}
 						} else {
 							util.sendMessage(p, "&cYou do not yet have the required skill!");
