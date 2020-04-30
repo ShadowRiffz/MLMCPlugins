@@ -95,6 +95,7 @@ public class ProfessionsMethods {
 					}
 					if (line.contains("Durability") || line.contains("Bonus Attributes")) {
 						end = i - 1;
+						break;
 					}
 				}
 				
