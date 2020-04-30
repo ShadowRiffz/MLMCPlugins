@@ -29,6 +29,7 @@ import me.Neoblade298.NeoProfessions.Listeners.SkillapiListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
+import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -54,6 +55,7 @@ public class Main extends JavaPlugin implements Listener {
 	public MasonMethods masonMethods;
 	public StonecutterMethods stonecutterMethods;
 	public CulinarianMethods culinarianMethods;
+	public ProfessionsMethods professionsMethods;
 
 	public CulinarianRecipes culinarianRecipes;
 	public CulinarianListeners culinarianListeners;
@@ -79,6 +81,8 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		this.setupPermissions();
 		this.setupChat();
+		
+		neogear = (me.neoblade298.neogear.Main) Bukkit.getPluginManager().getPlugin("NeoGear");
 		
 		// Configuration// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
@@ -106,6 +110,7 @@ public class Main extends JavaPlugin implements Listener {
 			masonMethods = new MasonMethods(this);
 			stonecutterMethods = new StonecutterMethods(this);
 			culinarianMethods = new CulinarianMethods(this);
+			professionsMethods = new ProfessionsMethods(this);
 	
 			// Command listeners for all classes
 			this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));

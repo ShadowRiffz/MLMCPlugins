@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/SkillAPI.jar"/>
+	<classpathentry kind="lib" path="src/NeoGear.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

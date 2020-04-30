@@ -2,6 +2,7 @@ name: NeoGear
 main: me.neoblade298.neogear.Main
 author: [Neoblade298]
 depend: [SkillAPI]
+softdepend: [NeoGear]
 version: 1.0
 api-version: 1.14
 commands:

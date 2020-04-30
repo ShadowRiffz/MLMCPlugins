@@ -207,7 +207,7 @@ public class Main extends JavaPlugin implements Listener {
 				e.setCancelled(true);
 			}
 		}
-		if (e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
+		else if (e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPvp")) {
 			e.setCancelled(true);
 		}
 	}

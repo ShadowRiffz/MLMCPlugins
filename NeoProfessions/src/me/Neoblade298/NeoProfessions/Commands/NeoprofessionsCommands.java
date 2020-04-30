@@ -388,6 +388,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/prof <playername> get [basic/advanced] [charm]");
 				sender.sendMessage("§7- §4/prof <playername> add [essence/oretype] [level] [amount]");
+				sender.sendMessage("§7- §4/prof artifact <playername>");
 				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
 				return true;
 			}
@@ -432,6 +433,16 @@ public class NeoprofessionsCommands implements CommandExecutor {
 								Integer.parseInt(args[3]));
 						util.sendMessage(sender, "&7Success!");
 						return true;
+					}
+				}
+				// /prof artifact <playername>
+				else if (args[0].equalsIgnoreCase("artifact")) {
+					if (args.length == 2) {
+						main.professionsMethods.artifactItem(Bukkit.getPlayer(args[1]));
+						return true;
+					}
+					else {
+						main.professionsMethods.artifactItem((Player) sender);
 					}
 				}
 				// /prof level playername
