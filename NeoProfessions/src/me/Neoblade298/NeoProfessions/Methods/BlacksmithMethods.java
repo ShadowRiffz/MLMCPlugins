@@ -237,7 +237,7 @@ public class BlacksmithMethods {
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
 						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
-							if (rarity.equalsIgnoreCase("Artifact")) {
+							if (!rarity.equalsIgnoreCase("Artifact")) {
 								if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
 									if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
 										cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
