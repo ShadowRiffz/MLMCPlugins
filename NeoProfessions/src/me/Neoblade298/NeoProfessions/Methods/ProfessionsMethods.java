@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Methods;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -114,6 +115,7 @@ public class ProfessionsMethods {
 				}
 				util.setCurrentDurability(item, util.getMaxDurability(item));
 				
+				Bukkit.broadcastMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has converted their item into an §bArtifact§7!");
 				econ.withdrawPlayer(p, ARTIFACT_PRICE);
 			}
 			else {
