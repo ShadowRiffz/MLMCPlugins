@@ -94,7 +94,6 @@ public class ProfessionsMethods {
 					}
 					if (line.contains("Durability") || line.contains("Bonus Attributes")) {
 						end = i - 1;
-						break;
 					}
 				}
 				
@@ -106,6 +105,14 @@ public class ProfessionsMethods {
 				
 				meta.setLore(lore);
 				item.setItemMeta(meta);
+				
+				if (util.isArmor(item)) {
+					util.setMaxDurability(item, util.getMaxDurability(item) + 100);
+				}
+				else {
+					util.setMaxDurability(item, util.getMaxDurability(item) + 200);
+				}
+				util.setCurrentDurability(item, util.getMaxDurability(item));
 				
 				econ.withdrawPlayer(p, ARTIFACT_PRICE);
 			}
