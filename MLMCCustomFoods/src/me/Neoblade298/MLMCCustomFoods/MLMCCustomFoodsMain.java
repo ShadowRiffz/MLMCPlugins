@@ -10,10 +10,12 @@ import java.util.Iterator;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -307,6 +309,14 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 				data.addBonusAttributes(s, ((int[]) playerAttribs.get(s))[1]);
 			}
 			this.effects.remove(p.getUniqueId());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerPlace(BlockPlaceEvent e) {
+		ItemStack item = e.getItemInHand();
+		if (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Potential Rewards")) {
+			e.setCancelled(true);
 		}
 	}
 
