@@ -33,16 +33,22 @@ public class ValueMaxMechanic extends CustomEffectComponent {
                         "attributes",
                         "Attributes",
                         "The attributes with which to max, separated by :",
-                        "Strength:Dexterity:Intelligence:Spirit")
+                        "Strength:Dexterity:Intelligence:Spirit"),
+                EditorOption.text(
+                        "multiplier",
+                        "Multiplier",
+                        "What to multiple the max by",
+                        "1.0")
         );
 	}
 
 	@Override
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
 		String[] attrs = settings.getString("attributes").split(":");
+		double multiplier = settings.getDouble("multiplier");
 		Player p = (Player) caster;
 		PlayerData d = SkillAPI.getPlayerData(p);
-		int max = 0;
+		double max = 0;
 		for (String attr : attrs) {
 			int attrVal = d.getAttribute(attr);
 			if (attrVal > max) {
@@ -52,7 +58,7 @@ public class ValueMaxMechanic extends CustomEffectComponent {
 
 		String key = settings.getString("key");
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
-		data.put(key, max);
+		data.put(key, max * multiplier);
 		return true;
 	}
 
