@@ -131,6 +131,10 @@ public class Commands implements CommandExecutor {
 				else sender.sendMessage("§4[§c§lBosses§4] §7Boss fights enabled!");
 				return true;
 			}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+				main.loadConfig();
+				return true;
+			}
 			// /boss resetcd player boss
 			else if (args.length == 3 && args[0].equalsIgnoreCase("resetcd") && !main.isInstance) {
 				if (main.cooldowns.get(WordUtils.capitalize(args[2]))

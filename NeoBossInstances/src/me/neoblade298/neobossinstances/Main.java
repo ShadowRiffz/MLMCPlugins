@@ -66,6 +66,19 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 	    this.getCommand("boss").setExecutor(new Commands(this));
 
+	    loadConfig();
+
+		Bukkit.getServer().getLogger().info("NeoBossInstances Enabled");
+	}
+	
+	public void loadConfig() {
+		// Clear existing databases
+		cooldowns.clear();
+		bossInfo.clear();
+		activeBosses.clear();
+		bossNames.clear();
+		activeFights.clear();
+		
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
 		if (!file.exists()) {
@@ -85,6 +98,25 @@ public class Main extends JavaPlugin implements Listener {
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
 
+		// Populate boss and raid  information
+		for (String boss : bosses.getKeys(false)) {
+			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
+			int cooldown = bossSection.getInt("Cooldown");
+			String cmd = bossSection.getString("Command");
+			String displayName = bossSection.getString("Display-Name");
+			boolean isRaid = bossSection.getBoolean("Is-Raid");
+			int timeLimit = bossSection.getInt("Time-Limit");
+			String permission = bossSection.getString("Permission");
+			
+			Location loc = parseLocation(bossSection.getString("Coordinates"));
+			if (isRaid) {
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission));
+			}
+			else {
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission));
+			}
+		}
+		
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
 			try {
@@ -106,27 +138,6 @@ public class Main extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-
-		// Populate boss and raid  information
-		for (String boss : bosses.getKeys(false)) {
-			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
-			int cooldown = bossSection.getInt("Cooldown");
-			String cmd = bossSection.getString("Command");
-			String displayName = bossSection.getString("Display-Name");
-			boolean isRaid = bossSection.getBoolean("Is-Raid");
-			int timeLimit = bossSection.getInt("Time-Limit");
-			String permission = bossSection.getString("Permission");
-			
-			Location loc = parseLocation(bossSection.getString("Coordinates"));
-			if (isRaid) {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission));
-			}
-			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission));
-			}
-		}
-
-		Bukkit.getServer().getLogger().info("NeoBossInstances Enabled");
 	}
 
 	public void onDisable() {
