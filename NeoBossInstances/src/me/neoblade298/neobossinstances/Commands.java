@@ -131,7 +131,9 @@ public class Commands implements CommandExecutor {
 				else sender.sendMessage("§4[§c§lBosses§4] §7Boss fights enabled!");
 				return true;
 			}
+			// /boss reload
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+				sender.sendMessage("§4[§c§lBosses§4] §7Bosses reloaded!");
 				main.loadConfig();
 				return true;
 			}
