@@ -55,7 +55,7 @@ public class Converter {
 			else if (idLine.contains("Durability")) {
 				return convertDurabilityItem(lore);
 			}
-			else if (idLine.contains("Essence")) {
+			else if (idLine.contains("Essence") && !idLine.contains("0")) {
 				return convertEssence(p, lore, item.getAmount());
 			}
 			else if (idLine.contains("Ore")) {
