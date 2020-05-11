@@ -31,7 +31,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onShootBow(EntityShootBowEvent e) {
 		if (e.getBow().getType().equals(Material.CROSSBOW) &&
-				e.getEntity() instanceof Player) {
+				e.getEntity() instanceof Player &&
+				e.getProjectile() instanceof Arrow) {
 			ItemStack bow = e.getBow();
 			if (bow.getEnchantmentLevel(Enchantment.ARROW_INFINITE) > 0) {
 				Player p = (Player) e.getEntity();
