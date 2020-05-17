@@ -42,15 +42,6 @@ public class Main extends JavaPlugin implements Listener {
 	    // Get command listener
 	    this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
-
-	    // Temporarily reload mythicmobs because dev build doesn't load properly
-		BukkitRunnable reload = new BukkitRunnable() {
-			public void run() {
-				getServer().dispatchCommand(getServer().getConsoleSender(), "mm reload");
-				log.info("Reloading MM via command!");
-			}
-		};
-		reload.runTaskLater(this, 200L);
 	}
 	
 	public void onDisable(){
