@@ -746,14 +746,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 								p.getInventory().addItem(ore);
 							}
 						}
-						else if (args[1].equalsIgnoreCase("ingr")) {
-							if (args[2].equals("22")) {
+						else if (args[2].equalsIgnoreCase("ingr")) {
+							if (args[3].equals("22")) {
 								p.getInventory().addItem(ingr.getVodka());
 							}
-							else if (args[2].equals("23")) {
+							else if (args[3].equals("23")) {
 								p.getInventory().addItem(ingr.getRum());
 							}
-							else if (args[2].equals("24")) {
+							else if (args[3].equals("24")) {
 								p.getInventory().addItem(ingr.getTequila());
 							}
 						}
