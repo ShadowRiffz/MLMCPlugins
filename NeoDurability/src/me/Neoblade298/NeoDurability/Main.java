@@ -167,6 +167,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onSkillCast(PlayerCastSkillEvent e) {
 		Player player = e.getPlayer();
+		if (e.isCancelled()) { return; }
 		if (player.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
 			return;
 		}
