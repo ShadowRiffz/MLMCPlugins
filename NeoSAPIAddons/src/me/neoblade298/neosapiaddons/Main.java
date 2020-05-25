@@ -3,9 +3,12 @@ package me.neoblade298.neosapiaddons;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.ImmutableList;
@@ -38,6 +41,30 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 			target.damage(e.getAmount());
 		}
 	}
+	
+	@EventHandler
+	public void onDamage(EntityDamageEvent e) {
+		if (e.getEntity() instanceof LivingEntity) {
+			LivingEntity ent = (LivingEntity) e.getEntity();
+			if (ent.getAbsorptionAmount() > 0) {
+				e.setCancelled(true);
+				ent.setAbsorptionAmount(ent.getAbsorptionAmount() - 1);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onEat(PlayerItemConsumeEvent e) {
+		if (e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPVP") ||
+				e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll")) {
+			if (e.getItem().getType().equals(Material.GOLDEN_APPLE) ||
+					e.getItem().getType().equals(Material.ENCHANTED_GOLDEN_APPLE)) {
+				e.setCancelled(true);
+				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cGolden apples are restricted in the quest world.");
+				return;
+			}
+		}
+	}
 
 	@Override
 	public void registerClasses(SkillAPI api) {
@@ -53,7 +80,9 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
     public List<CustomEffectComponent> getComponents() {
         return ImmutableList.of(
             new ValueMaxMechanic(),
-            new SpawnMythicmobMechanic()
+            new SpawnMythicmobMechanic(),
+            new AddAbsorptionMechanic(),
+            new AbsorptionCondition()
         );
     }
 }
