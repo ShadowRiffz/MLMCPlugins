@@ -48,7 +48,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 			LivingEntity ent = (LivingEntity) e.getEntity();
 			if (ent.getAbsorptionAmount() > 0) {
 				e.setCancelled(true);
-				ent.setAbsorptionAmount(ent.getAbsorptionAmount() - 1);
+				ent.setAbsorptionAmount(ent.getAbsorptionAmount() - 1 > 0 ? ent.getAbsorptionAmount() - 1 : 0);
 			}
 		}
 	}
