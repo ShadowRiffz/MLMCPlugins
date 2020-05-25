@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -44,11 +45,11 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
-		if (e.getEntity() instanceof LivingEntity) {
-			LivingEntity ent = (LivingEntity) e.getEntity();
-			if (ent.getAbsorptionAmount() > 0) {
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			if (p.getAbsorptionAmount() > 0) {
 				e.setCancelled(true);
-				ent.setAbsorptionAmount(ent.getAbsorptionAmount() - 1 > 0 ? ent.getAbsorptionAmount() - 1 : 0);
+				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 > 0 ? p.getAbsorptionAmount() - 1 : 0);
 			}
 		}
 	}
