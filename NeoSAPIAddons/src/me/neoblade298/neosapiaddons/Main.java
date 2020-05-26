@@ -48,8 +48,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			if (p.getAbsorptionAmount() > 0) {
-				e.setCancelled(true);
-				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 > 0 ? p.getAbsorptionAmount() - 1 : 0);
+				e.setDamage(1);
 			}
 		}
 	}
