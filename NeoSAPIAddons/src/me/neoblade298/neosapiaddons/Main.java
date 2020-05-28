@@ -56,6 +56,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 			Player p = (Player) e.getEntity();
 			if (p.getAbsorptionAmount() > 0) {
 				e.setDamage(1);
+				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 >= 0 ? p.getAbsorptionAmount() - 1 : 0);
 			}
 			
 			// Iron bond collection
