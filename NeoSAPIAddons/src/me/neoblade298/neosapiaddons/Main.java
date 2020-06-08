@@ -22,6 +22,7 @@ import com.sucy.skill.api.SkillPlugin;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
+import com.sucy.skill.dynamic.trigger.Trigger;
 
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	HashMap<Player, Player> ironbond;
@@ -121,6 +122,13 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	@Override
 	public void registerSkills(SkillAPI arg0) {
 
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Trigger> getTriggers() {
+		return ImmutableList.of(
+		);
 	}
     
     @Override

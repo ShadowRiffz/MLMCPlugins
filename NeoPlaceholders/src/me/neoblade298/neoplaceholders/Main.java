@@ -14,6 +14,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new NeoBossInstancesPlaceholders().register();
 		new MinibossPlaceholders().register();
 		new MinibossShortPlaceholders().register();
+		new OtherSkillAPIPlaceholders().register();
 	}
 
 	public void onDisable() {
