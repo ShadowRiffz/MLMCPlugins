@@ -88,6 +88,9 @@ public class CulinarianListeners implements Listener {
 			for(int i = 9; i < 36; i++) {
 				if(contents[i] != null && contents[i].hasItemMeta() && contents[i].getItemMeta().hasLore()) {
 					String id = contents[i].getItemMeta().getLore().get(0);
+					ItemStack drink = contents[i].clone();
+					drink.setAmount(1);
+					p.getInventory().removeItem(item);
 
 					if(id.contains("Drink 10")) {
 						int drunk = 35 + gen.nextInt(10);
