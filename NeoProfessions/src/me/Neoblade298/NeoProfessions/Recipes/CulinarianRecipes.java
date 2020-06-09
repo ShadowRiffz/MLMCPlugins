@@ -84,7 +84,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, util.setAmount(drink.getBlackWidow(), 3));
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.INK_SAC);
+		recipe.addIngredient(Material.BLACK_DYE);
 		recipe.addIngredient(Material.ICE);
 		recipe.addIngredient(Material.SPIDER_EYE);
 		return recipe;
