@@ -65,7 +65,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				List<Entity> nearby = p.getNearbyEntities(20, 20, 20);
 				System.out.println(p.getHealth() + ", " + e.getFinalDamage());
 				for (Entity ent : nearby) {
-					if (ent instanceof Player && ent.hasPermission("collections.sh.unlock.36")) {
+					if (ent instanceof Player && ent.hasPermission("collections.sh.use.36")) {
 						Player bond = (Player) ent;
 						if (!FlagManager.hasFlag(bond, "cd_ironBond") &&
 								bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() && bond.isValid() &&
