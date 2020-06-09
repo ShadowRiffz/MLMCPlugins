@@ -100,7 +100,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		Food food = null;
 		if (quickEat) {
 			ItemStack[] contents = p.getInventory().getContents();
-			for (int i = 9; i < 36 && food == null; i++) {
+			for (int i = 0; i < 36 && food == null; i++) {
 				ItemStack invItem = contents[i];
 				if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 					ItemMeta invMeta = invItem.getItemMeta();
