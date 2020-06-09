@@ -203,6 +203,7 @@ public class Main extends JavaPlugin implements Listener {
     					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
     					Statement stmt = con.createStatement();
     					ResultSet rs;
+    					
 
         				if (count > 3) {
         					this.cancel();
@@ -249,8 +250,12 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss)) {
+	    		    							Bukkit.getServer().getLogger().info("Sent " + p.getName() + " to " + boss + ", spawned boss.");
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+	    		    						}
+	    		    						else {
+	    		    							Bukkit.getServer().getLogger().info("Sent " + p.getName() + " to " + boss + ".");
 	    		    						}
 	    				    			}
 	    				    		};
@@ -282,7 +287,7 @@ public class Main extends JavaPlugin implements Listener {
     				}
 				}
     		};
-    		sendPlayer.runTaskTimer(this, 60L, 60L);
+    		sendPlayer.runTaskTimer(this, 60L, 100L);
 		}
 	}
 	
@@ -351,7 +356,9 @@ public class Main extends JavaPlugin implements Listener {
 		// Remove player from all fights locally
 		for (String boss : activeFights.keySet()) {
 			activeFights.get(boss).remove(p);
+			Bukkit.getServer().getLogger().info(p.getName() + " Left " + boss + ".");
 			if (activeFights.get(boss).size() == 0) {
+				Bukkit.getServer().getLogger().info(p.getName() + " Left " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
 			}
