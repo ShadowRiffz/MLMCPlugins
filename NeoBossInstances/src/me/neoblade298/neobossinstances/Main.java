@@ -68,7 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	    loadConfig();
 
-		Bukkit.getServer().getLogger().info("NeoBossInstances Enabled");
+		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
 	}
 	
 	public void loadConfig() {
@@ -164,14 +164,14 @@ public class Main extends JavaPlugin implements Listener {
 				}
 				
 				int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
-				Bukkit.getServer().getLogger().info("Cleared " + deleted + " fights from NeoBossInstances");
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] Cleared " + deleted + " fights from NeoBossInstances");
 				con.close();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		Bukkit.getServer().getLogger().info("NeoBossInstances Disabled");
+		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Disabled");
 	}
 	
 	public Location parseLocation(String toParse) {
@@ -250,12 +250,12 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss)) {
-	    		    							Bukkit.getServer().getLogger().info("Sent " + p.getName() + " to " + boss + ", spawned boss.");
+	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ", spawned boss.");
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
 	    		    						}
 	    		    						else {
-	    		    							Bukkit.getServer().getLogger().info("Sent " + p.getName() + " to " + boss + ".");
+	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 	    		    						}
 	    				    			}
 	    				    		};
@@ -355,10 +355,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void handleLeave(Player p) {
 		// Remove player from all fights locally
 		for (String boss : activeFights.keySet()) {
-			activeFights.get(boss).remove(p);
-			Bukkit.getServer().getLogger().info(p.getName() + " Left " + boss + ".");
+			if (activeFights.get(boss).contains(p)) {
+				activeFights.get(boss).remove(p);
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+			}
 			if (activeFights.get(boss).size() == 0) {
-				Bukkit.getServer().getLogger().info(p.getName() + " Left " + boss + ", removed from list.");
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
 			}
