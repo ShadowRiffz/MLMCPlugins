@@ -66,7 +66,7 @@ public class Commands implements CommandExecutor {
 		}
 		else {
 			p.sendMessage("§c/music edit - §7Edit a signed sheet music owned by you");
-			p.sendMessage("§c/music tempo [1-1200] - §7Sets tempo you play sheet music at");
+			p.sendMessage("§c/music tempo [2-20] - §7Sets tick delay between notes, recommended 4");
 			p.sendMessage("§c/music sync [player] - §7Requests syncing sheet music with a player");
 			p.sendMessage("§c/music unsync [player] - §7Unsyncs");
 			return true;

@@ -32,6 +32,7 @@ public class Main extends JavaPlugin implements Listener {
 	// State of music play
 	static Set<Player> bookPlaying = new HashSet<Player>();
 	Set<Player> freePlaying = new HashSet<Player>();
+	Set<Player> playingMusic = new HashSet<Player>();
 	
 	// To do with sounds
 	HashMap<Player, String> instrument = new HashMap<Player, String>();
@@ -282,15 +283,17 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (!this.syncedPlayers.contains(p)) { // if playing solo
 			p.sendMessage("§4[§c§lMLMC§4] §7You begin playing your sheet music! Right click again to stop!");
+			playingMusic.add(p);
 			new MusicRunnable(p, notesArr, sounds.get(instrument.get(p))).runTaskTimer(this, 0L, getNoteDelay(p));
 		}
 		else { // if playing synced (2+ people)
 			HashSet<Player> syncSet = getsyncSet(p);
 			this.noteArrs.put(p, notesArr);
-			if (bookPlaying.containsAll(syncSet)) {
+			if (bookPlaying.containsAll(syncSet) && canPlaySync(syncSet)) {
 				for (Player currPlayer : syncSet) {
 					currPlayer.sendMessage(
 							"§4[§c§lMLMC§4] §7You are playing your sheet music synced! Right click again to stop!");
+					playingMusic.add(currPlayer);
 					new MusicRunnable(currPlayer, this.noteArrs.get(currPlayer), sounds.get(instrument.get(currPlayer))).runTaskTimer(this, 0L, getNoteDelay(p));
 				}
 			}
@@ -303,6 +306,15 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
+	}
+	
+	public boolean canPlaySync(HashSet<Player> syncSet) {
+		for (Player p : syncSet) {
+			if (playingMusic.contains(p)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void editBook(Player player) {
@@ -330,10 +342,10 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void setTempo(Player player, int bpm) {
-		if (bpm < 1) {
-			bpm = 1;
+		if (bpm < 2) {
+			bpm = 2;
 		}
-		long noteDelay = 1200L / bpm;
+		long noteDelay = bpm;
 		if (!this.noteDelays.containsKey(player)) {
 			this.noteDelays.put(player, noteDelay);
 		}
@@ -457,6 +469,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void stopPlaying(Player player) {
 		this.upperRegister.remove(player);
 		this.freePlaying.remove(player);
+		playingMusic.remove(player);
 		bookPlaying.remove(player);
 		instrument.remove(player);
 	}
@@ -478,6 +491,6 @@ public class Main extends JavaPlugin implements Listener {
 		if (this.noteDelays.containsKey(player)) {
 			return this.noteDelays.get(player);
 		}
-		return 5L;
+		return 4L;
 	}
 }
