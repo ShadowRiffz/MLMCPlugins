@@ -242,6 +242,11 @@ public class Main extends JavaPlugin implements Listener {
 				String[] notes = chords[cnt].split(",");
 				Set<Float> notePitches = new HashSet<Float>();
 				for (String note : notes) {
+					if (pitches.get(note) == null) {
+						cancel();
+						stopPlaying(player);
+						player.sendMessage("§4[§c§lMLMC§4] §7There was a syntax error in your music at note: §e" + note + "§7! Playing stopped.");
+					}
 					notePitches.add(pitches.get(note));
 				}
 				playChord(player, notePitches, sound);
