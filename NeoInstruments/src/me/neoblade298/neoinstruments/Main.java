@@ -438,7 +438,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (syncSet.size() < 3) { // if updated syncSet will have nobody synced to each other
 			for (Player p : syncSet) {
 				syncedPlayers.remove(p);
-				if (!player.getName().equals(p.getName())) {
+				if (player.getName().equals(p.getName())) {
 					p.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
 				}
 			}
