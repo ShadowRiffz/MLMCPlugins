@@ -245,7 +245,7 @@ public class Main extends JavaPlugin implements Listener {
 					if (pitches.get(note) == null) {
 						cancel();
 						stopPlaying(player);
-						player.sendMessage("§4[§c§lMLMC§4] §7There was a syntax error in your music at note: §e" + note + "§7! Playing stopped.");
+						player.sendMessage("§4[§c§lMLMC§4] §7There was a syntax error in your music at note: §e" + chords[cnt] + "§7! Playing stopped.");
 					}
 					notePitches.add(pitches.get(note));
 				}
