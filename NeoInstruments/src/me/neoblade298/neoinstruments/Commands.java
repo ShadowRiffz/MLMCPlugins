@@ -1,5 +1,6 @@
 package me.neoblade298.neoinstruments;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,51 +16,60 @@ public class Commands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if(!(sender instanceof Player)) {
+		if (!(sender instanceof Player) || !sender.hasPermission("music.use")) {
 			return false;
 		}
-		
-		Player player = (Player) sender;
+
+		Player p = (Player) sender;
 
 		if (args.length > 0) {
 
 			switch (args[0]) {
 			case "edit":
-				main.editBook(player);
+				main.editBook(p);
 				break;
 			case "tempo":
-				if(args.length > 1 && args[1] != null) {
-					main.setTempo(player, Integer.parseInt(args[1]));
+				if (args.length > 1) {
+					main.setTempo(p, Integer.parseInt(args[1]));
 				}
 				break;
 			case "sync":
-				if(args.length > 1 && args[1] != null) {
-					main.askSync(player, args[1]);
+				if (args.length > 1) {
+					main.askSync(p, Bukkit.getPlayer(args[1]));
 				}
 				break;
 			case "unsync":
-				main.unsync(player);
+				main.unsync(p);
 				break;
 			case "confirm":
-				if(args.length > 1 && args[1] != null) {
-					main.confirmSync(player, args[1]);
+				if (args.length > 1) {
+					main.confirmSync(p, Bukkit.getPlayer(args[1]));
 				}
 				break;
 			case "deny":
-				main.denySync(player);
+				if (args.length > 1) {
+					main.denySync(p, Bukkit.getPlayer(args[1]));
+				}
 				break;
-			case "getbook":
-				if(player.isOp() || player.hasPermission("*")) {
-					main.getBook(player);
+			case "give":
+				if (p.isOp() || p.hasPermission("*")) {
+					if (args.length > 1 && args[1] != null) {
+						main.getBook(Bukkit.getPlayer(args[1]));
+					}
 				}
 				break;
 			default:
 				return false;
 			}
-			
+
 			return true;
-		} else {
-			return false;
+		}
+		else {
+			p.sendMessage("§c/music edit - §7Edit a signed sheet music owned by you");
+			p.sendMessage("§c/music tempo [1-1200] - §7Sets tempo you play sheet music at");
+			p.sendMessage("§c/music sync [player] - §7Requests syncing sheet music with a player");
+			p.sendMessage("§c/music unsync [player] - §7Unsyncs");
+			return true;
 		}
 	}
 }
