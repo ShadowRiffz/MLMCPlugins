@@ -238,7 +238,7 @@ public class CulinarianUtils {
 			}
 		}
 		if(isSmelted) {
-			if(!(inv.containsAtLeast(new ItemStack(Material.COAL), (int) Math.ceil(amount / 8)))) {
+			if(!(inv.containsAtLeast(new ItemStack(Material.COAL), (int) Math.ceil((double) amount / 8)))) {
 				return false;
 			}
 		}
@@ -291,7 +291,7 @@ public class CulinarianUtils {
 						}
 					}
 					if(isSmelted) {
-						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
+						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double) amount / 8)));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
@@ -355,7 +355,7 @@ public class CulinarianUtils {
 						}
 					}
 					if(isSmelted) {
-						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double)(amount / 8))));
+						inv.removeItem(util.setAmount(new ItemStack(Material.COAL), (int) Math.ceil((double) amount / 8)));
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
