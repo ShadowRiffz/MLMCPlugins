@@ -425,22 +425,22 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void unsync(Player player) {
-		player.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
 
 		stopPlaying(player);
 
 		if (!this.syncedPlayers.contains(player)) {
 			return;
 		}
+		player.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
 		syncedPlayers.remove(player);
 
 		HashSet<Player> syncSet = getsyncSet(player);
 		if (syncSet.size() < 3) { // if updated syncSet will have nobody synced to each other
 			for (Player p : syncSet) {
-				syncedPlayers.remove(p);
-				if (player.getName().equals(p.getName())) {
+				if (syncedPlayers.contains(p)) {
 					p.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
 				}
+				syncedPlayers.remove(p);
 			}
 			syncSets.remove(syncSet);
 		}
