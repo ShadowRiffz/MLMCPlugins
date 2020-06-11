@@ -136,8 +136,8 @@ public class StonecutterMethods {
 			cost = REFINE_ESSENCE_1;
 		}
 
-		int perm = ((oldLevel - LEVEL_INTERVAL)/ 10) - 2;
-		if (perm <= 0 || p.hasPermission("stonecutter.refine.tier." + perm)) {
+		int perm = ((oldLevel - LEVEL_INTERVAL)/ 10);
+		if (perm <= 1 || p.hasPermission("stonecutter.refine.tier." + perm)) {
 			if (econ.has(p, REFINE_COST * amount)) {
 				// Check if enough essence
 				if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
