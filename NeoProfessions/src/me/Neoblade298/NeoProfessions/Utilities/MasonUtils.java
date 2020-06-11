@@ -349,7 +349,7 @@ public class MasonUtils {
 					lore.remove(lineNum);
 
 					// Also remove bonus attributes line if necessary
-					if (lineNum + 1 == lore.size()) {
+					if (lineNum + 1 == lore.size() && count == 1) {
 						lore.remove(lineNum - 1);
 					}
 					break;
