@@ -210,7 +210,7 @@ public class Main extends JavaPlugin implements Listener {
 	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 	    					rs.next();
 							boss = rs.getString(2);
-	    					if (boss != null && p.isOnline()) {
+	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
 	    						if (!activeFights.containsKey(boss)) {
 	    							ArrayList<Player> players = new ArrayList<Player>();
@@ -245,12 +245,12 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						p.setHealth(p.getMaxHealth());
 	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
-	    		    						if (!activeBosses.contains(boss)) {
+	    		    						if (!activeBosses.contains(boss) && p.isOnline()) {
 	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ", spawned boss.");
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
 	    		    						}
-	    		    						else {
+	    		    						else if (p.isOnline()) {
 	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 	    		    						}
 	    				    			}
