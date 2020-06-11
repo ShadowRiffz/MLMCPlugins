@@ -274,7 +274,7 @@ public class Main extends JavaPlugin implements Listener {
 		List<String> pages = ((BookMeta) book.getItemMeta()).getPages();
 		List<String> notes = new ArrayList<String>();
 		for (String page : pages) {
-			page = page.replaceAll("\n", " ");
+			page = ChatColor.stripColor(page.replaceAll("\n", " "));
 			notes.addAll(Arrays.asList(page.split(" ")));
 		}
 		String[] notesArr = Arrays.copyOf(notes.toArray(), notes.toArray().length, String[].class);

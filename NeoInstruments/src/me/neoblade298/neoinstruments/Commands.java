@@ -16,7 +16,12 @@ public class Commands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if (!(sender instanceof Player) || !sender.hasPermission("music.use")) {
+		if (!(sender instanceof Player)) {
+			if (args[0].equalsIgnoreCase("give") && args.length > 1) {
+				main.getBook(Bukkit.getPlayer(args[1]));
+			}
+		}
+		if (!sender.hasPermission("music.use")) {
 			return false;
 		}
 
