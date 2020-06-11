@@ -210,7 +210,7 @@ public class Main extends JavaPlugin implements Listener {
 	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 	    					rs.next();
 							boss = rs.getString(2);
-	    					if (boss != null) {
+	    					if (boss != null && p.isOnline()) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
 	    						if (!activeFights.containsKey(boss)) {
 	    							ArrayList<Player> players = new ArrayList<Player>();
