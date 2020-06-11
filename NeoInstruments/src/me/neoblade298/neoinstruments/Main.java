@@ -319,7 +319,6 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void editBook(Player player) {
 		ItemStack item = player.getInventory().getItemInMainHand();
-		System.out.println(((BookMeta) item.getItemMeta()).getGeneration());
 		if (item.getType() == Material.WRITTEN_BOOK
 				&& ((BookMeta) item.getItemMeta()).getAuthor().equals(player.getName())
 				&& ((BookMeta) item.getItemMeta()).getGeneration() == null
