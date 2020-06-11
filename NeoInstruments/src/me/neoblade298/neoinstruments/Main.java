@@ -23,6 +23,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -319,8 +320,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void editBook(Player player) {
 		ItemStack item = player.getInventory().getItemInMainHand();
+		System.out.println(((BookMeta) item.getItemMeta()).getGeneration());
 		if (item.getType() == Material.WRITTEN_BOOK
 				&& ((BookMeta) item.getItemMeta()).getAuthor().equals(player.getName())
+				&& ((BookMeta) item.getItemMeta()).getGeneration() == null
 				&& item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Sheet Music")) {
 			ItemStack newItem = new ItemStack(item);
 			newItem.setType(Material.WRITABLE_BOOK);
@@ -342,8 +345,8 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void setTempo(Player player, int bpm) {
-		if (bpm < 2) {
-			bpm = 2;
+		if (bpm < 1) {
+			bpm = 1;
 		}
 		long noteDelay = bpm;
 		if (!this.noteDelays.containsKey(player)) {
