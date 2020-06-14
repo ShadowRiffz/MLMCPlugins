@@ -11,7 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,33 +52,32 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	}
 	
 	@EventHandler
-	public void onDamage(EntityDamageEvent e) {
-		if (e.getEntity() instanceof Player) {
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if (e.getEntity() instanceof Player && !(e.getDamager() instanceof Player)) {
 			Player p = (Player) e.getEntity();
 			if (p.getAbsorptionAmount() > 0) {
 				e.setDamage(1);
 				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 >= 0 ? p.getAbsorptionAmount() - 1 : 0);
 			}
 			
-			// Iron bond collection
+			// Iron bond collection activate
 			if (p.getHealth() <= e.getFinalDamage()) {
 				List<Entity> nearby = p.getNearbyEntities(20, 20, 20);
-				System.out.println(p.getHealth() + ", " + e.getFinalDamage());
 				for (Entity ent : nearby) {
 					if (ent instanceof Player && ent.hasPermission("collections.sh.use.36")) {
 						Player bond = (Player) ent;
 						if (!FlagManager.hasFlag(bond, "cd_ironBond") &&
 								bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() && bond.isValid() &&
-								!p.getName().equals(bond.getName())) {
+								!p.getName().equals(bond.getName()) && bond.getHealth() > e.getFinalDamage()) {
 							FlagManager.addFlag(bond, "cd_ironBond", 60 * 20);
 							p.sendMessage("§cIron Bond§7 was activated by §e"  + bond.getName());
 							bond.sendMessage("§cIron Bond§7 was activated");
 							ironbond.put(p, bond);
 							FlagManager.addFlag(p, "fl_ironBond", 5 * 20);
-							bond.damage(e.getDamage());
+							bond.setHealth(bond.getHealth() - e.getFinalDamage());
+							bond.damage(1, e.getDamager());
 				    		BukkitRunnable ironBondCooldown = new BukkitRunnable() {
 				    			public void run() {
-				    				System.out.println(p.getName() + " off cooldown");
 		    						if (bond.isOnline()) {
 		    							bond.sendMessage("§cIron Bond§7 is off cooldown");
 		    						}
@@ -91,10 +90,13 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 					}
 				}
 			}
+			// Iron bond collection continued
 			if (FlagManager.hasFlag(p, "fl_ironBond")) {
 				Player bond = ironbond.get(p);
-				if (bond.isValid() && bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth()) {
-					bond.damage(e.getDamage());
+				if (bond.isValid() && bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() &&
+						bond.getHealth() > e.getFinalDamage()) {
+					bond.setHealth(bond.getHealth() - e.getFinalDamage());
+					bond.damage(1, e.getDamager());
 					e.setCancelled(true);
 				}
 			}
