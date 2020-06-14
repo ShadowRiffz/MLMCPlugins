@@ -74,8 +74,13 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 							bond.sendMessage("§cIron Bond§7 was activated");
 							ironbond.put(p, bond);
 							FlagManager.addFlag(p, "fl_ironBond", 5 * 20);
-							bond.setHealth(bond.getHealth() - e.getFinalDamage());
-							bond.damage(1, e.getDamager());
+							if (bond.getAbsorptionAmount() >= 1) {
+								bond.setHealth(bond.getHealth() - e.getFinalDamage());
+								bond.damage(1, e.getDamager());
+							}
+							else {
+								bond.setAbsorptionAmount(bond.getAbsorptionAmount() - 1 > 0 ? bond.getAbsorptionAmount() - 1 : 0);
+							}
 				    		BukkitRunnable ironBondCooldown = new BukkitRunnable() {
 				    			public void run() {
 		    						if (bond.isOnline()) {
@@ -95,8 +100,13 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				Player bond = ironbond.get(p);
 				if (bond.isValid() && bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() &&
 						bond.getHealth() > e.getFinalDamage()) {
-					bond.setHealth(bond.getHealth() - e.getFinalDamage());
-					bond.damage(1, e.getDamager());
+					if (bond.getAbsorptionAmount() < 1) {
+						bond.setHealth(bond.getHealth() - e.getFinalDamage());
+						bond.damage(1, e.getDamager());
+					}
+					else {
+						bond.setAbsorptionAmount(bond.getAbsorptionAmount() - 1 > 0 ? bond.getAbsorptionAmount() - 1 : 0);
+					}
 					e.setCancelled(true);
 				}
 			}
