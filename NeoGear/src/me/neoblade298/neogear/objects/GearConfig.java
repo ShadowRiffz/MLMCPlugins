@@ -27,10 +27,11 @@ public class GearConfig {
 	public int enchantmentMax;
 	public Attributes attributes;
 	public HashMap<String, RarityBonuses> rarities;
+	public double price;
 	
 	public GearConfig(Main main, String name, String display, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
 			ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, int enchantmentMin, int enchantmentMax, Attributes attributes,
-			HashMap<String, RarityBonuses> rarities) {
+			HashMap<String, RarityBonuses> rarities, double price) {
 		
 		// Add color codes to all strings necessary
 		for (String prefix : prefixes) {

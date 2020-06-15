@@ -1,15 +1,20 @@
 package me.neoblade298.neogear;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
+
+import net.md_5.bungee.api.ChatColor;
 
 
 public class Commands implements CommandExecutor{
@@ -17,9 +22,13 @@ public class Commands implements CommandExecutor{
 	Main main;
 	ArrayList<String> validAttrs;
 	private static final String DEFAULT_SET = "random";
+	private HashMap<Player, Long> sellConfirm;
+	private HashMap<Player, ItemStack> sellItem;
 	
 	public Commands(Main main) {
 		this.main = main;
+		sellConfirm = new HashMap<Player, Long>();
+		sellItem = new HashMap<Player, ItemStack>();
 	}
 	
 	@Override
@@ -90,6 +99,24 @@ public class Commands implements CommandExecutor{
 				}
 				else {
 					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned item");
+				}
+			}
+			// Gear sell [player]
+			else if (args.length == 2 && args[0].equalsIgnoreCase("sell")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				// Confirm the sell
+				if (sellConfirm.containsKey(p)) {
+					long lastConfirm = sellConfirm.get(p);
+					if (System.currentTimeMillis() - lastConfirm < 5000 && p.getInventory().getItemInMainHand().equals(sellItem.get(p))) {
+						sellHand(p);
+					}
+					else {
+						initiateSell(p);
+					}
+				}
+				// Initiate the sell
+				else {
+					initiateSell(p);
 				}
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
@@ -192,5 +219,87 @@ public class Commands implements CommandExecutor{
 			}
 		}
 		return level;
+	}
+	
+	private void sellHand(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			int level = -1;
+			String type = null;
+			for (String line : item.getItemMeta().getLore()) {
+				if (line.contains("Level")) {
+					level = Integer.parseInt(line.split(" ")[2]);
+				}
+				else if (line.contains("Tier")) {
+					String[] lineSplit = line.split(" ");
+					if (lineSplit.length == 3) {
+						type = lineSplit[2];
+					}
+					else if (lineSplit.length == 4) {
+						type = lineSplit[2] + " " + lineSplit[3];
+					}
+					type = ChatColor.stripColor(type).toLowerCase();
+					if (main.typeConverter.containsKey(type)) {
+						type = main.typeConverter.get(type);
+					}
+				}
+			}
+			if (level != -1 && type != null) {
+				main.getEcon().depositPlayer(p, main.settings.get(type).get(level).price);
+				p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+				p.sendMessage("§4[§c§lMLMC§4] §7You sold " + item.getItemMeta().getDisplayName() + " §7for §e" +
+						main.settings.get(type).get(level).price + "g§7!");
+				sellConfirm.remove(p);
+				sellItem.remove(p);
+			}
+			else {
+				p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
+				return;
+			}
+		}
+		else {
+			p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
+			return;
+		}
+	}
+	
+	private void initiateSell(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			int level = -1;
+			String type = null;
+			for (String line : item.getItemMeta().getLore()) {
+				if (line.contains("Level")) {
+					level = Integer.parseInt(line.split(" ")[2]);
+				}
+				else if (line.contains("Tier")) {
+					String[] lineSplit = line.split(" ");
+					if (lineSplit.length == 3) {
+						type = lineSplit[2];
+					}
+					else if (lineSplit.length == 4) {
+						type = lineSplit[2] + " " + lineSplit[3];
+					}
+					type = ChatColor.stripColor(type).toLowerCase();
+					if (main.typeConverter.containsKey(type)) {
+						type = main.typeConverter.get(type);
+					}
+				}
+			}
+			if (level != -1 && type != null) {
+				p.sendMessage("§c[§4§lMLMC§c] §7Are you sure you want to sell " + item.getItemMeta().getDisplayName() + " §7for §e" +
+						main.settings.get(type).get(level).price + "g§7?");
+				sellConfirm.put(p, System.currentTimeMillis());
+				sellItem.put(p, item);
+			}
+			else {
+				p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
+				return;
+			}
+		}
+		else {
+			p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
+			return;
+		}
 	}
 }

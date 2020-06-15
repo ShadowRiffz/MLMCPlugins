@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neogear.objects.Attributes;
@@ -18,6 +19,7 @@ import me.neoblade298.neogear.objects.GearConfig;
 import me.neoblade298.neogear.objects.ItemSet;
 import me.neoblade298.neogear.objects.Rarity;
 import me.neoblade298.neogear.objects.RarityBonuses;
+import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, HashMap<Integer, GearConfig>> settings;
@@ -27,16 +29,45 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Rarity> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
 	public HashMap<String, ItemSet> itemSets;
+	public HashMap<String, String> typeConverter;
 	public Random gen;
+    private static Economy econ = null;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoGear Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 	    this.getCommand("gear").setExecutor(new Commands(this));
 		gen = new Random();
+		
+        if (!setupEconomy() ) {
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
+        typeConverter = new HashMap<String, String>();
+        typeConverter.put("reinforced helmet", "rhelmet");
+        typeConverter.put("reinforced chestplate", "rchestplate");
+        typeConverter.put("reinforced leggings", "rleggings");
+        typeConverter.put("reinforced boots", "rboots");
+        typeConverter.put("infused helmet", "ihelmet");
+        typeConverter.put("infused chestplate", "ichestplate");
+        typeConverter.put("infused leggings", "ileggings");
+        typeConverter.put("infused boots", "iboots");
 
 		loadConfigs();
 	}
+	
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoGear Disabled");
@@ -93,6 +124,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			String name = gearCfg.getString("name");
 			String display = gearCfg.getString("display");
 			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
+			double price = gearCfg.getDouble("price");
 			
 			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
 			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
@@ -129,7 +161,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
 					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames, duraMinBase, reqEnchList, optEnchList,
-							enchMin, enchMax, attributes, rarities);
+							enchMin, enchMax, attributes, rarities, price);
 	
 					// Level override
 					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
@@ -251,6 +283,11 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			conf.material = material;
 		}
 		
+		double price = sec.getDouble("price", -1);
+		if (price != -1) {
+			conf.price = price;
+		}
+		
 		ConfigurationSection nameSec = sec.getConfigurationSection("display-name");
 		if (nameSec != null) {
 			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
@@ -307,5 +344,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		}
+	}
+	
+	public Economy getEcon() {
+		return econ;
 	}
 }
