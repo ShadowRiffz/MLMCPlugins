@@ -34,6 +34,7 @@ public class Commands implements CommandExecutor {
 				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
 				p.sendMessage(
 						"§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
+				p.sendMessage("§c/ppr auto [name] {racism} §7- Automatically creates and posts racism PPR");
 				p.sendMessage("§c/ppr offense §7- Sets offense for PPR");
 				p.sendMessage("§c/ppr action §7- Sets action for PPR");
 				p.sendMessage("§c/ppr desc §7- Sets description for PPR");
@@ -103,6 +104,18 @@ public class Commands implements CommandExecutor {
 							ppr.setDescription("Said the n-word");
 							ppr.preview(p);
 						}
+					}
+				}
+				if (args.length > 1 && args[0].equalsIgnoreCase("auto")) {
+					if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
+						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+						PPR ppr = new PPR(Main.nextPPR, author);
+						Main.nextPPR++;
+						ppr.setUser(args[1]);
+						ppr.setOffense("Racism");
+						ppr.setAction("Automuted by bot");
+						ppr.setDescription("Said the n-word");
+						ppr.post(p);
 					}
 				}
 				else if (args.length > 1 && args[0].equalsIgnoreCase("offense")) {
