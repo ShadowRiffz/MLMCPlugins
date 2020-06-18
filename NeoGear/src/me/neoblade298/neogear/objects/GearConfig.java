@@ -54,6 +54,7 @@ public class GearConfig {
 		this.enchantmentMin = enchantmentMin;
 		this.attributes = attributes;
 		this.rarities = rarities;
+		this.price = price;
 	}
 	
 	public ItemStack generateItem(String rarity, int level) {
