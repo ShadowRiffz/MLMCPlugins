@@ -2,6 +2,7 @@ package me.neoblade298.neochatmod;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
@@ -21,7 +22,7 @@ public class Main extends JavaPlugin implements Listener {
 	ArrayList<String> bannedWords = null;
 	
 	boolean muteTutorial = false;
-	String punishCmd = null; 
+	List<String> punishCmds = null; 
 
 	int X_BOUND_1 = -1578;
 	int X_BOUND_2 = -1168;
@@ -41,7 +42,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		// Load settings
 		muteTutorial = getConfig().getBoolean("mute-tutorial");
-		punishCmd = getConfig().getString("punish-command");
+		punishCmds = getConfig().getStringList("punish-commands");
 		
 		// Load banned words
 		bannedWords = (ArrayList<String>) getConfig().getStringList("banned-words");
@@ -82,7 +83,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (msg.toUpperCase().contains(word)) {
 				e.setCancelled(true);
 				try {
-					Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), punishCmd.replaceAll("%player%", e.getPlayer().getName()))).get();
+					for (String cmd : punishCmds) {
+						Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", e.getPlayer().getName()))).get();
+					}
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
