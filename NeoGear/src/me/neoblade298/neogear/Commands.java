@@ -292,7 +292,6 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			if (level != -1 && type != null) {
-				System.out.println(rarity);
 				double price = main.settings.get(type).get(level).price * main.rarities.get(rarity).priceModifier;
 				p.sendMessage("§c[§4§lMLMC§c] §7Are you sure you want to sell " + item.getItemMeta().getDisplayName() + " §7for §e" +
 						price + "g§7?");
