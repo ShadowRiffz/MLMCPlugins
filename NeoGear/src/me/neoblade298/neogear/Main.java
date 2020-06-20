@@ -92,7 +92,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		ConfigurationSection raritySec = this.cfg.getConfigurationSection("rarities");
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
-			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"), specificRarity.getString("display-name"));
+			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"), specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"));
 			this.rarities.put(rarity, rarityObj);
 		}
 		

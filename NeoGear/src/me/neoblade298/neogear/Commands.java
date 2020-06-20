@@ -226,12 +226,14 @@ public class Commands implements CommandExecutor{
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			int level = -1;
 			String type = null;
+			String rarity = null;
 			for (String line : item.getItemMeta().getLore()) {
 				if (line.contains("Level")) {
 					level = Integer.parseInt(line.split(" ")[2]);
 				}
 				else if (line.contains("Tier")) {
 					String[] lineSplit = line.split(" ");
+					rarity = ChatColor.stripColor(lineSplit[1]).toLowerCase();
 					if (lineSplit.length == 3) {
 						type = lineSplit[2];
 					}
@@ -245,10 +247,11 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			if (level != -1 && type != null) {
-				main.getEcon().depositPlayer(p, main.settings.get(type).get(level).price);
+				double price = main.settings.get(type).get(level).price * main.rarities.get(rarity).priceModifier;
+				main.getEcon().depositPlayer(p, price);
 				p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 				p.sendMessage("§4[§c§lMLMC§4] §7You sold " + item.getItemMeta().getDisplayName() + " §7for §e" +
-						main.settings.get(type).get(level).price + "g§7!");
+						price + "g§7!");
 				sellConfirm.remove(p);
 				sellItem.remove(p);
 			}
@@ -268,12 +271,14 @@ public class Commands implements CommandExecutor{
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			int level = -1;
 			String type = null;
+			String rarity = null;
 			for (String line : item.getItemMeta().getLore()) {
 				if (line.contains("Level")) {
 					level = Integer.parseInt(line.split(" ")[2]);
 				}
 				else if (line.contains("Tier")) {
 					String[] lineSplit = line.split(" ");
+					rarity = ChatColor.stripColor(lineSplit[1]).toLowerCase();
 					if (lineSplit.length == 3) {
 						type = lineSplit[2];
 					}
@@ -287,8 +292,10 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			if (level != -1 && type != null) {
+				System.out.println(rarity);
+				double price = main.settings.get(type).get(level).price * main.rarities.get(rarity).priceModifier;
 				p.sendMessage("§c[§4§lMLMC§c] §7Are you sure you want to sell " + item.getItemMeta().getDisplayName() + " §7for §e" +
-						main.settings.get(type).get(level).price + "g§7?");
+						price + "g§7?");
 				sellConfirm.put(p, System.currentTimeMillis());
 				sellItem.put(p, item);
 			}
