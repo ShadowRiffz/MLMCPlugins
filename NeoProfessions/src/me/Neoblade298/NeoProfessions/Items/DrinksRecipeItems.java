@@ -255,7 +255,7 @@ public class DrinksRecipeItems {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(common.getEssence(20, true));
 		recipe.add(ingr.getVodka());
-		recipe.add(new ItemStack(Material.INK_SAC));
+		recipe.add(new ItemStack(Material.BLACK_DYE));
 		recipe.add(new ItemStack(Material.ICE));
 		recipe.add(new ItemStack(Material.SPIDER_EYE));
 		return recipe;

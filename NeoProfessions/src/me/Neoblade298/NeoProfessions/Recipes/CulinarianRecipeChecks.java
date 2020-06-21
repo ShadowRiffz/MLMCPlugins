@@ -85,13 +85,15 @@ public class CulinarianRecipeChecks {
 	}
 
 	public void checkBlackWidow(Player p, CraftingInventory inv) {
+		System.out.println("Check black widow");
 		if (p.hasPermission("recipes.drink1") && p.hasPermission("culinarian.bartender")) {
 			for (ItemStack i : drink.getBlackWidowRecipe()) {
 				if (i.getType().equals(Material.POTION)) {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
+						System.out.println("Missing " + i);
 						inv.setResult(null);
 						break;
 					}
@@ -110,7 +112,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -129,7 +131,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -148,7 +150,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 24);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -167,7 +169,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -186,7 +188,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -205,7 +207,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -224,7 +226,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -243,7 +245,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 23);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -262,7 +264,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -281,7 +283,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 23);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -300,7 +302,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -319,7 +321,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -338,7 +340,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 23);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -357,7 +359,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 24);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -376,7 +378,7 @@ public class CulinarianRecipeChecks {
 					checkAlcoholBase(inv, 22);
 				}
 				else {
-					if (!inv.containsAtLeast(i, 1)) {
+					if (!inventoryContainsSimilar(i, inv)) {
 						inv.setResult(null);
 						break;
 					}
@@ -403,5 +405,25 @@ public class CulinarianRecipeChecks {
 				}
 			}
 		}
+	}
+
+	public boolean inventoryContainsSimilar(ItemStack i1, CraftingInventory inv) {
+		ItemStack[] contents = inv.getContents();
+		for (ItemStack i2 : contents) {
+			if (i1 == null || i2 == null) {
+				continue;
+			}
+			if (!i1.hasItemMeta() && !i2.hasItemMeta()) {
+				if (i1.isSimilar(i2)) return true;
+				else continue;
+			}
+			else if (i1.hasItemMeta() && i2.hasItemMeta()) {
+				if (i1.getItemMeta().hasLore() && i2.getItemMeta().hasLore()) {
+					if (i1.getItemMeta().getLore().get(0).equals(i2.getItemMeta().getLore().get(0))) return true;
+					else continue;
+				}
+			}
+		}
+		return false;
 	}
 }
