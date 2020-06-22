@@ -27,6 +27,19 @@ public class Commands implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
+		if (!(sender instanceof Player)) {
+			if (args.length > 1 && args[0].equalsIgnoreCase("auto")) {
+				if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
+					PPR ppr = new PPR(Main.nextPPR, "Console");
+					Main.nextPPR++;
+					ppr.setUser(args[1]);
+					ppr.setOffense("Racism");
+					ppr.setAction("Automuted by bot");
+					ppr.setDescription("Said the n-word");
+					ppr.postConsole(sender);
+				}
+			}
+		}
 		if (sender.hasPermission("neopprs.admin") && sender instanceof Player) {
 			Player p = (Player) sender;
 			String author = p.getName();
@@ -104,18 +117,6 @@ public class Commands implements CommandExecutor {
 							ppr.setDescription("Said the n-word");
 							ppr.preview(p);
 						}
-					}
-				}
-				if (args.length > 1 && args[0].equalsIgnoreCase("auto")) {
-					if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
-						p.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
-						PPR ppr = new PPR(Main.nextPPR, author);
-						Main.nextPPR++;
-						ppr.setUser(args[1]);
-						ppr.setOffense("Racism");
-						ppr.setAction("Automuted by bot");
-						ppr.setDescription("Said the n-word");
-						ppr.post(p);
 					}
 				}
 				else if (args.length > 1 && args[0].equalsIgnoreCase("offense")) {

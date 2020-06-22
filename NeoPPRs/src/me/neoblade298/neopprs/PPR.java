@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PPR {
@@ -177,6 +178,28 @@ public class PPR {
 		catch(Exception e) {
 			System.out.println(e);
 			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+		}
+	}
+	public void postConsole(CommandSender s) {
+		try{  
+			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Statement stmt = con.createStatement();
+			// Post the PPR to SQL
+			stmt.executeUpdate("INSERT INTO neopprs_pprs VALUES (" + id + ",'" + author + "','" + user + "','" + uuid + "','" + date + "','" + offense + "','" + action + "','" + description +"')");
+			
+			// Get all alt accounts together
+			ArrayList<String> accounts = new ArrayList<String>();
+			accounts.add(uuid);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + uuid + "';");
+			while (rs.next()) {
+				accounts.add(rs.getString(6));
+			}
+			s.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+			con.close();
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	public void modify(Player p) {
