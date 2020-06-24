@@ -50,6 +50,7 @@ public class StonecutterMethods {
 		if (p.getInventory().firstEmpty() != -1) {
 			if (p.hasPermission("stonecutter.attribute." + attr)) {
 				int perm = (level - LEVEL_INTERVAL) / 10;
+				if (perm < 0) perm = 0;
 				if (perm <= 0 || p.hasPermission("stonecutter.gem." + type + "." + perm)) {
 					if (cm.hasEnough(p, "essence", level, GEM_ESSENCE)) {
 						if (cm.hasEnough(p, ore, level, GEM_ORES)) {
@@ -89,6 +90,7 @@ public class StonecutterMethods {
 		if (p.getInventory().firstEmpty() != -1) {
 			if (p.hasPermission("stonecutter.attribute." + attr)) {
 				int perm = (level - LEVEL_INTERVAL) / 10;
+				if (perm < 0) perm = 0;
 				if (perm <= 0 || p.hasPermission("stonecutter.overload." + type + "." + perm)) {
 					if (cm.hasEnough(p, "essence", level, GEM_ESSENCE)) {
 						if (cm.hasEnough(p, ore, level, GEM_ORES)) {
@@ -137,6 +139,7 @@ public class StonecutterMethods {
 		}
 
 		int perm = ((oldLevel - LEVEL_INTERVAL)/ 10);
+		if (perm < 0) perm = 0;
 		if (perm <= 1 || p.hasPermission("stonecutter.refine.tier." + perm)) {
 			if (econ.has(p, REFINE_COST * amount)) {
 				// Check if enough essence

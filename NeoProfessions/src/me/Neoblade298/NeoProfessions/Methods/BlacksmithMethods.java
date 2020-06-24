@@ -56,6 +56,7 @@ public class BlacksmithMethods {
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
 		int perm = (level - LEVEL_INTERVAL) / 10;
+		if (perm < 0) perm = 0;
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
@@ -234,6 +235,7 @@ public class BlacksmithMethods {
 					}
 					int itemLevel = util.getItemLevel(item);
 					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
+					if (perm < 0) perm = 0;
 					String rarity = util.getItemRarity(item);
 					if (itemLevel != -1 && rarity != null) {
 						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
@@ -278,6 +280,7 @@ public class BlacksmithMethods {
 			if (util.isGearReworked(item)) {
 				int itemLevel = util.getItemLevel(item);
 				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
+				if (perm < 0) perm = 0;
 				if (itemLevel != -1) {
 					if (perm <= 0 || p.hasPermission("blacksmith.scrap." + perm)) {
 						if (econ.has(p, SCRAP_COST)) {

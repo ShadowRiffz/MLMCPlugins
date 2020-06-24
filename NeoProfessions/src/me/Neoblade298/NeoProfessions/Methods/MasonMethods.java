@@ -88,6 +88,7 @@ public class MasonMethods {
 
 	public void createSlot(Player p, int level) {
 		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+		if (perm < 0) perm = 0;
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
@@ -261,6 +262,7 @@ public class MasonMethods {
 					if (util.isArmor(item)) {
 						int level = util.getItemLevel(item);
 						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+						if (perm < 0) perm = 0;
 						if (p.hasPermission("mason.slot.armor." + perm)) {
 							listeners.prepItemSlot(p, item, slot);
 						} else {
@@ -295,6 +297,7 @@ public class MasonMethods {
 				if (masonUtils.isSlotUsed(item, slot)) {
 					int level = util.getItemLevel(item);
 					int perm = (level/ 10) - 1;
+					if (perm < 0) perm = 0;
 					String line = masonUtils.getSlotLine(item, slot);
 					int slottedLevel = Integer.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
 					if (p.hasPermission("mason.unslot." + perm)) {
@@ -338,6 +341,7 @@ public class MasonMethods {
 				if (masonUtils.isSlotAvailable(item, slot)) {
 					int level = util.getItemLevel(item);
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
+					if (perm < 0) perm = 0;
 					if (level != -1) {
 						if (p.hasPermission("mason.engrave.tier." + perm)) {
 							if (cm.hasEnough(p, "essence", level, UNENGRAVE_ESSENCE)) {
