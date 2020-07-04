@@ -2,7 +2,6 @@ package me.neoblade298.neosapiaddons;
 
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -12,7 +11,6 @@ import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.custom.EditorOption;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 
 public class AttackChargeCondition extends CustomEffectComponent {
 
@@ -39,8 +37,8 @@ public class AttackChargeCondition extends CustomEffectComponent {
 
 	@Override
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
-		int min = settings.getInt("min");
-		int max = settings.getInt("max");
+		double min = settings.getDouble("min");
+		double max = settings.getDouble("max");
 		float charge = MythicMobs.inst().getVolatileCodeHandler().getItemRecharge((Player) caster);
 		return min <= charge && charge <= max;
 	}
