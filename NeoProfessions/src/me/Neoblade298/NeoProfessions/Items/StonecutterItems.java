@@ -23,7 +23,7 @@ public class StonecutterItems {
 	final int ARMOR_GEM_STR_PER_LVL = 1;
 	final int ARMOR_GEM_STR_BASE = 2;
 	final int ARMOR_GEM_VIT_PER_LVL = 7;
-	final int ARMOR_GEM_VIT_BASE = 0;
+	final int ARMOR_GEM_VIT_BASE = 1;
 	final int ARMOR_GEM_END_PER_LVL = 1;
 	final int ARMOR_GEM_END_BASE = 2;
 	final int OL_WEAPON_GEM_STR_RANGE = 3;
