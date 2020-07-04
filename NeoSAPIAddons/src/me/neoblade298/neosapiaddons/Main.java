@@ -149,7 +149,8 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new ValueMaxMechanic(),
             new SpawnMythicmobMechanic(),
             new AddAbsorptionMechanic(),
-            new AbsorptionCondition()
+            new AbsorptionCondition(),
+            new AttackChargeCondition()
         );
     }
 }
