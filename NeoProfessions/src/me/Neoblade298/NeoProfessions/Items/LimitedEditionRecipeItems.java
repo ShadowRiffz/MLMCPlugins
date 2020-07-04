@@ -29,6 +29,14 @@ public class LimitedEditionRecipeItems {
 	String BASE64_R14 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdmOGU3NDY2NTgzMzE2YThhYTU1ZjZlMTgzMzQ1YTRjNGU5ZjEwYjlkODdmZDExNzU3OTVkMjZiOWIzNzI4In19fQ";
 	String BASE64_R15 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjUyYzNmZDBmYWM2NGI5MzRjMTM0YTA2ZTY4NGZiMDQ3MmExNThhYWY2Nzk5NTMyMjdlNDc4YWYyZjgwMDQ1OCJ9fX0";
 	String BASE64_R16 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjAzMjM5ZjcwYTNjMjUzNThiMjJhMjliZTFiZmQxYjk4NWVlOTVmMjg2MzQ4YjRlMGYyMmYzNDc0MDk4MjViOCJ9fX0";
+	String BASE64_R17 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzc1MmQ3NWU4ZGUxNzExMTc4ZmJjMDI4ZDg4ZmU0ZWY5MDhiODkzZGM1Yzg4N2IzMzlkMDFmYjg4OGEyNCJ9fX0";
+	String BASE64_R18 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjc1NTg0ZTZmZDU0Y2EwMWRmNGVmZmQ1Zjc0NmIyZDgzYTU4OWRlNjc3NzU1NzU2YmI1OGQ5ZWEyODQ1MTYifX19";
+	String BASE64_R19 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGUyNjExNTE4MDM3NTM2NmJiMzRlZDE2YzI2Y2UyZDA0ZDkxZjdmNTI3Mjc2YWMyNDcwZTllYmFmMmRhZjM1In19fQ==";
+	String BASE64_R20 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTMyMzExODI5NWRlNjRjNWMzNDI5N2MyNWQxMWU0MWE4MjI4MDA0ZTRkOTFmOWQ1YzA4YzhlMWJlNDcyZDJhMyJ9fX0=";
+	String BASE64_R21 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2I3MGYyZmI1ZWJmNDlmNzlmZjNlODczNjE2ODYzYWU1ZDM2MmZiYmZjMzFhZWYyZGZiOTNkNmUxN2RiZjIifX19";
+	String BASE64_R22 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVkZDgzYTRhNTNiZGM2MjM2NGFiYTM2OTNhODNlMjhlMmQ2Nzk0Nzk0YmQ5MWQ0NTM1YzhlZmEzMzQ4YzIifX19";
+	String BASE64_R23 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM1MGFlZTg4MDEzZThmYWY0MjdlMTlmM2I4OTgyOGI4NmJiZjAzZGQyZjE3YzRjNzYwZDFkZGUyMmRlMyJ9fX0=";
+	String BASE64_R24 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTU0MTgxOWU4Zjc5NDVmYWY3YThmN2NjMTc1ZGNjNjRkNGUzOTc3MzE3ZjAxMjc0ZTNmZGYxOGE1NTE5NDQyMSJ9fX0=";
 
 	public LimitedEditionRecipeItems() {
 		util = new Util();
@@ -52,7 +60,7 @@ public class LimitedEditionRecipeItems {
 		list.add(getEscargot());
 		list.add(getVitalac());
 		list.add(getBelgianWaffle());
-		list.add(getVioletDirtPie());
+		list.add(getVioletDirtCake());
 		return list;
 	}
 	public ItemStack getCandyCorn() {
@@ -220,12 +228,100 @@ public class LimitedEditionRecipeItems {
 		return item;
 	}
 
-	public ItemStack getVioletDirtPie() {
+	public ItemStack getVioletDirtCake() {
 		ItemStack item = SkullCreator.itemFromBase64(BASE64_R16);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Violet's Dirt Pie");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 16");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getAvaBruschetta() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R17);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Ava's Bruschetta");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 17");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getAralicMuscadineWine() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R18);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Aralic's Muscadine Wine");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 18");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getMonaLemonBar() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R19);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Mona's Lemon Bars");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 19");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getNeoEggsBenedict() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R20);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Neo's Eggs Benedict");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 20");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getMattBeefFriedRice() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R21);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Matt's Beef Fried Rice");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 21");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getConversationHeart() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R22);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Conversation Heart");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 22");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getChocolateEgg() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R23);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Chocolate Egg");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 23");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	public ItemStack getPlayerPie() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R24);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Player's Pie");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Limited Edition Recipe 24");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -363,12 +459,81 @@ public class LimitedEditionRecipeItems {
 		return recipe;
 	}
 	
-	public ArrayList<ItemStack> getVioletDirtPieRecipe() {
+	public ArrayList<ItemStack> getVioletDirtCakeRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.DIRT, 3));
 		recipe.add(new ItemStack(Material.PUMPKIN_PIE, 2));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(util.setAmount(ingr.getHoney(), 3));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getAvaBruschettaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(ingr.getToast());
+		recipe.add(ingr.getTomato());
+		recipe.add(ingr.getOil());
+		recipe.add(ingr.getSalt());
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getAralicMuscadineWineRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(ingr.getGrapes(), 3));
+		recipe.add(ingr.getYeast());
+		recipe.add(new ItemStack(Material.SWEET_BERRIES));
+		recipe.add(new ItemStack(Material.APPLE));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getMonaLemonbarRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(ingr.getLemon(), 3));
+		recipe.add(ingr.getButter());
+		recipe.add(new ItemStack(Material.WHEAT));
+		recipe.add(new ItemStack(Material.MILK_BUCKET));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getNeoEggBenedictRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(new ItemStack(Material.EGG), 3));
+		recipe.add(util.setAmount(ingr.getGreens(), 2));
+		recipe.add(util.setAmount(ingr.getToast(), 3));
+		recipe.add(new ItemStack(Material.COOKED_PORKCHOP));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getMattBeefFriedRiceRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(ingr.getRice());
+		recipe.add(ingr.getOil());
+		recipe.add(ingr.getExoticGreens());
+		recipe.add(new ItemStack(Material.COOKED_BEEF));
+		recipe.add(new ItemStack(Material.CARROT));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getConversationHeartRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(new ItemStack(Material.SUGAR), 6));
+		recipe.add(util.setAmount(ingr.getGrapes(), 3));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getChocolateEggRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(new ItemStack(Material.SUGAR), 4));
+		recipe.add(util.setAmount(new ItemStack(Material.COCOA_BEANS), 4));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getPlayerPieRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(util.setAmount(new ItemStack(Material.LIME_DYE), 3));
+		recipe.add(util.setAmount(new ItemStack(Material.SUGAR), 2));
+		recipe.add(new ItemStack(Material.MILK_BUCKET));
+		recipe.add(util.setAmount(new ItemStack(Material.BREAD), 3));
 		return recipe;
 	}
 }

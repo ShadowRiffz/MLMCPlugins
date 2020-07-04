@@ -707,7 +707,7 @@ public class CulinarianMethods {
 				culinarianUtils.craftRecipe(p, econ, amount, ingr.getTequilaRecipe(), ingr.getTequila(), false, "Tequila");
 			}
 			else if(recipe.equalsIgnoreCase("grapes")) {
-				culinarianUtils.craftRecipe(p, econ, amount, ingr.getGrapesRecipe(), ingr.getGrapes(), false, "Grapes");
+				culinarianUtils.craftRecipe(p, econ, amount, ingr.getGrapesRecipe(), ingr.getGrapes(), true, "Grapes");
 			}
 		}
 		else {
@@ -1182,8 +1182,32 @@ public class CulinarianMethods {
 			else if(recipe.equalsIgnoreCase("belgian waffle")) {
 				culinarianUtils.craftRecipeMax(p, econ, ler.getBelgianWaffleRecipe(), ler.getBelgianWaffle(), false, "Belgian Waffle");
 			}
-			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
-				culinarianUtils.craftRecipeMax(p, econ, ler.getVioletDirtPieRecipe(), ler.getVioletDirtPie(), false, "Violet's Dirt Pie");
+			else if(recipe.equalsIgnoreCase("violet's dirt cake")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getVioletDirtCakeRecipe(), ler.getVioletDirtCake(), false, "Violet's Dirt Cake");
+			}
+			else if(recipe.equalsIgnoreCase("ava's bruschetta")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getVioletDirtCakeRecipe(), ler.getVioletDirtCake(), false, "Ava's Bruschetta");
+			}
+			else if(recipe.equalsIgnoreCase("aralic's muscadine wine")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getAralicMuscadineWineRecipe(), ler.getAralicMuscadineWine(), false, "Ava's Bruschetta");
+			}
+			else if(recipe.equalsIgnoreCase("mona's lemon bars")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getMonaLemonbarRecipe(), ler.getMonaLemonBar(), false, "Mona's Lemon Bars");
+			}
+			else if(recipe.equalsIgnoreCase("neo's eggs benedict")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getNeoEggBenedictRecipe(), ler.getNeoEggsBenedict(), false, "Neo's Eggs Benedict");
+			}
+			else if(recipe.equalsIgnoreCase("matt's beef fried rice")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getMattBeefFriedRiceRecipe(), ler.getMattBeefFriedRice(), false, "Matt's Beef Fried Rice");
+			}
+			else if(recipe.equalsIgnoreCase("conversation heart")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getConversationHeartRecipe(), ler.getConversationHeart(), false, "Conversation Heart");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate egg")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getChocolateEggRecipe(), ler.getChocolateEgg(), false, "Chocolate Egg");
+			}
+			else if(recipe.equalsIgnoreCase("player's pie")) {
+				culinarianUtils.craftRecipeMax(p, econ, ler.getPlayerPieRecipe(), ler.getPlayerPie(), false, "Player's Pie");
 			}
 		}
 		else {
@@ -1239,7 +1263,31 @@ public class CulinarianMethods {
 				culinarianUtils.craftRecipe(p, econ, amount, ler.getBelgianWaffleRecipe(), ler.getBelgianWaffle(), false, "Belgian Waffle");
 			}
 			else if(recipe.equalsIgnoreCase("violet's dirt pie")) {
-				culinarianUtils.craftRecipe(p, econ, amount, ler.getVioletDirtPieRecipe(), ler.getVioletDirtPie(), false, "Violet's Dirt Pie");
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getVioletDirtCakeRecipe(), ler.getVioletDirtCake(), false, "Violet's Dirt Cake");
+			}
+			else if(recipe.equalsIgnoreCase("ava's bruschetta")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getVioletDirtCakeRecipe(), ler.getVioletDirtCake(), false, "Ava's Bruschetta");
+			}
+			else if(recipe.equalsIgnoreCase("aralic's muscadine wine")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getAralicMuscadineWineRecipe(), ler.getAralicMuscadineWine(), false, "Ava's Bruschetta");
+			}
+			else if(recipe.equalsIgnoreCase("mona's lemon bars")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getMonaLemonbarRecipe(), ler.getMonaLemonBar(), false, "Mona's Lemon Bars");
+			}
+			else if(recipe.equalsIgnoreCase("neo's eggs benedict")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getNeoEggBenedictRecipe(), ler.getNeoEggsBenedict(), false, "Neo's Eggs Benedict");
+			}
+			else if(recipe.equalsIgnoreCase("matt's beef fried rice")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getMattBeefFriedRiceRecipe(), ler.getMattBeefFriedRice(), false, "Matt's Beef Fried Rice");
+			}
+			else if(recipe.equalsIgnoreCase("conversation heart")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getConversationHeartRecipe(), ler.getConversationHeart(), false, "Conversation Heart");
+			}
+			else if(recipe.equalsIgnoreCase("chocolate egg")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getChocolateEggRecipe(), ler.getChocolateEgg(), false, "Chocolate Egg");
+			}
+			else if(recipe.equalsIgnoreCase("player's pie")) {
+				culinarianUtils.craftRecipe(p, econ, amount, ler.getPlayerPieRecipe(), ler.getPlayerPie(), false, "Player's Pie");
 			}
 		}
 		else {
