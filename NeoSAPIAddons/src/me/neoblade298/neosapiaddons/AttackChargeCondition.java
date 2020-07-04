@@ -40,7 +40,7 @@ public class AttackChargeCondition extends CustomEffectComponent {
 		double min = settings.getDouble("min");
 		double max = settings.getDouble("max");
 		float charge = MythicMobs.inst().getVolatileCodeHandler().getItemRecharge((Player) caster);
-		return min <= charge && charge <= max;
+		return min <= charge && charge <= max && executeChildren(caster, lvl, targets);
 	}
 
 	@Override
