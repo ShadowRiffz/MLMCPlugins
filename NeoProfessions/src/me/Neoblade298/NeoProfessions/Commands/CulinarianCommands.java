@@ -119,7 +119,7 @@ public class CulinarianCommands implements CommandExecutor {
 						}
 					}
 					else if (args.length == 3) {
-						if(args[1].equalsIgnoreCase("all")) {
+						if(args[2].equalsIgnoreCase("all")) {
 							culinarianMethods.remedy(p, args[1], true);
 							return true;
 						}
