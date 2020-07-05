@@ -13,6 +13,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
+import me.neoblade298.neomythicextension.conditions.PlayersInBossCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
@@ -28,9 +29,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	private Logger log;
 	public ConcurrentHashMap<String, Integer> globalscores;
-	// ConcurrentHashMap of objectives which leads to ConcurrentHashMap of uuids to integers
+	// ConcurrentHashMap of objectives which leads to ConcurrentHashMap of uuids to
+	// integers
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
-	 
+
 	@Override
 	public void onEnable() {
 		log = this.getLogger();
@@ -38,92 +40,86 @@ public class Main extends JavaPlugin implements Listener {
 		globalscores = new ConcurrentHashMap<String, Integer>();
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 
-	    // Get command listener
-	    this.getCommand("nme").setExecutor(new Commands(this));
+		// Get command listener
+		this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
 	}
-	
-	public void onDisable(){
+
+	public void onDisable() {
 		log.info("NeoMythicExtensions Disabled!");
 	}
 
-	/*
-	 * Registers all of the custom mechanics when MythicMechanicLoadEvent is called
-	 */
-	/*@EventHandler
-	public void onMythicMechanicLoad(MythicMechanicLoadEvent event)	{
-		// Empty for now
-	}*/
-	
-	/*
-	 * Registers all of the custom conditions when MythicConditionLoadEvent is called
-	 */
 	@EventHandler
-	public void onMythicConditionLoad(MythicConditionLoadEvent event)	{
+	public void onMythicConditionLoad(MythicConditionLoadEvent event) {
 
-		if(event.getConditionName().equalsIgnoreCase("hasflag"))	{
+		if (event.getConditionName().equalsIgnoreCase("hasflag")) {
 			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if(event.getConditionName().equalsIgnoreCase("nglobalscore"))	{
+		if (event.getConditionName().equalsIgnoreCase("nglobalscore")) {
 			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if(event.getConditionName().equalsIgnoreCase("nscore"))	{
+		if (event.getConditionName().equalsIgnoreCase("nscore")) {
 			ScoreCondition condition = new ScoreCondition(event.getConfig());
 			event.register(condition);
 		}
+
+		if (event.getConditionName().equalsIgnoreCase("playersinboss")) {
+			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig());
+			event.register(condition);
+		}
 	}
-	
+
 	@EventHandler
 	public void onMythicTargeterLoad(MythicTargeterLoadEvent event) {
 
-		if(event.getTargeterName().equalsIgnoreCase("playersinboss") || 
-				event.getTargeterName().equalsIgnoreCase("pib"))	{
+		if (event.getTargeterName().equalsIgnoreCase("playersinboss")
+				|| event.getTargeterName().equalsIgnoreCase("pib")) {
 			PlayersInBossTargeter targeter = new PlayersInBossTargeter(event.getConfig());
 			event.register(targeter);
 		}
 	}
-	
+
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
 
-		if(event.getMechanicName().equalsIgnoreCase("instancetp"))	{
+		if (event.getMechanicName().equalsIgnoreCase("instancetp")) {
 			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("nscore"))	{
+		if (event.getMechanicName().equalsIgnoreCase("nscore")) {
 			ModScore mechanic = new ModScore(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("nglobalscore"))	{
+		if (event.getMechanicName().equalsIgnoreCase("nglobalscore")) {
 			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("warn"))	{
+		if (event.getMechanicName().equalsIgnoreCase("warn")) {
 			WarnMechanic mechanic = new WarnMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("taunt"))	{
+		if (event.getMechanicName().equalsIgnoreCase("taunt")) {
 			TauntMechanic mechanic = new TauntMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("flag"))	{
+		if (event.getMechanicName().equalsIgnoreCase("flag")) {
 			FlagMechanic mechanic = new FlagMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if(event.getMechanicName().equalsIgnoreCase("removeflag"))	{
+		if (event.getMechanicName().equalsIgnoreCase("removeflag")) {
 			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}
-	
+
 }
