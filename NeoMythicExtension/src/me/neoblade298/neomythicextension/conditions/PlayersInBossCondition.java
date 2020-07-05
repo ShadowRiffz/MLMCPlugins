@@ -15,7 +15,7 @@ public class PlayersInBossCondition extends SkillCondition implements IEntityCon
     
     public PlayersInBossCondition(MythicLineConfig mlc) {
         super(mlc.getLine());
-        this.boss = mlc.getString("boss", "Ratface");
+        this.boss = mlc.getString(new String[] {"boss", "b"}, "Ratface");
         this.min = mlc.getInteger("min", 0);
         this.max = mlc.getInteger("max", 0);
         this.nbi = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
