@@ -308,7 +308,7 @@ public class StonecutterItems {
 		ArrayList<String> lore = new ArrayList<String>();
 		int potency = 0;
 		int duraLost = 0;
-		int lvlDivided = level / 10;
+		int lvlDivided = level / 5;
 		if(isOverloaded) {
 			duraLost = OL_ARMOR_DURABILITY_BASE;
 			switch (attr) {
