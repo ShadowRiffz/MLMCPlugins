@@ -18,6 +18,7 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
     private boolean castinstead = false;
     private boolean stunchildren = false;
     private boolean action = true;
+    private int setgcd = -1;
     private String msg;
     
     public SkillAPIFlagCondition(MythicLineConfig mlc) {
@@ -29,6 +30,9 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
         }
         if(mlc.getString("stunchildren") != null) {
         	stunchildren = mlc.getString("stunchildren").equals("true");
+        }
+        if(mlc.getInteger("setgcd") != 0) {
+        	setgcd = mlc.getInteger("setgcd");
         }
         msg = mlc.getString("msg");
     }
@@ -66,6 +70,9 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 	    	        	    		}
 	            	    		}
 	            	    	}
+		    				if (setgcd != -1) {
+		    					am.setGlobalCooldown(setgcd);
+		    				}
 		    				
 		    				// If stun children, iterate through each child and also give them a stun tag
 		    				if(stunchildren) {
