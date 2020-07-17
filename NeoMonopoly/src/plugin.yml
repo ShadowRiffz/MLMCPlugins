@@ -1,11 +1,9 @@
-name: NeoBase
-main: me.neoblade298.base.Main
+name: NeoMonopoly
+main: me.neoblade298.neomonopoly.Monopoly
 author: [Neoblade298]
-depend: [MythicMobs]
 version: 1.0
-api-version: 1.14
+api-version: 1.16
 commands:
-   disenchant:
-      description: This command allows you to disenchant item in hand
-      usage: /disenchant
-      permission: disenchant.true
+   mono:
+      description: Main command
+      usage: /mono

@@ -1,0 +1,23 @@
+
+
+# Spaces on the board, in order from GO
+Spaces:
+  '0':
+    type: 'GO'
+  '1':
+    type: 'property'
+    name: 'Mediterranean Avenue'
+    price: 60
+    rent: '2,10,30,90,160,250'
+    houseprice: 50
+  '2':
+    type: 'communitychest'
+  '3':
+    type: 'property'
+    name: 'Baltic Avenue'
+    price: 60
+    rent: '4,20,60,180,320,450'
+    houseprice: 50
+  '4':
+    type: 'incometax'
+    
