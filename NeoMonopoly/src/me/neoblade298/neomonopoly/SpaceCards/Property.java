@@ -1,9 +1,12 @@
-package me.neoblade298.neomonopoly.Objects;
+package me.neoblade298.neomonopoly.SpaceCards;
+
+import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public abstract class Property implements Space {
 	private GamePlayer owner;
 	private boolean isMortgaged;
 	private int[] rent;
+	private String name;
 	
 	public void onLand(GamePlayer lander, int dice) {
 		
@@ -35,5 +38,13 @@ public abstract class Property implements Space {
 
 	public void setRent(int[] rent) {
 		this.rent = rent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -2,6 +2,8 @@ package me.neoblade298.neomonopoly.Objects;
 
 import java.util.ArrayList;
 
+import me.neoblade298.neomonopoly.SpaceCards.Property;
+
 public class GamePlayer {
 	private int numJailFree;
 	private int numRailroads;

@@ -1,4 +1,8 @@
-package me.neoblade298.neomonopoly.Objects;
+package me.neoblade298.neomonopoly.SpaceCards;
+
+import org.bukkit.ChatColor;
+
+import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class BuildableProperty extends Property {
 	private GamePlayer owner;
@@ -7,9 +11,23 @@ public class BuildableProperty extends Property {
 	private boolean isMonopoly;
 	private boolean isMortgaged;
 	private int[] rent;
+
+	private int price;
+	private int houseprice;
+	private String name;
+	private ChatColor color;
 	
-	public BuildableProperty() {
-		
+	public BuildableProperty(String name, int[] rent, int price, int houseprice, ChatColor color) {
+		numHouses = 0;
+		numHotels = 0;
+		isMonopoly = false;
+		isMortgaged = false;
+		owner = null;
+		this.name = name;
+		this.rent = rent;
+		this.price = price;
+		this.setHouseprice(houseprice);
+		this.color = color;
 	}
 
 	@Override
@@ -68,6 +86,37 @@ public class BuildableProperty extends Property {
 
 	public void setMonopoly(boolean isMonopoly) {
 		this.isMonopoly = isMonopoly;
+	}
+
+	public int getHouseprice() {
+		return houseprice;
+	}
+
+	public void setHouseprice(int houseprice) {
+		this.houseprice = houseprice;
+	}
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ChatColor getColor() {
+		return color;
+	}
+
+	public void setColor(ChatColor color) {
+		this.color = color;
 	}
 
 }
