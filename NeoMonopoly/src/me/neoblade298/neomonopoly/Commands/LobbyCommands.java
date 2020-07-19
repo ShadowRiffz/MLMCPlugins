@@ -124,14 +124,18 @@ public class LobbyCommands {
 	public void startGame(Player sender) {
 		Lobby lobby = main.inlobby.get(sender);
 		if (lobby.getPlayers().size() >= 2) {
-			Game game = new Game(lobby.getName(), lobby.getStartingMoney(), lobby.getPlayers());
-			main.games.put(lobby.getName(), game);
 			if (lobby.getHost().equals(sender)) {
-				for (Player p : lobby.getPlayers()) {
-					main.inlobby.remove(p);
-					main.ingame.put(p, game);
+				try {
+					Game game = new Game(lobby.getName(), lobby.getStartingMoney(), lobby.getPlayers(), main);
+					main.games.put(lobby.getName(), game);
+					for (Player p : lobby.getPlayers()) {
+						main.inlobby.remove(p);
+						main.ingame.put(p, game);
+					}
+					main.lobbies.remove(lobby.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				main.lobbies.remove(lobby.getName());
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can start the game!");

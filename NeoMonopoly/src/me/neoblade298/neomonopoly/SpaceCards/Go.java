@@ -5,16 +5,16 @@ import org.bukkit.ChatColor;
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
-public class GoToJail implements Space {
+public class Go implements Space {
 	private Game game;
 	
-	public GoToJail(Game game) {
+	public Go(Game game) {
 		this.game = game;
 	}
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		game.sendToJail(lander);
+		
 	}
 
 	@Override
@@ -44,11 +44,11 @@ public class GoToJail implements Space {
 	
 	@Override
 	public void displayProperty(GamePlayer gp) {
-		gp.message("&7[&cGo to Jail&7]");
+		gp.message("&7[&aGO&7]");
 	}
 	
 	@Override
 	public String getShorthand(GamePlayer gp) {
-		return "&7[&cGo to Jail&7]";
+		return "&7[&aGO&7]";
 	}
 }

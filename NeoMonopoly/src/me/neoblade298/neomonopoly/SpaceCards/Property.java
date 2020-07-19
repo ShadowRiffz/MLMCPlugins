@@ -2,49 +2,19 @@ package me.neoblade298.neomonopoly.SpaceCards;
 
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
-public abstract class Property implements Space {
-	private GamePlayer owner;
-	private boolean isMortgaged;
-	private int[] rent;
-	private String name;
+public interface Property extends Space {
 	
-	public void onLand(GamePlayer lander, int dice) {
-		
-	}
-	
-	public void onStart() {
-		
-	}
-
-	public GamePlayer getOwner() {
-		return owner;
-	}
-
-	public void setOwner(GamePlayer owner) {
-		this.owner = owner;
-	}
-
-	public boolean isMortgaged() {
-		return isMortgaged;
-	}
-
-	public void setMortgaged(boolean isMortgaged) {
-		this.isMortgaged = isMortgaged;
-	}
-
-	public int[] getRent() {
-		return rent;
-	}
-
-	public void setRent(int[] rent) {
-		this.rent = rent;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void onLand(GamePlayer lander, int dice);
+	public void onOwned(GamePlayer owner);
+	public void onUnowned(GamePlayer formerOwner);
+	public void onStart(GamePlayer starter);
+	public GamePlayer getOwner();
+	public void setOwner(GamePlayer owner);
+	public boolean isMortgaged();
+	public void setMortgaged(boolean isMortgaged);
+	public int[] getRent();
+	public void setRent(int[] rent);
+	public String getName();
+	public void setName(String name);
+	int calculateRent(int dice);
 }

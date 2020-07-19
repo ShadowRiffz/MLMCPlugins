@@ -77,6 +77,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono properties {player} §7- Views owned properties");
 				p.sendMessage("§c/mono mortgage # §7- Mortgages a property");
 				p.sendMessage("§c/mono view {player}§7- Views the space you're on");
+				p.sendMessage("§c/mono paybills§7- Pays any bills you owe");
 				p.sendMessage("§c/mono build #§7- Builds a house/hotel on a property");
 				p.sendMessage("§c/mono destroy # §7- Destroys a house/hotel on a property");
 				p.sendMessage("§c/mono trade §7- Shows all commands related to trading");
