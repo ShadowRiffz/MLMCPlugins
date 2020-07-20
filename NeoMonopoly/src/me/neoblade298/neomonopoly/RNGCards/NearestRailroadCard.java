@@ -20,19 +20,19 @@ public class NearestRailroadCard extends RNGCard {
 		new BukkitRunnable() { public void run() {
 			int pos = gp.getPosition();
 			if (pos < 5) {
-				game.movePlayerAbsolute(gp, 5, true, false);
+				game.movePlayerAbsolute(gp, 5, true, true);
 			}
 			else if (pos < 15) {
-				game.movePlayerAbsolute(gp, 15, true, false);
+				game.movePlayerAbsolute(gp, 15, true, true);
 			}
 			else if (pos < 25) {
-				game.movePlayerAbsolute(gp, 25, true, false);
+				game.movePlayerAbsolute(gp, 25, true, true);
 			}
 			else if (pos < 35) {
-				game.movePlayerAbsolute(gp, 35, true, false);
+				game.movePlayerAbsolute(gp, 35, true, true);
 			}
 			else {
-				game.movePlayerAbsolute(gp, 5, true, false);
+				game.movePlayerAbsolute(gp, 5, true, true);
 			}
 			Railroad rr = (Railroad) game.board.get(gp.getPosition());
 			rr.onRNGLand(gp);

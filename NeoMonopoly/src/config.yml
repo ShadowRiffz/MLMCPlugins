@@ -20,6 +20,7 @@ spaces:
     color: 'd'
   '4':
     type: 'tax'
+    name: 'Income'
     price: 200
   '5':
     type: 'railroad'
@@ -208,11 +209,12 @@ spaces:
     color: '9'
   '38':
     type: 'tax'
+    name: 'Luxury'
     price: 100
   '39':
     type: 'property'
     name: 'Boardwalk'
-    price: 320
+    price: 400
     rent: '50,200,600,1400,1700,2000'
     houseprice: 200
     color: '9'

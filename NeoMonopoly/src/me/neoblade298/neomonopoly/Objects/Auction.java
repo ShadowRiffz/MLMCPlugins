@@ -12,6 +12,7 @@ public class Auction {
 	private int bid;
 	private Property property;
 	private GamePlayer topBidder;
+	private GamePlayer host;
 	
 	public Auction(Game game, Property property, GamePlayer host) {
 		this.game = game;
@@ -19,6 +20,7 @@ public class Auction {
 		this.participants = new ArrayList<GamePlayer>(game.gameplayers);
 		this.bid = 0;
 		this.topBidder = host;
+		this.host = host;
 
 		game.broadcast("&7An auction for &e" + property.getName() + "&7 has begun! &e30 &7seconds remaining!");
 		BukkitRunnable endAuction = new BukkitRunnable() {
@@ -70,9 +72,12 @@ public class Auction {
 	}
 	
 	public void endAuction() {
-		game.broadcast("&7The winner of the auction for &e" + property.getName() + "&7is &e" + topBidder + " with &a$" + bid + "&7!");
+		game.broadcast("&7The winner of the auction for &e" + property.getName() + " &7is &e" + topBidder + " with &a$" + bid + "&7!");
 		property.setOwner(topBidder);
+		topBidder.getProperties().add(property);
 		property.onOwned(topBidder);
+		game.requiredActions.get(host).remove(0);
+		game.checkEndTurn(host);
 	}
 	
 	public void display(GamePlayer gp) {

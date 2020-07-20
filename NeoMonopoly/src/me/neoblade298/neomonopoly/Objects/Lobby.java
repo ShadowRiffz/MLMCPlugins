@@ -17,6 +17,23 @@ public class Lobby {
 		players.add(p);
 		this.name = name;
 		this.invited = new ArrayList<Player>();
+		this.money = 2000;
+	}
+	
+	public String getPlayerList() {
+		String msg = new String();
+		for (int i = 0; i < players.size(); i++) {
+			msg += "§e" + players.get(i).getName();
+			if (i != players.size() - 1) msg += "§7, ";
+		}
+		return msg;
+	}
+	
+	public void broadcast(String msg) {
+		for (Player p : players) {
+			String message = "&4[&c&lMLMC&4] &7" + msg;
+			p.sendMessage(message.replaceAll("&", "§"));
+		}
 	}
 
 	public ArrayList<Player> getInvited() {

@@ -5,16 +5,20 @@ import org.bukkit.ChatColor;
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
-public class CommunityChest implements Space {
+public class Tax implements Space {
 	private Game game;
+	private int amount;
+	private String type;
 	
-	public CommunityChest(Game game) {
+	public Tax(Game game, int amount, String type) {
 		this.game = game;
+		this.amount = amount;
+		this.type = type;
 	}
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		game.drawChest(lander);
+		game.billPlayer(lander, this.amount, null);
 		game.isBusy = false;
 	}
 
@@ -45,12 +49,12 @@ public class CommunityChest implements Space {
 	
 	@Override
 	public void displayProperty(GamePlayer gp) {
-		gp.message("&7[&fCommunity Chest&7]");
+		gp.message("&7[&f" + type + " Tax&7 (&e" + amount + "&7]");
 	}
 	
 	@Override
 	public String getShorthand(GamePlayer gp) {
-		return "&7[&fCommunity Chest&7]";
+		return "&7[&f" + type + " Tax&7 (&e" + amount + "&7]";
 	}
 
 }

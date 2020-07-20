@@ -61,6 +61,7 @@ public class Commands implements CommandExecutor{
 			if (args.length == 0) {
 				p.sendMessage("§4[§c§lMonopoly§4]");
 				p.sendMessage("§7Lobby name: §e" + lobby.getName());
+				p.sendMessage("§7Players: §e" + lobby.getPlayerList());
 				p.sendMessage("§c/mono leave §7- Leave the lobby you're in");
 				p.sendMessage("§c/mono start §7- Start the game (host only)");
 				p.sendMessage("§c/mono invite [player] §7- Invite a player to the lobby (host only)");
@@ -89,7 +90,7 @@ public class Commands implements CommandExecutor{
 				lobbyCommands.kickPlayer(p, args[1]);
 				return true;
 			}
-			else if (args.length == 3 && args[1].equalsIgnoreCase("set")) {
+			else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
 				if (args[1].equalsIgnoreCase("money")) {
 					lobbyCommands.setStartingMoney(p, args[2]);
 					return true;
@@ -110,8 +111,9 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
 				p.sendMessage("§c/mono property [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
+				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono end [name] §7- End a game");
+					p.sendMessage("§4/mono endgame [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
 					p.sendMessage("§4/mono check [name] §7- Checks what game a player is in");
 				}
@@ -166,8 +168,8 @@ public class Commands implements CommandExecutor{
 			}
 			// mono summary [player]
 			else if (args[0].equalsIgnoreCase("summary")) {
-				Player view = Bukkit.getPlayer(args[1]);
-				if (args.length == 2 && view != null) {
+				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
+					Player view = Bukkit.getPlayer(args[1]);
 					gameCommands.summarize(p, view);
 					return true;
 				}
@@ -178,12 +180,12 @@ public class Commands implements CommandExecutor{
 			}
 			// mono color [color] {player}
 			else if (args[0].equalsIgnoreCase("color")) {
-				Player view = Bukkit.getPlayer(args[2]);
-				if (args.length == 3 && view != null) {
+				if (args.length == 3 && Bukkit.getPlayer(args[2]) != null) {
+					Player view = Bukkit.getPlayer(args[2]);
 					gameCommands.viewColor(p, view, args[1]);
 					return true;
 				}
-				else if (args.length == 1) {
+				else if (args.length == 2) {
 					gameCommands.viewColor(p, p, args[1]);
 					return true;
 				}
@@ -195,8 +197,8 @@ public class Commands implements CommandExecutor{
 			}
 			// mono properties {player}
 			else if (args[0].equalsIgnoreCase("properties")) {
-				Player view = Bukkit.getPlayer(args[1]);
-				if (args.length == 2 && view != null) {
+				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
+					Player view = Bukkit.getPlayer(args[1]);
 					gameCommands.listProperties(p, view);
 					return true;
 				}
@@ -206,14 +208,23 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			// mono property [name]
-			else if (args.length == 1 && args[0].equalsIgnoreCase("property")) {
-				gameCommands.viewProperty(p, args[1]);
+			else if (args.length > 1 && args[0].equalsIgnoreCase("property")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
+				}
+				gameCommands.viewProperty(p, name);
+				return true;
+			}
+			// mono end {player}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("end")) {
+				gameCommands.endTurn(p);
 				return true;
 			}
 			// mono view {player}
 			else if (args[0].equalsIgnoreCase("view")) {
-				Player view = Bukkit.getPlayer(args[1]);
-				if (args.length == 2 && view != null) {
+				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
+					Player view = Bukkit.getPlayer(args[1]);
 					gameCommands.viewPlayer(p, view);
 					return true;
 				}
@@ -245,7 +256,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			// mono bid [amount]
-			else if (args.length == 1 && args[0].equalsIgnoreCase("bid")) {
+			else if (args.length == 2 && args[0].equalsIgnoreCase("bid")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.bidAuction(p, Integer.parseInt(args[1]));
 					return true;
@@ -348,7 +359,7 @@ public class Commands implements CommandExecutor{
 		}
 		
 		if (p.hasPermission("neomonopoly.admin")) {
-			if (args.length == 2 && args[0].equalsIgnoreCase("end")) {
+			if (args.length == 2 && args[0].equalsIgnoreCase("endgame")) {
 				adminCommands.endGame(p, args[1]);
 				return true;
 			}

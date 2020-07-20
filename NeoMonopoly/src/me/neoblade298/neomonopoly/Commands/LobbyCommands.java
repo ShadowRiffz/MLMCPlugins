@@ -35,7 +35,7 @@ public class LobbyCommands {
 		Lobby lobby = new Lobby(sender, name);
 		main.inlobby.put(sender, lobby);
 		main.lobbies.put(name, lobby);
-		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby &e" + lobby.getName() + "&7!");
+		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby §e" + lobby.getName() + "§7!");
 	}
 
 	public void joinLobby(String name, Player sender) {
@@ -47,8 +47,9 @@ public class LobbyCommands {
 		Lobby lobby = main.lobbies.get(name);
 		ArrayList<Player> invited = lobby.getInvited();
 		if (invited.contains(sender)) {
-			if (lobby.getPlayers().size() <= 3) {
-				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby &e" + lobby.getName() + "&7!");
+			if (lobby.getPlayers().size() <= 7) {
+				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby §e" + lobby.getName() + "§7!");
+				lobby.broadcast("&e" + sender.getName() + " &7has joined the lobby!");
 				lobby.getPlayers().add(sender);
 				lobby.getInvited().remove(sender);
 				main.inlobby.put(sender, lobby);
@@ -65,23 +66,30 @@ public class LobbyCommands {
 	public void leaveLobby(Player sender) {
 		Lobby lobby = main.inlobby.get(sender);
 		if (lobby.getHost().equals(sender)) {
+			lobby.broadcast("&7Lobby disbanded by host!");
 			for (Player p : lobby.getPlayers()) {
 				main.inlobby.remove(p);
 			}
 			main.lobbies.remove(lobby.getName());
-			sender.sendMessage("§4[§c§lMLMC§4] §7Lobby disbanded!");
 		}
 		else {
 			lobby.getPlayers().remove(sender);
 			main.inlobby.remove(sender);
 			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully left lobby!");
+			lobby.broadcast("&e" + sender.getName() + " &7has left the lobby!");
 		}
 	}
 
 	public void kickPlayer(Player sender, String name) {
 		Lobby lobby = main.inlobby.get(sender);
+		Player toKick = Bukkit.getPlayer(name);
+		if (toKick == null) {
+			return;
+		}
 		if (lobby.getHost().equals(sender)) {
 			lobby.getPlayers().remove(Bukkit.getPlayer(name));
+			Bukkit.getPlayer(name).sendMessage("&7You were kicked from the lobby!");
+			lobby.broadcast("&e" + name + "&7 has been kicked by the host!");
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can kick from lobby!");
@@ -90,8 +98,14 @@ public class LobbyCommands {
 
 	public void invitePlayer(Player sender, String name) {
 		Lobby lobby = main.inlobby.get(sender);
+		Player invited = Bukkit.getPlayer(name);
+		if (invited == null) {
+			return;
+		}
 		if (lobby.getHost().equals(sender)) {
-			lobby.getInvited().add(Bukkit.getPlayer(name));
+			lobby.getInvited().add(invited);
+			lobby.broadcast("&7Successfully invited &e" + invited.getName() + "&7!");
+			invited.sendMessage("§4[§c§lMLMC§4] §7You were invited to monopoly lobby §e" + lobby.getName() + "§7! Join with §c/mono join " + lobby.getName() + "§7.");
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can invite to lobby!");
@@ -115,7 +129,7 @@ public class LobbyCommands {
 
 		if (lobby.getHost().equals(sender)) {
 			main.inlobby.get(sender).setStartingMoney(amount);
-			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set starting money to §e" + amt + "!");
+			lobby.broadcast("&7Successfully set starting money to &e" + amt + "!");
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can change starting money!");

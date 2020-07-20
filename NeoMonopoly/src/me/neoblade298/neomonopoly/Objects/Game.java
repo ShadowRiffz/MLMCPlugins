@@ -56,6 +56,8 @@ public class Game {
 		usedChance = new ArrayList<RNGCard>();
 		orderDecider = new HashMap<GamePlayer, Integer>();
 		colors = new HashMap<ChatColor, ArrayList<BuildableProperty>>();
+		requiredActions = new HashMap<GamePlayer, ArrayList<String>>();
+		currentTurn = new ArrayList<GamePlayer>();
 		
 		// Load in data
 		main.loadBoard(board, this, colors);
@@ -66,12 +68,12 @@ public class Game {
 
 		// Initialize players
 		this.gameplayers = new ArrayList<GamePlayer>();
+		this.players = new HashMap<Player, GamePlayer>();
 		for (Player p : players) {
 			GamePlayer gp = new GamePlayer(p, money, this);
 			this.gameplayers.add(gp);
 			this.players.put(p, gp);
 			this.requiredActions.put(gp, new ArrayList<String>(Arrays.asList("ROLL_ORDER")));
-			this.orderDecider.put(gp, 0);
 		}
 		currentTurn = new ArrayList<GamePlayer>(gameplayers);
 		
@@ -84,24 +86,22 @@ public class Game {
 		
 		switch (action) {
 		case "ROLL_MOVE":
+			requiredActions.get(p).remove(0);
 			if (isDoubles) {
 				this.numDoubles++;
 				if (numDoubles >= 3) {
 					broadcast("&e" + p + " &crolled doubles 3 times in a row!");
 					sendToJail(p);
 					requiredActions.get(p).clear();
-					this.numDoubles = 0;
 					return;
 				}
-				requiredActions.get(p).remove(0);
 				broadcast("&e" + p + " &7rolled doubles! They can roll again!");
-				requiredActions.get(p).add(0, "ROLL_MOVE");
+				requiredActions.get(p).add("ROLL_MOVE");
 			}
-			new BukkitRunnable() { public void run () {
-				movePlayer(p, dice, true, true);
-			}}.runTaskLater(main, 40L);
+			movePlayer(p, dice, true, true);
 			break;
 		case "ROLL_PAY":
+			requiredActions.get(p).remove(0);
 			Utility space = (Utility) board.get(p.getPosition());
 			billPlayer(p, 10 * dice, space.getOwner());
 			break;
@@ -132,15 +132,6 @@ public class Game {
 	}
 	
 	public void endTurn(GamePlayer p) {
-		if (!p.equals(currentTurn.get(0))) {
-			p.message("&cIt's not your turn!");
-			return;
-		}
-		if (requiredActions.get(p).size() != 0) {
-			messageRequiredAction(p);
-			return;
-		}
-		
 		broadcast("&e" + p + " &7ends their turn!");
 		startTurn(true);
 	}
@@ -172,7 +163,7 @@ public class Game {
 			Game game = this;
 			new BukkitRunnable() { public void run() {
 				game.isBusy = false;
-				startTurn(true);
+				startTurn(false);
 			}}.runTaskLater(main, 40L);
 		}
 		else {
@@ -182,15 +173,27 @@ public class Game {
 	}
 	
 	public void startTurn(boolean nextPlayer) {
-		if (nextPlayer) currentTurn.add(currentTurn.remove(0));
+		this.numDoubles = 0;
+		if (nextPlayer) {
+			currentTurn.add(currentTurn.remove(0));
+		}
 		GamePlayer curr = currentTurn.get(0);
-		broadcast("It is now &e" + curr + "'s &7turn! Roll the dice with &c/mono roll&7!");
+		String msg = "It is now &e" + curr + "'s &7turn! ";
+		String action = requiredActions.get(curr).get(0);
+		if (action.equalsIgnoreCase("JAIL_ACTION")) {
+			msg += "&7They're jailed and must either type &c/mono payjail&7 to pay &a$50&7, &c/mono jailfree&7 to use a get out of "
+					+ "jail free card, or &c/mono roll &7to try to roll doubles to get out of jail.";
+		}
+		else if (action.equalsIgnoreCase("ROLL_MOVE")) {
+			msg += "&7Type &c/mono roll &7to roll the dice!";
+		}
+		broadcast(msg);
 		board.get(curr.getPosition()).onStart(curr);
 	}
 
 	public void broadcast(String msg) {
 		for (GamePlayer gp : gameplayers) {
-			String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("§", "&");
+			String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "§");
 			gp.getPlayer().sendMessage(message);
 		}
 	}
@@ -223,26 +226,40 @@ public class Game {
 	}
 	
 	public void movePlayer(GamePlayer p, int spaces, boolean passGo, boolean normalLand) {
+		Game game = this;
 		boolean passedGo = p.getPosition() + spaces >= 40;
 		p.move(spaces);
 		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
-		broadcast("&e" + p + " &7has landed on the space " + board.get(p.getPosition()).getShorthand(p));
-		if (normalLand) board.get(p.getPosition()).onLand(p, spaces);
+		broadcast("&e" + p + " &7has landed on " + board.get(p.getPosition()).getShorthand(p));
+		if (normalLand) {
+			new BukkitRunnable() { public void run() {
+				board.get(p.getPosition()).onLand(p, spaces);
+				game.checkEndTurn(p);
+			}}.runTaskLater(main, 20L);
+		}
 	}
 	
 	public void movePlayerAbsolute(GamePlayer p, int position, boolean passGo, boolean normalLand) {
-		boolean passedGo = p.getPosition() <= position;
+		Game game = this;
+		boolean passedGo = p.getPosition() >= position;
 		p.moveAbsolute(position);
 		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
-		broadcast("&e" + p + " &7has landed on the space " + board.get(p.getPosition()).getShorthand(p));
-		if (normalLand) board.get(p.getPosition()).onLand(p, 0);
+		broadcast("&e" + p + " &7has landed on " + board.get(p.getPosition()).getShorthand(p));
+		if (normalLand) {
+			new BukkitRunnable() { public void run() {
+				board.get(p.getPosition()).onLand(p, 0);
+				game.checkEndTurn(p);
+			}}.runTaskLater(main, 20L);
+		}
 	}
 	
 	public void sendToJail(GamePlayer gp) {
 		broadcast("&e" + gp + " &cis sent to jail!");
 		requiredActions.get(gp).clear();
+		endTurn(gp);
 		gp.setJailed(true);
 		gp.setPosition(10);
+		isBusy = false;
 	}
 	
 	public void payBill(GamePlayer payer) {
@@ -301,6 +318,7 @@ public class Game {
 				paid.setMoney(paid.getMoney() + amt);
 				broadcast("&e" + payer + " &7paid &e" + paid + " &a$" + amt + "&7! They now have &a$" + payer.getMoney() + "&7.");
 			}
+			checkEndTurn(payer);
 			return true;
 		}
 	}
@@ -332,11 +350,19 @@ public class Game {
 	}
 	
 	public void giveMoney(int amt, GamePlayer p, String msg) {
+		p.setMoney(p.getMoney() + amt);
 		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
 	}
 	
 	public void takeMoney(int amt, GamePlayer p, String msg) {
+		p.setMoney(p.getMoney() - amt);
 		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+	}
+	
+	public void checkEndTurn(GamePlayer gp) {
+		if (requiredActions.get(gp).size() == 0) {
+			gp.message("&cNo actions remaining! Manage properties or end your turn with /mono end!");
+		}
 	}
 	
 	public int getHouses() {
@@ -367,6 +393,7 @@ public class Game {
 		prop.setOwner(gp);
 		takeMoney(prop.getPrice(), gp, "&e" + gp + " &7has purchased " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.");
 		prop.onOwned(gp);
+		checkEndTurn(gp);
 	}
 	
 	public void onBankrupt() {
@@ -386,6 +413,7 @@ public class Game {
 	
 	public void startTrade(GamePlayer trader, GamePlayer tradee) {
 		this.trade = new Trade(this, trader, tradee);
+		broadcast("A trade has begun between &e" + trader + " &7 and &e" + tradee + "&7! &c/mono trade view&7!");
 	}
 	
 	public void forceEndGame() {

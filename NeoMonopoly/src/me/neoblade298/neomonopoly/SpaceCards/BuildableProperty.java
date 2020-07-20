@@ -39,7 +39,7 @@ public class BuildableProperty implements Property {
 	public void onLand(GamePlayer lander, int dice) {
 		// Auction or purchase
 		if (owner == null) {
-			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.requiredActions.get(lander).add(0, "UNOWNED_SPACE");
 			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
@@ -52,7 +52,7 @@ public class BuildableProperty implements Property {
 
 	@Override
 	public void onStart(GamePlayer starter) {
-		return;
+		game.requiredActions.get(starter).add("ROLL_MOVE");
 	}
 
 	public GamePlayer getOwner() {
@@ -143,11 +143,11 @@ public class BuildableProperty implements Property {
 		ArrayList<BuildableProperty> colorProps = game.colors.get(color);
 		int count = 0;
 		for (BuildableProperty prop : colorProps) {
-			if (prop.getOwner().equals(owner)) {
+			if (prop.getOwner() != null && prop.getOwner().equals(owner)) {
 				count++;
 			}
 		}
-		String msg = "&e" + this + " &7now owns &e" + count + "/" + colorProps.size() + " " + color + game.main.colorToString.get(color) +
+		String msg = "&e" + owner + " &7now owns &e" + count + "/" + colorProps.size() + " " + color + game.main.colorToString.get(color) +
 				" &7properties!";
 		if (count == colorProps.size()) {
 			for (BuildableProperty prop : colorProps) {
@@ -163,12 +163,12 @@ public class BuildableProperty implements Property {
 		ArrayList<BuildableProperty> colorProps = game.colors.get(color);
 		int count = 0;
 		for (BuildableProperty prop : colorProps) {
-			if (prop.getOwner().equals(formerOwner)) {
+			if (prop.getOwner() != null && prop.getOwner().equals(formerOwner)) {
 				count++;
 			}
 			prop.setMonopoly(false);
 		}
-		String msg = "&e" + this + " &7now owns &e" + count + "/" + colorProps.size() + " " + color + game.main.colorToString.get(color) +
+		String msg = "&e" + formerOwner + " &7now owns &e" + count + "/" + colorProps.size() + " " + color + game.main.colorToString.get(color) +
 				" &7properties!";
 		game.broadcast(msg);
 	}
@@ -225,12 +225,14 @@ public class BuildableProperty implements Property {
 			gp.message("&eRent&7: " + msg);
 			gp.message("&7Number of Houses: &e" + numHouses + "&7, Number of Hotels: &e" + numHotels);
 		}
-		gp.message("&cCurrently mortgaged. Price to unmortgage: &e" + price);
+		else {
+			gp.message("&cCurrently mortgaged. Price to unmortgage: &e" + price);
+		}
 	}
 	
 	@Override
 	public String getShorthand(GamePlayer gp) {
-		String ownerName = owner == null ? "Unowned" : owner.toString();
+		String ownerName = owner == null ? "&a$" + price : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
 	}
 	
@@ -241,7 +243,7 @@ public class BuildableProperty implements Property {
 	
 	@Override
 	public String listComponent() {
-		return "&7[" + color + name + "&7] &7Houses: &e" + numHouses + "&7, Hotels: &e" + numHotels + "&7, rent: &e" + calculateRent(0);
+		return "&7[" + color + name + "&7] &7Houses: &e" + numHouses + "&7, Hotels: &e" + numHotels + "&7, Rent: &e" + calculateRent(0);
 	}
 
 	@Override

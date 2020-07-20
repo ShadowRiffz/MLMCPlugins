@@ -28,8 +28,9 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!hasRequiredActions(game, gp) || !isPlayerTurn(game, gp)
-					|| !isRequiredAction(game, gp, "ROLL_") || isBusy(game, gp)) {
+			if (!isPlayerTurn(game, gp) || !hasRequiredActions(game, gp)
+					|| (!isRequiredAction(game, gp, "ROLL_") && (!isRequiredAction(game, gp, "JAIL_")))
+					|| !isBusy(game, gp)) {
 				return;
 			}
 
@@ -50,10 +51,10 @@ public class GameCommands {
 			new BukkitRunnable() {
 				public void run() {
 					if (dice1 == dice2) {
-						game.broadcast("&a" + dice1 + "! &lDOUBLES!");
+						game.broadcast("&a" + dice2 + "! &lDOUBLES! " + (dice1 + dice2) + " total.");
 					}
 					else {
-						game.broadcast("&a" + dice1 + "!");
+						game.broadcast("&a" + dice2 + "! " + (dice1 + dice2) + " total.");
 					}
 				}
 			}.runTaskLater(main, 50L);
@@ -82,6 +83,10 @@ public class GameCommands {
 			}
 			
 			int count = 0;
+			System.out.println(gpView + " " + gpView.getProperties());
+			if (gpView.getProperties().size() == 0) {
+				gp.message("&7No properties to show!");
+			}
 			for (Property prop : gpView.getProperties()) {
 				gp.message("&f" + count + ". " + prop.listComponent());
 				count++;
@@ -118,9 +123,11 @@ public class GameCommands {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !hasNoRequiredActions(game, gp) ||
-				!isBusy(game, gp)) {
+				!isBusy(game, gp) || !hasNoTrades(game, gp)) {
 				return;
 			}
+			
+			game.endTurn(gp);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
@@ -185,13 +192,15 @@ public class GameCommands {
 			GamePlayer gp = game.players.get(sender);
 			if (!main.ingame.containsKey(toView)) {
 				gp.message("&cThat player isn't in a game!");
+				return;
 			}
 			GamePlayer gpView = main.ingame.get(toView).players.get(toView);
 			if (!game.gameplayers.contains(gpView)) {
 				gp.message("&cThat player isn't in your game!");
+				return;
 			}
 			
-			game.board.get(gpView.getPosition()).displayProperty(gp);
+			gp.message("&e" + gpView + " &7is at: " + game.board.get(gpView.getPosition()).getShorthand(gpView));
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
@@ -282,7 +291,7 @@ public class GameCommands {
 			}
 			
 			for (BuildableProperty prop : game.colors.get(ccolor)) {
-				if (!prop.getOwner().equals(gpView)) {
+				if (prop == null || !prop.getOwner().equals(gpView)) {
 					missing.add(prop);
 				}
 			}
@@ -312,7 +321,7 @@ public class GameCommands {
 			
 			int count = 1;
 			for (GamePlayer p : game.currentTurn) {
-				gp.message("&f" + count + ". " + game.board.get(p.getPosition()).getShorthand(gp));
+				gp.message("&f" + count + ". &e" + p + " &7: "+ game.board.get(p.getPosition()).getShorthand(gp));
 				count++;
 			}
 		}
@@ -471,7 +480,7 @@ public class GameCommands {
 			}
 			
 			Property prop = (Property) game.board.get(gp.getPosition());
-			
+
 			game.startAuction(gp, prop);
 		}
 		else {
@@ -541,6 +550,8 @@ public class GameCommands {
 				return;
 			}
 			
+			game.requiredActions.get(gp).remove(0);
+			gp.getProperties().add(prop);
 			game.buyProperty(gp, prop);
 		}
 		else {
@@ -596,7 +607,7 @@ public class GameCommands {
 					|| !hasRequiredActions(game, gp) || !isRequiredAction(game, gp, "JAIL_")) {
 				return;
 			}
-
+			
 			gp.setJailed(false);
 			gp.resetJailTime();
 			game.requiredActions.get(gp).remove(0);
@@ -707,6 +718,14 @@ public class GameCommands {
 	private boolean canAfford(Game game, GamePlayer gp, int amount) {
 		if (gp.getMoney() < amount) {
 			gp.message("&cYou can't afford to do that!");
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean hasNoTrades(Game game, GamePlayer gp) {
+		if (game.trade != null) {
+			gp.message("&cYou must first cancel your trade! /mono trade cancel!");
 			return false;
 		}
 		return true;

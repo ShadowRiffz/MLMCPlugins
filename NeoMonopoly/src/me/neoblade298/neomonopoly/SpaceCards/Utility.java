@@ -114,13 +114,13 @@ public class Utility implements Property {
 	@Override
 	public void onOwned(GamePlayer owner) {
 		owner.setNumUtilities(owner.getNumUtilities() + 1);
-		game.broadcast("&e" + owner + " now owns &e" + owner.getNumUtilities() + " &7utilities.");
+		game.broadcast("&e" + owner + " &7now owns &e" + owner.getNumUtilities() + " &7utilities.");
 	}
 
 	@Override
 	public void onUnowned(GamePlayer formerOwner) {
 		owner.setNumUtilities(owner.getNumUtilities() + 1);
-		game.broadcast("&e" + owner + " now owns &e" + owner.getNumUtilities() + " &7utilities.");
+		game.broadcast("&e" + formerOwner + " &7now owns &e" + owner.getNumUtilities() + " &7utilities.");
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class Utility implements Property {
 	
 	@Override
 	public String getShorthand(GamePlayer gp) {
-		String ownerName = owner == null ? "Unowned" : owner.toString();
+		String ownerName = owner == null ? "&a$" + price : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
 	}
 	

@@ -167,6 +167,25 @@ public class Trade {
 		if (confirmA && confirmB) {
 			game.broadcast("&7Trade successful!");
 			display();
+			
+			for (Property prop : propertiesA) {
+				prop.onUnowned(traderA);
+				traderA.getProperties().remove(prop);
+				traderB.getProperties().add(prop);
+				prop.onOwned(traderB);
+			}
+			
+			for (Property prop : propertiesB) {
+				prop.onUnowned(traderB);
+				traderB.getProperties().remove(prop);
+				traderA.getProperties().add(prop);
+				prop.onOwned(traderA);
+			}
+			
+			traderA.setMoney(traderA.getMoney() + moneyB);
+			traderB.setMoney(traderB.getMoney() + moneyA);
+			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB);
+			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA);
 		}
 	}
 	

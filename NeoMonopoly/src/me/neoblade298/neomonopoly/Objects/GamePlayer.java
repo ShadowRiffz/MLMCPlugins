@@ -160,7 +160,7 @@ public class GamePlayer {
 	}
 
 	public void message(String msg) {
-		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("§", "&");
+		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "§");
 		player.sendMessage(message);
 	}
 

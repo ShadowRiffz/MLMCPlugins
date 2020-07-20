@@ -112,7 +112,7 @@ public class Railroad implements Property {
 	@Override
 	public void onUnowned(GamePlayer formerOwner) {
 		owner.setNumRailroads(owner.getNumRailroads() - 1);
-		game.broadcast("&e" + owner + " now owns &e" + owner.getNumRailroads() + " &7railroads.");
+		game.broadcast("&e" + formerOwner + " now owns &e" + owner.getNumRailroads() + " &7railroads.");
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class Railroad implements Property {
 	
 	@Override
 	public String getShorthand(GamePlayer gp) {
-		String ownerName = owner == null ? "Unowned" : owner.toString();
+		String ownerName = owner == null ? "&a$" + price : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
 	}
 	

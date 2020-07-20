@@ -49,6 +49,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		colorToString.put(ChatColor.LIGHT_PURPLE, "pink");
 		colorToString.put(ChatColor.DARK_AQUA, "cyan");
 		colorToString.put(ChatColor.GREEN, "green");
+		colorToString.put(ChatColor.DARK_RED, "red");
 		colorToString.put(ChatColor.GRAY, "grey");
 		colorToString.put(ChatColor.DARK_GRAY, "dark grey");
 		colorToString.put(ChatColor.YELLOW, "yellow");
@@ -77,14 +78,14 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 			ChatColor color = null;
 			switch (type) {
 			case "go":
-				board.add(new FreeSpace(game));
+				board.add(new Go(game));
 				break;
 			case "free":
 				board.add(new FreeSpace(game));
 				break;
 			case "property":
 				name = spaceConfig.getString("name");
-				rent = spaceConfig.getIntegerList("rent").stream().mapToInt(Integer::intValue).toArray();
+				rent = convertToInt(spaceConfig.getString("rent").split(","));
 				price = spaceConfig.getInt("price");
 				int houseprice = spaceConfig.getInt("houseprice");
 				color = ChatColor.getByChar(spaceConfig.getString("color").charAt(0));
@@ -94,7 +95,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 				break;
 			case "railroad":
 				name = spaceConfig.getString("name");
-				rent = spaceConfig.getIntegerList("rent").stream().mapToInt(Integer::intValue).toArray();
+				rent = convertToInt(spaceConfig.getString("rent").split(","));
 				color = ChatColor.getByChar(spaceConfig.getString("color").charAt(0));
 				price = spaceConfig.getInt("price");
 				property = new Railroad(name, rent, color, game, price);
@@ -102,11 +103,14 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 				break;
 			case "utility":
 				name = spaceConfig.getString("name");
-				rent = spaceConfig.getIntegerList("rent").stream().mapToInt(Integer::intValue).toArray();
+				rent = convertToInt(spaceConfig.getString("rent").split(","));
 				color = ChatColor.getByChar(spaceConfig.getString("color").charAt(0));
 				price = spaceConfig.getInt("price");
 				property = new Utility(name, rent, color, game, price);
 				board.add(property);
+				break;
+			case "gotojail":
+				board.add(new GoToJail(game));
 				break;
 			case "jail":
 				board.add(new Jail(game));
@@ -115,10 +119,13 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 				board.add(new CommunityChest(game));
 				break;
 			case "chance":
-				board.add(new Jail(game));
+				board.add(new Chance(game));
+				break;
+			case "tax":
+				board.add(new Tax(game, spaceConfig.getInt("price"), spaceConfig.getString("name")));
 				break;
 			default:
-				throw new Exception("Improper space card type");
+				throw new Exception("Improper space card type: " + type);
 			}
 		}
 	}
@@ -183,6 +190,14 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 				throw new Exception("Improper space card type");
 			}
 		}
+	}
+	
+	private int[] convertToInt(String[] rentString) {
+		int[] rent = new int[rentString.length];
+		for (int i = 0; i < rentString.length; i++ ) {
+			rent[i] = Integer.parseInt(rentString[i]);
+		}
+		return rent;
 	}
 	
 }
