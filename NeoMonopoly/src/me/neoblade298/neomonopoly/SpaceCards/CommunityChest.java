@@ -14,7 +14,7 @@ public class CommunityChest implements Space {
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		
+		game.drawChest(lander);
 	}
 
 	@Override

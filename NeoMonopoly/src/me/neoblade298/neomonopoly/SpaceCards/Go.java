@@ -14,7 +14,7 @@ public class Go implements Space {
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		
+		game.isBusy = false;
 	}
 
 	@Override

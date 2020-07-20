@@ -14,7 +14,7 @@ public class Chance implements Space {
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		
+		game.drawChance(lander);
 	}
 
 	@Override

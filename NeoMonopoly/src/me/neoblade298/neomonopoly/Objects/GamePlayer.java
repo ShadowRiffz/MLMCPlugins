@@ -11,13 +11,6 @@ import me.neoblade298.neomonopoly.SpaceCards.Railroad;
 import me.neoblade298.neomonopoly.SpaceCards.Utility;
 
 public class GamePlayer {
-	public int getNumUtilities() {
-		return numUtilities;
-	}
-
-	public void setNumUtilities(int numUtilities) {
-		this.numUtilities = numUtilities;
-	}
 
 	private int numJailFree;
 	private int numRailroads;
@@ -27,6 +20,44 @@ public class GamePlayer {
 	private Player player;
 	private int bills;
 	private GamePlayer billtaker;
+	private boolean isBankrupt;
+	private Game game;
+	private int jailTime;
+	private boolean isJailed;
+	private ArrayList<Property> properties;
+
+	public GamePlayer(Player player, int money, Game game) {
+		this.numRailroads = 0;
+		this.numUtilities = 0;
+		this.numJailFree = 0;
+		this.money = money;
+		this.position = 0;
+		this.player = player;
+		this.bills = 0;
+		this.isBankrupt = false;
+		this.game = game;
+		this.jailTime = 0;
+		this.isJailed = false;
+		this.properties = new ArrayList<Property>();
+	}
+	
+	
+	public int getNumUtilities() {
+		return numUtilities;
+	}
+
+	public void setNumUtilities(int numUtilities) {
+		this.numUtilities = numUtilities;
+	}
+
+	public boolean isBankrupt() {
+		return isBankrupt;
+	}
+
+	public void setBankrupt(boolean isBankrupt) {
+		this.isBankrupt = isBankrupt;
+	}
+
 	public GamePlayer getBilltaker() {
 		return billtaker;
 	}
@@ -43,8 +74,6 @@ public class GamePlayer {
 		this.game = game;
 	}
 
-	private Game game;
-	
 	public int getBills() {
 		return bills;
 	}
@@ -53,25 +82,14 @@ public class GamePlayer {
 		this.bills = bills;
 	}
 
-	public GamePlayer(Player player, int money, Game game) {
-		this.money = money;
-		this.position = 0;
-		this.numRailroads = 0;
-		this.numUtilities = 0;
-		this.numJailFree = 0;
-		this.bills = 0;
-		this.player = player;
-		this.game = game;
-	}
-	
 	public String toString() {
 		return player.getName();
 	}
-	
+
 	public void move(int spaces) {
 		this.position = (this.position += spaces) % 40;
 	}
-	
+
 	public void moveAbsolute(int space) {
 		this.position = space;
 	}
@@ -124,22 +142,32 @@ public class GamePlayer {
 		this.properties = properties;
 	}
 
-	private boolean isJailed;
-	private ArrayList<Property> properties;
 
 	public boolean isJailed() {
 		return isJailed;
+	}
+	
+	public int getJailTime() {
+		return jailTime;
+	}
+	
+	public void resetJailTime() {
+		jailTime = 0;
+	}
+	
+	public void addJailTime() {
+		jailTime++;
 	}
 
 	public void setJailed(boolean isJailed) {
 		this.isJailed = isJailed;
 	}
-	
+
 	public void message(String msg) {
 		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("§", "&");
 		player.sendMessage(message);
 	}
-	
+
 	public boolean equals(GamePlayer gp) {
 		return this.player.equals(gp.getPlayer());
 	}

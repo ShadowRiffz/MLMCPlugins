@@ -19,11 +19,6 @@ import me.neoblade298.neomonopoly.SpaceCards.*;
 public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 	private YamlConfiguration conf;
 	
-	// For copying into game sessions
-	public ArrayList<RNGCard> communitychest;
-	public ArrayList<RNGCard> chance;
-	public HashMap<ChatColor, ArrayList<BuildableProperty>> colors;
-	
 	// Player data structures
 	public HashMap<Player, Lobby> inlobby;
 	public HashMap<Player, Game> ingame;
@@ -61,22 +56,9 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 			saveResource("config.yml", false);
 		}
 		this.conf = YamlConfiguration.loadConfiguration(file);
-
-		// Initialize data structures
-		communitychest = new ArrayList<RNGCard>();
-		chance = new ArrayList<RNGCard>();
-		colors = new HashMap<ChatColor, ArrayList<BuildableProperty>>();
-
-		// Load in community chest and chance cards
-		try {
-			loadRNGCards(communitychest, conf.getConfigurationSection("communitychest"));
-			loadRNGCards(chance, conf.getConfigurationSection("chance"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void loadBoard(ArrayList<Space> board, Game game) throws Exception {
+	public void loadBoard(ArrayList<Space> board, Game game, HashMap<ChatColor, ArrayList<BuildableProperty>> colors) throws Exception {
 		ConfigurationSection spacesConfig = conf.getConfigurationSection("spaces");
 		for (String key : spacesConfig.getKeys(false)) {
 			ConfigurationSection spaceConfig = spacesConfig.getConfigurationSection(key);
@@ -101,7 +83,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 				int houseprice = spaceConfig.getInt("houseprice");
 				color = ChatColor.getByChar(spaceConfig.getString("color").charAt(0));
 				BuildableProperty buildableProperty = new BuildableProperty(name, rent, price, houseprice, color, game);
-				sortColor(buildableProperty);
+				sortColor(buildableProperty, colors);
 				board.add(buildableProperty);
 				break;
 			case "railroad":
@@ -140,7 +122,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		super.onDisable();
 	}
 
-	private void sortColor(BuildableProperty property) {
+	private void sortColor(BuildableProperty property, HashMap<ChatColor, ArrayList<BuildableProperty>> colors) {
 		if (colors.containsKey(property.getColor())) {
 			colors.get(property.getColor()).add(property);
 		}
@@ -151,44 +133,45 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 
-	private void loadRNGCards(ArrayList<RNGCard> list, ConfigurationSection sec) throws Exception {
+	public void loadRNGCards(ArrayList<RNGCard> list, Game game, String configSec) throws Exception {
+		ConfigurationSection sec = conf.getConfigurationSection(configSec);
 		for (String key : sec.getKeys(false)) {
 			ConfigurationSection card = sec.getConfigurationSection(key);
 			String type = card.getString("type");
 			
 			switch (type) {
 			case "buildingtax":
-				list.add(new BuildingTaxCard());
+				list.add(new BuildingTaxCard(game, card.getString("name"), card.getInt("house"), card.getInt("hotel")) );
 				break;
 			case "gainmoney":
-				list.add(new GainMoneyCard());
+				list.add(new GainMoneyCard(game, card.getString("name"), card.getInt("amount")));
 				break;
 			case "jail":
-				list.add(new JailCard());
+				list.add(new JailCard(game, card.getString("name")));
 				break;
 			case "jailfree":
-				list.add(new JailFreeCard());
+				list.add(new JailFreeCard(game, card.getString("name")));
 				break;
 			case "losemoney":
-				list.add(new LoseMoneyCard());
+				list.add(new LoseMoneyCard(game, card.getString("name"), card.getInt("amount")));
 				break;
 			case "move":
-				list.add(new MoveCard());
+				list.add(new MoveCard(game, card.getString("name"), card.getInt("move")));
 				break;
 			case "moverelative":
-				list.add(new MoveRelativeCard());
+				list.add(new MoveRelativeCard(game, card.getString("name"), card.getInt("move")));
 				break;
 			case "nearestrailroad":
-				list.add(new NearestRailroadCard());
+				list.add(new NearestRailroadCard(game, card.getString("name")));
 				break;
 			case "nearestutility":
-				list.add(new NearestUtilityCard());
+				list.add(new NearestUtilityCard(game, card.getString("name")));
 				break;
 			case "paymoney":
-				list.add(new PayMoneyCard());
+				list.add(new PayMoneyCard(game, card.getString("name"), card.getInt("amount")));
 				break;
 			case "takemoney":
-				list.add(new TakeMoneyCard());
+				list.add(new TakeMoneyCard(game, card.getString("name"), card.getInt("amount")));
 				break;
 			default:
 				throw new Exception("Improper space card type");

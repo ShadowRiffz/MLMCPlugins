@@ -30,12 +30,26 @@ public class Railroad implements Property {
 		// Auction or purchase
 		if (owner == null) {
 			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
 			if (!owner.equals(lander)) {
 				game.billPlayer(lander, calculateRent(dice), owner);
 			}
 		}
+		game.isBusy = false;
+	}
+	
+	public void onRNGLand(GamePlayer lander) {
+		if (owner == null) {
+			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+		}
+		else {
+			if (!owner.equals(lander)) {
+				game.billPlayer(lander, calculateRent(0) * 2, owner);
+			}
+		}
+		game.isBusy = false;
 	}
 
 	@Override
@@ -57,6 +71,10 @@ public class Railroad implements Property {
 
 	public void setOwner(GamePlayer owner) {
 		this.owner = owner;
+	}
+	
+	public boolean canMortgage() {
+		return true;
 	}
 
 	public boolean isMortgaged() {
@@ -95,6 +113,11 @@ public class Railroad implements Property {
 	public void onUnowned(GamePlayer formerOwner) {
 		owner.setNumRailroads(owner.getNumRailroads() - 1);
 		game.broadcast("&e" + owner + " now owns &e" + owner.getNumRailroads() + " &7railroads.");
+	}
+
+	@Override
+	public void onBankrupt(GamePlayer formerOwner) {
+		owner.setNumRailroads(owner.getNumRailroads() - 1);
 	}
 
 
@@ -139,9 +162,29 @@ public class Railroad implements Property {
 		String ownerName = owner == null ? "Unowned" : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
 	}
+	
+	@Override
+	public String getColoredName() {
+		return "&7[" + color + name + "&7)]";
+	}
+	
+	@Override
+	public String listComponent() {
+		return "&7[" + color + name + "&7] Rent: &e" + calculateRent(0);
+	}
 
 	@Override
 	public int calculateRent(int dice) {
 		return rent[owner.getNumRailroads() - 1];
+	}
+
+	@Override
+	public int getPrice() {
+		return price;
+	}
+
+	@Override
+	public void setPrice(int price) {
+		this.price = price;
 	}
 }

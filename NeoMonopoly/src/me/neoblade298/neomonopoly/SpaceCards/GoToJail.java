@@ -15,6 +15,7 @@ public class GoToJail implements Space {
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
 		game.sendToJail(lander);
+		game.isBusy = false;
 	}
 
 	@Override

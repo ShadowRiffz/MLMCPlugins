@@ -13,7 +13,7 @@ public class FreeSpace implements Space {
 	}
 	
 	public void onLand(GamePlayer lander, int dice) {
-		return;
+		game.isBusy = false;
 	}
 
 	public void onStart(GamePlayer starter) {

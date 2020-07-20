@@ -40,12 +40,14 @@ public class BuildableProperty implements Property {
 		// Auction or purchase
 		if (owner == null) {
 			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
 			if (!owner.equals(lander)) {
 				game.billPlayer(lander, calculateRent(dice), owner);
 			}
 		}
+		game.isBusy = false;
 	}
 
 	@Override
@@ -59,6 +61,10 @@ public class BuildableProperty implements Property {
 
 	public void setOwner(GamePlayer owner) {
 		this.owner = owner;
+	}
+	
+	public boolean canMortgage() {
+		return numHouses == 0 && numHotels == 0;
 	}
 
 	public boolean isMortgaged() {
@@ -168,6 +174,18 @@ public class BuildableProperty implements Property {
 	}
 
 	@Override
+	public void onBankrupt(GamePlayer formerOwner) {
+		ArrayList<BuildableProperty> colorProps = game.colors.get(color);
+		for (BuildableProperty prop : colorProps) {
+			prop.setMonopoly(false);
+		}
+		game.addHouses(numHouses);
+		game.addHotels(numHotels);
+		this.numHouses = 0;
+		this.numHotels = 0;
+	}
+
+	@Override
 	public Game getGame() {
 		return this.game;
 	}
@@ -214,6 +232,16 @@ public class BuildableProperty implements Property {
 	public String getShorthand(GamePlayer gp) {
 		String ownerName = owner == null ? "Unowned" : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
+	}
+	
+	@Override
+	public String getColoredName() {
+		return "&7[" + color + name + "&7)]";
+	}
+	
+	@Override
+	public String listComponent() {
+		return "&7[" + color + name + "&7] &7Houses: &e" + numHouses + "&7, Hotels: &e" + numHotels + "&7, rent: &e" + calculateRent(0);
 	}
 
 	@Override

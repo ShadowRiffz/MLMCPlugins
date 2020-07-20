@@ -13,10 +13,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neomonopoly.Monopoly;
 import me.neoblade298.neomonopoly.RNGCards.RNGCard;
 import me.neoblade298.neomonopoly.SpaceCards.BuildableProperty;
+import me.neoblade298.neomonopoly.SpaceCards.Property;
 import me.neoblade298.neomonopoly.SpaceCards.Space;
+import me.neoblade298.neomonopoly.SpaceCards.Utility;
 
 public class Game {
-	String name;
+	private String name;
 	public ArrayList<GamePlayer> gameplayers;
 	public HashMap<Player, GamePlayer> players;
 	private HashMap<GamePlayer, Integer> orderDecider;
@@ -27,11 +29,13 @@ public class Game {
 	private ArrayList<RNGCard> usedChest;
 	private ArrayList<RNGCard> unusedChance;
 	private ArrayList<RNGCard> usedChance;
-	private ArrayList<Space> board;
+	public ArrayList<Space> board;
 	public HashMap<ChatColor, ArrayList<BuildableProperty>> colors;
 	public boolean isBusy;
 	public boolean decidingOrder;
 	public Monopoly main;
+	public Auction auction;
+	public Trade trade;
 	
 	public HashMap<GamePlayer, ArrayList<String>> requiredActions;
 	public ArrayList<GamePlayer> currentTurn;
@@ -44,16 +48,20 @@ public class Game {
 		this.isBusy = false;
 		this.decidingOrder = true;
 		
-		// RNG cards and board
-		main.loadBoard(board, this);
-		unusedChest = new ArrayList<RNGCard>(main.communitychest);
-		unusedChance = new ArrayList<RNGCard>(main.chance);
+		// Data structure initialization
+		unusedChest = new ArrayList<RNGCard>();
+		unusedChance = new ArrayList<RNGCard>();
 		usedChest = new ArrayList<RNGCard>();
 		usedChance = new ArrayList<RNGCard>();
+		orderDecider = new HashMap<GamePlayer, Integer>();
+		colors = new HashMap<ChatColor, ArrayList<BuildableProperty>>();
+		
+		// Load in data
+		main.loadBoard(board, this, colors);
+		main.loadRNGCards(unusedChest, this, "communitychest");
+		main.loadRNGCards(unusedChance, this, "chance");
 		Collections.shuffle(unusedChest);
 		Collections.shuffle(unusedChance);
-		orderDecider = new HashMap<GamePlayer, Integer>();
-		colors = new HashMap<ChatColor, ArrayList<BuildableProperty>>(main.colors);
 
 		// Initialize players
 		this.gameplayers = new ArrayList<GamePlayer>();
@@ -81,26 +89,43 @@ public class Game {
 					broadcast("&e" + p + " &crolled doubles 3 times in a row!");
 					sendToJail(p);
 					requiredActions.get(p).clear();
+					this.numDoubles = 0;
 					return;
 				}
+				requiredActions.get(p).remove(0);
 				broadcast("&e" + p + " &7rolled doubles! They can roll again!");
 				requiredActions.get(p).add(0, "ROLL_MOVE");
 			}
 			new BukkitRunnable() { public void run () {
-				boolean passedGo = ((p.getPosition() + dice) / 40) > 0;
-				p.move(dice);
-				if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a$200&7!");
-				broadcast("&e" + p + " &7has landed on the space " + board.get(p.getPosition()).getShorthand(p));
-				board.get(p.getPosition()).onLand(p, dice);
-				isBusy = false;
+				movePlayer(p, dice, true, true);
 			}}.runTaskLater(main, 40L);
 			break;
 		case "ROLL_PAY":
+			Utility space = (Utility) board.get(p.getPosition());
+			billPlayer(p, 10 * dice, space.getOwner());
 			break;
 		case "ROLL_ORDER":
 			orderDecider.put(p, dice);
 			requiredActions.get(p).clear();
 			endTurnOrder(p);
+			break;
+		case "JAIL_ACTION":
+			requiredActions.get(p).remove(0);
+			if (isDoubles) {
+				broadcast("&e" + p + " &7rolled doubles! They can now leave jail!");
+				p.setJailed(false);
+				p.resetJailTime();
+				movePlayer(p, dice, true, true);
+				return;
+			}
+			broadcast("&e" + p + " &7failed to roll doubles!");
+			p.addJailTime();
+			if (p.getJailTime() >= 3) {
+				broadcast("&e" + p + " &7must pay 2x the fine to leave jail!");
+			}
+			billPlayer(p, 100, null);
+			p.setJailed(false);
+			p.resetJailTime();
 			break;
 		}
 	}
@@ -182,15 +207,34 @@ public class Game {
 			gp.message("&cYou must first roll to get the order players will be playing!");
 			break;
 		case "PAY_BILLS":
-			gp.message("&cYou must first get enough money to pay off your bill of &e" + gp.getBills() + "&c!");
+			gp.message("&cYou must first get enough money to pay off your bill of &e" + gp.getBills() + "&c! Use /mono paybills!");
 			break;
-		case "IN_JAIL":
+		case "JAIL_ACTION":
 			gp.message("&cYou must first either roll doubles, pay &e$50 &cwith /mono payjail, or use a jail free with /mono jailfree!");
 			break;
 		case "UNOWNED_SPACE":
 			gp.message("&cYou must first choose what to do with the space you landed on!");
 			break;
+		case "WAIT_PLAYERBILLS":
+			gp.message("&cSome players owe you money that must first be paid!");
+			break;
 		}
+	}
+	
+	public void movePlayer(GamePlayer p, int spaces, boolean passGo, boolean normalLand) {
+		boolean passedGo = p.getPosition() + spaces >= 40;
+		p.move(spaces);
+		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
+		broadcast("&e" + p + " &7has landed on the space " + board.get(p.getPosition()).getShorthand(p));
+		if (normalLand) board.get(p.getPosition()).onLand(p, spaces);
+	}
+	
+	public void movePlayerAbsolute(GamePlayer p, int position, boolean passGo, boolean normalLand) {
+		boolean passedGo = p.getPosition() <= position;
+		p.moveAbsolute(position);
+		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
+		broadcast("&e" + p + " &7has landed on the space " + board.get(p.getPosition()).getShorthand(p));
+		if (normalLand) board.get(p.getPosition()).onLand(p, 0);
 	}
 	
 	public void sendToJail(GamePlayer gp) {
@@ -200,7 +244,39 @@ public class Game {
 		gp.setPosition(10);
 	}
 	
-	public void billPlayer(GamePlayer payer, int amt, GamePlayer paid) {
+	public void payBill(GamePlayer payer) {
+		if (payer.getBills() > payer.getMoney()) {
+			payer.message("&cYou do not have enough money to pay your bills! You need &a$" + payer.getBills() + " &cbut only have &a$" + payer.getMoney() + "&c.");
+			return;
+		}
+		
+		int amt = payer.getBills();
+		payer.setMoney(payer.getMoney() - payer.getBills());
+		GamePlayer paid = payer.getBilltaker();
+		if (paid == null) {
+			broadcast("&e" + payer + " &7paid the bank &a$" + amt + "&7! They now have &a$" + payer.getMoney() + "&7.");
+		}
+		else {
+			paid.setMoney(paid.getMoney() + amt);
+			broadcast("&e" + payer + " &7paid &e" + paid + " &a$" + amt + "&7! They now have &a$" + payer.getMoney() + "&7.");
+		}
+		requiredActions.get(payer).remove("PAY_BILLS");
+		
+		
+		// Check for edge case where everyone owes the current player money due to the chance card
+		ArrayList<String> currentActions = requiredActions.get(currentTurn.get(0));
+		boolean allPaid = true;
+		if (currentActions.size() > 0 && currentActions.get(0).equals("WAIT_PLAYERBILLS")) {
+			for (GamePlayer p : requiredActions.keySet()) {
+				if (!p.equals(currentTurn.get(0))) {
+					if (requiredActions.get(p).size() != 0) allPaid = false;
+				}
+			}
+			if (allPaid) currentActions.remove("WAIT_PLAYERBILLS");
+		}
+	}
+	
+	public boolean billPlayer(GamePlayer payer, int amt, GamePlayer paid) {
 		if (payer.getMoney() < amt) {
 			payer.setBills(amt);
 			payer.setBilltaker(paid);
@@ -213,6 +289,7 @@ public class Game {
 				broadcast("&e" + payer + " &ccould not pay &e" + paid + " &a$" + amt + "&c! They only have &a$" + payer.getMoney() + "&c. "
 						+ "Destroy houses or mortgage properties to get money and type /mono paybills, or type /mono bankrupt to give up!");
 			}
+			return false;
 		}
 		else {
 			payer.setMoney(payer.getMoney() - amt);
@@ -223,10 +300,82 @@ public class Game {
 				paid.setMoney(paid.getMoney() + amt);
 				broadcast("&e" + payer + " &7paid &e" + paid + " &a$" + amt + "&7! They now have &a$" + payer.getMoney() + "&7.");
 			}
+			return true;
+		}
+	}
+	
+	public void drawChance(GamePlayer gp) {
+		RNGCard card = unusedChance.remove(0);
+		card.onDraw(gp, "Chance");
+		if (unusedChance.size() == 0) {
+			unusedChance = new ArrayList<RNGCard>(usedChance);
+			Collections.shuffle(unusedChance);
+			usedChance.clear();
+		}
+		else {
+			usedChance.add(card);
+		}
+	}
+	
+	public void drawChest(GamePlayer gp) {
+		RNGCard card = unusedChest.remove(0);
+		card.onDraw(gp, "Community Chest");
+		if (unusedChest.size() == 0) {
+			unusedChest = new ArrayList<RNGCard>(usedChest);
+			Collections.shuffle(unusedChest);
+			usedChest.clear();
+		}
+		else {
+			usedChest.add(card);
 		}
 	}
 	
 	public void giveMoney(int amt, GamePlayer p, String msg) {
 		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+	}
+	
+	public void takeMoney(int amt, GamePlayer p, String msg) {
+		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+	}
+	
+	public int getHouses() {
+		 return numHouses;
+	}
+	
+	public int getHotels() {
+		return numHotels;
+	}
+	
+	public void addHouses(int num) {
+		numHouses += num;
+	}
+	
+	public void addHotels(int num) {
+		numHotels += num;
+	}
+	
+	public void buyProperty(GamePlayer gp, Property prop) {
+		prop.setOwner(gp);
+		takeMoney(prop.getPrice(), gp, "&e" + gp + " &7has purchased " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.");
+		prop.onOwned(gp);
+	}
+	
+	public void onBankrupt() {
+		if (currentTurn.size() == 1) {
+			GamePlayer winner = currentTurn.get(0);
+			broadcast("&a&l" + winner + " is the winner! They have $" + winner.getMoney() + "!");
+			for (GamePlayer gp : gameplayers) {
+				main.ingame.remove(gp.getPlayer());
+			}
+			main.games.remove(this.name);
+		}
+	}
+	
+	public void startAuction(GamePlayer gp, Property prop) {
+		this.auction = new Auction(this, prop, gp);
+	}
+	
+	public void startTrade(GamePlayer trader, GamePlayer tradee) {
+		this.trade = new Trade(this, trader, tradee);
 	}
 }

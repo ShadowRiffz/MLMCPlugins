@@ -72,20 +72,43 @@ public class Commands implements CommandExecutor{
 		
 		else if (main.ingame.containsKey(p)) {
 			if (args.length == 0) {
-				p.sendMessage("§4[§c§lMonopoly§4]");
+				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
+				p.sendMessage("§7[] = Required, {} = Optional");
 				p.sendMessage("§c/mono roll §7- Rolls the dice");
-				p.sendMessage("§c/mono properties {player} §7- Views owned properties");
-				p.sendMessage("§c/mono mortgage # §7- Mortgages a property");
-				p.sendMessage("§c/mono view {player}§7- Views the space you're on");
-				p.sendMessage("§c/mono paybills§7- Pays any bills you owe");
-				p.sendMessage("§c/mono build #§7- Builds a house/hotel on a property");
-				p.sendMessage("§c/mono destroy # §7- Destroys a house/hotel on a property");
-				p.sendMessage("§c/mono trade §7- Shows all commands related to trading");
-				p.sendMessage("§c/mono bankrupt §7- Give up everything, continue to spectate");
-				p.sendMessage("§c/mono quit §7- Bankrupt and exit the game");
+				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
+				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
+				p.sendMessage("§c/mono positions §7- Shows where every player is");
+				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
+				p.sendMessage("§c/mono property [name] §7- View a property's info card");
+				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 			}
 			
-			if (args.length == 1 && args[0].equalsIgnoreCase("trade")) {
+			else if (args.length == 1 && args[0].equals("1")) {
+				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
+				p.sendMessage("§7[] = Required, {} = Optional");
+				p.sendMessage("§c/mono roll §7- Rolls the dice");
+				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
+				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
+				p.sendMessage("§c/mono positions §7- Shows where every player is");
+				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
+				p.sendMessage("§c/mono property [name] §7- View a property's info card");
+				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
+				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
+			}
+			
+			else if (args.length == 1 && args[0].equals("2")) {
+				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
+				p.sendMessage("§7[] = Required, {} = Optional");
+				p.sendMessage("§c/mono mortgage/unmortgage # §7- Mortgages/unmortgages a property");
+				p.sendMessage("§c/mono buy/auction §7- Buy/auction the unowned property you're on");
+				p.sendMessage("§c/mono bid [money] §7- Bid on an active auction");
+				p.sendMessage("§c/mono auction view/leave§7 - View or leave the auction");
+				p.sendMessage("§c/mono trade §7- Shows all commands related to trading");
+				p.sendMessage("§c/mono bankrupt §7- Give up everything, continue to spectate");
+				p.sendMessage("§c/mono quit §7- Exit the game completely");
+			}
+			
+			else if (args.length == 1 && args[0].equalsIgnoreCase("trade")) {
 				p.sendMessage("§c/mono trade [player] §7- Starts a trade with a player");
 				p.sendMessage("§c/mono trade view §7- View your current trade");
 				p.sendMessage("§c/mono trade offer/request money [amt]");

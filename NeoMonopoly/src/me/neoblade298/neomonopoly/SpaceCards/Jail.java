@@ -14,13 +14,13 @@ public class Jail implements Space {
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
-		
+		game.isBusy = false;
 	}
 
 	@Override
 	public void onStart(GamePlayer starter) {
 		if (starter.isJailed()) {
-			game.requiredActions.get(starter).add("ROLL_JAIL");
+			game.requiredActions.get(starter).add("JAIL_ACTION");
 		}
 		else {
 			game.requiredActions.get(starter).add("ROLL_MOVE");

@@ -28,8 +28,20 @@ public class Utility implements Property {
 		return owner;
 	}
 
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
 	public void setOwner(GamePlayer owner) {
 		this.owner = owner;
+	}
+	
+	public boolean canMortgage() {
+		return true;
 	}
 
 	public boolean isMortgaged() {
@@ -61,14 +73,29 @@ public class Utility implements Property {
 		// Auction or purchase
 		if (owner == null) {
 			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
 			if (!owner.equals(lander)) {
 				game.billPlayer(lander, calculateRent(dice), owner);
 			}
 		}
+		game.isBusy = false;
 	}
-
+	
+	public void onRNGLand(GamePlayer lander) {
+		// Auction or purchase
+		if (owner == null) {
+			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+		}
+		else {
+			if (!owner.equals(lander)) {
+				game.requiredActions.get(lander).add(0, "ROLL_PAY");
+			}
+		}
+		game.isBusy = false;
+	}
+	
 	@Override
 	public void onStart(GamePlayer starter) {
 		game.requiredActions.get(starter).add("ROLL_MOVE");
@@ -94,6 +121,11 @@ public class Utility implements Property {
 	public void onUnowned(GamePlayer formerOwner) {
 		owner.setNumUtilities(owner.getNumUtilities() + 1);
 		game.broadcast("&e" + owner + " now owns &e" + owner.getNumUtilities() + " &7utilities.");
+	}
+
+	@Override
+	public void onBankrupt(GamePlayer formerOwner) {
+		owner.setNumUtilities(owner.getNumUtilities() + 1);
 	}
 
 	@Override
@@ -136,6 +168,16 @@ public class Utility implements Property {
 	public String getShorthand(GamePlayer gp) {
 		String ownerName = owner == null ? "Unowned" : owner.toString();
 		return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
+	}
+	
+	@Override
+	public String getColoredName() {
+		return "&7[" + color + name + "&7)]";
+	}
+	
+	@Override
+	public String listComponent() {
+		return "&7[" + color + name + "&7] Rent: &e" + rent[owner.getNumUtilities() - 1] + "x dice roll";
 	}
 
 	@Override
