@@ -9,13 +9,12 @@ import me.neoblade298.neomonopoly.SpaceCards.Property;
 
 public class BuildingTaxCard extends RNGCard {
 	private Game game;
-	private String name;
 	private int house;
 	private int hotel;
 	
 	public BuildingTaxCard(Game game, String name, int house, int hotel) {
+		super(game, name);
 		this.game = game;
-		this.name = name;
 		this.house = house;
 		this.hotel = hotel;
 	}

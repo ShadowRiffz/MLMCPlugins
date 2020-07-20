@@ -49,6 +49,7 @@ public class Game {
 		this.decidingOrder = true;
 		
 		// Data structure initialization
+		board = new ArrayList<Space>();
 		unusedChest = new ArrayList<RNGCard>();
 		unusedChance = new ArrayList<RNGCard>();
 		usedChest = new ArrayList<RNGCard>();
@@ -346,6 +347,14 @@ public class Game {
 		return numHotels;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void addHouses(int num) {
 		numHouses += num;
 	}
@@ -377,5 +386,21 @@ public class Game {
 	
 	public void startTrade(GamePlayer trader, GamePlayer tradee) {
 		this.trade = new Trade(this, trader, tradee);
+	}
+	
+	public void forceEndGame() {
+		int topMoney = 0;
+		GamePlayer topPlayer = null;
+		for (GamePlayer gp : gameplayers) {
+			if (gp.getMoney() > topMoney) {
+				topPlayer = gp;
+				topMoney = gp.getMoney();
+			}
+		}
+		broadcast("&7The game has been ended by force by an admin! The default winner is &e" + topPlayer + " &7with &a$" + topMoney + "&7!");
+		for (GamePlayer gp : gameplayers) {
+			main.ingame.remove(gp.getPlayer());
+		}
+		main.games.remove(this.name);
 	}
 }

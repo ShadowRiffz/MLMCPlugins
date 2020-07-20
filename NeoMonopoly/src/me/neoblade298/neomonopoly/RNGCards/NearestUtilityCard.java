@@ -4,16 +4,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
-import me.neoblade298.neomonopoly.SpaceCards.Railroad;
 import me.neoblade298.neomonopoly.SpaceCards.Utility;
 
 public class NearestUtilityCard extends RNGCard{
 	private Game game;
-	private String name;
 	
 	public NearestUtilityCard(Game game, String name) {
+		super(game, name);
 		this.game = game;
-		this.name = name;
 	}
 	
 	@Override

@@ -5,13 +5,12 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class LoseMoneyCard extends RNGCard {
 	private Game game;
-	private String name;
 	private int amount;
 	
 	public LoseMoneyCard(Game game, String name, int amount) {
+		super(game, name);
 		this.game = game;
 		this.amount = amount;
-		this.name = name;
 	}
 
 	@Override

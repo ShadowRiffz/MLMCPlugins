@@ -30,10 +30,16 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoMonopoly Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-		this.getCommand("cmd").setExecutor(new Commands(this));
+		this.getCommand("mono").setExecutor(new Commands(this));
 
 		// Load in items from config
 		loadConfigs();
+		
+		// Initialize data structures
+		inlobby = new HashMap<Player, Lobby>();
+		ingame = new HashMap<Player, Game>();
+		lobbies = new HashMap<String, Lobby>();
+		games = new HashMap<String, Game>();
 		
 		// Chat color to string
 		colorToString = new HashMap<ChatColor, String>();

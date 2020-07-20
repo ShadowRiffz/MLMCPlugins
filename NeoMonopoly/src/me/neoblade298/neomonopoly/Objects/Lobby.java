@@ -16,6 +16,7 @@ public class Lobby {
 		players = new ArrayList<Player>();
 		players.add(p);
 		this.name = name;
+		this.invited = new ArrayList<Player>();
 	}
 
 	public ArrayList<Player> getInvited() {

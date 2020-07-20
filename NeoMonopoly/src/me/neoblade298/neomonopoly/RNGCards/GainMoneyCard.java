@@ -5,12 +5,11 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class GainMoneyCard extends RNGCard {
 	private Game game;
-	private String name;
 	private int amount;
 	
 	public GainMoneyCard(Game game, String name, int amount) {
+		super(game, name);
 		this.game = game;
-		this.name = name;
 		this.amount = amount;
 	}
 	

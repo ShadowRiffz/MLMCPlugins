@@ -5,11 +5,10 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class JailFreeCard extends RNGCard{
 	private Game game;
-	private String name;
 	
 	public JailFreeCard(Game game, String name) {
+		super(game, name);
 		this.game = game;
-		this.name = name;
 	}
 	
 	public void onDraw(GamePlayer gp, String src) {

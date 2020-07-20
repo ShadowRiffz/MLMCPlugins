@@ -8,11 +8,10 @@ import me.neoblade298.neomonopoly.SpaceCards.Railroad;
 
 public class NearestRailroadCard extends RNGCard {
 	private Game game;
-	private String name;
 	
 	public NearestRailroadCard(Game game, String name) {
+		super(game, name);
 		this.game = game;
-		this.name = name;
 	}
 	
 	@Override

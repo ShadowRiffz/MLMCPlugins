@@ -35,7 +35,7 @@ public class LobbyCommands {
 		Lobby lobby = new Lobby(sender, name);
 		main.inlobby.put(sender, lobby);
 		main.lobbies.put(name, lobby);
-		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby!");
+		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby &e" + lobby.getName() + "&7!");
 	}
 
 	public void joinLobby(String name, Player sender) {
@@ -48,9 +48,10 @@ public class LobbyCommands {
 		ArrayList<Player> invited = lobby.getInvited();
 		if (invited.contains(sender)) {
 			if (lobby.getPlayers().size() <= 3) {
-				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby!");
+				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby &e" + lobby.getName() + "&7!");
 				lobby.getPlayers().add(sender);
 				lobby.getInvited().remove(sender);
+				main.inlobby.put(sender, lobby);
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cThat lobby is full!");

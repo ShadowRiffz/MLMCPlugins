@@ -1,18 +1,15 @@
 package me.neoblade298.neomonopoly.Commands;
 
-import java.util.Random;
-
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neomonopoly.Monopoly;
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
-import me.neoblade298.neomonopoly.SpaceCards.Property;
 
 public class TradeCommands {
 	Monopoly main;
 
-	public TradeCommands(Monopoly main, Game game) {
+	public TradeCommands(Monopoly main) {
 		this.main = main;
 	}
 	
@@ -94,6 +91,22 @@ public class TradeCommands {
 			}
 			
 			game.trade.requestProperty(gp, num);
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+		}
+	}
+	
+	public void offerProperty(Player sender, int num) {
+		if (main.ingame.containsKey(sender)) {
+			Game game = main.ingame.get(sender);
+			GamePlayer gp = game.players.get(sender);
+			
+			if (!tradeExists(game, gp) || !inTrade(game, gp)) {
+				return;
+			}
+			
+			game.trade.offerProperty(gp, num);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");

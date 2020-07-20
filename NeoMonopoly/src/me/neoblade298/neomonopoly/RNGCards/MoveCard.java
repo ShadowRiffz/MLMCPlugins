@@ -7,13 +7,12 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class MoveCard extends RNGCard{
 	private Game game;
-	private String name;
 	private int position;
 	
 	public MoveCard(Game game, String name, int position) {
+		super(game, name);
 		this.game = game;
 		this.position = position;
-		this.name = name;
 	}
 	
 	public void onDraw(GamePlayer gp, String src) {

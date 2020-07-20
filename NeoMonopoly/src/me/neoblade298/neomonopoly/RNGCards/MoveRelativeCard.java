@@ -7,13 +7,12 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 
 public class MoveRelativeCard extends RNGCard {
 	private Game game;
-	private String name;
 	private int move;
 	
 	public MoveRelativeCard(Game game, String name, int move) {
+		super(game, name);
 		this.game = game;
 		this.move = move;
-		this.name = name;
 	}
 	
 	@Override

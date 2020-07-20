@@ -2,13 +2,9 @@ package me.neoblade298.neomonopoly.Objects;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neomonopoly.SpaceCards.BuildableProperty;
 import me.neoblade298.neomonopoly.SpaceCards.Property;
-import me.neoblade298.neomonopoly.SpaceCards.Railroad;
-import me.neoblade298.neomonopoly.SpaceCards.Utility;
 
 public class GamePlayer {
 
