@@ -192,16 +192,18 @@ public class Trade {
 				traderB.getProperties().remove(prop);
 				traderA.getProperties().add(prop);
 				prop.setOwner(traderA);
-				prop.setOwner(traderB);
+				prop.onUnowned(traderB);
 				prop.onOwned(traderA);
 			}
 			
 			traderA.setMoney(traderA.getMoney() + moneyB);
 			traderA.setMoney(traderA.getMoney() - moneyA);
 			traderB.setMoney(traderB.getMoney() + moneyA);
-			traderB.setMoney(traderA.getMoney() - moneyB);
+			traderB.setMoney(traderB.getMoney() - moneyB);
 			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB);
+			traderA.setNumJailFree(traderA.getNumJailFree() - jailFreeA);
 			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA);
+			traderB.setNumJailFree(traderB.getNumJailFree() - jailFreeB);
 			game.trade = null;
 		}
 	}

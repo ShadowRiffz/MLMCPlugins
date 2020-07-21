@@ -581,7 +581,7 @@ public class GameCommands {
 					line += ChatColor.WHITE + " " + p.mapChar + (", " + p.mapChar).toUpperCase() + ": " + p;
 				}
 				if (i == 8) {
-					line += ChatColor.WHITE + " x: Unowned property, o: Community Chest/Chance";
+					line += ChatColor.WHITE + " x: Unowned, o: Chest/Chance";
 				}
 				if (i == 9) {
 					line += ChatColor.WHITE + " J: Jail, /: Go to jail";
@@ -703,6 +703,7 @@ public class GameCommands {
 				prop.onBankrupt(gp);
 			}
 			
+			game.endTurn(gp);
 			game.currentTurn.remove(gp);
 			game.requiredActions.remove(gp);
 			gp.message("&7You may leave the game any time with &c/mono quit&7.");
@@ -786,7 +787,7 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+			if (!isBusy(game, gp)) {
 				return;
 			}
 
@@ -796,6 +797,7 @@ public class GameCommands {
 					prop.onBankrupt(gp);
 					game.broadcast("&4&l" + gp + " has filed for bankruptcy and left the game. All of their properties are now unowned.");
 				}
+				game.endTurn(gp);
 				game.currentTurn.remove(gp);
 				game.requiredActions.remove(gp);
 				game.onBankrupt();

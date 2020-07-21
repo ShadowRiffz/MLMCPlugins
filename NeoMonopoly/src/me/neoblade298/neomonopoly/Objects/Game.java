@@ -365,7 +365,7 @@ public class Game {
 	public void takeMoney(int amt, GamePlayer p, String msg, boolean showExtra) {
 		p.setMoney(p.getMoney() - amt);
 		if (!msg.equalsIgnoreCase("") && showExtra) msg += " ";
-		if (showExtra) broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+		if (showExtra) broadcast(msg + "&7They now have &a$" + p.getMoney() + "&7.");
 		else broadcast(msg);
 	}
 	

@@ -18,7 +18,7 @@ public class TakeMoneyCard extends RNGCard {
 		super.onDraw(gp, src);
 		game.isBusy = false;
 		boolean cantPay = false;
-		for (GamePlayer p : game.gameplayers) {
+		for (GamePlayer p : game.currentTurn) {
 			if (!p.equals(gp)) {
 				if(!(game.billPlayer(p, amount, gp))) cantPay = true;
 			}

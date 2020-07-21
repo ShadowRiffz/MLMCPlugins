@@ -114,6 +114,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
+				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
 				if (p.hasPermission("neomonopoly.admin")) {
 					p.sendMessage("§4/mono endgame [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
@@ -133,6 +134,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono search [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				return true;
 			}
