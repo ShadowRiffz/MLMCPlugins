@@ -17,7 +17,7 @@ public class PayMoneyCard extends RNGCard {
 	public void onDraw(GamePlayer gp, String src) {
 		super.onDraw(gp, src);
 		for (GamePlayer p : game.gameplayers) {
-			if (!p.equals(gp)) game.giveMoney(amount, p, "&e" + gp + "&7 has given &e" + gp + " &a+$" + amount + "&7!", false);
+			if (!p.equals(gp)) game.giveMoney(amount, p, "&e" + gp + "&7 has given &e" + p + " &a+$" + amount + "&7!", false);
 		}
 		game.billPlayer(gp, (game.gameplayers.size() - 1) * amount, null);
 		game.isBusy = false;

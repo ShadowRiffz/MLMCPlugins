@@ -73,6 +73,7 @@ public class Auction {
 	
 	public void endAuction() {
 		game.broadcast("&7The winner of the auction for &e" + property.getName() + " &7is &e" + topBidder + " with &a$" + bid + "&7!");
+		game.takeMoney(bid, topBidder, "", true);
 		property.setOwner(topBidder);
 		topBidder.getProperties().add(property);
 		property.onOwned(topBidder);

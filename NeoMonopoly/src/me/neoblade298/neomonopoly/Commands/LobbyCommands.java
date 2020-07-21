@@ -88,8 +88,8 @@ public class LobbyCommands {
 		}
 		if (lobby.getHost().equals(sender)) {
 			lobby.getPlayers().remove(Bukkit.getPlayer(name));
-			Bukkit.getPlayer(name).sendMessage("&7You were kicked from the lobby!");
-			lobby.broadcast("&e" + name + "&7 has been kicked by the host!");
+			Bukkit.getPlayer(name).sendMessage("§7You were kicked from the lobby!");
+			lobby.broadcast("&e" + Bukkit.getPlayer(name).getName() + "&7 has been kicked by the host!");
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can kick from lobby!");

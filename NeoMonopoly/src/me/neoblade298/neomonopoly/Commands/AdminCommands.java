@@ -60,6 +60,17 @@ public class AdminCommands {
 			sender.sendMessage("§4[§c§lMLMC§4] §cThat player isn't in a game!");
 		}
 	}
+	
+	public void checkPlayer(Player sender, Player toView) {
+		if (main.ingame.containsKey(toView)) {
+			Game game = main.ingame.get(toView);
+			GamePlayer gp = game.players.get(toView);
+			sender.sendMessage("§4[§c§lMLMC§4] §7" + game.requiredActions.get(gp));
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cThat player isn't in a game!");
+		}
+	}
 
 	private boolean isBusy(Game game, GamePlayer gp) {
 		if (game.isBusy) {

@@ -42,7 +42,7 @@ public class Game {
 
 	public Game(String name, int money, ArrayList<Player> players, Monopoly main) throws Exception {
 		this.name = name;
-		this.numHotels = 32;
+		this.numHouses = 32;
 		this.numHotels = 12;
 		this.main = main;
 		this.isBusy = false;
@@ -319,7 +319,6 @@ public class Game {
 				paid.setMoney(paid.getMoney() + amt);
 				broadcast("&e" + payer + " &7paid &e" + paid + " &a$" + amt + "&7! They now have &a$" + payer.getMoney() + "&7.");
 			}
-			checkEndTurn(payer);
 			return true;
 		}
 	}

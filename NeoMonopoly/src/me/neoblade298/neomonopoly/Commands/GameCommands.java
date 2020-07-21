@@ -83,7 +83,6 @@ public class GameCommands {
 			}
 			
 			int count = 0;
-			System.out.println(gpView + " " + gpView.getProperties());
 			if (gpView.getProperties().size() == 0) {
 				gp.message("&7No properties to show!");
 			}
@@ -321,7 +320,7 @@ public class GameCommands {
 			
 			int count = 1;
 			for (GamePlayer p : game.currentTurn) {
-				gp.message("&f" + count + ". &e" + p + " &7: "+ game.board.get(p.getPosition()).getShorthand(gp));
+				gp.message("&f" + count + ". &e" + p + " &7: "+ game.board.get(p.getPosition()).getShorthand(p));
 				count++;
 			}
 		}
@@ -350,6 +349,7 @@ public class GameCommands {
 			}
 			if (!bprop.isMonopoly()) {
 				gp.message("&cYou can't build on a property without owning all of the properties of the same color!");
+				return;
 			}
 			
 			// Check if all of same color have the same or more houses
@@ -476,6 +476,10 @@ public class GameCommands {
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !isBusy(game, gp) ||
 					!hasRequiredActions(game, gp) || !isRequiredAction(game, gp, "UNOWNED_")) {
+				return;
+			}
+			if (game.auction != null) {
+				gp.message("&cAn auction is already happening!");
 				return;
 			}
 			

@@ -20,7 +20,7 @@ public class TakeMoneyCard extends RNGCard {
 		boolean cantPay = false;
 		for (GamePlayer p : game.gameplayers) {
 			if (!p.equals(gp)) {
-				if(!(game.billPlayer(p, (game.gameplayers.size() - 1) * amount, gp))) cantPay = true;
+				if(!(game.billPlayer(p, amount, gp))) cantPay = true;
 			}
 		}
 		if (cantPay) {

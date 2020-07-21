@@ -35,6 +35,7 @@ public class Trade {
 				offerer.message("&cAll houses on the same color properties must be sold before you may trade this!");
 				return;
 			}
+			game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
 			propertiesA.add(prop);
 		}
 		else {
@@ -43,6 +44,7 @@ public class Trade {
 				offerer.message("&cAll houses on the same color properties must be sold before you may trade this!");
 				return;
 			}
+			game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
 			propertiesB.add(prop);
 		}
 		this.confirmA = false;
@@ -66,6 +68,7 @@ public class Trade {
 				offerer.message("&cYou don't have enough money for that!");
 			}
 		}
+		game.broadcast("&e" + offerer + " &7has offered &a$" + money + "&7.");
 		this.confirmA = false;
 		this.confirmB = false;
 	}
@@ -87,6 +90,7 @@ public class Trade {
 				offerer.message("&cYou don't have enough get out of jail free cards for that!");
 			}
 		}
+		game.broadcast("&e" + offerer + " &7has offered &e" + jailFree + "&7 get out of jail free card(s).");
 		this.confirmA = false;
 		this.confirmB = false;
 	}
@@ -98,6 +102,7 @@ public class Trade {
 				requester.message("&cAll houses on the same color properties must be sold before they may trade this!");
 				return;
 			}
+			game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
 			propertiesA.add(prop);
 		}
 		else {
@@ -106,6 +111,7 @@ public class Trade {
 				requester.message("&cAll houses on the same color properties must be sold before they may trade this!");
 				return;
 			}
+			game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
 			propertiesB.add(prop);
 		}
 		this.confirmA = false;
@@ -129,6 +135,7 @@ public class Trade {
 				requester.message("&cThe player does not have enough money for that!");
 			}
 		}
+		game.broadcast("&e" + requester + " &7has requested &a$" + money + "&7.");
 		this.confirmA = false;
 		this.confirmB = false;
 	}
@@ -150,6 +157,7 @@ public class Trade {
 				requester.message("&cThe player does not have enough get out of jail free cards for that!");
 			}
 		}
+		game.broadcast("&e" + requester + " &7has requested &e" + jailFree + "&7 get out of jail free card(s).");
 		this.confirmA = false;
 		this.confirmB = false;
 	}
@@ -188,6 +196,7 @@ public class Trade {
 			traderB.setMoney(traderB.getMoney() + moneyA);
 			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB);
 			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA);
+			game.trade = null;
 		}
 	}
 	

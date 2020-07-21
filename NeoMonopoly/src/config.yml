@@ -246,7 +246,7 @@ communitychest:
   '6':
     type: 'takemoney'
     name: 'Grand Opera Night. Collect $50 from every player for opening night seats.'
-    amount: 200
+    amount: 50
   '7':
     type: 'gainmoney'
     name: 'Holiday fund matures. Receive $100.'

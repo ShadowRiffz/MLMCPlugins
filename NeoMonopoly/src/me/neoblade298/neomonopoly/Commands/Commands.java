@@ -71,6 +71,7 @@ public class Commands implements CommandExecutor{
 					p.sendMessage("§4/mono end [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
 					p.sendMessage("§4/mono check [name] §7- Checks what game a player is in");
+					p.sendMessage("§4/mono checkactions [name] §7- Check player's required actions");
 				}
 				return true;
 			}
@@ -111,6 +112,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
 				p.sendMessage("§c/mono property [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
+				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				if (p.hasPermission("neomonopoly.admin")) {
 					p.sendMessage("§4/mono endgame [name] §7- End a game");
@@ -131,6 +133,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono property [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				return true;
 			}
 			
@@ -221,6 +224,16 @@ public class Commands implements CommandExecutor{
 				gameCommands.endTurn(p);
 				return true;
 			}
+			// mono jailfree {player}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("jailfree")) {
+				gameCommands.useJailFree(p);
+				return true;
+			}
+			// mono payjail {player}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("payjail")) {
+				gameCommands.payJail(p);
+				return true;
+			}
 			// mono view {player}
 			else if (args[0].equalsIgnoreCase("view")) {
 				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
@@ -243,6 +256,19 @@ public class Commands implements CommandExecutor{
 			else if (args.length == 1 && args[0].equalsIgnoreCase("unmortgage")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.unmortgageProperty(p, Integer.parseInt(args[1]));
+					return true;
+				}
+			}
+			// mono build/destroy
+			else if (args.length == 2 && args[0].equalsIgnoreCase("build")) {
+				if (StringUtils.isNumeric(args[1])) {
+					gameCommands.buildOnProperty(p, Integer.parseInt(args[1]));
+					return true;
+				}
+			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("destroy")) {
+				if (StringUtils.isNumeric(args[1])) {
+					gameCommands.destroyOnProperty(p, Integer.parseInt(args[1]));
 					return true;
 				}
 			}
@@ -369,6 +395,10 @@ public class Commands implements CommandExecutor{
 			}
 			else if (args.length == 2 && args[0].equalsIgnoreCase("check")) {
 				adminCommands.checkGame(p, Bukkit.getPlayer(args[1]));
+				return true;
+			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("checkactions")) {
+				adminCommands.checkPlayer(p, Bukkit.getPlayer(args[1]));
 				return true;
 			}
 		}
