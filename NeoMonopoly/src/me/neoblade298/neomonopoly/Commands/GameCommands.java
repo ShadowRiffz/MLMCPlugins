@@ -612,6 +612,12 @@ public class GameCommands {
 				return;
 			}
 			
+			if (gp.getNumJailFree() == 0) {
+				gp.message("&cYou do not have any jail free cards!");
+				return;
+			}
+			
+			gp.setNumJailFree(gp.getNumJailFree() - 1);
 			gp.setJailed(false);
 			gp.resetJailTime();
 			game.requiredActions.get(gp).remove(0);

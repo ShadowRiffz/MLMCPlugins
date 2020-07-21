@@ -125,7 +125,7 @@ public class Utility implements Property {
 
 	@Override
 	public void onBankrupt(GamePlayer formerOwner) {
-		owner.setNumUtilities(owner.getNumUtilities() + 1);
+		return;
 	}
 
 	@Override

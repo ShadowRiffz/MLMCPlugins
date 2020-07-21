@@ -177,17 +177,17 @@ public class Trade {
 			display();
 			
 			for (Property prop : propertiesA) {
-				prop.onUnowned(traderA);
 				traderA.getProperties().remove(prop);
 				traderB.getProperties().add(prop);
+				prop.onUnowned(traderA);
 				prop.setOwner(traderB);
 				prop.onOwned(traderB);
 			}
 			
 			for (Property prop : propertiesB) {
-				prop.onUnowned(traderB);
 				traderB.getProperties().remove(prop);
 				traderA.getProperties().add(prop);
+				prop.onUnowned(traderB);
 				prop.setOwner(traderA);
 				prop.onOwned(traderA);
 			}

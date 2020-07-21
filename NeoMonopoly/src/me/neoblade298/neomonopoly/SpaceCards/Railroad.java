@@ -117,7 +117,7 @@ public class Railroad implements Property {
 
 	@Override
 	public void onBankrupt(GamePlayer formerOwner) {
-		owner.setNumRailroads(owner.getNumRailroads() - 1);
+		return;
 	}
 
 

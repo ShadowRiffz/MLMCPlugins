@@ -109,8 +109,8 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
 				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
 				p.sendMessage("§c/mono positions §7- Shows where every player is");
-				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono property [name] §7- View a property's info card");
+				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
+				p.sendMessage("§c/mono search [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
@@ -129,8 +129,8 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
 				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
 				p.sendMessage("§c/mono positions §7- Shows where every player is");
-				p.sendMessage("§c/mono properties {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono property [name] §7- View a property's info card");
+				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
+				p.sendMessage("§c/mono search [name] §7- View a property's info card");
 				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
 				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
@@ -199,7 +199,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			// mono properties {player}
-			else if (args[0].equalsIgnoreCase("properties")) {
+			else if (args[0].equalsIgnoreCase("list")) {
 				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
 					Player view = Bukkit.getPlayer(args[1]);
 					gameCommands.listProperties(p, view);
@@ -211,7 +211,7 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			// mono property [name]
-			else if (args.length > 1 && args[0].equalsIgnoreCase("property")) {
+			else if (args.length > 1 && args[0].equalsIgnoreCase("search")) {
 				String name = args[1];
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
@@ -232,6 +232,11 @@ public class Commands implements CommandExecutor{
 			// mono payjail {player}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("payjail")) {
 				gameCommands.payJail(p);
+				return true;
+			}
+			// mono paybills
+			else if (args.length == 1 && args[0].equalsIgnoreCase("paybills")) {
+				gameCommands.payBills(p);
 				return true;
 			}
 			// mono view {player}
