@@ -48,7 +48,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		colorToString.put(ChatColor.DARK_PURPLE, "purple");
 		colorToString.put(ChatColor.LIGHT_PURPLE, "pink");
 		colorToString.put(ChatColor.DARK_AQUA, "cyan");
-		colorToString.put(ChatColor.GREEN, "green");
+		colorToString.put(ChatColor.DARK_GREEN, "green");
 		colorToString.put(ChatColor.DARK_RED, "red");
 		colorToString.put(ChatColor.GRAY, "grey");
 		colorToString.put(ChatColor.DARK_GRAY, "dark grey");

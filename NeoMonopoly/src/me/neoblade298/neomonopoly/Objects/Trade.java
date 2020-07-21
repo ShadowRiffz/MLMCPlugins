@@ -172,6 +172,7 @@ public class Trade {
 				prop.onUnowned(traderA);
 				traderA.getProperties().remove(prop);
 				traderB.getProperties().add(prop);
+				prop.setOwner(traderB);
 				prop.onOwned(traderB);
 			}
 			
@@ -179,6 +180,7 @@ public class Trade {
 				prop.onUnowned(traderB);
 				traderB.getProperties().remove(prop);
 				traderA.getProperties().add(prop);
+				prop.setOwner(traderA);
 				prop.onOwned(traderA);
 			}
 			

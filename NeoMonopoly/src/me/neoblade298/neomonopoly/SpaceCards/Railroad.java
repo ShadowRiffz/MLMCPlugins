@@ -29,7 +29,7 @@ public class Railroad implements Property {
 	public void onLand(GamePlayer lander, int dice) {
 		// Auction or purchase
 		if (owner == null) {
-			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.requiredActions.get(lander).add(0, "UNOWNED_SPACE");
 			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
@@ -154,7 +154,9 @@ public class Railroad implements Property {
 			}
 			gp.message("&eRent&7: " + msg);
 		}
-		gp.message("&cCurrently mortgaged. Price to unmortgage: &e" + price);
+		else {
+			gp.message("&cCurrently mortgaged. Price to unmortgage: &e" + price);
+		}
 	}
 	
 	@Override

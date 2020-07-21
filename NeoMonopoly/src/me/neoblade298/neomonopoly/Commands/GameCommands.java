@@ -291,7 +291,7 @@ public class GameCommands {
 			}
 			
 			for (BuildableProperty prop : game.colors.get(ccolor)) {
-				if (prop == null || !prop.getOwner().equals(gpView)) {
+				if (prop.getOwner() == null || !prop.getOwner().equals(gpView)) {
 					missing.add(prop);
 				}
 			}

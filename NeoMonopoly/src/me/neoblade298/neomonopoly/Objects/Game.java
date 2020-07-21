@@ -123,10 +123,11 @@ public class Game {
 			p.addJailTime();
 			if (p.getJailTime() >= 3) {
 				broadcast("&e" + p + " &7must pay 2x the fine to leave jail!");
+				billPlayer(p, 100, null);
+				p.setJailed(false);
+				p.resetJailTime();
 			}
-			billPlayer(p, 100, null);
-			p.setJailed(false);
-			p.resetJailTime();
+			this.isBusy = false;
 			break;
 		}
 	}
@@ -415,7 +416,7 @@ public class Game {
 	
 	public void startTrade(GamePlayer trader, GamePlayer tradee) {
 		this.trade = new Trade(this, trader, tradee);
-		broadcast("A trade has begun between &e" + trader + " &7 and &e" + tradee + "&7! &c/mono trade view&7!");
+		broadcast("A trade has begun between &e" + trader + " &7and &e" + tradee + "&7! &c/mono trade view&7!");
 	}
 	
 	public void forceEndGame() {
