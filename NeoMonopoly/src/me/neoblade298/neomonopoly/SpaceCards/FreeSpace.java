@@ -15,6 +15,10 @@ public class FreeSpace implements Space {
 	public void onLand(GamePlayer lander, int dice) {
 		game.isBusy = false;
 	}
+	
+	public char getMapChar() {
+		return '+';
+	}
 
 	public void onStart(GamePlayer starter) {
 		game.requiredActions.get(starter).add("ROLL_MOVE");

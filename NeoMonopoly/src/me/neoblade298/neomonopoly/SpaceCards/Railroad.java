@@ -34,7 +34,12 @@ public class Railroad implements Property {
 		}
 		else {
 			if (!owner.equals(lander)) {
-				game.billPlayer(lander, calculateRent(dice), owner);
+				if (isMortgaged) {
+					game.broadcast("&7This space is mortgaged! No rent needed.");
+				}
+				else {
+					game.billPlayer(lander, calculateRent(dice), owner);
+				}
 			}
 		}
 		game.isBusy = false;
@@ -47,10 +52,19 @@ public class Railroad implements Property {
 		}
 		else {
 			if (!owner.equals(lander)) {
-				game.billPlayer(lander, calculateRent(0) * 2, owner);
+				if (isMortgaged) {
+					game.broadcast("&7This space is mortgaged! No rent needed.");
+				}
+				else {
+					game.billPlayer(lander, calculateRent(0), owner);
+				}
 			}
 		}
 		game.isBusy = false;
+	}
+	
+	public char getMapChar() {
+		return 'x';
 	}
 
 	@Override

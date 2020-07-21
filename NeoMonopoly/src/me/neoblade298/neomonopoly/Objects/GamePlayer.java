@@ -21,8 +21,9 @@ public class GamePlayer {
 	private int jailTime;
 	private boolean isJailed;
 	private ArrayList<Property> properties;
+	public char mapChar;
 
-	public GamePlayer(Player player, int money, Game game) {
+	public GamePlayer(Player player, int money, Game game, char mapChar) {
 		this.numRailroads = 0;
 		this.numUtilities = 0;
 		this.numJailFree = 0;
@@ -35,6 +36,7 @@ public class GamePlayer {
 		this.jailTime = 0;
 		this.isJailed = false;
 		this.properties = new ArrayList<Property>();
+		this.mapChar = mapChar;
 	}
 	
 	

@@ -44,7 +44,12 @@ public class BuildableProperty implements Property {
 		}
 		else {
 			if (!owner.equals(lander)) {
-				game.billPlayer(lander, calculateRent(dice), owner);
+				if (isMortgaged) {
+					game.broadcast("&7This space is mortgaged! No rent needed.");
+				}
+				else {
+					game.billPlayer(lander, calculateRent(dice), owner);
+				}
 			}
 		}
 		game.isBusy = false;
@@ -69,6 +74,10 @@ public class BuildableProperty implements Property {
 
 	public boolean isMortgaged() {
 		return isMortgaged;
+	}
+	
+	public char getMapChar() {
+		return 'x';
 	}
 
 	public void setMortgaged(boolean isMortgaged) {

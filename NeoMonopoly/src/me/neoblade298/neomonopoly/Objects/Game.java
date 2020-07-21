@@ -69,11 +69,13 @@ public class Game {
 		// Initialize players
 		this.gameplayers = new ArrayList<GamePlayer>();
 		this.players = new HashMap<Player, GamePlayer>();
+		char mapChar = 'a';
 		for (Player p : players) {
-			GamePlayer gp = new GamePlayer(p, money, this);
+			GamePlayer gp = new GamePlayer(p, money, this, mapChar);
 			this.gameplayers.add(gp);
 			this.players.put(p, gp);
 			this.requiredActions.put(gp, new ArrayList<String>(Arrays.asList("ROLL_ORDER")));
+			mapChar++;
 		}
 		currentTurn = new ArrayList<GamePlayer>(gameplayers);
 		
@@ -187,6 +189,9 @@ public class Game {
 					+ "jail free card, or &c/mono roll &7to try to roll doubles to get out of jail.";
 		}
 		else if (action.equalsIgnoreCase("ROLL_MOVE")) {
+			msg += "&7Type &c/mono roll &7to roll the dice!";
+		}
+		else if (action.equalsIgnoreCase("ROLL_ORDER")) {
 			msg += "&7Type &c/mono roll &7to roll the dice!";
 		}
 		broadcast(msg);

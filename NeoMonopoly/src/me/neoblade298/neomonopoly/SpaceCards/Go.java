@@ -16,6 +16,10 @@ public class Go implements Space {
 	public void onLand(GamePlayer lander, int dice) {
 		game.isBusy = false;
 	}
+	
+	public char getMapChar() {
+		return '+';
+	}
 
 	@Override
 	public void onStart(GamePlayer starter) {

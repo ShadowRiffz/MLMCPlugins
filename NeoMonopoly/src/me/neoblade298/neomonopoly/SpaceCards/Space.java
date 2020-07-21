@@ -14,4 +14,5 @@ public interface Space {
 	public void setGame(Game game);
 	public void displayProperty(GamePlayer gp);
 	public String getShorthand(GamePlayer gp);
+	public char getMapChar();
 }

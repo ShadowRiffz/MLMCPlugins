@@ -251,6 +251,11 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
+			// mono map
+			else if (args.length == 1 && args[0].equalsIgnoreCase("map")) {
+				gameCommands.displayMap(p);
+				return true;
+			}
 			// mono mortgage/unmortgage #
 			else if (args.length == 2 && args[0].equalsIgnoreCase("mortgage")) {
 				if (StringUtils.isNumeric(args[1])) {
@@ -316,7 +321,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			// mono quit
-			else if (args.length == 1 && args[0].equalsIgnoreCase("bankrupt")) {
+			else if (args.length == 1 && args[0].equalsIgnoreCase("quit")) {
 				gameCommands.quit(p);
 				return true;
 			}

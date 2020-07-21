@@ -23,7 +23,7 @@ public class GameCommands {
 		this.main = main;
 		this.gen = new Random();
 	}
-
+	
 	public void rollDice(Player sender) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
@@ -500,6 +500,96 @@ public class GameCommands {
 			else if (bprop.getNumHotels() == 0 && bprop.getNumHouses() == 0) {
 				gp.message("&cThis property has nothing to destroy!");
 				return;
+			}
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+		}
+	}
+	
+	public void displayMap(Player sender) {
+		if (main.ingame.containsKey(sender)) {
+			Game game = main.ingame.get(sender);
+			GamePlayer gp = game.players.get(sender);
+			
+			// First find positions;
+			HashMap<Integer, ArrayList<GamePlayer>> positions = new HashMap<Integer, ArrayList<GamePlayer>>();
+			for (GamePlayer p : game.gameplayers) {
+				int pos = p.getPosition();
+				if (positions.containsKey(pos)) {
+					positions.get(pos).add(p);
+				}
+				else {
+					positions.put(pos, new ArrayList<GamePlayer>());
+					positions.get(pos).add(p);
+				}
+			}
+			
+			// Start mapping
+			for (int i = 0; i <= 10; i++) {
+				String line = new String();
+				int pos = -1;
+				for (int j = 0; j <= 10; j++) {
+					pos = -1;
+					if (j == 0) {
+						pos = 10 - i;
+					}
+					else if (j == 10) {
+						pos = i + 20;
+					}
+					else if (i == 0) {
+						pos = j + 10;
+					}
+					else if (i == 10) {
+						pos = 40 - j;
+					}
+					else {
+						line += ChatColor.DARK_GRAY + "- ";
+						continue;
+					}
+					Space space = game.board.get(pos);
+					line += space.getColor();
+					
+					// Place players on map
+					if (positions.containsKey(pos)) {
+						if (positions.get(pos).size() > 1) {
+							line += '@' + " ";
+						}
+						else {
+							line += positions.get(pos).get(0).mapChar + " ";
+						}
+					}
+					// Place item on map
+					else {
+						if (space instanceof Property) {
+							Property prop = (Property) space;
+							if (prop.getOwner() != null) {
+								line += (prop.getOwner().mapChar + " ").toUpperCase();
+							}
+							else {
+								line += space.getMapChar() + " ";
+							}
+						}
+						else {
+							line += space.getMapChar() + " ";
+						}
+					}
+				
+				}
+				if (i < game.gameplayers.size()) {
+					GamePlayer p = game.gameplayers.get(i);
+					line += ChatColor.WHITE + " " + p.mapChar + (", " + p.mapChar).toUpperCase() + ": " + p;
+				}
+				if (i == 8) {
+					line += ChatColor.WHITE + " x: Unowned property, o: Community Chest/Chance";
+				}
+				if (i == 9) {
+					line += ChatColor.WHITE + " J: Jail, /: Go to jail";
+				}
+				if (i == 10) {
+					line += ChatColor.WHITE + " +: Tax, @: Multiple players here";
+				}
+				gp.message(line);
 			}
 		}
 		else {

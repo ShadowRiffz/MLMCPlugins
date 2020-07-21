@@ -30,27 +30,11 @@ public class Auction {
 				}
 			}
 		};
-		BukkitRunnable warn3 = new BukkitRunnable() {
-			public void run() {
-				if (game.auction != null) {
-					game.broadcast("&e3 &7seconds remaining!");
-					endAuction.runTaskLater(game.main, 60L);
-				}
-			}
-		};
-		BukkitRunnable warn5 = new BukkitRunnable() {
-			public void run() {
-				if (game.auction != null) {
-					game.broadcast("&e5 &7seconds remaining!");
-					warn3.runTaskLater(game.main, 40L);
-				}
-			}
-		};
 		BukkitRunnable warn10 = new BukkitRunnable() {
 			public void run() {
 				if (game.auction != null) {
 					game.broadcast("&e10 &7seconds remaining!");
-					warn5.runTaskLater(game.main, 100L);
+					endAuction.runTaskLater(game.main, 200L);
 				}
 			}
 		};

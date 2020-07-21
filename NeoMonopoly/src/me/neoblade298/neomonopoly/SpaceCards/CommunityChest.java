@@ -17,6 +17,10 @@ public class CommunityChest implements Space {
 		game.drawChest(lander);
 		game.isBusy = false;
 	}
+	
+	public char getMapChar() {
+		return 'o';
+	}
 
 	@Override
 	public void onStart(GamePlayer starter) {

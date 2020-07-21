@@ -26,6 +26,10 @@ public class Jail implements Space {
 			game.requiredActions.get(starter).add("ROLL_MOVE");
 		}
 	}
+	
+	public char getMapChar() {
+		return 'J';
+	}
 
 	@Override
 	public ChatColor getColor() {

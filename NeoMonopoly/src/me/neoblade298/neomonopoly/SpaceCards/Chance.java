@@ -17,6 +17,10 @@ public class Chance implements Space {
 		game.drawChance(lander);
 		game.isBusy = false;
 	}
+	
+	public char getMapChar() {
+		return 'o';
+	}
 
 	@Override
 	public void onStart(GamePlayer starter) {

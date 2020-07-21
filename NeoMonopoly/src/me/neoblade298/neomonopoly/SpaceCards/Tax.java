@@ -26,6 +26,10 @@ public class Tax implements Space {
 	public void onStart(GamePlayer starter) {
 		game.requiredActions.get(starter).add("ROLL_MOVE");
 	}
+	
+	public char getMapChar() {
+		return '+';
+	}
 
 	@Override
 	public ChatColor getColor() {

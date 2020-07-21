@@ -17,6 +17,10 @@ public class GoToJail implements Space {
 		game.sendToJail(lander);
 		game.isBusy = false;
 	}
+	
+	public char getMapChar() {
+		return '/';
+	}
 
 	@Override
 	public void onStart(GamePlayer starter) {

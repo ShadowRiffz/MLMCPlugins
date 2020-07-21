@@ -67,6 +67,10 @@ public class Utility implements Property {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public char getMapChar() {
+		return 'x';
+	}
 
 	@Override
 	public void onLand(GamePlayer lander, int dice) {
@@ -77,7 +81,12 @@ public class Utility implements Property {
 		}
 		else {
 			if (!owner.equals(lander)) {
-				game.billPlayer(lander, calculateRent(dice), owner);
+				if (isMortgaged) {
+					game.broadcast("&7This space is mortgaged! No rent needed.");
+				}
+				else {
+					game.billPlayer(lander, calculateRent(dice), owner);
+				}
 			}
 		}
 		game.isBusy = false;
@@ -91,7 +100,12 @@ public class Utility implements Property {
 		}
 		else {
 			if (!owner.equals(lander)) {
-				game.requiredActions.get(lander).add(0, "ROLL_PAY");
+				if (isMortgaged) {
+					game.broadcast("&7This space is mortgaged! No rent needed.");
+				}
+				else {
+					game.requiredActions.get(lander).add(0, "ROLL_PAY");
+				}
 			}
 		}
 		game.isBusy = false;
