@@ -179,6 +179,7 @@ public class Game {
 		}
 		GamePlayer curr = currentTurn.get(0);
 		String msg = "It is now &e" + curr + "'s &7turn! ";
+		board.get(curr.getPosition()).onStart(curr);
 		String action = requiredActions.get(curr).get(0);
 		if (action.equalsIgnoreCase("JAIL_ACTION")) {
 			msg += "&7They're jailed and must either type &c/mono payjail&7 to pay &a$50&7, &c/mono jailfree&7 to use a get out of "
@@ -188,7 +189,6 @@ public class Game {
 			msg += "&7Type &c/mono roll &7to roll the dice!";
 		}
 		broadcast(msg);
-		board.get(curr.getPosition()).onStart(curr);
 	}
 
 	public void broadcast(String msg) {
@@ -229,7 +229,7 @@ public class Game {
 		Game game = this;
 		boolean passedGo = p.getPosition() + spaces >= 40;
 		p.move(spaces);
-		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
+		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!", true);
 		broadcast("&e" + p + " &7has landed on " + board.get(p.getPosition()).getShorthand(p));
 		if (normalLand) {
 			new BukkitRunnable() { public void run() {
@@ -243,7 +243,7 @@ public class Game {
 		Game game = this;
 		boolean passedGo = p.getPosition() >= position;
 		p.moveAbsolute(position);
-		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!");
+		if (passedGo) giveMoney(200, p, "&e" + p + " &7passed go and received &a+$200&7!", true);
 		broadcast("&e" + p + " &7has landed on " + board.get(p.getPosition()).getShorthand(p));
 		if (normalLand) {
 			new BukkitRunnable() { public void run() {
@@ -349,14 +349,16 @@ public class Game {
 		}
 	}
 	
-	public void giveMoney(int amt, GamePlayer p, String msg) {
+	public void giveMoney(int amt, GamePlayer p, String msg, boolean showExtra) {
 		p.setMoney(p.getMoney() + amt);
-		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+		if (showExtra) broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+		else broadcast(msg);
 	}
 	
-	public void takeMoney(int amt, GamePlayer p, String msg) {
+	public void takeMoney(int amt, GamePlayer p, String msg, boolean showExtra) {
 		p.setMoney(p.getMoney() - amt);
-		broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+		if (showExtra) broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
+		else broadcast(msg);
 	}
 	
 	public void checkEndTurn(GamePlayer gp) {
@@ -391,7 +393,7 @@ public class Game {
 	
 	public void buyProperty(GamePlayer gp, Property prop) {
 		prop.setOwner(gp);
-		takeMoney(prop.getPrice(), gp, "&e" + gp + " &7has purchased " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.");
+		takeMoney(prop.getPrice(), gp, "&e" + gp + " &7has purchased " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.", true);
 		prop.onOwned(gp);
 		checkEndTurn(gp);
 	}

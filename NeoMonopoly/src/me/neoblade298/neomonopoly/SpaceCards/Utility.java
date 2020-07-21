@@ -86,7 +86,7 @@ public class Utility implements Property {
 	public void onRNGLand(GamePlayer lander) {
 		// Auction or purchase
 		if (owner == null) {
-			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.requiredActions.get(lander).add(0, "UNOWNED_SPACE");
 		}
 		else {
 			if (!owner.equals(lander)) {

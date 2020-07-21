@@ -151,7 +151,7 @@ public class GameCommands {
 				gp.message("&cThis property is already mortgaged!");
 			}
 			
-			game.giveMoney(prop.getPrice() / 2, gp, "&e" + gp + "&7 mortgaged " + prop.getShorthand(gp) + "&7 for &a+$" + (prop.getPrice() / 2) + "&7.");
+			game.giveMoney(prop.getPrice() / 2, gp, "&e" + gp + "&7 mortgaged " + prop.getShorthand(gp) + "&7 for &a+$" + (prop.getPrice() / 2) + "&7.", true);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
@@ -179,7 +179,7 @@ public class GameCommands {
 				return;
 			}
 			
-			game.takeMoney(prop.getPrice(), gp, "&e" + gp + "&7 unmortgaged " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.");
+			game.takeMoney(prop.getPrice(), gp, "&e" + gp + "&7 unmortgaged " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.", true);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
@@ -373,7 +373,7 @@ public class GameCommands {
 							"&e" + gp + " &7built a hotel on " + bprop.getShorthand(gp) + " &7for &c-$" +
 					bprop.getHouseprice() + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
 									" &7There are now &e" + game.getHouses() + " &7free houses and &e" +
-					game.getHotels() + "&7 free hotels.");
+					game.getHotels() + "&7 free hotels.", true);
 					return;
 				}
 				else {
@@ -393,7 +393,7 @@ public class GameCommands {
 					game.takeMoney(bprop.getHouseprice(), gp,
 							"&e" + gp + " &7built house &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
 					bprop.getHouseprice() + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
-									" &7There are now &e" + game.getHouses() + " &7free houses.");
+									" &7There are now &e" + game.getHouses() + " &7free houses.", true);
 					return;
 				}
 				else {
@@ -443,7 +443,7 @@ public class GameCommands {
 							"&e" + gp + " &7downgraded to &e4 &7houses on " + bprop.getShorthand(gp) + " &7for &c+$" +
 					bprop.getHouseprice() + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
 									" &7There are now &e" + game.getHouses() + " &7free houses and &e" +
-					game.getHotels() + "&7 free hotels.");
+					game.getHotels() + "&7 free hotels.", true);
 					return;
 				}
 				else {
@@ -461,7 +461,7 @@ public class GameCommands {
 				game.giveMoney(bprop.getHouseprice() / 2, gp,
 						"&e" + gp + " &7built house &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
 				(bprop.getHouseprice() / 2) + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
-								" &7There are now &e" + game.getHouses() + " &7free houses.");
+								" &7There are now &e" + game.getHouses() + " &7free houses.", true);
 				return;
 			}
 		}

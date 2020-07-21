@@ -42,7 +42,7 @@ public class Railroad implements Property {
 	
 	public void onRNGLand(GamePlayer lander) {
 		if (owner == null) {
-			game.requiredActions.get(lander).add("UNOWNED_SPACE");
+			game.requiredActions.get(lander).add(0, "UNOWNED_SPACE");
 		}
 		else {
 			if (!owner.equals(lander)) {
@@ -106,13 +106,13 @@ public class Railroad implements Property {
 	@Override
 	public void onOwned(GamePlayer owner) {
 		owner.setNumRailroads(owner.getNumRailroads() + 1);
-		game.broadcast("&e" + owner + " now owns &e" + owner.getNumRailroads() + " &7railroads.");
+		game.broadcast("&e" + owner + " &7now owns &e" + owner.getNumRailroads() + " &7railroads.");
 	}
 
 	@Override
 	public void onUnowned(GamePlayer formerOwner) {
 		owner.setNumRailroads(owner.getNumRailroads() - 1);
-		game.broadcast("&e" + formerOwner + " now owns &e" + owner.getNumRailroads() + " &7railroads.");
+		game.broadcast("&e" + formerOwner + " &7now owns &e" + owner.getNumRailroads() + " &7railroads.");
 	}
 
 	@Override

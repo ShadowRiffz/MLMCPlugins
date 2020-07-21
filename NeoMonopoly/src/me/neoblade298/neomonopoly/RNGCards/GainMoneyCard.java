@@ -15,7 +15,7 @@ public class GainMoneyCard extends RNGCard {
 	
 	public void onDraw(GamePlayer gp, String src) {
 		super.onDraw(gp, src);
-		game.giveMoney(amount, gp, "&e" + gp + " &7got &a+$" + amount + "&7!");
+		game.giveMoney(amount, gp, "&e" + gp + " &7got &a+$" + amount + "&7!", true);
 		game.isBusy = false;
 	}
 }
