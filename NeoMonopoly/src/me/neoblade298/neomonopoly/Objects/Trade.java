@@ -125,6 +125,7 @@ public class Trade {
 			}
 			else {
 				requester.message("&cThe player does not have enough money for that!");
+				return;
 			}
 		}
 		else {
@@ -133,6 +134,7 @@ public class Trade {
 			}
 			else {
 				requester.message("&cThe player does not have enough money for that!");
+				return;
 			}
 		}
 		game.broadcast("&e" + requester + " &7has requested &a$" + money + "&7.");
@@ -147,6 +149,7 @@ public class Trade {
 			}
 			else {
 				requester.message("&cThe player does not have enough get out of jail free cards for that!");
+				return;
 			}
 		}
 		else {
@@ -155,6 +158,7 @@ public class Trade {
 			}
 			else {
 				requester.message("&cThe player does not have enough get out of jail free cards for that!");
+				return;
 			}
 		}
 		game.broadcast("&e" + requester + " &7has requested &e" + jailFree + "&7 get out of jail free card(s).");
@@ -179,21 +183,23 @@ public class Trade {
 			for (Property prop : propertiesA) {
 				traderA.getProperties().remove(prop);
 				traderB.getProperties().add(prop);
-				prop.onUnowned(traderA);
 				prop.setOwner(traderB);
+				prop.onUnowned(traderA);
 				prop.onOwned(traderB);
 			}
 			
 			for (Property prop : propertiesB) {
 				traderB.getProperties().remove(prop);
 				traderA.getProperties().add(prop);
-				prop.onUnowned(traderB);
 				prop.setOwner(traderA);
+				prop.setOwner(traderB);
 				prop.onOwned(traderA);
 			}
 			
 			traderA.setMoney(traderA.getMoney() + moneyB);
+			traderA.setMoney(traderA.getMoney() - moneyA);
 			traderB.setMoney(traderB.getMoney() + moneyA);
+			traderB.setMoney(traderA.getMoney() - moneyB);
 			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB);
 			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA);
 			game.trade = null;

@@ -150,6 +150,7 @@ public class GameCommands {
 				gp.message("&cThis property is already mortgaged!");
 			}
 			
+			prop.setMortgaged(true);
 			game.giveMoney(prop.getPrice() / 2, gp, "&e" + gp + "&7 mortgaged " + prop.getShorthand(gp) + "&7 for &a+$" + (prop.getPrice() / 2) + "&7.", true);
 		}
 		else {
@@ -177,7 +178,8 @@ public class GameCommands {
 			if (!canAfford(game, gp, prop.getPrice())) {
 				return;
 			}
-			
+
+			prop.setMortgaged(false);
 			game.takeMoney(prop.getPrice(), gp, "&e" + gp + "&7 unmortgaged " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.", true);
 		}
 		else {
@@ -388,8 +390,7 @@ public class GameCommands {
 			else {
 				if (game.getHouses() > 0) {
 					bprop.setNumHouses(bprop.getNumHouses() + 1);
-					game.addHouses(4);
-					game.addHotels(-1);
+					game.addHouses(-1);
 					game.takeMoney(bprop.getHouseprice(), gp,
 							"&e" + gp + " &7built house &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
 					bprop.getHouseprice() + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
@@ -455,13 +456,49 @@ public class GameCommands {
 				gp.message("&cThis property has nothing to destroy!");
 				return;
 			}
-			else if (bprop.getNumHotels() == 0&& bprop.getNumHouses() > 0) {
+			else if (bprop.getNumHotels() == 0 && bprop.getNumHouses() > 0) {
 				bprop.setNumHouses(bprop.getNumHouses() - 1);
 				game.addHouses(1);
 				game.giveMoney(bprop.getHouseprice() / 2, gp,
 						"&e" + gp + " &7built house &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
 				(bprop.getHouseprice() / 2) + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
 								" &7There are now &e" + game.getHouses() + " &7free houses.", true);
+				return;
+			}
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+		}
+	}
+	
+	public void destroyHotel(Player sender, int num) {
+		if (main.ingame.containsKey(sender)) {
+			Game game = main.ingame.get(sender);
+			GamePlayer gp = game.players.get(sender);
+			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+				return;
+			}
+			
+			Property prop = gp.getProperties().get(num);
+			if (!(prop instanceof BuildableProperty)) {
+				gp.message("&cYou can't build on this type of property!");
+				return;
+			}
+			
+			BuildableProperty bprop = (BuildableProperty) prop;
+			
+			if (bprop.getNumHotels() == 1) {
+				bprop.setNumHotels(0);
+				game.addHotels(1);
+				game.takeMoney(bprop.getHouseprice() * 5, gp,
+						"&e" + gp + " &7downgraded to &e4 &7houses on " + bprop.getShorthand(gp) + " &7for &c+$" +
+				(bprop.getHouseprice() * 5) + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
+								" &7There are now &e" + game.getHouses() + " &7free houses and &e" +
+				game.getHotels() + "&7 free hotels.", true);
+				return;
+			}
+			else if (bprop.getNumHotels() == 0 && bprop.getNumHouses() == 0) {
+				gp.message("&cThis property has nothing to destroy!");
 				return;
 			}
 		}

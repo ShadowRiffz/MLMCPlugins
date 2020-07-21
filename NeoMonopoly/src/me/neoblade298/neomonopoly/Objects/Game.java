@@ -297,15 +297,17 @@ public class Game {
 	
 	public boolean billPlayer(GamePlayer payer, int amt, GamePlayer paid) {
 		if (payer.getMoney() < amt) {
-			payer.setBills(amt);
+			int remaining = amt - payer.getMoney();
+			payer.setMoney(0);
+			payer.setBills(remaining);
 			payer.setBilltaker(paid);
 			requiredActions.get(payer).add(0, "PAY_BILLS");
 			if (paid == null) {
-				broadcast("&e" + payer + " &ccould not pay the bank &a$" + amt + "&c! They only have &a$" + payer.getMoney() + "&c. "
+				broadcast("&e" + payer + " &ccould not pay the bank &a$" + amt + "&c! They need &a$" + remaining + "&c more. "
 						+ "Destroy houses or mortgage properties to get money and type /mono paybills, or type /mono bankrupt to give up!");
 			}
 			else {
-				broadcast("&e" + payer + " &ccould not pay &e" + paid + " &a$" + amt + "&c! They only have &a$" + payer.getMoney() + "&c. "
+				broadcast("&e" + payer + " &ccould not pay &e" + paid + " &a$" + amt + "&c! They need &a$" + remaining + "&c more. "
 						+ "Destroy houses or mortgage properties to get money and type /mono paybills, or type /mono bankrupt to give up!");
 			}
 			return false;
@@ -357,6 +359,7 @@ public class Game {
 	
 	public void takeMoney(int amt, GamePlayer p, String msg, boolean showExtra) {
 		p.setMoney(p.getMoney() - amt);
+		if (!msg.equalsIgnoreCase("") && showExtra) msg += " ";
 		if (showExtra) broadcast(msg + " &7They now have &a$" + p.getMoney() + "&7.");
 		else broadcast(msg);
 	}

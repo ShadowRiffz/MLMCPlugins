@@ -198,7 +198,7 @@ public class Commands implements CommandExecutor{
 				gameCommands.showPositions(p);
 				return true;
 			}
-			// mono properties {player}
+			// mono list {player}
 			else if (args[0].equalsIgnoreCase("list")) {
 				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
 					Player view = Bukkit.getPlayer(args[1]);
@@ -210,7 +210,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
-			// mono property [name]
+			// mono search [name]
 			else if (args.length > 1 && args[0].equalsIgnoreCase("search")) {
 				String name = args[1];
 				for (int i = 2; i < args.length; i++) {
@@ -252,19 +252,19 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			// mono mortgage/unmortgage #
-			else if (args.length == 1 && args[0].equalsIgnoreCase("mortgage")) {
+			else if (args.length == 2 && args[0].equalsIgnoreCase("mortgage")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.mortgageProperty(p, Integer.parseInt(args[1]));
 					return true;
 				}
 			}
-			else if (args.length == 1 && args[0].equalsIgnoreCase("unmortgage")) {
+			else if (args.length == 2 && args[0].equalsIgnoreCase("unmortgage")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.unmortgageProperty(p, Integer.parseInt(args[1]));
 					return true;
 				}
 			}
-			// mono build/destroy
+			// mono build/destroy/destroyhotel
 			else if (args.length == 2 && args[0].equalsIgnoreCase("build")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.buildOnProperty(p, Integer.parseInt(args[1]));
@@ -274,6 +274,12 @@ public class Commands implements CommandExecutor{
 			else if (args.length == 2 && args[0].equalsIgnoreCase("destroy")) {
 				if (StringUtils.isNumeric(args[1])) {
 					gameCommands.destroyOnProperty(p, Integer.parseInt(args[1]));
+					return true;
+				}
+			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("destroyhotel")) {
+				if (StringUtils.isNumeric(args[1])) {
+					gameCommands.destroyHotel(p, Integer.parseInt(args[1]));
 					return true;
 				}
 			}

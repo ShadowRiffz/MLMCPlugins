@@ -20,13 +20,13 @@ public class NearestUtilityCard extends RNGCard{
 		new BukkitRunnable() { public void run() {
 			int pos = gp.getPosition();
 			if (pos < 12) {
-				game.movePlayerAbsolute(gp, 12, true, true);
+				game.movePlayerAbsolute(gp, 12, true, false);
 			}
 			else if (pos < 28) {
-				game.movePlayerAbsolute(gp, 28, true, true);
+				game.movePlayerAbsolute(gp, 28, true, false);
 			}
 			else {
-				game.movePlayerAbsolute(gp, 12, true, true);
+				game.movePlayerAbsolute(gp, 12, true, false);
 			}
 			Utility util = (Utility) game.board.get(gp.getPosition());
 			util.onRNGLand(gp);

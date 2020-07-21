@@ -87,6 +87,7 @@ public class Utility implements Property {
 		// Auction or purchase
 		if (owner == null) {
 			game.requiredActions.get(lander).add(0, "UNOWNED_SPACE");
+			game.broadcast("&7This space is unowned! You may buy it with &c/mono buy &7or auction it with &c/mono auction&7.");
 		}
 		else {
 			if (!owner.equals(lander)) {

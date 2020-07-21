@@ -61,13 +61,16 @@ public class Auction {
 		if (!participants.contains(gp)) {
 			gp.message("&cYou already left the auction!");
 		}
-		else if (amount > bid) {
-			bid = amount;
-			topBidder = gp;
-			game.broadcast("&e" + gp + " &7bid &a$" + bid + " &7!");
+		else if (amount > gp.getMoney()) {
+			gp.message("&cYou don't have enough money!");
 		}
 		else if (amount <= bid) {
 			gp.message("&cYou must bid higher than &a$" + bid + "&c!");
+		}
+		else if (amount > bid) {
+			bid = amount;
+			topBidder = gp;
+			game.broadcast("&e" + gp + " &7bid &a$" + bid + "&7!");
 		}
 	}
 	
@@ -79,6 +82,7 @@ public class Auction {
 		property.onOwned(topBidder);
 		game.requiredActions.get(host).remove(0);
 		game.checkEndTurn(host);
+		game.auction = null;
 	}
 	
 	public void display(GamePlayer gp) {
