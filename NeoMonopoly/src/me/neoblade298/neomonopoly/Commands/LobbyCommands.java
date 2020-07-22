@@ -164,7 +164,7 @@ public class LobbyCommands {
 	
 	public void spectateGame(Player sender, String name) {
 		if (!main.ingame.containsKey(sender)) {
-			if (!main.games.containsKey(name)) {
+			if (main.games.containsKey(name)) {
 				Game game = main.games.get(name);
 				GamePlayer gp = new GamePlayer(sender, 0, game, '-');
 				gp.setPosition(-1);
