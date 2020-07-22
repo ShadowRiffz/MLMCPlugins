@@ -184,17 +184,32 @@ public class Utility implements Property {
 	@Override
 	public String getShorthand(GamePlayer gp) {
 		String ownerName = owner == null ? "&a$" + price : owner.toString();
-		return "&7&m[" + color + "&m" + name + "&7&m (" + ownerName + "&7&m)]&7";
+		if (isMortgaged) {
+			return "&7&m[" + color + "&m" + name + "&7&m (" + ownerName + "&7&m)]&7";
+		}
+		else {
+			return "&7[" + color + name + "&7 (" + ownerName + "&7)]";
+		}
 	}
 	
 	@Override
 	public String getColoredName() {
-		return "&7&m[" + color + "&m" + name + "&7&m)]&7";
+		if (isMortgaged) {
+			return "&7&m[" + color + "&m" + name + "&7&m)]&7";
+		}
+		else {
+			return "&7[" + color + name + "&7)]";
+		}
 	}
 	
 	@Override
 	public String listComponent() {
-		return "&7&m[" + color + "&m" + name + "&7&m] Rent: &e&m" + rent[owner.getNumUtilities() - 1] + "x dice roll";
+		if (isMortgaged) {
+			return "&7&m[" + color + "&m" + name + "&7&m] Rent: &e&m" + rent[owner.getNumUtilities() - 1] + "x dice roll";
+		}
+		else {
+			return "&7[" + color + name + "&7] Rent: &e" + rent[owner.getNumUtilities() - 1] + "x dice roll";
+		}
 	}
 
 	@Override
