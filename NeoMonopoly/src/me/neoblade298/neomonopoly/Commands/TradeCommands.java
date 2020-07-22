@@ -81,7 +81,7 @@ public class TradeCommands {
 		}
 	}
 	
-	public void requestProperty(Player sender, int num) {
+	public void requestProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
@@ -90,14 +90,14 @@ public class TradeCommands {
 				return;
 			}
 			
-			game.trade.requestProperty(gp, num);
+			game.trade.requestProperty(gp, prefix);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
 		}
 	}
 	
-	public void offerProperty(Player sender, int num) {
+	public void offerProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
@@ -106,7 +106,7 @@ public class TradeCommands {
 				return;
 			}
 			
-			game.trade.offerProperty(gp, num);
+			game.trade.offerProperty(gp, prefix);
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");

@@ -108,11 +108,10 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono roll §7- Rolls the dice");
 				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
 				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
-				p.sendMessage("§c/mono positions §7- Shows where every player is");
+				p.sendMessage("§c/mono pos §7- Shows where every player is");
 				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono search [name] §7- View a property's info card");
-				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
-				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("§c/mono view [name] §7- View a property's info card");
+				p.sendMessage("§c/mono build/destroy [name]§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
 				if (p.hasPermission("neomonopoly.admin")) {
@@ -129,11 +128,10 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono roll §7- Rolls the dice");
 				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
 				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
-				p.sendMessage("§c/mono positions §7- Shows where every player is");
+				p.sendMessage("§c/mono pos §7- Shows where every player is");
 				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono search [name] §7- View a property's info card");
-				p.sendMessage("§c/mono view {player} §7- View the info card of the space you're on");
-				p.sendMessage("§c/mono build/destroy #§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("§c/mono view [name] §7- View a property's info card");
+				p.sendMessage("§c/mono build/destroy [name]§7- Builds/destroys a house/hotel on a property");
 				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
 				p.sendMessage("§c/mono end {player} §7- Ends your turn");
 				return true;
@@ -142,7 +140,7 @@ public class Commands implements CommandExecutor{
 			else if (args.length == 1 && args[0].equals("2")) {
 				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
 				p.sendMessage("§7[] = Required, {} = Optional");
-				p.sendMessage("§c/mono mortgage/unmortgage # §7- Mortgages/unmortgages a property");
+				p.sendMessage("§c/mono mortgage/unmortgage [name] §7- Mortgages/unmortgages a property");
 				p.sendMessage("§c/mono buy/auction §7- Buy/auction the unowned property you're on");
 				p.sendMessage("§c/mono bid [money] §7- Bid on an active auction");
 				p.sendMessage("§c/mono auction view/leave§7 - View or leave the auction");
@@ -157,11 +155,11 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§7[] = Required, {} = Optional");
 				p.sendMessage("§c/mono trade [player] §7- Starts a trade with a player");
 				p.sendMessage("§c/mono trade view §7- View your current trade");
-				p.sendMessage("§c/mono trade offer/request money [amt]");
-				p.sendMessage("§c/mono trade offer/request property #");
-				p.sendMessage("§c/mono trade offer/request jailfree [amt]");
-				p.sendMessage("§c/mono trade confirm/unconfirm §7- Confirm the trade");
-				p.sendMessage("§c/mono trade cancel §7- Cancel the trade");
+				p.sendMessage("§c/mono offer/request money [amt]");
+				p.sendMessage("§c/mono offer/request property [name]");
+				p.sendMessage("§c/mono offer/request jailfree [amt]");
+				p.sendMessage("§c/mono confirm/unconfirm §7- Confirm the trade");
+				p.sendMessage("§c/mono cancel §7- Cancel the trade");
 				return true;
 			}
 			
@@ -195,8 +193,8 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
-			// mono positions
-			else if (args.length == 1 && args[0].equalsIgnoreCase("positions")) {
+			// mono pos
+			else if (args.length == 1 && args[0].equalsIgnoreCase("pos")) {
 				gameCommands.showPositions(p);
 				return true;
 			}
@@ -212,8 +210,8 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
-			// mono search [name]
-			else if (args.length > 1 && args[0].equalsIgnoreCase("search")) {
+			// mono view [name]
+			else if (args.length > 1 && args[0].equalsIgnoreCase("view")) {
 				String name = args[1];
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
@@ -241,54 +239,51 @@ public class Commands implements CommandExecutor{
 				gameCommands.payBills(p);
 				return true;
 			}
-			// mono view {player}
-			else if (args[0].equalsIgnoreCase("view")) {
-				if (args.length == 2 && Bukkit.getPlayer(args[1]) != null) {
-					Player view = Bukkit.getPlayer(args[1]);
-					gameCommands.viewPlayer(p, view);
-					return true;
-				}
-				else if (args.length == 1) {
-					gameCommands.viewPlayer(p, p);
-					return true;
-				}
-			}
 			// mono map
 			else if (args.length == 1 && args[0].equalsIgnoreCase("map")) {
 				gameCommands.displayMap(p);
 				return true;
 			}
-			// mono mortgage/unmortgage #
-			else if (args.length == 2 && args[0].equalsIgnoreCase("mortgage")) {
-				if (StringUtils.isNumeric(args[1])) {
-					gameCommands.mortgageProperty(p, Integer.parseInt(args[1]));
-					return true;
+			// mono mortgage/unmortgage [name]
+			else if (args.length >= 2 && args[0].equalsIgnoreCase("mortgage")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
 				}
+				gameCommands.mortgageProperty(p, name);
+				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("unmortgage")) {
-				if (StringUtils.isNumeric(args[1])) {
-					gameCommands.unmortgageProperty(p, Integer.parseInt(args[1]));
-					return true;
+			else if (args.length >= 2 && args[0].equalsIgnoreCase("unmortgage")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
 				}
+				gameCommands.unmortgageProperty(p, name);
 			}
 			// mono build/destroy/destroyhotel
-			else if (args.length == 2 && args[0].equalsIgnoreCase("build")) {
-				if (StringUtils.isNumeric(args[1])) {
-					gameCommands.buildOnProperty(p, Integer.parseInt(args[1]));
-					return true;
+			else if (args.length >= 2 && args[0].equalsIgnoreCase("build")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
 				}
+				gameCommands.buildOnProperty(p, name);
+				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("destroy")) {
-				if (StringUtils.isNumeric(args[1])) {
-					gameCommands.destroyOnProperty(p, Integer.parseInt(args[1]));
-					return true;
+			else if (args.length >= 2 && args[0].equalsIgnoreCase("destroy")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
 				}
+				gameCommands.destroyOnProperty(p, name);
+				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("destroyhotel")) {
-				if (StringUtils.isNumeric(args[1])) {
-					gameCommands.destroyHotel(p, Integer.parseInt(args[1]));
-					return true;
+			else if (args.length >= 2 && args[0].equalsIgnoreCase("destroyhotel")) {
+				String name = args[1];
+				for (int i = 2; i < args.length; i++) {
+					name += " " + args[i];
 				}
+				gameCommands.destroyHotel(p, name);
+				return true;
 			}
 			// mono buy/auction
 			else if (args.length == 1 && args[0].equalsIgnoreCase("buy")) {
@@ -335,68 +330,70 @@ public class Commands implements CommandExecutor{
 					tradeCommands.viewTrade(p);
 					return true;
 				}
-				// mono trade confirm
-				else if (args[1].equalsIgnoreCase("confirm")) {
-					tradeCommands.setConfirmTrade(p, true);
-					return true;
-				}
-				// mono trade unconfirm
-				else if (args[1].equalsIgnoreCase("unconfirm")) {
-					tradeCommands.setConfirmTrade(p, false);
-					return true;
-				}
-				// mono trade cancel
-				else if (args[1].equalsIgnoreCase("cancel")) {
-					tradeCommands.cancelTrade(p);
-					return true;
-				}
 				// mono trade [player]
 				else if (Bukkit.getPlayer(args[1]) != null) {
 					tradeCommands.startTrade(p, Bukkit.getPlayer(args[1]));
 					return true;
 				}
 			}
-			else if (args.length == 4 && args[0].equalsIgnoreCase("trade")) {
-				// mono trade offer money/property/jailfree
-				if (args[1].equalsIgnoreCase("offer")) {
-					if (args[2].equalsIgnoreCase("money")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.offerMoney(p, Integer.parseInt(args[3]));
-							return true;
-						}
-					}
-					else if (args[2].equalsIgnoreCase("property")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.offerProperty(p, Integer.parseInt(args[3]));
-							return true;
-						}
-					}
-					else if (args[2].equalsIgnoreCase("jailfree")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.offerJailFree(p, Integer.parseInt(args[3]));
-							return true;
-						}
+			// mono confirm
+			else if (args[0].equalsIgnoreCase("confirm")) {
+				tradeCommands.setConfirmTrade(p, true);
+				return true;
+			}
+			// mono unconfirm
+			else if (args[0].equalsIgnoreCase("unconfirm")) {
+				tradeCommands.setConfirmTrade(p, false);
+				return true;
+			}
+			// mono cancel
+			else if (args[0].equalsIgnoreCase("cancel")) {
+				tradeCommands.cancelTrade(p);
+				return true;
+			}
+			// mono offer money/property/jailfree
+			else if (args[0].equalsIgnoreCase("offer") && args.length >= 3) {
+				if (args[1].equalsIgnoreCase("money")) {
+					if (StringUtils.isNumeric(args[3])) {
+						tradeCommands.offerMoney(p, Integer.parseInt(args[3]));
+						return true;
 					}
 				}
-				// mono trade request money/property/jailfree
-				else if (args[1].equalsIgnoreCase("request")) {
-					if (args[2].equalsIgnoreCase("money")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.requestMoney(p, Integer.parseInt(args[3]));
-							return true;
-						}
+				else if (args[1].equalsIgnoreCase("property")) {
+					String name = args[2];
+					for (int i = 3; i < args.length; i++) {
+						name += " " + args[i];
 					}
-					else if (args[2].equalsIgnoreCase("property")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.requestProperty(p, Integer.parseInt(args[3]));
-							return true;
-						}
+					tradeCommands.offerProperty(p, name);
+					return true;
+				}
+				else if (args[1].equalsIgnoreCase("jailfree")) {
+					if (StringUtils.isNumeric(args[3])) {
+						tradeCommands.offerJailFree(p, Integer.parseInt(args[3]));
+						return true;
 					}
-					else if (args[2].equalsIgnoreCase("jailfree")) {
-						if (StringUtils.isNumeric(args[3])) {
-							tradeCommands.requestJailFree(p, Integer.parseInt(args[3]));
-							return true;
-						}
+				}
+			}
+			// mono request money/property/jailfree
+			else if (args[0].equalsIgnoreCase("request") && args.length >= 3) {
+				if (args[1].equalsIgnoreCase("money")) {
+					if (StringUtils.isNumeric(args[3])) {
+						tradeCommands.requestMoney(p, Integer.parseInt(args[3]));
+						return true;
+					}
+				}
+				else if (args[1].equalsIgnoreCase("property")) {
+					String name = args[2];
+					for (int i = 3; i < args.length; i++) {
+						name += " " + args[i];
+					}
+					tradeCommands.requestProperty(p, name);
+					return true;
+				}
+				else if (args[1].equalsIgnoreCase("jailfree")) {
+					if (StringUtils.isNumeric(args[3])) {
+						tradeCommands.requestJailFree(p, Integer.parseInt(args[3]));
+						return true;
 					}
 				}
 			}

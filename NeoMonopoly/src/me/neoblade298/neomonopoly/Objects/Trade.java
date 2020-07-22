@@ -28,24 +28,58 @@ public class Trade {
 		this.confirmB = false;
 	}
 	
-	public void offerProperty(GamePlayer offerer, int num) {
+	public void offerProperty(GamePlayer offerer, String prefix) {
 		if (traderA.equals(offerer)) {
-			Property prop = traderA.getProperties().get(num);
+			Property prop = null;
+			for (Property search : traderA.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				offerer.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!canTradeProperty(prop)) {
 				offerer.message("&cAll houses on the same color properties must be sold before you may trade this!");
 				return;
 			}
-			game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
-			propertiesA.add(prop);
+			
+			if (propertiesA.contains(prop)) {
+				game.broadcast("&e" + offerer + " &7stopped offering " + prop.getColoredName() + "&7.");
+				propertiesA.remove(prop);
+			}
+			else {
+				game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
+				propertiesA.add(prop);
+			}
 		}
 		else {
-			Property prop = traderB.getProperties().get(num);
+			Property prop = null;
+			for (Property search : traderB.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				offerer.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!canTradeProperty(prop)) {
 				offerer.message("&cAll houses on the same color properties must be sold before you may trade this!");
 				return;
 			}
-			game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
-			propertiesB.add(prop);
+			
+			if (propertiesB.contains(prop)) {
+				game.broadcast("&e" + offerer + " &7stopped offering " + prop.getColoredName() + "&7.");
+				propertiesB.remove(prop);
+			}
+			else {
+				game.broadcast("&e" + offerer + " &7has offered " + prop.getColoredName() + "&7.");
+				propertiesB.add(prop);
+			}
 		}
 		this.confirmA = false;
 		this.confirmB = false;
@@ -95,24 +129,58 @@ public class Trade {
 		this.confirmB = false;
 	}
 	
-	public void requestProperty(GamePlayer requester, int num) {
+	public void requestProperty(GamePlayer requester, String prefix) {
 		if (traderB.equals(requester)) {
-			Property prop = traderA.getProperties().get(num);
+			Property prop = null;
+			for (Property search : traderA.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				requester.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!canTradeProperty(prop)) {
 				requester.message("&cAll houses on the same color properties must be sold before they may trade this!");
 				return;
 			}
-			game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
-			propertiesA.add(prop);
+			
+			if (propertiesA.contains(prop)) {
+				game.broadcast("&e" + requester + " &7has stopped requesting " + prop.getColoredName() + "&7.");
+				propertiesA.remove(prop);
+			}
+			else {
+				game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
+				propertiesA.add(prop);
+			}
 		}
 		else {
-			Property prop = traderB.getProperties().get(num);
+			Property prop = null;
+			for (Property search : traderA.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				requester.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!canTradeProperty(prop)) {
 				requester.message("&cAll houses on the same color properties must be sold before they may trade this!");
 				return;
 			}
-			game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
-			propertiesB.add(prop);
+			
+			if (propertiesB.contains(prop)) {
+				game.broadcast("&e" + requester + " &7has stopped requesting " + prop.getColoredName() + "&7.");
+				propertiesB.remove(prop);
+			}
+			else {
+				game.broadcast("&e" + requester + " &7has requested " + prop.getColoredName() + "&7.");
+				propertiesB.add(prop);
+			}
 		}
 		this.confirmA = false;
 		this.confirmB = false;
@@ -196,14 +264,10 @@ public class Trade {
 				prop.onOwned(traderA);
 			}
 			
-			traderA.setMoney(traderA.getMoney() + moneyB);
-			traderA.setMoney(traderA.getMoney() - moneyA);
-			traderB.setMoney(traderB.getMoney() + moneyA);
-			traderB.setMoney(traderB.getMoney() - moneyB);
-			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB);
-			traderA.setNumJailFree(traderA.getNumJailFree() - jailFreeA);
-			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA);
-			traderB.setNumJailFree(traderB.getNumJailFree() - jailFreeB);
+			traderA.setMoney(traderA.getMoney() + moneyB - moneyA);
+			traderB.setMoney(traderB.getMoney() + moneyA - moneyB);
+			traderA.setNumJailFree(traderA.getNumJailFree() + jailFreeB - jailFreeA);
+			traderB.setNumJailFree(traderB.getNumJailFree() + jailFreeA - jailFreeB);
 			game.trade = null;
 		}
 	}

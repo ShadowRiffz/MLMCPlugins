@@ -133,18 +133,30 @@ public class GameCommands {
 		}
 	}
 	
-	public void mortgageProperty(Player sender, int num) {
+	public void mortgageProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
 				return;
 			}
-			
-			Property prop = gp.getProperties().get(num);
-			if (!prop.canMortgage()) {
-				gp.message("&cAll constructions must be destroyed before mortgaging this property! /mono destroy #!");
+
+			Property prop = null;
+			for (Property search : gp.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				gp.message("&cCould not find the specified property!");
 				return;
+			}
+			for (BuildableProperty bp : game.colors.get(prop.getColor())) {
+				if (!bp.canMortgage()) {
+					gp.message("&cAll constructions must be destroyed on all same color properties before mortgaging this property! /mono destroy [name]!");
+					return;
+				}
 			}
 			if (prop.isMortgaged()) {
 				gp.message("&cThis property is already mortgaged!");
@@ -158,7 +170,7 @@ public class GameCommands {
 		}
 	}
 		
-	public void unmortgageProperty(Player sender, int num) {
+	public void unmortgageProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
@@ -166,9 +178,19 @@ public class GameCommands {
 				return;
 			}
 			
-			Property prop = gp.getProperties().get(num);
+			Property prop = null;
+			for (Property search : gp.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				gp.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!prop.canMortgage()) {
-				gp.message("&cAll constructions must be destroyed before mortgaging this property! /mono destroy #!");
+				gp.message("&cAll constructions must be destroyed before mortgaging this property! /mono destroy [name]!");
 				return;
 			}
 			if (!prop.isMortgaged()) {
@@ -331,15 +353,25 @@ public class GameCommands {
 		}
 	}
 	
-	public void buildOnProperty(Player sender, int num) {
+	public void buildOnProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
 				return;
 			}
-			
-			Property prop = gp.getProperties().get(num);
+
+			Property prop = null;
+			for (Property search : gp.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				gp.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!(prop instanceof BuildableProperty)) {
 				gp.message("&cYou can't build on this type of property!");
 				return;
@@ -408,15 +440,25 @@ public class GameCommands {
 		}
 	}
 	
-	public void destroyOnProperty(Player sender, int num) {
+	public void destroyOnProperty(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
 				return;
 			}
-			
-			Property prop = gp.getProperties().get(num);
+
+			Property prop = null;
+			for (Property search : gp.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				gp.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!(prop instanceof BuildableProperty)) {
 				gp.message("&cYou can't build on this type of property!");
 				return;
@@ -448,7 +490,7 @@ public class GameCommands {
 					return;
 				}
 				else {
-					gp.message("&cThere are no houses remaining! To sell the hotel completely for only cash, do /mono destroyhotel #");
+					gp.message("&cThere are no houses remaining! To sell the hotel completely for only cash, do /mono destroyhotel [name]");
 					return;
 				}
 			}
@@ -460,7 +502,7 @@ public class GameCommands {
 				bprop.setNumHouses(bprop.getNumHouses() - 1);
 				game.addHouses(1);
 				game.giveMoney(bprop.getHouseprice() / 2, gp,
-						"&e" + gp + " &7built house &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
+						"&e" + gp + " &7destroyed a house, leaving &e" + bprop.getNumHouses() + " &7on " + bprop.getShorthand(gp) + " &7for &c-$" +
 				(bprop.getHouseprice() / 2) + "&7. The rent there is now &e" + bprop.calculateRent(0) + "&7." +
 								" &7There are now &e" + game.getHouses() + " &7free houses.", true);
 				return;
@@ -471,15 +513,25 @@ public class GameCommands {
 		}
 	}
 	
-	public void destroyHotel(Player sender, int num) {
+	public void destroyHotel(Player sender, String prefix) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
 			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
 				return;
 			}
-			
-			Property prop = gp.getProperties().get(num);
+
+			Property prop = null;
+			for (Property search : gp.getProperties()) {
+				if (search.getName().startsWith(prefix)) {
+					prop = search;
+					break;
+				}
+			}
+			if (prop == null) {
+				gp.message("&cCould not find the specified property!");
+				return;
+			}
 			if (!(prop instanceof BuildableProperty)) {
 				gp.message("&cYou can't build on this type of property!");
 				return;

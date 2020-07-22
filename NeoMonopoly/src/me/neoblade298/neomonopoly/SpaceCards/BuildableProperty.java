@@ -257,6 +257,9 @@ public class BuildableProperty implements Property {
 
 	@Override
 	public int calculateRent(int dice) {
+		if (numHouses + numHotels == 0 && isMonopoly) {
+			return rent[0] * 2;
+		}
 		return rent[numHouses + (numHotels * 5)];
 	}
 
