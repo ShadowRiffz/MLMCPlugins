@@ -22,23 +22,7 @@ public class Auction {
 		this.topBidder = host;
 		this.host = host;
 
-		game.broadcast("&7An auction for &e" + property.getName() + "&7 has begun! &e30 &7seconds remaining!");
-		BukkitRunnable endAuction = new BukkitRunnable() {
-			public void run() {
-				if (game.auction != null) {
-					endAuction();
-				}
-			}
-		};
-		BukkitRunnable warn10 = new BukkitRunnable() {
-			public void run() {
-				if (game.auction != null) {
-					game.broadcast("&e10 &7seconds remaining!");
-					endAuction.runTaskLater(game.main, 200L);
-				}
-			}
-		};
-		warn10.runTaskLater(game.main, 400L);
+		game.broadcast("&7An auction for &e" + property.getName() + "&7 has begun! It ends when only 1 bidder remains! Drop out with &c/mono auction leave&7!");
 	}
 	
 	public void bid(GamePlayer gp, int amount) {
