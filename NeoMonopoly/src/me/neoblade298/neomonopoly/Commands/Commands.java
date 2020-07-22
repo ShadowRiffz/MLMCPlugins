@@ -216,7 +216,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.viewProperty(p, name);
+				gameCommands.viewProperty(p, name.toLowerCase());
 				return true;
 			}
 			// mono end {player}
@@ -250,7 +250,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.mortgageProperty(p, name);
+				gameCommands.mortgageProperty(p, name.toLowerCase());
 				return true;
 			}
 			else if (args.length >= 2 && args[0].equalsIgnoreCase("unmortgage")) {
@@ -258,7 +258,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.unmortgageProperty(p, name);
+				gameCommands.unmortgageProperty(p, name.toLowerCase());
 			}
 			// mono build/destroy/destroyhotel
 			else if (args.length >= 2 && args[0].equalsIgnoreCase("build")) {
@@ -266,7 +266,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.buildOnProperty(p, name);
+				gameCommands.buildOnProperty(p, name.toLowerCase());
 				return true;
 			}
 			else if (args.length >= 2 && args[0].equalsIgnoreCase("destroy")) {
@@ -274,7 +274,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.destroyOnProperty(p, name);
+				gameCommands.destroyOnProperty(p, name.toLowerCase());
 				return true;
 			}
 			else if (args.length >= 2 && args[0].equalsIgnoreCase("destroyhotel")) {
@@ -282,7 +282,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 2; i < args.length; i++) {
 					name += " " + args[i];
 				}
-				gameCommands.destroyHotel(p, name);
+				gameCommands.destroyHotel(p, name.toLowerCase());
 				return true;
 			}
 			// mono buy/auction
@@ -364,7 +364,7 @@ public class Commands implements CommandExecutor{
 					for (int i = 3; i < args.length; i++) {
 						name += " " + args[i];
 					}
-					tradeCommands.offerProperty(p, name);
+					tradeCommands.offerProperty(p, name.toLowerCase());
 					return true;
 				}
 				else if (args[1].equalsIgnoreCase("jailfree")) {
@@ -387,7 +387,7 @@ public class Commands implements CommandExecutor{
 					for (int i = 3; i < args.length; i++) {
 						name += " " + args[i];
 					}
-					tradeCommands.requestProperty(p, name);
+					tradeCommands.requestProperty(p, name.toLowerCase());
 					return true;
 				}
 				else if (args[1].equalsIgnoreCase("jailfree")) {

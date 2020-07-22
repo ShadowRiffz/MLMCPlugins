@@ -104,7 +104,7 @@ public class GameCommands {
 			for (Space space : game.board) {
 				if (space instanceof Property) {
 					Property prop = (Property) space;
-					if (prop.getName().toLowerCase().startsWith(prefix.toLowerCase())) {
+					if (prop.getName().toLowerCase().startsWith(prefix)) {
 						prop.displayProperty(gp);
 						return;
 					}
@@ -143,7 +143,7 @@ public class GameCommands {
 
 			Property prop = null;
 			for (Property search : gp.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -180,7 +180,7 @@ public class GameCommands {
 			
 			Property prop = null;
 			for (Property search : gp.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -363,7 +363,7 @@ public class GameCommands {
 
 			Property prop = null;
 			for (Property search : gp.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -450,7 +450,7 @@ public class GameCommands {
 
 			Property prop = null;
 			for (Property search : gp.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -523,7 +523,7 @@ public class GameCommands {
 
 			Property prop = null;
 			for (Property search : gp.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}

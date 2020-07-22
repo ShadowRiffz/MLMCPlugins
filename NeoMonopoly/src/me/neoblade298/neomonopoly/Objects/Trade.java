@@ -32,7 +32,7 @@ public class Trade {
 		if (traderA.equals(offerer)) {
 			Property prop = null;
 			for (Property search : traderA.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -58,7 +58,7 @@ public class Trade {
 		else {
 			Property prop = null;
 			for (Property search : traderB.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
@@ -159,7 +159,7 @@ public class Trade {
 		else {
 			Property prop = null;
 			for (Property search : traderA.getProperties()) {
-				if (search.getName().startsWith(prefix)) {
+				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
 				}
