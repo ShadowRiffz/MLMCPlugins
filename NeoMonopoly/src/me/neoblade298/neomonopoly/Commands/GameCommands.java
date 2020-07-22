@@ -193,8 +193,8 @@ public class GameCommands {
 				gp.message("&cAll constructions must be destroyed before mortgaging this property! /mono destroy [name]!");
 				return;
 			}
-			if (!prop.isMortgaged()) {
-				gp.message("&cThis property is not mortgaged!");
+			if (prop.isMortgaged()) {
+				gp.message("&cThis property is already mortgaged!");
 				return;
 			}
 			if (!canAfford(game, gp, prop.getPrice())) {
@@ -605,10 +605,10 @@ public class GameCommands {
 					// Place players on map
 					if (positions.containsKey(pos)) {
 						if (positions.get(pos).size() > 1) {
-							line += '@' + " ";
+							line += ChatColor.UNDERLINE + "@" + space.getColor() + " ";
 						}
 						else {
-							line += positions.get(pos).get(0).mapChar + " ";
+							line += ChatColor.UNDERLINE + "" + positions.get(pos).get(0).mapChar + space.getColor() + " ";
 						}
 					}
 					// Place item on map
@@ -616,7 +616,10 @@ public class GameCommands {
 						if (space instanceof Property) {
 							Property prop = (Property) space;
 							if (prop.getOwner() != null) {
-								line += (prop.getOwner().mapChar + " ").toUpperCase();
+								if (prop.isMortgaged()) {
+									line += ChatColor.UNDERLINE;
+								}
+								line += (prop.getOwner().mapChar + "" + space.getColor() + " ").toUpperCase();
 							}
 							else {
 								line += space.getMapChar() + " ";
@@ -639,7 +642,7 @@ public class GameCommands {
 					line += ChatColor.WHITE + " J: Jail, /: Go to jail";
 				}
 				if (i == 10) {
-					line += ChatColor.WHITE + " +: Tax, @: Multiple players here";
+					line += ChatColor.WHITE + " ~: Tax, @: Multiple players";
 				}
 				gp.message(line);
 			}
@@ -742,6 +745,24 @@ public class GameCommands {
 		}
 	}
 	
+	public void spectateGame(Player sender, String name) {
+		if (!main.ingame.containsKey(sender)) {
+			if (!main.games.containsKey(name)) {
+				Game game = main.games.get(name);
+				GamePlayer gp = new GamePlayer(sender, 0, game, '-');
+				gp.setPosition(-1);
+				game.gameplayers.add(gp);
+				gp.message("&7You're now spectating! Leave any time with &c/mono quit&7.");
+			}
+			else {
+				sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist");
+			}
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a game!");
+		}
+	}
+	
 	public void goBankrupt(Player sender) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
@@ -756,6 +777,7 @@ public class GameCommands {
 			}
 			
 			game.endTurn(gp);
+			gp.setPosition(-1);
 			game.currentTurn.remove(gp);
 			game.requiredActions.remove(gp);
 			gp.message("&7You may leave the game any time with &c/mono quit&7.");

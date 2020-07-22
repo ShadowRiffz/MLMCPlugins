@@ -312,6 +312,7 @@ public class Game {
 						+ "Destroy houses or mortgage properties to get money and type /mono paybills, or type /mono bankrupt to give up!");
 			}
 			else {
+				paid.setMoney(paid.getMoney() + amt - remaining);
 				broadcast("&e" + payer + " &ccould not pay &e" + paid + " &a$" + amt + "&c! They need &a$" + remaining + "&c more. "
 						+ "Destroy houses or mortgage properties to get money and type /mono paybills, or type /mono bankrupt to give up!");
 			}

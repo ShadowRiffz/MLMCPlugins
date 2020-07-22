@@ -40,10 +40,11 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§4[§c§lMonopoly§4]");
 				p.sendMessage("§c/mono create [name] §7- Create a lobby");
 				p.sendMessage("§c/mono join [name] §7- Join a lobby");
+				p.sendMessage("§c/mono spectate [name] §7- Spectate a game");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono end [name] §7- End a game");
+					p.sendMessage("§4/mono endgame [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono check [name] §7- Checks what game a player is in");
+					p.sendMessage("§4/mono games §7- Lists all games and player");
 				}
 				return true;
 			}
@@ -68,10 +69,9 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/mono kick [player] §7- Kick player from lobby (host only)");
 				p.sendMessage("§c/mono set money [amt] §7- Set game starting money (host only)");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono end [name] §7- End a game");
+					p.sendMessage("§4/mono endgame [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono check [name] §7- Checks what game a player is in");
-					p.sendMessage("§4/mono checkactions [name] §7- Check player's required actions");
+					p.sendMessage("§4/mono games §7- Lists all games and player");
 				}
 				return true;
 			}
@@ -117,7 +117,7 @@ public class Commands implements CommandExecutor{
 				if (p.hasPermission("neomonopoly.admin")) {
 					p.sendMessage("§4/mono endgame [name] §7- End a game");
 					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono check [name] §7- Checks what game a player is in");
+					p.sendMessage("§4/mono games §7- Lists all games and player");
 				}
 				return true;
 			}
@@ -259,6 +259,7 @@ public class Commands implements CommandExecutor{
 					name += " " + args[i];
 				}
 				gameCommands.unmortgageProperty(p, name.toLowerCase());
+				return true;
 			}
 			// mono build/destroy/destroyhotel
 			else if (args.length >= 2 && args[0].equalsIgnoreCase("build")) {
@@ -354,8 +355,8 @@ public class Commands implements CommandExecutor{
 			// mono offer money/property/jailfree
 			else if (args[0].equalsIgnoreCase("offer") && args.length >= 3) {
 				if (args[1].equalsIgnoreCase("money")) {
-					if (StringUtils.isNumeric(args[3])) {
-						tradeCommands.offerMoney(p, Integer.parseInt(args[3]));
+					if (StringUtils.isNumeric(args[2])) {
+						tradeCommands.offerMoney(p, Integer.parseInt(args[2]));
 						return true;
 					}
 				}
@@ -368,8 +369,8 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				else if (args[1].equalsIgnoreCase("jailfree")) {
-					if (StringUtils.isNumeric(args[3])) {
-						tradeCommands.offerJailFree(p, Integer.parseInt(args[3]));
+					if (StringUtils.isNumeric(args[2])) {
+						tradeCommands.offerJailFree(p, Integer.parseInt(args[2]));
 						return true;
 					}
 				}
@@ -377,8 +378,8 @@ public class Commands implements CommandExecutor{
 			// mono request money/property/jailfree
 			else if (args[0].equalsIgnoreCase("request") && args.length >= 3) {
 				if (args[1].equalsIgnoreCase("money")) {
-					if (StringUtils.isNumeric(args[3])) {
-						tradeCommands.requestMoney(p, Integer.parseInt(args[3]));
+					if (StringUtils.isNumeric(args[2])) {
+						tradeCommands.requestMoney(p, Integer.parseInt(args[2]));
 						return true;
 					}
 				}
@@ -391,8 +392,8 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				else if (args[1].equalsIgnoreCase("jailfree")) {
-					if (StringUtils.isNumeric(args[3])) {
-						tradeCommands.requestJailFree(p, Integer.parseInt(args[3]));
+					if (StringUtils.isNumeric(args[2])) {
+						tradeCommands.requestJailFree(p, Integer.parseInt(args[2]));
 						return true;
 					}
 				}
@@ -408,12 +409,8 @@ public class Commands implements CommandExecutor{
 				adminCommands.kickPlayer(p, Bukkit.getPlayer(args[1]));
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("check")) {
-				adminCommands.checkGame(p, Bukkit.getPlayer(args[1]));
-				return true;
-			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("checkactions")) {
-				adminCommands.checkPlayer(p, Bukkit.getPlayer(args[1]));
+			else if (args.length == 1 && args[0].equalsIgnoreCase("games")) {
+				adminCommands.checkGames(p, main);
 				return true;
 			}
 		}

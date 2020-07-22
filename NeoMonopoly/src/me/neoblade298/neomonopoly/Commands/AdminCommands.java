@@ -51,13 +51,17 @@ public class AdminCommands {
 		}
 	}
 	
-	public void checkGame(Player sender, Player toView) {
-		if (main.ingame.containsKey(toView)) {
-			Game game = main.ingame.get(toView);
-			sender.sendMessage("§4[§c§lMLMC§4] §e" + toView.getName() + "§7 is in the game: §e" + game.getName() + "§7.");
+	public void checkGames(Player sender, Monopoly main) {
+		if (main.games.size() == 0) {
+			sender.sendMessage("§cNo games being played.");
 		}
-		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat player isn't in a game!");
+		for (String name : main.games.keySet()) {
+			Game game = main.games.get(name);
+			String msg = "§e" + game.getName() + "§7: §e";
+			for (GamePlayer gp : game.gameplayers) {
+				msg += gp + " ";
+			}
+			sender.sendMessage(msg);
 		}
 	}
 	

@@ -28,7 +28,7 @@ public class Tax implements Space {
 	}
 	
 	public char getMapChar() {
-		return '+';
+		return '~';
 	}
 
 	@Override
