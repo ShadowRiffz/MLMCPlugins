@@ -745,24 +745,6 @@ public class GameCommands {
 		}
 	}
 	
-	public void spectateGame(Player sender, String name) {
-		if (!main.ingame.containsKey(sender)) {
-			if (!main.games.containsKey(name)) {
-				Game game = main.games.get(name);
-				GamePlayer gp = new GamePlayer(sender, 0, game, '-');
-				gp.setPosition(-1);
-				game.gameplayers.add(gp);
-				gp.message("&7You're now spectating! Leave any time with &c/mono quit&7.");
-			}
-			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist");
-			}
-		}
-		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a game!");
-		}
-	}
-	
 	public void goBankrupt(Player sender) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);

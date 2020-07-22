@@ -56,6 +56,10 @@ public class Commands implements CommandExecutor{
 				lobbyCommands.joinLobby(args[1], p);
 				return true;
 			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("spectate")) {
+				lobbyCommands.spectateGame(p, args[1]);
+				return true;
+			}
 		}
 		else if (main.inlobby.containsKey(p)) {
 			Lobby lobby = main.inlobby.get(p);

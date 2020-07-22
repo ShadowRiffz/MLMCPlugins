@@ -65,6 +65,7 @@ public class Auction {
 		}
 		else {
 			game.broadcast("&e" + gp + " &7has left the auction!");
+			participants.remove(gp);
 			if (participants.size() == 1) {
 				endAuction();
 			}
