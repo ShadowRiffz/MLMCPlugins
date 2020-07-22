@@ -2,8 +2,6 @@ package me.neoblade298.neomonopoly.Objects;
 
 import java.util.ArrayList;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.neoblade298.neomonopoly.SpaceCards.Property;
 
 public class Auction {
