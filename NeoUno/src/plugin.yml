@@ -1,7 +1,7 @@
 name: NeoUno
 main: me.neoblade298.neouno.Uno
 author: [Neoblade298]
-version: 1.33
+version: 1.34
 api-version: 1.15
 commands:
    uno:

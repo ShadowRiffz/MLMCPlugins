@@ -121,6 +121,7 @@ public class Game {
 			Collections.shuffle(drawDeck);
 			for (GamePlayer gp : turns) {
 				for (int i = 0; i < 7; i++) {
+					gp.getCards().clear();
 					gp.getCards().add(drawDeck.remove(0));
 				}
 			}
