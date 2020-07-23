@@ -1,0 +1,10 @@
+name: NeoBase
+main: me.neoblade298.base.Uno
+author: [Neoblade298]
+version: 1.0
+api-version: 1.15
+commands:
+   uno:
+      description: The base command
+      usage: /uno
+      permission: neouno.player
