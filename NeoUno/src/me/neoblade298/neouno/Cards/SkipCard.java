@@ -48,7 +48,7 @@ public class SkipCard implements Card{
 	public void onPlay() {
 		game.turns.add(game.curr);
 		GamePlayer gp = game.turns.remove(0);
-		game.broadcast("&e" + gp + "'s &7turn was skipped!");
+		game.broadcast("&f" + gp + "'s &7turn was skipped!");
 		game.turns.add(gp);
 		game.curr = game.turns.remove(0);
 	}

@@ -1,7 +1,7 @@
-name: NeoBase
-main: me.neoblade298.base.Uno
+name: NeoUno
+main: me.neoblade298.neouno.Uno
 author: [Neoblade298]
-version: 1.0
+version: 1.1
 api-version: 1.15
 commands:
    uno:

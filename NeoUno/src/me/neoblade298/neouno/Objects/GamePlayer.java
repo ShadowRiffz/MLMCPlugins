@@ -32,11 +32,11 @@ public class GamePlayer {
 			message("Your turn! Top card is: " + game.topCard.getDisplay());
 		}
 		else {
-			message("&e" + game.curr + "'s &7turn! Top card is: " + game.topCard.getDisplay());
+			message("&f" + game.curr + "'s &7turn! Top card is: " + game.topCard.getDisplay());
 		}
 		String msg = new String("&7Hand: ");
 		for (Card card : this.cards) {
-			msg += card.getColor() + "" + card.getNumber() + " ";
+			msg += card.getColor() + "" + card.getDisplay() + " ";
 		}
 		message(msg);
 	}

@@ -86,7 +86,7 @@ public class GameCommands {
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
 			}
-			if (game.requiredAction != null && game.requiredAction.equalsIgnoreCase("PICK_COLOR")) {
+			if (game.requiredAction == null || !game.requiredAction.equalsIgnoreCase("PICK_COLOR")) {
 				gp.message("&cYou can't pick a color right now!");
 				return;
 			}
@@ -99,7 +99,7 @@ public class GameCommands {
 			ChatColor clr = game.main.stringToColor.get(color);
 			game.topCard.setColor(clr);
 			String display = game.main.colorToString.get(clr);
-			game.broadcast("&e" + sender + " &7has changed the color to " + clr + display + "&7!");
+			game.broadcast("&f" + sender + " &7has changed the color to " + clr + display + "&7!");
 			game.turns.add(game.curr);
 			game.curr = game.turns.remove(0);
 		}
@@ -122,12 +122,12 @@ public class GameCommands {
 			}	
 			
 			if (game.curr.equals(gp) && gp.getCards().size() == 2) {
-				game.broadcast("&e" + gp + " &7calls &lUno&7!");
+				game.broadcast("&f" + gp + " &7calls &lUno&7!");
 				gp.setCalledUno(true);
 				return;
 			}
 			else if (!game.curr.equals(gp) && gp.getCards().size() == 1) {
-				game.broadcast("&e" + gp + " &7calls &lUno&7!");
+				game.broadcast("&f" + gp + " &7calls &lUno&7!");
 				gp.setCalledUno(true);
 				return;
 			}
@@ -158,7 +158,7 @@ public class GameCommands {
 					return;
 				}
 				
-				game.broadcast("&e" + gp + " &7called out &e" + challenged + " &7for not calling uno!");
+				game.broadcast("&f" + gp + " &7called out &f" + challenged + " &7for not calling uno!");
 				game.drawCard(challenged, 2);
 			}
 		}
@@ -192,10 +192,10 @@ public class GameCommands {
 				return;
 			}
 			
-			game.broadcast("&7Current turn: &e" + game.curr);
+			game.broadcast("&7Current turn: &f" + game.curr);
 			int count = 2;
 			for (GamePlayer p : game.gameplayers) {
-				game.broadcast("&7" + count + ". &e" + p);
+				game.broadcast("&7" + count + ". &f" + p);
 				count++;
 			}
 		}

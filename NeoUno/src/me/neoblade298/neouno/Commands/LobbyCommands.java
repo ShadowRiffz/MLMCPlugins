@@ -106,7 +106,7 @@ public class LobbyCommands {
 		if (lobby.getHost().equals(sender)) {
 			lobby.getInvited().add(invited);
 			lobby.broadcast("&7Successfully invited &e" + invited.getName() + "&7!");
-			invited.sendMessage("§4[§c§lMLMC§4] §7You were invited to monopoly lobby §e" + lobby.getName() + "§7! Join with §c/mono join " + lobby.getName() + "§7.");
+			invited.sendMessage("§4[§c§lMLMC§4] §7You were invited to uno lobby §e" + lobby.getName() + "§7! Join with §c/uno join " + lobby.getName() + "§7.");
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can invite to lobby!");

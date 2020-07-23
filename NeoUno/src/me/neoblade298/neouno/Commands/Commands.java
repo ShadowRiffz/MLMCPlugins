@@ -69,9 +69,9 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/uno kick [player] §7- Kick player from lobby (host only)");
 				p.sendMessage("§c/uno set points [amt] §7- Set game points to win (host only)");
 				if (p.hasPermission("neouno.admin")) {
-					p.sendMessage("§4/mono endgame [name] §7- End a game");
-					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono games §7- Lists all games and player");
+					p.sendMessage("§4/uno endgame [name] §7- End a game");
+					p.sendMessage("§4/uno forcequit [player] §7- Forces a player in the game to quit");
+					p.sendMessage("§4/uno games §7- Lists all games and player");
 				}
 				return true;
 			}
@@ -104,9 +104,9 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/uno challenge [player] §7- If someone fails to call uno, use this!");
 				p.sendMessage("§c/uno players §7- View players and order of players");
 				if (p.hasPermission("neouno.admin")) {
-					p.sendMessage("§4/mono endgame [name] §7- End a game");
-					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono games §7- Lists all games and player");
+					p.sendMessage("§4/uno endgame [name] §7- End a game");
+					p.sendMessage("§4/uno forcequit [player] §7- Forces a player in the game to quit");
+					p.sendMessage("§4/uno games §7- Lists all games and player");
 				}
 				return true;
 			}

@@ -78,6 +78,8 @@ public class Game {
 			copyDeck.add(new Wildcard(this));
 			copyDeck.add(new WildDrawFour(this));
 		}
+		
+		onRoundStart();
 	}
 	
 	public void drawCard(GamePlayer gp, int num) {
@@ -87,21 +89,25 @@ public class Game {
 		}
 		if (drawNum == 0 && num == 1) {
 			gp.getCards().add(drawDeck.remove(0));
-			broadcast("&e" + gp + "&7 draws a card.");
+			broadcast("&f" + gp + "&7 draws a card.");
 		}
 		else if (drawNum > 0 && num == 1) {
 			for (int i = 0; i < drawNum; i++) {
 				gp.getCards().add(drawDeck.remove(0));
 			}
-			broadcast("&e" + gp + "&7 draws &e" + drawNum + " &7cards.");
+			broadcast("&f" + gp + "&7 draws &f" + drawNum + " &7cards.");
 			drawNum = 0;
 		}
 		else if (num > 1) {
 			for (int i = 0; i < num; i++) {
 				gp.getCards().add(drawDeck.remove(0));
 			}
-			broadcast("&e" + gp + "&7 draws &e" + num + " &7cards.");
+			broadcast("&f" + gp + "&7 draws &f" + num + " &7cards.");
 		}
+		
+		turns.add(curr);
+		curr = turns.remove(0);
+		nextTurn();
 	}
 	
 	private void onRoundStart() {
@@ -116,16 +122,16 @@ public class Game {
 			}
 			
 			Collections.shuffle(turns);
-			curr = turns.remove(0);
-			topCard = drawDeck.remove(0);
 			String msg = "A round has started! The order is: ";
 			for (int i = 0; i < turns.size(); i++) {
 				GamePlayer gp = turns.get(i);
-				msg += "&e" + gp;
+				msg += "&f" + gp;
 				if (i != turns.size() - 1) {
 					msg += "&7, ";
 				}
 			}
+			curr = turns.remove(0);
+			topCard = drawDeck.remove(0);
 			broadcast(msg);
 			showHands();
 		}}.runTaskLater(main, 40L);
@@ -150,7 +156,7 @@ public class Game {
 				// Display points
 				broadcast("Point scores:");
 				for (GamePlayer gp : game.gameplayers) {
-					broadcast("&e" + gp + "&7 - " + game.points.get(gp));
+					broadcast("&f" + gp + "&7 - " + game.points.get(gp));
 				}
 			}}.runTaskLater(main, 20L);
 		
@@ -195,12 +201,12 @@ public class Game {
 		boolean topAdd = topCard instanceof WildDrawFour || topCard instanceof DrawTwoCard;
 		boolean playAdd = card instanceof WildDrawFour || card instanceof DrawTwoCard;
 		
-		if (number != card.getNumber() &&
+		if (number != card.getNumber() && !color.equals(ChatColor.WHITE) &&
 			!color.equals(card.getColor()) && !card.getColor().equals(ChatColor.WHITE)) {
 			gp.message("&cThis card is not the same type or color!");
 			return;
 		}
-		if (topAdd && !playAdd) {
+		if (topAdd && !playAdd && drawNum > 0) {
 			gp.message("&cYou must either use /uno draw or play a card that makes the next player draw more cards!");
 			return;
 		}
@@ -208,12 +214,15 @@ public class Game {
 		gp.getCards().remove(card);
 		card.onPlay();
 		topCard = card;
-		broadcast("&e" + gp + " &7played a " + card.getDisplay() + "&7 and has &e" + gp.getCards().size() + "&7 cardsleft!");
+		broadcast("&f" + gp + " &7played a " + card.getDisplay() + "&7 and has &f" + gp.getCards().size() + "&7 cards left!");
 		if (drawNum > 0) { 
-			broadcast("&7Next person to draw must draw &e" + drawNum + "&7 cards!");
+			broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
 		}
 		if (gp.getCards().size() == 0) {
 			onRoundEnd(gp);
+		}
+		if (card.getColor().equals(ChatColor.WHITE)) {
+			broadcast("&f" + gp + " &7must choose the new color with &c/mono color [r/g/b/y]&7!");
 		}
 		if (requiredAction == null) {
 			nextTurn();
@@ -239,8 +248,8 @@ public class Game {
 	}
 	
 	public void playerLeave(boolean forced, GamePlayer gp) {
-		if (forced) broadcast("&e" + gp + "&7 was kicked by an admin!");
-		else broadcast("&e" + gp + " &7left the game!");
+		if (forced) broadcast("&f" + gp + "&7 was kicked by an admin!");
+		else broadcast("&f" + gp + " &7left the game!");
 		
 		main.ingame.remove(gp.getPlayer());
 		gameplayers.remove(gp);
@@ -260,7 +269,7 @@ public class Game {
 		if (this.pointsToWin > 0) {
 			broadcast("Point scores:");
 			for (GamePlayer gp : gameplayers) {
-				broadcast("&e" + gp + "&7 - " + points.get(gp));
+				broadcast("&f" + gp + "&7 - " + points.get(gp));
 				main.ingame.remove(gp.getPlayer());
 			}
 		}
