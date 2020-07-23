@@ -17,7 +17,10 @@ public class Lobby {
 		players.add(p);
 		this.name = name;
 		this.invited = new ArrayList<Player>();
-		this.money = 2000;
+		this.money = 6000 / this.invited.size();
+		if (this.invited.size() == 7) {
+			this.money = 850;
+		}
 	}
 	
 	public String getPlayerList() {

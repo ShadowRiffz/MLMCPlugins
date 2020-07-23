@@ -134,7 +134,7 @@ public class Utility implements Property {
 
 	@Override
 	public void onUnowned(GamePlayer formerOwner) {
-		owner.setNumUtilities(owner.getNumUtilities() + 1);
+		owner.setNumUtilities(owner.getNumUtilities() - 1);
 		game.broadcast("&e" + formerOwner + " &7now owns &e" + owner.getNumUtilities() + " &7utilities.");
 	}
 
