@@ -167,6 +167,7 @@ public class LobbyCommands {
 			if (main.games.containsKey(name)) {
 				Game game = main.games.get(name);
 				GamePlayer gp = new GamePlayer(game, sender);
+				main.ingame.put(sender, game);
 				game.spectators.add(gp);
 				gp.message("&7You're now spectating! Leave any time with &c/uno quit&7.");
 			}

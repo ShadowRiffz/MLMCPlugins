@@ -265,6 +265,10 @@ public class Game {
 		main.ingame.remove(gp.getPlayer());
 		gameplayers.remove(gp);
 		players.remove(gp.getPlayer());
+		
+		if (spectators.contains(gp)) {
+			spectators.remove(gp);
+		}
 		if (turns.contains(gp)) {
 			turns.remove(gp);
 		}
