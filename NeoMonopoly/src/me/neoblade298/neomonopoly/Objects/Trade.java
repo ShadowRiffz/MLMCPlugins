@@ -158,7 +158,7 @@ public class Trade {
 		}
 		else {
 			Property prop = null;
-			for (Property search : traderA.getProperties()) {
+			for (Property search : traderB.getProperties()) {
 				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
 					break;
