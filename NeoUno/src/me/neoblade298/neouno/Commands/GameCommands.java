@@ -32,6 +32,23 @@ public class GameCommands {
 		}
 	}
 	
+	public void quitGame(Player sender) {
+		if (main.ingame.containsKey(sender)) {
+			Game game = main.ingame.get(sender);
+			GamePlayer gp = game.players.get(sender);
+			
+			if (!isNotBusy(game, gp)) {
+				return;
+			}
+
+			game.playerLeave(false, gp);
+			
+		}
+		else {
+			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+		}
+	}
+	
 	public void playCard(Player sender, String name) {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
@@ -102,6 +119,7 @@ public class GameCommands {
 			game.broadcast("&f" + gp + " &7has changed the color to " + clr + display + "&7!");
 			game.turns.add(game.curr);
 			game.curr = game.turns.remove(0);
+			game.nextTurn();
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");

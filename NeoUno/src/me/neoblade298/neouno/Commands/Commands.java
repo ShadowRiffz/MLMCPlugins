@@ -103,6 +103,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c/uno color [r/g/b/y] §7- Set the color when you use a wildcard!");
 				p.sendMessage("§c/uno challenge [player] §7- If someone fails to call uno, use this!");
 				p.sendMessage("§c/uno players §7- View players and order of players");
+				p.sendMessage("§c/uno quit §7- Quit the game you're in");
 				if (p.hasPermission("neouno.admin")) {
 					p.sendMessage("§4/uno endgame [name] §7- End a game");
 					p.sendMessage("§4/uno forcequit [player] §7- Forces a player in the game to quit");

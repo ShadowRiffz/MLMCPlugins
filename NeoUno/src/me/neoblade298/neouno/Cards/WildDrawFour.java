@@ -25,6 +25,7 @@ public class WildDrawFour implements Card{
 	@Override
 	public void setColor(ChatColor color) {
 		this.color = color;
+		this.display = this.color + "+4";
 	}
 
 	@Override

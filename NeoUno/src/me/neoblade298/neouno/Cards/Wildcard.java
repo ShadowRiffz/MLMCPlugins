@@ -25,6 +25,7 @@ public class Wildcard implements Card{
 	@Override
 	public void setColor(ChatColor color) {
 		this.color = color;
+		this.display = this.color + "Wild";
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class Wildcard implements Card{
 	@Override
 	public void setNumber(int number) {
 		this.number = number;
+		this.display = this.color + "" + this.number;
 	}
 	
 	@Override

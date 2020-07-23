@@ -90,6 +90,9 @@ public class Game {
 		if (drawNum == 0 && num == 1) {
 			gp.getCards().add(drawDeck.remove(0));
 			broadcast("&f" + gp + "&7 draws a card.");
+			turns.add(curr);
+			curr = turns.remove(0);
+			nextTurn();
 		}
 		else if (drawNum > 0 && num == 1) {
 			for (int i = 0; i < drawNum; i++) {
@@ -97,20 +100,21 @@ public class Game {
 			}
 			broadcast("&f" + gp + "&7 draws &f" + drawNum + " &7cards.");
 			drawNum = 0;
+			turns.add(curr);
+			curr = turns.remove(0);
+			nextTurn();
 		}
+		// Only used when uno is challenged
 		else if (num > 1) {
 			for (int i = 0; i < num; i++) {
 				gp.getCards().add(drawDeck.remove(0));
 			}
 			broadcast("&f" + gp + "&7 draws &f" + num + " &7cards.");
 		}
-		
-		turns.add(curr);
-		curr = turns.remove(0);
-		nextTurn();
 	}
 	
 	private void onRoundStart() {
+		Game game = this;
 		broadcast("&7Starting new round...");
 		new BukkitRunnable() { public void run() {
 			drawDeck = new ArrayList<Card>(copyDeck);
@@ -134,7 +138,8 @@ public class Game {
 			topCard = drawDeck.remove(0);
 			broadcast(msg);
 			showHands();
-		}}.runTaskLater(main, 40L);
+			game.isBusy = false;
+		}}.runTaskLater(main, 20L);
 	}
 	
 	private void onRoundEnd(GamePlayer winner) {
@@ -176,8 +181,13 @@ public class Game {
 	}
 	
 	public void nextTurn() {
-		curr.setCalledUno(false);
-		showHands();
+		this.isBusy = true;
+		Game game = this;
+		new BukkitRunnable() { public void run() {
+			curr.setCalledUno(false);
+			showHands();
+			game.isBusy = false;
+		}}.runTaskLater(main, 20L);
 	}
 	
 	public void broadcast(String msg) {
@@ -220,6 +230,7 @@ public class Game {
 		}
 		if (gp.getCards().size() == 0) {
 			onRoundEnd(gp);
+			return;
 		}
 		if (card.getColor().equals(ChatColor.WHITE)) {
 			broadcast("&f" + gp + " &7must choose the new color with &c/uno color [r/g/b/y]&7!");
