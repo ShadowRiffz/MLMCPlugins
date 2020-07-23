@@ -99,7 +99,7 @@ public class GameCommands {
 			ChatColor clr = game.main.stringToColor.get(color);
 			game.topCard.setColor(clr);
 			String display = game.main.colorToString.get(clr);
-			game.broadcast("&f" + sender + " &7has changed the color to " + clr + display + "&7!");
+			game.broadcast("&f" + gp + " &7has changed the color to " + clr + display + "&7!");
 			game.turns.add(game.curr);
 			game.curr = game.turns.remove(0);
 		}

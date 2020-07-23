@@ -222,7 +222,7 @@ public class Game {
 			onRoundEnd(gp);
 		}
 		if (card.getColor().equals(ChatColor.WHITE)) {
-			broadcast("&f" + gp + " &7must choose the new color with &c/mono color [r/g/b/y]&7!");
+			broadcast("&f" + gp + " &7must choose the new color with &c/uno color [r/g/b/y]&7!");
 		}
 		if (requiredAction == null) {
 			nextTurn();
