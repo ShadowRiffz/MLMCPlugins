@@ -251,16 +251,16 @@ public class Trade {
 			for (Property prop : propertiesA) {
 				traderA.getProperties().remove(prop);
 				traderB.getProperties().add(prop);
-				prop.setOwner(traderB);
 				prop.onUnowned(traderA);
+				prop.setOwner(traderB);
 				prop.onOwned(traderB);
 			}
 			
 			for (Property prop : propertiesB) {
 				traderB.getProperties().remove(prop);
 				traderA.getProperties().add(prop);
-				prop.setOwner(traderA);
 				prop.onUnowned(traderB);
+				prop.setOwner(traderA);
 				prop.onOwned(traderA);
 			}
 			
