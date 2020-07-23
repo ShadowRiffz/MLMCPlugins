@@ -156,7 +156,7 @@ public class Commands implements CommandExecutor{
 				ac.endGame(p, args[1]);
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("games")) {
+			else if (args.length == 1 && args[0].equalsIgnoreCase("games")) {
 				ac.checkGames(p, main);
 				return true;
 			}
