@@ -269,6 +269,7 @@ public class Game {
 			turns.remove(gp);
 		}
 		if (curr.equals(gp)) {
+			curr = turns.remove(0);
 			nextTurn();
 		}
 		if (turns.size() <= 1) {
