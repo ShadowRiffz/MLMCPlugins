@@ -51,6 +51,7 @@ public class LobbyCommands {
 			if (lobby.getPlayers().size() <= 7) {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby §e" + lobby.getName() + "§7!");
 				lobby.broadcast("&e" + sender.getName() + " &7has joined the lobby!");
+				setStartingMoney(lobby.getHost().getPlayer(), "" + (6000 / (lobby.getPlayers().size() + 1)));
 				lobby.getPlayers().add(sender);
 				lobby.getInvited().remove(sender);
 				main.inlobby.put(sender, lobby);
