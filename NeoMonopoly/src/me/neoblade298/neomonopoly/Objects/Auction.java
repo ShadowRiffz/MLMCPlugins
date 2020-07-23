@@ -53,7 +53,7 @@ public class Auction {
 	
 	public void display(GamePlayer gp) {
 		gp.message("&7Auctioning: " + property.getShorthand(gp));
-		gp.message("&7Top bid: &a$" + bid + " &7 by &e" + topBidder);
+		gp.message("&7Top bid: &a$" + bid + "&7 by &e" + topBidder);
 	}
 	
 	public void dropPlayer(GamePlayer gp) {
