@@ -1,7 +1,7 @@
 name: NeoMonopoly
 main: me.neoblade298.neomonopoly.Monopoly
 author: [Neoblade298]
-version: 2.04
+version: 2.05
 api-version: 1.15
 commands:
    mono:

@@ -15,7 +15,7 @@ public class Auction {
 	public Auction(Game game, Property property, GamePlayer host) {
 		this.game = game;
 		this.property = property;
-		this.participants = new ArrayList<GamePlayer>(game.gameplayers);
+		this.participants = new ArrayList<GamePlayer>(game.currentTurn);
 		this.bid = 0;
 		this.topBidder = host;
 		this.host = host;
