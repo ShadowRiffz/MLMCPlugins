@@ -1,9 +1,14 @@
 package me.neoblade298.neomonopoly.SpaceCards;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class GoToJail implements Space {
 	private Game game;
@@ -55,5 +60,34 @@ public class GoToJail implements Space {
 	@Override
 	public String getShorthand(GamePlayer gp) {
 		return "&7[&cGo to Jail&7]";
+	}
+
+	@Override
+	public void addComponent(ComponentBuilder builder, ArrayList<GamePlayer> players) {
+		if (players.size() > 1) {
+			builder.append(new TextComponent("@"));
+		}
+		else if (players.size() == 1) {
+			builder.append(new TextComponent(Character.toString(players.get(0).mapChar)));
+		}
+		else {
+			builder.append(new TextComponent(Character.toString(getMapChar()).toUpperCase()));
+		}
+		builder.color(game.main.spigotToBungee.get(getColor()));
+
+		ComponentBuilder hoverBuild = new ComponentBuilder("[").color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent("Go To Jail")).color(game.main.spigotToBungee.get(getColor()))
+			.append(new TextComponent("]")).color(net.md_5.bungee.api.ChatColor.GRAY);
+		
+		if (players.size() > 0) {
+			builder.underlined(true).italic(true);
+			hoverBuild.append(new TextComponent("\nPlayers on Space:")).color(net.md_5.bungee.api.ChatColor.GRAY);
+			for (GamePlayer gp : players) {
+				hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+			}
+		}
+		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuild.create()));
+		builder.append(new TextComponent(" ")).reset();
 	}
 }

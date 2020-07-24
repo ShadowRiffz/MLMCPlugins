@@ -14,6 +14,7 @@ import me.neoblade298.neomonopoly.Objects.GamePlayer;
 import me.neoblade298.neomonopoly.SpaceCards.BuildableProperty;
 import me.neoblade298.neomonopoly.SpaceCards.Property;
 import me.neoblade298.neomonopoly.SpaceCards.Space;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class GameCommands {
 	Monopoly main;
@@ -585,7 +586,7 @@ public class GameCommands {
 			
 			// Start mapping
 			for (int i = 0; i <= 10; i++) {
-				String line = new String();
+				ComponentBuilder builder = new ComponentBuilder("");
 				int pos = -1;
 				for (int j = 0; j <= 10; j++) {
 					pos = -1;
@@ -602,55 +603,32 @@ public class GameCommands {
 						pos = 40 - j;
 					}
 					else {
-						line += ChatColor.DARK_GRAY + "- ";
+						builder.append("- ").color(net.md_5.bungee.api.ChatColor.DARK_GRAY);
 						continue;
 					}
 					Space space = game.board.get(pos);
-					line += space.getColor();
 					
-					// Place players on map
 					if (positions.containsKey(pos)) {
-						if (positions.get(pos).size() > 1) {
-							line += ChatColor.UNDERLINE + "@" + space.getColor() + " ";
-						}
-						else {
-							line += ChatColor.UNDERLINE + "" + positions.get(pos).get(0).mapChar + space.getColor() + " ";
-						}
+						space.addComponent(builder, positions.get(pos));
 					}
-					// Place item on map
 					else {
-						if (space instanceof Property) {
-							Property prop = (Property) space;
-							if (prop.getOwner() != null) {
-								if (prop.isMortgaged()) {
-									line += ChatColor.UNDERLINE;
-								}
-								line += (prop.getOwner().mapChar + "" + space.getColor() + " ").toUpperCase();
-							}
-							else {
-								line += space.getMapChar() + " ";
-							}
-						}
-						else {
-							line += space.getMapChar() + " ";
-						}
+						space.addComponent(builder, new ArrayList<GamePlayer>());
 					}
-				
 				}
 				if (i < game.gameplayers.size()) {
 					GamePlayer p = game.gameplayers.get(i);
-					line += ChatColor.WHITE + " " + p.mapChar + (", " + p.mapChar).toUpperCase() + ": " + p;
+					builder.append(" " + p.mapChar + (", " + p.mapChar).toUpperCase() + ": " + p).color(net.md_5.bungee.api.ChatColor.WHITE);
 				}
 				if (i == 8) {
-					line += ChatColor.WHITE + " x: Unowned, o: Chest/Chance";
+					builder.append(" x: Unowned, o: Chest/Chance").color(net.md_5.bungee.api.ChatColor.WHITE);
 				}
 				if (i == 9) {
-					line += ChatColor.WHITE + " J: Jail, /: Go to jail";
+					builder.append(" J: Jail, /: Go to jail").color(net.md_5.bungee.api.ChatColor.WHITE);
 				}
 				if (i == 10) {
-					line += ChatColor.WHITE + " ~: Tax, @: Multiple players";
+					builder.append(" t: Tax, @: Multiple players").color(net.md_5.bungee.api.ChatColor.WHITE);
 				}
-				gp.message(line);
+				gp.getPlayer().spigot().sendMessage(builder.create());
 			}
 		}
 		else {

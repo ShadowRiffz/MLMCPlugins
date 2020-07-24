@@ -1,9 +1,15 @@
 package me.neoblade298.neomonopoly.SpaceCards;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 
 import me.neoblade298.neomonopoly.Objects.Game;
 import me.neoblade298.neomonopoly.Objects.GamePlayer;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Railroad implements Property {
 	private String name;
@@ -167,7 +173,7 @@ public class Railroad implements Property {
 					msg += " " + rent[i - 1];
 				}
 			}
-			gp.message("&eRent&7: " + msg);
+			gp.message("&7Rent&7: " + msg);
 		}
 		else {
 			gp.message("&cCurrently mortgaged. Price to unmortgage: &e" + price);
@@ -218,5 +224,48 @@ public class Railroad implements Property {
 	@Override
 	public void setPrice(int price) {
 		this.price = price;
+	}
+	
+	@Override
+	public void addComponent(ComponentBuilder builder, ArrayList<GamePlayer> players) {
+		if (players.size() > 1) {
+			builder.append(new TextComponent("@"));
+		}
+		else if (players.size() == 1) {
+			builder.append(new TextComponent(Character.toString(players.get(0).mapChar)));
+		}
+		else if (owner == null) {
+			builder.append(new TextComponent("x"));
+		}
+		else {
+			builder.append(new TextComponent(Character.toString(owner.mapChar).toUpperCase()));
+		}
+		builder.color(game.main.spigotToBungee.get(color));
+
+		ComponentBuilder hoverBuild = new ComponentBuilder("[").color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent(name)).color(game.main.spigotToBungee.get(color))
+			.append(new TextComponent("]")).color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent("\nValue: ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent("" + price)).color(net.md_5.bungee.api.ChatColor.YELLOW);
+		if (isMortgaged) {
+			builder.strikethrough(true);
+			hoverBuild.append(new TextComponent("Currently mortgaged")).color(net.md_5.bungee.api.ChatColor.RED);
+		}
+		else if (owner != null) {
+			hoverBuild.append(new TextComponent("\nRent: ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent("" + calculateRent(0))).color(net.md_5.bungee.api.ChatColor.YELLOW);
+		}
+		
+		if (players.size() > 0) {
+			builder.underlined(true).italic(true);
+			hoverBuild.append(new TextComponent("\nPlayers on Space:")).color(net.md_5.bungee.api.ChatColor.GRAY);
+			for (GamePlayer gp : players) {
+				hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+			}
+		}
+		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuild.create()));
+		builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mono view " + name));
+		builder.append(new TextComponent(" ")).reset();
 	}
 }

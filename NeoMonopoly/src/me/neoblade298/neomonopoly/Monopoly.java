@@ -26,6 +26,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Game> games;
 	
 	public HashMap<ChatColor, String> colorToString;
+	public HashMap<ChatColor, net.md_5.bungee.api.ChatColor> spigotToBungee;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoMonopoly Enabled");
@@ -53,6 +54,19 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		colorToString.put(ChatColor.GRAY, "grey");
 		colorToString.put(ChatColor.DARK_GRAY, "dark grey");
 		colorToString.put(ChatColor.YELLOW, "yellow");
+		
+		// Bungee chat color hashmap
+		spigotToBungee = new HashMap<ChatColor, net.md_5.bungee.api.ChatColor>();
+		spigotToBungee.put(ChatColor.BLUE, net.md_5.bungee.api.ChatColor.BLUE);
+		spigotToBungee.put(ChatColor.GOLD, net.md_5.bungee.api.ChatColor.GOLD);
+		spigotToBungee.put(ChatColor.DARK_PURPLE, net.md_5.bungee.api.ChatColor.DARK_PURPLE);
+		spigotToBungee.put(ChatColor.LIGHT_PURPLE, net.md_5.bungee.api.ChatColor.LIGHT_PURPLE);
+		spigotToBungee.put(ChatColor.DARK_AQUA, net.md_5.bungee.api.ChatColor.DARK_AQUA);
+		spigotToBungee.put(ChatColor.DARK_GREEN, net.md_5.bungee.api.ChatColor.DARK_GREEN);
+		spigotToBungee.put(ChatColor.DARK_RED, net.md_5.bungee.api.ChatColor.DARK_RED);
+		spigotToBungee.put(ChatColor.GRAY, net.md_5.bungee.api.ChatColor.GRAY);
+		spigotToBungee.put(ChatColor.DARK_GRAY, net.md_5.bungee.api.ChatColor.DARK_GRAY);
+		spigotToBungee.put(ChatColor.YELLOW, net.md_5.bungee.api.ChatColor.YELLOW);
 	}
 
 	public void loadConfigs() {
