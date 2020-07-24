@@ -142,6 +142,10 @@ public class Commands implements CommandExecutor{
 				gc.displayPlayers(p);
 				return true;
 			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("quit")) {
+				gc.quitGame(p);
+				return true;
+			}
 		}
 		
 		if (p.hasPermission("neouno.admin")) {
