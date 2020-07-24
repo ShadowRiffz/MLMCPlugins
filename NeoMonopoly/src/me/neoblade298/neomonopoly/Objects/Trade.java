@@ -34,6 +34,10 @@ public class Trade {
 			for (Property search : traderA.getProperties()) {
 				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
+					if (prop.isMortgaged()) {
+						offerer.message("&cCannot trade mortgaged properties!");
+						return;
+					}
 					break;
 				}
 			}
@@ -60,6 +64,10 @@ public class Trade {
 			for (Property search : traderB.getProperties()) {
 				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
+					if (prop.isMortgaged()) {
+						offerer.message("&cCannot trade mortgaged properties!");
+						return;
+					}
 					break;
 				}
 			}
@@ -135,6 +143,10 @@ public class Trade {
 			for (Property search : traderA.getProperties()) {
 				if (search.getName().startsWith(prefix)) {
 					prop = search;
+					if (prop.isMortgaged()) {
+						requester.message("&cCannot trade mortgaged properties!");
+						return;
+					}
 					break;
 				}
 			}
@@ -161,6 +173,10 @@ public class Trade {
 			for (Property search : traderB.getProperties()) {
 				if (search.getName().toLowerCase().startsWith(prefix)) {
 					prop = search;
+					if (prop.isMortgaged()) {
+						requester.message("&cCannot trade mortgaged properties!");
+						return;
+					}
 					break;
 				}
 			}

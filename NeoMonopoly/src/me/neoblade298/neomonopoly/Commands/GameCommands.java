@@ -137,8 +137,10 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
-				return;
+			if (!owesBills(game, gp)) {
+				if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+					return;
+				}
 			}
 
 			Property prop = null;
@@ -444,8 +446,10 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
-				return;
+			if (!owesBills(game, gp)) {
+				if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+					return;
+				}
 			}
 
 			Property prop = null;
@@ -517,8 +521,10 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
-				return;
+			if (!owesBills(game, gp)) {
+				if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+					return;
+				}
 			}
 
 			Property prop = null;
@@ -749,8 +755,10 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-			if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
-				return;
+			if (!owesBills(game, gp)) {
+				if (!isPlayerTurn(game, gp) || !isBusy(game, gp)) {
+					return;
+				}
 			}
 
 			for (Property prop : gp.getProperties()) {
@@ -758,13 +766,27 @@ public class GameCommands {
 				prop.onBankrupt(gp);
 			}
 			
-			game.endTurn(gp);
+			if (game.currentTurn.get(0).equals(gp)) {
+				game.endTurn(gp);
+			}
 			gp.setPosition(-1);
 			game.currentTurn.remove(gp);
 			game.requiredActions.remove(gp);
 			gp.message("&7You may leave the game any time with &c/mono quit&7.");
 			game.broadcast("&4&l" + gp + " has filed for bankruptcy. All of their properties are now unowned.");
 			game.onBankrupt();
+
+			// Check for edge case where everyone owes the current player money due to the chance card
+			ArrayList<String> currentActions = game.requiredActions.get(game.currentTurn.get(0));
+			boolean allPaid = true;
+			if (currentActions.size() > 0 && currentActions.get(0).equals("WAIT_PLAYERBILLS")) {
+				for (GamePlayer p : game.requiredActions.keySet()) {
+					if (!p.equals(game.currentTurn.get(0))) {
+						if (game.requiredActions.get(p).size() != 0) allPaid = false;
+					}
+				}
+				if (allPaid) currentActions.remove("WAIT_PLAYERBILLS");
+			}
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
@@ -851,12 +873,27 @@ public class GameCommands {
 				for (Property prop : gp.getProperties()) {
 					prop.setOwner(null);
 					prop.onBankrupt(gp);
-					game.broadcast("&4&l" + gp + " has filed for bankruptcy and left the game. All of their properties are now unowned.");
 				}
-				game.endTurn(gp);
+				game.broadcast("&4&l" + gp + " has filed for bankruptcy and left the game. All of their properties are now unowned.");
+				gp.setPosition(-1);
 				game.currentTurn.remove(gp);
 				game.requiredActions.remove(gp);
 				game.onBankrupt();
+				if (game.currentTurn.get(0).equals(gp)) {
+					game.endTurn(gp);
+				}
+
+				// Check for edge case where everyone owes the current player money due to the chance card
+				ArrayList<String> currentActions = game.requiredActions.get(game.currentTurn.get(0));
+				boolean allPaid = true;
+				if (currentActions.size() > 0 && currentActions.get(0).equals("WAIT_PLAYERBILLS")) {
+					for (GamePlayer p : game.requiredActions.keySet()) {
+						if (!p.equals(game.currentTurn.get(0))) {
+							if (game.requiredActions.get(p).size() != 0) allPaid = false;
+						}
+					}
+					if (allPaid) currentActions.remove("WAIT_PLAYERBILLS");
+				}
 			}
 			else {
 				game.broadcast("&4&l" + gp + " has left the game.");
@@ -924,5 +961,9 @@ public class GameCommands {
 			return false;
 		}
 		return true;
+	}
+	
+	private boolean owesBills(Game game, GamePlayer gp) {
+		return gp.getBills() > 0;
 	}
 }
