@@ -120,8 +120,8 @@ public class Game {
 			drawDeck = new ArrayList<Card>(copyDeck);
 			Collections.shuffle(drawDeck);
 			for (GamePlayer gp : turns) {
+				gp.getCards().clear();
 				for (int i = 0; i < 7; i++) {
-					gp.getCards().clear();
 					gp.getCards().add(drawDeck.remove(0));
 				}
 			}
