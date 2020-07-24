@@ -9,12 +9,14 @@ public class DrawTwoCard implements Card{
 	private ChatColor color;
 	private int number;
 	private String display;
+	private String alias;
 	
 	public DrawTwoCard(Game game, ChatColor color) {
 		this.game = game;
 		this.color = color;
 		this.number = 12;
 		this.display = color + "+2";
+		this.alias = "+2" + game.main.colorToString.get(color).substring(0, 1);
 	}
 
 	@Override
@@ -54,5 +56,10 @@ public class DrawTwoCard implements Card{
 	public void onDraw(boolean normalDraw) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 }

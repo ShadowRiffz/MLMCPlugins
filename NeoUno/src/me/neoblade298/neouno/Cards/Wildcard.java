@@ -9,12 +9,14 @@ public class Wildcard implements Card{
 	private int number;
 	private ChatColor color;
 	private String display;
+	private String alias;
 	
 	public Wildcard(Game game) {
 		this.game = game;
 		this.number = -1;
 		this.color = ChatColor.WHITE;
 		this.display = this.color + "Wild";
+		this.alias = "wild";
 	}
 
 	@Override
@@ -54,5 +56,10 @@ public class Wildcard implements Card{
 	public void onDraw(boolean normalDraw) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 }

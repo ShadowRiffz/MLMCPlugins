@@ -9,6 +9,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neouno.Uno;
 import me.neoblade298.neouno.Cards.*;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Game {
 	public String name;
@@ -234,7 +238,17 @@ public class Game {
 			return;
 		}
 		if (card.getColor().equals(ChatColor.WHITE)) {
-			broadcast("&f" + gp + " &7must choose the new color with &c/uno color [r/g/b/y]&7!");
+			HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to choose!").create());
+			ComponentBuilder builder = new ComponentBuilder("You must choose a new color: ").color(net.md_5.bungee.api.ChatColor.GRAY)
+			.append(new TextComponent("Red")).color(net.md_5.bungee.api.ChatColor.RED).event(hover)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color r")).append(new TextComponent(" "))
+			.append(new TextComponent("Blue")).color(net.md_5.bungee.api.ChatColor.BLUE).event(hover)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color b")).append(new TextComponent(" "))
+			.append(new TextComponent("Green")).color(net.md_5.bungee.api.ChatColor.DARK_GREEN).event(hover)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color g")).append(new TextComponent(" "))
+			.append(new TextComponent("Yellow")).color(net.md_5.bungee.api.ChatColor.YELLOW).event(hover)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color y")).append(new TextComponent(" "));
+			gp.getPlayer().spigot().sendMessage(builder.create());
 		}
 		if (requiredAction == null) {
 			nextTurn();
@@ -283,12 +297,12 @@ public class Game {
 	}
 	
 	public void endGame() {
-		if (this.pointsToWin > 0) {
-			broadcast("Point scores:");
-			for (GamePlayer gp : gameplayers) {
+		if (this.pointsToWin > 0) broadcast("Point scores:");
+		for (GamePlayer gp : gameplayers) {
+			if (this.pointsToWin > 0) {
 				broadcast("&f" + gp + "&7 - " + points.get(gp));
-				main.ingame.remove(gp.getPlayer());
 			}
+			main.ingame.remove(gp.getPlayer());
 		}
 		main.games.remove(name);
 	}

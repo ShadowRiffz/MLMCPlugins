@@ -9,12 +9,14 @@ public class WildDrawFour implements Card{
 	private int number;
 	private ChatColor color;
 	private String display;
+	private String alias;
 	
 	public WildDrawFour(Game game) {
 		this.game = game;
 		this.number = -1;
 		this.color = ChatColor.WHITE;
 		this.display = this.color + "+4";
+		this.alias = "+4";
 	}
 
 	@Override
@@ -54,5 +56,10 @@ public class WildDrawFour implements Card{
 	public void onDraw(boolean normalDraw) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 }

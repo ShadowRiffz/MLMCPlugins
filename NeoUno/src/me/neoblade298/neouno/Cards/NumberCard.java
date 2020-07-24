@@ -9,11 +9,13 @@ public class NumberCard implements Card {
 	private int number;
 	private ChatColor color;
 	private String display;
+	private String alias;
 	public NumberCard(Game game, int number, ChatColor color) {
 		this.game = game;
 		this.number = number;
 		this.color = color;
 		this.display = this.color + "" + this.number;
+		this.alias = this.number + game.main.colorToString.get(color).substring(0, 1);
 	}
 	
 	@Override
@@ -50,6 +52,11 @@ public class NumberCard implements Card {
 	@Override
 	public void onDraw(boolean normalDraw) {
 		return;
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 
 }

@@ -11,12 +11,14 @@ public class ReverseCard implements Card{
 	private ChatColor color;
 	private int number;
 	private String display;
+	private String alias;
 	
 	public ReverseCard(Game game, ChatColor color) {
 		this.game = game;
 		this.color = color;
 		this.number = 11;
 		this.display = this.color + "Reverse";
+		this.alias = "reverse" + game.main.colorToString.get(color).substring(0, 1);
 	}
 
 	@Override
@@ -56,5 +58,10 @@ public class ReverseCard implements Card{
 	public void onDraw(boolean normalDraw) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 }

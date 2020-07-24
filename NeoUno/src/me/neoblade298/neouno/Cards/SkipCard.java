@@ -10,12 +10,14 @@ public class SkipCard implements Card{
 	private ChatColor color;
 	private int number;
 	private String display;
+	private String alias;
 	
 	public SkipCard(Game game, ChatColor color) {
 		this.game = game;
 		this.color = color;
 		this.number = 10;
 		this.display = this.color + "Skip";
+		this.alias = "skip" + game.main.colorToString.get(color).substring(0, 1);
 	}
 
 	@Override
@@ -57,5 +59,10 @@ public class SkipCard implements Card{
 	public void onDraw(boolean normalDraw) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 }

@@ -175,6 +175,11 @@ public class GameCommands {
 					gp.message("&cIt's not the end of that player's turn yet!");
 					return;
 				}
+
+				if (challenged.getCards().size() > 1) {
+					gp.message("&cThat player has more than 1 card in hand!");
+					return;
+				}
 				
 				game.broadcast("&f" + gp + " &7called out &f" + challenged + " &7for not calling uno!");
 				game.drawCard(challenged, 2);

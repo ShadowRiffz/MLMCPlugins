@@ -10,4 +10,5 @@ public interface Card {
 	public String getDisplay();
 	public void onPlay();
 	public void onDraw(boolean normalDraw);
+	public String getAlias();
 }
