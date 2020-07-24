@@ -243,8 +243,14 @@ public class Railroad implements Property {
 		builder.color(game.main.spigotToBungee.get(color));
 
 		ComponentBuilder hoverBuild = new ComponentBuilder("[").color(net.md_5.bungee.api.ChatColor.GRAY)
-			.append(new TextComponent(name)).color(game.main.spigotToBungee.get(color))
-			.append(new TextComponent("]")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(name)).color(game.main.spigotToBungee.get(color));
+		
+			if (owner != null) {
+				hoverBuild.append(new TextComponent(" (")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(owner.toString())).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(")")).color(net.md_5.bungee.api.ChatColor.GRAY);
+			}
+			hoverBuild.append(new TextComponent("]")).color(net.md_5.bungee.api.ChatColor.GRAY)
 			.append(new TextComponent("\nValue: ")).color(net.md_5.bungee.api.ChatColor.GRAY)
 			.append(new TextComponent("" + price)).color(net.md_5.bungee.api.ChatColor.YELLOW);
 		if (isMortgaged) {
@@ -260,8 +266,8 @@ public class Railroad implements Property {
 			builder.underlined(true).italic(true);
 			hoverBuild.append(new TextComponent("\nPlayers on Space:")).color(net.md_5.bungee.api.ChatColor.GRAY);
 			for (GamePlayer gp : players) {
-				hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
-				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+				hoverBuild.append(new TextComponent("\n- ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.GRAY);
 			}
 		}
 		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuild.create()));

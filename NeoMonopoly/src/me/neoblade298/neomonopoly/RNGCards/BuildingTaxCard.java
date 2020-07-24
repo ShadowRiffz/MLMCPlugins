@@ -33,7 +33,7 @@ public class BuildingTaxCard extends RNGCard {
 				}
 			}
 			int pay = (numHouses * house) + (numHotels * hotel);
-			game.broadcast("&e" + gp + " &7has &e" + numHouses + " &7and &e" + numHotels + 
+			game.broadcast("&e" + gp + " &7has &e" + numHouses + " &7houses and &e" + numHotels + 
 					" &7hotels so they pay &a$" + pay + "&7.");
 			game.billPlayer(gp, pay, null);
 			game.isBusy = false;

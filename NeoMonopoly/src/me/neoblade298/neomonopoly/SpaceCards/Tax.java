@@ -87,8 +87,8 @@ public class Tax implements Space {
 			builder.underlined(true).italic(true);
 			hoverBuild.append(new TextComponent("\nPlayers on property:")).color(net.md_5.bungee.api.ChatColor.GRAY);
 			for (GamePlayer gp : players) {
-				hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
-				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+				hoverBuild.append(new TextComponent("\n- ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+				.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.GRAY);
 			}
 		}
 		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuild.create()));

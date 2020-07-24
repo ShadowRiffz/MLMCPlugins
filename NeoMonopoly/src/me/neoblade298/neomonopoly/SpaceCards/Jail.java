@@ -101,15 +101,15 @@ public class Jail implements Space {
 			if (visiting.size() > 0) {
 				hoverBuild.append(new TextComponent("\nPlayers visiting:")).color(net.md_5.bungee.api.ChatColor.GRAY);
 				for (GamePlayer gp : visiting) {
-					hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
-					.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+					hoverBuild.append(new TextComponent("\n- ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+					.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.GRAY);
 				}
 			}
 			if (jailed.size() > 0) {
 				hoverBuild.append(new TextComponent("\nPlayers in jail:")).color(net.md_5.bungee.api.ChatColor.GRAY);
 				for (GamePlayer gp : jailed) {
-					hoverBuild.append(new TextComponent("\n- : ")).color(net.md_5.bungee.api.ChatColor.GRAY)
-					.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.YELLOW);
+					hoverBuild.append(new TextComponent("\n- ")).color(net.md_5.bungee.api.ChatColor.GRAY)
+					.append(new TextComponent(gp.toString())).color(net.md_5.bungee.api.ChatColor.GRAY);
 				}
 			}
 		}
