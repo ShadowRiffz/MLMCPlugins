@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if ((sender.hasPermission("neosapiaddons.use")) && (args.length == 3)) {
+		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args[0].equalsIgnoreCase("takexp") && (StringUtils.isNumeric(args[2]))) {
 				double exp = Integer.parseInt(args[2]);
 				PlayerClass data = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("class");
