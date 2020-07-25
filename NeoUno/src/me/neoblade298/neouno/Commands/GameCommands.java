@@ -211,10 +211,6 @@ public class GameCommands {
 		if (main.ingame.containsKey(sender)) {
 			Game game = main.ingame.get(sender);
 			GamePlayer gp = game.players.get(sender);
-
-			if (!isNotBusy(game, gp)) {
-				return;
-			}
 			
 			gp.message("&7Current turn: &f" + game.curr + "&7 - &e" + game.curr.getCards().size() + " &7cards");
 			int count = 2;
