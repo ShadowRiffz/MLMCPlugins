@@ -8,6 +8,7 @@ public interface Card {
 	public int getNumber();
 	public void setNumber(int number);
 	public String getDisplay();
+	public void setDisplay(String display);
 	public void onPlay();
 	public void onDraw(boolean normalDraw);
 	public String getAlias();

@@ -170,6 +170,7 @@ public class LobbyCommands {
 				main.ingame.put(sender, game);
 				game.spectators.add(gp);
 				gp.message("&7You're now spectating! Leave any time with &c/uno quit&7.");
+				game.broadcast("&e" + gp + " &7is now spectating!");
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist");

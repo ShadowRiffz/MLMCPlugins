@@ -102,6 +102,10 @@ public class Game {
 			else {
 				topCard = card;
 				broadcast("&f" + gp + "&7 draws and plays a " + card.getDisplay() + "&7. They now have &e" + gp.getCards().size() + "&7 cards.");
+				card.onPlay();
+				if (drawNum > 0) { 
+					broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
+				}
 			}
 			turns.add(curr);
 			curr = turns.remove(0);
@@ -236,8 +240,11 @@ public class Game {
 		
 		gp.getCards().remove(card);
 		card.onPlay();
-		topCard = card;
 		broadcast("&f" + gp + " &7played a " + card.getDisplay() + "&7 and has &f" + gp.getCards().size() + "&7 cards left!");
+		if (card instanceof Wildcard) {
+			card.setDisplay(topCard.getDisplay());
+		}
+		topCard = card;
 		if (drawNum > 0) { 
 			broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
 		}

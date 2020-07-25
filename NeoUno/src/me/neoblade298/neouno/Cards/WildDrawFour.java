@@ -44,6 +44,11 @@ public class WildDrawFour implements Card{
 	public String getDisplay() {
 		return this.display;
 	}
+	
+	@Override
+	public void setDisplay(String display) {
+		this.display = display;
+	}
 
 	@Override
 	public void onPlay() {

@@ -44,6 +44,11 @@ public class NumberCard implements Card {
 	}
 	
 	@Override
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+	
+	@Override
 	public void onPlay() {
 		game.turns.add(game.curr);
 		game.curr = game.turns.remove(0);
