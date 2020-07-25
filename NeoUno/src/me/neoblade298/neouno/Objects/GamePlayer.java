@@ -33,7 +33,7 @@ public class GamePlayer {
 	
 	public void showHandOld() {
 		if (game.curr.equals(this)) {
-			message("Your turn! Top card is: " + game.topCard.getDisplay());
+			message("&lYour turn! &7Top card is: " + game.topCard.getDisplay());
 		}
 		else {
 			message("&f" + game.curr + "'s &7turn! Top card is: " + game.topCard.getDisplay());
