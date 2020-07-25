@@ -48,7 +48,7 @@ public class LobbyCommands {
 		Lobby lobby = main.lobbies.get(name);
 		ArrayList<Player> invited = lobby.getInvited();
 		if (invited.contains(sender)) {
-			if (lobby.getPlayers().size() <= 3) {
+			if (lobby.getPlayers().size() <= 7) {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby §e" + lobby.getName() + "§7!");
 				lobby.broadcast("&e" + sender.getName() + " &7has joined the lobby!");
 				lobby.getPlayers().add(sender);
