@@ -98,6 +98,8 @@ public class Game {
 					!color.equals(card.getColor()) && !card.getColor().equals(ChatColor.WHITE)) {
 				gp.getCards().add(card);
 				broadcast("&f" + gp + "&7 draws a card. They now have &e" + gp.getCards().size() + "&7 cards.");
+				turns.add(curr);
+				curr = turns.remove(0);
 			}
 			else {
 				topCard = card;
@@ -107,8 +109,6 @@ public class Game {
 					broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
 				}
 			}
-			turns.add(curr);
-			curr = turns.remove(0);
 			nextTurn();
 		}
 		else if (drawNum > 0 && num == 1) {
@@ -133,6 +133,7 @@ public class Game {
 	private void onRoundStart() {
 		Game game = this;
 		broadcast("&7Starting new round...");
+		this.drawNum = 0;
 		initializeDeck();
 		new BukkitRunnable() { public void run() {
 			for (GamePlayer gp : turns) {
