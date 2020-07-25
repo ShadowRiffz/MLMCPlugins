@@ -218,7 +218,7 @@ public class GameCommands {
 			
 			gp.message("&7Current turn: &f" + game.curr + "&7 - &e" + game.curr.getCards().size() + " &7cards");
 			int count = 2;
-			for (GamePlayer p : game.gameplayers) {
+			for (GamePlayer p : game.turns) {
 				gp.message("&7" + count + ". &f" + p + "&7 - &e" + p.getCards().size() + " &7cards");
 				count++;
 			}
