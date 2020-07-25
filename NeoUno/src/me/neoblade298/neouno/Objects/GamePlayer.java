@@ -71,7 +71,7 @@ public class GamePlayer {
 			builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno play " + card.getAlias()));
 			builder.append(new TextComponent(" "));
 		}
-		builder.append(new TextComponent("(Draw Card)")).color(net.md_5.bungee.api.ChatColor.DARK_GRAY)
+		builder.append(new TextComponent("|| (Draw Card)")).color(net.md_5.bungee.api.ChatColor.WHITE)
 		.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to draw card!").create()))
 		.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno draw"));
 		player.spigot().sendMessage(builder.create());

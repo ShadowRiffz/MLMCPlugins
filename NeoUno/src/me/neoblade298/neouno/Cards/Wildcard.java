@@ -27,7 +27,7 @@ public class Wildcard implements Card{
 	@Override
 	public void setColor(ChatColor color) {
 		this.color = color;
-		this.display = this.color + "Wild";
+		this.display = this.color + ChatColor.stripColor(this.display);
 	}
 
 	@Override
@@ -50,6 +50,7 @@ public class Wildcard implements Card{
 	public void onPlay() {
 		game.requiredAction = "PICK_COLOR";
 		number = game.topCard.getNumber();
+		this.display = game.topCard.getDisplay();
 	}
 
 	@Override

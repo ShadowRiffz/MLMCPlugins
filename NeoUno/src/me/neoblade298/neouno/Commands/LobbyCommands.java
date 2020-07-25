@@ -123,7 +123,7 @@ public class LobbyCommands {
 			return;
 		}
 		
-		if (amount >= 100 && amount <= 100000) {
+		if (amount < 100 || amount > 100000) {
 			sender.sendMessage("§4[§c§lMLMC§4] §cAmount must be between 100 and 100000!");
 			return;
 		}

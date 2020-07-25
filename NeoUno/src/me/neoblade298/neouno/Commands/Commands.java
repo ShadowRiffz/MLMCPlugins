@@ -138,7 +138,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("players")) {
+			else if (args.length == 1 && args[0].equalsIgnoreCase("players")) {
 				gc.displayPlayers(p);
 				return true;
 			}

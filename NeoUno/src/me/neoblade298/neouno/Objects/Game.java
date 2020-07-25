@@ -19,7 +19,6 @@ public class Game {
 	public ArrayList<GamePlayer> spectators;
 	public ArrayList<GamePlayer> gameplayers;
 	public ArrayList<Card> drawDeck;
-	private ArrayList<Card> copyDeck;
 	public Card topCard;
 	public HashMap<Player, GamePlayer> players;
 	private HashMap<GamePlayer, Integer> points;
@@ -39,7 +38,6 @@ public class Game {
 		// Initialize data structures
 		this.spectators = new ArrayList<GamePlayer>();
 		this.gameplayers = new ArrayList<GamePlayer>();
-		this.copyDeck = new ArrayList<Card>();
 		this.drawDeck = new ArrayList<Card>();
 		this.players = new HashMap<Player, GamePlayer>();
 		this.points = new HashMap<GamePlayer, Integer>();
@@ -56,44 +54,55 @@ public class Game {
 			this.points.put(gp, 0);
 		}
 
-		// Set up copy deck
+		onRoundStart();
+	}
+	
+	public void initializeDeck() {
+		drawDeck.clear();
 		ArrayList<ChatColor> colors = new ArrayList<ChatColor>();
 		colors.add(ChatColor.DARK_GREEN);
 		colors.add(ChatColor.RED);
 		colors.add(ChatColor.BLUE);
 		colors.add(ChatColor.YELLOW);
 		
-		// Initialize copy deck
 		for (ChatColor color : colors) {
 			for (int i = 0; i <= 9; i++) {
-				copyDeck.add(new NumberCard(this, i, color));
+				drawDeck.add(new NumberCard(this, i, color));
 				if (i != 0) {
-					copyDeck.add(new NumberCard(this, i, color));
+					drawDeck.add(new NumberCard(this, i, color));
 				}
 			}
 			for (int i = 0; i < 2; i++ ) {
-				copyDeck.add(new SkipCard(this, color));
-				copyDeck.add(new ReverseCard(this, color));
-				copyDeck.add(new DrawTwoCard(this, color));
+				drawDeck.add(new SkipCard(this, color));
+				drawDeck.add(new ReverseCard(this, color));
+				drawDeck.add(new DrawTwoCard(this, color));
 			}
 		}
 		
 		for (int i = 0; i < 4; i++) {
-			copyDeck.add(new Wildcard(this));
-			copyDeck.add(new WildDrawFour(this));
+			drawDeck.add(new Wildcard(this));
+			drawDeck.add(new WildDrawFour(this));
 		}
-		
-		onRoundStart();
+		Collections.shuffle(drawDeck);
 	}
 	
 	public void drawCard(GamePlayer gp, int num) {
 		if (drawDeck.size() < num || drawDeck.size() < drawNum) {
-			drawDeck = new ArrayList<Card>(copyDeck);
-			Collections.shuffle(drawDeck);
+			initializeDeck();
 		}
 		if (drawNum == 0 && num == 1) {
-			gp.getCards().add(drawDeck.remove(0));
-			broadcast("&f" + gp + "&7 draws a card.");
+			Card card = drawDeck.remove(0);
+			int number = topCard.getNumber();
+			ChatColor color = topCard.getColor();
+			if (number != card.getNumber() && !color.equals(ChatColor.WHITE) &&
+					!color.equals(card.getColor()) && !card.getColor().equals(ChatColor.WHITE)) {
+				gp.getCards().add(card);
+				broadcast("&f" + gp + "&7 draws a card. They now have &e" + gp.getCards().size() + "&7 cards.");
+			}
+			else {
+				topCard = card;
+				broadcast("&f" + gp + "&7 draws and plays a " + card.getDisplay() + "&7. They now have &e" + gp.getCards().size() + "&7 cards.");
+			}
 			turns.add(curr);
 			curr = turns.remove(0);
 			nextTurn();
@@ -120,9 +129,8 @@ public class Game {
 	private void onRoundStart() {
 		Game game = this;
 		broadcast("&7Starting new round...");
+		initializeDeck();
 		new BukkitRunnable() { public void run() {
-			drawDeck = new ArrayList<Card>(copyDeck);
-			Collections.shuffle(drawDeck);
 			for (GamePlayer gp : turns) {
 				gp.getCards().clear();
 				for (int i = 0; i < 7; i++) {
