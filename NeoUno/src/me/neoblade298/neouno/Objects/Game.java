@@ -203,8 +203,8 @@ public class Game {
 	public void nextTurn() {
 		this.isBusy = true;
 		Game game = this;
+		curr.setCalledUno(false);
 		new BukkitRunnable() { public void run() {
-			curr.setCalledUno(false);
 			showHands();
 			game.isBusy = false;
 		}}.runTaskLater(main, 20L);
@@ -238,6 +238,10 @@ public class Game {
 		}
 		if (topAdd && !playAdd && drawNum > 0) {
 			gp.message("&cYou must either use /uno draw or play a card that makes the next player draw more cards!");
+			return;
+		}
+		if (requiredAction != null) {
+			gp.message("&cYou already played a card! You must choose a color to end your turn.");
 			return;
 		}
 		
