@@ -109,7 +109,9 @@ public class Game {
 					broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
 				}
 			}
-			nextTurn();
+			if (requiredAction == null) {
+				nextTurn();
+			}
 		}
 		else if (drawNum > 0 && num == 1) {
 			for (int i = 0; i < drawNum; i++) {
