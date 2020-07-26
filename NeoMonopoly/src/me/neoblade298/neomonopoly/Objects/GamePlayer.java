@@ -22,6 +22,7 @@ public class GamePlayer {
 	private boolean isJailed;
 	private ArrayList<Property> properties;
 	public char mapChar;
+	private String name;
 
 	public GamePlayer(Player player, int money, Game game, char mapChar) {
 		this.numRailroads = 0;
@@ -37,6 +38,7 @@ public class GamePlayer {
 		this.isJailed = false;
 		this.properties = new ArrayList<Property>();
 		this.mapChar = mapChar;
+		this.name = player.getName();
 	}
 	
 	
@@ -168,5 +170,13 @@ public class GamePlayer {
 
 	public boolean equals(GamePlayer gp) {
 		return this.player.equals(gp.getPlayer());
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

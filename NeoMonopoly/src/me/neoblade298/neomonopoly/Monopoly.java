@@ -9,6 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neomonopoly.Commands.Commands;
@@ -25,6 +29,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Lobby> lobbies;
 	public HashMap<String, Game> games;
 	
+	public HashMap<String, String> cache;
 	public HashMap<ChatColor, String> colorToString;
 	public HashMap<ChatColor, net.md_5.bungee.api.ChatColor> spigotToBungee;
 
@@ -41,6 +46,7 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 		ingame = new HashMap<Player, Game>();
 		lobbies = new HashMap<String, Lobby>();
 		games = new HashMap<String, Game>();
+		cache = new HashMap<String, String>();
 		
 		// Chat color to string
 		colorToString = new HashMap<ChatColor, String>();
@@ -203,6 +209,43 @@ public class Monopoly extends JavaPlugin implements org.bukkit.event.Listener {
 			default:
 				throw new Exception("Improper space card type");
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerQuitEvent e) {
+		Player p = e.getPlayer();
+		if (ingame.containsKey(p)) {
+			cache.put(p.getName(), ingame.get(p).getName());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent e) {
+		Player p = e.getPlayer();
+		if (ingame.containsKey(p)) {
+			cache.put(p.getName(), ingame.get(p).getName());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		String name = p.getName();
+		if (cache.containsKey(name)) {
+			String gamename = cache.get(name);
+			if (games.containsKey(gamename)) {
+				Game game = games.get(gamename);
+				ingame.put(p, game);
+				for (GamePlayer gp : game.gameplayers) {
+					if (gp.getName().equals(name)) {
+						gp.setPlayer(p);
+						game.players.put(p, gp);
+						break;
+					}
+				}
+			}
+			cache.remove(p.getName());
 		}
 	}
 	

@@ -71,4 +71,28 @@ public class Auction {
 			}
 		}
 	}
+
+	public ArrayList<GamePlayer> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(ArrayList<GamePlayer> participants) {
+		this.participants = participants;
+	}
+
+	public GamePlayer getTopBidder() {
+		return topBidder;
+	}
+
+	public void setTopBidder(GamePlayer topBidder) {
+		this.topBidder = topBidder;
+	}
+
+	public GamePlayer getHost() {
+		return host;
+	}
+
+	public void setHost(GamePlayer host) {
+		this.host = host;
+	}
 }

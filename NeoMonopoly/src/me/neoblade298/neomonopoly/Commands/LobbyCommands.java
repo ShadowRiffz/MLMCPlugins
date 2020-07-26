@@ -168,9 +168,11 @@ public class LobbyCommands {
 			if (main.games.containsKey(name)) {
 				Game game = main.games.get(name);
 				GamePlayer gp = new GamePlayer(sender, 0, game, '-');
+				main.ingame.put(sender, game);
 				gp.setPosition(-1);
 				game.gameplayers.add(gp);
 				gp.message("&7You're now spectating! Leave any time with &c/mono quit&7.");
+				game.broadcast("&e" + gp + " &7is now spectating!");
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist");
