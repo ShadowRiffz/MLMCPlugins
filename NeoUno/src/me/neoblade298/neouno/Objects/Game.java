@@ -105,6 +105,23 @@ public class Game {
 				topCard = card;
 				broadcast("&f" + gp + "&7 draws and plays a " + card.getDisplay() + "&7. They now have &e" + gp.getCards().size() + "&7 cards.");
 				card.onPlay();
+				if (card instanceof Wildcard) {
+					card.setDisplay(topCard.getDisplay());
+				}
+				if (card.getColor().equals(ChatColor.WHITE)) {
+					HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to choose!").create());
+					ComponentBuilder builder = new ComponentBuilder("You must choose a new color: ").color(net.md_5.bungee.api.ChatColor.GRAY)
+					.append(new TextComponent("Red")).color(net.md_5.bungee.api.ChatColor.RED).event(hover)
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color r")).append(new TextComponent(" "))
+					.append(new TextComponent("Blue")).color(net.md_5.bungee.api.ChatColor.BLUE).event(hover)
+			
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color b")).append(new TextComponent(" "))
+					.append(new TextComponent("Green")).color(net.md_5.bungee.api.ChatColor.DARK_GREEN).event(hover)
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color g")).append(new TextComponent(" "))
+					.append(new TextComponent("Yellow")).color(net.md_5.bungee.api.ChatColor.YELLOW).event(hover)
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color y")).append(new TextComponent(" "));
+					gp.getPlayer().spigot().sendMessage(builder.create());
+				}
 				if (drawNum > 0) { 
 					broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
 				}
@@ -137,6 +154,7 @@ public class Game {
 		broadcast("&7Starting new round...");
 		this.drawNum = 0;
 		initializeDeck();
+		this.requiredAction = null;
 		new BukkitRunnable() { public void run() {
 			for (GamePlayer gp : turns) {
 				gp.getCards().clear();
