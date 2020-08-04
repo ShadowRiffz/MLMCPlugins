@@ -26,18 +26,24 @@ public class CulinarianUtils {
 
 	public void checkAlcoholUp(Player p, int amount, HashMap<Player, Integer> drunkness) {
 		if (amount >= 30 && amount < 50) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30 * 20, 0), true);
+			p.removePotionEffect(PotionEffectType.CONFUSION);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30 * 20, 0));
 			util.sendMessage(p, "&7You are now &esomewhat drunk&7 (" + amount + "/100).");
 		}
 		else if (amount >= 50 && amount < 70) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0), true);
+			p.removePotionEffect(PotionEffectType.BLINDNESS);
+			p.removePotionEffect(PotionEffectType.CONFUSION);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0));
 			util.sendMessage(p, "&7You are now &6very drunk&7 (" + amount + "/100).");
 		}
 		else if (amount >= 70 && amount < 100) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10 * 20, 0), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0), true);
+			p.removePotionEffect(PotionEffectType.WITHER);
+			p.removePotionEffect(PotionEffectType.BLINDNESS);
+			p.removePotionEffect(PotionEffectType.CONFUSION);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10 * 20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0));
 			util.sendMessage(p, "&7You are now &4dangerously drunk&7. (" + amount + "/100).");
 		}
 		else if (amount > 100) {
@@ -67,12 +73,15 @@ public class CulinarianUtils {
 			util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
 		}
 		else if (amount == 49) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 5 * 20, 0), true);
+			p.removePotionEffect(PotionEffectType.CONFUSION);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 5 * 20, 0));
 			util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7 (49/100).");
 		}
 		else if (amount == 69) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0), true);
+			p.removePotionEffect(PotionEffectType.BLINDNESS);
+			p.removePotionEffect(PotionEffectType.CONFUSION);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0));
 			util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7 (69/100).");
 		}
 	}
