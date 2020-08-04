@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Methods;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -59,27 +60,35 @@ public class ProfessionsMethods {
 				switch (type) {
 				case "Reinforced Boots":
 					parsedType = "rboots";
+					item.setType(Material.NETHERITE_BOOTS);
 					break;
 				case "Reinforced Helmet":
 					parsedType = "rhelmet";
+					item.setType(Material.NETHERITE_HELMET);
 					break;
 				case "Reinforced Leggings":
 					parsedType = "rleggings";
+					item.setType(Material.NETHERITE_LEGGINGS);
 					break;
 				case "Reinforced Chestplate":
 					parsedType = "rchestplate";
+					item.setType(Material.NETHERITE_CHESTPLATE);
 					break;
 				case "Infused Boots":
 					parsedType = "iboots";
+					item.setType(Material.NETHERITE_BOOTS);
 					break;
 				case "Infused Helmet":
 					parsedType = "ihelmet";
+					item.setType(Material.NETHERITE_HELMET);
 					break;
 				case "Infused Leggings":
 					parsedType = "ileggings";
+					item.setType(Material.NETHERITE_LEGGINGS);
 					break;
 				case "Infused Chestplate":
 					parsedType = "ichestplate";
+					item.setType(Material.NETHERITE_CHESTPLATE);
 					break;
 				}
 				
@@ -125,6 +134,45 @@ public class ProfessionsMethods {
 		}
 		else {
 			util.sendMessage(p, "&cItem is not valid for artifact conversion!");
+		}
+	}
+	
+	public void fixArtifact(Player p) {
+		PlayerInventory inv = p.getInventory();
+		ItemStack item = inv.getItemInMainHand();
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		
+		// Get the item type and level
+		String tierLine = lore.get(0);
+		String type = tierLine.substring(tierLine.indexOf('y') + 2);
+		
+		// Parse item type
+		switch (type) {
+		case "Reinforced Boots":
+			item.setType(Material.NETHERITE_BOOTS);
+			break;
+		case "Reinforced Helmet":
+			item.setType(Material.NETHERITE_HELMET);
+			break;
+		case "Reinforced Leggings":
+			item.setType(Material.NETHERITE_LEGGINGS);
+			break;
+		case "Reinforced Chestplate":
+			item.setType(Material.NETHERITE_CHESTPLATE);
+			break;
+		case "Infused Boots":
+			item.setType(Material.NETHERITE_BOOTS);
+			break;
+		case "Infused Helmet":
+			item.setType(Material.NETHERITE_HELMET);
+			break;
+		case "Infused Leggings":
+			item.setType(Material.NETHERITE_LEGGINGS);
+			break;
+		case "Infused Chestplate":
+			item.setType(Material.NETHERITE_CHESTPLATE);
+			break;
 		}
 	}
 
