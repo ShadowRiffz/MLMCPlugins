@@ -1,10 +1,11 @@
 name: NeoBossInstances
 author: Neoblade298
 main: me.neoblade298.neobossinstances.Main
-api-version: 1.14
+api-version: 1.16
 version: 1.0
 depend: [SkillAPI, LuckPerms]
 softdepend: [Multiverse-Core]
+load: POSTWORLD
 commands:
   boss:
     description: Does its job
