@@ -162,7 +162,7 @@ public class ReportsCommand implements CommandExecutor {
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
 								temp.list(p);
 								count++;
-								if (count >= NUM_REPORTS_PER_PAGE) {
+								if (count > NUM_REPORTS_PER_PAGE) {
 									break;
 								}
 							}
@@ -191,7 +191,7 @@ public class ReportsCommand implements CommandExecutor {
 									temp.list(p);
 								}
 								count++;
-								if (count >= NUM_REPORTS_PER_PAGE * page) {
+								if (count > NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
 							}
