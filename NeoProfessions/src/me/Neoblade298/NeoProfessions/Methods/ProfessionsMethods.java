@@ -86,9 +86,17 @@ public class ProfessionsMethods {
 					parsedType = "ileggings";
 					item.setType(Material.NETHERITE_LEGGINGS);
 					break;
-				case "Infused Chestplate":
-					parsedType = "ichestplate";
-					item.setType(Material.NETHERITE_CHESTPLATE);
+				case "Sword":
+					item.setType(Material.NETHERITE_SWORD);
+					break;
+				case "Axe":
+					item.setType(Material.NETHERITE_AXE);
+					break;
+				case "Spellsword":
+					item.setType(Material.NETHERITE_SWORD);
+					break;
+				case "Wand":
+					item.setType(Material.NETHERITE_HOE);
 					break;
 				}
 				
@@ -145,7 +153,7 @@ public class ProfessionsMethods {
 		
 		// Get the item type and level
 		String tierLine = lore.get(0);
-		String type = tierLine.substring(tierLine.indexOf('y') + 2);
+		String type = tierLine.substring(tierLine.indexOf("Artifact") + 2);
 		
 		// Parse item type
 		switch (type) {
@@ -173,7 +181,20 @@ public class ProfessionsMethods {
 		case "Infused Chestplate":
 			item.setType(Material.NETHERITE_CHESTPLATE);
 			break;
+		case "Sword":
+			item.setType(Material.NETHERITE_SWORD);
+			break;
+		case "Axe":
+			item.setType(Material.NETHERITE_AXE);
+			break;
+		case "Spellsword":
+			item.setType(Material.NETHERITE_SWORD);
+			break;
+		case "Wand":
+			item.setType(Material.NETHERITE_HOE);
+			break;
 		}
+		util.sendMessage(p, "&7Artifact fixed.");
 	}
 
 }
