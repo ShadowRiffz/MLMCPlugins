@@ -153,7 +153,7 @@ public class ProfessionsMethods {
 		
 		// Get the item type and level
 		String tierLine = lore.get(0);
-		String type = tierLine.substring(tierLine.indexOf("Artifact") + 2);
+		String type = tierLine.substring(tierLine.indexOf("ct") + 3);
 		
 		// Parse item type
 		switch (type) {
