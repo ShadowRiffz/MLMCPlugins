@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.EconomyException;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 
 public class Commands implements CommandExecutor {
@@ -23,6 +24,13 @@ public class Commands implements CommandExecutor {
 		Player p = (Player) sender;
 		if (args.length == 1 && args[0].equalsIgnoreCase("sweep") && p.hasPermission("tdeleter.admin")) {
 			main.sweepTowns();
+			if (this.main.deletableTowns.size() > 0) {
+				String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+				for (Town town : main.deletableTowns) {
+					msg += town.getName() + " ";
+				}
+				p.sendMessage(msg);
+			}
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("confirm") && p.hasPermission("tdeleter.admin")) {
@@ -47,6 +55,18 @@ public class Commands implements CommandExecutor {
 			main.debug = !main.debug;
 			String msg = "§4[§c§lMLMC§4] §7Debug is now §e" + main.debug;
 			p.sendMessage(msg);
+			return true;
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("check") && p.hasPermission("tdeleter.admin")) {
+			try {
+				Town town = TownyAPI.getInstance().getDataSource().getTown(args[1]);
+				if (main.checkTownInactive(town, p)) {
+					p.sendMessage("§4[§c§lMLMC§4] §7Town can be deleted.");
+				}
+			} catch (NotRegisteredException e) {
+				String error = "§4[§c§lMLMC§4] §7Town not registered.";
+				p.sendMessage(error);
+			}
 			return true;
 		}
 		else if (args.length == 1 && p.hasPermission("tdeleter.admin")) {
