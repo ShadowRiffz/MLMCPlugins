@@ -2,7 +2,7 @@ name: NeoProfessions
 author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Main
 version: 1.0
-api-version: 1.14
+api-version: 1.16
 depend: [MythicMobs, SkillAPI, NeoGear, Vault]
 commands:
   prof:
