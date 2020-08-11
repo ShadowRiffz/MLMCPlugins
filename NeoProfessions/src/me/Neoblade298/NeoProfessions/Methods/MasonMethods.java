@@ -300,8 +300,7 @@ public class MasonMethods {
 					int level = util.getItemLevel(item);
 					int perm = (level/ 10) - 1;
 					if (perm < 0) perm = 0;
-					String line = masonUtils.getSlotLine(item, slot);
-					int slottedLevel = Integer.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
+					int slottedLevel = level;
 					if (p.hasPermission("mason.unslot." + perm)) {
 						if (p.getInventory().firstEmpty() != -1) {
 							if (cm.hasEnough(p, "essence", slottedLevel, UNSLOT_ESSENCE)) {
