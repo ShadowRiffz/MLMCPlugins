@@ -159,7 +159,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, util.setAmount(drink.getWhiteRussian(), 3));
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.BONE_MEAL);
+		recipe.addIngredient(Material.WHITE_DYE);
 		recipe.addIngredient(Material.COCOA_BEANS);
 		return recipe;
 	}
@@ -224,7 +224,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, util.setAmount(drink.getPinaColada(), 3));
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.BONE_MEAL);
+		recipe.addIngredient(Material.WHITE_DYE);
 		recipe.addIngredient(Material.APPLE);
 		return recipe;
 	}
