@@ -55,7 +55,6 @@ public class Wildcard implements Card{
 	public void onPlay() {
 		game.requiredAction = "PICK_COLOR";
 		number = game.topCard.getNumber();
-		this.display = game.topCard.getDisplay();
 	}
 
 	@Override
