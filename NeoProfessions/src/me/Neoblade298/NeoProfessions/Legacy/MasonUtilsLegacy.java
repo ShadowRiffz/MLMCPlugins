@@ -85,20 +85,20 @@ public class MasonUtilsLegacy {
 		case 1:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getArmorGem(attr, slottedLevel, false, potency);
 			}
 			else {
-				return sItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getWeaponGem(attr, slottedLevel, false, potency);
 			}
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			durabilityLoss = Integer.parseInt(line.substring(7, 8) + line.substring(9, 10) + line.substring(11, 12));
 			util.setMaxDurability(item, util.getMaxDurability(item) + durabilityLoss);
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getArmorGem(attr, slottedLevel, true, potency);
 			}
 			else {
-				return sItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getWeaponGem(attr, slottedLevel, true, potency);
 			}
 		case 3:
 			if (line.contains("Advanced")) {
@@ -180,20 +180,20 @@ public class MasonUtilsLegacy {
 		case 1:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getArmorGem(attr, slottedLevel, false, potency);
 			}
 			else {
-				return sItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getWeaponGem(attr, slottedLevel, false, potency);
 			}
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			durabilityLoss = Integer.parseInt(line.substring(7, 8) + line.substring(9, 10) + line.substring(11, 12));
 			util.setMaxDurability(item, util.getMaxDurability(item) + durabilityLoss);
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getArmorGem(attr, slottedLevel, true, potency);
 			}
 			else {
-				return sItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getWeaponGem(attr, slottedLevel, true, potency);
 			}
 		case 3:
 			if (line.contains("Advanced")) {

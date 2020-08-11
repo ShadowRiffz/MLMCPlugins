@@ -185,7 +185,8 @@ public class MasonListeners implements Listener {
 			if (p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if (slotType != null) {
 					if (masonUtils.isGearReworked(itemToSlot)) {
-						if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel || itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)) {
+						if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel ||
+								(itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS) && masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
 							int level = util.getItemLevel(itemWithSlot);
 							if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute")) ||
 									(util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute")) ||
@@ -235,7 +236,7 @@ public class MasonListeners implements Listener {
 								slotNum.remove(p);
 							}
 						} else {
-							util.sendMessage(p, "&cThis item must be the same level as this slot!");
+							util.sendMessage(p, "&cThis item must be the same level as this slot (or be a charm)!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
