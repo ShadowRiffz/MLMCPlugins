@@ -86,10 +86,12 @@ public class MasonMethods {
 		cm = main.cManager;
 	}
 
-	public void createSlot(Player p, int level) {
+	public void createSlot(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		int level = util.getItemLevel(item);
+		
 		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 		if (perm < 0) perm = 0;
-		ItemStack item = p.getInventory().getItemInMainHand();
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
 				if (p.hasPermission("mason.engrave.tier." + perm)) {

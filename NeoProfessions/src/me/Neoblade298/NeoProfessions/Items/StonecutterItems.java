@@ -256,7 +256,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+	public ItemStack getWeaponGem(String attr, int level, boolean isOverloaded, int potency) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.ENDER_EYE);
@@ -290,7 +290,7 @@ public class StonecutterItems {
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
-			lore.add("§7Durability Lost: §e" + durabilityLoss);
+			lore.add("§7Durability Lost: §e" + OL_WEAPON_DURABILITY_BASE);
 		}
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -393,7 +393,7 @@ public class StonecutterItems {
 		return item;
 	}
 	
-	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency, int durabilityLoss) {
+	public ItemStack getArmorGem(String attr, int level, boolean isOverloaded, int potency) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		if(isOverloaded) {
 			item = new ItemStack(Material.ENDER_EYE);
@@ -460,7 +460,7 @@ public class StonecutterItems {
 		lore.add(effect);
 		lore.add("§7Potency: §e" + potency);
 		if(isOverloaded) {
-			lore.add("§7Durability Lost: §e" + durabilityLoss);
+			lore.add("§7Durability Lost: §e" + OL_ARMOR_DURABILITY_BASE);
 		}
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

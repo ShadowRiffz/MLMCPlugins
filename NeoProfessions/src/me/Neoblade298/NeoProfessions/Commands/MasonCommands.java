@@ -34,7 +34,7 @@ public class MasonCommands implements CommandExecutor {
 			if (args.length == 0) {
 				util.sendMessage(p, "&8&l[&cMason&8&l]");
 				util.sendMessage(p, "&7- &c/mason create [basic/advanced] [charm]");
-				util.sendMessage(p, "&7- &c/mason create slot [level]");
+				util.sendMessage(p, "&7- &c/mason create slot");
 				util.sendMessage(p, "&7- &c/mason slot [slot #]");
 				util.sendMessage(p, "&7- &c/mason unslot [slot #]");
 				util.sendMessage(p, "&7- &c/mason remove slot [slot #]");
@@ -72,21 +72,8 @@ public class MasonCommands implements CommandExecutor {
 						}
 					}
 					else if(args[1].equalsIgnoreCase("slot")) {
-						if(StringUtils.isNumeric(args[2])) {
-							int level = Integer.parseInt(args[2]);
-							if (level % 5 == 0 && level > 0 && level <= 60) {
-								masonMethods.createSlot(p, Integer.parseInt(args[2]));
-								return true;
-							}
-							else {
-								util.sendMessage(p, "&cInvalid level!");
-								return true;
-							}
-						}
-						else {
-							util.sendMessage(p, "&cInvalid level!");
-							return true;
-						}
+						masonMethods.createSlot(p);
+						return true;
 					}
 					else {
 						util.sendMessage(p, "&cInvalid item!");

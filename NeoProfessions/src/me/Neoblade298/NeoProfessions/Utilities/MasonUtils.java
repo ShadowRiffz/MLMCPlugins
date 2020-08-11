@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,21 +58,44 @@ public class MasonUtils {
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		String line = getSlotLine(item, slot);
+		String[] words = line.split(" ");
+		int level = util.getItemLevel(item);
 
 		// Parse the line and revert the lore
 		// chars 1 3 5 = slotLevel, chars 7 9 11 = slottedLevel, char 13 = slotType,
 		// chars 15 17 19 = durability loss
 		// slotType: 0 = Durability, 1 = attribute, 2 = overload, 3 = charm
-		int slotLevel = Integer.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
+		char color = line.charAt(1);
 		int slottedLevel = Integer.parseInt("" + line.charAt(7) + line.charAt(9) + line.charAt(11));
 		int slotType = Character.getNumericValue(line.charAt(13));
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = util.isArmor(item);
 		int potency = -1;
 		int durabilityLoss = -1;
-		lore.set(getSlotNum(item, slot), "§8(Lv " + slotLevel + " Slot)");
+		lore.set(getSlotNum(item, slot), "§8(Lv " + level + " Slot)");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		
+		if (line.contains("Durability")) {
+			slotType = 0;
+		}
+		else if (StringUtils.isNumeric(words[1])) {
+			if (color == '9') {
+				slotType = 1;
+			}
+			else {
+				slotType = 2;
+				if (isArmor) {
+					durabilityLoss = 200;
+				}
+				else {
+					durabilityLoss = 400;
+				}
+			}
+		}
+		else if (line.contains("Charm")) {
+			slotType = 3;
+		}
 
 		switch (slotType) {
 		// Max durability
@@ -92,20 +116,19 @@ public class MasonUtils {
 		case 1:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getArmorGem(attr, slottedLevel, false, potency);
 			} else {
-				return sItems.getWeaponGem(attr, slottedLevel, false, potency, 0);
+				return sItems.getWeaponGem(attr, slottedLevel, false, potency);
 			}
 
 			// Overload gem
 		case 2:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
-			durabilityLoss = Integer.parseInt(line.substring(15, 16) + line.substring(17, 18) + line.substring(19, 20));
 			util.setMaxDurability(item, util.getMaxDurability(item) + durabilityLoss);
 			if (isArmor) {
-				return sItems.getArmorGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getArmorGem(attr, slottedLevel, true, potency);
 			} else {
-				return sItems.getWeaponGem(attr, slottedLevel, true, potency, durabilityLoss);
+				return sItems.getWeaponGem(attr, slottedLevel, true, potency);
 			}
 
 			// Charm
