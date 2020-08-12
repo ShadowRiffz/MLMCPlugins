@@ -91,7 +91,7 @@ public class MasonMethods {
 		int level = util.getItemLevel(item);
 		
 		int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-		if (perm < 0) perm = 0;
+		if (perm < 1) perm = 1;
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
 				if (p.hasPermission("mason.engrave.tier." + perm)) {
