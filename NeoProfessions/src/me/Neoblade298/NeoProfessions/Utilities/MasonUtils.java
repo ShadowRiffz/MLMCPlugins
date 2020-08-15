@@ -67,7 +67,7 @@ public class MasonUtils {
 		// slotType: 0 = Durability, 1 = attribute, 2 = overload, 3 = charm
 		char color = line.charAt(1);
 		int slottedLevel = level;
-		int slotType = Character.getNumericValue(line.charAt(13));
+		int slotType = -1;
 		String attr = getSlotLineAttribute(line);
 		boolean isArmor = util.isArmor(item);
 		int potency = -1;

@@ -40,45 +40,39 @@ public class MasonCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/mason remove slot [slot #]");
 				return true;
 			}
-			else if(args[0].equalsIgnoreCase("create")) {
-				if(args.length == 3) {
-					if (args[1].equalsIgnoreCase("basic")) {
-						if (args[2].equalsIgnoreCase("exp") ||
-								args[2].equalsIgnoreCase("drop") ||
-								args[2].equalsIgnoreCase("looting") ||
-								args[2].equalsIgnoreCase("traveler") ||
-								args[2].equalsIgnoreCase("recovery")) {
-							masonMethods.createBasicCharm(p, args[2].toLowerCase());
-							return true;
-						}
-						else {
-							util.sendMessage(p, "&cInvalid charm!");
-							return true;
-						}
-					}
-					else if (args[1].equalsIgnoreCase("advanced")) {
-						if (args[2].equalsIgnoreCase("exp") ||
-								args[2].equalsIgnoreCase("drop") ||
-								args[2].equalsIgnoreCase("looting") ||
-								args[2].equalsIgnoreCase("secondchance") ||
-								args[2].equalsIgnoreCase("hunger") ||
-								args[2].equalsIgnoreCase("quickeat")) {
-							masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
-							return true;
-						}
-						else {
-							util.sendMessage(p, "&cInvalid charm!");
-							return true;
-						}
-					}
-					else if(args[1].equalsIgnoreCase("slot")) {
-						masonMethods.createSlot(p);
+			else if (args[0].equalsIgnoreCase("create")) {
+				if (args.length == 3 && args[1].equalsIgnoreCase("basic")) {
+					if (args[2].equalsIgnoreCase("exp") ||
+							args[2].equalsIgnoreCase("drop") ||
+							args[2].equalsIgnoreCase("looting") ||
+							args[2].equalsIgnoreCase("traveler") ||
+							args[2].equalsIgnoreCase("recovery")) {
+						masonMethods.createBasicCharm(p, args[2].toLowerCase());
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cInvalid item!");
+						util.sendMessage(p, "&cInvalid charm!");
 						return true;
 					}
+				}
+				else if (args.length == 3 && args[1].equalsIgnoreCase("advanced")) {
+					if (args[2].equalsIgnoreCase("exp") ||
+							args[2].equalsIgnoreCase("drop") ||
+							args[2].equalsIgnoreCase("looting") ||
+							args[2].equalsIgnoreCase("secondchance") ||
+							args[2].equalsIgnoreCase("hunger") ||
+							args[2].equalsIgnoreCase("quickeat")) {
+						masonMethods.createAdvancedCharm(p, args[2].toLowerCase());
+						return true;
+					}
+					else {
+						util.sendMessage(p, "&cInvalid charm!");
+						return true;
+					}
+				}
+				else if(args.length == 2 && args[1].equalsIgnoreCase("slot")) {
+					masonMethods.createSlot(p);
+					return true;
 				}
 				else {
 					util.sendMessage(p, "&cIncorrect number of arguments!");
