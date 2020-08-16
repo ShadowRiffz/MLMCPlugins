@@ -50,8 +50,8 @@ public class Commands implements CommandExecutor {
 						// empty until everyone leaves
 						BukkitRunnable addSql = new BukkitRunnable() {
 							public void run() {
-								if (main.mainSpawn == null) {
-									main.mainSpawn = main.parseLocation(main.getConfig().getString("Main_Spawn"));
+								if (main.mainSpawn.getWorld() == null) {
+									main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
 								}
 								p.teleport(main.mainSpawn);
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
@@ -101,8 +101,8 @@ public class Commands implements CommandExecutor {
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
-					if (main.mainSpawn == null) {
-						main.mainSpawn = main.parseLocation(main.getConfig().getString("Main_Spawn"));
+					if (main.mainSpawn.getWorld() == null) {
+						main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
 					}
 					p.teleport(main.mainSpawn);
 	
