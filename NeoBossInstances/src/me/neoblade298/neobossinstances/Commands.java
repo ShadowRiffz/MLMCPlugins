@@ -50,6 +50,9 @@ public class Commands implements CommandExecutor {
 						// empty until everyone leaves
 						BukkitRunnable addSql = new BukkitRunnable() {
 							public void run() {
+								if (main.mainSpawn == null) {
+									main.mainSpawn = main.parseLocation(main.getConfig().getString("Main_Spawn"));
+								}
 								p.teleport(main.mainSpawn);
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
 										.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
@@ -97,6 +100,9 @@ public class Commands implements CommandExecutor {
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+					}
+					if (main.mainSpawn == null) {
+						main.mainSpawn = main.parseLocation(main.getConfig().getString("Main_Spawn"));
 					}
 					p.teleport(main.mainSpawn);
 	
