@@ -1,6 +1,8 @@
 package me.neoblade298.neomythicextension.conditions;
 
 import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,6 +14,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import me.neoblade298.neomythicextension.Main;
 
 public class SkillAPIFlagCondition extends SkillCondition implements IEntityCondition {
     private String[] flags;
@@ -20,8 +23,10 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
     private boolean action = true;
     private int setgcd = -1;
     private String msg;
+    private ArrayList<Entity> near;
+    private Main main;
     
-    public SkillAPIFlagCondition(MythicLineConfig mlc) {
+    public SkillAPIFlagCondition(MythicLineConfig mlc, Main main) {
         super(mlc.getLine());
         this.flags = mlc.getString("flag").trim().split(",");
         if(mlc.getString("action") != null) {
@@ -35,6 +40,8 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
         	setgcd = mlc.getInteger("setgcd");
         }
         msg = mlc.getString("msg");
+        near = null;
+        this.main = main;
     }
 
     public boolean check(AbstractEntity t) {
@@ -61,13 +68,12 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 		        	    		
 		        	    		// If a message was specified, show players in radius the message
 		            	    	if(msg != null) {
-		            	    		ArrayList<Entity> near = (ArrayList<Entity>) am.getEntity().getBukkitEntity().getNearbyEntities(40, 40, 40);
-	    	        	    		for(Entity e : near) {
-	    	        	    			if (e instanceof Player) {
-	    	        	    				Player p = (Player) e;
-	    	        	    				p.sendMessage(msg);
-	    	        	    			}
-	    	        	    		}
+		            	    		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+		            	    			public void run() {
+				            	    		near = (ArrayList<Entity>) am.getEntity().getBukkitEntity().getNearbyEntities(40, 40, 40);
+				            	    		displayMessage();
+		            	    			}
+		            	    		});
 	            	    		}
 	            	    	}
 		    				if (setgcd != -1) {
@@ -95,5 +101,14 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 	        }
         }
         return !result;
+    }
+    
+    public void displayMessage() {
+		for(Entity e : near) {
+			if (e instanceof Player) {
+				Player p = (Player) e;
+				p.sendMessage(msg);
+			}
+		}
     }
 }

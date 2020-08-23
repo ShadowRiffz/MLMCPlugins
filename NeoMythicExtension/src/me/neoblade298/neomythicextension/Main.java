@@ -53,7 +53,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onMythicConditionLoad(MythicConditionLoadEvent event) {
 
 		if (event.getConditionName().equalsIgnoreCase("hasflag")) {
-			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig());
+			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig(), this);
 			event.register(condition);
 		}
 
