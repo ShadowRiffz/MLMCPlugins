@@ -75,11 +75,11 @@ public class MasonUtils {
 		lore.set(getSlotNum(item, slot), "§8(Lv " + level + " Slot)");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		
+
 		if (line.contains("Durability")) {
 			slotType = 0;
 		}
-		else if (StringUtils.isNumeric(words[1])) {
+		else if (StringUtils.isNumeric(words[1].substring(1))) {
 			if (color == '9') {
 				slotType = 1;
 			}
