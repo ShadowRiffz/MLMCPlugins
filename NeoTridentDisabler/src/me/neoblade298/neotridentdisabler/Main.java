@@ -3,17 +3,12 @@ package me.neoblade298.neotridentdisabler;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,6 +39,7 @@ public class Main extends JavaPlugin implements Listener {
   	
   	@EventHandler
   	public void onAnvilPrep(PrepareAnvilEvent e) {
+  		if (e.getResult() == null) return;
   		if (e.getResult().containsEnchantment(Enchantment.RIPTIDE)) {
   			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
   			e.getViewers().get(0).closeInventory();
