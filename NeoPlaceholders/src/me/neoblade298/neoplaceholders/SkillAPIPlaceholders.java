@@ -51,7 +51,7 @@ public class SkillAPIPlaceholders {
 				if (online && p != null) {
 					double health = p.getHealth();
 					if (health >= 10000) {
-						placeholder = df10k.format(health / 1000);
+						placeholder = df10k.format(health / 100);
 					}
 					else if (health >= 1000) {
 						placeholder = df1k.format(health / 1000);
@@ -86,6 +86,42 @@ public class SkillAPIPlaceholders {
 						placeholder = df.format(health);
 					}
 					return placeholder;
+				}
+				return placeholder;
+			}
+		});
+
+		// Exp placeholder
+		PlaceholderAPI.registerPlaceholder(this.main, "CurrentExp", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "Mana";
+
+				if (online && p != null) {
+					PlayerData pData = SkillAPI.getPlayerData(p);
+					if (pData != null) {
+						return "" + pData.getClass("class").getExp();
+					}
+				}
+				return placeholder;
+			}
+		});
+
+		// Required exp placeholder
+		PlaceholderAPI.registerPlaceholder(this.main, "RequiredExp", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "Mana";
+
+				if (online && p != null) {
+					PlayerData pData = SkillAPI.getPlayerData(p);
+					if (pData != null) {
+						return "" + pData.getClass("class").getRequiredExp();
+					}
 				}
 				return placeholder;
 			}
