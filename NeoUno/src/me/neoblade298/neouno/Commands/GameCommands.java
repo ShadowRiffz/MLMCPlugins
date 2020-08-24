@@ -140,7 +140,7 @@ public class GameCommands {
 				return;
 			}	
 			
-			if (game.curr.equals(gp) && gp.getCards().size() == 2) {
+			if (game.curr.equals(gp) && gp.getCards().size() <= 2) {
 				game.broadcast("&f" + gp + " &7calls &lUno&7!");
 				gp.setCalledUno(true);
 				return;
