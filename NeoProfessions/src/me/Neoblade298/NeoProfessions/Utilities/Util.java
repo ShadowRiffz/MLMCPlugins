@@ -109,16 +109,19 @@ public class Util {
 				mat.equals(Material.GOLDEN_SWORD) ||
 				mat.equals(Material.IRON_SWORD) ||
 				mat.equals(Material.DIAMOND_SWORD) ||
+				mat.equals(Material.NETHERITE_SWORD) ||
 				mat.equals(Material.WOODEN_AXE) ||
 				mat.equals(Material.STONE_AXE) ||
 				mat.equals(Material.GOLDEN_AXE) ||
 				mat.equals(Material.IRON_AXE) ||
 				mat.equals(Material.DIAMOND_AXE) ||
+				mat.equals(Material.NETHERITE_AXE) ||
 				mat.equals(Material.WOODEN_HOE) ||
 				mat.equals(Material.STONE_HOE) ||
 				mat.equals(Material.GOLDEN_HOE) ||
 				mat.equals(Material.IRON_HOE) ||
 				mat.equals(Material.DIAMOND_HOE) ||
+				mat.equals(Material.NETHERITE_HOE) ||
 				mat.equals(Material.SHIELD) ||
 				mat.equals(Material.BOW) ||
 				mat.equals(Material.CROSSBOW) ||
@@ -133,18 +136,22 @@ public class Util {
 				mat.equals(Material.GOLDEN_HELMET) ||
 				mat.equals(Material.IRON_HELMET) ||
 				mat.equals(Material.DIAMOND_HELMET) ||
+				mat.equals(Material.NETHERITE_HELMET) ||
 				mat.equals(Material.LEATHER_CHESTPLATE) ||
 				mat.equals(Material.GOLDEN_CHESTPLATE) ||
 				mat.equals(Material.IRON_CHESTPLATE) ||
 				mat.equals(Material.DIAMOND_CHESTPLATE) ||
+				mat.equals(Material.NETHERITE_CHESTPLATE) ||
 				mat.equals(Material.LEATHER_LEGGINGS) ||
 				mat.equals(Material.GOLDEN_LEGGINGS) ||
 				mat.equals(Material.IRON_LEGGINGS) ||
 				mat.equals(Material.DIAMOND_LEGGINGS) ||
+				mat.equals(Material.NETHERITE_LEGGINGS) ||
 				mat.equals(Material.LEATHER_BOOTS) ||
 				mat.equals(Material.GOLDEN_BOOTS) ||
 				mat.equals(Material.IRON_BOOTS) ||
-				mat.equals(Material.DIAMOND_BOOTS);
+				mat.equals(Material.DIAMOND_BOOTS) ||
+				mat.equals(Material.NETHERITE_BOOTS);
 	}
 	
 	public int getCurrentDurability(ItemStack item) {
