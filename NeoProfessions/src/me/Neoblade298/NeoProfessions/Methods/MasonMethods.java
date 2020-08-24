@@ -264,7 +264,7 @@ public class MasonMethods {
 					if (util.isArmor(item)) {
 						int level = util.getItemLevel(item);
 						int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-						if (perm < 0) perm = 0;
+						if (perm < 1) perm = 1;
 						if (p.hasPermission("mason.slot.armor." + perm)) {
 							listeners.prepItemSlot(p, item, slot);
 						} else {
