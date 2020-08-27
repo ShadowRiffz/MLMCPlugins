@@ -10,6 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -341,6 +344,24 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection raritySec = raresSec.getConfigurationSection(rarity);
 				if (raritySec != null) {
 					conf.rarities.put(rarity, overrideRarities(conf.rarities.get(rarity), raritySec));
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
+		ItemStack[] arrayOfItemStack;
+		int j = (arrayOfItemStack = e.getInventory().getContents()).length;
+		for (int i = 0; i < j; i++) {
+			ItemStack item = arrayOfItemStack[i];
+			if (item != null) {
+				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+					for (String line : item.getItemMeta().getLore())
+					if (line.contains("Tier")) {
+						e.setResult(null);
+						return;
+					}
 				}
 			}
 		}
