@@ -25,7 +25,7 @@ public class ProfessionsMethods {
 	// Constants
 
 	// Prices
-	static final int ARTIFACT_PRICE = 2000000;
+	static final int ARTIFACT_PRICE = 1500000;
 
 	public ProfessionsMethods(Main main) {
 		this.main = main;
