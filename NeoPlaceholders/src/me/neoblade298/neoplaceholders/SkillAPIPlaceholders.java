@@ -102,7 +102,10 @@ public class SkillAPIPlaceholders {
 				if (online && p != null) {
 					PlayerData pData = SkillAPI.getPlayerData(p);
 					if (pData != null) {
-						return "" + pData.getClass("class").getExp();
+						PlayerClass pClass = pData.getClass("class");
+						if (pClass != null) {
+							return "" + pClass.getRequiredExp();
+						}
 					}
 				}
 				return placeholder;
@@ -120,7 +123,10 @@ public class SkillAPIPlaceholders {
 				if (online && p != null) {
 					PlayerData pData = SkillAPI.getPlayerData(p);
 					if (pData != null) {
-						return "" + pData.getClass("class").getRequiredExp();
+						PlayerClass pClass = pData.getClass("class");
+						if (pClass != null) {
+							return "" + pClass.getRequiredExp();
+						}
 					}
 				}
 				return placeholder;
