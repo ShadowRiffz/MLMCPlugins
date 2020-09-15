@@ -104,7 +104,7 @@ public class SkillAPIPlaceholders {
 					if (pData != null) {
 						PlayerClass pClass = pData.getClass("class");
 						if (pClass != null) {
-							return "" + pClass.getRequiredExp();
+							return "" + pClass.getExp();
 						}
 					}
 				}
