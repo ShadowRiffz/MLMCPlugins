@@ -86,6 +86,10 @@ public class ProfessionsMethods {
 					parsedType = "ileggings";
 					item.setType(Material.NETHERITE_LEGGINGS);
 					break;
+				case "Infused Chestplate":
+					parsedType = "ichestplate";
+					item.setType(Material.NETHERITE_CHESTPLATE);
+					break;
 				case "Sword":
 					item.setType(Material.NETHERITE_SWORD);
 					break;
