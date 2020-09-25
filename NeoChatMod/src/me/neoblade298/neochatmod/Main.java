@@ -24,10 +24,14 @@ public class Main extends JavaPlugin implements Listener {
 	boolean muteTutorial = false;
 	List<String> punishCmds = null; 
 
-	int X_BOUND_1 = -1578;
-	int X_BOUND_2 = -1168;
-	int Z_BOUND_1 = 1243;
-	int Z_BOUND_2 = 1805;
+	int QUEST_X_BOUND_1 = -1578;
+	int QUEST_X_BOUND_2 = -1168;
+	int QUEST_Z_BOUND_1 = 1243;
+	int QUEST_Z_BOUND_2 = 1805;
+	int TOWNY_X_BOUND_1 = -1638;
+	int TOWNY_X_BOUND_2 = -1468;
+	int TOWNY_Z_BOUND_1 = 764;
+	int TOWNY_Z_BOUND_2 = 1034;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoChatMod Enabled");
@@ -65,17 +69,29 @@ public class Main extends JavaPlugin implements Listener {
 		Player sender = e.getPlayer();
 		
 		// Check if they're in the tutorial world
-		if (w.getName().equalsIgnoreCase("Argyll") &&
-			(X_BOUND_1 <= x && x <= X_BOUND_2) &&
-			(Z_BOUND_1 <= z && z <= Z_BOUND_2) &&
+		if (w.getName().equalsIgnoreCase("Argyll")) {
+			if ((QUEST_X_BOUND_1 <= x && x <= QUEST_X_BOUND_2) &&
+			(QUEST_Z_BOUND_1 <= z && z <= QUEST_Z_BOUND_2) &&
 			!sender.hasPermission("tutorial.chat.receive")) {
-			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-				if (p.hasPermission("tutorial.chat.receive")) {
-					p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+					if (p.hasPermission("tutorial.chat.receive")) {
+						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+					}
 				}
+				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				e.setCancelled(true);
 			}
-			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
-			e.setCancelled(true);
+			else if ((TOWNY_X_BOUND_1 <= x && x <= TOWNY_X_BOUND_2) &&
+			(TOWNY_Z_BOUND_1 <= z && z <= TOWNY_Z_BOUND_2) &&
+			!sender.hasPermission("tutorial.chat.receive")) {
+				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+					if (p.hasPermission("tutorial.chat.receive")) {
+						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+					}
+				}
+				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				e.setCancelled(true);
+			}
 		}
 		
 		// Check if it contained a curse word
