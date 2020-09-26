@@ -100,12 +100,11 @@ public class SkillAPIPlaceholders {
 				String placeholder = "Mana";
 
 				if (online && p != null) {
-					PlayerData pData = SkillAPI.getPlayerData(p);
-					if (pData != null) {
-						PlayerClass pClass = pData.getClass("class");
-						if (pClass != null) {
-							return "" + pClass.getExp();
-						}
+					try {
+						return "" + SkillAPI.getPlayerData(p).getClass("class").getExp();
+					}
+					catch (NullPointerException ex) {
+						return placeholder;
 					}
 				}
 				return placeholder;
@@ -121,12 +120,11 @@ public class SkillAPIPlaceholders {
 				String placeholder = "Mana";
 
 				if (online && p != null) {
-					PlayerData pData = SkillAPI.getPlayerData(p);
-					if (pData != null) {
-						PlayerClass pClass = pData.getClass("class");
-						if (pClass != null) {
-							return "" + pClass.getRequiredExp();
-						}
+					try {
+						return "" + SkillAPI.getPlayerData(p).getClass("class").getRequiredExp();
+					}
+					catch (NullPointerException ex) {
+						return placeholder;
 					}
 				}
 				return placeholder;
@@ -213,13 +211,11 @@ public class SkillAPIPlaceholders {
 				String placeholder = "N/A";
 
 				if (online && p != null) {
-					PlayerData pData = SkillAPI.getPlayerData(p);
-					if (pData != null) {
-						PlayerClass pClass = pData.getClass("class");
-						if (pClass != null) {
-							placeholder = pClass.getLevel() + "";
-							return placeholder;
-						}
+					try {
+						return "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
+					}
+					catch (NullPointerException ex) {
+						return placeholder;
 					}
 				}
 				return placeholder;
