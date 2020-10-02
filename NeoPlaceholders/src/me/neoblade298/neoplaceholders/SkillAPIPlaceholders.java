@@ -234,7 +234,7 @@ public class SkillAPIPlaceholders {
 					try {
 						return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
 					}
-					catch (NullPointerException ex) {
+					catch (Exception ex) {
 						return placeholder;
 					}
 				}
