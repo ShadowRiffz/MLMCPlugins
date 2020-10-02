@@ -2,8 +2,8 @@ package me.neoblade298.neoplaceholders;
 
 import java.text.DecimalFormat;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.classes.RPGClass;
 import com.sucy.skill.api.player.PlayerClass;
@@ -15,8 +15,8 @@ import be.maximvdw.placeholderapi.PlaceholderReplacer;
 
 public class SkillAPIPlaceholders {
 	private Main main;
-	
-	public SkillAPIPlaceholders (Main main) {
+
+	public SkillAPIPlaceholders(Main main) {
 		this.main = main;
 	}
 
@@ -226,18 +226,20 @@ public class SkillAPIPlaceholders {
 		PlaceholderAPI.registerPlaceholder(this.main, "Resource", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				boolean online = e.isOnline();
-				Player p = e.getPlayer();
 				String placeholder = "MP";
-				
-				if (online && p != null) {
-					try {
-						return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
+				Bukkit.getScheduler().runTask(main, new Runnable() { public void run() {
+					boolean online = e.isOnline();
+					Player p = e.getPlayer();
+					
+					if (online && p != null) {
+						try {
+							SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
+						}
+						catch (Exception ex) {
+							return;
+						}
 					}
-					catch (Exception ex) {
-						return placeholder;
-					}
-				}
+				}});
 				return placeholder;
 			}
 		});
