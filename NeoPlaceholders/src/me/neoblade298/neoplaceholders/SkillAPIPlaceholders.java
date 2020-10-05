@@ -2,8 +2,8 @@ package me.neoblade298.neoplaceholders;
 
 import java.text.DecimalFormat;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.classes.RPGClass;
 import com.sucy.skill.api.player.PlayerClass;
@@ -15,8 +15,8 @@ import be.maximvdw.placeholderapi.PlaceholderReplacer;
 
 public class SkillAPIPlaceholders {
 	private Main main;
-
-	public SkillAPIPlaceholders(Main main) {
+	
+	public SkillAPIPlaceholders (Main main) {
 		this.main = main;
 	}
 
@@ -133,23 +133,20 @@ public class SkillAPIPlaceholders {
 
 		// Current mana placeholder
 		PlaceholderAPI.registerPlaceholder(this.main, "CurrentMana", new PlaceholderReplacer() {
-			String placeholder = "0";
-			
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Bukkit.getScheduler().runTask(main, new Runnable() { public void run() {
-					boolean online = e.isOnline();
-					Player p = e.getPlayer();
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "0";
 
-					if (online && p != null) {
-						try {
-							placeholder = df.format(SkillAPI.getPlayerData(p).getMana());
-						}
-						catch (NullPointerException ex) {
-							return;
-						}
+				if (online && p != null) {
+					try {
+						return df.format(SkillAPI.getPlayerData(p).getMana());
 					}
-				}});
+					catch (NullPointerException ex) {
+						return placeholder;
+					}
+				}
 				return placeholder;
 			}
 		});
@@ -207,46 +204,40 @@ public class SkillAPIPlaceholders {
 		
 		// Current level placeholder
 		PlaceholderAPI.registerPlaceholder(this.main, "CurrentLevel", new PlaceholderReplacer() {
-			String placeholder = "N/A";
-			
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Bukkit.getScheduler().runTask(main, new Runnable() { public void run() {
-					boolean online = e.isOnline();
-					Player p = e.getPlayer();
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "N/A";
 
-					if (online && p != null) {
-						try {
-							placeholder = "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
-						}
-						catch (NullPointerException ex) {
-							return;
-						}
+				if (online && p != null) {
+					try {
+						return "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
 					}
-				}});
+					catch (NullPointerException ex) {
+						return placeholder;
+					}
+				}
 				return placeholder;
 			}
 		});
 		
 		// Resource placeholder
 		PlaceholderAPI.registerPlaceholder(this.main, "Resource", new PlaceholderReplacer() {
-			String placeholder = "MP";
-			
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Bukkit.getScheduler().runTask(main, new Runnable() { public void run() {
-					boolean online = e.isOnline();
-					Player p = e.getPlayer();
-					
-					if (online && p != null) {
-						try {
-							placeholder = SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
-						}
-						catch (Exception ex) {
-							return;
-						}
+				boolean online = e.isOnline();
+				Player p = e.getPlayer();
+				String placeholder = "MP";
+				
+				if (online && p != null) {
+					try {
+						return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
 					}
-				}});
+					catch (Exception ex) {
+						return placeholder;
+					}
+				}
 				return placeholder;
 			}
 		});
