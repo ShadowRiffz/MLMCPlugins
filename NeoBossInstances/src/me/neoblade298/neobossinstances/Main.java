@@ -261,17 +261,6 @@ public class Main extends JavaPlugin implements Listener {
 	    				    		this.cancel();
 	    						}
 	    					}
-	    					// Retried 3 times, time to teleport them out
-	    					else if (count >= 3 && !p.hasPermission("bossinstances.exemptjoin")) {
-	    		    			p.sendMessage("§4[§c§lBosses§4] §7Something went wrong! Could not teleport you to boss.");
-					    		BukkitRunnable returnPlayer = new BukkitRunnable() {
-					    			public void run() {
-		    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-					    			}
-					    		};
-					    		returnPlayer.runTaskLater(main, 100L);
-					    		count++;
-	    					}
 	    					// Task failed, retry
 	    					else {
 	    						count++;
