@@ -4,4 +4,4 @@ main: me.neoblade298.neoplaceholders.Main
 version: 1.01
 api-version: 1.14
 depend: [MVdWPlaceholderAPI, PlaceholderAPI, SkillAPI]
-softdepend: [NeoBossInstances, NeoProfessions]
+softdepend: [NeoBossInstances, NeoProfessions, CrossTownyServer]
