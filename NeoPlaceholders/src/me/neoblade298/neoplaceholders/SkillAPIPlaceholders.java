@@ -2,6 +2,7 @@ package me.neoblade298.neoplaceholders;
 
 import java.text.DecimalFormat;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
@@ -12,12 +13,19 @@ import com.sucy.skill.api.player.PlayerData;
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
+import me.mrmaurice.cts.CrossTownyServer;
 
 public class SkillAPIPlaceholders {
 	private Main main;
+	boolean hasCts = false;
+	CrossTownyServer cts = null;
 	
 	public SkillAPIPlaceholders (Main main) {
 		this.main = main;
+		cts = (CrossTownyServer) Bukkit.getPluginManager().getPlugin("CrossTownyServer");
+		if (cts != null) {
+			hasCts = true;
+		}
 	}
 
 	public void registerPlaceholders() {
@@ -98,8 +106,9 @@ public class SkillAPIPlaceholders {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
 				String placeholder = "Mana";
+				
 
-				if (online && p != null) {
+				if (online && p != null && cts.hasManager(p)) {
 					try {
 						return "" + SkillAPI.getPlayerData(p).getClass("class").getExp();
 					}
@@ -210,7 +219,7 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "N/A";
 
-				if (online && p != null) {
+				if (online && p != null && cts.hasManager(p)) {
 					try {
 						return "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
 					}
@@ -230,7 +239,7 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "MP";
 				
-				if (online && p != null) {
+				if (online && p != null && cts.hasManager(p)) {
 					try {
 						return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
 					}
