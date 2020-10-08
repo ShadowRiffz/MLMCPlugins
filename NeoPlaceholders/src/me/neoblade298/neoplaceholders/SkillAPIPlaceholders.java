@@ -105,17 +105,22 @@ public class SkillAPIPlaceholders {
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
-				String placeholder = "Mana";
+				String placeholder = "";
 				
 
-				if (online && p != null && cts.hasManager(p)) {
-					try {
-						return "" + SkillAPI.getPlayerData(p).getClass("class").getExp();
-					}
-					catch (NullPointerException ex) {
-						return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return "" + SkillAPI.getPlayerData(p).getClass("class").getExp();
+							}
+							catch (NullPointerException ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -126,16 +131,21 @@ public class SkillAPIPlaceholders {
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
-				String placeholder = "Mana";
+				String placeholder = "";
 
-				if (online && p != null) {
-					try {
-						return "" + SkillAPI.getPlayerData(p).getClass("class").getRequiredExp();
-					}
-					catch (NullPointerException ex) {
-						return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return "" + SkillAPI.getPlayerData(p).getClass("class").getRequiredExp();
+							}
+							catch (NullPointerException ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -148,14 +158,19 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "0";
 
-				if (online && p != null) {
-					try {
-						return df.format(SkillAPI.getPlayerData(p).getMana());
-					}
-					catch (NullPointerException ex) {
-						return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return df.format(SkillAPI.getPlayerData(p).getMana());
+							}
+							catch (NullPointerException ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -167,15 +182,20 @@ public class SkillAPIPlaceholders {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
 				String placeholder = "0";
-				
-				if (online && p != null) {
-					try {
-						return df.format(SkillAPI.getPlayerData(p).getMaxMana());
-					}
-					catch (NullPointerException ex) {
-						return placeholder;
+
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return df.format(SkillAPI.getPlayerData(p).getMaxMana());
+							}
+							catch (NullPointerException ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -188,25 +208,30 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "N/A";
 
-				if (online && p != null) {
-					PlayerData pData = SkillAPI.getPlayerData(p);
-					if (pData != null) {
-						PlayerClass pClass = pData.getClass("class");
-						if (pClass != null) {
-							RPGClass rClass = pClass.getData();
-							if (rClass != null) {
-								int max = rClass.getMaxLevel();
-								int lvl = pClass.getLevel();
-								if (max != lvl) {
-									double reqExp = pClass.getRequiredExp();
-									double currExp = pClass.getExp();
-									placeholder = pct.format((currExp / reqExp) * 100) + "%";
-									return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							PlayerData pData = SkillAPI.getPlayerData(p);
+							if (pData != null) {
+								PlayerClass pClass = pData.getClass("class");
+								if (pClass != null) {
+									RPGClass rClass = pClass.getData();
+									if (rClass != null) {
+										int max = rClass.getMaxLevel();
+										int lvl = pClass.getLevel();
+										if (max != lvl) {
+											double reqExp = pClass.getRequiredExp();
+											double currExp = pClass.getExp();
+											placeholder = pct.format((currExp / reqExp) * 100) + "%";
+											return placeholder;
+										}
+									}
 								}
 							}
 						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -219,14 +244,19 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "N/A";
 
-				if (online && p != null && cts.hasManager(p)) {
-					try {
-						return "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
-					}
-					catch (NullPointerException ex) {
-						return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return "" + SkillAPI.getPlayerData(p).getClass("class").getLevel();
+							}
+							catch (NullPointerException ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
@@ -239,14 +269,19 @@ public class SkillAPIPlaceholders {
 				Player p = e.getPlayer();
 				String placeholder = "MP";
 				
-				if (online && p != null && cts.hasManager(p)) {
-					try {
-						return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
-					}
-					catch (Exception ex) {
-						return placeholder;
+				try {
+					if (online && p != null) {
+						if (!hasCts || !cts.hasManager(p)) {
+							try {
+								return SkillAPI.getPlayerData(p).getClass("class").getData().getManaName();
+							}
+							catch (Exception ex) {
+								return placeholder;
+							}
+						}
 					}
 				}
+				catch (Exception ex) {}
 				return placeholder;
 			}
 		});
