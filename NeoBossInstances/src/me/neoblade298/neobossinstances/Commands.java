@@ -40,6 +40,7 @@ public class Commands implements CommandExecutor {
 					String instance = main.findInstance(boss);
 					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
 						
 						// Only give cooldown if they've beaten the boss before or it's a raid
 						if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
