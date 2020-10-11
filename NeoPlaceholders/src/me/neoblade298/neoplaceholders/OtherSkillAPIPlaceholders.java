@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
+import com.sucy.skill.api.player.PlayerData;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -62,6 +63,20 @@ public class OtherSkillAPIPlaceholders extends PlaceholderExpansion {
 				return prof.getData().getPrefix();
 			}
 			return "N/A";
+		}
+		if (args[0].equalsIgnoreCase("mana")) {
+			PlayerData data = SkillAPI.getPlayerData(p);
+			if (data != null) {
+				return "" + (int) data.getMana();
+			}
+			return "0";
+		}
+		if (args[0].equalsIgnoreCase("profession")) {
+			PlayerData data = SkillAPI.getPlayerData(p);
+			if (data != null) {
+				return "" + (int) data.getMaxMana();
+			}
+			return "0";
 		}
 	 	return "Invalid placeholder";
 	}
