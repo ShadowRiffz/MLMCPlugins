@@ -150,7 +150,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		// /prof solidify [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("solidify")) {
-			if (p.getGameMode().equals(GameMode.CREATIVE)) {
+			if (!p.getGameMode().equals(GameMode.CREATIVE)) {
 				if (cm.containsKey(args[1])) {
 					if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
 						int level = Integer.parseInt(args[2]);
@@ -206,65 +206,70 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 		// /prof liquidate [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("liquidate")) {
-
-			if (cm.containsKey(args[1])) {
-				if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
-					int level = Integer.parseInt(args[2]);
-					int amount = Integer.parseInt(args[3]);
-					if (level % 5 == 0 && level > 0 && level <= 60) {
-						if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
-							HashMap<Integer, ItemStack> result = p.getInventory()
-									.removeItem(util.setAmount(common.getEssence(level, false), amount));
-							if (!result.isEmpty()) {
-								int notAdded = 0;
-								for (Entry<Integer, ItemStack> item : result.entrySet()) {
-									notAdded += item.getValue().getAmount();
+			if (!p.getGameMode().equals(GameMode.CREATIVE)) {
+				if (cm.containsKey(args[1])) {
+					if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
+						int level = Integer.parseInt(args[2]);
+						int amount = Integer.parseInt(args[3]);
+						if (level % 5 == 0 && level > 0 && level <= 60) {
+							if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
+								HashMap<Integer, ItemStack> result = p.getInventory()
+										.removeItem(util.setAmount(common.getEssence(level, false), amount));
+								if (!result.isEmpty()) {
+									int notAdded = 0;
+									for (Entry<Integer, ItemStack> item : result.entrySet()) {
+										notAdded += item.getValue().getAmount();
+									}
+									cm.add(p, args[1], level, amount - notAdded);
+									util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+									return true;
 								}
-								cm.add(p, args[1], level, amount - notAdded);
-								util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-								return true;
+								else {
+									cm.add(p, args[1], level, amount);
+									util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
+									return true;
+								}
+							}
+							else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
+								HashMap<Integer, ItemStack> result = p.getInventory()
+										.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
+								if (!result.isEmpty()) {
+									int notAdded = 0;
+									for (Entry<Integer, ItemStack> item : result.entrySet()) {
+										notAdded += item.getValue().getAmount();
+									}
+									cm.add(p, args[1], level, amount - notAdded);
+									util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+									return true;
+								}
+								else {
+									cm.add(p, args[1], level, amount);
+									util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
+									return true;
+								}
 							}
 							else {
-								cm.add(p, args[1], level, amount);
-								util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
-								return true;
-							}
-						}
-						else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
-							HashMap<Integer, ItemStack> result = p.getInventory()
-									.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
-							if (!result.isEmpty()) {
-								int notAdded = 0;
-								for (Entry<Integer, ItemStack> item : result.entrySet()) {
-									notAdded += item.getValue().getAmount();
-								}
-								cm.add(p, args[1], level, amount - notAdded);
-								util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-								return true;
-							}
-							else {
-								cm.add(p, args[1], level, amount);
-								util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
+								util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
+							util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cInvalid level!");
+						util.sendMessage(p, "&cLevel and amount should be a number!");
 						return true;
 					}
 				}
 				else {
-					util.sendMessage(p, "&cLevel and amount should be a number!");
+					util.sendMessage(p, "&cInvalid essence or ore type!");
 					return true;
 				}
 			}
 			else {
-				util.sendMessage(p, "&cInvalid essence or ore type!");
+				util.sendMessage(p, "&cCannot be in creative mode for this command!");
 				return true;
 			}
 		}
