@@ -17,6 +17,7 @@ import me.neoblade298.neomythicextension.conditions.PlayersInBossCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
+import me.neoblade298.neomythicextension.mechanics.GiveIndexMechanic;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
@@ -118,6 +119,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (event.getMechanicName().equalsIgnoreCase("removeflag")) {
 			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if (event.getMechanicName().equalsIgnoreCase("giveindex")) {
+			GiveIndexMechanic mechanic = new GiveIndexMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}

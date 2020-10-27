@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="src/spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/MythicMobsExtension.jar"/>
 	<classpathentry kind="lib" path="src/NeoBossInstances.jar"/>
-	<classpathentry kind="lib" path="src/MythicMobs-4.9.0.jar"/>
+	<classpathentry kind="lib" path="src/MythicMobs-4.11.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
