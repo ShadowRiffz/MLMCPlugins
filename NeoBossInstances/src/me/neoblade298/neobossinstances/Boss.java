@@ -1,6 +1,8 @@
 package me.neoblade298.neobossinstances;
 
 
+import java.util.ArrayList;
+
 import org.bukkit.Location;
 
 public class Boss {
@@ -11,6 +13,7 @@ public class Boss {
 	private boolean isRaid = false;
 	private int timeLimit = 0;
 	private String permission = null;
+	private ArrayList<RaidBoss> raidBosses = null;
 
 	public Boss (Location coords, String cmd, int cooldown, String displayName, String permission){
 		this.coords = coords;
@@ -28,6 +31,7 @@ public class Boss {
 		this.isRaid = isRaid;
 		this.timeLimit = timeLimit;
 		this.setPermission(permission);
+		this.raidBosses = new ArrayList<RaidBoss>();
 	}
 	
 	public boolean isRaid() {
@@ -84,5 +88,13 @@ public class Boss {
 
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public ArrayList<RaidBoss> getRaidBosses() {
+		return raidBosses;
+	}
+
+	public void setRaidBosses(ArrayList<RaidBoss> raidBosses) {
+		this.raidBosses = raidBosses;
 	}
 }

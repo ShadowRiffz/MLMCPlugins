@@ -131,6 +131,40 @@ public class Commands implements CommandExecutor {
 				}
 				return true;
 			}
+			// /boss mini [boss] [player] [miniboss]
+			else if (args.length == 4 && args[0].equalsIgnoreCase("mini") && main.isInstance) {
+				Boss boss = main.bossInfo.get(args[1]);
+				RaidBoss rboss = null;
+				Player p = Bukkit.getPlayer(args[2]);
+				for (RaidBoss rbosses : boss.getRaidBosses()) {
+					if (rbosses.getName().equalsIgnoreCase(args[3])) {
+						rboss = rbosses;
+						break;
+					}
+				}
+				final RaidBoss frboss = rboss;
+				
+				// Only start fight if fight hasn't been started before
+				if (!main.raidBossesFought.contains(rboss.getName())) {
+					main.raidBossesFought.add(rboss.getName());
+					Bukkit.getPlayer(args[2]).teleport(rboss.getCoords());
+					
+					// If the boss hasn't been spawned, spawn it (cooldown of 5s)
+					if (!main.activeBosses.contains(rboss.getName())) {
+						main.activeBosses.add(rboss.getName());
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), rboss.getCmd());
+						BukkitRunnable removeBoss = new BukkitRunnable() {
+							public void run() {
+								main.activeBosses.remove(frboss.getName());
+							}
+						};
+						removeBoss.runTaskLater(main, 100L);
+					}
+				}
+				else {
+					p.sendMessage("§4[§c§lMLMC§4] §7This boss has already been fought!");
+				}
+			}
 			// /boss disable
 			else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !main.isInstance) {
 				main.disableFights = !main.disableFights;
@@ -243,6 +277,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
+				sender.sendMessage("§4/boss mini [name] [boss]§7- Teleports player to open miniboss");
 				sender.sendMessage("§4/boss disable §7- Toggles whether boss fights are enabled");
 				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
 				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");

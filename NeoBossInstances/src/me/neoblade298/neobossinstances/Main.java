@@ -57,6 +57,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
 	public ConcurrentHashMap<String, Long> dropCooldown = new ConcurrentHashMap<String, Long>();
 	public ArrayList<String> bossNames = new ArrayList<String>();
+	public ArrayList<String> raidBossesFought = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
@@ -106,10 +107,24 @@ public class Main extends JavaPlugin implements Listener {
 			boolean isRaid = bossSection.getBoolean("Is-Raid");
 			int timeLimit = bossSection.getInt("Time-Limit");
 			String permission = bossSection.getString("Permission");
-			
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
+			
 			if (isRaid) {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission));
+				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission);
+				
+				// If the raid has extra bosses within it, add them to the boss info
+				if (bossSection.contains("Bosses")) {
+					ConfigurationSection raidBosses = bossSection.getConfigurationSection("Bosses");
+					ArrayList<RaidBoss> raidBossList = new ArrayList<RaidBoss>();
+					for (String raidBoss : raidBosses.getKeys(false)) {
+						ConfigurationSection raidBossSection = raidBosses.getConfigurationSection(raidBoss);
+						String rcmd = raidBossSection.getString("Command");
+						Location rloc = parseLocation(raidBossSection.getString("Coordinates"));
+						raidBossList.add(new RaidBoss(rloc, rcmd, raidBoss));
+					}
+					info.setRaidBosses(raidBossList);
+				}
+				bossInfo.put(boss, info);
 			}
 			else {
 				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission));
@@ -234,6 +249,9 @@ public class Main extends JavaPlugin implements Listener {
 	    		    							scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+	        	    							for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
+	        	    								raidBossesFought.remove(raidBoss.getName());
+	        	    							}
 	    		    						}
 	    				    			}
 	    				    		};
