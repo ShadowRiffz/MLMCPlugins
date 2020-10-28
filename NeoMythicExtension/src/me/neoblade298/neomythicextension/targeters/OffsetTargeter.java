@@ -32,13 +32,9 @@ public class OffsetTargeter extends ILocationSelector {
         final Vector dir = loc.getDirection().setY(0).normalize();
         final Vector nor = dir.clone().crossProduct(UP);
 
-        System.out.println(dir.getX() + " " + dir.getZ());
         dir.multiply(this.forward);
-        System.out.println(dir.getX() + " " + dir.getZ());
         dir.setY(this.upward);
-        System.out.println(dir.getX() + " " + dir.getZ());
         dir.rotateAroundY(-this.clockwise * Math.PI / 180);
-        System.out.println(dir.getX() + " " + dir.getZ());
         loc.add(dir);
         locs.add(new AbstractLocation(data.getCaster().getLocation().getWorld(), loc.getX(), loc.getY(), loc.getZ()));
 
