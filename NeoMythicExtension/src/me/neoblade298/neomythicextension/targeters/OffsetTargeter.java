@@ -12,7 +12,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 public class OffsetTargeter extends ILocationSelector {
-    private static final Vector UP = new Vector(0, 1, 0);
 
 	protected final double forward;
 	protected final double upward;
@@ -30,7 +29,6 @@ public class OffsetTargeter extends ILocationSelector {
 		HashSet<AbstractLocation> locs = new HashSet<AbstractLocation>();
 		Location loc = data.getCaster().getEntity().getBukkitEntity().getLocation();
         final Vector dir = loc.getDirection().setY(0).normalize();
-        final Vector nor = dir.clone().crossProduct(UP);
 
         dir.multiply(this.forward);
         dir.setY(this.upward);
