@@ -35,8 +35,8 @@ public class GiveIndexMechanic extends SkillMechanic implements ITargetedEntityS
         String itemString = config.getString("i", "mi_sewerzombie");
         this.item = MythicMobs.inst().getItemManager().getItemStack(itemString);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 1);
-        this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1);
-        this.advancedmult = config.getDouble(new String[] {"advancedmult", "am"}, 1);
+        this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1.2);
+        this.advancedmult = config.getDouble(new String[] {"advancedmult", "am"}, 1.5);
         this.announce = config.getString("announce", "false").equalsIgnoreCase("true");
         this.type = config.getString("type", "other");
         this.basicchance = basechance * basicmult;
