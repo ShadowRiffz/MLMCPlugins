@@ -5,6 +5,7 @@ import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +34,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 	HashMap<String, Food> foods = new HashMap<String, Food>();
 	HashMap<UUID, HashMap<String, int[]>> effects = new HashMap<UUID, HashMap<String, int[]>>();
 	HashMap<UUID, Long> playerCooldowns = new HashMap<UUID, Long>();
+	HashMap<UUID, ArrayList<Food>> recentlyUsed = new HashMap<UUID, ArrayList<Food>>();
 	boolean isInstance = false;
 
 	public void onEnable() {
@@ -297,6 +300,11 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		}
 		food.executeCommands(p);
 		item.setAmount(item.getAmount() - 1);
+		
+		// Add recently used if in an instance to cache
+		if (isInstance) {
+			recentlyUsed.get(p.getUniqueId()).add(food);
+		}
 	}
 
 	@EventHandler
@@ -309,6 +317,21 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 				data.addBonusAttributes(s, ((int[]) playerAttribs.get(s))[1]);
 			}
 			this.effects.remove(p.getUniqueId());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerLoginEvent e) {
+		Player p = e.getPlayer();
+		if (isInstance) {
+			UUID id = p.getUniqueId();
+			if (recentlyUsed.containsKey(id)) {
+				clearPlayerCooldowns(recentlyUsed.get(id), id);
+				recentlyUsed.clear();
+			}
+			else {
+				recentlyUsed.put(id, new ArrayList<Food>());
+			}
 		}
 	}
 	
@@ -329,5 +352,11 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 
 	public static MLMCCustomFoodsMain getMain() {
 		return main;
+	}
+	
+	private void clearPlayerCooldowns(ArrayList<Food> foods, UUID id) {
+		for (Food food : foods) {
+			food.lastEaten.remove(id);
+		}
 	}
 }
