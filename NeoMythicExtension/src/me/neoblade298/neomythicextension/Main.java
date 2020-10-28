@@ -24,6 +24,7 @@ import me.neoblade298.neomythicextension.mechanics.ModScore;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
+import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
 import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
 
 public class Main extends JavaPlugin implements Listener {
@@ -80,6 +81,11 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getTargeterName().equalsIgnoreCase("playersinboss")
 				|| event.getTargeterName().equalsIgnoreCase("pib")) {
 			PlayersInBossTargeter targeter = new PlayersInBossTargeter(event.getConfig());
+			event.register(targeter);
+		}
+
+		if (event.getTargeterName().equalsIgnoreCase("offset")) {
+			OffsetTargeter targeter = new OffsetTargeter(event.getConfig());
 			event.register(targeter);
 		}
 	}
