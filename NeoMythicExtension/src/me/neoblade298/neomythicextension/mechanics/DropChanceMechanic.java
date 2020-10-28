@@ -15,7 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class GiveIndexMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class DropChanceMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	protected final ItemStack item;
 	protected final double basechance;
@@ -27,7 +27,7 @@ public class GiveIndexMechanic extends SkillMechanic implements ITargetedEntityS
 	protected final String type;
 	protected final Random rand;
 
-	public GiveIndexMechanic(MythicLineConfig config) {
+	public DropChanceMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
