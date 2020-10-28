@@ -28,7 +28,7 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
     
     public SkillAPIFlagCondition(MythicLineConfig mlc, Main main) {
         super(mlc.getLine());
-        this.flags = mlc.getString("flag").trim().split(",");
+        this.flags = mlc.getString(new String[] {"flag", "f"}).trim().split(",");
         if(mlc.getString("action") != null) {
         	castinstead = mlc.getString("action").equals("castinstead");
         	action = mlc.getString("action").equals("true");
