@@ -149,16 +149,16 @@ public class Commands implements CommandExecutor {
 					main.raidBossesFought.add(rboss.getName());
 					Bukkit.getPlayer(args[2]).teleport(rboss.getCoords());
 					
-					// If the boss hasn't been spawned, spawn it (cooldown of 5s)
+					// If the boss hasn't been spawned, spawn it (cooldown of 10s)
 					if (!main.activeBosses.contains(rboss.getName())) {
 						main.activeBosses.add(rboss.getName());
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), rboss.getCmd());
-						BukkitRunnable removeBoss = new BukkitRunnable() {
+						BukkitRunnable spawnBoss = new BukkitRunnable() {
 							public void run() {
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), frboss.getCmd());
 								main.activeBosses.remove(frboss.getName());
 							}
 						};
-						removeBoss.runTaskLater(main, 100L);
+						spawnBoss.runTaskLater(main, 200L);
 					}
 				}
 				else {
