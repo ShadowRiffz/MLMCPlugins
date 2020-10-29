@@ -69,15 +69,12 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 				if (lore.size() > 1) {
 					for (int i = lore.size() - 2; i >= 0; i--) {
 						String line = lore.get(i);
-						System.out.println("line: " + line);
 						if (line.contains("Advanced Drop Charm")) {
-							System.out.println("advanced");
 							dropType = 2;
 							chance = this.advancedchance;
 							break;
 						}
 						else if (line.contains("Drop Charm")) {
-							System.out.println("basic");
 							dropType = 1;
 							chance = this.basicchance;
 							break;
