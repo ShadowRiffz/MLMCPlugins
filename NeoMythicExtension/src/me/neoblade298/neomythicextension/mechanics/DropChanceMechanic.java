@@ -23,7 +23,10 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 	protected final double advancedmult;
 	protected final double basicchance;
 	protected final double advancedchance;
+	protected final long cooldown;
+	protected long lastAnnounced;
 	protected final boolean announce;
+	protected final String msg;
 	protected final String type;
 	protected final Random rand;
 
@@ -36,12 +39,14 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
         this.item = MythicMobs.inst().getItemManager().getItemStack(itemString);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 1);
         this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1.2);
+        this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Monster Index")).replaceAll("&", "§");
         this.advancedmult = config.getDouble(new String[] {"advancedmult", "am"}, 1.5);
         this.announce = config.getString("announce", "false").equalsIgnoreCase("true");
         this.type = config.getString("type", "other");
         this.basicchance = basechance * basicmult;
         this.advancedchance = basechance * advancedmult;
         this.rand = new Random();
+        this.cooldown = config.getLong("cd", 10) * 1000;
 	}
 	
 	@Override
@@ -99,14 +104,22 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 					if (!failed.isEmpty()) p.getWorld().dropItem(p.getLocation(), this.item);
 					
 					// Message
-					String localMsg = "§4[§c§lMLMC§4] §7You found a Monster Index";
+					String localMsg = msg;
 					if (dropType == 1 && rand >= this.basechance) localMsg += " via Basic Drop Charm";
 					if (dropType == 2 && rand >= this.basechance) localMsg += " via Advanced Drop Charm";
 					localMsg += "!";
 					p.sendMessage(localMsg);
 					if (this.announce) {
-						String name = this.item.getItemMeta().getDisplayName().replaceAll("§", "&");
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
+						if (this.cooldown > 0 && (this.lastAnnounced + this.cooldown) < System.currentTimeMillis()) {
+							String name = this.item.getItemMeta().getDisplayName().replaceAll("§", "&");
+							this.lastAnnounced = System.currentTimeMillis();
+							if (this.type.equals("chest")) {
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all essentials:bc " + "&4[&c&lMLMC&4] &7A party has found " + name + "&7!");
+							}
+							else {
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
+							}
+						}
 					}
 				}
 			}

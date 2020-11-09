@@ -40,7 +40,9 @@ public class ScaleHealthMechanic extends SkillMechanic implements ITargetedEntit
     	// Make sure target is a MythicMob
     	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
     		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
-    		am.getEntity().setMaxHealth(am.getEntity().getMaxHealth() * this.scale.get(numPlayers));
+    		AbstractEntity ent = am.getEntity();
+    		ent.setMaxHealth(ent.getMaxHealth() * this.scale.get(numPlayers));
+    		ent.setHealth(ent.getMaxHealth());
     	}
     	return true;
     }
