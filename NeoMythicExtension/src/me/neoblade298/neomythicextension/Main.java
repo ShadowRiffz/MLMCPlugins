@@ -22,6 +22,7 @@ import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleHealthMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
 import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
@@ -130,6 +131,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (event.getMechanicName().equalsIgnoreCase("dropchance")) {
 			DropChanceMechanic mechanic = new DropChanceMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if (event.getMechanicName().equalsIgnoreCase("scalehealth")) {
+			ScaleHealthMechanic mechanic = new ScaleHealthMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}
