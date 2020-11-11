@@ -141,19 +141,25 @@ public class StonecutterMethods {
 		int perm = ((oldLevel - LEVEL_INTERVAL)/ 10);
 		if (perm < 0) perm = 0;
 		if (perm <= 1 || p.hasPermission("stonecutter.refine.tier." + perm)) {
-			if (econ.has(p, REFINE_COST * amount)) {
-				// Check if enough essence
-				if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
-					cm.subtract(p, type, oldLevel, cost * amount);
-					cm.add(p, type, level, amount);
-					econ.withdrawPlayer(p, REFINE_COST);
-					util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
+			if (level >= 5 && level <= 55) {
+				if (econ.has(p, REFINE_COST * amount)) {
+					// Check if enough essence
+					if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
+						cm.subtract(p, type, oldLevel, cost * amount);
+						cm.add(p, type, level, amount);
+						econ.withdrawPlayer(p, REFINE_COST);
+						util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
+					} else {
+						util.sendMessage(p, "&cYou lack the materials to refine this!");
+						return;
+					}
 				} else {
-					util.sendMessage(p, "&cYou lack the materials to refine this!");
+					util.sendMessage(p, "&cYou lack the gold to refine this!");
 					return;
 				}
-			} else {
-				util.sendMessage(p, "&cYou lack the gold to refine this!");
+			}
+			else {
+				util.sendMessage(p, "&cInvalid levelto !");
 				return;
 			}
 		} else {
