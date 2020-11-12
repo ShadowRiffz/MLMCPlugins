@@ -14,7 +14,7 @@ public class Report {
 	private int id;
 	private String date, user, description, comment, resolver, fixdate;
 	private boolean is_resolved, is_urgent;
-	private static DateFormat dateformat = new SimpleDateFormat("MM-dd");
+	private static DateFormat dateformat = new SimpleDateFormat("MM-dd HH:mm:ss");
 	
 	public Report(int id, String user, String description, boolean is_urgent) {
 		this.id = id;
