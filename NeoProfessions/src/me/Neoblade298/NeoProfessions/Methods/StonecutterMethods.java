@@ -141,7 +141,7 @@ public class StonecutterMethods {
 		int perm = ((oldLevel - LEVEL_INTERVAL)/ 10);
 		if (perm < 0) perm = 0;
 		if (perm <= 1 || p.hasPermission("stonecutter.refine.tier." + perm)) {
-			if (level >= 5 && level <= 55) {
+			if (level >= 5 && level <= 60) {
 				if (econ.has(p, REFINE_COST * amount)) {
 					// Check if enough essence
 					if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
@@ -159,7 +159,7 @@ public class StonecutterMethods {
 				}
 			}
 			else {
-				util.sendMessage(p, "&cInvalid levelto !");
+				util.sendMessage(p, "&cInvalid level!");
 				return;
 			}
 		} else {

@@ -27,8 +27,6 @@ import net.milkbowl.vault.economy.Economy;
 public class MasonListeners implements Listener {
 	HashMap<Player, ItemStack> slotItem = new HashMap<Player, ItemStack>();
 	HashMap<Player, Integer> slotNum = new HashMap<Player, Integer>();
-	HashMap<Player, Long> secondChanceCooldown = new HashMap<Player, Long>();
-	final static long SECOND_CHANCE_COOLDOWN = 900000;
 	Random gen = new Random();
 
 	// Constants
@@ -139,17 +137,14 @@ public class MasonListeners implements Listener {
 					for (String line : item.getItemMeta().getLore()) {
 						if (line.contains("Second Chance")) {
 							hasChance = true;
+							break;
 						}
 					}
 				}
-				if ((secondChanceCooldown.containsKey(p) && secondChanceCooldown.get(p) > System.currentTimeMillis())
-						|| !secondChanceCooldown.containsKey(p)) {
-					if (hasChance) {
-						masonUtils.breakSecondChance(item);
-						util.sendMessage(p, "&7Your second chance charm was broken");
-						secondChanceCooldown.put(p, System.currentTimeMillis() + SECOND_CHANCE_COOLDOWN);
-						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
-					}
+				if (hasChance) {
+					masonUtils.breakSecondChance(item);
+					util.sendMessage(p, "&7Your second chance charm was broken");
+					p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
 				}
 			}
 		}
