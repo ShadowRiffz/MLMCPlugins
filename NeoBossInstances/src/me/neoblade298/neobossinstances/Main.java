@@ -61,6 +61,7 @@ public class Main extends JavaPlugin implements Listener {
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
+	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> activeWarnings = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -334,6 +335,14 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		warnPlayer.runTaskLater(main, ticks - timeToWarn);
+		if (activeWarnings.containsKey(boss)) {
+			activeWarnings.get(boss).add(warnPlayer);
+		}
+		else {
+			ArrayList<BukkitRunnable> list = new ArrayList<BukkitRunnable>();
+			list.add(warnPlayer);
+			activeWarnings.put(boss, list);
+		}
 	}
 	
 	public String findInstance(String boss) {
@@ -368,6 +377,14 @@ public class Main extends JavaPlugin implements Listener {
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
+				if (activeWarnings.containsKey(boss)) {
+					for (BukkitRunnable runnable : activeWarnings.get(boss)) {
+						if (!runnable.isCancelled()) {
+							runnable.cancel();
+						}
+					}
+					activeWarnings.remove(boss);
+				}
 			}
 		}
     	// Delete player from all fights in sql
