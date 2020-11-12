@@ -171,9 +171,7 @@ public class MasonUtils {
 			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 			for (int i = lore.size() - 1; i > lore.size() - 5 && i >= 0; i--) {
 				if (lore.get(i).contains("Second Chance")) {
-					String line = lore.get(i);
-					int slotLevel = Integer
-							.parseInt("" + line.charAt(1) + line.charAt(3) + line.charAt(5));
+					int slotLevel = util.getItemLevel(item);
 					lore.set(i, "§8(Lv " + slotLevel + " Slot)");
 					meta.setLore(lore);
 					item.setItemMeta(meta);
