@@ -12,6 +12,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
+import me.neoblade298.neomythicextension.conditions.AboveBlockCondition;
 import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
 import me.neoblade298.neomythicextension.conditions.PlayersInBossCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
@@ -73,6 +74,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (event.getConditionName().equalsIgnoreCase("playersinboss")) {
 			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig());
+			event.register(condition);
+		}
+
+		if (event.getConditionName().equalsIgnoreCase("aboveblock")) {
+			AboveBlockCondition condition = new AboveBlockCondition(event.getConfig());
 			event.register(condition);
 		}
 	}
