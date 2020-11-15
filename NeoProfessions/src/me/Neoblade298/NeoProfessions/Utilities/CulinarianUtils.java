@@ -373,6 +373,9 @@ public class CulinarianUtils {
 						if (item.equals(new ItemStack(Material.MILK_BUCKET))) {
 							inv.addItem(new ItemStack(Material.BUCKET, amount));
 						}
+						if (item.equals(new ItemStack(Material.LAVA_BUCKET))) {
+							inv.addItem(new ItemStack(Material.BUCKET, amount));
+						}
 					}
 					if (isSmelted) {
 						inv.removeItem(
