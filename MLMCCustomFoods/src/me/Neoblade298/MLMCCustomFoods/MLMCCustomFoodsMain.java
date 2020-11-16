@@ -303,7 +303,14 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		
 		// Add recently used if in an instance to cache
 		if (isInstance) {
-			recentlyUsed.get(p.getUniqueId()).add(food);
+			UUID id = p.getUniqueId();
+			if (recentlyUsed.containsKey(id)) {
+				recentlyUsed.get(id).add(food);
+			}
+			else {
+				recentlyUsed.put(id, new ArrayList<Food>());
+				recentlyUsed.get(id).add(food);
+			}
 		}
 	}
 
