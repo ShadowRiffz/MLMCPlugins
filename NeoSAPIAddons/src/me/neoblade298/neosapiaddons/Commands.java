@@ -19,6 +19,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§c/neosapiaddons skillup [player] [skill]");
 				sender.sendMessage("§c/neosapiaddons points [player] [classtype] [amount]");
 				sender.sendMessage("§c/neosapiaddons refresh [player]");
+				return true;
 			}
 			if (args[0].equalsIgnoreCase("takexp") && (StringUtils.isNumeric(args[2]))) {
 				double exp = Integer.parseInt(args[2]);
