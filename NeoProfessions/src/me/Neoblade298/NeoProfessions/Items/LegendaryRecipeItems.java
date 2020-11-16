@@ -177,7 +177,7 @@ public class LegendaryRecipeItems {
 		recipe.add(new ItemStack(Material.DIAMOND));
 		recipe.add(new ItemStack(Material.SUGAR, 2));
 		recipe.add(new ItemStack(Material.ICE, 2));
-		recipe.add(t1.getHotChocolate());
+		recipe.add(util.setAmount(t1.getHotChocolate(), 3));
 		recipe.add(t1.getIceCream());
 		return recipe;
 	}
