@@ -24,14 +24,14 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		// /autotag [player] [tag]
-		if (args.length > 2) {
+		if (args.length > 2 && sender.isOp()) {
 			String tag = args[1] + " ";
 			for (int i = 2; i < args.length; i++) {
 				tag += args[i] + " ";
 			}
 			String internalTag = tag.replaceAll("&", "§").replaceAll(" ", "").toLowerCase();
 			internalTag = ChatColor.stripColor(internalTag);
-			File file = new File("/home/MLMC/ServerTowny/plugins/DeluxeTags");
+			File file = new File("/home/MLMC/ServerTowny/plugins/DeluxeTags/config.yml");
 			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
 			// First check for next order number
@@ -67,7 +67,7 @@ public class Commands implements CommandExecutor{
 
 			// Found a non-used version
 			ConfigurationSection newTag = null;
-			if (version == 1) {
+			if (version == 2) {
 				String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag;
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 				newTag = tags.createSection(internalTag);
@@ -78,8 +78,8 @@ public class Commands implements CommandExecutor{
 				newTag = tags.createSection(internalTag + version);
 			}
 			newTag.set("order", order);
-			newTag.set("tag", tag);
-			newTag.set("desc", "&7Donated for a custom tag!");
+			newTag.set("tag", tag.replaceAll("§", "&"));
+			newTag.set("description", "&7Donated for a custom tag!");
 			cfg.set("order", order + 1);
 			try {
 				cfg.save(file);
@@ -89,6 +89,7 @@ public class Commands implements CommandExecutor{
 			}
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tags reload");
 			
+			Bukkit.getPlayer(args[0]).sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + tag.replaceAll("&", "§") + "§7tag! Do §c/tags§7!");
 		}
 		return true;
 	}
