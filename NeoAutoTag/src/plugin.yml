@@ -1,0 +1,8 @@
+name: NeoAutoTag
+main: me.neoblade298.neoautotag.Main
+author: [Neoblade298]
+version: 1.0
+api-version: 1.16
+commands:
+   autotag:
+      usage: /autotag [player] [tag]
