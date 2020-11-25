@@ -2,6 +2,7 @@ package me.neoblade298.neoautotag;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -24,7 +25,7 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		// /autotag [player] [tag]
-		if (args.length > 2 && sender.isOp()) {
+		if (args.length >= 2 && sender.isOp()) {
 			String tag = args[1] + " ";
 			for (int i = 2; i < args.length; i++) {
 				tag += args[i] + " ";
@@ -43,6 +44,7 @@ public class Commands implements CommandExecutor{
 				// If internal tag is used, and actual tag is the same
 				ConfigurationSection tagSec = tags.getConfigurationSection(internalTag);
 				if (tagSec.getString("tag").equals(tag)) {
+					Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag);
 					String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag;
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 					return true;
@@ -53,6 +55,7 @@ public class Commands implements CommandExecutor{
 					while (tags.contains(internalTag + version)) {
 						tagSec = tags.getConfigurationSection(internalTag + version);
 						if (tagSec.getString("tag").equals(tag)) {
+							Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag + version);
 							String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag + version;
 							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 							return true;
@@ -71,11 +74,13 @@ public class Commands implements CommandExecutor{
 				String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag;
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 				newTag = tags.createSection(internalTag);
+				Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag);
 			}
 			else {
 				String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag + version;
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 				newTag = tags.createSection(internalTag + version);
+				Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag + version);
 			}
 			newTag.set("order", order);
 			newTag.set("tag", tag.replaceAll("§", "&"));
