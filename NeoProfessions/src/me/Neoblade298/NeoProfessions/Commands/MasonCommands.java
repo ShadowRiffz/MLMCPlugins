@@ -28,6 +28,12 @@ public class MasonCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
+		if (sender.isOp()) {
+			if (args.length == 3 && args[0].equalsIgnoreCase("giveslot")) {
+				masonMethods.giveSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]));
+			}
+		}
+		
 		if(sender.hasPermission("mason.professed") && sender instanceof Player) {
 			
 			Player p = (Player) sender;
@@ -38,6 +44,9 @@ public class MasonCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/mason slot [slot #]");
 				util.sendMessage(p, "&7- &c/mason unslot [slot #]");
 				util.sendMessage(p, "&7- &c/mason remove slot [slot #]");
+				if (sender.isOp()) {
+					util.sendMessage(p, "&7- &4/mason giveslot [player] [maxlevel]");
+				}
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("create")) {

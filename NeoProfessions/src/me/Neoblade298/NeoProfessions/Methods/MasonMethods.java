@@ -29,6 +29,7 @@ public class MasonMethods {
 
 	// Constants
 	static final int MAX_SLOTS = 3;
+	static final int MAX_GIVE_SLOTS = 1;
 	static final int ENGRAVE_ESSENCE_BASE = 12;
 	static final int ENGRAVE_ESSENCE_PER_SLOT = 12;
 	static final int ENGRAVE_GOLD_BASE = 10000;
@@ -85,6 +86,30 @@ public class MasonMethods {
 		util = new Util();
 		cm = main.cManager;
 	}
+	
+	public void giveSlot(Player p, int maxlevel) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		int level = util.getItemLevel(item);
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			if (util.isGearReworked(item)) {
+				if (util.getItemLevel(item) >= maxlevel) {
+					int numSlots = masonUtils.countSlots(item);
+					if (numSlots <= MAX_GIVE_SLOTS) {
+						masonUtils.createSlot(item, level);
+						util.sendMessage(p, "&7Successfully created slot!");
+					} else {
+						util.sendMessage(p, "&cYou cannot buy any more slots!");
+					}
+				} else {
+					util.sendMessage(p, "&cThis item is too high level!");
+				}
+			} else {
+				util.sendMessage(p, "&cItem is no longer supported by the server!");
+			}
+		} else {
+			util.sendMessage(p, "&cThis item cannot have slots!");
+		}
+	}
 
 	public void createSlot(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
@@ -95,31 +120,27 @@ public class MasonMethods {
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
 				if (p.hasPermission("mason.engrave.tier." + perm)) {
-					if (util.getItemLevel(item) >= level) {
-						int numSlots = masonUtils.countSlots(item);
-						if (numSlots < MAX_SLOTS) {
-							if (p.hasPermission(("mason.engrave.max." + (numSlots + 1)))) {
-								int essence = ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots);
-								if (cm.hasEnough(p, "essence", level, essence)) {
-									if (econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
-										masonUtils.createSlot(item, level);
-										cm.subtract(p, "essence", level, essence);
-										econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
-										util.sendMessage(p, "&7Successfully created slot!");
-									} else {
-										util.sendMessage(p, "&cYou lack the gold to create this!");
-									}
+					int numSlots = masonUtils.countSlots(item);
+					if (numSlots < MAX_SLOTS) {
+						if (p.hasPermission(("mason.engrave.max." + (numSlots + 1)))) {
+							int essence = ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots);
+							if (cm.hasEnough(p, "essence", level, essence)) {
+								if (econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
+									masonUtils.createSlot(item, level);
+									cm.subtract(p, "essence", level, essence);
+									econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
+									util.sendMessage(p, "&7Successfully created slot!");
 								} else {
-									util.sendMessage(p, "&cYou lack the materials to create this!");
+									util.sendMessage(p, "&cYou lack the gold to create this!");
 								}
 							} else {
-								util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
+								util.sendMessage(p, "&cYou lack the materials to create this!");
 							}
 						} else {
-							util.sendMessage(p, "&cThis item cannot have any more slots!");
+							util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
 						}
 					} else {
-						util.sendMessage(p, "&cThis item is not capable of holding a slot of this level!");
+						util.sendMessage(p, "&cThis item cannot have any more slots!");
 					}
 				} else {
 					util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
