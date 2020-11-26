@@ -31,6 +31,7 @@ public class MasonCommands implements CommandExecutor {
 		if (sender.isOp()) {
 			if (args.length == 3 && args[0].equalsIgnoreCase("giveslot")) {
 				masonMethods.giveSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]));
+				return true;
 			}
 		}
 		
