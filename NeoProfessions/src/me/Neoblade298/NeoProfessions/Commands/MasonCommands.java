@@ -29,8 +29,12 @@ public class MasonCommands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
 		if (sender.isOp()) {
-			if (args.length == 3 && args[0].equalsIgnoreCase("giveslot")) {
-				masonMethods.giveSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]));
+			if (args.length == 4 && args[0].equalsIgnoreCase("giveslot")) {
+				masonMethods.giveSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+				return true;
+			}
+			if (args.length == 4 && args[0].equalsIgnoreCase("setslot")) {
+				masonMethods.setSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 				return true;
 			}
 		}
@@ -46,7 +50,8 @@ public class MasonCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/mason unslot [slot #]");
 				util.sendMessage(p, "&7- &c/mason remove slot [slot #]");
 				if (sender.isOp()) {
-					util.sendMessage(p, "&7- &4/mason giveslot [player] [maxlevel]");
+					util.sendMessage(p, "&7- &4/mason giveslot [player] [maxlevel] [maxslots] [gold]");
+					util.sendMessage(p, "&7- &4/mason setslot [player] [maxlevel] [slot] [gold]");
 				}
 				return true;
 			}
