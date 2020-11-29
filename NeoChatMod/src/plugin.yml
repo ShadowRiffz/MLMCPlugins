@@ -4,3 +4,7 @@ main: me.neoblade298.neochatmod.Main
 api-version: 1.14
 version: 1.0
 depend: [TownyChat]
+commands:
+   servermute:
+      description: Does its job
+      usage: /servermute

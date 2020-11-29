@@ -20,6 +20,7 @@ public class Main extends JavaPlugin implements Listener {
 	File file = null;
 	FileConfiguration conf = null;
 	ArrayList<String> bannedWords = null;
+	boolean muteGlobal = false;
 	
 	boolean muteTutorial = false;
 	List<String> punishCmds = null; 
@@ -36,6 +37,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoChatMod Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+	    this.getCommand("servermute").setExecutor(new Commands(this));
 
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
@@ -62,6 +64,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler(ignoreCancelled=true)
 	public void onChat(AsyncChatHookEvent e) {
+		if (this.muteGlobal && !e.getPlayer().hasPermission("towny.chat.mod")) {
+			e.setCancelled(true);
+			return;
+		}
 		String msg = e.getMessage();
 		double x = e.getPlayer().getLocation().getX();
 		double z = e.getPlayer().getLocation().getZ();
@@ -118,5 +124,13 @@ public class Main extends JavaPlugin implements Listener {
 				return;
 			}
 		}
+	}
+	
+	public void toggleMute() {
+		this.muteGlobal = !this.muteGlobal;
+	}
+	
+	public boolean getMute() {
+		return this.muteGlobal;
 	}
 }
