@@ -38,7 +38,7 @@ public class StonecutterCommands implements CommandExecutor {
 		if (sender.hasPermission("stonecutter.professed") && sender instanceof Player) {
 
 			Player p = (Player) sender;
-			if (args.length == 0) {
+			if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
 				util.sendMessage(p, "&8&l[&cStonecutter&8&l]");
 				util.sendMessage(p, "&7- &c/stonecutter create gem [weapon/armor] [attribute] [level]");
 				util.sendMessage(p, "&7- &c/stonecutter create overload [weapon/armor] [attribute] [level]");

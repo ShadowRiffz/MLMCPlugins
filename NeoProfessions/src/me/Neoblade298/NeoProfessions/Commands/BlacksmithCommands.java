@@ -39,7 +39,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				p = (Player) sender;
 			}
 			
-			if (args.length == 0) {
+			if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
 				util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
 				util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
 				util.sendMessage(p, "&7- &c/blacksmith create repair [level]");

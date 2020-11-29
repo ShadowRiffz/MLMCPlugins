@@ -29,7 +29,7 @@ public class CulinarianCommands implements CommandExecutor {
 		if(sender.hasPermission("culinarian.professed") && sender instanceof Player) {
 			Player p = (Player) sender;
 
-			if (args.length == 0) {
+			if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
 				util.sendMessage(p, "&8&l[&cCulinarian&8&l]");
 				util.sendMessage(p, "&7- &c/culinarian garnish [all]");
 				util.sendMessage(p, "&7- &c/culinarian spice [all]");
