@@ -29,11 +29,11 @@ public class MasonCommands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
 		if (sender.isOp()) {
-			if (args.length == 4 && args[0].equalsIgnoreCase("giveslot")) {
+			if (args.length == 5 && args[0].equalsIgnoreCase("giveslot")) {
 				masonMethods.giveSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 				return true;
 			}
-			if (args.length == 4 && args[0].equalsIgnoreCase("setslot")) {
+			if (args.length == 5 && args[0].equalsIgnoreCase("setslot")) {
 				masonMethods.setSlot(Bukkit.getPlayer(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 				return true;
 			}
