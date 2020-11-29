@@ -45,6 +45,9 @@ public class StonecutterCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/stonecutter refine [essence/gem] [level] [amount]");
 				return true;
 			}
+			else if (args.length == 0) {
+				return true;
+			}
 			else if (args[0].equalsIgnoreCase("create")) {
 				if (args.length == 5) {
 					if (args[1].equalsIgnoreCase("gem")) {

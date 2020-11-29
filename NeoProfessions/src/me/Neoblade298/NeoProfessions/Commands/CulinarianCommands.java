@@ -40,6 +40,9 @@ public class CulinarianCommands implements CommandExecutor {
 				util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limited/drink/legendary] [itemname] <amount>");
 				return true;
 			}
+			else if (args.length == 0) {
+				return true;
+			}
 			else {
 				if(args[0].equalsIgnoreCase("garnish")) {
 					if(args.length == 1) {

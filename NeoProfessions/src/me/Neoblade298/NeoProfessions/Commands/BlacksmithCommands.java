@@ -55,6 +55,9 @@ public class BlacksmithCommands implements CommandExecutor {
 				}
 				return true;
 			}
+			else if (args.length == 0) {
+				return true;
+			}
 			else {
 				// CREATE COMMAND
 				if(args[0].equalsIgnoreCase("create")) {

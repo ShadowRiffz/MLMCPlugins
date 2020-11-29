@@ -55,6 +55,9 @@ public class MasonCommands implements CommandExecutor {
 				}
 				return true;
 			}
+			else if (args.length == 0) {
+				return true;
+			}
 			else if (args[0].equalsIgnoreCase("create")) {
 				if (args.length == 3 && args[1].equalsIgnoreCase("basic")) {
 					if (args[2].equalsIgnoreCase("exp") ||
