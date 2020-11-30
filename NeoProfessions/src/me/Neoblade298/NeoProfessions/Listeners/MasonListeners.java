@@ -158,12 +158,21 @@ public class MasonListeners implements Listener {
 		}
 		Player p = e.getPlayer();
 		ItemStack itemToSlot = p.getInventory().getItemInMainHand();
+		ItemStack offhand = p.getInventory().getItemInOffHand();
 
 		if (itemToSlot.getType() == Material.ENDER_PEARL && itemToSlot.getItemMeta().hasLore()) {
 			e.setCancelled(true);
 		}
 
 		if (itemToSlot.getType() == Material.ENDER_EYE && itemToSlot.getItemMeta().hasLore()) {
+			e.setCancelled(true);
+		}
+
+		if (offhand.getType() == Material.ENDER_PEARL && offhand.getItemMeta().hasLore()) {
+			e.setCancelled(true);
+		}
+
+		if (offhand.getType() == Material.ENDER_EYE && offhand.getItemMeta().hasLore()) {
 			e.setCancelled(true);
 		}
 

@@ -93,7 +93,7 @@ public class MasonMethods {
 			if (util.isGearReworked(item)) {
 				if (util.getItemLevel(item) >= maxlevel) {
 					int numSlots = masonUtils.countSlots(item);
-					if (numSlots <= maxslots) {
+					if (numSlots < maxslots) {
 						if (econ.has(p, gold)) {
 							masonUtils.createSlot(item, level);
 							econ.withdrawPlayer(p, gold);
@@ -135,46 +135,52 @@ public class MasonMethods {
 									|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
 								int level = util.getItemLevel(itemWithSlot);
-								if (level > maxlevel) {
-									if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
-											|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
-											|| !(slotType.equalsIgnoreCase("aattribute")
-													|| slotType.equalsIgnoreCase("wattribute"))) {
-										if (econ.has(p, gold)) {
-											boolean success = false;
-											switch (slotType) {
-											case "durability":
-												success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-												break;
-											case "wattribute":
-												success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-												break;
-											case "aattribute":
-												success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-												break;
-											case "overload":
-												success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-												break;
-											case "charm":
-												success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-												break;
-											}
-											if (success) {
-												p.getInventory()
-														.removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
-												econ.withdrawPlayer(p, gold);
-												util.sendMessage(p, "&7Successfully slotted item!");
+								if (level <= maxlevel) {
+									if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel ||
+											(itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS) && masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
+										if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
+												|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
+												|| !(slotType.equalsIgnoreCase("aattribute")
+														|| slotType.equalsIgnoreCase("wattribute"))) {
+											if (econ.has(p, gold)) {
+												boolean success = false;
+												switch (slotType) {
+												case "durability":
+													success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+													break;
+												case "wattribute":
+													success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+													break;
+												case "aattribute":
+													success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+													break;
+												case "overload":
+													success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+													break;
+												case "charm":
+													success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+													break;
+												}
+												if (success) {
+													p.getInventory()
+															.removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+													econ.withdrawPlayer(p, gold);
+													util.sendMessage(p, "&7Successfully slotted item!");
+												}
+												else {
+													util.sendMessage(p, "&cFailed to slot item!");
+												}
 											}
 											else {
-												util.sendMessage(p, "&cFailed to slot item!");
+												util.sendMessage(p, "&cYou lack the gold to do this!");
 											}
 										}
 										else {
-											util.sendMessage(p, "&cYou lack the gold to do this!");
+											util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cThis augment is incompatible with this item type!");
+										util.sendMessage(p, "&cThis item must be the same level as this slot (or be a charm)!");
 									}
 								}
 								else {
