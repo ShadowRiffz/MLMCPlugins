@@ -437,13 +437,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						Random gen = new Random();
 						this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
 								Integer.parseInt(args[3]));
-						util.sendMessage(sender, "&7Success!");
+						util.sendMessage(sender, "&7Successfully added ore!");
 						return true;
 					}
 					else {
 						this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
 								Integer.parseInt(args[3]));
-						util.sendMessage(sender, "&7Success!");
+						util.sendMessage(sender, "&7Successfully added essence!");
 						return true;
 					}
 				}
@@ -732,13 +732,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							Random gen = new Random();
 							this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
 									Integer.parseInt(args[4]));
-							util.sendMessage(sender, "&7Success!");
+							util.sendMessage(sender, "&7Successfully added ore!");
 							return true;
 						}
 						else {
 							this.main.cManager.add(p, args[2], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
 									Integer.parseInt(args[4]));
-							util.sendMessage(sender, "&7Success!");
+							util.sendMessage(sender, "&7Successfully added essence!");
 							return true;
 						}
 					}
