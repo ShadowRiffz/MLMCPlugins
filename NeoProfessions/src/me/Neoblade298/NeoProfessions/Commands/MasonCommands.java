@@ -56,6 +56,7 @@ public class MasonCommands implements CommandExecutor {
 				return true;
 			}
 			else if (args.length == 0) {
+				p.performCommand("masonmenu");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("create")) {

@@ -46,6 +46,7 @@ public class StonecutterCommands implements CommandExecutor {
 				return true;
 			}
 			else if (args.length == 0) {
+				p.performCommand("stonecuttermenu");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("create")) {

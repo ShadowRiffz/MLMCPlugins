@@ -41,6 +41,7 @@ public class CulinarianCommands implements CommandExecutor {
 				return true;
 			}
 			else if (args.length == 0) {
+				p.performCommand("culinarianmenu");
 				return true;
 			}
 			else {

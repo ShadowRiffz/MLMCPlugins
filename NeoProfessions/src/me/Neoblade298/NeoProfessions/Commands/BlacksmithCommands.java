@@ -56,6 +56,7 @@ public class BlacksmithCommands implements CommandExecutor {
 				return true;
 			}
 			else if (args.length == 0) {
+				p.performCommand("blacksmithmenu");
 				return true;
 			}
 			else {
