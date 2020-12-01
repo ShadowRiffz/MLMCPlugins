@@ -214,6 +214,9 @@ public class MasonListeners implements Listener {
 										case "charm":
 											success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
 											break;
+										case "relic":
+											success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
+											break;
 										}
 										if (success) {
 											p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));

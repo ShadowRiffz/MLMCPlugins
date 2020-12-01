@@ -91,7 +91,7 @@ public class MasonMethods {
 		int level = util.getItemLevel(item);
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			if (util.isGearReworked(item)) {
-				if (util.getItemLevel(item) >= maxlevel) {
+				if (util.getItemLevel(item) <= maxlevel) {
 					int numSlots = masonUtils.countSlots(item);
 					if (numSlots < maxslots) {
 						if (econ.has(p, gold)) {
@@ -159,6 +159,9 @@ public class MasonMethods {
 													break;
 												case "charm":
 													success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+													break;
+												case "relic":
+													success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 													break;
 												}
 												if (success) {

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
@@ -96,6 +97,9 @@ public class MasonUtils {
 		else if (line.contains("Charm")) {
 			slotType = 3;
 		}
+		else if (line.contains("Relic")) {
+			slotType = 4;
+		}
 
 		switch (slotType) {
 		// Max durability
@@ -133,34 +137,12 @@ public class MasonUtils {
 
 			// Charm
 		case 3:
-			if (line.contains("Advanced")) {
-				if (line.contains("Exp")) {
-					return mItems.getExpCharm(true);
-				} else if (line.contains("Drop")) {
-					return mItems.getDropCharm(true);
-				} else if (line.contains("Looting")) {
-					return mItems.getLootingCharm(true);
-				}
-			} else {
-				if (line.contains("Exp")) {
-					return mItems.getExpCharm(false);
-				} else if (line.contains("Drop")) {
-					return mItems.getDropCharm(false);
-				} else if (line.contains("Looting")) {
-					return mItems.getLootingCharm(false);
-				} else if (line.contains("Recovery")) {
-					return mItems.getRecoveryCharm();
-				} else if (line.contains("Traveler")) {
-					return mItems.getTravelerCharm();
-				} else if (line.contains("Second Chance")) {
-					return mItems.getSecondChanceCharm();
-				} else if (line.contains("Hunger")) {
-					return mItems.getHungerCharm();
-				} else if (line.contains("Quick Eat")) {
-					return mItems.getQuickEatCharm();
-				}
+			String[] relicStrings = line.split(" ");
+			String relic = "Relic" + relicStrings[2];
+			for (int i = 3; i < relicStrings.length; i++) {
+				relic += relicStrings[i];
 			}
-			break;
+			return MythicMobs.inst().getItemManager().getItemStack(relic);
 		}
 		return null;
 	}
@@ -434,6 +416,8 @@ public class MasonUtils {
 			return "aattribute";
 		} else if (charmLine.contains("Charm")) {
 			return "charm";
+		} else if (charmLine.contains("Relic")) {
+			return "relic";
 		}
 		return null;
 	}
@@ -529,8 +513,6 @@ public class MasonUtils {
 			return false;
 		}
 		ItemMeta meta = itemWithSlot.getItemMeta();
-		String slotLevel = getSlotLevel(itemWithSlot, slot);
-		String slottedLevel = getSlottedLevel(itemToSlot);
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 
 		String[] charmStrings = itemToSlot.getItemMeta().getLore().get(0).split(" ");
@@ -542,7 +524,23 @@ public class MasonUtils {
 			}
 		}
 
-		lore.set(getSlotNum(itemWithSlot, slot), slotLevel + slottedLevel + "񗱈񖶄�9" + charm);
+		lore.set(getSlotNum(itemWithSlot, slot), charm);
+		meta.setLore(lore);
+		itemWithSlot.setItemMeta(meta);
+		return true;
+	}
+
+	public boolean parseRelic(Player p, ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
+		ItemMeta meta = itemWithSlot.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+
+		String[] relicStrings = itemToSlot.getItemMeta().getLore().get(0).split(" ");
+		String relic = "" + relicStrings[2];
+		for (int i = 3; i < relicStrings.length; i++) {
+			relic += " " + relicStrings[i];
+		}
+
+		lore.set(getSlotNum(itemWithSlot, slot), relic);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
