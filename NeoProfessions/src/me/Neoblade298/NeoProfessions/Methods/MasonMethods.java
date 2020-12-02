@@ -165,8 +165,7 @@ public class MasonMethods {
 													break;
 												}
 												if (success) {
-													p.getInventory()
-															.removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+													itemToSlot.setAmount(itemToSlot.getAmount() - 1);
 													econ.withdrawPlayer(p, gold);
 													util.sendMessage(p, "&7Successfully slotted item!");
 												}
