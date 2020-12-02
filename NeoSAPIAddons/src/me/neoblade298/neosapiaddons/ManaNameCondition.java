@@ -25,7 +25,7 @@ public class ManaNameCondition extends CustomEffectComponent {
                         "mananame",
                         "Mana Name",
                         "Contains this mana name",
-                        "0")
+                        "MP")
         );
 	}
 
@@ -33,7 +33,7 @@ public class ManaNameCondition extends CustomEffectComponent {
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
 		String mananame = settings.getString("mananame");
 		if (!(caster instanceof Player)) return false;
-		return SkillAPI.getPlayerData((Player) caster).getClass("class").getData().getManaName().contains(mananame);
+		return SkillAPI.getPlayerData((Player) caster).getClass("class").getData().getManaName().endsWith(mananame) && executeChildren(caster, lvl, targets);
 	}
 
 	@Override

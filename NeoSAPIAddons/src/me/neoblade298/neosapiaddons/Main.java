@@ -150,7 +150,8 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new SpawnMythicmobMechanic(),
             new AddAbsorptionMechanic(),
             new AbsorptionCondition(),
-            new AttackChargeCondition()
+            new AttackChargeCondition(),
+            new ManaNameCondition()
         );
     }
 }
