@@ -524,7 +524,7 @@ public class MasonUtils {
 			}
 		}
 
-		lore.set(getSlotNum(itemWithSlot, slot), charm);
+		lore.set(getSlotNum(itemWithSlot, slot), "§9" + charm);
 		meta.setLore(lore);
 		itemWithSlot.setItemMeta(meta);
 		return true;
