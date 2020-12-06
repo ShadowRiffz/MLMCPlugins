@@ -137,6 +137,35 @@ public class MasonUtils {
 
 			// Charm
 		case 3:
+			if (line.contains("Advanced")) {
+				if (line.contains("Exp")) {
+					return mItems.getExpCharm(true);
+				} else if (line.contains("Drop")) {
+					return mItems.getDropCharm(true);
+				} else if (line.contains("Looting")) {
+					return mItems.getLootingCharm(true);
+				}
+			} else {
+				if (line.contains("Exp")) {
+					return mItems.getExpCharm(false);
+				} else if (line.contains("Drop")) {
+					return mItems.getDropCharm(false);
+				} else if (line.contains("Looting")) {
+					return mItems.getLootingCharm(false);
+				} else if (line.contains("Recovery")) {
+					return mItems.getRecoveryCharm();
+				} else if (line.contains("Traveler")) {
+					return mItems.getTravelerCharm();
+				} else if (line.contains("Second Chance")) {
+					return mItems.getSecondChanceCharm();
+				} else if (line.contains("Hunger")) {
+					return mItems.getHungerCharm();
+				} else if (line.contains("Quick Eat")) {
+					return mItems.getQuickEatCharm();
+				}
+			}
+			// Relic
+		case 4:
 			String[] relicStrings = line.split(" ");
 			String relic = "Relic" + relicStrings[2];
 			for (int i = 3; i < relicStrings.length; i++) {
