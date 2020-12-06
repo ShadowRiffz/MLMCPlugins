@@ -545,4 +545,17 @@ public class MasonUtils {
 		itemWithSlot.setItemMeta(meta);
 		return true;
 	}
+	
+	public boolean hasRelic(ItemStack item) {
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+			
+			int count = 1;
+			for (int i = lore.size() - 1; i > 0 && count <= 3; i--) {
+				if (lore.get(i).contains("Relic")) return true;
+				count++;
+			}
+		}
+		return false;
+	}
 }

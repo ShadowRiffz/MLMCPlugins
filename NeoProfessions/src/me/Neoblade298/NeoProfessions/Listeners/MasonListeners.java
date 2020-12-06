@@ -215,7 +215,12 @@ public class MasonListeners implements Listener {
 											success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
 											break;
 										case "relic":
-											success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
+											if (masonUtils.hasRelic(itemWithSlot)) {
+												success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
+											}
+											else {
+												util.sendMessage(p, "&cOnly one relic may be sloted per item!");
+											}
 											break;
 										}
 										if (success) {
