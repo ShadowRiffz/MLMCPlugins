@@ -56,7 +56,8 @@ public class BlacksmithMethods {
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
 		int slot = p.getInventory().firstEmpty();
 		int perm = (level - LEVEL_INTERVAL) / 10;
-		if (perm < 0) perm = 0;
+		if (perm < 0)
+			perm = 0;
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
@@ -65,16 +66,20 @@ public class BlacksmithMethods {
 						cm.subtract(p, "essence", level, DURABILITY_ESSENCE);
 						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * perm);
 						util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
-					} else {
+					}
+					else {
 						util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
-				} else {
+				}
+				else {
 					util.sendMessage(p, "&cYou lack the essence to create this!");
 				}
-			} else {
+			}
+			else {
 				util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
-		} else {
+		}
+		else {
 			util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
@@ -90,61 +95,63 @@ public class BlacksmithMethods {
 						cm.subtract(p, "essence", level, REPAIR_ESSENCE);
 						econ.withdrawPlayer(p, REPAIR_COST);
 						util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
-					} else {
+					}
+					else {
 						util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
-				} else {
+				}
+				else {
 					util.sendMessage(p, "&cYou lack the essence to create this!");
 				}
-			} else {
+			}
+			else {
 				util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
-		} else {
+		}
+		else {
 			util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 
 	public void upgradeUnbreaking(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if(!item.getType().equals(Material.AIR)) {
-			if(item.containsEnchantment(Enchantment.DURABILITY)) {
-				if (util.isGearReworked(item)) {
-					int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
-					int upgradeLevel = enchLevel + 1;
-					int itemLevel = util.getItemLevel(item);
-					if(enchLevel <= 6) {
-						if((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.unbreaking.3")) ||
-								(enchLevel > 3 && p.hasPermission("blacksmith.upgrade.unbreaking." + enchLevel))) {
-							if(itemLevel != -1) {
-								if (cm.hasEnough(p, "essence", itemLevel, (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
-									if(econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
-										item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
-										cm.subtract(p, "essence", itemLevel, (UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE);
-										econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
-										util.sendMessage(p, "&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
-									}
-									else {
-										util.sendMessage(p, "&cYou lack the gold to create this!");
-									}
+		if (!item.getType().equals(Material.AIR)) {
+			if (item.containsEnchantment(Enchantment.DURABILITY)) {
+				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
+				int upgradeLevel = enchLevel + 1;
+				int itemLevel = util.getItemLevel(item);
+				if (enchLevel <= 6) {
+					if ((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.unbreaking.3"))
+							|| (enchLevel > 3 && p.hasPermission("blacksmith.upgrade.unbreaking." + enchLevel))) {
+						if (itemLevel != -1) {
+							if (cm.hasEnough(p, "essence", itemLevel,
+									(UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
+								if (econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
+									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
+									cm.subtract(p, "essence", itemLevel,
+											(UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE);
+									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
+									util.sendMessage(p,
+											"&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the essence to create this!");
+									util.sendMessage(p, "&cYou lack the gold to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+								util.sendMessage(p, "&cYou lack the essence to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou do not yet have the required skill!");
+							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cItem is no longer supported by the server!");
+					util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
 				}
 			}
 			else {
@@ -160,43 +167,48 @@ public class BlacksmithMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (!item.getType().equals(Material.AIR)) {
 			if (item.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
-				if (util.isGearReworked(item)) {
-					int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
-					int upgradeLevel = enchLevel + 1;
-					int itemLevel = util.getItemLevel(item);
-					if (enchLevel <= 6) {
-						if((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.protection.3")) ||
-								(enchLevel > 3 && p.hasPermission("blacksmith.upgrade.protection." + enchLevel))) {
-							if (itemLevel != -1) {
-								if (cm.hasEnough(p, "essence", itemLevel, (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
-									if (econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
-										item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
-										cm.subtract(p, "essence", itemLevel, (PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE);
-										econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
-										util.sendMessage(p,
-												"&7Successfully upgraded protection to level " + upgradeLevel + "!");
-									} else {
-										util.sendMessage(p, "&cYou lack the gold to create this!");
-									}
-								} else {
-									util.sendMessage(p, "&cYou lack the essence to create this!");
+				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
+				int upgradeLevel = enchLevel + 1;
+				int itemLevel = util.getItemLevel(item);
+				if (enchLevel <= 6) {
+					if ((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.protection.3"))
+							|| (enchLevel > 3 && p.hasPermission("blacksmith.upgrade.protection." + enchLevel))) {
+						if (itemLevel != -1) {
+							if (cm.hasEnough(p, "essence", itemLevel,
+									(PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
+								if (econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
+									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
+									cm.subtract(p, "essence", itemLevel,
+											(PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE);
+									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
+									util.sendMessage(p,
+											"&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
-							} else {
-								util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+								else {
+									util.sendMessage(p, "&cYou lack the gold to create this!");
+								}
 							}
-						} else {
-							util.sendMessage(p, "&cYou do not yet have the required skill!");
+							else {
+								util.sendMessage(p, "&cYou lack the essence to create this!");
+							}
 						}
-					} else {
-						util.sendMessage(p, "&cCannot upgrade protection any further!");
+						else {
+							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+						}
 					}
-				} else {
-					util.sendMessage(p, "&cItem is no longer supported by the server!");
+					else {
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
+					}
 				}
-			} else {
+				else {
+					util.sendMessage(p, "&cCannot upgrade protection any further!");
+				}
+			}
+			else {
 				util.sendMessage(p, "&cItem doesn't have a protection enchantment to upgrade!");
 			}
-		} else {
+		}
+		else {
 			util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
@@ -204,74 +216,78 @@ public class BlacksmithMethods {
 	public void reforgeItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (!item.getType().equals(Material.AIR)) {
-			if (util.isGearReworked(item)) {
-				String type = util.getItemType(item);
-				
-				if (type != null) {
-					// Fix type
-					switch (type) {
-					case "reinforcedhelmet":
-						type = "rhelmet";
-						break;
-					case "reinforcedchestplate":
-						type = "rchestplate";
-						break;
-					case "reinforcedleggings":
-						type = "rleggings";
-						break;
-					case "reinforcedboots":
-						type = "rboots";
-						break;
-					case "infusedhelmet":
-						type = "ihelmet";
-						break;
-					case "infusedchestplate":
-						type = "ichestplate";
-						break;
-					case "infusedleggings":
-						type = "ileggings";
-						break;
-					case "infusedboots":
-						type = "iboots";
-						break;
-					}
-					int itemLevel = util.getItemLevel(item);
-					int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
-					if (perm < 0) perm = 0;
-					String rarity = util.getItemRarity(item);
-					if (itemLevel != -1 && rarity != null) {
-						if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
-							if (!rarity.equalsIgnoreCase("Artifact")) {
-								if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
-									if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
-										cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
-										p.getInventory().removeItem(item);
-										econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
-										p.getInventory().addItem(neogear.settings.get(type).get(itemLevel)
-												.generateItem(rarity, itemLevel));
-										util.sendMessage(p, "&7Successfully reforged item!");
-									} else {
-										util.sendMessage(p, "&cYou lack the gold to create this!");
-									}
-								} else {
-									util.sendMessage(p, "&cYou lack the essence to create this!");
+			String type = util.getItemType(item);
+
+			if (type != null) {
+				// Fix type
+				switch (type) {
+				case "reinforcedhelmet":
+					type = "rhelmet";
+					break;
+				case "reinforcedchestplate":
+					type = "rchestplate";
+					break;
+				case "reinforcedleggings":
+					type = "rleggings";
+					break;
+				case "reinforcedboots":
+					type = "rboots";
+					break;
+				case "infusedhelmet":
+					type = "ihelmet";
+					break;
+				case "infusedchestplate":
+					type = "ichestplate";
+					break;
+				case "infusedleggings":
+					type = "ileggings";
+					break;
+				case "infusedboots":
+					type = "iboots";
+					break;
+				}
+				int itemLevel = util.getItemLevel(item);
+				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
+				if (perm < 0)
+					perm = 0;
+				String rarity = util.getItemRarity(item);
+				if (itemLevel != -1 && rarity != null) {
+					if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
+						if (!rarity.equalsIgnoreCase("Artifact")) {
+							if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
+								if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
+									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
+									p.getInventory().removeItem(item);
+									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
+									p.getInventory().addItem(
+											neogear.settings.get(type).get(itemLevel).generateItem(rarity, itemLevel));
+									util.sendMessage(p, "&7Successfully reforged item!");
 								}
-							} else {
-								util.sendMessage(p, "&cArtifacts cannot be rerolled!");
+								else {
+									util.sendMessage(p, "&cYou lack the gold to create this!");
+								}
 							}
-						} else {
-							util.sendMessage(p, "&cYou do not yet have the required skill!");
+							else {
+								util.sendMessage(p, "&cYou lack the essence to create this!");
+							}
 						}
-					} else {
-						util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+						else {
+							util.sendMessage(p, "&cArtifacts cannot be rerolled!");
+						}
 					}
-				} else {
+					else {
+						util.sendMessage(p, "&cYou do not yet have the required skill!");
+					}
+				}
+				else {
 					util.sendMessage(p, "&cYou cannot reforge non-quest items!");
 				}
-			} else {
-				util.sendMessage(p, "&cItem is no longer supported by the server!");
 			}
-		} else {
+			else {
+				util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+			}
+		}
+		else {
 			util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
@@ -279,30 +295,31 @@ public class BlacksmithMethods {
 	public void scrapItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (!item.getType().equals(Material.AIR)) {
-			if (util.isGearReworked(item)) {
-				int itemLevel = util.getItemLevel(item);
-				int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
-				if (perm < 0) perm = 0;
-				if (itemLevel != -1) {
-					if (perm <= 0 || p.hasPermission("blacksmith.scrap." + perm)) {
-						if (econ.has(p, SCRAP_COST)) {
-							p.getInventory().removeItem(item);
-							econ.withdrawPlayer(p, SCRAP_COST);
-							cm.add(p, "essence", itemLevel, 1);
-							util.sendMessage(p, "&7Successfully scrapped item!");
-						} else {
-							util.sendMessage(p, "&cYou lack the gold to scrap this!");
-						}
-					} else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+			int itemLevel = util.getItemLevel(item);
+			int perm = ((itemLevel + (10 - itemLevel % 10)) / 10) - 2;
+			if (perm < 0)
+				perm = 0;
+			if (itemLevel != -1) {
+				if (perm <= 0 || p.hasPermission("blacksmith.scrap." + perm)) {
+					if (econ.has(p, SCRAP_COST)) {
+						p.getInventory().removeItem(item);
+						econ.withdrawPlayer(p, SCRAP_COST);
+						cm.add(p, "essence", itemLevel, 1);
+						util.sendMessage(p, "&7Successfully scrapped item!");
 					}
-				} else {
-					util.sendMessage(p, "&cYou cannot scrap non-quest items!");
+					else {
+						util.sendMessage(p, "&cYou lack the gold to scrap this!");
+					}
 				}
-			} else {
-				util.sendMessage(p, "&cItem is no longer supported by the server!");
+				else {
+					util.sendMessage(p, "&cYou do not yet have the required skill!");
+				}
 			}
-		} else {
+			else {
+				util.sendMessage(p, "&cYou cannot scrap non-quest items!");
+			}
+		}
+		else {
 			util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
@@ -316,16 +333,20 @@ public class BlacksmithMethods {
 						cm.subtract(p, "essence", level, amount);
 						cm.add(p, "essence", level - LEVEL_INTERVAL, amount * DECONSTRUCT_AMOUNT);
 						util.sendMessage(p, "&7Successfully deconstructed!");
-					} else {
+					}
+					else {
 						util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
 					}
-				} else {
+				}
+				else {
 					util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
-			} else {
+			}
+			else {
 				util.sendMessage(p, "&cYou do not have enough essence!");
 			}
-		} else {
+		}
+		else {
 			util.sendMessage(p, "&cDeconstructed essences must be at least level 10!");
 		}
 	}

@@ -15,7 +15,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Damageable;
@@ -31,7 +30,6 @@ import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
-import me.Neoblade298.NeoProfessions.Legacy.Converter;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
@@ -270,118 +268,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			else {
 				util.sendMessage(p, "&cCannot be in creative mode for this command!");
-				return true;
-			}
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemStack[] inv = p.getInventory().getStorageContents();
-			Converter conv = new Converter(main);
-			for (int i = 0; i < inv.length; i++) {
-				if (inv[i] != null) {
-					int amt = inv[i].getAmount();
-					ItemStack item = conv.convertItem(p, inv[i]);
-					if (item != null)
-						inv[i] = util.setAmount(conv.convertItem(p, inv[i]), amt);
-					else
-						inv[i] = null;
-				}
-			}
-			p.getInventory().setStorageContents(inv);
-			return true;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("convertgear")) {
-			if (p.hasPermission("neoprofessions.admin")) {
-				PlayerInventory pInv = p.getInventory();
-				ItemStack[] inv = pInv.getArmorContents();
-				Converter conv = new Converter(main);
-				for (int i = 0; i < inv.length; i++) {
-					if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-						inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(),
-								(ArrayList<String>) inv[i].getItemMeta().getLore());
-					}
-				}
-				pInv.setArmorContents(inv);
-				ItemStack item = pInv.getItemInMainHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				item = pInv.getItemInOffHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				return true;
-			}
-			else if (!p.hasPermission("neoprofessions.convert.1")) {
-				PlayerInventory pInv = p.getInventory();
-				ItemStack[] inv = pInv.getArmorContents();
-				Converter conv = new Converter(main);
-				for (int i = 0; i < inv.length; i++) {
-					if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-						inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(),
-								(ArrayList<String>) inv[i].getItemMeta().getLore());
-					}
-				}
-				pInv.setArmorContents(inv);
-				ItemStack item = pInv.getItemInMainHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				item = pInv.getItemInOffHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-						"lp user " + p.getName() + " permission set neoprofessions.convert.1");
-				return true;
-			}
-			else if (!p.hasPermission("neoprofessions.convert.2") && p.hasPermission("skillapi.account.diamond")) {
-				PlayerInventory pInv = p.getInventory();
-				ItemStack[] inv = pInv.getArmorContents();
-				Converter conv = new Converter(main);
-				for (int i = 0; i < inv.length; i++) {
-					if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-						inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(),
-								(ArrayList<String>) inv[i].getItemMeta().getLore());
-					}
-				}
-				pInv.setArmorContents(inv);
-				ItemStack item = pInv.getItemInMainHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				item = pInv.getItemInOffHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-						"lp user " + p.getName() + " permission set neoprofessions.convert.2");
-				return true;
-			}
-			else if (!p.hasPermission("neoprofessions.convert.3") && p.hasPermission("class.account.unlocked.3")) {
-				PlayerInventory pInv = p.getInventory();
-				ItemStack[] inv = pInv.getArmorContents();
-				Converter conv = new Converter(main);
-				for (int i = 0; i < inv.length; i++) {
-					if (inv[i] != null && inv[i].hasItemMeta() && inv[i].getItemMeta().hasLore()) {
-						inv[i] = conv.convertGear(p, inv[i], inv[i].getItemMeta(),
-								(ArrayList<String>) inv[i].getItemMeta().getLore());
-					}
-				}
-				pInv.setArmorContents(inv);
-				ItemStack item = pInv.getItemInMainHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInMainHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				item = pInv.getItemInOffHand();
-				if (!item.getType().equals(Material.AIR))
-					pInv.setItemInOffHand(conv.convertGear(p, item, item.getItemMeta(),
-							(ArrayList<String>) item.getItemMeta().getLore()));
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-						"lp user " + p.getName() + " permission set neoprofessions.convert.3");
-				return true;
-			}
-			else {
-				util.sendMessage(p, "&cYou are out of gear conversions!");
 				return true;
 			}
 		}

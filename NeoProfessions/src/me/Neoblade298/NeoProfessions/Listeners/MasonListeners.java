@@ -79,7 +79,8 @@ public class MasonListeners implements Listener {
 				for (String line : item.getItemMeta().getLore()) {
 					if (line.contains("Looting")) {
 						lootLine = line;
-					} else if (line.contains("Exp")) {
+					}
+					else if (line.contains("Exp")) {
 						expLine = line;
 					}
 				}
@@ -96,7 +97,8 @@ public class MasonListeners implements Listener {
 							econ.depositPlayer(p, amount);
 						}
 					}
-				} else if (e.getMobType().getDisplayName() != null) {
+				}
+				else if (e.getMobType().getDisplayName() != null) {
 					String[] name = e.getMobType().getDisplayName().get().split(" ");
 					if (name.length > 2) {
 						if (name[1].contains("]")) {
@@ -115,7 +117,8 @@ public class MasonListeners implements Listener {
 						double amount = d.getAmount();
 						if (expLine.contains("Advanced")) {
 							d.setAmount(amount * 2);
-						} else {
+						}
+						else {
 							d.setAmount(amount * 1.5);
 						}
 						break;
@@ -188,82 +191,83 @@ public class MasonListeners implements Listener {
 			String slotType = masonUtils.slotType(itemToSlot);
 			if (p.getInventory().containsAtLeast(itemWithSlot, 1)) {
 				if (slotType != null) {
-					if (masonUtils.isGearReworked(itemToSlot)) {
-						if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel ||
-								(itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS) && masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
-							int level = util.getItemLevel(itemWithSlot);
-							if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute")) ||
-									(util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute")) ||
-									!(slotType.equalsIgnoreCase("aattribute") || slotType.equalsIgnoreCase("wattribute"))) {
-								if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
-									if (econ.has(p, SLOT_GOLD)) {
-										boolean success = false;
-										switch (slotType) {
-										case "durability":
-											success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-											break;
-										case "wattribute":
-											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-											break;
-										case "aattribute":
-											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-											break;
-										case "overload":
-											success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-											break;
-										case "charm":
-											success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-											break;
-										case "relic":
-											if (masonUtils.hasRelic(itemWithSlot)) {
-												success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
-											}
-											else {
-												util.sendMessage(p, "&cOnly one relic may be sloted per item!");
-											}
-											break;
+					if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel
+							|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
+									&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
+						int level = util.getItemLevel(itemWithSlot);
+						if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
+								|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
+								|| !(slotType.equalsIgnoreCase("aattribute")
+										|| slotType.equalsIgnoreCase("wattribute"))) {
+							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
+								if (econ.has(p, SLOT_GOLD)) {
+									boolean success = false;
+									switch (slotType) {
+									case "durability":
+										success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+										break;
+									case "wattribute":
+										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+										break;
+									case "aattribute":
+										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+										break;
+									case "overload":
+										success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+										break;
+									case "charm":
+										success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+										break;
+									case "relic":
+										if (masonUtils.hasRelic(itemWithSlot)) {
+											success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 										}
-										if (success) {
-											p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
-											cm.subtract(p, "essence", level, SLOT_ESSENCE);
-											econ.withdrawPlayer(p, SLOT_GOLD);
-											util.sendMessage(p, "&7Successfully slotted item!");
-										} else {
-											util.sendMessage(p, "&cFailed to slot item!");
+										else {
+											util.sendMessage(p, "&cOnly one relic may be sloted per item!");
 										}
-									} else {
-										util.sendMessage(p, "&cYou lack the gold to do this!");
-										slotItem.remove(p);
-										slotNum.remove(p);
+										break;
 									}
-								} else {
-									util.sendMessage(p, "&cYou lack the materials to do this!");
+									if (success) {
+										p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
+										cm.subtract(p, "essence", level, SLOT_ESSENCE);
+										econ.withdrawPlayer(p, SLOT_GOLD);
+										util.sendMessage(p, "&7Successfully slotted item!");
+									}
+									else {
+										util.sendMessage(p, "&cFailed to slot item!");
+									}
+								}
+								else {
+									util.sendMessage(p, "&cYou lack the gold to do this!");
 									slotItem.remove(p);
 									slotNum.remove(p);
 								}
 							}
 							else {
-								util.sendMessage(p, "&cThis augment is incompatible with this item type!");
+								util.sendMessage(p, "&cYou lack the materials to do this!");
 								slotItem.remove(p);
 								slotNum.remove(p);
 							}
-						} else {
-							util.sendMessage(p, "&cThis item must be the same level as this slot (or be a charm)!");
+						}
+						else {
+							util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
 					}
 					else {
-						util.sendMessage(p, "&cItem is no longer supported by the server!");
+						util.sendMessage(p, "&cThis item must be the same level as this slot (or be a charm)!");
 						slotItem.remove(p);
 						slotNum.remove(p);
 					}
-				} else {
+				}
+				else {
 					util.sendMessage(p, "&cThis item cannot be slotted!");
 					slotItem.remove(p);
 					slotNum.remove(p);
 				}
-			} else {
+			}
+			else {
 				util.sendMessage(p, "&cSomething went wrong! Please try again.");
 				slotItem.remove(p);
 				slotNum.remove(p);

@@ -450,14 +450,6 @@ public class MasonUtils {
 		}
 		return null;
 	}
-	
-	public boolean isGearReworked(ItemStack item) {
-		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			String line = item.getItemMeta().getLore().get(0);
-			return line.charAt(line.length() - 1) == '0';
-		}
-		return false;
-	}
 
 	public boolean parseDurability(ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
 		int potency = -1;
