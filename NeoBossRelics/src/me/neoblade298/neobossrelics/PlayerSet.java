@@ -6,8 +6,10 @@ public class PlayerSet {
 	private Set set;
 	private int numRelics;
 	private Player p;
+	private NeoBossRelics main;
 	
-	public PlayerSet(Set set, int numRelics, Player p) {
+	public PlayerSet(NeoBossRelics main, Set set, int numRelics, Player p) {
+		this.main = main;
 		this.set = set;
 		this.numRelics = numRelics;
 		this.p = p;
@@ -29,12 +31,15 @@ public class PlayerSet {
 	public void decrementNum() {
 		int before = this.numRelics;
 		this.set.applyEffects(p, before, --this.numRelics);
+		if (this.numRelics <= 0) main.playersets.remove(this.p.getUniqueId());
+		
 	}
 	
 	public void setNumRelics(int num) {
 		int before = this.numRelics;
 		this.numRelics = num;
 		this.set.applyEffects(p, before, this.numRelics);
+		if (this.numRelics <= 0) main.playersets.remove(this.p.getUniqueId());
 	}
 	
 	public void remove() {

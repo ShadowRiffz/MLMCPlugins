@@ -32,7 +32,6 @@ public class SetEffect {
 			FlagManager.removeFlag(p, this.flag);
 		}
 		for (Entry<String, Integer> entry : attributes.entrySet()) {
-			System.out.println("Removing " + entry.getKey() + " to -" + entry.getValue());
 			SkillAPI.getPlayerData(p).addBonusAttributes(entry.getKey(), -entry.getValue());
 		}
 	}

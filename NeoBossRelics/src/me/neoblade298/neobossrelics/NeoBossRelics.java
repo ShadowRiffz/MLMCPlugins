@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -119,7 +120,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChangeSlot(PlayerItemHeldEvent e) {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
@@ -151,7 +152,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		ItemStack[] armor = p.getInventory().getArmorContents();
 		
 		if (this.playersets.containsKey(p.getUniqueId())) {
-			this.playersets.remove(p.getUniqueId()).remove();;
+			this.playersets.remove(p.getUniqueId()).remove();
 		}
 		
 		int num = 0;
@@ -205,7 +206,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 					setName += " " + words[j];
 				}
 				if (sets.containsKey(setName)) {
-					PlayerSet pSet = new PlayerSet(sets.get(setName), 0, p);
+					PlayerSet pSet = new PlayerSet(this, sets.get(setName), 0, p);
 					playersets.put(p.getUniqueId(), pSet);
 					return true;
 				}
