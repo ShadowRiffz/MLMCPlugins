@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public class Main extends JavaPlugin implements Listener {
@@ -261,12 +262,14 @@ public class Main extends JavaPlugin implements Listener {
 		if (item.getType().equals(Material.CROSSBOW)) {
 			removeCrossbowMain = new BukkitRunnable() {
 				public void run() {
+					Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 					player.getInventory().setItemInMainHand(null);
 					player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 				}
 			};
 			removeCrossbowOff = new BukkitRunnable() {
 				public void run() {
+					Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 					player.getInventory().setItemInOffHand(null);
 					player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 				}
@@ -285,21 +288,25 @@ public class Main extends JavaPlugin implements Listener {
 					d -= 1;
 					if (d <= 0) {
 						if (i == 1) {
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 							player.getInventory().setBoots(null);
 							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							return;
 						}
 						if (i == 2) {
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 							player.getInventory().setLeggings(null);
 							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							return;
 						}
 						if (i == 3) {
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 							player.getInventory().setChestplate(null);
 							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							return;
 						}
 						if (i == 4) {
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 							player.getInventory().setHelmet(null);
 							player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							return;
@@ -309,6 +316,7 @@ public class Main extends JavaPlugin implements Listener {
 								removeCrossbowMain.runTaskLater(this, 1L);
 							}
 							else {
+								Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 								player.getInventory().setItemInMainHand(null);
 								player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							}
@@ -319,6 +327,7 @@ public class Main extends JavaPlugin implements Listener {
 								removeCrossbowOff.runTaskLater(this, 1L);
 							}
 							else {
+								Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(player, item));
 								player.getInventory().setItemInOffHand(null);
 								player.getWorld().playSound(player.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
 							}
