@@ -179,7 +179,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		int count = 1;
-		for (int i = lore.size() - 1; i >= 0 && ++count < 3; i--) {
+		for (int i = lore.size() - 2; i >= 0 && count++ <= 3; i--) {
 			String line = ChatColor.stripColor(lore.get(i));
 			if (line.startsWith("Relic")) {
 				if (line.endsWith(set.getName())) {
@@ -196,7 +196,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		int count = 1;
-		for (int i = lore.size() - 1; i >= 0 && ++count < 3; i--) {
+		for (int i = lore.size() - 2; i >= 0 && count++ <= 3; i--) {
 			String line = ChatColor.stripColor(lore.get(i));
 			if (line.startsWith("Relic")) {
 				String[] words = line.split(" ");
