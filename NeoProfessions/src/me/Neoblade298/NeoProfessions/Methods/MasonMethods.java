@@ -132,7 +132,9 @@ public class MasonMethods {
 							if (level <= maxlevel) {
 								if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel
 										|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
-												&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
+												&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)
+										|| (itemToSlot.getType().equals(Material.QUARTZ))
+												&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 									if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
 											|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
 											|| !(slotType.equalsIgnoreCase("aattribute")
@@ -156,11 +158,11 @@ public class MasonMethods {
 												success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
 												break;
 											case "relic":
-												if (masonUtils.hasRelic(itemWithSlot)) {
+												if (!masonUtils.hasRelic(itemWithSlot)) {
 													success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 												}
 												else {
-													util.sendMessage(p, "&cOnly one relic may be sloted per item!");
+													util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 												}
 												break;
 											}
@@ -183,7 +185,7 @@ public class MasonMethods {
 								}
 								else {
 									util.sendMessage(p,
-											"&cThis item must be the same level as this slot (or be a charm)!");
+											"&cThis item must be the same level as this slot (or be a charm/relic)!");
 								}
 							}
 							else {
