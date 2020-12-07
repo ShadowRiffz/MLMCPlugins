@@ -15,11 +15,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Set> sets;
@@ -118,6 +121,31 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		if (this.playersets.containsKey(uuid)) {
 			this.playersets.remove(uuid);
 		}
+	}
+	
+	@EventHandler
+	public void onItemBreak(PlayerItemBreakEvent e) {
+		Player p = e.getPlayer();
+		UUID uuid = p.getUniqueId();
+		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		
+		if (this.playersets.containsKey(uuid)) {
+			if (checkRelic(p, e.getBrokenItem())) this.playersets.get(uuid).decrementNum();
+		}
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		
+	    // Wait 5 seconds to make sure skillapi loads them first
+		BukkitRunnable loadRelics = new BukkitRunnable() {
+			public void run() {
+				recalculateSetEffect(p);
+			}
+		};
+		loadRelics.runTaskLater(this, 100L);
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
