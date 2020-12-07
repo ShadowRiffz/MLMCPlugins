@@ -467,7 +467,7 @@ public class MasonMethods {
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis slot is unused or does not exist!!");
+				util.sendMessage(p, "&cThis slot is unused or does not exist!");
 			}
 		}
 		else {
