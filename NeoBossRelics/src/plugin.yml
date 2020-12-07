@@ -1,10 +1,10 @@
 name: NeoBossRelics
-main: me.neoblade298.neobossgear.NeoBossRelics
+main: me.neoblade298.neobossrelics.NeoBossRelics
 author: [Neoblade298]
 depend: [SkillAPI]
 version: 1.0
 api-version: 1.16
 commands:
-   bossgear:
+   relic:
       description: Various debug commands
-      usage: /bossrelic
+      usage: /relic
