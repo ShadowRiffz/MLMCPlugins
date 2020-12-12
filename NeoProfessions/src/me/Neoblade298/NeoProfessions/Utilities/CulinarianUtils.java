@@ -90,16 +90,16 @@ public class CulinarianUtils {
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			String line = item.getItemMeta().getLore().get(0);
 			if (line.contains("Tier 1") || line.contains("Ingredient")) {
-				return 10;
-			}
-			else if (line.contains("Tier 2")) {
 				return 20;
 			}
-			else if (line.contains("Tier 3") || line.contains("Drink")) {
+			else if (line.contains("Tier 2")) {
 				return 30;
 			}
-			else if (line.contains("Limited Edition") || line.contains("Legendary")) {
+			else if (line.contains("Tier 3") || line.contains("Drink")) {
 				return 40;
+			}
+			else if (line.contains("Limited Edition") || line.contains("Legendary")) {
+				return 50;
 			}
 		}
 		return -1;

@@ -236,7 +236,7 @@ public class CulinarianRecipes {
 		recipe.addIngredient(Material.POTION);
 		recipe.addIngredient(Material.GREEN_DYE);
 		recipe.addIngredient(Material.ICE);
-		recipe.addIngredient(Material.SUGAR);
+		recipe.addIngredient(Material.PLAYER_HEAD);
 		recipe.addIngredient(Material.PLAYER_HEAD);
 		return recipe;
 	}
