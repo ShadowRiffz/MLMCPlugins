@@ -50,6 +50,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Black Widow");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 1");
+		lore.add("§7Effects: §95% DEX");
+		lore.add("§7Duration: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -63,6 +65,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Pink Panther");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 2");
+		lore.add("§7Effects: §95% SPR");
+		lore.add("§7Duration: §6100 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -76,6 +80,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Midnight Kiss");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 3");
+		lore.add("§7Effects: §94% END");
+		lore.add("§7Duration: §6120 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -89,6 +95,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Midnight Blue");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 4");
+		lore.add("§7Effects: §94%VIT");
+		lore.add("§7Duration: §6100 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -102,6 +110,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Good and Evil");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 5");
+		lore.add("§7Effects: §96% SPR§7, §9-4% STR");
+		lore.add("§7Duration: §6100 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -115,6 +125,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Thor's Hammer");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 6");
+		lore.add("§7Effects: §97% STR§7, §9-4% END");
+		lore.add("§7Duration: §680 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -128,6 +140,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Jack Frost");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 7");
+		lore.add("§7Effects: §95% INT");
+		lore.add("§7Duration: §6100 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -141,6 +155,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9White Russian");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 8");
+		lore.add("§7Effects: §94% PRC");
+		lore.add("§7Duration: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -154,6 +170,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Swamp Water");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 9");
+		lore.add("§7Effects: §97% DEX");
+		lore.add("§7Duration: §680 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -167,6 +185,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Blue Motorcycle");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 10");
+		lore.add("§7Effects: §95% STR");
+		lore.add("§7Duration: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -180,6 +200,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Red Death");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 11");
+		lore.add("§7Effects: §95% INT");
+		lore.add("§7Duration: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -193,6 +215,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Bombsicle");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 12");
+		lore.add("§7Effects: §96% VIT§7, §9-4% STR");
+		lore.add("§7Duration: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -206,6 +230,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Sweet Tart");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 13");
+		lore.add("§7Effects: §95.5% SPR");
+		lore.add("§7Durations: §690 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -219,6 +245,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Pina Colada");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 14");
+		lore.add("§7Effects: §95% END");
+		lore.add("§7Duration: §660 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -232,6 +260,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Margarita on the Rocks");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 15");
+		lore.add("§7Effects: §96% INT");
+		lore.add("§7Duration: §660 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);
@@ -245,6 +275,8 @@ public class DrinksRecipeItems {
 		meta.setDisplayName("§9Bloody Mary");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Drink 16");
+		lore.add("§7Effects: §96% STR");
+		lore.add("§7Duration: §660 Seconds");
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		item.setItemMeta(meta);

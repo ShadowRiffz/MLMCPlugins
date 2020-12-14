@@ -34,6 +34,7 @@ public class Tier2RecipeItems {
 	String BASE64_R19 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM5MWRmZmJlYTJmYzNmMmFkNzhhNjIzZjQ5YmY3ZTExMjE2OTQxMTJjMzc1OWZlZWQ0MTU2ZmMyYmE0NmMwIn19fQ";
 	String BASE64_R20 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzZjMzY1MjNjMmQxMWI4YzhlYTJlOTkyMjkxYzUyYTY1NDc2MGVjNzJkY2MzMmRhMmNiNjM2MTY0ODFlZSJ9fX0";
 	String BASE64_R21 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWJlNDVhNWU5Yzk1ZDUyMjM2NDBlNzNlYzAyOGEwZDRiYTBlNTk0ZjU1Y2U0Nzc5MmRmNDA5N2IzMjRiZGRmIn19fQ";
+	String BASE64_R22 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q1MzI1MjViNzkwNjRkNGI1MDRkODczMTE3OGI1YmFhYjkxODY2ZWI5YWI1M2QwZmRlN2YwOGMxY2MwZGY4YyJ9fX0="; 
 
 	public Tier2RecipeItems() {
 		util = new Util();
@@ -72,6 +73,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Steak w/ Green Beans");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 1");
+		lore.add("§7Effects: §9+40 END (180s)");
+		lore.add("§7Hunger: §e6 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b 0MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -83,6 +88,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Buttered Toast");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 2");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c75 HP§7, §b10 MP");
+		lore.add("§7Cooldown: §660 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -94,6 +103,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Lemonade");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 3");
+		lore.add("§7Effects: §aSpeed II (10s)");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b40 MP");
+		lore.add("§7Cooldown: §660 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -105,6 +118,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Honeyed Ham");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 4");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e5 Food Bars");
+		lore.add("§7Restores §c480 HP (20/5s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -116,6 +133,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Candy Bar");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 5");
+		lore.add("§7Effects: §9+50 DEX (15s)§7, §9+50 STR (15s)§7, §aHaste II (15s)");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -127,6 +148,11 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Ale");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 6");
+		lore.add("§7Effects: §9+70 STR (20s)§7, §aConfusion I (30s)§7,");
+		lore.add("§aSlowness I (30s)§7, §aMining Fatigue I (30s)");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -138,6 +164,11 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Sandwich");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 7");
+		lore.add("§7Effects: §9+15 STR (150s)§7, §9+15 INT (150s)§7,");
+		lore.add("§9+15 DEX (150s)§7, §9+15 SPR (150s)");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -149,6 +180,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Beef Stew");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 8");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c540 HP (30/5s)§7, §b54 MP (3/5s)");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -160,6 +195,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Exotic Tea");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 9");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e3 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b240 MP (10/5s)");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -171,6 +210,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Bartrand's Cornbread");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 10");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c150 HP§7, §b40 MP");
+		lore.add("§7Cooldown: §690 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -182,6 +225,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Tuna Sandwich");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 11");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e4.5 Food Bars");
+		lore.add("§7Restores §c900 HP (30/10s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6480 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -193,6 +240,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Apple Pie");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 12");
+		lore.add("§7Effects: §9+100 INT (10s)");
+		lore.add("§7Hunger: §e4.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §690 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -204,6 +255,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Beer");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 13");
+		lore.add("§7Effects: §9+300 VIT (20s)§7, §aConfusion I (30s)§7, §aBlindness I (30s)");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c400 HP (40/2s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -215,6 +270,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Hash Browns");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 14");
+		lore.add("§7Effects: §9+25 DEX (180s)");
+		lore.add("§7Hunger: §e2.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -226,6 +285,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Lemon Tart");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 15");
+		lore.add("§7Effects: §aSpeed II (10s)§7, §aCleanses all Negative Effects");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -237,6 +300,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Wrapped Chicken");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 16");
+		lore.add("§7Effects: §9+30 STR (120s)");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -248,6 +315,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Mystery Meat");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 17");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e3 Food Bars");
+		lore.add("§7Restores §c840 HP (35/5s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -259,6 +330,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Tomato Soup");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 18");
+		lore.add("§7Effects: §9+30 SPR (120s)");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -270,6 +345,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Corn on the Cob");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 19");
+		lore.add("§7Effects: §9+70 DEX (10s)");
+		lore.add("§7Hunger: §e2.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §690 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -281,6 +360,10 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Bread Pudding");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 20");
+		lore.add("§7Effects: §aSpeed III (5s)§7, §aJump Boost I (60s)");
+		lore.add("§7Hunger: §e3 Food Bars");
+		lore.add("§7Restores §c100 HP§7, §b30 MP");
+		lore.add("§7Cooldown: §690 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -292,6 +375,25 @@ public class Tier2RecipeItems {
 		meta.setDisplayName("§9Chicken Pasta");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Tier 2 Recipe 21");
+		lore.add("§7Effects: §9+20 SPR (180s)§7, §9+20 INT (180s)");
+		lore.add("§7Hunger: §e5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public ItemStack getPeanutButterJelly() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R22);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Peanut Butter & Jelly");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Tier 2 Recipe 22");
+		lore.add("§7Effects: §9xxx");
+		lore.add("§7Hunger: §exx Food Bars");
+		lore.add("§7Restores §cxx HP§7, §bxx MP");
+		lore.add("§7Cooldown: §6xxx Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -474,6 +576,15 @@ public class Tier2RecipeItems {
 		recipe.add(ingr.getButter());
 		recipe.add(util.setAmount(ingr.getPasta(), 2));
 		recipe.add(util.setAmount(ingr.getGreens(), 3));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getPeanutButterJellyRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.BREAD, 6));
+		recipe.add(ingr.getGrapes());
+		recipe.add(ingr.getNuts());
+		recipe.add(ingr.getButter());
 		return recipe;
 	}
 }

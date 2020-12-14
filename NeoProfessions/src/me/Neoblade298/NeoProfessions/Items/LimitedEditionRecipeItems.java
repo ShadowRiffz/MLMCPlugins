@@ -12,6 +12,7 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 public class LimitedEditionRecipeItems {
 	Util util;
 	IngredientRecipeItems ingr;
+	Tier1RecipeItems t1;
 	
 	String BASE64_R1 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQ4Njc2N2Q0ZjFjYTI4NjhiNjc1Njk2YzcyMTc4Y2Q3NGM0ZWI2YzI4ZjNjN2FmYzgyZWRkMDkwY2EyY2E0NiJ9fX0";
 	String BASE64_R2 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWYxOGI5YTQzNmEyN2Y4MTNjMjg3ZWI2NzM3OWVmOGFkYmZkYzcwYWZhZjMwNGM0M2IxNjZjZTk4NmRkOCJ9fX0";
@@ -37,6 +38,8 @@ public class LimitedEditionRecipeItems {
 	String BASE64_R22 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVkZDgzYTRhNTNiZGM2MjM2NGFiYTM2OTNhODNlMjhlMmQ2Nzk0Nzk0YmQ5MWQ0NTM1YzhlZmEzMzQ4YzIifX19";
 	String BASE64_R23 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM1MGFlZTg4MDEzZThmYWY0MjdlMTlmM2I4OTgyOGI4NmJiZjAzZGQyZjE3YzRjNzYwZDFkZGUyMmRlMyJ9fX0=";
 	String BASE64_R24 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTU0MTgxOWU4Zjc5NDVmYWY3YThmN2NjMTc1ZGNjNjRkNGUzOTc3MzE3ZjAxMjc0ZTNmZGYxOGE1NTE5NDQyMSJ9fX0=";
+	String BASE64_R25 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTI5YzcxMTU1YjNmYjQ5ZDNlNDhkNTI0MGMxZDY3MzY2NzU0ODhiMzg0OWU5NmFlZWNlNDIzYzhlMzM5YTMwYiJ9fX0=";
+	String BASE64_R26 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2I2MmVjMWRkNWQwNGIyMGY0MjkwZTgzOWZlYzg3M2NjZDc0NzI3MTY0MDU5MGE5Mjk5N2I1ODQ2YTAyYzYxOSJ9fX0=";
 
 	public LimitedEditionRecipeItems() {
 		util = new Util();
@@ -69,6 +72,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Candy Corn");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 1");
+		lore.add("§7Recipe From: §c §c2017 Halloween Event");
+		lore.add("§7Effects: §9+125 DEX (20s)§7, §aSpeed II (20s)");
+		lore.add("§7Hunger: §e1 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -80,6 +88,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Witch's Brew");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 2");
+		lore.add("§7Recipe From: §c §c2017 Halloween Event");
+		lore.add("§7Effects: §9+40 INT (180s)§7, §9+40 SPR (180s)");
+		lore.add("§7Hunger: §e5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -91,6 +104,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Baked Eyeball");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 3");
+		lore.add("§7Recipe From: §c §c2017 Halloween Event");
+		lore.add("§7Effects: §9+150 INT (20s)");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §690 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -102,6 +120,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Candy Cane");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 4");
+		lore.add("§7Recipe From: §c2017 Christmas Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e1 Food Bars");
+		lore.add("§7Restores §c200 HP§7, §b50 MP");
+		lore.add("§7Cooldown: §650 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -113,6 +136,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Gingerbread");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 5");
+		lore.add("§7Recipe From: §c2017 Christmas Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b200 MP");
+		lore.add("§7Cooldown: §650 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -124,6 +152,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Eggnog");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 6");
+		lore.add("§7Recipe From: §c2017 Christmas Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e1.5 Food Bars");
+		lore.add("§7Restores §c1200 HP (50/5s)§7, §b120 MP (5/5s)");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -135,6 +168,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Smoked Ham");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 7");
+		lore.add("§7Recipe From: §c2017 Christmas Event");
+		lore.add("§7Effects: §9+45 STR (150s)§7, §9+80 END (150s)");
+		lore.add("§7Hunger: §e2.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -146,6 +184,12 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Lasagna");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 8");
+		lore.add("§7Recipe From: §cVote Calendar Reward");
+		lore.add("§7Effects: §9+20 STR (120s)§7, §9+20 DEX (120s)§7,");
+		lore.add("§9+20 INT (120s)§7, §9+20 SPR (120s)§7, §9+75 VIT (120s)");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6240 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -157,6 +201,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Lemon Soda");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 9");
+		lore.add("§7Recipe From: §c2018 MLMC Olympics");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c150 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §630 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -168,6 +217,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Olympian Gyro");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 10");
+		lore.add("§7Recipe From: §c2018 MLMC Olympics");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e6 Food Bars");
+		lore.add("§7Restores §c1890 HP (45/5s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6360 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -179,6 +233,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Cupcake");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 11");
+		lore.add("§7Recipe From: §c2018 MLMC Prom");
+		lore.add("§7Effects: §9+110 STR (20s)");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -190,6 +249,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Fish And Chips");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 12");
+		lore.add("§7Recipe From: §c2018 World Cup Event");
+		lore.add("§7Effects: §9+45 DEX (180s)");
+		lore.add("§7Hunger: §e7 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -201,6 +265,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Escargot");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 13");
+		lore.add("§7Recipe From: §c2018 World Cup Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c1500 HP (125/10s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -212,6 +281,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Vitalac");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 14");
+		lore.add("§7Recipe From: §c2018 World Cup Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e7 Food Bars");
+		lore.add("§7Restores §c350 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -223,6 +297,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Belgian Waffle");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 15");
+		lore.add("§7Recipe From: §c2018 World Cup Event");
+		lore.add("§7Effects: §9+120 INT (20s)§7, §9+160 SPR (20s)");
+		lore.add("§7Hunger: §e5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6150 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -234,6 +313,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Violet's Dirt Pie");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 16");
+		lore.add("§7Recipe From: §cToken Shop § 2020 Recipe Event");
+		lore.add("§7Effects: §9+45 PRC (180s)");
+		lore.add("§7Hunger: §e6 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -245,6 +329,12 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Ava's Bruschetta");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 17");
+		lore.add("§7Recipe From: §c2020 Recipe Event");
+		lore.add("§7Effects: §9+110 STR (15s)§7, §9+110 DEX (15s)§7,");
+		lore.add("§9+110 INT (15s)§7, §9+110 SPR (15s)");
+		lore.add("§7Hunger: §e5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6180 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -256,6 +346,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Aralic's Muscadine Wine");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 18");
+		lore.add("§7Recipe From: §c2020 Recipe Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b500 MP (20/5s)");
+		lore.add("§7Cooldown: §6300 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -267,6 +362,12 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Mona's Lemon Bars");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 19");
+		lore.add("§7Recipe From: §c2020 Recipe Event");
+		lore.add("§7Effects: §aSpeed III (10s)§7, §aHaste II (10s)§7,");
+		lore.add("§aCleanses all Negative Effects");
+		lore.add("§7Hunger: §e3.5 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §660 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -278,6 +379,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Neo's Eggs Benedict");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 20");
+		lore.add("§7Recipe From: §c2020 Recipe Event");
+		lore.add("§7Effects: §9+350 VIT (240s)§7, §9+80 END (240s)");
+		lore.add("§7Hunger: §e7 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6480 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -289,6 +395,12 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Matt's Beef Fried Rice");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 21");
+		lore.add("§7Recipe From: §c2020 Recipe Event");
+		lore.add("§7Effects: §9+30 STR (150s)§7, §9+30 DEX (150s)§7,");
+		lore.add("§9+30 INT (150s)§7, §9+30 SPR (150s)");
+		lore.add("§7Hunger: §e6 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6360 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -300,6 +412,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Conversation Heart");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 22");
+		lore.add("§7Recipe From: §c2020 Valentine's Event");
+		lore.add("§7Effects: §fNone");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c600 HP (100/5s)§7, §b0 MP");
+		lore.add("§7Cooldown: §6120 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -311,6 +428,11 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Chocolate Egg");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 23");
+		lore.add("§7Recipe From: §c2020 Easter Egg Hunt");
+		lore.add("§7Effects: §aSpeed II (5s)");
+		lore.add("§7Hunger: §e2 Food Bars");
+		lore.add("§7Restores §c100 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §620 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -322,6 +444,43 @@ public class LimitedEditionRecipeItems {
 		meta.setDisplayName("§9Player's Pie");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Limited Edition Recipe 24");
+		lore.add("§7Recipe From: §c2020 Player Appreciation Event");
+		lore.add("§7Effects: §9+125 PRC (20s)");
+		lore.add("§7Hunger: §e6 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b0 MP");
+		lore.add("§7Cooldown: §6150 Seconds");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public ItemStack getGummySpider() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R25);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Gummy Spider");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7Limited Edition Recipe 25");
+		lore.add("§7Recipe From: §c2020 Halloween Event");
+		lore.add("§7Effects: §9xxx");
+		lore.add("§7Hunger: §exx Food Bars");
+		lore.add("§7Restores §cxx HP§7, §bxx MP");
+		lore.add("§7Cooldown: §6xxx Seconds");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public ItemStack getBaklava() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R26);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Baklava");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7Limited Edition Recipe 26");
+		lore.add("§7Recipe From: §c2020 Nation Olympics");
+		lore.add("§7Effects: §aSpeed II (5s)");
+		lore.add("§7Hunger: §e4 Food Bars");
+		lore.add("§7Restores §c0 HP§7, §b100 MP");
+		lore.add("§7Cooldown: §630 Seconds");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -534,6 +693,24 @@ public class LimitedEditionRecipeItems {
 		recipe.add(util.setAmount(new ItemStack(Material.SUGAR), 2));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(util.setAmount(new ItemStack(Material.BREAD), 3));
+		return recipe;
+	}
+	
+	public ArrayList <ItemStack> getGummySpiderRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.SPIDER_EYE));
+		recipe.add(new ItemStack(Material.SUGAR));
+		recipe.add(new ItemStack(Material.PINK_DYE));
+		recipe.add(t1.getCuredFlesh());
+		return recipe;
+	}
+	
+	public ArrayList <ItemStack> getBaklavaRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.WHEAT));
+		recipe.add(ingr.getHoney());
+		recipe.add(ingr.getNuts());
+		recipe.add(ingr.getOil());
 		return recipe;
 	}
 }

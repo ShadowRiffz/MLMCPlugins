@@ -40,6 +40,7 @@ public class IngredientRecipeItems {
 	String BASE64_R20 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWViZjRiZDhkMjE2OWYxMDI3MzhiZmUyYmY3Y2ZlZDY5NTc3YjdjZjY3MjFhZmI3YTYyNGE4NTcwM2JiZDRiIn19fQ";
 	String BASE64_R21 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmIzMWE4MTEyNWI1M2VjOGZmMTFkMDlkYjM3YTJkZDQ0MmM0MjdiNWMzNmQ0YzZiYTVjMTlkY2QwMmU2MzEifX19";
 	String BASE64_R25 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWU1OTM1ODYzYzUzYTk5NmY1MzM0ZTkwZjU1ZGU1MzhlODNmZmM1ZjZiMGI4ZTgzYTRkYzRmNmU2YjEyMDgifX19";
+	String BASE64_R26 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI4NzhhOTFlZTQyNzhkMTZlZjE1MTc1ZWQ4ZTI4NjE1NDFkZTc5NzQ3NWNmNGE0NzMyOTE1ODc2YzZlOWEifX19";
 	
 	// Ingredients
 	public ArrayList<ItemStack> getIngredients() {
@@ -66,6 +67,7 @@ public class IngredientRecipeItems {
 		list.add(getPopcorn());
 		list.add(getPepper());
 		list.add(getGrapes());
+		list.add(getNuts());
 		return list;
 	}
 	
@@ -350,6 +352,17 @@ public class IngredientRecipeItems {
 		return item;
 	}
 	
+	public ItemStack getNuts() {
+		ItemStack item = SkullCreator.itemFromBase64(BASE64_R25);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§eNuts");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§6Ingredient 26");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	public ArrayList<ItemStack> getSaltRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.WATER_BUCKET));
@@ -523,6 +536,12 @@ public class IngredientRecipeItems {
 	public ArrayList<ItemStack> getGrapesRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.SWEET_BERRIES));
+		return recipe;
+	}
+	
+	public ArrayList<ItemStack> getNutsRecipe() {
+		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
+		recipe.add(new ItemStack(Material.OAK_SAPLING));
 		return recipe;
 	}
 }
