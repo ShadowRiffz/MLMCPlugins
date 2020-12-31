@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,12 +33,8 @@ public class MasonMethods {
 	static final int MAX_SLOTS = 3;
 	static final int ENGRAVE_ESSENCE_BASE = 12;
 	static final int ENGRAVE_ESSENCE_PER_SLOT = 12;
-	static final int ENGRAVE_GOLD_BASE = 10000;
-	static final int ENGRAVE_GOLD_PER_LVL = 5000;
-	static final int UNENGRAVE_GOLD = 2000;
 	static final int UNENGRAVE_ESSENCE = 2;
 	static final int UNSLOT_ESSENCE = 4;
-	static final int UNSLOT_GOLD_PER_LVL = 1500;
 	static final int LEVEL_INTERVAL = 5;
 
 	// Prices
@@ -74,7 +72,13 @@ public class MasonMethods {
 	static final int ADVANCED_QUICKEAT_GOLD = 18000;
 	static final int ADVANCED_QUICKEAT_ESSENCE = 18;
 	static final int ADVANCED_QUICKEAT_LEVEL = 40;
-
+	
+	// Prices
+	HashMap<Integer, Integer> REMOVE_SLOT_GOLD;
+	HashMap<Integer, HashMap<Integer, Integer>> CREATE_SLOT_GOLD;
+	HashMap<Integer, Integer> EQUIP_SLOT_GOLD;
+	HashMap<Integer, Integer> UNEQUIP_SLOT_GOLD;
+	
 	public MasonMethods(Main main) {
 		this.main = main;
 		this.econ = main.getEconomy();
@@ -84,6 +88,93 @@ public class MasonMethods {
 		common = new CommonItems();
 		util = new Util();
 		cm = main.cManager;
+		
+		// Set prices
+		REMOVE_SLOT_GOLD = new HashMap<Integer, Integer>();
+		REMOVE_SLOT_GOLD.put(5, 50);
+		REMOVE_SLOT_GOLD.put(10, 100);
+		REMOVE_SLOT_GOLD.put(15, 200);
+		REMOVE_SLOT_GOLD.put(20, 400);
+		REMOVE_SLOT_GOLD.put(25, 600);
+		REMOVE_SLOT_GOLD.put(30, 800);
+		REMOVE_SLOT_GOLD.put(35, 1000);
+		REMOVE_SLOT_GOLD.put(40, 1200);
+		REMOVE_SLOT_GOLD.put(45, 1400);
+		REMOVE_SLOT_GOLD.put(50, 1600);
+		REMOVE_SLOT_GOLD.put(55, 1800);
+		REMOVE_SLOT_GOLD.put(60, 2000);
+		
+		CREATE_SLOT_GOLD = new HashMap<Integer, HashMap<Integer, Integer>>();
+		HashMap<Integer, Integer> CREATE_SLOT_GOLD_1 = new HashMap<Integer, Integer>();
+		CREATE_SLOT_GOLD_1.put(5, 500);
+		CREATE_SLOT_GOLD_1.put(10, 1000);
+		CREATE_SLOT_GOLD_1.put(15, 1500);
+		CREATE_SLOT_GOLD_1.put(20, 2000);
+		CREATE_SLOT_GOLD_1.put(25, 3000);
+		CREATE_SLOT_GOLD_1.put(30, 4000);
+		CREATE_SLOT_GOLD_1.put(35, 5000);
+		CREATE_SLOT_GOLD_1.put(40, 6000);
+		CREATE_SLOT_GOLD_1.put(45, 7000);
+		CREATE_SLOT_GOLD_1.put(50, 8000);
+		CREATE_SLOT_GOLD_1.put(55, 9000);
+		CREATE_SLOT_GOLD_1.put(60, 10000);
+		HashMap<Integer, Integer> CREATE_SLOT_GOLD_2 = new HashMap<Integer, Integer>();
+		CREATE_SLOT_GOLD_2.put(5, 750);
+		CREATE_SLOT_GOLD_2.put(10, 1500);
+		CREATE_SLOT_GOLD_2.put(15, 2250);
+		CREATE_SLOT_GOLD_2.put(20, 3000);
+		CREATE_SLOT_GOLD_2.put(25, 4500);
+		CREATE_SLOT_GOLD_2.put(30, 6000);
+		CREATE_SLOT_GOLD_2.put(35, 7500);
+		CREATE_SLOT_GOLD_2.put(40, 9000);
+		CREATE_SLOT_GOLD_2.put(45, 10500);
+		CREATE_SLOT_GOLD_2.put(50, 12000);
+		CREATE_SLOT_GOLD_2.put(55, 13500);
+		CREATE_SLOT_GOLD_2.put(60, 15000);
+		HashMap<Integer, Integer> CREATE_SLOT_GOLD_3 = new HashMap<Integer, Integer>();
+		CREATE_SLOT_GOLD_3.put(5, 1000);
+		CREATE_SLOT_GOLD_3.put(10, 2000);
+		CREATE_SLOT_GOLD_3.put(15, 3000);
+		CREATE_SLOT_GOLD_3.put(20, 4000);
+		CREATE_SLOT_GOLD_3.put(25, 6000);
+		CREATE_SLOT_GOLD_3.put(30, 8000);
+		CREATE_SLOT_GOLD_3.put(35, 10000);
+		CREATE_SLOT_GOLD_3.put(40, 12000);
+		CREATE_SLOT_GOLD_3.put(45, 14000);
+		CREATE_SLOT_GOLD_3.put(50, 16000);
+		CREATE_SLOT_GOLD_3.put(55, 18000);
+		CREATE_SLOT_GOLD_3.put(60, 20000);
+		CREATE_SLOT_GOLD.put(1, CREATE_SLOT_GOLD_1);
+		CREATE_SLOT_GOLD.put(2, CREATE_SLOT_GOLD_2);
+		CREATE_SLOT_GOLD.put(3, CREATE_SLOT_GOLD_3);
+
+		EQUIP_SLOT_GOLD = new HashMap<Integer, Integer>();
+		EQUIP_SLOT_GOLD.put(5, 50);
+		EQUIP_SLOT_GOLD.put(10, 100);
+		EQUIP_SLOT_GOLD.put(15, 150);
+		EQUIP_SLOT_GOLD.put(20, 200);
+		EQUIP_SLOT_GOLD.put(25, 250);
+		EQUIP_SLOT_GOLD.put(30, 500);
+		EQUIP_SLOT_GOLD.put(35, 750);
+		EQUIP_SLOT_GOLD.put(40, 1000);
+		EQUIP_SLOT_GOLD.put(45, 1500);
+		EQUIP_SLOT_GOLD.put(50, 2000);
+		EQUIP_SLOT_GOLD.put(55, 2500);
+		EQUIP_SLOT_GOLD.put(60, 3000);
+
+		UNEQUIP_SLOT_GOLD = new HashMap<Integer, Integer>();
+		UNEQUIP_SLOT_GOLD.put(5, 250);
+		UNEQUIP_SLOT_GOLD.put(10, 500);
+		UNEQUIP_SLOT_GOLD.put(15, 1000);
+		UNEQUIP_SLOT_GOLD.put(20, 1500);
+		UNEQUIP_SLOT_GOLD.put(25, 2000);
+		UNEQUIP_SLOT_GOLD.put(30, 2500);
+		UNEQUIP_SLOT_GOLD.put(35, 3000);
+		UNEQUIP_SLOT_GOLD.put(40, 3500);
+		UNEQUIP_SLOT_GOLD.put(45, 4500);
+		UNEQUIP_SLOT_GOLD.put(50, 5500);
+		UNEQUIP_SLOT_GOLD.put(55, 6500);
+		UNEQUIP_SLOT_GOLD.put(60, 7500);
 	}
 
 	public void giveSlot(Player p, int maxlevel, int maxslots, int gold) {
@@ -227,10 +318,10 @@ public class MasonMethods {
 					if (p.hasPermission(("mason.engrave.max." + (numSlots + 1)))) {
 						int essence = ENGRAVE_ESSENCE_BASE + (ENGRAVE_ESSENCE_PER_SLOT * numSlots);
 						if (cm.hasEnough(p, "essence", level, essence)) {
-							if (econ.has(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots))) {
+							if (econ.has(p, CREATE_SLOT_GOLD.get(numSlots + 1).get(level))) {
 								masonUtils.createSlot(item, level);
 								cm.subtract(p, "essence", level, essence);
-								econ.withdrawPlayer(p, ENGRAVE_GOLD_BASE + (ENGRAVE_GOLD_PER_LVL * numSlots));
+								econ.withdrawPlayer(p, CREATE_SLOT_GOLD.get(numSlots + 1).get(level));
 								util.sendMessage(p, "&7Successfully created slot!");
 							}
 							else {
@@ -441,11 +532,11 @@ public class MasonMethods {
 				if (p.hasPermission("mason.unslot." + perm)) {
 					if (p.getInventory().firstEmpty() != -1) {
 						if (cm.hasEnough(p, "essence", slottedLevel, UNSLOT_ESSENCE)) {
-							if (econ.has(p, UNSLOT_GOLD_PER_LVL * perm)) {
+							if (econ.has(p, UNEQUIP_SLOT_GOLD.get(level))) {
 								ItemStack returned = masonUtils.parseUnslot(p, slot);
 								if (returned != null) {
 									cm.subtract(p, "essence", slottedLevel, UNSLOT_ESSENCE);
-									econ.withdrawPlayer(p, UNSLOT_GOLD_PER_LVL * perm);
+									econ.withdrawPlayer(p, UNEQUIP_SLOT_GOLD.get(level));
 									p.getInventory().addItem(returned);
 									util.sendMessage(p, "&7Successfully unslotted item!");
 								}
@@ -486,9 +577,9 @@ public class MasonMethods {
 				if (level != -1) {
 					if (p.hasPermission("mason.engrave.tier." + perm)) {
 						if (cm.hasEnough(p, "essence", level, UNENGRAVE_ESSENCE)) {
-							if (econ.has(p, UNENGRAVE_GOLD)) {
+							if (econ.has(p, REMOVE_SLOT_GOLD.get(level))) {
 								cm.subtract(p, "essence", level, UNENGRAVE_ESSENCE);
-								econ.withdrawPlayer(p, UNENGRAVE_GOLD);
+								econ.withdrawPlayer(p, REMOVE_SLOT_GOLD.get(level));
 								masonUtils.removeSlotLine(item, slot);
 								util.sendMessage(p, "&7Successfully removed slot!");
 							}

@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoProfessions.Methods;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -25,23 +27,23 @@ public class BlacksmithMethods {
 	me.neoblade298.neogear.Main neogear;
 
 	// Constants
-	final int DURABILITY_COST_PER_LVL = 4000;
 	final int DURABILITY_ESSENCE = 5;
-	final int REPAIR_COST = 2000;
 	final int REPAIR_ESSENCE = 1;
-	final int UNBREAKING_COST_PER_LVL = 5000;
-	final int PROTECTION_COST_PER_LVL = 5000;
 	final int UNBREAKING_ESSENCE_BASE = 2;
 	final int UNBREAKING_ESSENCE_PER_LVL = 4;
 	final int PROTECTION_ESSENCE_BASE = 2;
 	final int PROTECTION_ESSENCE_PER_LVL = 4;
-	final int REFORGE_COST_BASE = 1000;
-	final int REFORGE_COST_MULT = 2;
 	final int REFORGE_ESSENCE_PER_LVL = 4;
 	final int SCRAP_COST = 100;
 	final int DECONSTRUCT_COST = 250;
 	final int DECONSTRUCT_AMOUNT = 4;
 	final int LEVEL_INTERVAL = 5;
+	
+	// Prices
+	HashMap<Integer, Integer> CREATE_REPAIR_GOLD;
+	HashMap<Integer, Integer> CREATE_DURABILITY_GOLD;
+	HashMap<Integer, Integer> INCREASE_ENCHANTMENT_GOLD;
+	HashMap<Integer, Integer> REFORGE_GOLD;
 
 	public BlacksmithMethods(Main main) {
 		this.main = main;
@@ -51,6 +53,62 @@ public class BlacksmithMethods {
 		bItems = new BlacksmithItems();
 		cm = main.cManager;
 		neogear = main.neogear;
+		
+		CREATE_REPAIR_GOLD = new HashMap<Integer, Integer>();
+		CREATE_REPAIR_GOLD.put(5, 10);
+		CREATE_REPAIR_GOLD.put(10, 25);
+		CREATE_REPAIR_GOLD.put(15, 50);
+		CREATE_REPAIR_GOLD.put(20, 200);
+		CREATE_REPAIR_GOLD.put(25, 400);
+		CREATE_REPAIR_GOLD.put(30, 600);
+		CREATE_REPAIR_GOLD.put(35, 800);
+		CREATE_REPAIR_GOLD.put(40, 1000);
+		CREATE_REPAIR_GOLD.put(45, 1200);
+		CREATE_REPAIR_GOLD.put(50, 1400);
+		CREATE_REPAIR_GOLD.put(55, 1600);
+		CREATE_REPAIR_GOLD.put(60, 2000);
+		
+		CREATE_DURABILITY_GOLD = new HashMap<Integer, Integer>();
+		CREATE_DURABILITY_GOLD.put(5, 100);
+		CREATE_DURABILITY_GOLD.put(10, 250);
+		CREATE_DURABILITY_GOLD.put(15, 500);
+		CREATE_DURABILITY_GOLD.put(20, 1000);
+		CREATE_DURABILITY_GOLD.put(25, 2000);
+		CREATE_DURABILITY_GOLD.put(30, 4000);
+		CREATE_DURABILITY_GOLD.put(35, 6000);
+		CREATE_DURABILITY_GOLD.put(40, 8000);
+		CREATE_DURABILITY_GOLD.put(45, 10000);
+		CREATE_DURABILITY_GOLD.put(50, 12000);
+		CREATE_DURABILITY_GOLD.put(55, 16000);
+		CREATE_DURABILITY_GOLD.put(60, 20000);
+		
+		INCREASE_ENCHANTMENT_GOLD = new HashMap<Integer, Integer>();
+		INCREASE_ENCHANTMENT_GOLD.put(5, 100);
+		INCREASE_ENCHANTMENT_GOLD.put(10, 200);
+		INCREASE_ENCHANTMENT_GOLD.put(15, 400);
+		INCREASE_ENCHANTMENT_GOLD.put(20, 600);
+		INCREASE_ENCHANTMENT_GOLD.put(25, 800);
+		INCREASE_ENCHANTMENT_GOLD.put(30, 1000);
+		INCREASE_ENCHANTMENT_GOLD.put(35, 1500);
+		INCREASE_ENCHANTMENT_GOLD.put(40, 2000);
+		INCREASE_ENCHANTMENT_GOLD.put(45, 2500);
+		INCREASE_ENCHANTMENT_GOLD.put(50, 3000);
+		INCREASE_ENCHANTMENT_GOLD.put(55, 4000);
+		INCREASE_ENCHANTMENT_GOLD.put(60, 5000);
+		
+		REFORGE_GOLD = new HashMap<Integer, Integer>();
+		REFORGE_GOLD.put(5, 250);
+		REFORGE_GOLD.put(10, 500);
+		REFORGE_GOLD.put(15, 1000);
+		REFORGE_GOLD.put(20, 2000);
+		REFORGE_GOLD.put(25, 4000);
+		REFORGE_GOLD.put(30, 6000);
+		REFORGE_GOLD.put(35, 8000);
+		REFORGE_GOLD.put(40, 10000);
+		REFORGE_GOLD.put(45, 12000);
+		REFORGE_GOLD.put(50, 16000);
+		REFORGE_GOLD.put(55, 24000);
+		REFORGE_GOLD.put(60, 32000);
 	}
 
 	public void createDurabilityItem(Player p, String item, String itemtype, int level) {
@@ -61,10 +119,10 @@ public class BlacksmithMethods {
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + itemtype + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, DURABILITY_ESSENCE)) {
-					if (main.getEconomy().has(p, DURABILITY_COST_PER_LVL * perm)) {
+					if (main.getEconomy().has(p, CREATE_DURABILITY_GOLD.get(level))) {
 						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
 						cm.subtract(p, "essence", level, DURABILITY_ESSENCE);
-						econ.withdrawPlayer(p, DURABILITY_COST_PER_LVL * perm);
+						econ.withdrawPlayer(p, CREATE_DURABILITY_GOLD.get(level));
 						util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
 					}
 					else {
@@ -90,10 +148,10 @@ public class BlacksmithMethods {
 		if (slot != -1) {
 			if (perm <= 0 || p.hasPermission("blacksmith." + item + "." + perm)) {
 				if (cm.hasEnough(p, "essence", level, REPAIR_ESSENCE)) {
-					if (econ.has(p, REPAIR_COST)) {
+					if (econ.has(p, CREATE_REPAIR_GOLD.get(level))) {
 						p.getInventory().addItem(util.setAmount(bItems.getRepairItem(level), 2));
 						cm.subtract(p, "essence", level, REPAIR_ESSENCE);
-						econ.withdrawPlayer(p, REPAIR_COST);
+						econ.withdrawPlayer(p, CREATE_REPAIR_GOLD.get(level));
 						util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
 					}
 					else {
@@ -126,11 +184,11 @@ public class BlacksmithMethods {
 						if (itemLevel != -1) {
 							if (cm.hasEnough(p, "essence", itemLevel,
 									(UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE)) {
-								if (econ.has(p, UNBREAKING_COST_PER_LVL * enchLevel)) {
+								if (econ.has(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.DURABILITY, upgradeLevel);
 									cm.subtract(p, "essence", itemLevel,
 											(UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE);
-									econ.withdrawPlayer(p, UNBREAKING_COST_PER_LVL * enchLevel);
+									econ.withdrawPlayer(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel);
 									util.sendMessage(p,
 											"&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
@@ -176,11 +234,11 @@ public class BlacksmithMethods {
 						if (itemLevel != -1) {
 							if (cm.hasEnough(p, "essence", itemLevel,
 									(PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE)) {
-								if (econ.has(p, PROTECTION_COST_PER_LVL * enchLevel)) {
+								if (econ.has(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel)) {
 									item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
 									cm.subtract(p, "essence", itemLevel,
 											(PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE);
-									econ.withdrawPlayer(p, PROTECTION_COST_PER_LVL * enchLevel);
+									econ.withdrawPlayer(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel);
 									util.sendMessage(p,
 											"&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
@@ -255,10 +313,10 @@ public class BlacksmithMethods {
 					if (perm <= 0 || p.hasPermission("blacksmith.reforge." + perm)) {
 						if (!rarity.equalsIgnoreCase("Artifact")) {
 							if (cm.hasEnough(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm)) {
-								if (econ.has(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm))) {
+								if (econ.has(p, REFORGE_GOLD.get(itemLevel))) {
 									cm.subtract(p, "essence", itemLevel, REFORGE_ESSENCE_PER_LVL * perm);
 									p.getInventory().removeItem(item);
-									econ.withdrawPlayer(p, REFORGE_COST_BASE * Math.pow(REFORGE_COST_MULT, perm));
+									econ.withdrawPlayer(p, REFORGE_GOLD.get(itemLevel));
 									p.getInventory().addItem(
 											neogear.settings.get(type).get(itemLevel).generateItem(rarity, itemLevel));
 									util.sendMessage(p, "&7Successfully reforged item!");
