@@ -173,7 +173,7 @@ public class StonecutterMethods {
 		if (perm < 0) perm = 0;
 		if (perm <= 1 || p.hasPermission("stonecutter.refine.tier." + perm)) {
 			if (level >= 5 && level <= 60) {
-				if (econ.has(p, REFINE_GOLD.get(level))) {
+				if (econ.has(p, REFINE_GOLD.get(oldLevel))) {
 					// Check if enough essence
 					if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
 						cm.subtract(p, type, oldLevel, cost * amount);
