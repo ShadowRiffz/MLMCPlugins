@@ -3,6 +3,7 @@ package me.neoblade298.neomythicextension.mechanics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -44,6 +45,10 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
         this.basicchance = basechance * basicmult;
         this.advancedchance = basechance * advancedmult;
         this.rand = new Random();
+        
+        if (this.item == null) {
+        	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Item doesn't exist: " + itemString);
+        }
 	}
 	
 	@Override
