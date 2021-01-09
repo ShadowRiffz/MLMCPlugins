@@ -50,20 +50,6 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 
-		// Damage simulator to spare armor durability
-		if ((e.getDamage() > 20.0D) && (e.getCause() != EntityDamageEvent.DamageCause.MAGIC)
-				&& (e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) && (e.getEntity() instanceof Player)
-				&& (!(e.getDamager() instanceof Player)) && (!e.isCancelled())) {
-			Player player = (Player) e.getEntity();
-
-			double oldDamage = e.getDamage();
-			e.setCancelled(true);
-			player.damage(oldDamage);
-			EntityDamageEvent newDamage = new EntityDamageByEntityEvent(e.getDamager(), e.getEntity(),
-					EntityDamageEvent.DamageCause.MAGIC, oldDamage);
-			Bukkit.getPluginManager().callEvent(newDamage);
-		}
-
 		// Lowers durability of damager
 		if (((cause instanceof Player)) && (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
 				&& (!e.isCancelled()) && (!FlagManager.hasFlag((LivingEntity) cause, "WeaponDur"))) {
@@ -284,6 +270,10 @@ public class Main extends JavaPlugin implements Listener {
 					String[] numbers = end.split("/");
 					double d = Integer.parseInt(numbers[0].trim());
 					double dM = Integer.parseInt(numbers[1].trim());
+					
+					if (d == 25 && player.hasPermission("donator.warndurability")) {
+						player.sendMessage("&4[&c&lMLMC&4] §4WARNING: Your item, " + item.getItemMeta().getDisplayName() + "§4, is at 25 durability!");
+					}
 
 					d -= 1;
 					if (d <= 0) {
