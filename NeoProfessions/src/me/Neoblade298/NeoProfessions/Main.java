@@ -157,7 +157,7 @@ public class Main extends JavaPlugin implements Listener {
 								String charmLine = null;
 								if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 									for (String line : item.getItemMeta().getLore()) {
-										if (line.contains("Hunger")) {
+										if (line.contains("Hunger Charm")) {
 											charmLine = line;
 											break;
 										}
