@@ -50,6 +50,20 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 
+		// Damage simulator to spare armor durability
+		if ((e.getDamage() > 20.0D) && (e.getCause() != EntityDamageEvent.DamageCause.MAGIC)
+				&& (e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) && (e.getEntity() instanceof Player)
+				&& (!(e.getDamager() instanceof Player)) && (!e.isCancelled())) {
+			Player player = (Player) e.getEntity();
+
+			double oldDamage = e.getDamage();
+			e.setCancelled(true);
+			player.damage(oldDamage);
+			EntityDamageEvent newDamage = new EntityDamageByEntityEvent(e.getDamager(), e.getEntity(),
+					EntityDamageEvent.DamageCause.MAGIC, oldDamage);
+			Bukkit.getPluginManager().callEvent(newDamage);
+		}
+
 		// Lowers durability of damager
 		if (((cause instanceof Player)) && (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
 				&& (!e.isCancelled()) && (!FlagManager.hasFlag((LivingEntity) cause, "WeaponDur"))) {
@@ -240,6 +254,7 @@ public class Main extends JavaPlugin implements Listener {
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasEnchant(Enchantment.DURABILITY))) {
 			Random rand = new Random();
 			double ench = item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
+			if (ench >= 6) ench = 6;
 			double chance = rand.nextDouble();
 			if (chance - (ench * 0.05) <= 0) {
 				return;
