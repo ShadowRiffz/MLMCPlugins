@@ -230,6 +230,7 @@ public class Main extends JavaPlugin implements Listener {
 							boss = rs.getString(2);
 	    					if (boss != null) {
 	    						p.teleport(bossInfo.get(boss).getCoords());
+    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 	    						if (!activeFights.containsKey(boss)) {
 	    							ArrayList<Player> players = new ArrayList<Player>();
 	    							players.add(p);
@@ -267,12 +268,9 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss) && p.isOnline()) {
-	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ", spawned boss.");
+	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 	    		    							activeBosses.add(boss);
 	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-	    		    						}
-	    		    						else if (p.isOnline()) {
-	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 	    		    						}
 	    				    			}
 	    				    		};
