@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -344,11 +345,11 @@ public class CulinarianListeners implements Listener {
 			return;
 		}
 
-		String id = item.getItemMeta().getLore().get(0);
+		String id = ChatColor.stripColor(item.getItemMeta().getLore().get(0));
 		Player p = e.getPlayer();
 		boolean canGetAttrs = p.getWorld().getName().equalsIgnoreCase("Argyll")
 				|| p.getWorld().getName().equalsIgnoreCase("ClassPVP");
-		if (id.contains("Drink 1")) {
+		if (id.equals("Drink 1")) {
 			int drunk = 27 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -362,7 +363,7 @@ public class CulinarianListeners implements Listener {
 			}
 
 		}
-		else if (id.contains("Drink 2")) {
+		else if (id.equals("Drink 2")) {
 			int drunk = 22 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -376,7 +377,7 @@ public class CulinarianListeners implements Listener {
 			}
 
 		}
-		else if (id.contains("Drink 3")) {
+		else if (id.equals("Drink 3")) {
 			int drunk = 17 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -390,7 +391,7 @@ public class CulinarianListeners implements Listener {
 			}
 
 		}
-		else if (id.contains("Drink 4")) {
+		else if (id.equals("Drink 4")) {
 			int drunk = 17 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -403,7 +404,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.04, "Vitality", 100);
 			}
 		}
-		else if (id.contains("Drink 5")) {
+		else if (id.equals("Drink 5")) {
 			int drunk = 27 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -417,7 +418,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, -0.04, "Strength", 100);
 			}
 		}
-		else if (id.contains("Drink 6")) {
+		else if (id.equals("Drink 6")) {
 			int drunk = 17 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -431,7 +432,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, -0.04, "Endurance", 80);
 			}
 		}
-		else if (id.contains("Drink 7")) {
+		else if (id.equals("Drink 7")) {
 			int drunk = 30 + gen.nextInt(31);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -444,7 +445,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.05, "Intelligence", 100);
 			}
 		}
-		else if (id.contains("Drink 8")) {
+		else if (id.equals("Drink 8")) {
 			int drunk = 12 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -457,7 +458,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.04, "Perception", 100);
 			}
 		}
-		else if (id.contains("Drink 9")) {
+		else if (id.equals("Drink 9")) {
 			int drunk = 35 + gen.nextInt(10);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -470,7 +471,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.07, "Dexterity", 90);
 			}
 		}
-		else if (id.contains("Drink 10")) {
+		else if (id.equals("Drink 10")) {
 			int drunk = 35 + gen.nextInt(10);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -483,7 +484,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.05, "Strength", 90);
 			}
 		}
-		else if (id.contains("Drink 11")) {
+		else if (id.equals("Drink 11")) {
 			int drunk = 27 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -496,7 +497,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.05, "Intelligence", 90);
 			}
 		}
-		else if (id.contains("Drink 12")) {
+		else if (id.equals("Drink 12")) {
 			int drunk = 12 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -510,7 +511,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, -0.04, "Spirit", 90);
 			}
 		}
-		else if (id.contains("Drink 13")) {
+		else if (id.equals("Drink 13")) {
 			int drunk = 27 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -523,7 +524,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.055, "Spirit", 90);
 			}
 		}
-		else if (id.contains("Drink 14")) {
+		else if (id.equals("Drink 14")) {
 			int drunk = 40 + gen.nextInt(9);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -536,7 +537,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.05, "Endurance", 60);
 			}
 		}
-		else if (id.contains("Drink 15")) {
+		else if (id.equals("Drink 15")) {
 			int drunk = 35 + gen.nextInt(10);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -549,7 +550,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.06, "Intelligence", 60);
 			}
 		}
-		else if (id.contains("Drink 16")) {
+		else if (id.equals("Drink 16")) {
 			int drunk = 27 + gen.nextInt(7);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -562,7 +563,7 @@ public class CulinarianListeners implements Listener {
 				addStat(p, 0.06, "Strength", 60);
 			}
 		}
-		else if (id.contains("Ingredient 22")) {
+		else if (id.equals("Ingredient 22")) {
 			int drunk = 22 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -572,7 +573,7 @@ public class CulinarianListeners implements Listener {
 			}
 			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 		}
-		else if (id.contains("Ingredient 23")) {
+		else if (id.equals("Ingredient 23")) {
 			int drunk = 22 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
@@ -582,7 +583,7 @@ public class CulinarianListeners implements Listener {
 			}
 			culinarianUtils.checkAlcoholUp(p, drunkness.get(p), drunkness);
 		}
-		else if (id.contains("Ingredient 24")) {
+		else if (id.equals("Ingredient 24")) {
 			int drunk = 22 + gen.nextInt(6);
 			if (drunkness.containsKey(p)) {
 				drunkness.put(p, drunkness.get(p) + drunk);
