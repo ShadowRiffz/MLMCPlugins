@@ -178,7 +178,7 @@ public class BlacksmithMethods {
 				int enchLevel = item.getEnchantments().get(Enchantment.DURABILITY);
 				int upgradeLevel = enchLevel + 1;
 				int itemLevel = util.getItemLevel(item);
-				if (enchLevel <= 6) {
+				if (enchLevel <= 5) {
 					if ((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.unbreaking.3"))
 							|| (enchLevel > 3 && p.hasPermission("blacksmith.upgrade.unbreaking." + enchLevel))) {
 						if (itemLevel != -1) {
@@ -228,7 +228,7 @@ public class BlacksmithMethods {
 				int enchLevel = item.getEnchantments().get(Enchantment.PROTECTION_ENVIRONMENTAL);
 				int upgradeLevel = enchLevel + 1;
 				int itemLevel = util.getItemLevel(item);
-				if (enchLevel <= 6) {
+				if (enchLevel <= 5) {
 					if ((enchLevel <= 3 && p.hasPermission("blacksmith.upgrade.protection.3"))
 							|| (enchLevel > 3 && p.hasPermission("blacksmith.upgrade.protection." + enchLevel))) {
 						if (itemLevel != -1) {
