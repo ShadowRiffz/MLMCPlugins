@@ -41,7 +41,7 @@ public class Handler implements CommandExecutor {
 		}
 		if ((cmd.getName().equals("disenchant")) && (!itemInHand.getEnchantments().isEmpty())
 				&& (itemInHand.getType() != Material.BOOK)) {
-			if (isQuestGear(itemInHand)) {
+			if (!isQuestGear(itemInHand)) {
 				if (player.hasPermission("disenchant.true")) {
 					if (player.getLevel() < this.levelCost) {
 						player.sendMessage(
