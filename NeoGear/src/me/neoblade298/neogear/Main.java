@@ -496,8 +496,6 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					return;
 				}
 			}
-			
-			// Disable swapping with existing armor
 		}
 	}
 	
