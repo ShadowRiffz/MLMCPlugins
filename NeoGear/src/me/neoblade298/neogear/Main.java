@@ -383,10 +383,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		// Only consider changing worlds
 		if (!from.equals(to)) {
-			if (!to.equals("Argyll") && !to.equals("ClassPVP") && !to.equals("Dev")) {
+			if (!to.equals("Argyll") && !to.equals("ClassPVP")) {
 				PlayerInventory inv = p.getInventory();
 				ItemStack[] armor = inv.getArmorContents();
-				for (int i = 0; i <3; i++) {
+				for (int i = 0; i <= 3; i++) {
 					if (armor[i] != null && isQuestGear(armor[i])) {
 						if (inv.firstEmpty() != -1) {
 							inv.addItem(armor[i]);
@@ -399,6 +399,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 					}
 				}
+				inv.setArmorContents(armor);
 			}
 		}
 	}
@@ -408,7 +409,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
 		String world = p.getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
 			if (isQuestGear(item)) {
 				e.setCancelled(true);
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
@@ -418,14 +419,17 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player) {
-			Player p = (Player) e.getDamager();
-			ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
-			for (ItemStack item : weapons) {
-				if (isQuestGear(item)) {
-					e.setCancelled(true);
-					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
-					break;
+		String world = e.getEntity().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+			if (e.getDamager() instanceof Player) {
+				Player p = (Player) e.getDamager();
+				ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
+				for (ItemStack item : weapons) {
+					if (isQuestGear(item)) {
+						e.setCancelled(true);
+						p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+						break;
+					}
 				}
 			}
 		}
@@ -433,12 +437,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onShoot(EntityShootBowEvent e) {
-		if (e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			ItemStack item = e.getBow();
-			if (isQuestGear(item)) {
-				e.setCancelled(true);
-				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+		String world = e.getEntity().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+			if (e.getEntity() instanceof Player) {
+				Player p = (Player) e.getEntity();
+				ItemStack item = e.getBow();
+				if (isQuestGear(item)) {
+					e.setCancelled(true);
+					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+				}
 			}
 		}
 	}
@@ -446,7 +453,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
 			PlayerInventory inv = (PlayerInventory) e.getView().getBottomInventory();
 			InventoryAction action = e.getAction();
 			
@@ -506,7 +513,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
 			if (e.getInventorySlots().size() == 1) {
 				for (Integer i : e.getInventorySlots()) {
 					if (i >= 36 && i <= 39) {
