@@ -19,6 +19,11 @@ public class Handler implements CommandExecutor {
 		this.config = config;
 	}
 
+	public boolean isQuestGear(ItemStack item) {
+		return item.hasItemMeta() && item.getItemMeta().hasLore()
+				&& item.getItemMeta().getLore().get(0).contains("Tier");
+	}
+
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = (Player) sender;
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
@@ -36,31 +41,39 @@ public class Handler implements CommandExecutor {
 		}
 		if ((cmd.getName().equals("disenchant")) && (!itemInHand.getEnchantments().isEmpty())
 				&& (itemInHand.getType() != Material.BOOK)) {
-			if (player.hasPermission("disenchant.true")) {
-				if (player.getLevel() < this.levelCost) {
-					player.sendMessage(
-							"§3[Disenchant]§f You don't have enough levels for this, you need " + this.levelCost);
-				} else {
-					ItemStack withoutEnchant = new ItemStack(player.getInventory().getItemInMainHand().getType(), 1);
-
-					Map<Enchantment, Integer> enchantments = itemInHand.getEnchantments();
-					player.getInventory().removeItem(new ItemStack[] { itemInHand });
-
-					player.setLevel(player.getLevel() - this.levelCost);
-					for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-						ItemStack enchantBook = new ItemStack(Material.ENCHANTED_BOOK, 1);
-						Enchantment enchant = (Enchantment) entry.getKey();
-						int level = ((Integer) entry.getValue()).intValue();
-
-						player.getInventory()
-								.addItem(new ItemStack[] { addBookEnchantment(enchantBook, enchant, level) });
+			if (isQuestGear(itemInHand)) {
+				if (player.hasPermission("disenchant.true")) {
+					if (player.getLevel() < this.levelCost) {
+						player.sendMessage(
+								"§3[Disenchant]§f You don't have enough levels for this, you need " + this.levelCost);
 					}
-					player.sendMessage("§3[Disenchant]§f Your item has been disenchanted!");
-					withoutEnchant.setDurability(durability);
-					player.getInventory().addItem(new ItemStack[] { withoutEnchant });
+					else {
+						ItemStack withoutEnchant = new ItemStack(player.getInventory().getItemInMainHand().getType(),
+								1);
+
+						Map<Enchantment, Integer> enchantments = itemInHand.getEnchantments();
+						player.getInventory().removeItem(new ItemStack[] { itemInHand });
+
+						player.setLevel(player.getLevel() - this.levelCost);
+						for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+							ItemStack enchantBook = new ItemStack(Material.ENCHANTED_BOOK, 1);
+							Enchantment enchant = (Enchantment) entry.getKey();
+							int level = ((Integer) entry.getValue()).intValue();
+
+							player.getInventory()
+									.addItem(new ItemStack[] { addBookEnchantment(enchantBook, enchant, level) });
+						}
+						player.sendMessage("§3[Disenchant]§f Your item has been disenchanted!");
+						withoutEnchant.setDurability(durability);
+						player.getInventory().addItem(new ItemStack[] { withoutEnchant });
+					}
 				}
-			} else {
-				player.sendMessage("§3[Disenchant]§f You do not have the correct permissions for this");
+				else {
+					player.sendMessage("§3[Disenchant]§f You do not have the correct permissions for this");
+				}
+			}
+			else {
+				player.sendMessage("§3[Disenchant]§f You cannot disenchant quest gear");
 			}
 			return true;
 		}
