@@ -10,9 +10,20 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.PrepareSmithingEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -356,14 +367,166 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		for (int i = 0; i < j; i++) {
 			ItemStack item = arrayOfItemStack[i];
 			if (item != null) {
-				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-					for (String line : item.getItemMeta().getLore())
-					if (line.contains("Tier")) {
-						e.setResult(null);
+				if (isQuestGear(item)) {
+					e.setResult(null);
+					return;
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onChangeWorlds(PlayerTeleportEvent e) {
+		Player p = e.getPlayer();
+		String from = e.getFrom().getWorld().getName();
+		String to = e.getTo().getWorld().getName();
+		
+		// Only consider changing worlds
+		if (!from.equals(to)) {
+			if (!to.equals("Argyll") && !to.equals("ClassPVP") && !to.equals("Dev")) {
+				PlayerInventory inv = p.getInventory();
+				ItemStack[] armor = inv.getArmorContents();
+				for (int i = 0; i <3; i++) {
+					if (armor[i] != null && isQuestGear(armor[i])) {
+						if (inv.firstEmpty() != -1) {
+							inv.addItem(armor[i]);
+							armor[i] = null;
+						}
+						else {
+							e.setCancelled(true);
+							p.sendMessage("§c[§4§lMLMC§4] §cYou must take off your quest armor before changing worlds!");
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		ItemStack item = e.getItem();
+		String world = p.getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			if (isQuestGear(item)) {
+				e.setCancelled(true);
+				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if (e.getDamager() instanceof Player) {
+			Player p = (Player) e.getDamager();
+			ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
+			for (ItemStack item : weapons) {
+				if (isQuestGear(item)) {
+					e.setCancelled(true);
+					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+					break;
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onShoot(EntityShootBowEvent e) {
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			ItemStack item = e.getBow();
+			if (isQuestGear(item)) {
+				e.setCancelled(true);
+				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		String world = e.getView().getPlayer().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			PlayerInventory inv = (PlayerInventory) e.getView().getBottomInventory();
+			InventoryAction action = e.getAction();
+			
+			// Disable shift clicking armor
+			if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && e.isShiftClick()) {
+				ItemStack item = e.getCurrentItem();
+				if (item.getType().toString().endsWith("HELMET")) {
+					if (inv.getContents()[39] == null && isQuestGear(item)) {
+						e.setCancelled(true);
+						return;
+					}
+				}
+				else if (item.getType().toString().endsWith("CHESTPLATE")) {
+					if (inv.getContents()[38] == null && isQuestGear(item)) {
+						e.setCancelled(true);
+						return;
+					}
+				}
+				else if (item.getType().toString().endsWith("LEGGINGS")) {
+					if (inv.getContents()[37] == null && isQuestGear(item)) {
+						e.setCancelled(true);
+						return;
+					}
+				}
+				else if (item.getType().toString().endsWith("BOOTS")) {
+					if (inv.getContents()[36] == null && isQuestGear(item)) {
+						e.setCancelled(true);
 						return;
 					}
 				}
 			}
+			
+			// Disable hotbar keying armor
+			else if (action.equals(InventoryAction.HOTBAR_SWAP) && e.getSlot() >= 36 && e.getSlot() <= 39) {
+				ItemStack item = inv.getContents()[e.getHotbarButton()];
+				if (isQuestGear(item)) {
+					e.setCancelled(true);
+					return;
+				}
+			}
+			
+			// Disable dropping armor
+			else if (action.equals(InventoryAction.PLACE_ALL) || action.equals(InventoryAction.PLACE_ONE) ||
+					action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
+				if (e.getSlotType().equals(SlotType.ARMOR) && isQuestGear(e.getCursor())) {
+					e.setCancelled(true);
+					return;
+				}
+			}
+			
+			// Disable swapping with existing armor
+		}
+	}
+	
+	public boolean isQuestGear(ItemStack item) {
+		return item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier");
+	}
+	
+	@EventHandler
+	public void onInventoryDrag(InventoryDragEvent e) {
+		String world = e.getView().getPlayer().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			if (e.getInventorySlots().size() == 1) {
+				for (Integer i : e.getInventorySlots()) {
+					if (i >= 36 && i <= 39) {
+						if (isQuestGear(e.getOldCursor())) {
+							e.setCancelled(true);
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onSmith(PrepareSmithingEvent e) {
+		ItemStack result = e.getResult();
+		if (isQuestGear(result)) {
+			result = null;
 		}
 	}
 	
