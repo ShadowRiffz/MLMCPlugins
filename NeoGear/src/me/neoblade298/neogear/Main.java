@@ -12,18 +12,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -409,8 +411,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
 		String world = p.getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
-			if (isQuestGear(item)) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			if (item != null && isQuestGear(item)) {
 				e.setCancelled(true);
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 			}
@@ -420,7 +422,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent e) {
 		String world = e.getEntity().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (e.getDamager() instanceof Player) {
 				Player p = (Player) e.getDamager();
 				ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
@@ -438,7 +440,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onShoot(EntityShootBowEvent e) {
 		String world = e.getEntity().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (e.getEntity() instanceof Player) {
 				Player p = (Player) e.getEntity();
 				ItemStack item = e.getBow();
@@ -453,12 +455,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			PlayerInventory inv = (PlayerInventory) e.getView().getBottomInventory();
 			InventoryAction action = e.getAction();
 			
 			// Disable shift clicking armor
-			if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && e.isShiftClick()) {
+			if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && e.isShiftClick() && e.getView().getType().equals(InventoryType.CRAFTING)) {
 				ItemStack item = e.getCurrentItem();
 				if (item.getType().toString().endsWith("HELMET")) {
 					if (inv.getContents()[39] == null && isQuestGear(item)) {
@@ -504,16 +506,25 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		}
+		
+		// Disable netheriting quest gear
+		if (e.getView().getTopInventory().getType().equals(InventoryType.SMITHING)) {
+			SmithingInventory smith = (SmithingInventory) e.getView().getTopInventory();
+			if (isQuestGear(smith.getContents()[0]) && e.getSlot() == 2) {
+				e.setCancelled(true);
+				e.getView().getPlayer().sendMessage("§c[§4§lMLMC§4] §cYou cannot apply netherite to quest gear!");
+			}
+		}
 	}
 	
 	public boolean isQuestGear(ItemStack item) {
-		return item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier");
+		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier");
 	}
 	
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP")) {
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (e.getInventorySlots().size() == 1) {
 				for (Integer i : e.getInventorySlots()) {
 					if (i >= 36 && i <= 39) {
@@ -528,12 +539,19 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	@EventHandler
-	public void onSmith(PrepareSmithingEvent e) {
-		ItemStack result = e.getResult();
-		if (isQuestGear(result)) {
-			result = null;
+	public void onDispenseArmor(BlockDispenseArmorEvent e) {
+		String world = e.getBlock().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			if (e.getTargetEntity() instanceof Player) {
+				if (isQuestGear(e.getItem())) {
+					e.setCancelled(true);
+					e.getTargetEntity().sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+				}
+			}
 		}
 	}
+	
+	@EventHandler
 	
 	public Economy getEcon() {
 		return econ;

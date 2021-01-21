@@ -72,13 +72,13 @@ public class MasonMethods {
 	static final int ADVANCED_QUICKEAT_GOLD = 18000;
 	static final int ADVANCED_QUICKEAT_ESSENCE = 18;
 	static final int ADVANCED_QUICKEAT_LEVEL = 40;
-	
+
 	// Prices
 	HashMap<Integer, Integer> REMOVE_SLOT_GOLD;
 	HashMap<Integer, HashMap<Integer, Integer>> CREATE_SLOT_GOLD;
 	HashMap<Integer, Integer> EQUIP_SLOT_GOLD;
 	HashMap<Integer, Integer> UNEQUIP_SLOT_GOLD;
-	
+
 	public MasonMethods(Main main) {
 		this.main = main;
 		this.econ = main.getEconomy();
@@ -88,7 +88,7 @@ public class MasonMethods {
 		common = new CommonItems();
 		util = new Util();
 		cm = main.cManager;
-		
+
 		// Set prices
 		REMOVE_SLOT_GOLD = new HashMap<Integer, Integer>();
 		REMOVE_SLOT_GOLD.put(5, 50);
@@ -103,7 +103,7 @@ public class MasonMethods {
 		REMOVE_SLOT_GOLD.put(50, 1600);
 		REMOVE_SLOT_GOLD.put(55, 1800);
 		REMOVE_SLOT_GOLD.put(60, 2000);
-		
+
 		CREATE_SLOT_GOLD = new HashMap<Integer, HashMap<Integer, Integer>>();
 		HashMap<Integer, Integer> CREATE_SLOT_GOLD_1 = new HashMap<Integer, Integer>();
 		CREATE_SLOT_GOLD_1.put(5, 500);
@@ -213,78 +213,70 @@ public class MasonMethods {
 			if (!itemToSlot.getType().equals(Material.AIR)) {
 				if (masonUtils.isSlotAvailable(itemWithSlot, slot)) {
 					int slotLevel = masonUtils.getSlotLevel(slot, itemWithSlot);
-
 					String slotType = masonUtils.slotType(itemToSlot);
 					if (slotType != null) {
-						if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel
-								|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
-										&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)) {
-							int level = util.getItemLevel(itemWithSlot);
-							if (level <= maxlevel) {
-								if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel
-										|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
-												&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)
-										|| (itemToSlot.getType().equals(Material.QUARTZ))
-												&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
-									if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
-											|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
-											|| !(slotType.equalsIgnoreCase("aattribute")
-													|| slotType.equalsIgnoreCase("wattribute"))) {
-										if (econ.has(p, gold)) {
-											boolean success = false;
-											switch (slotType) {
-											case "durability":
-												success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
-												break;
-											case "wattribute":
-												success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-												break;
-											case "aattribute":
-												success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
-												break;
-											case "overload":
-												success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
-												break;
-											case "charm":
-												success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
-												break;
-											case "relic":
-												if (!masonUtils.hasRelic(itemWithSlot)) {
-													success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
-												}
-												else {
-													util.sendMessage(p, "&cOnly one relic may be slotted per item!");
-												}
-												break;
-											}
-											if (success) {
-												itemToSlot.setAmount(itemToSlot.getAmount() - 1);
-												econ.withdrawPlayer(p, gold);
-												util.sendMessage(p, "&7Successfully slotted item!");
+						int level = util.getItemLevel(itemWithSlot);
+						if (level <= maxlevel) {
+							if (masonUtils.getAugmentLevel(itemToSlot) == slotLevel
+									|| (itemToSlot.getType().equals(Material.PRISMARINE_CRYSTALS)
+											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)
+									|| (itemToSlot.getType().equals(Material.QUARTZ))
+											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
+								if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
+										|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
+										|| !(slotType.equalsIgnoreCase("aattribute")
+												|| slotType.equalsIgnoreCase("wattribute"))) {
+									if (econ.has(p, gold)) {
+										boolean success = false;
+										switch (slotType) {
+										case "durability":
+											success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
+											break;
+										case "wattribute":
+											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+											break;
+										case "aattribute":
+											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
+											break;
+										case "overload":
+											success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+											break;
+										case "charm":
+											success = masonUtils.parseCharm(p, itemWithSlot, itemToSlot, slot);
+											break;
+										case "relic":
+											if (!masonUtils.hasRelic(itemWithSlot)) {
+												success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 											}
 											else {
-												util.sendMessage(p, "&cFailed to slot item!");
+												util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 											}
+											break;
+										}
+										if (success) {
+											itemToSlot.setAmount(itemToSlot.getAmount() - 1);
+											econ.withdrawPlayer(p, gold);
+											util.sendMessage(p, "&7Successfully slotted item!");
 										}
 										else {
-											util.sendMessage(p, "&cYou lack the gold to do this!");
+											util.sendMessage(p, "&cFailed to slot item!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cThis augment is incompatible with this item type!");
+										util.sendMessage(p, "&cYou lack the gold to do this!");
 									}
 								}
 								else {
-									util.sendMessage(p,
-											"&cThis item must be the same level as this slot (or be a charm/relic)!");
+									util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cThis item is too high level!");
+								util.sendMessage(p,
+										"&cThis item must be the same level as this slot (or be a charm/relic)!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis item must be the same level as this slot (or be a charm)!");
+							util.sendMessage(p, "&cThis item is too high level!");
 						}
 					}
 					else {
@@ -488,7 +480,8 @@ public class MasonMethods {
 				if (util.isArmor(item)) {
 					int level = util.getItemLevel(item);
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-					if (perm < 1) perm = 1;
+					if (perm < 1)
+						perm = 1;
 					if (p.hasPermission("mason.slot.armor." + perm)) {
 						listeners.prepItemSlot(p, item, slot);
 					}
@@ -499,7 +492,8 @@ public class MasonMethods {
 				else if (util.isWeapon(item)) {
 					int level = util.getItemLevel(item);
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
-					if (perm < 1) perm = 1;
+					if (perm < 1)
+						perm = 1;
 					if (p.hasPermission("mason.slot.weapon." + perm)) {
 						listeners.prepItemSlot(p, item, slot);
 					}
