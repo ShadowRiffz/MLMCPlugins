@@ -165,6 +165,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	
 	public boolean checkPlayerInactive(Resident res) {
+		if (res == null) return true;
 		long threshold = res.getLastOnline() + 2592000000L;
 		return System.currentTimeMillis() > threshold;
 	}

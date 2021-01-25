@@ -22,6 +22,12 @@ public class Commands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		Player p = (Player) sender;
+		if (args.length == 0) {
+			p.sendMessage("/tdelete sweep - Sweeps all towns");
+			p.sendMessage("/tdelete list - Sees all towns deletable");
+			p.sendMessage("/tdelete debug - Toggles debug");
+			p.sendMessage("/tdelete check - Checks reason for a town's deletability");
+		}
 		if (args.length == 1 && args[0].equalsIgnoreCase("sweep") && p.hasPermission("tdeleter.admin")) {
 			main.sweepTowns();
 			if (this.main.deletableTowns.size() > 0) {
