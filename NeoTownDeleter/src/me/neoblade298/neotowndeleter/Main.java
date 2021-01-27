@@ -2,6 +2,7 @@ package me.neoblade298.neotowndeleter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -44,29 +45,35 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	// Automatic version (Not a command)
 	public boolean checkTownInactive(Town town) {
-		// 1. Check mayor inactivity
-		if (checkPlayerInactive(town.getMayor())) {
-			// 2. Check less than 100 residents
-			if (town.getNumResidents() < 100) {
-				// 3. Check less than 1000 claimed plots
-				if (town.getTownBlocks().size() < 1000) {
-					// 4. Check if owned by NPC
-					if (!town.getMayor().isNPC()) {
-						// 5. Check if all residents of rank assistant, advisor are inactive
-						List<Resident> residents = town.getResidents();
-						for (Resident res : residents) {
-							List<String> ranks = res.getTownRanks();
-							if (ranks.contains("assistant") ||
-								ranks.contains("advisor")) {
-								if (!checkPlayerInactive(res)) {
-									return false;
+		try {
+			// 1. Check mayor inactivity
+			if (checkPlayerInactive(town.getMayor())) {
+				// 2. Check less than 100 residents
+				if (town.getNumResidents() < 100) {
+					// 3. Check less than 1000 claimed plots
+					if (town.getTownBlocks().size() < 1000) {
+						// 4. Check if owned by NPC
+						if (town.hasMayor() && !town.getMayor().isNPC()) {
+							// 5. Check if all residents of rank assistant, advisor are inactive
+							List<Resident> residents = town.getResidents();
+							for (Resident res : residents) {
+								List<String> ranks = res.getTownRanks();
+								if (ranks.contains("assistant") ||
+									ranks.contains("advisor")) {
+									if (!checkPlayerInactive(res)) {
+										return false;
+									}
 								}
 							}
+							return true;
 						}
-						return true;
 					}
 				}
 			}
+		}
+		catch (Exception e) {
+			getServer().getLogger().log(Level.WARNING, "[NeoTownDeleter] Could not check if town: " + town.getName() + " was inactive.");
+			return false;
 		}
 		return false;
 	}
