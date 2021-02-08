@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,6 +68,9 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 					continue;
 				}
 				if (!item.getItemMeta().hasLore()) {
+					continue;
+				}
+				if (item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
 					continue;
 				}
 				
