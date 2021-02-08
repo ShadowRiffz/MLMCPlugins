@@ -291,8 +291,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			else {
+				if (args[0].equalsIgnoreCase("debug")) {
+					main.debug = !main.debug;
+					p.sendMessage("Debug set to " + main.debug);
+					return true;
+				}
 				// /prof quickfix
-				if (args[0].equalsIgnoreCase("quickfix")) {
+				else if (args[0].equalsIgnoreCase("quickfix")) {
 					ItemStack item = p.getInventory().getItemInMainHand();
 					ItemMeta meta = item.getItemMeta();
 					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
@@ -302,7 +307,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				// /prof givepaint [player] R G B
-				if (args[0].equalsIgnoreCase("givepaint")) {
+				else if (args[0].equalsIgnoreCase("givepaint")) {
 					ItemStack item = new ItemStack(Material.POTION);
 					PotionMeta meta = (PotionMeta) item.getItemMeta();
 					meta.setDisplayName("§nDye");
@@ -318,7 +323,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				// /prof add [essence/oretype] [level] [amount]
-				if (args[0].equalsIgnoreCase("add")) {
+				else if (args[0].equalsIgnoreCase("add")) {
 					if (args[1].equalsIgnoreCase("randomore")) {
 						Random gen = new Random();
 						this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
