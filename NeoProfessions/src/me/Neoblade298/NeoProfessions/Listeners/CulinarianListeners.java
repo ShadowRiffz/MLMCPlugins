@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -73,7 +74,7 @@ public class CulinarianListeners implements Listener {
 		boolean quickEat = false;
 		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			for (String line : item.getItemMeta().getLore()) {
-				if (line.contains("Quick Eat")) {
+				if (line.contains("Quick Eat") && !item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
 					quickEat = true;
 					break;
 				}
@@ -88,7 +89,7 @@ public class CulinarianListeners implements Listener {
 					String id = contents[i].getItemMeta().getLore().get(0);
 					ItemStack drink = contents[i].clone();
 					drink.setAmount(1);
-					p.getInventory().removeItem(item);
+					p.getInventory().removeItem(drink);
 
 					if (id.contains("Drink 1")) {
 						int drunk = 27 + gen.nextInt(7);
