@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -93,7 +94,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		boolean quickEat = false;
 		if (meta.hasLore()) {
 			for (String line : meta.getLore()) {
-				if (line.contains("Quick Eat")) {
+				if (line.contains("Quick Eat") && !item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
 					quickEat = true;
 				}
 			}
