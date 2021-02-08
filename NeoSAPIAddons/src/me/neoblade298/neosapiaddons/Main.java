@@ -55,8 +55,10 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if (e.getEntity() instanceof Player && !(e.getDamager() instanceof Player)) {
 			Player p = (Player) e.getEntity();
+			
+			// Guardian angel
 			if (p.getAbsorptionAmount() > 0) {
-				e.setDamage(1);
+				e.setCancelled(true);
 				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 >= 0 ? p.getAbsorptionAmount() - 1 : 0);
 			}
 			
