@@ -203,7 +203,7 @@ public class MasonListeners implements Listener {
 						if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
 								|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
 								|| !(slotType.equalsIgnoreCase("aattribute")
-										|| slotType.equalsIgnoreCase("wattribute"))) {
+										&& slotType.equalsIgnoreCase("wattribute"))) {
 							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
 								if (econ.has(p, SLOT_GOLD)) {
 									boolean success = false;
