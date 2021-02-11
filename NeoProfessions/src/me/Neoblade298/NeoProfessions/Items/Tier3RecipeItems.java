@@ -394,9 +394,9 @@ public class Tier3RecipeItems {
 	
 	public ArrayList<ItemStack> getChickenLegRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
-		recipe.add(new ItemStack(Material.COOKED_CHICKEN, 2));
+		recipe.add(new ItemStack(Material.COOKED_CHICKEN, 1));
 		recipe.add(ingr.getSalt());
-		recipe.add(ingr.getSpices());
+		recipe.add(util.setAmount(ingr.getSpices(), 2));
 		recipe.add(ingr.getOil());
 		return recipe;
 	}
