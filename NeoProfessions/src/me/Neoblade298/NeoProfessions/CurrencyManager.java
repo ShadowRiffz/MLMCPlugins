@@ -74,7 +74,7 @@ public class CurrencyManager {
 		Statement stmt = con.createStatement();
 		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
 		for (String type : types) {
-			HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type);
+			HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type.toLowerCase());
 			String sqlString = "" + typeCurrencies.get(5);
 			for (int i = 10; i <= 60; i += 5) {
 				sqlString += ":" + typeCurrencies.get(i);
@@ -90,7 +90,7 @@ public class CurrencyManager {
 		for (UUID uuid : currencies.keySet()) {
 			HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(uuid);
 			for (String type : types) {
-				HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type);
+				HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type.toLowerCase());
 				String sqlString = "" + typeCurrencies.get(5);
 				for (int i = 10; i <= 60; i += 5) {
 					sqlString += ":" + typeCurrencies.get(i);
@@ -104,7 +104,7 @@ public class CurrencyManager {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return;
 		}
-		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) + amount;
 		typeCurrency.put(level, newAmount);
 		util.sendMessage(p, "&7You gained &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
@@ -114,7 +114,7 @@ public class CurrencyManager {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return;
 		}
-		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) - amount;
 		typeCurrency.put(level, newAmount);
 		util.sendMessage(p, "&7You lost &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
@@ -124,14 +124,14 @@ public class CurrencyManager {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return -1;
 		}
-		return currencies.get(p.getUniqueId()).get(type).get(level);
+		return currencies.get(p.getUniqueId()).get(type.toLowerCase()).get(level);
 	}
 	
 	public boolean hasEnough(Player p, String type, int level, int compare) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return false;
 		}
-		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type);
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		return typeCurrency.get(level) >= compare;
 	}
 	

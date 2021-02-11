@@ -68,6 +68,7 @@ public class MasonListeners implements Listener {
 
 	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
+		if (main.debug) System.out.println("Looted, player: " + e.getKiller() + " entity: " + e.getMobType().getInternalName());
 		if (e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			ItemStack item = p.getInventory().getItemInMainHand();
