@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.alessiodp.parties.api.Parties;
@@ -29,7 +30,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	    super.onDisable();
 	}
 	
-	@EventHandler
+	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onMobLoot(MythicMobLootDropEvent e) {
 		if (!(e.getKiller() instanceof Player)) return;
 		Player p = (Player) e.getKiller();
