@@ -68,7 +68,6 @@ public class MasonListeners implements Listener {
 
 	@EventHandler
 	public void onLoot(MythicMobLootDropEvent e) {
-		if (main.debug) System.out.println("Looted, player: " + e.getKiller() + " entity: " + e.getMobType().getInternalName());
 		if (e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			ItemStack item = p.getInventory().getItemInMainHand();
@@ -111,19 +110,16 @@ public class MasonListeners implements Listener {
 				}
 			}
 
-			// Exp charm
+			// Exp charm is handled by NeoPartyExp
 			if (expLine != null) {
 				for (Drop d : e.getDrops().getDrops()) {
 					if (d instanceof SkillAPIDrop) {
 						double amount = d.getAmount();
-						if (main.debug) System.out.println("SkillAPI Drop: " + amount);
 						if (expLine.contains("Advanced")) {
 							d.setAmount(amount * 2);
-							if (main.debug) System.out.println("Advanced");
 						}
 						else {
 							d.setAmount(amount * 1.5);
-							if (main.debug) System.out.println("Basic");
 						}
 						break;
 					}
