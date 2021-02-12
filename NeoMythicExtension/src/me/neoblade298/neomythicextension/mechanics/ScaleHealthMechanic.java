@@ -35,15 +35,17 @@ public class ScaleHealthMechanic extends SkillMechanic implements ITargetedEntit
 	
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		int numPlayers = this.nbi.getActiveFights().get(this.boss).size();
-
-    	// Make sure target is a MythicMob
-    	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
-    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
-    		AbstractEntity ent = am.getEntity();
-    		ent.setMaxHealth(ent.getMaxHealth() * this.scale.get(numPlayers));
-    		ent.setHealth(ent.getMaxHealth());
-    	}
+		if (this.nbi.getActiveFights().containsKey(this.boss)) { 
+			int numPlayers = this.nbi.getActiveFights().get(this.boss).size();
+	
+	    	// Make sure target is a MythicMob
+	    	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
+	    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
+	    		AbstractEntity ent = am.getEntity();
+	    		ent.setMaxHealth(ent.getMaxHealth() * this.scale.get(numPlayers));
+	    		ent.setHealth(ent.getMaxHealth());
+	    	}
+		}
     	return true;
     }
 
