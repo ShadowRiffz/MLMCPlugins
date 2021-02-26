@@ -4,7 +4,7 @@ main: me.neoblade298.neomythicextension.Main
 version: 1.00
 depend: [MythicMobs]
 softdepend: [NeoBossInstances]
-api-version: 1.14
+api-version: 1.16
 commands:
   nme:
     description: Does its job

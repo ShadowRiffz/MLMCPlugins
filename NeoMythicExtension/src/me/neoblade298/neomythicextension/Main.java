@@ -1,5 +1,7 @@
 package me.neoblade298.neomythicextension;
 
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -27,6 +29,7 @@ import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.ScaleHealthMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
+import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
 import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
 
@@ -37,6 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 	// ConcurrentHashMap of objectives which leads to ConcurrentHashMap of uuids to
 	// integers
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
+	public HashMap<UUID, SpawnerMaker> spawnermakers;
 
 	@Override
 	public void onEnable() {
@@ -44,6 +48,7 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		globalscores = new ConcurrentHashMap<String, Integer>();
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
+		spawnermakers = new HashMap<UUID, SpawnerMaker>();
 
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
