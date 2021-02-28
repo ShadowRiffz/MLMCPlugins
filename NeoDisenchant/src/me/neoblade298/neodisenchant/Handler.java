@@ -55,6 +55,7 @@ public class Handler implements CommandExecutor {
 						player.setLevel(player.getLevel() - this.levelCost);
 						ArrayList<Enchantment> toRemove = new ArrayList<Enchantment>();
 						for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+							toRemove.add(entry.getKey());
 							ItemStack enchantBook = new ItemStack(Material.ENCHANTED_BOOK, 1);
 							Enchantment enchant = (Enchantment) entry.getKey();
 							int level = ((Integer) entry.getValue()).intValue();
