@@ -1,5 +1,6 @@
 package me.neoblade298.neodisenchant;
 
+import java.util.ArrayList;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -48,13 +49,11 @@ public class Handler implements CommandExecutor {
 								"§3[Disenchant]§f You don't have enough levels for this, you need " + this.levelCost);
 					}
 					else {
-						ItemStack withoutEnchant = new ItemStack(player.getInventory().getItemInMainHand().getType(),
-								1);
 
 						Map<Enchantment, Integer> enchantments = itemInHand.getEnchantments();
-						player.getInventory().removeItem(new ItemStack[] { itemInHand });
 
 						player.setLevel(player.getLevel() - this.levelCost);
+						ArrayList<Enchantment> toRemove = new ArrayList<Enchantment>();
 						for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
 							ItemStack enchantBook = new ItemStack(Material.ENCHANTED_BOOK, 1);
 							Enchantment enchant = (Enchantment) entry.getKey();
@@ -63,9 +62,11 @@ public class Handler implements CommandExecutor {
 							player.getInventory()
 									.addItem(new ItemStack[] { addBookEnchantment(enchantBook, enchant, level) });
 						}
+						
+						for (Enchantment ench : toRemove) {
+							itemInHand.removeEnchantment(ench);
+						}
 						player.sendMessage("§3[Disenchant]§f Your item has been disenchanted!");
-						withoutEnchant.setDurability(durability);
-						player.getInventory().addItem(new ItemStack[] { withoutEnchant });
 					}
 				}
 				else {
