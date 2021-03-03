@@ -1,0 +1,16 @@
+sql:
+  host: 127.0.0.1
+  port: '3306'
+  db: MLMC
+  username: username
+  password: password
+  flags: ?verifyServerCertificate=false&useSSL=false&useUnicode=true&characterEncoding=utf-8
+  
+general:
+  research_complete_command: "bc &4[&c&lMLMC&4] &e%player% &7has just completed the &c%item% &7research item!"
+  permission_command: "lp user %player% permission set research.item.%item%"
+  
+research_items:
+  "Example Item":
+    SewerZombie: 10
+    SewerSkeleton: 5
