@@ -27,7 +27,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
+import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
@@ -86,6 +88,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		// Load research items into mobMap, researchItems,
 		researchItems = new HashMap<String, HashMap<String, Integer>>();
 		mobMap = new HashMap<String, ArrayList<String>>();
+		displayNameMap = new HashMap<String, String>();
+		MobManager mm = MythicMobs.inst().getMobManager();
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
 
 		for (String rItem : rItems.getKeys(false)) {
@@ -94,9 +98,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			for (String mob : rItems.getKeys(false)) {
 				obj.put(mob, sec.getInt(mob));
 
-				// Add to mob map and research book min
+				// Add to mob map, research book min, and display name map
 				if (mobMap.containsKey(mob)) {
 					mobMap.get(mob).add(rItem);
+					displayNameMap.put(mob, mm.getMythicMob(mob).getDisplayName().get());
 					if (researchBookMin.get(mob) < sec.getInt(mob))
 						researchBookMin.put(mob, sec.getInt(mob));
 				}
@@ -167,7 +172,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 								mobKills.put(rs.getString(2), rs.getInt(3));
 							}
 							
-							rs = stmt.executeQuery("SELECT * FROM research_items WHERE uuid = '" + uuid + "';");
+							rs = stmt.executeQuery("SELECT * FROM research_completed WHERE uuid = '" + uuid + "';");
 							while (rs.next()) {
 								completedResearchItems.add(rs.getString(2));
 							}
@@ -214,7 +219,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 
 						for (String item : stats.getCompletedResearchItems()) {
-							exec += "REPLACE INTO research_statistics values('" + uuid + "'," + item + ");";
+							exec += "REPLACE INTO research_completed values('" + uuid + "'," + item + ");";
 						}
 						stmt.executeUpdate(exec);
 						con.close();
@@ -251,10 +256,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 			// "Grants x research points for [mob display name]"
 			int amount = Integer.parseInt(args[1]);
-			String display = args[5];
-			for (int i = 6; i < args.length; i++) {
-				display += " " + args[i];
-			}
+			String display = main.getItemMeta().getLore().get(1);
 
 			if (playerStats.containsKey(p.getUniqueId())) {
 				String mob = displayNameMap.get(display);
