@@ -9,6 +9,10 @@ sql:
 general:
   research_complete_command: "bc &4[&c&lMLMC&4] &e%player% &7has just completed the &c%item% &7research item!"
   permission_command: "lp user %player% permission set research.item.%item%"
+
+exp:
+  5: 500
+  6: 600
   
 research_items:
   "Example Item":

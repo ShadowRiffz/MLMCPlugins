@@ -28,6 +28,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, ArrayList<String>> mobMap;
 	public HashMap<String, Integer> researchBookMin;
 	public HashMap<UUID, PlayerStats> playerStats;
+	public HashMap<Integer, Integer> toNextLvl;
 
 	private String broadcast;
 	private String permcmd;
@@ -63,8 +64,15 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 		// General
 		ConfigurationSection general = cfg.getConfigurationSection("general");
-		broadcast = general.getString("research_complete_broadcast").replaceAll("&", "ง");
+		broadcast = general.getString("research_complete_broadcast").replaceAll("&", "ยง");
 		permcmd = general.getString("permission_command");
+
+		// Exp
+		toNextLvl = new HashMap<Integer, Integer>();
+		ConfigurationSection exp = cfg.getConfigurationSection("exp");
+		for (String lvl : exp.getKeys(false)) {
+			toNextLvl.put(Integer.parseInt(lvl), exp.getInt(lvl));
+		}
 
 		// Load research items into mobMap, researchItems,
 		researchItems = new HashMap<String, HashMap<String, Integer>>();
@@ -112,10 +120,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 			// Check for research goals that need it
 			TreeSet<String> completedItems = stats.getCompletedResearchItems();
-			int count = 0;
 			for (String researchItem : mobMap.get(mob)) { // For each relevant research item
 				if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
-					count++;
 					// Check if research goal is completed for specific mob
 					if (researchItems.get(researchItem).get(mob) <= points) {
 						for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
@@ -151,11 +157,29 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(url, user, pass);
 						Statement stmt = con.createStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + p.getUniqueId() + "';");
+						ResultSet rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
 						
+						int level = 0, exp = 0;
+						TreeSet<String> 
 						// Load in account info
 						if (rs.next()) {
+							level = rs.getInt(2);
+							exp = rs.getInt(3);
+
+							rs = stmt.executeQuery("SELECT * FROM research_statistics WHERE uuid = '" + uuid + "';");
+							while (rs.next()) {
+								
+							}
+
+							rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
+							while (rs.next()) {
+
+							}
 							
+							rs = stmt.executeQuery("SELECT * FROM research_items WHERE uuid = '" + uuid + "';");
+							while (rs.next()) {
+
+							}
 						}
 						
 						// No account info, initialize a blank one
