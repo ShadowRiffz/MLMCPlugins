@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -25,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
@@ -33,6 +34,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public String url, user, pass;
 	public HashMap<String, HashMap<String, Integer>> researchItems;
 	public HashMap<String, ArrayList<String>> mobMap;
+	public HashMap<String, String> displayNameMap;
 	public HashMap<String, Integer> researchBookMin;
 	public HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
@@ -125,27 +127,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			int points = researchPoints.get(mob) + 1;
 			researchPoints.put(mob, points);
 
-			// Check for research goals that need it
-			TreeSet<String> completedItems = stats.getCompletedResearchItems();
-			for (String researchItem : mobMap.get(mob)) { // For each relevant research item
-				if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
-					// Check if research goal is completed for specific mob
-					if (researchItems.get(researchItem).get(mob) <= points) {
-						for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
-							if (researchPoints.get(rMob) <= researchItems.get(researchItem).get(rMob)) {
-								return; // Haven't completed every item
-							}
-						}
-
-						// Completed a research item
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
-						completedItems.add(researchItem);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
-					}
-				}
-			}
+			checkItemCompletion(mob, p, points);
 		}
 	}
 
@@ -241,7 +223,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					}
 				}
 			}
-		}
+		};
 		save.runTaskAsynchronously(this);
 	}
 	
@@ -261,13 +243,60 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			return;
 		}
 		Player p = e.getPlayer();
-		ItemStack main = p.getInventory().getItemInMainHand();
+		ItemStack main = p.getInventory().getItemInMainHand().clone();
+		main.setAmount(1);
 
 		if (main.getType().equals(Material.BOOK) && main.hasItemMeta() && main.getItemMeta().getCustomModelData() == 100 && main.getItemMeta().hasLore()) {
-			String line = main.getItemMeta().getLore().get(0);
+			String[] args = main.getItemMeta().getLore().get(0).split(" ");
 
 			// "Grants x research points for [mob display name]"
-			MythicMobs.inst().getMobManager().getm
+			int amount = Integer.parseInt(args[1]);
+			String display = args[5];
+			for (int i = 6; i < args.length; i++) {
+				display += " " + args[i];
+			}
+
+			if (playerStats.containsKey(p.getUniqueId())) {
+				String mob = displayNameMap.get(display);
+				HashMap<String, Integer> researchPoints = playerStats.get(p.getUniqueId()).getResearchPoints();
+				int points = researchPoints.get(mob) + amount;
+				researchPoints.put(mob, points);
+				p.getInventory().removeItem(main);
+				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
+				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
+				checkItemCompletion(mob, p, points);
+			}
+			else {
+				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
+			}
+		}
+	}
+
+	public void checkItemCompletion(String mob, Player p, int points) {
+		// Check for research goals that need it
+		PlayerStats stats = playerStats.get(p.getUniqueId());
+		TreeSet<String> completedItems = stats.getCompletedResearchItems();
+		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+		for (String researchItem : mobMap.get(mob)) { // For each relevant research item
+			if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
+				// Check if research goal is completed for specific mob
+				if (researchItems.get(researchItem).get(mob) <= points) {
+					for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
+						if (researchPoints.get(rMob) <= researchItems.get(researchItem).get(rMob)) {
+							return; // Haven't completed every item
+						}
+					}
+
+					// Completed a research item
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+							broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
+					completedItems.add(researchItem);
+					p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+							permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
+				}
+			}
 		}
 	}
 }
