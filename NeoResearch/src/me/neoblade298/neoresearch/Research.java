@@ -11,14 +11,21 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
@@ -153,14 +160,16 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			// Asynchronously look up sql and load it in
 			BukkitRunnable load = new BukkitRunnable() {
 				public void run() {
+					int level = 5, exp = 0;
+					HashMap<String, Integer> researchPoints = new HashMap<String, Integer>();
+					HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
+					TreeSet<String> completedResearchItems = new TreeSet<String>();
 					try {
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(url, user, pass);
 						Statement stmt = con.createStatement();
 						ResultSet rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
 						
-						int level = 0, exp = 0;
-						TreeSet<String> 
 						// Load in account info
 						if (rs.next()) {
 							level = rs.getInt(2);
@@ -168,30 +177,97 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 							rs = stmt.executeQuery("SELECT * FROM research_statistics WHERE uuid = '" + uuid + "';");
 							while (rs.next()) {
-								
+								researchPoints.put(rs.getString(2), rs.getInt(3));
 							}
 
 							rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
 							while (rs.next()) {
-
+								mobKills.put(rs.getString(2), rs.getInt(3));
 							}
 							
 							rs = stmt.executeQuery("SELECT * FROM research_items WHERE uuid = '" + uuid + "';");
 							while (rs.next()) {
-
+								completedResearchItems.add(rs.getString(2));
 							}
+
+							playerStats.put(uuid, new PlayerStats(level, exp, completedResearchItems, researchPoints, mobKills));
 						}
-						
-						// No account info, initialize a blank one
-						else {
-							
-						}
+						con.close();
 					} catch (Exception ex) {
 						System.out.println(ex);
+					} finally {
+						playerStats.put(uuid, new PlayerStats(level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 				}
 			};
 			load.runTaskAsynchronously(this);
+		}
+	}
+
+	private void handleLeave(UUID uuid) {
+		PlayerStats stats = playerStats.get(uuid);
+
+		BukkitRunnable save = new BukkitRunnable() {
+			public void run() {
+				if (playerStats.containsKey(uuid)) {
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(url, user, pass);
+						Statement stmt = con.createStatement();
+
+						// Save account
+						stmt.executeUpdate("INSERT INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+						+ "','" + stats.getExp() + "');");
+
+						// Save research points
+						String exec = "";
+						HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+						for (String mob : researchPoints.keySet()) {
+							exec += "REPLACE INTO research_points values('" + uuid + "'," + mob + "," + researchPoints.get(mob) + ");";
+						}
+
+						HashMap<String, Integer> mobKills = stats.getMobKills();
+						for (String mob : mobKills.keySet()) {
+							exec += "REPLACE INTO research_statistics values('" + uuid + "'," + mob + "," + mobKills.get(mob) + ");";
+						}
+
+						for (String item : stats.getCompletedResearchItems()) {
+							exec += "REPLACE INTO research_statistics values('" + uuid + "'," + item + ");";
+						}
+						stmt.executeUpdate(exec);
+						con.close();
+					} catch (Exception ex) {
+						System.out.println(ex);
+					}
+				}
+			}
+		}
+		save.runTaskAsynchronously(this);
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerKickEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
+	}
+
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+		Player p = e.getPlayer();
+		ItemStack main = p.getInventory().getItemInMainHand();
+
+		if (main.getType().equals(Material.BOOK) && main.hasItemMeta() && main.getItemMeta().getCustomModelData() == 100 && main.getItemMeta().hasLore()) {
+			String line = main.getItemMeta().getLore().get(0);
+
+			// "Grants x research points for [mob display name]"
+			MythicMobs.inst().getMobManager().getm
 		}
 	}
 }
