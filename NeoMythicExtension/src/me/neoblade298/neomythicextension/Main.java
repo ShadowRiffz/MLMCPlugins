@@ -26,6 +26,7 @@ import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
 import me.neoblade298.neomythicextension.mechanics.RandomizeGoldMechanic;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
+import me.neoblade298.neomythicextension.mechanics.ResearchPointsMechanic;
 import me.neoblade298.neomythicextension.mechanics.ScaleHealthMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
@@ -153,6 +154,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (event.getMechanicName().equalsIgnoreCase("randomizegold")) {
 			RandomizeGoldMechanic mechanic = new RandomizeGoldMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		if (event.getMechanicName().equalsIgnoreCase("researchpoints")) {
+			ResearchPointsMechanic mechanic = new ResearchPointsMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}

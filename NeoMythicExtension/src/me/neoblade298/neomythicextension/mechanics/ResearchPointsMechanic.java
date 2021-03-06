@@ -13,50 +13,46 @@ import org.bukkit.inventory.ItemStack;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import me.neoblade298.neoresearch.Research;
 
-public class DropChanceMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	protected final ItemStack item;
+	protected final int amount;
 	protected final double basechance;
 	protected final double basicmult;
 	protected final double advancedmult;
 	protected final double basicchance;
 	protected final double advancedchance;
-	protected final boolean announce;
-	protected final String msg;
-	protected final String type;
 	protected final Random rand;
+	protected final Research nr;
 
-	public DropChanceMechanic(MythicLineConfig config) {
+	public ResearchPointsMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
         
-        String itemString = config.getString("i", "mi_sewerzombie");
-        this.item = MythicMobs.inst().getItemManager().getItemStack(itemString);
+        this.amount = config.getInteger("a");
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 1);
         this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1.2);
-        this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Monster Index")).replaceAll("&", "§");
         this.advancedmult = config.getDouble(new String[] {"advancedmult", "am"}, 1.5);
-        this.announce = config.getString("announce", "false").equalsIgnoreCase("true");
-        this.type = config.getString("type", "other");
         this.basicchance = basechance * basicmult;
         this.advancedchance = basechance * advancedmult;
         this.rand = new Random();
         
-        if (this.item == null) {
-        	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Item doesn't exist: " + itemString);
-        }
+        nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 	}
 	
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player) {
+		if (target.getBukkitEntity() instanceof Player && data.getCaster().getEntity() instanceof ActiveMob) {
 			double rand = this.rand.nextDouble();
 			double chance = this.basechance;
+			ActiveMob amob = (ActiveMob) data.getCaster().getEntity();
+			String mob = amob.getType().getInternalName();
 			
 			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
@@ -104,22 +100,7 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 			
 			// Check for successful drop
 			if (rand <= chance) {
-				if ((this.type.equals("shiny") && p.hasPermission("filters.indexes.shiny")) || (this.type.equals("index") && p.hasPermission("filters.indexes.regular"))
-						|| (!this.type.equals("shiny") && !this.type.equals("index"))) {
-					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(this.item);
-					if (!failed.isEmpty()) p.getWorld().dropItem(p.getLocation(), this.item);
-					
-					// Message
-					String localMsg = msg;
-					if (dropType == 1 && rand >= this.basechance) localMsg += " via Basic Drop Charm";
-					if (dropType == 2 && rand >= this.basechance) localMsg += " via Advanced Drop Charm";
-					localMsg += "!";
-					p.sendMessage(localMsg);
-					if (this.announce) {
-						String name = this.item.getItemMeta().getDisplayName().replaceAll("§", "&");
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
-					}
-				}
+				nr.giveResearchPoints(p, this.amount, mob);
 			}
 			return true;
 		}
