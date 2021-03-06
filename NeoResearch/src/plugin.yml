@@ -1,5 +1,5 @@
 name: NeoResearch
-main: me.neoblade298.base.Research
+main: me.neoblade298.neoresearch.Research
 author: [Neoblade298]
 depend: [MythicMobs]
 version: 1.0

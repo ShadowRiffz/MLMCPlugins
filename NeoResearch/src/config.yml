@@ -16,5 +16,7 @@ exp:
   
 research_items:
   "Example Item":
-    SewerZombie: 10
-    SewerSkeleton: 5
+    required: true
+    goals:
+      SewerZombie: 10
+      SewerSkeleton: 5

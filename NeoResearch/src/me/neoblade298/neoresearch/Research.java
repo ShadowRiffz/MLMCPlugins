@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Integer> researchBookMin;
 	public HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
+	public Random rand;
 
 	private String broadcast;
 	private String permcmd;
@@ -49,16 +51,19 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("nr").setExecutor(new Commands(this));
 
-		load_config();
+		loadConfig();
 	}
 
 	public void onDisable() {
+		saveAll();
 		org.bukkit.Bukkit.getServer().getLogger().info("NeoResearch Disabled");
 		super.onDisable();
 	}
 
-	public void load_config() {
+	public void loadConfig() {
 		File file = new File(getDataFolder(), "config.yml");
+		playerStats = new HashMap<UUID, PlayerStats>();
+		rand = new Random();
 
 		// Save config if doesn't exist
 		if (!file.exists()) {
@@ -68,14 +73,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 		// SQL
 		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		url = "jbdc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
+		url = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
 				sql.getString("db") + sql.getString("flags");
 		user = sql.getString("username");
 		pass = sql.getString("password");
 
 		// General
 		ConfigurationSection general = cfg.getConfigurationSection("general");
-		broadcast = general.getString("research_complete_broadcast").replaceAll("&", "Â§");
+		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
 		permcmd = general.getString("permission_command");
 
 		// Exp
@@ -89,13 +94,17 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		researchItems = new HashMap<String, HashMap<String, Integer>>();
 		mobMap = new HashMap<String, ArrayList<String>>();
 		displayNameMap = new HashMap<String, String>();
+		researchBookMin = new HashMap<String, Integer>();
+		
 		MobManager mm = MythicMobs.inst().getMobManager();
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
 
 		for (String rItem : rItems.getKeys(false)) {
 			HashMap<String, Integer> obj = new HashMap<String, Integer>();
-			ConfigurationSection sec = rItems.getConfigurationSection(rItem);
-			for (String mob : rItems.getKeys(false)) {
+			ConfigurationSection rItemSec = rItems.getConfigurationSection(rItem);
+			boolean required = rItemSec.getBoolean("required");
+			ConfigurationSection sec = rItemSec.getConfigurationSection("goals");
+			for (String mob : sec.getKeys(false)) {
 				obj.put(mob, sec.getInt(mob));
 
 				// Add to mob map, research book min, and display name map
@@ -109,7 +118,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					ArrayList<String> list = new ArrayList<String>();
 					list.add(rItem);
 					mobMap.put(mob, list);
-					researchBookMin.put(mob, sec.getInt(mob));
+					if (required) researchBookMin.put(mob, sec.getInt(mob));
 				}
 			}
 			researchItems.put(rItem, obj);
@@ -125,11 +134,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			// First update the mob kill stat
 			PlayerStats stats = playerStats.get(p.getUniqueId());
 			HashMap<String, Integer> mobKills = stats.getMobKills();
-			mobKills.put(mob, mobKills.get(mob) + 1);
+			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + 1 : 1;
+			mobKills.put(mob, kills);
 
 			// Update research points
 			HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-			int points = researchPoints.get(mob) + 1;
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + 1 : 1;
 			researchPoints.put(mob, points);
 
 			checkItemCompletion(mob, p, points);
@@ -203,25 +213,25 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						Statement stmt = con.createStatement();
 
 						// Save account
-						stmt.executeUpdate("INSERT INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+						stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
 						+ "','" + stats.getExp() + "');");
 
 						// Save research points
-						String exec = "";
-						HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-						for (String mob : researchPoints.keySet()) {
-							exec += "REPLACE INTO research_points values('" + uuid + "'," + mob + "," + researchPoints.get(mob) + ");";
-						}
 
 						HashMap<String, Integer> mobKills = stats.getMobKills();
 						for (String mob : mobKills.keySet()) {
-							exec += "REPLACE INTO research_statistics values('" + uuid + "'," + mob + "," + mobKills.get(mob) + ");";
+							stmt.addBatch("REPLACE INTO research_statistics values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+						}
+						HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+						for (String mob : researchPoints.keySet()) {
+							stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
 						}
 
 						for (String item : stats.getCompletedResearchItems()) {
-							exec += "REPLACE INTO research_completed values('" + uuid + "'," + item + ");";
+							stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
 						}
-						stmt.executeUpdate(exec);
+						
+						stmt.executeBatch();
 						con.close();
 					} catch (Exception ex) {
 						System.out.println(ex);
@@ -230,6 +240,44 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		};
 		save.runTaskAsynchronously(this);
+	}
+	
+	private void saveAll() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, user, pass);
+			Statement stmt = con.createStatement();
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				UUID uuid = p.getUniqueId();
+				PlayerStats stats = playerStats.get(uuid);
+				if (playerStats.containsKey(p.getUniqueId())) {
+
+					// Save account
+					stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+					+ "','" + stats.getExp() + "');");
+
+					// Save research points
+
+					HashMap<String, Integer> mobKills = stats.getMobKills();
+					for (String mob : mobKills.keySet()) {
+						stmt.addBatch("REPLACE INTO research_statistics values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+					}
+					HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+					for (String mob : researchPoints.keySet()) {
+						stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
+					}
+
+					for (String item : stats.getCompletedResearchItems()) {
+						stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
+					}
+
+				}
+			}
+			stmt.executeBatch();
+			con.close();
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
 	}
 	
 	@EventHandler
@@ -261,44 +309,56 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			if (playerStats.containsKey(p.getUniqueId())) {
 				String mob = displayNameMap.get(display);
 				HashMap<String, Integer> researchPoints = playerStats.get(p.getUniqueId()).getResearchPoints();
-				int points = researchPoints.get(mob) + amount;
+				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 				researchPoints.put(mob, points);
 				p.getInventory().removeItem(main);
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
-				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You gained Â§e" + amount + " Â§7research points for " + display + "Â§7!");
+				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
 				checkItemCompletion(mob, p, points);
 			}
 			else {
-				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError, player stats not found.");
+				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
 			}
 		}
 	}
 
-	public void checkItemCompletion(String mob, Player p, int points) {
+	public void checkItemCompletion(String mob, Player p, int totalPoints) {
 		// Check for research goals that need it
 		PlayerStats stats = playerStats.get(p.getUniqueId());
 		TreeSet<String> completedItems = stats.getCompletedResearchItems();
 		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-		for (String researchItem : mobMap.get(mob)) { // For each relevant research item
-			if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
-				// Check if research goal is completed for specific mob
-				if (researchItems.get(researchItem).get(mob) <= points) {
-					for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
-						if (researchPoints.get(rMob) <= researchItems.get(researchItem).get(rMob)) {
-							return; // Haven't completed every item
+		if (mobMap.containsKey(mob)) {
+			for (String researchItem : mobMap.get(mob)) { // For each relevant research item
+				if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
+					// Check if research goal is completed for specific mob
+					if (researchItems.get(researchItem).get(mob) <= totalPoints) {
+						for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
+							if (researchPoints.get(rMob) <= researchItems.get(researchItem).get(rMob)) {
+								return; // Haven't completed every item
+							}
 						}
+	
+						// Completed a research item
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
+						completedItems.add(researchItem);
+						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
+						p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.replaceAll(" ", "")));
 					}
-
-					// Completed a research item
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
-					completedItems.add(researchItem);
-					p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
-					p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
 				}
 			}
+		}
+	}
+	
+	public void giveResearchPoints(Player p, int amount, String mob) {
+		UUID uuid = p.getUniqueId();
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
+			researchPoints.put(mob, points);
+			checkItemCompletion(mob, p, points);
 		}
 	}
 }
