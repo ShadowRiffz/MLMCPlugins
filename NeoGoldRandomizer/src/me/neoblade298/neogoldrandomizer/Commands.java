@@ -22,10 +22,9 @@ public class Commands implements CommandExecutor {
 				// First check number of players in the instance
 				ArrayList<Player> players = main.nbi.getActiveFights().get(args[0]);
 
-				// Get gold min and max for party size, generate gold
-				double bonus = 0.9 + (players.size() * 0.1);
-				double min = (Integer.parseInt(args[1]) / players.size()) * bonus;
-				double max = (Integer.parseInt(args[2]) / players.size()) * bonus;
+				// Get gold min and max, generate gold
+				double min = Integer.parseInt(args[1]);
+				double max = Integer.parseInt(args[2]);
 				double gold = Math.random() * (max - min) + min;
 				gold = Math.round(gold / 25.0D) * 25L;
 				
