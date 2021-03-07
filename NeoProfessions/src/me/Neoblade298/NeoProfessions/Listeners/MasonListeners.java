@@ -93,7 +93,7 @@ public class MasonListeners implements Listener {
 					if (name.length > 2) {
 						if (name[1].contains("]")) {
 							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
-							amount = amount * (1.5 + gen.nextDouble());
+							amount = amount * (1 + gen.nextDouble());
 							econ.depositPlayer(p, amount);
 						}
 					}
