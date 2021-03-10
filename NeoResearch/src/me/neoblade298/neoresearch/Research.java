@@ -361,4 +361,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			checkItemCompletion(mob, p, points);
 		}
 	}
+	
+	public PlayerStats getPlayerStats(Player p) {
+		return playerStats.get(p.getUniqueId());
+	}
 }
