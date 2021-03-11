@@ -57,10 +57,10 @@ public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 		String mob = args[0];
 		String name = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
-		HashMap<String, Integer> mobKills = nr.getPlayerStats(p).getMobKills();
-		if (mobKills.containsKey(mob)) {
-			int kills = mobKills.get(mob);
-			return name + "§7: §e" + kills + "§7 kills";
+		HashMap<String, Integer> researchPoints = nr.getPlayerStats(p).getResearchPoints();
+		if (researchPoints.containsKey(mob)) {
+			int points = researchPoints.get(mob);
+			return name + "§7: §e" + points + "§7 research points";
 		}
     	return "§c???";
 	}
