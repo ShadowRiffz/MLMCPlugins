@@ -34,7 +34,7 @@ public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchkills";
+		return "researchpoints";
 	}
 
     @Override
