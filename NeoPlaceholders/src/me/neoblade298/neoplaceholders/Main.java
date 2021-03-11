@@ -13,6 +13,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new EtcPlaceholders(this).registerPlaceholders();
 		new NeoprofessionsPlaceholders().register();
 		new NeoBossInstancesPlaceholders().register();
+		new ResearchKillsPlaceholders().register();
+		new ResearchPointsPlaceholders().register();
 		new MinibossPlaceholders().register();
 		new MinibossShortPlaceholders().register();
 		new OtherSkillAPIPlaceholders().register();
