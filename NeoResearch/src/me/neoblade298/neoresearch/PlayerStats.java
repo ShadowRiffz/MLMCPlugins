@@ -3,14 +3,20 @@ package me.neoblade298.neoresearch;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Player;
+
 public class PlayerStats {
+	private Research main;
 	private TreeSet<String> completedResearchItems;
 	private HashMap<String, Integer> researchPoints;
 	private HashMap<String, Integer> mobKills;
 	private int exp;
 	private int level;
 	
-	public PlayerStats(int level, int exp, TreeSet<String> completedResearchItems, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
+	public PlayerStats(Research main, int level, int exp, TreeSet<String> completedResearchItems, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
+		this.main = main;
 		this.level = level;
 		this.exp = exp;
 		this.completedResearchItems = completedResearchItems;
@@ -47,5 +53,20 @@ public class PlayerStats {
 	}
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	
+	public void addExp(Player p, int exp) {
+		int remainingExp = exp + this.exp;
+		
+		// If next level exists, check that the player can reach it, else just add
+		if (main.toNextLvl.containsKey(this.level)) {
+			while (remainingExp > main.toNextLvl.get(this.level)) {
+				remainingExp -= main.toNextLvl.get(this.level);
+				this.level++;
+				p.sendMessage(main.levelup.replaceAll("%level%", "" + this.level));
+				p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
+			}
+		}
+		this.exp = remainingExp;
 	}
 }

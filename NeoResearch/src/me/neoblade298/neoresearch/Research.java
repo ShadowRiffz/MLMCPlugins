@@ -39,12 +39,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, ArrayList<String>> mobMap;
 	public HashMap<String, String> displayNameMap;
 	public HashMap<String, Integer> researchBookMin;
+	public HashMap<String, Integer> researchExp;
 	public HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
 	public Random rand;
 
-	private String broadcast;
-	private String permcmd;
+	public String broadcast, permcmd, levelup;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
@@ -82,6 +82,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		ConfigurationSection general = cfg.getConfigurationSection("general");
 		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
 		permcmd = general.getString("permission_command");
+		levelup = general.getString("research_levelup").replaceAll("&", "§");
 
 		// Exp
 		toNextLvl = new HashMap<Integer, Integer>();
@@ -95,6 +96,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		mobMap = new HashMap<String, ArrayList<String>>();
 		displayNameMap = new HashMap<String, String>();
 		researchBookMin = new HashMap<String, Integer>();
+		researchExp = new HashMap<String, Integer>();
 		
 		MobManager mm = MythicMobs.inst().getMobManager();
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
@@ -104,10 +106,11 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			ConfigurationSection rItemSec = rItems.getConfigurationSection(rItem);
 			boolean required = rItemSec.getBoolean("required");
 			ConfigurationSection sec = rItemSec.getConfigurationSection("goals");
+			researchExp.put(rItem, rItemSec.getInt("exp"));
 			for (String mob : sec.getKeys(false)) {
 				obj.put(mob, sec.getInt(mob));
 
-				// Add to mob map, research book min, and display name map
+				// Add to mob map, research book min, display name map
 				if (mobMap.containsKey(mob)) {
 					mobMap.get(mob).add(rItem);
 					displayNameMap.put(mob, mm.getMythicMob(mob).getDisplayName().get());
@@ -155,6 +158,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		if (!playerStats.containsKey(uuid)) {
 			
 			// Asynchronously look up sql and load it in
+			Research main = this;
 			BukkitRunnable load = new BukkitRunnable() {
 				public void run() {
 					int level = 5, exp = 0;
@@ -187,13 +191,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 								completedResearchItems.add(rs.getString(2));
 							}
 
-							playerStats.put(uuid, new PlayerStats(level, exp, completedResearchItems, researchPoints, mobKills));
+							playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 						}
 						con.close();
 					} catch (Exception ex) {
 						System.out.println(ex);
 					} finally {
-						playerStats.put(uuid, new PlayerStats(level, exp, completedResearchItems, researchPoints, mobKills));
+						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 				}
 			};
@@ -333,7 +337,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					// Check if research goal is completed for specific mob
 					if (researchItems.get(researchItem).get(mob) <= totalPoints) {
 						for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
-							if (researchPoints.get(rMob) <= researchItems.get(researchItem).get(rMob)) {
+							if (researchPoints.get(rMob) < researchItems.get(researchItem).get(rMob)) {
 								return; // Haven't completed every item
 							}
 						}
@@ -343,9 +347,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
 						completedItems.add(researchItem);
 						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
-						p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.replaceAll(" ", "")));
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.replaceAll(" ", "")
+										.replaceAll(":", "").toLowerCase()));
+						stats.addExp(p, researchExp.get(researchItem));
 					}
 				}
 			}
