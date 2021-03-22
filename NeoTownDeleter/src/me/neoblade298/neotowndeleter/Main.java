@@ -138,14 +138,14 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 		
-		// If there are less than 5 towns that can be deleted, delete them; otherwise wait for confirmation
+		// If there are less than 10 towns that can be deleted, delete them; otherwise wait for confirmation
 		Bukkit.getServer().getLogger().info("Found " + deletableTowns.size() + " deletable towns");
 		if (debug) {
 			for (Town town : deletableTowns) {
 				Bukkit.getServer().getLogger().info(town.getName() + " can be deleted");
 			}
 		}
-		if (deletableTowns.size() < 5) {
+		if (deletableTowns.size() < 10) {
 			deleteTowns();
 		}
 	}
