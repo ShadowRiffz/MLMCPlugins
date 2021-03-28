@@ -44,7 +44,7 @@ public class Commands implements CommandExecutor{
 				// If internal tag is used, and actual tag is the same
 				ConfigurationSection tagSec = tags.getConfigurationSection(internalTag);
 				if (tagSec.getString("tag").equals(tag)) {
-					Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag);
+					Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " existing tag " + internalTag);
 					String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag;
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 					return true;
@@ -53,9 +53,10 @@ public class Commands implements CommandExecutor{
 				// If internal tag is used, but actual tag is different (color codes)
 				else {
 					while (tags.contains(internalTag + version)) {
+						// If internal tag is versioned but used, and actual tag is the same
 						tagSec = tags.getConfigurationSection(internalTag + version);
 						if (tagSec.getString("tag").equals(tag)) {
-							Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag + version);
+							Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " existing tag " + internalTag + version);
 							String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag + version;
 							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
 							return true;
@@ -68,20 +69,11 @@ public class Commands implements CommandExecutor{
 				}
 			}
 
-			// Found a non-used version
-			ConfigurationSection newTag = null;
-			if (version == 2) {
-				String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag;
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
-				newTag = tags.createSection(internalTag);
-				Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag);
-			}
-			else {
-				String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag + version;
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
-				newTag = tags.createSection(internalTag + version);
-				Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " tag " + internalTag + version);
-			}
+			// Need a brand new tag, found a non-used version
+			String lpcmd = "lp user " + args[0] + " permission set deluxetags.tag." + internalTag + version;
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpcmd);
+			ConfigurationSection newTag = tags.createSection(internalTag + version);
+			Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " new tag " + internalTag + version);
 			newTag.set("order", order);
 			newTag.set("tag", tag.replaceAll("§", "&"));
 			newTag.set("description", "&7Donated for a custom tag!");
