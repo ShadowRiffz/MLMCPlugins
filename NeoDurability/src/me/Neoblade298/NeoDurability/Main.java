@@ -169,7 +169,8 @@ public class Main extends JavaPlugin implements Listener {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(main, player, 0);
 			}
-			else if (off != null && off.hasItemMeta() && off.getItemMeta().getLore().get(0).contains("Tier")) {
+			else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
+					&& off.getItemMeta().getLore().get(0).contains("Tier")) {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(off, player, 5);
 			}
