@@ -36,8 +36,8 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded config");
 			}
 
-			// /nr givebook [player] [internalmob] [amount]
-			else if (args[0].equalsIgnoreCase("givebook")) {
+			// /nr spawnbook [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("spawnbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
 					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
@@ -46,6 +46,45 @@ public class Commands implements CommandExecutor{
 				String display = MythicMobs.inst().getMobManager().getMythicMob(args[2]).getDisplayName().get();
 				int amt = Integer.parseInt(args[3]);
 
+				ItemStack item = new ItemStack(Material.BOOK);
+				ItemMeta meta = item.getItemMeta();
+
+				meta.setDisplayName("§9Research Book");
+				ArrayList<String> lore = new ArrayList<String>();
+				lore.add("§7Grants§e " + amt + " §7research points for");
+				lore.add(display);
+
+				meta.setCustomModelData(100);
+				item.setItemMeta(meta);
+				p.getInventory().addItem(item);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
+			}
+
+			// /nr givebook [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("givebook")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				UUID uuid = p.getUniqueId();
+				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
+					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
+					return true;
+				}
+				String display = MythicMobs.inst().getMobManager().getMythicMob(args[2]).getDisplayName().get();
+				int amt = Integer.parseInt(args[3]);
+				
+				// First check if the player has enough research points
+				int currentPoints = main.playerStats.get(uuid).getResearchPoints().get(args[2]);
+				int min = -1;
+				for (ResearchItem rItem : main.mobMap.get(args[2])) {
+					int goal = rItem.getGoals().get(args[2]);
+					if (min < goal && goal < currentPoints) min = goal;
+				}
+
+				if (currentPoints - amt < min) {
+					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + amt) + "§cresearch points to do this!");
+					return true;
+				}
+				
+				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - amt);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -69,6 +108,17 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				main.giveResearchPoints(p, amount, args[2]);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[1] + " §7to player §e" + p.getName());
+			}
+			// /nr givekills [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("givekills")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[3]);
+				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
+					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
+					return true;
+				}
+				main.giveResearchKills(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[1] + " §7to player §e" + p.getName());
 			}
 			return true;

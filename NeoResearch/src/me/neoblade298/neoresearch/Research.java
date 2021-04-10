@@ -50,7 +50,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
-		getServer().getPluginManager().registerEvents(this, this);
+		if (!isInstance) getServer().getPluginManager().registerEvents(this, this);
 		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "prc", "vit", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 
@@ -188,7 +188,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					// 2 cases to update:
 					// 1. playerStats doesn't contain uuid
 					// 2. playerStats contains uuid but rs not empty
-					if (playerStats.containsKey(uuid) && rs.next()) return;
+					if (playerStats.containsKey(uuid) && rs.next()) {
+						con.close();
+						return;
+					}
 					rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
 					
 					// Load in account info
@@ -244,7 +247,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 						HashMap<String, Integer> mobKills = stats.getMobKills();
 						for (String mob : mobKills.keySet()) {
-							stmt.addBatch("REPLACE INTO research_statistics values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+							stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
 						}
 						HashMap<String, Integer> researchPoints = stats.getResearchPoints();
 						for (String mob : researchPoints.keySet()) {
@@ -284,7 +287,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 					HashMap<String, Integer> mobKills = stats.getMobKills();
 					for (String mob : mobKills.keySet()) {
-						stmt.addBatch("REPLACE INTO research_statistics values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+						stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
 					}
 					HashMap<String, Integer> researchPoints = stats.getResearchPoints();
 					for (String mob : researchPoints.keySet()) {
@@ -362,7 +365,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 								return; // Haven't completed every item
 							}
 						}
-						// TODO: Check the mobmap for the highest number below the current research points, limit it with that
 	
 						// Completed a research item
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
@@ -381,11 +383,73 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public void giveResearchPoints(Player p, int amount, String mob) {
 		UUID uuid = p.getUniqueId();
-		if (playerStats.containsKey(uuid)) {
-			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
-			researchPoints.put(mob, points);
-			checkItemCompletion(mob, p, points);
+		if (!isInstance) {
+			if (playerStats.containsKey(uuid)) {
+				HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
+				researchPoints.put(mob, points);
+				checkItemCompletion(mob, p, points);
+			}
+		} else {
+			BukkitRunnable increment = new BukkitRunnable() {
+				public void run() {
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(url, user, pass);
+						Statement stmt = con.createStatement();
+						ResultSet rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "' AND mob = '" + mob + "';");
+						
+						if (rs.next()) {
+							stmt.executeUpdate("UPDATE research_points SET points = points + " + amount + " WHERE mob = '" + mob + "';");
+						}
+						else {
+							stmt.executeUpdate("INSERT INTO research_points VALUES ('" + uuid + "', '" + mob + "', " + amount + ");");
+						}
+						
+						stmt.executeUpdate("INSERT INTO research_updates VALUES ('" + uuid + "');");
+						con.close();
+					} catch (Exception ex) {
+						System.out.println(ex);
+					}
+				}
+			};
+			increment.runTaskAsynchronously(this);
+		}
+	}
+
+	public void giveResearchKills(Player p, int amount, String mob) {
+		UUID uuid = p.getUniqueId();
+		if (!isInstance) {
+			if (playerStats.containsKey(uuid)) {
+				HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
+				int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : 1;
+				mobKills.put(mob, kills);
+				checkItemCompletion(mob, p, kills);
+			}
+		} else {
+			BukkitRunnable increment = new BukkitRunnable() {
+				public void run() {
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(url, user, pass);
+						Statement stmt = con.createStatement();
+						ResultSet rs = stmt.executeQuery("SELECT * FROM research_kills WHERE uuid = '" + uuid + "' AND mob = '" + mob + "';");
+						
+						if (rs.next()) {
+							stmt.executeUpdate("UPDATE research_kills SET kills = kills + " + amount + " WHERE mob = '" + mob + "';");
+						}
+						else {
+							stmt.executeUpdate("INSERT INTO research_kills VALUES ('" + uuid + "', '" + mob + "', " + amount + ");");
+						}
+						
+						stmt.executeUpdate("INSERT INTO research_updates VALUES ('" + uuid + "');");
+						con.close();
+					} catch (Exception ex) {
+						System.out.println(ex);
+					}
+				}
+			};
+			increment.runTaskAsynchronously(this);
 		}
 	}
 	
