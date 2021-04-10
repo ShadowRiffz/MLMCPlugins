@@ -4,12 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin implements Listener{
 	Map<String, Double> selfHealed = new HashMap<String, Double>();
 	Map<String, Double> allyHealed = new HashMap<String, Double>();
 	Map<String, String> inBoss = new HashMap<String, String>();
+	Map<String, Long> timeSpawned = new HashMap<String, Long>();
 	BukkitAPIHelper helper;
 	MobManager manager;
 	YamlConfiguration conf;
@@ -106,11 +108,29 @@ public class Main extends JavaPlugin implements Listener{
 				}
 			}
 			
+			// Figure out time
+			long time = -1;
+	        String timer = "n/a";
+			if (timeSpawned.containsKey(deadBoss)) {
+				time = System.currentTimeMillis() - timeSpawned.get(deadBoss);
+				timeSpawned.remove(deadBoss);
+				final long hr = TimeUnit.MILLISECONDS.toHours(time);
+		        final long min = TimeUnit.MILLISECONDS.toMinutes(time - TimeUnit.HOURS.toMillis(hr));
+		        final long sec = TimeUnit.MILLISECONDS.toSeconds(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
+		        final long ms = TimeUnit.MILLISECONDS.toMillis(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min) - TimeUnit.SECONDS.toMillis(sec));
+		        if (hr > 0) {
+		        	timer = String.format("%2d:%02d:%02d.%03d", hr, min, sec, ms);
+		        }
+		        else {
+		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
+		        }
+			}
+			
 			// Damage is calculated, now display to all relevant players
 			ArrayList<String> toRemove = new ArrayList<String>();
 			for (String receiver : inBoss.keySet()) {
 				if(Bukkit.getPlayer(receiver) != null && inBoss.get(receiver).equals(deadBoss)) {
-					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7)");
+					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7) [Time: §c" + timer + "§7]");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
 					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 					for (String player : inBoss.keySet()) {
@@ -189,9 +209,6 @@ public class Main extends JavaPlugin implements Listener{
 					if(e.getDamager() instanceof Player) {
 						player = e.getDamager().getName();
 					}
-					else if(e.getDamager() instanceof TippedArrow && ((TippedArrow)e.getDamager()).getShooter() instanceof Player) {
-						player = ((TippedArrow)((Arrow) e.getDamager()).getShooter()).getName();
-					}
 					else if(e.getDamager() instanceof Arrow && ((Arrow)e.getDamager()).getShooter() instanceof Player) {
 						player = ((Player)((Arrow) e.getDamager()).getShooter()).getName();
 					}
@@ -239,22 +256,24 @@ public class Main extends JavaPlugin implements Listener{
 	
 	@EventHandler
 	public void onMMSpawn(MythicMobSpawnEvent e) {
-		if(damageDealt.containsKey(e.getMobType().getInternalName())) {
-			for (String mob : conf.getStringList(e.getMobType().getInternalName())) {
+		String name = e.getMobType().getInternalName();
+		if(damageDealt.containsKey(name)) {
+			timeSpawned.put(name, System.currentTimeMillis());
+			for (String mob : conf.getStringList(name)) {
 				damageDealt.put(mob, new HashMap<String, Double>());
 				damageTaken.put(mob, new HashMap<String, Double>());
 			}
 		}
 		
 		// If a player is within 40 of a spawned boss, track their stats
-		if(conf.getKeys(false).contains(e.getMobType().getInternalName())) {
+		if(conf.getKeys(false).contains(name)) {
 			for(Entity entity : e.getEntity().getNearbyEntities(30, 100, 30)) {
 				if(entity instanceof Player) {
 					selfHealed.put(entity.getName(), 0.0);
 					allyHealed.put(entity.getName(), 0.0);
-					damageDealt.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
-					damageTaken.get(e.getMobType().getInternalName()).put(entity.getName(), 0.0);
-					inBoss.put(entity.getName(), e.getMobType().getInternalName());
+					damageDealt.get(name).put(entity.getName(), 0.0);
+					damageTaken.get(name).put(entity.getName(), 0.0);
+					inBoss.put(entity.getName(), name);
 				}
 			}
 		}
