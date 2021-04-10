@@ -1,6 +1,7 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -73,5 +74,34 @@ public class Commands implements CommandExecutor{
 			return true;
 		}
 		return false;
+	}
+	
+
+	public void updateBonuses(Player p) {
+		// Make sure the player has no bonuses already equipped
+		if (p == null) {
+			return;
+		}
+		
+		removeBonuses(p);
+
+		// Go through all completed collections and add attributes
+		UUID uuid = p.getUniqueId();
+		Attributes pAttrs = new Attributes();
+		for (String rName : main.playerStats.get(uuid).getCompletedResearchItems()) {
+			pAttrs.addAttribute(main.researchItems.get(rName).getAttrs());
+		}
+		
+		main.playerAttrs.put(uuid, pAttrs);
+		pAttrs.applyAttributes(p);
+	}
+	
+	public void removeBonuses(Player p) {
+		UUID uuid = p.getUniqueId();
+		if (main.playerAttrs.containsKey(uuid)) {
+			Attributes pAttrs = main.playerAttrs.get(uuid);
+			pAttrs.removeAttributes(p);
+			pAttrs.resetAttributes();
+		}
 	}
 }

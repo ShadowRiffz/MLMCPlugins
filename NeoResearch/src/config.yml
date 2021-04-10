@@ -10,6 +10,7 @@ general:
   research_complete_command: "bc &4[&c&lMLMC&4] &e%player% &7has just completed the &c%item% &7research item!"
   research_levelup: "bc &4[&c&lMLMC&4] &7Your research level improved! You may now research up to level &e%level% &7mobs!"
   permission_command: "lp user %player% permission set research.item.%item%"
+  is_instance: false
 
 exp:
   5: 500
@@ -21,3 +22,6 @@ research_items:
     goals:
       SewerZombie: 10
       SewerSkeleton: 5
+    attributes:
+      str: 5
+      int: 10

@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeSet;
@@ -35,20 +36,22 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager;
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
 	public String url, user, pass;
-	public HashMap<String, HashMap<String, Integer>> researchItems;
-	public HashMap<String, ArrayList<String>> mobMap;
+	public HashMap<String, ResearchItem> researchItems;
+	public HashMap<String, ArrayList<ResearchItem>> mobMap;
 	public HashMap<String, String> displayNameMap;
-	public HashMap<String, Integer> researchBookMin;
-	public HashMap<String, Integer> researchExp;
 	public HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
+	public HashMap<UUID, Attributes> playerAttrs;
+	public ArrayList<String> attrs;
 	public Random rand;
+	public boolean isInstance;
 
 	public String broadcast, permcmd, levelup;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "prc", "vit", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 
 		loadConfig();
@@ -83,48 +86,57 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
 		permcmd = general.getString("permission_command");
 		levelup = general.getString("research_levelup").replaceAll("&", "§");
+		isInstance = general.getBoolean("is_instance");
 
 		// Exp
 		toNextLvl = new HashMap<Integer, Integer>();
-		ConfigurationSection exp = cfg.getConfigurationSection("exp");
-		for (String lvl : exp.getKeys(false)) {
-			toNextLvl.put(Integer.parseInt(lvl), exp.getInt(lvl));
+		ConfigurationSection expSec = cfg.getConfigurationSection("exp");
+		for (String lvl : expSec.getKeys(false)) {
+			toNextLvl.put(Integer.parseInt(lvl), expSec.getInt(lvl));
 		}
 
 		// Load research items into mobMap, researchItems,
-		researchItems = new HashMap<String, HashMap<String, Integer>>();
-		mobMap = new HashMap<String, ArrayList<String>>();
+		researchItems = new HashMap<String, ResearchItem>();
+		mobMap = new HashMap<String, ArrayList<ResearchItem>>();
 		displayNameMap = new HashMap<String, String>();
-		researchBookMin = new HashMap<String, Integer>();
-		researchExp = new HashMap<String, Integer>();
 		
 		MobManager mm = MythicMobs.inst().getMobManager();
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
 
 		for (String rItem : rItems.getKeys(false)) {
-			HashMap<String, Integer> obj = new HashMap<String, Integer>();
 			ConfigurationSection rItemSec = rItems.getConfigurationSection(rItem);
-			boolean required = rItemSec.getBoolean("required");
-			ConfigurationSection sec = rItemSec.getConfigurationSection("goals");
-			researchExp.put(rItem, rItemSec.getInt("exp"));
-			for (String mob : sec.getKeys(false)) {
-				obj.put(mob, sec.getInt(mob));
+			ResearchItem researchItem = new ResearchItem(rItem);
+			
+			// exp
+			researchItem.setExp(rItemSec.getInt("exp"));
+			
+			// attributes
+			Attributes attributes = new Attributes();
+			ConfigurationSection attrSec = rItemSec.getConfigurationSection("attributes");
+			for (String attr : attrs) {
+				attributes.setAttribute(attr, attrSec.getInt(attr));
+			}
+			researchItem.setAttrs(attributes);
+			
+			// kill goals
+			ConfigurationSection goalsSec = rItemSec.getConfigurationSection("goals");
+			HashMap<String, Integer> goals = new HashMap<String, Integer>();
+			for (String mob : goalsSec.getKeys(false)) {
+				goals.put(mob, goalsSec.getInt(mob));
 
 				// Add to mob map, research book min, display name map
 				if (mobMap.containsKey(mob)) {
-					mobMap.get(mob).add(rItem);
+					mobMap.get(mob).add(researchItem);
 					displayNameMap.put(mob, mm.getMythicMob(mob).getDisplayName().get());
-					if (researchBookMin.get(mob) < sec.getInt(mob))
-						researchBookMin.put(mob, sec.getInt(mob));
 				}
 				else {
-					ArrayList<String> list = new ArrayList<String>();
-					list.add(rItem);
+					ArrayList<ResearchItem> list = new ArrayList<ResearchItem>();
+					list.add(researchItem);
 					mobMap.put(mob, list);
-					if (required) researchBookMin.put(mob, sec.getInt(mob));
 				}
 			}
-			researchItems.put(rItem, obj);
+			researchItem.setGoals(goals);
+			researchItems.put(rItem, researchItem);
 		}
 	}
 
@@ -154,59 +166,67 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
 		
-		// First check if the account was already loaded
-		if (!playerStats.containsKey(uuid)) {
+		// Add them to playerattrs
+		if (!playerAttrs.containsKey(uuid)) {
+			playerAttrs.put(uuid, new Attributes());
+		}
 			
-			// Asynchronously look up sql and load it in
-			Research main = this;
-			BukkitRunnable load = new BukkitRunnable() {
-				public void run() {
-					int level = 5, exp = 0;
-					HashMap<String, Integer> researchPoints = new HashMap<String, Integer>();
-					HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
-					TreeSet<String> completedResearchItems = new TreeSet<String>();
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(url, user, pass);
-						Statement stmt = con.createStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
-						
-						// Load in account info
-						if (rs.next()) {
-							level = rs.getInt(2);
-							exp = rs.getInt(3);
+		// Asynchronously look up sql and load it in
+		Research main = this;
+		BukkitRunnable load = new BukkitRunnable() {
+			public void run() {
+				int level = 5, exp = 0;
+				HashMap<String, Integer> researchPoints = new HashMap<String, Integer>();
+				HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
+				TreeSet<String> completedResearchItems = new TreeSet<String>();
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection con = DriverManager.getConnection(url, user, pass);
+					Statement stmt = con.createStatement();
+					ResultSet rs = stmt.executeQuery("SELECT * FROM research_updates WHERE uuid = '" + uuid + "';");
+					
+					// 2 cases to update:
+					// 1. playerStats doesn't contain uuid
+					// 2. playerStats contains uuid but rs not empty
+					if (playerStats.containsKey(uuid) && rs.next()) return;
+					rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
+					
+					// Load in account info
+					if (rs.next()) {
+						level = rs.getInt(2);
+						exp = rs.getInt(3);
 
-							rs = stmt.executeQuery("SELECT * FROM research_statistics WHERE uuid = '" + uuid + "';");
-							while (rs.next()) {
-								researchPoints.put(rs.getString(2), rs.getInt(3));
-							}
-
-							rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
-							while (rs.next()) {
-								mobKills.put(rs.getString(2), rs.getInt(3));
-							}
-							
-							rs = stmt.executeQuery("SELECT * FROM research_completed WHERE uuid = '" + uuid + "';");
-							while (rs.next()) {
-								completedResearchItems.add(rs.getString(2));
-							}
-
-							playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
+						rs = stmt.executeQuery("SELECT * FROM research_statistics WHERE uuid = '" + uuid + "';");
+						while (rs.next()) {
+							researchPoints.put(rs.getString(2), rs.getInt(3));
 						}
-						con.close();
-					} catch (Exception ex) {
-						System.out.println(ex);
-					} finally {
+
+						rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
+						while (rs.next()) {
+							mobKills.put(rs.getString(2), rs.getInt(3));
+						}
+						
+						rs = stmt.executeQuery("SELECT * FROM research_completed WHERE uuid = '" + uuid + "';");
+						while (rs.next()) {
+							completedResearchItems.add(rs.getString(2));
+						}
+
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
+					con.close();
+				} catch (Exception ex) {
+					System.out.println(ex);
+				} finally {
+					playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 				}
-			};
-			load.runTaskAsynchronously(this);
-		}
+			}
+		};
+		load.runTaskAsynchronously(this);
 	}
 
 	private void handleLeave(UUID uuid) {
 		PlayerStats stats = playerStats.get(uuid);
+		playerAttrs.remove(uuid);
 
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
@@ -332,25 +352,27 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		TreeSet<String> completedItems = stats.getCompletedResearchItems();
 		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
 		if (mobMap.containsKey(mob)) {
-			for (String researchItem : mobMap.get(mob)) { // For each relevant research item
-				if (!completedItems.contains(researchItem)) { // If the player hasn't completed it
+			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
+				if (!completedItems.contains(researchItem.getName())) { // If the player hasn't completed it
 					// Check if research goal is completed for specific mob
-					if (researchItems.get(researchItem).get(mob) <= totalPoints) {
-						for (String rMob : researchItems.get(researchItem).keySet()) { // Check every objective
-							if (researchPoints.get(rMob) < researchItems.get(researchItem).get(rMob)) {
+					HashMap<String, Integer> goals = researchItem.getGoals();
+					if (goals.get(mob) <= totalPoints) {
+						for (String rMob : goals.keySet()) { // Check every objective
+							if (researchPoints.get(rMob) < goals.get(rMob)) {
 								return; // Haven't completed every item
 							}
 						}
+						// TODO: Check the mobmap for the highest number below the current research points, limit it with that
 	
 						// Completed a research item
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem));
-						completedItems.add(researchItem);
+								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName()));
+						completedItems.add(researchItem.getName());
 						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.replaceAll(" ", "")
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName().replaceAll(" ", "")
 										.replaceAll(":", "").toLowerCase()));
-						stats.addExp(p, researchExp.get(researchItem));
+						stats.addExp(p, researchItem.getExp());
 					}
 				}
 			}
