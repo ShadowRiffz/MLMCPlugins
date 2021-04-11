@@ -66,6 +66,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void loadConfig() {
 		File file = new File(getDataFolder(), "config.yml");
 		playerStats = new HashMap<UUID, PlayerStats>();
+		playerAttrs = new HashMap<UUID, Attributes>();
 		rand = new Random();
 
 		// Save config if doesn't exist
@@ -104,41 +105,49 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
 
 		for (String rItem : rItems.getKeys(false)) {
-			ConfigurationSection rItemSec = rItems.getConfigurationSection(rItem);
-			ResearchItem researchItem = new ResearchItem(rItem);
-			
-			// exp
-			researchItem.setExp(rItemSec.getInt("exp"));
-			
-			// attributes
-			Attributes attributes = new Attributes();
-			ConfigurationSection attrSec = rItemSec.getConfigurationSection("attributes");
-			if (attrSec != null) {
-				for (String attr : attrs) {
-					attributes.setAttribute(attr, attrSec.getInt(attr));
+			try {
+				ConfigurationSection rItemSec = rItems.getConfigurationSection(rItem);
+				ResearchItem researchItem = new ResearchItem(rItem);
+				
+				// exp
+				researchItem.setExp(rItemSec.getInt("exp"));
+				
+				// attributes
+				Attributes attributes = new Attributes();
+				ConfigurationSection attrSec = rItemSec.getConfigurationSection("attributes");
+				if (attrSec != null) {
+					for (String attr : attrs) {
+						attributes.setAttribute(attr, attrSec.getInt(attr));
+					}
 				}
+				researchItem.setAttrs(attributes);
+				
+				// kill goals
+				ConfigurationSection goalsSec = rItemSec.getConfigurationSection("goals");
+				HashMap<String, Integer> goals = new HashMap<String, Integer>();
+				for (String mob : goalsSec.getKeys(false)) {
+					goals.put(mob, goalsSec.getInt(mob));
+	
+					// Add to mob map, research book min, display name map
+					if (mobMap.containsKey(mob)) {
+						mobMap.get(mob).add(researchItem);
+						String mobdisplay = mob;
+						if (mm.getMythicMob(mob) != null) {
+							 mm.getMythicMob(mob).getDisplayName().get();
+						}
+						displayNameMap.put(mob, mobdisplay);
+					}
+					else {
+						ArrayList<ResearchItem> list = new ArrayList<ResearchItem>();
+						list.add(researchItem);
+						mobMap.put(mob, list);
+					}
+				}
+				researchItem.setGoals(goals);
+				researchItems.put(rItem, researchItem);
+			} catch (Exception e) {
+				System.out.println("Failed: " + rItem);
 			}
-			researchItem.setAttrs(attributes);
-			
-			// kill goals
-			ConfigurationSection goalsSec = rItemSec.getConfigurationSection("goals");
-			HashMap<String, Integer> goals = new HashMap<String, Integer>();
-			for (String mob : goalsSec.getKeys(false)) {
-				goals.put(mob, goalsSec.getInt(mob));
-
-				// Add to mob map, research book min, display name map
-				if (mobMap.containsKey(mob)) {
-					mobMap.get(mob).add(researchItem);
-					displayNameMap.put(mob, mm.getMythicMob(mob).getDisplayName().get());
-				}
-				else {
-					ArrayList<ResearchItem> list = new ArrayList<ResearchItem>();
-					list.add(researchItem);
-					mobMap.put(mob, list);
-				}
-			}
-			researchItem.setGoals(goals);
-			researchItems.put(rItem, researchItem);
 		}
 	}
 
