@@ -113,8 +113,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			// attributes
 			Attributes attributes = new Attributes();
 			ConfigurationSection attrSec = rItemSec.getConfigurationSection("attributes");
-			for (String attr : attrs) {
-				attributes.setAttribute(attr, attrSec.getInt(attr));
+			if (attrSec != null) {
+				for (String attr : attrs) {
+					attributes.setAttribute(attr, attrSec.getInt(attr));
+				}
 			}
 			researchItem.setAttrs(attributes);
 			
