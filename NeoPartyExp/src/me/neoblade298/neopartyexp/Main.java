@@ -54,9 +54,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 						for (Entity ent : p.getNearbyEntities(60, 60, 60)) {
 							if (ent instanceof Player) {
 								Player receive = (Player) ent;
-								if (Parties.getApi().getPartyPlayer(receive.getUniqueId()).getPartyName().equals(pName)) {
-									getsExp.add(receive);
-								}
+								getsExp.add(receive);
 							}
 						}
 					}
