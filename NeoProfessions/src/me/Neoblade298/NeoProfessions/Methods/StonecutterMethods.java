@@ -178,7 +178,7 @@ public class StonecutterMethods {
 					if (cm.hasEnough(p, type, oldLevel, cost * amount)) {
 						cm.subtract(p, type, oldLevel, cost * amount);
 						cm.add(p, type, level, amount);
-						econ.withdrawPlayer(p, REFINE_GOLD.get(oldLevel));
+						econ.withdrawPlayer(p, REFINE_GOLD.get(oldLevel) * amount);
 						util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
 					} else {
 						util.sendMessage(p, "&cYou lack the materials to refine this!");

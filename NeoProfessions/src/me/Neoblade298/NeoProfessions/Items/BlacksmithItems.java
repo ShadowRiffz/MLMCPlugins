@@ -23,7 +23,7 @@ public class BlacksmithItems {
 		if(itemtype.equals("armor")) {
 			lore.add("§7Effect: Increases armor max durability");
 			int offset = (10 * ((level / 5) - 1)) + 1;
-			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) + offset) + 1);
+			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) + offset + 1));
 		}
 		if(itemtype.equals("weapon")) {
 			lore.add("§7Effect: Increases weapon max durability");
