@@ -10,7 +10,7 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoJourney Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("journey").setExecutor(new Commands(this));
+	    this.getCommand("njourney").setExecutor(new Commands(this));
 	}
 	
 	public void onDisable() {
