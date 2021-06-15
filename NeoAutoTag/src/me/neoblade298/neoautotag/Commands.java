@@ -86,7 +86,9 @@ public class Commands implements CommandExecutor{
 			}
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tags reload");
 			
-			Bukkit.getPlayer(args[0]).sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + tag.replaceAll("&", "§") + "§7tag! Do §c/tags§7!");
+			if (Bukkit.getPlayer(args[0]) != null) {
+				Bukkit.getPlayer(args[0]).sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + tag.replaceAll("&", "§") + "§7tag! Do §c/tags§7!");
+			}
 		}
 		return true;
 	}
