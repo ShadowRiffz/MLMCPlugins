@@ -17,6 +17,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new ResearchPointsPlaceholders().register();
 		new MinibossPlaceholders().register();
 		new MinibossShortPlaceholders().register();
+		new ChatColorPlaceholders().register();
 		new OtherSkillAPIPlaceholders().register();
 	}
 
