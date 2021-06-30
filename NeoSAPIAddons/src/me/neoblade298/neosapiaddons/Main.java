@@ -58,7 +58,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 			// Make damage go through shields
 			if (p.isBlocking()) {
 				String world = p.getWorld().getName();
-				if (world.equals("Argyll") || world.equals("ClassPVP")) {
+				if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
 				}
 			}
