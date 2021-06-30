@@ -5,17 +5,14 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.google.common.collect.ImmutableList;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.SkillPlugin;
@@ -24,6 +21,7 @@ import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.trigger.Trigger;
 
+@SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	HashMap<Player, Player> ironbond;
 	public void onEnable() {
@@ -51,15 +49,18 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 		}
 	}
 	
-	@EventHandler
+	// Stop players from blocking mythicmobs
+	@EventHandler(ignoreCancelled=false)
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			
 			// Make damage go through shields
 			if (p.isBlocking()) {
-				System.out.println("DAMAGE: " + e.getDamage());
-				System.out.println("FINAL DAMAGE: " + e.getFinalDamage());
+				String world = p.getWorld().getName();
+				if (world.equals("Argyll") || world.equals("ClassPVP")) {
+					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
+				}
 			}
 		}
 	}
