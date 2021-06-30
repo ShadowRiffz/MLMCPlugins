@@ -1,46 +1,49 @@
 package me.neoblade298.neouno.Objects;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Lobby {
-	private ArrayList<Player> players;
-	private ArrayList<Player> invited;
-	private Player host;
+	private ArrayList<UUID> players;
+	private ArrayList<UUID> invited;
+	private UUID host;
 	private String name;
 	private int pointsToWin;
 	
-	public Lobby(Player p, String name) {
-		host = p;
-		players = new ArrayList<Player>();
-		players.add(p);
+	public Lobby(UUID uuid, String name) {
+		host = uuid;
+		players = new ArrayList<UUID>();
+		players.add(uuid);
 		this.name = name;
-		this.invited = new ArrayList<Player>();
+		this.invited = new ArrayList<UUID>();
 		this.pointsToWin = -1;
 	}
 	
 	public String getPlayerList() {
 		String msg = new String();
 		for (int i = 0; i < players.size(); i++) {
-			msg += "§e" + players.get(i).getName();
+			msg += "§e" + Bukkit.getPlayer(players.get(i)).getName();
 			if (i != players.size() - 1) msg += "§7, ";
 		}
 		return msg;
 	}
 	
 	public void broadcast(String msg) {
-		for (Player p : players) {
+		for (UUID uuid : players) {
+			Player p = Bukkit.getPlayer(uuid);
 			String message = "&4[&c&lMLMC&4] &7" + msg;
 			p.sendMessage(message.replaceAll("&", "§"));
 		}
 	}
 
-	public ArrayList<Player> getInvited() {
+	public ArrayList<UUID> getInvited() {
 		return invited;
 	}
 
-	public void setInvited(ArrayList<Player> invited) {
+	public void setInvited(ArrayList<UUID> invited) {
 		this.invited = invited;
 	}
 
@@ -52,19 +55,19 @@ public class Lobby {
 		this.name = name;
 	}
 
-	public ArrayList<Player> getPlayers() {
+	public ArrayList<UUID> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<Player> players) {
+	public void setPlayers(ArrayList<UUID> players) {
 		this.players = players;
 	}
 
-	public Player getHost() {
+	public UUID getHost() {
 		return host;
 	}
 
-	public void setHost(Player host) {
+	public void setHost(UUID host) {
 		this.host = host;
 	}
 

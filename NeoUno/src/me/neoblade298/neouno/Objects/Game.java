@@ -3,6 +3,9 @@ package me.neoblade298.neouno.Objects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,7 +23,7 @@ public class Game {
 	public ArrayList<GamePlayer> gameplayers;
 	public ArrayList<Card> drawDeck;
 	public Card topCard;
-	public HashMap<Player, GamePlayer> players;
+	public HashMap<UUID, GamePlayer> players;
 	private HashMap<GamePlayer, Integer> points;
 	public Uno main;
 	public GamePlayer curr;
@@ -30,7 +33,7 @@ public class Game {
 	public String requiredAction;
 	public boolean isBusy;
 	
-	public Game(Uno main, String name, ArrayList<Player> players, int pointsToWin) {
+	public Game(Uno main, String name, ArrayList<UUID> players, int pointsToWin) {
 		this.name = name;
 		this.main = main;
 		this.pointsToWin = pointsToWin;
@@ -39,18 +42,18 @@ public class Game {
 		this.spectators = new ArrayList<GamePlayer>();
 		this.gameplayers = new ArrayList<GamePlayer>();
 		this.drawDeck = new ArrayList<Card>();
-		this.players = new HashMap<Player, GamePlayer>();
+		this.players = new HashMap<UUID, GamePlayer>();
 		this.points = new HashMap<GamePlayer, Integer>();
 		this.turns = new ArrayList<GamePlayer>();
 		this.requiredAction = null;
 		this.drawNum = 0;
 		this.isBusy = false;
 		
-		for (Player p : players) {
-			GamePlayer gp = new GamePlayer(this, p);
+		for (UUID uuid : players) {
+			GamePlayer gp = new GamePlayer(this, uuid);
 			this.turns.add(gp);
 			this.gameplayers.add(gp);
-			this.players.put(p, gp);
+			this.players.put(uuid, gp);
 			this.points.put(gp, 0);
 		}
 
@@ -120,7 +123,7 @@ public class Game {
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color g")).append(new TextComponent(" "))
 					.append(new TextComponent("Yellow")).color(net.md_5.bungee.api.ChatColor.YELLOW).event(hover)
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color y")).append(new TextComponent(" "));
-					gp.getPlayer().spigot().sendMessage(builder.create());
+					Bukkit.getPlayer(gp.getPlayer()).spigot().sendMessage(builder.create());
 				}
 				if (drawNum > 0) { 
 					broadcast("&7Next person to draw must draw &f" + drawNum + "&7 cards!");
@@ -288,7 +291,7 @@ public class Game {
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color g")).append(new TextComponent(" "))
 			.append(new TextComponent("Yellow")).color(net.md_5.bungee.api.ChatColor.YELLOW).event(hover)
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno color y")).append(new TextComponent(" "));
-			gp.getPlayer().spigot().sendMessage(builder.create());
+			Bukkit.getPlayer(gp.getPlayer()).spigot().sendMessage(builder.create());
 		}
 		if (requiredAction == null) {
 			nextTurn();

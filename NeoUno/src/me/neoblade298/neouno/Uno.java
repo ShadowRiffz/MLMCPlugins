@@ -1,6 +1,7 @@
 package me.neoblade298.neouno;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,8 +14,8 @@ import me.neoblade298.neouno.Commands.Commands;
 
 public class Uno extends JavaPlugin implements org.bukkit.event.Listener {
 	// Player data structures
-	public HashMap<Player, Lobby> inlobby;
-	public HashMap<Player, Game> ingame;
+	public HashMap<UUID, Lobby> inlobby;
+	public HashMap<UUID, Game> ingame;
 	public HashMap<String, Lobby> lobbies;
 	public HashMap<String, Game> games;
 	public HashMap<String, ChatColor> stringToColor;
@@ -26,8 +27,8 @@ public class Uno extends JavaPlugin implements org.bukkit.event.Listener {
 	    this.getCommand("uno").setExecutor(new Commands(this));
 	    
 	    // Initialize data structures
-		inlobby = new HashMap<Player, Lobby>();
-		ingame = new HashMap<Player, Game>();
+		inlobby = new HashMap<UUID, Lobby>();
+		ingame = new HashMap<UUID, Game>();
 		lobbies = new HashMap<String, Lobby>();
 		games = new HashMap<String, Game>();
 		stringToColor = new HashMap<String, ChatColor>();

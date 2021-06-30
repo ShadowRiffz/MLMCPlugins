@@ -53,64 +53,13 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && !(e.getDamager() instanceof Player)) {
+		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			
-			// Guardian angel
-			if (p.getAbsorptionAmount() > 0) {
-				e.setCancelled(true);
-				p.setAbsorptionAmount(p.getAbsorptionAmount() - 1 >= 0 ? p.getAbsorptionAmount() - 1 : 0);
-			}
-			
-			// Iron bond collection activate
-			if (p.getHealth() <= e.getFinalDamage()) {
-				List<Entity> nearby = p.getNearbyEntities(20, 20, 20);
-				for (Entity ent : nearby) {
-					if (ent instanceof Player && ent.hasPermission("collections.sh.use.36") && !ent.hasPermission("*")) {
-						Player bond = (Player) ent;
-						if (!FlagManager.hasFlag(bond, "cd_ironBond") &&
-								bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() && bond.isValid() &&
-								!p.getName().equals(bond.getName()) && bond.getHealth() > e.getFinalDamage()) {
-							FlagManager.addFlag(bond, "cd_ironBond", 60 * 20);
-							p.sendMessage("§cIron Bond§7 was activated by §e"  + bond.getName());
-							bond.sendMessage("§cIron Bond§7 was activated");
-							ironbond.put(p, bond);
-							FlagManager.addFlag(p, "fl_ironBond", 5 * 20);
-							if (bond.getAbsorptionAmount() >= 1) {
-								bond.setHealth(bond.getHealth() - e.getFinalDamage());
-								bond.damage(1, e.getDamager());
-							}
-							else {
-								bond.setAbsorptionAmount(bond.getAbsorptionAmount() - 1 > 0 ? bond.getAbsorptionAmount() - 1 : 0);
-							}
-				    		BukkitRunnable ironBondCooldown = new BukkitRunnable() {
-				    			public void run() {
-		    						if (bond.isOnline()) {
-		    							bond.sendMessage("§cIron Bond§7 is off cooldown");
-		    						}
-				    			}
-				    		};
-				    		ironBondCooldown.runTaskLater(this, 20L * 60L);
-							e.setCancelled(true);
-							break;
-						}
-					}
-				}
-			}
-			// Iron bond collection continued
-			if (FlagManager.hasFlag(p, "fl_ironBond")) {
-				Player bond = ironbond.get(p);
-				if (bond.isValid() && bond.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.3 <= bond.getHealth() &&
-						bond.getHealth() > e.getFinalDamage()) {
-					if (bond.getAbsorptionAmount() < 1) {
-						bond.setHealth(bond.getHealth() - e.getFinalDamage());
-						bond.damage(1, e.getDamager());
-					}
-					else {
-						bond.setAbsorptionAmount(bond.getAbsorptionAmount() - 1 > 0 ? bond.getAbsorptionAmount() - 1 : 0);
-					}
-					e.setCancelled(true);
-				}
+			// Make damage go through shields
+			if (p.isBlocking()) {
+				System.out.println("DAMAGE: " + e.getDamage());
+				System.out.println("FINAL DAMAGE: " + e.getFinalDamage());
 			}
 		}
 	}

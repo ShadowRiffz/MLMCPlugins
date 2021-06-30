@@ -1,5 +1,7 @@
 package me.neoblade298.neouno.Commands;
 
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,9 +18,10 @@ public class GameCommands {
 	}
 	
 	public void showHand(Player sender) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -33,9 +36,10 @@ public class GameCommands {
 	}
 	
 	public void quitGame(Player sender) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -50,9 +54,10 @@ public class GameCommands {
 	}
 	
 	public void playCard(Player sender, String name) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -96,9 +101,10 @@ public class GameCommands {
 	}
 	
 	public void changeColor(Player sender, String color) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -127,9 +133,10 @@ public class GameCommands {
 	}
 	
 	public void callUno(Player sender) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -158,12 +165,14 @@ public class GameCommands {
 	}
 	
 	public void challengeUno(Player sender, Player toChallenge) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
-			if (main.ingame.containsKey(toChallenge)) {
-				GamePlayer challenged = game.players.get(toChallenge);
+			UUID cuuid = toChallenge.getUniqueId();
+			if (main.ingame.containsKey(cuuid)) {
+				GamePlayer challenged = game.players.get(cuuid);
 
 				if (!isNotBusy(game, gp)) {
 					return;
@@ -192,9 +201,10 @@ public class GameCommands {
 	}
 	
 	public void drawCard(Player sender) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -208,9 +218,10 @@ public class GameCommands {
 	}
 	
 	public void displayPlayers(Player sender) {
-		if (main.ingame.containsKey(sender)) {
-			Game game = main.ingame.get(sender);
-			GamePlayer gp = game.players.get(sender);
+		UUID uuid = sender.getUniqueId();
+		if (main.ingame.containsKey(uuid)) {
+			Game game = main.ingame.get(uuid);
+			GamePlayer gp = game.players.get(uuid);
 			
 			gp.message("&7Current turn: &f" + game.curr + "&7 - &e" + game.curr.getCards().size() + " &7cards");
 			int count = 2;
