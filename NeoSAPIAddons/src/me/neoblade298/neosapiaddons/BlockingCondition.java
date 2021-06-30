@@ -14,7 +14,7 @@ public class BlockingCondition extends CustomEffectComponent {
 
 	@Override
 	public String getDescription() {
-		return "Check absorption of the player.";
+		return "Check if player is blocking with shield";
 	}
 
 	@Override
