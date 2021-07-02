@@ -29,7 +29,7 @@ public class BlockingCondition extends CustomEffectComponent {
     	Player p = (Player) caster;
         final boolean blocking = p.isBlocking();
         final boolean wantBlocking = settings.getString("type", "blocking").equalsIgnoreCase("blocking");
-        return blocking == wantBlocking;
+        return blocking == wantBlocking && executeChildren(caster, lvl, targets);
 	}
 
 	@Override
