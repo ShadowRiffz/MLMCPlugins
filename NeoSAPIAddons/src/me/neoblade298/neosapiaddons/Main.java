@@ -61,6 +61,9 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
 				}
+				else {
+					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.5);
+				}
 			}
 		}
 	}
