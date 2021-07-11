@@ -19,6 +19,7 @@ import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
 import me.neoblade298.neomythicextension.conditions.PlayersInBossCondition;
 import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
+import me.neoblade298.neomythicextension.conditions.StrongPlayerWithin;
 import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.DropChanceMechanic;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
@@ -85,6 +86,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (event.getConditionName().equalsIgnoreCase("aboveblock")) {
 			AboveBlockCondition condition = new AboveBlockCondition(event.getConfig());
+			event.register(condition);
+		}
+
+		if (event.getConditionName().equalsIgnoreCase("strongplayerwithin")) {
+			StrongPlayerWithin condition = new StrongPlayerWithin(event.getConfig());
 			event.register(condition);
 		}
 	}
