@@ -21,7 +21,7 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onMend(PlayerItemMendEvent e) {
-		e.setRepairAmount(e.getRepairAmount() / 2);
+		e.setRepairAmount((e.getRepairAmount() + 1) / 2);
 	}
 	
 	@EventHandler
