@@ -27,7 +27,7 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onDurability(PlayerItemDamageEvent e) {
 		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasCustomModelData()) {
-			e.setDamage(e.getDamage() / 2);
+			e.setDamage((e.getDamage() + 1) / 2);
 		}
 	}
 	
