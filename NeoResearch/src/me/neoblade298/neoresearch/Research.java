@@ -46,7 +46,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public Random rand;
 	public boolean isInstance;
 
-	public String broadcast, permcmd, levelup;
+	public String broadcast, permcmd, levelup, discovery;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
@@ -88,6 +88,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		permcmd = general.getString("permission_command");
 		levelup = general.getString("research_levelup").replaceAll("&", "§");
 		isInstance = general.getBoolean("is_instance");
+		discovery = general.getString("discovery");
 
 		// Exp
 		toNextLvl = new HashMap<Integer, Integer>();
@@ -165,7 +166,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			// First update the mob kill stat
 			PlayerStats stats = playerStats.get(p.getUniqueId());
 			HashMap<String, Integer> mobKills = stats.getMobKills();
-			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + 1 : 1;
+			int kills = 1;
+			
+			// Discover new mob
+			if (mobKills.containsKey(mob)) {
+				kills = mobKills.get(mob) + 1;
+				p.sendMessage(discovery.replaceAll("%mob%", e.getMobType().getDisplayName().get()).replaceAll("&", "§"));
+			}
 			mobKills.put(mob, kills);
 
 			// Update research points
@@ -234,6 +241,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 	
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
+						
+						// Use completed research items to apply attributes
+						updateBonuses(p);
 					}
 					con.close();
 				} catch (Exception ex) {
@@ -246,9 +256,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		load.runTaskAsynchronously(this);
 	}
 
-	private void handleLeave(UUID uuid) {
-		PlayerStats stats = playerStats.get(uuid);
+	private void handleLeave(Player p) {
+		UUID uuid = p.getUniqueId();
 		playerAttrs.remove(uuid);
+		PlayerStats stats = playerStats.get(uuid);
 
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
@@ -328,12 +339,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
+		handleLeave(e.getPlayer());
 	}
 	
 	@EventHandler
 	public void onLeave(PlayerKickEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
+		handleLeave(e.getPlayer());
 	}
 
 	@EventHandler
@@ -394,6 +405,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName().replaceAll(" ", "")
 										.replaceAll(":", "").toLowerCase()));
 						stats.addExp(p, researchItem.getExp());
+						updateBonuses(p); // make sure this works when u get home
 					}
 				}
 			}
@@ -402,73 +414,44 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public void giveResearchPoints(Player p, int amount, String mob) {
 		UUID uuid = p.getUniqueId();
-		if (!isInstance) {
-			if (playerStats.containsKey(uuid)) {
-				HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
-				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
-				researchPoints.put(mob, points);
-				checkItemCompletion(mob, p, points);
-			}
-		} else {
-			BukkitRunnable increment = new BukkitRunnable() {
-				public void run() {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(url, user, pass);
-						Statement stmt = con.createStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "' AND mob = '" + mob + "';");
-						
-						if (rs.next()) {
-							stmt.executeUpdate("UPDATE research_points SET points = points + " + amount + " WHERE mob = '" + mob + "';");
-						}
-						else {
-							stmt.executeUpdate("INSERT INTO research_points VALUES ('" + uuid + "', '" + mob + "', " + amount + ");");
-						}
-						
-						stmt.executeUpdate("INSERT INTO research_updates VALUES ('" + uuid + "');");
-						con.close();
-					} catch (Exception ex) {
-						System.out.println(ex);
-					}
-				}
-			};
-			increment.runTaskAsynchronously(this);
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
+			researchPoints.put(mob, points);
+			checkItemCompletion(mob, p, points);
 		}
 	}
 
 	public void giveResearchKills(Player p, int amount, String mob) {
 		UUID uuid = p.getUniqueId();
-		if (!isInstance) {
-			if (playerStats.containsKey(uuid)) {
-				HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
-				int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : 1;
-				mobKills.put(mob, kills);
-				checkItemCompletion(mob, p, kills);
-			}
-		} else {
-			BukkitRunnable increment = new BukkitRunnable() {
-				public void run() {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(url, user, pass);
-						Statement stmt = con.createStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM research_kills WHERE uuid = '" + uuid + "' AND mob = '" + mob + "';");
-						
-						if (rs.next()) {
-							stmt.executeUpdate("UPDATE research_kills SET kills = kills + " + amount + " WHERE mob = '" + mob + "';");
-						}
-						else {
-							stmt.executeUpdate("INSERT INTO research_kills VALUES ('" + uuid + "', '" + mob + "', " + amount + ");");
-						}
-						
-						stmt.executeUpdate("INSERT INTO research_updates VALUES ('" + uuid + "');");
-						con.close();
-					} catch (Exception ex) {
-						System.out.println(ex);
-					}
-				}
-			};
-			increment.runTaskAsynchronously(this);
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
+			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : 1;
+			mobKills.put(mob, kills);
+		}
+	}
+
+	public void updateBonuses(Player p) {
+		// Make sure the player has no bonuses already equipped
+		removeBonuses(p);
+
+		// Go through all completed collections and add attributes
+		UUID uuid = p.getUniqueId();
+		Attributes pAttrs = new Attributes();
+		for (String rName : playerStats.get(uuid).getCompletedResearchItems()) {
+			pAttrs.addAttribute(researchItems.get(rName).getAttrs());
+		}
+		
+		playerAttrs.put(uuid, pAttrs);
+		pAttrs.applyAttributes(p);
+	}
+	
+	public void removeBonuses(Player p) {
+		UUID uuid = p.getUniqueId();
+		if (playerAttrs.containsKey(uuid)) {
+			Attributes pAttrs = playerAttrs.get(uuid);
+			pAttrs.removeAttributes(p);
+			pAttrs.resetAttributes();
 		}
 	}
 	

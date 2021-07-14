@@ -33,6 +33,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr givepoints [player] [mob] [amt]");
 				sender.sendMessage("§c/nr givekills [player] [mob] [amt]");
 				sender.sendMessage("§c/nr inspect [player] [mob]");
+				sender.sendMessage("§c/nr updateattrs [player] [mob]");
 			}
 
 			// /nr reload
@@ -138,37 +139,13 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
 						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
 			}
+			// /nr updateattrs [player]
+			else if (args[0].equalsIgnoreCase("updateattrs")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				main.updateBonuses(p);
+			}
 			return true;
 		}
 		return false;
-	}
-	
-
-	public void updateBonuses(Player p) {
-		// Make sure the player has no bonuses already equipped
-		if (p == null) {
-			return;
-		}
-		
-		removeBonuses(p);
-
-		// Go through all completed collections and add attributes
-		UUID uuid = p.getUniqueId();
-		Attributes pAttrs = new Attributes();
-		for (String rName : main.playerStats.get(uuid).getCompletedResearchItems()) {
-			pAttrs.addAttribute(main.researchItems.get(rName).getAttrs());
-		}
-		
-		main.playerAttrs.put(uuid, pAttrs);
-		pAttrs.applyAttributes(p);
-	}
-	
-	public void removeBonuses(Player p) {
-		UUID uuid = p.getUniqueId();
-		if (main.playerAttrs.containsKey(uuid)) {
-			Attributes pAttrs = main.playerAttrs.get(uuid);
-			pAttrs.removeAttributes(p);
-			pAttrs.resetAttributes();
-		}
 	}
 }
