@@ -149,6 +149,11 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				System.out.println("Failed: " + rItem);
 			}
 		}
+		
+		// Finally, load in all online players
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			loadPlayer(p);
+		}
 	}
 
 	@EventHandler
@@ -174,7 +179,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
+		loadPlayer(e.getPlayer());
+	}
+	
+	private void loadPlayer(Player p) {
 		UUID uuid = p.getUniqueId();
 		
 		// Add them to playerattrs
@@ -209,12 +217,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					if (rs.next()) {
 						level = rs.getInt(2);
 						exp = rs.getInt(3);
-
-						rs = stmt.executeQuery("SELECT * FROM research_statistics WHERE uuid = '" + uuid + "';");
+	
+						rs = stmt.executeQuery("SELECT * FROM research_kills WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
 							researchPoints.put(rs.getString(2), rs.getInt(3));
 						}
-
+	
 						rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
 							mobKills.put(rs.getString(2), rs.getInt(3));
@@ -224,7 +232,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						while (rs.next()) {
 							completedResearchItems.add(rs.getString(2));
 						}
-
+	
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
