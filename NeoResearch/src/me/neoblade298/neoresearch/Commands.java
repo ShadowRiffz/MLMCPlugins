@@ -27,7 +27,12 @@ public class Commands implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("mycommand.staff") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§c/nr givebook [player] [mob] [amt]");
+				sender.sendMessage("§c/nr reload");
+				sender.sendMessage("§c/nr createbook [player] [mob] [amt]");
+				sender.sendMessage("§c/nr spawnbook [player] [mob] [amt]");
+				sender.sendMessage("§c/nr givepoints [player] [mob] [amt]");
+				sender.sendMessage("§c/nr givekills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr inspect [player] [mob]");
 			}
 
 			// /nr reload
@@ -60,8 +65,8 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
 			}
 
-			// /nr givebook [player] [internalmob] [amount]
-			else if (args[0].equalsIgnoreCase("givebook")) {
+			// /nr createbook [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("createbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
@@ -120,6 +125,18 @@ public class Commands implements CommandExecutor{
 				}
 				main.giveResearchKills(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[1] + " §7to player §e" + p.getName());
+			}
+			// /nr givekills [player] [internalmob]
+			else if (args[0].equalsIgnoreCase("inspect")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
+					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
+					return true;
+				}
+				String mob = args[2];
+				PlayerStats stats = main.getPlayerStats(p);
+				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
+						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
 			}
 			return true;
 		}
