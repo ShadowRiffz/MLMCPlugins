@@ -247,7 +247,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		};
-		load.runTaskAsynchronously(this);
+		load.runTaskLaterAsynchronously(this, 100L);
 	}
 
 	private void handleLeave(Player p) {
@@ -451,5 +451,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public PlayerStats getPlayerStats(Player p) {
 		return playerStats.get(p.getUniqueId());
+	}
+	
+	public int getNumResearchItems() {
+		return researchItems.size();
 	}
 }
