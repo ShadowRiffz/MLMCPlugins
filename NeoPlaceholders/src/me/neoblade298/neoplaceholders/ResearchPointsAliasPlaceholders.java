@@ -59,7 +59,7 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 		for (int i = 2; args.length > i; i++) {
 			name += args[i];
 		}
-		name = name.replaceAll("$", "§");
+		name = name.replaceAll("@", "§");
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 		HashMap<String, Integer> researchPoints = nr.getPlayerStats(p).getResearchPoints();
 		if (researchPoints.containsKey(mob)) {
