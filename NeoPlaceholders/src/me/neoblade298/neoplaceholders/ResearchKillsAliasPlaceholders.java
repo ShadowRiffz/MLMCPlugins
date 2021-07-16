@@ -52,7 +52,7 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length != 1) return "Invalid placeholder";
+		if (args.length <= 1) return "Invalid placeholder";
 		String mob = args[0];
 		String name = args[1];
 		// %researchkillsalias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil

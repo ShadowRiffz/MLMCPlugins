@@ -211,13 +211,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					Statement stmt = con.createStatement();
 					ResultSet rs = stmt.executeQuery("SELECT * FROM research_updates WHERE uuid = '" + uuid + "';");
 					
-					// 2 cases to update:
-					// 1. playerStats doesn't contain uuid
-					// 2. playerStats contains uuid but rs not empty
-					if (playerStats.containsKey(uuid) && rs.next()) {
-						con.close();
-						return;
-					}
+					
 					rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
 					
 					// Load in account info
