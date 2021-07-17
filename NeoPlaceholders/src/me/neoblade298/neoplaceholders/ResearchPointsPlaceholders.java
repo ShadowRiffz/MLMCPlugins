@@ -60,7 +60,7 @@ public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 		HashMap<String, Integer> researchPoints = nr.getPlayerStats(p).getResearchPoints();
 		if (researchPoints.containsKey(mob)) {
 			int points = researchPoints.get(mob);
-			return name + "§7: §e" + points + "§7 research points";
+			return name + "§7: §e" + points;
 		}
     	return "§c???";
 	}
