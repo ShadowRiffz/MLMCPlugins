@@ -33,7 +33,7 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchpoints";
+		return "researchpointsalias";
 	}
 
     @Override

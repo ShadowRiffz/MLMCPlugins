@@ -1,7 +1,5 @@
 package me.neoblade298.neoplaceholders;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
