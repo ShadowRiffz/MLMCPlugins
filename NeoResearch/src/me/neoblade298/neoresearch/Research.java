@@ -169,9 +169,11 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			int kills = 1;
 			
 			// Discover new mob
-			if (mobKills.containsKey(mob)) {
-				kills = mobKills.get(mob) + 1;
+			if (!mobKills.containsKey(mob)) {
 				p.sendMessage(discovery.replaceAll("%mob%", e.getMobType().getDisplayName().get()).replaceAll("&", "§"));
+			}
+			else {
+				kills = mobKills.get(mob) + 1;
 			}
 			mobKills.put(mob, kills);
 
@@ -455,5 +457,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public int getNumResearchItems() {
 		return researchItems.size();
+	}
+	
+	public HashMap<Integer, Integer> getNextLvl() {
+		return toNextLvl;
 	}
 }
