@@ -26,7 +26,6 @@ public class ModManaMechanic extends SkillMechanic implements ITargetedEntitySki
 		if (target.getBukkitEntity() instanceof Player) {
 			Player p = (Player) target.getBukkitEntity();
 			SkillAPI.getPlayerData(p).giveMana(amount);
-			System.out.println("Giving mana " + amount);
 			return true;
 		}
 		return false;
