@@ -112,6 +112,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				
 				// exp
 				researchItem.setExp(rItemSec.getInt("exp"));
+				// perm
+				researchItem.setPermission(rItemSec.getString("perm"));
 				
 				// attributes
 				Attributes attributes = new Attributes();
@@ -147,7 +149,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				researchItem.setGoals(goals);
 				researchItems.put(rItem, researchItem);
 			} catch (Exception e) {
-				System.out.println("Failed: " + rItem);
+				System.out.println("Failed to load research item: " + rItem);
 			}
 		}
 		
@@ -398,10 +400,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						completedItems.add(researchItem.getName());
 						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								permcmd.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName().replaceAll(" ", "")
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%perm%", researchItem.getPermission().replaceAll(" ", "")
 										.replaceAll(":", "").toLowerCase()));
 						stats.addExp(p, researchItem.getExp());
-						updateBonuses(p); // make sure this works when u get home
+						updateBonuses(p);
 					}
 				}
 			}

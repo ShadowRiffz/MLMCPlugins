@@ -7,6 +7,7 @@ public class ResearchItem {
 	private HashMap<String, Integer> goals;
 	private Attributes attrs;
 	private int exp;
+	private String permission;
 	
 	public ResearchItem(String name) {
 		this.goals = new HashMap<String, Integer>();
@@ -45,5 +46,13 @@ public class ResearchItem {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 }
