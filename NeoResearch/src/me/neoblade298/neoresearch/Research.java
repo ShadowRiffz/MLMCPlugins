@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
@@ -169,12 +170,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			PlayerStats stats = playerStats.get(p.getUniqueId());
 			HashMap<String, Integer> mobKills = stats.getMobKills();
 			int kills = 1;
-			
-			// Discover new mob
-			if (!mobKills.containsKey(mob)) {
-				p.sendMessage(discovery.replaceAll("%mob%", e.getMobType().getDisplayName().get()).replaceAll("&", "§"));
-			}
-			else {
+			if (mobKills.containsKey(mob)) {
 				kills = mobKills.get(mob) + 1;
 			}
 			mobKills.put(mob, kills);
@@ -184,7 +180,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + 1 : 1;
 			researchPoints.put(mob, points);
 
-			checkItemCompletion(mob, p, points);
+			checkItemCompletion(mob, p, points, e.getMobType().getDisplayName().get());
 		}
 	}
 
@@ -362,14 +358,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			String display = main.getItemMeta().getLore().get(1);
 
 			if (playerStats.containsKey(p.getUniqueId())) {
-				String mob = displayNameMap.get(display);
+				String mob = new NBTItem(main).getString("internalmob");
 				HashMap<String, Integer> researchPoints = playerStats.get(p.getUniqueId()).getResearchPoints();
 				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 				researchPoints.put(mob, points);
 				p.getInventory().removeItem(main);
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
 				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
-				checkItemCompletion(mob, p, points);
+				checkItemCompletion(mob, p, points, display);
 			}
 			else {
 				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
@@ -377,11 +373,16 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 
-	public void checkItemCompletion(String mob, Player p, int totalPoints) {
-		// Check for research goals that need it
+	public void checkItemCompletion(String mob, Player p, int totalPoints, String display) {
+		// Check if new discovery
 		PlayerStats stats = playerStats.get(p.getUniqueId());
-		TreeSet<String> completedItems = stats.getCompletedResearchItems();
 		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+		if (!researchPoints.containsKey(mob)) {
+			p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
+		}
+		
+		// Check for research goals that need it
+		TreeSet<String> completedItems = stats.getCompletedResearchItems();
 		if (mobMap.containsKey(mob)) {
 			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
 				if (!completedItems.contains(researchItem.getName())) { // If the player hasn't completed it
@@ -437,7 +438,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
 			researchPoints.put(mob, points);
-			checkItemCompletion(mob, p, points);
+			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
+			checkItemCompletion(mob, p, points, display);
 		}
 	}
 
