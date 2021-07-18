@@ -400,14 +400,35 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						completedItems.add(researchItem.getName());
 						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								permcmd.replaceAll("%player%", p.getName()).replaceAll("%perm%", researchItem.getPermission().replaceAll(" ", "")
-										.replaceAll(":", "").toLowerCase()));
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%perm%", researchItem.getPermission()));
 						stats.addExp(p, researchItem.getExp());
 						updateBonuses(p);
 					}
 				}
 			}
 		}
+	}
+
+	// Strictly for taking away research points/kills
+	public void checkItemDecompletion(String mob, Player p, int totalPoints) {
+		// Check for research goals that need it
+		PlayerStats stats = playerStats.get(p.getUniqueId());
+		TreeSet<String> completedItems = stats.getCompletedResearchItems();
+		if (mobMap.containsKey(mob)) {
+			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
+				if (completedItems.contains(researchItem.getName())) { // If the player has completed it
+					// Check if research goal is completed for specific mob
+					HashMap<String, Integer> goals = researchItem.getGoals();
+					if (goals.get(mob) > totalPoints) {
+						stats.takeExp(p, researchItem.getExp());
+						completedItems.remove(researchItem.getName());
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								permcmd.replaceAll("%player%", p.getName()).replaceAll("%perm%", researchItem.getPermission()).replaceAll("set", "unset"));
+					}
+				}
+			}
+		}
+		updateBonuses(p);
 	}
 	
 	public void giveResearchPoints(Player p, int amount, String mob) {
@@ -426,6 +447,23 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
 			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : 1;
 			mobKills.put(mob, kills);
+		}
+	}
+	
+	public void setResearchPoints(Player p, int amount, String mob) {
+		UUID uuid = p.getUniqueId();
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			researchPoints.put(mob, amount);
+			checkItemDecompletion(mob, p, amount);
+		}
+	}
+
+	public void setResearchKills(Player p, int amount, String mob) {
+		UUID uuid = p.getUniqueId();
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
+			mobKills.put(mob, amount);
 		}
 	}
 

@@ -29,14 +29,14 @@ public class Commands implements CommandExecutor{
 		if (sender.hasPermission("mycommand.staff") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§c/nr reload");
-				sender.sendMessage("§c/nr createbook [player] [mob] [points]");
-				sender.sendMessage("§c/nr spawnbook [player] [mob] [points]");
-				sender.sendMessage("§c/nr createbookalias [player] [mob] [points] [display]");
-				sender.sendMessage("§c/nr spawnbookalias [player] [mob] [points] [display]");
-				sender.sendMessage("§c/nr givepoints [player] [mob] [amt]");
-				sender.sendMessage("§c/nr givekills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [points] (display)");
+				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [points] (display)");
+				sender.sendMessage("§c/nr givepoints/kills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr setlevel [player] [amt]");
+				sender.sendMessage("§c/nr setexp [player] [amt]");
 				sender.sendMessage("§c/nr inspect [player] [mob]");
-				sender.sendMessage("§c/nr updateattrs [player] [mob]");
+				sender.sendMessage("§c/nr updateattrs [player]");
 			}
 
 			// /nr reload
@@ -192,6 +192,34 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[3]);
 				main.giveResearchKills(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
+			}
+			// /nr setpoints [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("givepoints")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[3]);
+				main.setResearchPoints(p, amount, args[2]);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to player §e" + p.getName());
+			}
+			// /nr setkills [player] [internalmob] [amount]
+			else if (args[0].equalsIgnoreCase("givekills")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[3]);
+				main.setResearchKills(p, amount, args[2]);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to player §e" + p.getName());
+			}
+			// /nr setlevel [player] [amount]
+			else if (args[0].equalsIgnoreCase("setlevel")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[2]);
+				main.playerStats.get(p.getUniqueId()).setLevel(amount);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set level for " + p.getName() + " §7to §e" + amount);
+			}
+			// /nr setexp [player] [amount]
+			else if (args[0].equalsIgnoreCase("setexp")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[2]);
+				main.playerStats.get(p.getUniqueId()).setExp(amount);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
 			}
 			// /nr inspect [player] [internalmob]
 			else if (args[0].equalsIgnoreCase("inspect")) {

@@ -56,6 +56,7 @@ public class PlayerStats {
 	}
 	
 	public void addExp(Player p, int exp) {
+		int prevLvl = this.level;
 		int remainingExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it, else just add
@@ -63,10 +64,26 @@ public class PlayerStats {
 			while (remainingExp > main.toNextLvl.get(this.level)) {
 				remainingExp -= main.toNextLvl.get(this.level);
 				this.level++;
-				p.sendMessage(main.levelup.replaceAll("%level%", "" + this.level));
-				p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 			}
 		}
+		p.sendMessage(main.levelup.replaceAll("%level%", "" + this.level).replaceAll("%previous%", "" + prevLvl));
+		p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 		this.exp = remainingExp;
+	}
+	
+	public void takeExp(Player p, int exp) {
+		int expToTake = exp;
+		while (expToTake > 0 || this.level > 5) {
+			if (expToTake > this.exp) {
+				expToTake -= this.exp;
+				this.level--;
+				this.exp = main.toNextLvl.get(this.level);
+			}
+			else {
+				this.exp -= expToTake;
+				expToTake = 0;
+				break;
+			}
+		}
 	}
 }
