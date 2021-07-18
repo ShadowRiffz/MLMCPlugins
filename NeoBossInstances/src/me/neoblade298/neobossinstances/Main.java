@@ -444,6 +444,9 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public String getCooldownPlaceholder(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
+			if (p.hasPermission(bossInfo.get(name).getPermission())) {
+				return "§c???";
+			}
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
