@@ -389,6 +389,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				if (!completedItems.contains(researchItem.getName())) { // If the player hasn't completed it
 					// Check if research goal is completed for specific mob
 					HashMap<String, Integer> goals = researchItem.getGoals();
+					System.out.println(goals.get(mob) + " " + totalPoints);
 					if (goals.get(mob) <= totalPoints) {
 						for (String rMob : goals.keySet()) { // Check every objective
 							if (researchPoints.get(rMob) < goals.get(rMob)) {

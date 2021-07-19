@@ -1,6 +1,7 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -35,7 +36,9 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [amt]");
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
 				sender.sendMessage("§c/nr setexp [player] [amt]");
+				sender.sendMessage("§c/nr takegoal [player] [goal]");
 				sender.sendMessage("§c/nr inspect [player] [mob]");
+				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr updateattrs [player]");
 			}
 
@@ -198,14 +201,14 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchPoints(p, amount, args[2]);
-				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to §e" + amount);
 			}
 			// /nr setkills [player] [internalmob] [amount]
 			else if (args[0].equalsIgnoreCase("setkills")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchKills(p, amount, args[2]);
-				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set kills for " + args[2] + " §7to §e" + amount);
 			}
 			// /nr setlevel [player] [amount]
 			else if (args[0].equalsIgnoreCase("setlevel")) {
@@ -228,6 +231,30 @@ public class Commands implements CommandExecutor{
 				PlayerStats stats = main.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
 						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
+			}
+			// /nr inspectgoals [player]
+			else if (args[0].equalsIgnoreCase("inspectgoals")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				PlayerStats stats = main.getPlayerStats(p);
+				String msg = new String("§4[§c§lMLMC§4] §e" + p.getName() + " §7has: §e");
+				Iterator<String> iter = stats.getCompletedResearchItems().iterator();
+				while (iter.hasNext()) {
+					msg += iter.next() + " ";
+				}
+				sender.sendMessage(msg);
+			}
+			// /nr takegoal [player] [goal]
+			else if (args[0].equalsIgnoreCase("takegoal")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				PlayerStats stats = main.getPlayerStats(p);
+				Iterator<String> iter = stats.getCompletedResearchItems().iterator();
+				while (iter.hasNext()) {
+					if (iter.next().contains(args[2])) {
+						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully removed goal");
+						iter.remove();
+						break;
+					}
+				}
 			}
 			// /nr updateattrs [player]
 			else if (args[0].equalsIgnoreCase("updateattrs")) {
