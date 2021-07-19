@@ -139,7 +139,7 @@ public class Commands implements CommandExecutor{
 			}
 
 			// /nr createbookalias [player] [alias] [point amt] [display]
-			else if (args[0].equalsIgnoreCase("createbook")) {
+			else if (args[0].equalsIgnoreCase("createbookalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				String display = args[4];
@@ -194,14 +194,14 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr setpoints [player] [internalmob] [amount]
-			else if (args[0].equalsIgnoreCase("givepoints")) {
+			else if (args[0].equalsIgnoreCase("setpoints")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchPoints(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr setkills [player] [internalmob] [amount]
-			else if (args[0].equalsIgnoreCase("givekills")) {
+			else if (args[0].equalsIgnoreCase("setkills")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchKills(p, amount, args[2]);
