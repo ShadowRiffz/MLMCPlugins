@@ -350,7 +350,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		ItemStack main = p.getInventory().getItemInMainHand().clone();
 		main.setAmount(1);
 
-		if (main.getType().equals(Material.BOOK) && main.hasItemMeta() && main.getItemMeta().getCustomModelData() == 100 && main.getItemMeta().hasLore()) {
+		if (main.getType().equals(Material.BOOK) && main.hasItemMeta() && main.getItemMeta().hasCustomModelData() && 
+				main.getItemMeta().getCustomModelData() == 100 && main.getItemMeta().hasLore()) {
 			String[] args = main.getItemMeta().getLore().get(0).split(" ");
 
 			// "Grants x research points for [mob display name]"
