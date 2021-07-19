@@ -162,7 +162,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onMobKill(MythicMobDeathEvent e) {
-		if (e.getKiller() instanceof Player) {
+		if (e.getKiller() != null && e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			String mob = e.getMobType().getInternalName();
 
