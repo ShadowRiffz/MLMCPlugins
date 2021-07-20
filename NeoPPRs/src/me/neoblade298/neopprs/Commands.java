@@ -29,13 +29,13 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (!(sender instanceof Player)) {
 			if (args.length > 1 && args[0].equalsIgnoreCase("auto")) {
-				if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
+				if (args.length == 3) {
 					PPR ppr = new PPR(Main.nextPPR, "Console");
 					Main.nextPPR++;
 					ppr.setUser(args[1]);
-					ppr.setOffense("Racism");
+					ppr.setOffense("Banned word");
 					ppr.setAction("Automuted by bot");
-					ppr.setDescription("Said the n-word");
+					ppr.setDescription("Said banned word: " + args[2]);
 					ppr.postConsole(sender);
 				}
 			}
@@ -47,7 +47,7 @@ public class Commands implements CommandExecutor {
 				p.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
 				p.sendMessage(
 						"§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
-				p.sendMessage("§c/ppr auto [name] {racism} §7- Automatically creates and posts racism PPR");
+				p.sendMessage("§c/ppr auto [name] banned-word §7- Automatically creates and posts banned word PPR");
 				p.sendMessage("§c/ppr offense §7- Sets offense for PPR");
 				p.sendMessage("§c/ppr action §7- Sets action for PPR");
 				p.sendMessage("§c/ppr desc §7- Sets description for PPR");
