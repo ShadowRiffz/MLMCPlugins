@@ -107,7 +107,8 @@ public class Main extends JavaPlugin implements Listener {
 				e.setCancelled(true);
 				try {
 					for (String cmd : punishCmds) {
-						Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", e.getPlayer().getName()))).get();
+						Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", e.getPlayer().getName())
+								.replaceAll("%word%", word))).get();
 					}
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
