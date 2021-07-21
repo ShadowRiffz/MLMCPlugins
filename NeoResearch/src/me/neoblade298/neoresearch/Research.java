@@ -118,7 +118,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				
 				// attributes
 				Attributes attributes = new Attributes();
-				ConfigurationSection attrSec = rItemSec.getConfigurationSection("attributes");
+				ConfigurationSection attrSec = rItemSec.getConfigurationSection("attrs");
 				if (attrSec != null) {
 					for (String attr : attrs) {
 						attributes.setAttribute(attr, attrSec.getInt(attr));
@@ -389,7 +389,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				if (!completedItems.contains(researchItem.getName())) { // If the player hasn't completed it
 					// Check if research goal is completed for specific mob
 					HashMap<String, Integer> goals = researchItem.getGoals();
-					System.out.println(goals.get(mob) + " " + totalPoints);
 					if (goals.get(mob) <= totalPoints) {
 						for (String rMob : goals.keySet()) { // Check every objective
 							if (researchPoints.get(rMob) < goals.get(rMob)) {
