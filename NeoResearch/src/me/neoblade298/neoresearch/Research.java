@@ -364,7 +364,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			if (playerStats.containsKey(p.getUniqueId())) {
 				String mob = new NBTItem(main).getString("internalmob");
 				HashMap<String, Integer> researchPoints = playerStats.get(p.getUniqueId()).getResearchPoints();
+				HashMap<String, Integer> mobKills = playerStats.get(p.getUniqueId()).getMobKills();
 				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
+				
+				// Reveal mob in kills if not there
+				if (!mobKills.containsKey(mob)) {
+					mobKills.put(mob, 0);
+				}
+				
 				researchPoints.put(mob, points);
 				p.getInventory().removeItem(main);
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
