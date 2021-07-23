@@ -447,9 +447,25 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : 1;
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 			researchPoints.put(mob, points);
 			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
+			String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+			msg = msg.replaceAll("&", "§");
+			p.sendMessage(msg);
+			checkItemCompletion(mob, p, points, display);
+		}
+	}
+	
+	public void giveResearchPointsAlias(Player p, int amount, String mob, String display) {
+		UUID uuid = p.getUniqueId();
+		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
+			researchPoints.put(mob, points);
+			String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+			msg = msg.replaceAll("&", "§");
+			p.sendMessage(msg);
 			checkItemCompletion(mob, p, points, display);
 		}
 	}
@@ -458,7 +474,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
-			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : 1;
+			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : amount;
 			mobKills.put(mob, kills);
 		}
 	}

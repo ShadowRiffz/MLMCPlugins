@@ -32,7 +32,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr reload");
 				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [points] (display)");
 				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [points] (display)");
-				sender.sendMessage("§c/nr givepoints/kills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [amt] (display)");
 				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [amt]");
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
 				sender.sendMessage("§c/nr setexp [player] [amt]");
@@ -188,6 +188,13 @@ public class Commands implements CommandExecutor{
 			
 			// /nr givepoints [player] [internalmob] [amount]
 			else if (args[0].equalsIgnoreCase("givepoints")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[3]);
+				main.giveResearchPoints(p, amount, args[2]);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
+			}
+			// /nr givepointsalias [player] [internalmob] [amount] [display]
+			else if (args[0].equalsIgnoreCase("givepointsalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
 				main.giveResearchPoints(p, amount, args[2]);
