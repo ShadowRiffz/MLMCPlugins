@@ -197,7 +197,11 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("givepointsalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
-				main.giveResearchPoints(p, amount, args[2]);
+				String display = args[4];
+				for (int i = 5; i < args.length; i++) {
+					display += " " + args[i];
+				}
+				main.giveResearchPointsAlias(p, amount, args[2], display);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr givekills [player] [internalmob] [amount]
