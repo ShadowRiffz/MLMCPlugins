@@ -88,8 +88,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
 		permcmd = general.getString("permission_command");
 		levelup = general.getString("research_levelup").replaceAll("&", "§");
-		isInstance = general.getBoolean("is_instance");
 		discovery = general.getString("discovery");
+		if (new File(getDataFolder(), "instance").exists()) {
+			isInstance = true;
+		}
 
 		// Exp
 		toNextLvl = new HashMap<Integer, Integer>();
@@ -162,6 +164,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onMobKill(MythicMobDeathEvent e) {
+		if (isInstance) return;
 		if (e.getKiller() != null && e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			String mob = e.getMobType().getInternalName();

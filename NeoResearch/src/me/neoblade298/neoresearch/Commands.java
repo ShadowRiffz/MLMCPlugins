@@ -67,6 +67,7 @@ public class Commands implements CommandExecutor{
 				lore.add(display);
 
 				meta.setCustomModelData(100);
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
@@ -93,6 +94,7 @@ public class Commands implements CommandExecutor{
 				lore.add(display);
 
 				meta.setCustomModelData(100);
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
@@ -134,6 +136,7 @@ public class Commands implements CommandExecutor{
 				lore.add(display);
 
 				meta.setCustomModelData(100);
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
@@ -175,6 +178,7 @@ public class Commands implements CommandExecutor{
 				lore.add(display);
 
 				meta.setCustomModelData(100);
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
