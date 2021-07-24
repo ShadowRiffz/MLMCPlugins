@@ -196,12 +196,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						level = rs.getInt(2);
 						exp = rs.getInt(3);
 	
-						rs = stmt.executeQuery("SELECT * FROM research_kills WHERE uuid = '" + uuid + "';");
+						rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
 							researchPoints.put(rs.getString(2), rs.getInt(3));
 						}
 	
-						rs = stmt.executeQuery("SELECT * FROM research_points WHERE uuid = '" + uuid + "';");
+						rs = stmt.executeQuery("SELECT * FROM research_kills WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
 							mobKills.put(rs.getString(2), rs.getInt(3));
 						}
