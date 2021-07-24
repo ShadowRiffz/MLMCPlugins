@@ -190,7 +190,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("givepoints")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[3]);
-				main.giveResearchPoints(p, amount, args[2]);
+				main.giveResearchPoints(p, amount, args[2], true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr givepointsalias [player] [internalmob] [amount] [display]
@@ -201,7 +201,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 5; i < args.length; i++) {
 					display += " " + args[i];
 				}
-				main.giveResearchPointsAlias(p, amount, args[2], display);
+				main.giveResearchPointsAlias(p, amount, args[2], display, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr givekills [player] [internalmob] [amount]
