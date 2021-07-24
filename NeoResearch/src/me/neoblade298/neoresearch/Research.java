@@ -31,7 +31,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
@@ -159,31 +158,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		// Finally, load in all online players
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			loadPlayer(p);
-		}
-	}
-
-	@EventHandler
-	public void onMobKill(MythicMobDeathEvent e) {
-		if (isInstance) return;
-		if (e.getKiller() != null && e.getKiller() instanceof Player) {
-			Player p = (Player) e.getKiller();
-			String mob = e.getMobType().getInternalName();
-
-			// First update the mob kill stat
-			PlayerStats stats = playerStats.get(p.getUniqueId());
-			HashMap<String, Integer> mobKills = stats.getMobKills();
-			int kills = 1;
-			if (mobKills.containsKey(mob)) {
-				kills = mobKills.get(mob) + 1;
-			}
-			mobKills.put(mob, kills);
-
-			// Update research points
-			HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + 1 : 1;
-			researchPoints.put(mob, points);
-
-			checkItemCompletion(mob, p, points, e.getMobType().getDisplayName().get());
 		}
 	}
 
@@ -443,29 +417,33 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		updateBonuses(p);
 	}
 	
-	public void giveResearchPoints(Player p, int amount, String mob) {
+	public void giveResearchPoints(Player p, int amount, String mob, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 			researchPoints.put(mob, points);
 			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
-			String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-			msg = msg.replaceAll("&", "§");
-			p.sendMessage(msg);
+			if (announce) {
+				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+				msg = msg.replaceAll("&", "§");
+				p.sendMessage(msg);
+			}
 			checkItemCompletion(mob, p, points, display);
 		}
 	}
 	
-	public void giveResearchPointsAlias(Player p, int amount, String mob, String display) {
+	public void giveResearchPointsAlias(Player p, int amount, String mob, String display, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 			researchPoints.put(mob, points);
-			String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-			msg = msg.replaceAll("&", "§");
-			p.sendMessage(msg);
+			if (announce) {
+				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+				msg = msg.replaceAll("&", "§");
+				p.sendMessage(msg);
+			}
 			checkItemCompletion(mob, p, points, display);
 		}
 	}
