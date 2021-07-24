@@ -29,6 +29,7 @@ import me.neoblade298.neomythicextension.mechanics.ModScore;
 import me.neoblade298.neomythicextension.mechanics.RandomizeGoldMechanic;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchKillsMechanic;
+import me.neoblade298.neomythicextension.mechanics.ResearchPointsChanceMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchPointsMechanic;
 import me.neoblade298.neomythicextension.mechanics.ScaleHealthMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
@@ -71,27 +72,27 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(condition);
 		}
 
-		if (event.getConditionName().equalsIgnoreCase("nglobalscore")) {
+		else if (event.getConditionName().equalsIgnoreCase("nglobalscore")) {
 			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if (event.getConditionName().equalsIgnoreCase("nscore")) {
+		else if (event.getConditionName().equalsIgnoreCase("nscore")) {
 			ScoreCondition condition = new ScoreCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if (event.getConditionName().equalsIgnoreCase("playersinboss")) {
+		else if (event.getConditionName().equalsIgnoreCase("playersinboss")) {
 			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if (event.getConditionName().equalsIgnoreCase("aboveblock")) {
+		else if (event.getConditionName().equalsIgnoreCase("aboveblock")) {
 			AboveBlockCondition condition = new AboveBlockCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		if (event.getConditionName().equalsIgnoreCase("strongplayerwithin")) {
+		else if (event.getConditionName().equalsIgnoreCase("strongplayerwithin")) {
 			StrongPlayerWithin condition = new StrongPlayerWithin(event.getConfig());
 			event.register(condition);
 		}
@@ -106,7 +107,7 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(targeter);
 		}
 
-		if (event.getTargeterName().equalsIgnoreCase("offset")) {
+		else if (event.getTargeterName().equalsIgnoreCase("offset")) {
 			OffsetTargeter targeter = new OffsetTargeter(event.getConfig());
 			event.register(targeter);
 		}
@@ -120,62 +121,67 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("nscore")) {
+		else if (event.getMechanicName().equalsIgnoreCase("nscore")) {
 			ModScore mechanic = new ModScore(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("nglobalscore")) {
+		else if (event.getMechanicName().equalsIgnoreCase("nglobalscore")) {
 			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("warn")) {
+		else if (event.getMechanicName().equalsIgnoreCase("warn")) {
 			WarnMechanic mechanic = new WarnMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("taunt")) {
+		else if (event.getMechanicName().equalsIgnoreCase("taunt")) {
 			TauntMechanic mechanic = new TauntMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("flag")) {
+		else if (event.getMechanicName().equalsIgnoreCase("flag")) {
 			FlagMechanic mechanic = new FlagMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("removeflag")) {
+		else if (event.getMechanicName().equalsIgnoreCase("removeflag")) {
 			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("dropchance")) {
+		else if (event.getMechanicName().equalsIgnoreCase("dropchance")) {
 			DropChanceMechanic mechanic = new DropChanceMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("scalehealth")) {
+		else if (event.getMechanicName().equalsIgnoreCase("scalehealth")) {
 			ScaleHealthMechanic mechanic = new ScaleHealthMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("randomizegold")) {
+		else if (event.getMechanicName().equalsIgnoreCase("randomizegold")) {
 			RandomizeGoldMechanic mechanic = new RandomizeGoldMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("researchpoints")) {
+		else if (event.getMechanicName().equalsIgnoreCase("researchpoints")) {
 			ResearchPointsMechanic mechanic = new ResearchPointsMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("researchpoints")) {
+		else if (event.getMechanicName().equalsIgnoreCase("researchpointschance")) {
+			ResearchPointsChanceMechanic mechanic = new ResearchPointsChanceMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		else if (event.getMechanicName().equalsIgnoreCase("researchkills")) {
 			ResearchKillsMechanic mechanic = new ResearchKillsMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		if (event.getMechanicName().equalsIgnoreCase("modmana")) {
+		else if (event.getMechanicName().equalsIgnoreCase("modmana")) {
 			ModManaMechanic mechanic = new ModManaMechanic(event.getConfig());
 			event.register(mechanic);
 		}

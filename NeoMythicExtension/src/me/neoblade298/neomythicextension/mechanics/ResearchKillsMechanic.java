@@ -29,10 +29,10 @@ public class ResearchKillsMechanic extends SkillMechanic implements ITargetedEnt
 	
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player && data.getCaster().getEntity() instanceof ActiveMob) {
+		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
 			String mob = this.alias;
 			if (this.alias.equals("default")) {
-				ActiveMob amob = (ActiveMob) data.getCaster().getEntity();
+				ActiveMob amob = (ActiveMob) data.getCaster();
 				mob = amob.getType().getInternalName();
 			}
 			Player p = (Player) target.getBukkitEntity();
