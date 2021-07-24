@@ -50,9 +50,10 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 			ActiveMob amob = (ActiveMob) data.getCaster().getEntity();
 			String mob = amob.getType().getInternalName();
 			
-			// Check if player is holding a drop charm
+			// Check if player is holding a research charm
 			Player p = (Player) target.getBukkitEntity();
 			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
+			nr.giveResearchPoints(p, this.amount, mob, true);
 			
 			int dropType = 0;
 			for (ItemStack item : items) {
@@ -72,12 +73,12 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 				if (lore.size() > 1) {
 					for (int i = lore.size() - 2; i >= 0; i--) {
 						String line = lore.get(i);
-						if (line.contains("Advanced Drop Charm")) {
+						if (line.contains("Advanced Research Charm")) {
 							dropType = 2;
 							chance = this.advancedchance;
 							break;
 						}
-						else if (line.contains("Drop Charm")) {
+						else if (line.contains("Research Charm")) {
 							dropType = 1;
 							chance = this.basicchance;
 							break;
@@ -96,7 +97,7 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 			
 			// Check for successful drop
 			if (rand <= chance) {
-				nr.giveResearchPoints(p, this.amount, mob);
+				nr.giveResearchPoints(p, this.amount, mob, true);
 			}
 			return true;
 		}
