@@ -82,7 +82,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 5; i < args.length; i++) {
 					display += " " + args[i];
 				}
-				display.replaceAll("&", "§");
+				display = display.replaceAll("@", "§");
 				int amt = Integer.parseInt(args[3]);
 
 				ItemStack item = new ItemStack(Material.BOOK);
@@ -152,7 +152,7 @@ public class Commands implements CommandExecutor{
 				for (int i = 5; i < args.length; i++) {
 					display += " " + args[i];
 				}
-				display.replaceAll("&", "§");
+				display = display.replaceAll("&", "§");
 				int amt = Integer.parseInt(args[3]);
 				
 				// First check if the player has enough research points
