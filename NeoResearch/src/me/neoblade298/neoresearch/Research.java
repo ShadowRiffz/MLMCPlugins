@@ -230,7 +230,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	private void handleLeave(Player p) {
 		UUID uuid = p.getUniqueId();
 		playerAttrs.remove(uuid);
-		PlayerStats stats = playerStats.get(uuid);
 
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
@@ -241,26 +240,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						Statement stmt = con.createStatement();
 
 						// Save account
-						stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
-						+ "','" + stats.getExp() + "');");
-
-						// Save research points
-
-						HashMap<String, Integer> mobKills = stats.getMobKills();
-						for (String mob : mobKills.keySet()) {
-							stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
-						}
-						HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-						for (String mob : researchPoints.keySet()) {
-							stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
-						}
-
-						for (String item : stats.getCompletedResearchItems()) {
-							stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
-						}
-						
-						stmt.executeBatch();
-						con.close();
+						save(p, con, stmt);
 					} catch (Exception ex) {
 						System.out.println(ex);
 					}
@@ -276,33 +256,41 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			Connection con = DriverManager.getConnection(url, user, pass);
 			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				UUID uuid = p.getUniqueId();
-				PlayerStats stats = playerStats.get(uuid);
-				if (playerStats.containsKey(p.getUniqueId())) {
-
-					// Save account
-					stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
-					+ "','" + stats.getExp() + "');");
-
-					// Save research points
-
-					HashMap<String, Integer> mobKills = stats.getMobKills();
-					for (String mob : mobKills.keySet()) {
-						stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
-					}
-					HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-					for (String mob : researchPoints.keySet()) {
-						stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
-					}
-
-					for (String item : stats.getCompletedResearchItems()) {
-						stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
-					}
-
-				}
+				save (p, con, stmt);
 			}
 			stmt.executeBatch();
 			con.close();
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+	}
+	
+	public void save(Player p, Connection con, Statement stmt) {
+		try {
+			UUID uuid = p.getUniqueId();
+			PlayerStats stats = playerStats.get(uuid);
+			if (playerStats.containsKey(p.getUniqueId())) {
+	
+				// Save account
+				stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+				+ "','" + stats.getExp() + "');");
+	
+				// Save research points
+	
+				HashMap<String, Integer> mobKills = stats.getMobKills();
+				for (String mob : mobKills.keySet()) {
+					stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+				}
+				HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+				for (String mob : researchPoints.keySet()) {
+					stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
+				}
+	
+				for (String item : stats.getCompletedResearchItems()) {
+					item = item.replaceAll("'", "''");
+					stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
+				}
+			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
