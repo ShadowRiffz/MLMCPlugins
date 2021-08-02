@@ -420,9 +420,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void giveResearchPoints(Player p, int amount, String mob, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 			researchPoints.put(mob, points);
+			if (!mobKills.containsKey(mob)) {
+				mobKills.put(mob, 0);
+			}
 			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
 			if (announce) {
 				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
@@ -436,9 +440,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void giveResearchPointsAlias(Player p, int amount, String mob, String display, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
+			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
 			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
 			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 			researchPoints.put(mob, points);
+			if (!mobKills.containsKey(mob)) {
+				mobKills.put(mob, 0);
+			}
 			if (announce) {
 				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
 				msg = msg.replaceAll("&", "§");
@@ -452,6 +460,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
+			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			if (!researchPoints.containsKey(mob)) {
+				researchPoints.put(mob, 0);
+			}
 			int kills = mobKills.containsKey(mob) ? mobKills.get(mob) + amount : amount;
 			mobKills.put(mob, kills);
 		}
