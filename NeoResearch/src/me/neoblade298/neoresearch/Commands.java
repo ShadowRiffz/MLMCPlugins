@@ -112,6 +112,7 @@ public class Commands implements CommandExecutor{
 				}
 				String display = MythicMobs.inst().getMobManager().getMythicMob(args[2]).getDisplayName().get();
 				int amt = Integer.parseInt(args[3]);
+				int needed = amt * 2;
 				
 				// First check if the player has enough research points
 				int currentPoints = main.playerStats.get(uuid).getResearchPoints().get(args[2]);
@@ -121,12 +122,12 @@ public class Commands implements CommandExecutor{
 					if (min < goal && goal < currentPoints) min = goal;
 				}
 
-				if (currentPoints - amt < min) {
-					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + amt) + "§cresearch points to do this!");
+				if (currentPoints - needed < min) {
+					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (needed + amt) + " §cresearch points to do this!");
 					return true;
 				}
 				
-				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - amt);
+				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -154,6 +155,7 @@ public class Commands implements CommandExecutor{
 				}
 				display = display.replaceAll("&", "§");
 				int amt = Integer.parseInt(args[3]);
+				int needed = amt * 2;
 				
 				// First check if the player has enough research points
 				int currentPoints = main.playerStats.get(uuid).getResearchPoints().get(args[2]);
@@ -163,12 +165,12 @@ public class Commands implements CommandExecutor{
 					if (min < goal && goal < currentPoints) min = goal;
 				}
 
-				if (currentPoints - amt < min) {
-					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + amt) + "§cresearch points to do this!");
+				if (currentPoints - needed < min) {
+					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + "§cresearch points to do this!");
 					return true;
 				}
 				
-				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - amt);
+				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
