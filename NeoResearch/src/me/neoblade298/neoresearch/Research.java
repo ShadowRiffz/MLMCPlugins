@@ -363,7 +363,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					HashMap<String, Integer> goals = researchItem.getGoals();
 					if (goals.get(mob) <= totalPoints) {
 						for (String rMob : goals.keySet()) { // Check every objective
-							if (researchPoints.get(rMob) < goals.get(rMob)) {
+							if (!researchPoints.containsKey(rMob) || researchPoints.get(rMob) < goals.get(rMob)) {
 								return; // Haven't completed every item
 							}
 						}
