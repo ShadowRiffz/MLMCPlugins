@@ -546,7 +546,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
-			if (dead.contains(p.getUniqueId())) e.setCancelled(true);
+			if (dead.containsKey(p.getUniqueId())) e.setCancelled(true);
 		}
 	}
 }
