@@ -7,9 +7,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +19,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -28,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.player.PlayerAccounts;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -62,6 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> activeWarnings = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
+	public ConcurrentHashMap<UUID, Integer> dead = new ConcurrentHashMap<UUID, Integer>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -364,50 +370,19 @@ public class Main extends JavaPlugin implements Listener {
 		return "Failed to connect";
 	}
 	
+	@EventHandler(priority = EventPriority.HIGH)
 	public void handleLeave(Player p) {
+		// Remove spectator mode
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
+		p.setInvulnerable(false);
+		dead.remove(p.getUniqueId());
+		
 		// Remove player from all fights locally
-		for (String boss : activeFights.keySet()) {
-			if (activeFights.get(boss).contains(p)) {
-				activeFights.get(boss).remove(p);
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
-			}
-			if (activeFights.get(boss).size() == 0) {
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
-				activeFights.remove(boss);
-				activeBosses.remove(boss);
-				if (activeWarnings.containsKey(boss)) {
-					for (BukkitRunnable runnable : activeWarnings.get(boss)) {
-						if (!runnable.isCancelled()) {
-							runnable.cancel();
-						}
-					}
-					activeWarnings.remove(boss);
-				}
-			}
-		}
-    	// Delete player from all fights in sql
-		String uuid = p.getUniqueId().toString();
-		try {
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-			
-			con.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
 		
 		BukkitRunnable handle = new BukkitRunnable() {
 			public void run() {
 				// Check if player is still here
 				if (Bukkit.getPlayer(p.getName()) != null) {
-					if (p.isDead()) {
-						p.spigot().respawn();
-					}
-					if (p.hasPermission("bossinstances.exemptleave")) {
-						p.teleport(instanceSpawn);
-					}
 			    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
 				}
 			}
@@ -474,13 +449,55 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
 			Player p = e.getEntity();
+			Location death = p.getLocation();
 			BukkitRunnable save = new BukkitRunnable() {
 				public void run() {
-					SkillAPI.saveSingle(p);
+					if (p != null) {
+						if (p.isDead()) p.spigot().respawn();
+						p.teleport(death);
+    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
+						p.setGameMode(GameMode.ADVENTURE);
+						p.setInvulnerable(true);
+						PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
+						dead.put(p.getUniqueId(), accs.getActiveId());
+						SkillAPI.getPlayerAccountData(p).setAccount(13);
+						p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+
+						for (String boss : activeFights.keySet()) {
+							if (activeFights.get(boss).contains(p)) {
+								activeFights.get(boss).remove(p);
+								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+							}
+							if (activeFights.get(boss).size() == 0) {
+								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
+								activeFights.remove(boss);
+								activeBosses.remove(boss);
+								if (activeWarnings.containsKey(boss)) {
+									for (BukkitRunnable runnable : activeWarnings.get(boss)) {
+										if (!runnable.isCancelled()) {
+											runnable.cancel();
+										}
+									}
+									activeWarnings.remove(boss);
+								}
+							}
+						}
+				    	// Delete player from all fights in sql
+						String uuid = p.getUniqueId().toString();
+						try {
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+							Statement stmt = con.createStatement();
+							stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+							
+							con.close();
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
 				}
 			};
 			save.runTaskLater(main, 10L);
-			handleLeave(e.getEntity());
 		}
 	}
 	
@@ -488,6 +505,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
+			if (dead.containsKey(p.getUniqueId())) {
+				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
+			}
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
@@ -497,6 +517,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
+			if (dead.containsKey(p.getUniqueId())) {
+				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
+			}
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
@@ -506,11 +529,24 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDrop(PlayerDropItemEvent e) {
 		if (isInstance) {
 			String p = e.getPlayer().getName();
-			if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
+			if (dead.containsKey(e.getPlayer().getUniqueId())) {
+				e.setCancelled(true);
+				e.getPlayer().sendMessage("§cCan't drop items when you're dead!");
+				return;
+			}
+			else if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
 				e.setCancelled(true);
 				e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
 			}
 			dropCooldown.put(p, System.currentTimeMillis());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDamage(EntityDamageByEntityEvent e) {
+		if (e.getDamager() instanceof Player) {
+			Player p = (Player) e.getDamager();
+			if (dead.contains(p.getUniqueId())) e.setCancelled(true);
 		}
 	}
 }
