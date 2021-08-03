@@ -32,8 +32,8 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr reload");
 				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [points] (display)");
 				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [points] (display)");
-				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [amt] (display)");
-				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [amt]");
+				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [level (pts only)] [amt] (display)");
+				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [level (pts only)] [amt]");
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
 				sender.sendMessage("§c/nr setexp [player] [amt]");
 				sender.sendMessage("§c/nr takegoal [player] [goal]");
@@ -135,12 +135,17 @@ public class Commands implements CommandExecutor{
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
+				
+				String sLevel = display.split(" ")[1];
+				sLevel = sLevel.substring(0, sLevel.length() - 1);
+				int level = Integer.parseInt(sLevel);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
+				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
 			}
@@ -178,32 +183,39 @@ public class Commands implements CommandExecutor{
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
+				
+				String sLevel = display.split(" ")[1];
+				sLevel = sLevel.substring(0, sLevel.length() - 1);
+				int level = Integer.parseInt(sLevel);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
+				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
 			}
 			
-			// /nr givepoints [player] [internalmob] [amount]
+			// /nr givepoints [player] [internalmob] [level] [amount]
 			else if (args[0].equalsIgnoreCase("givepoints")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				int amount = Integer.parseInt(args[3]);
-				main.giveResearchPoints(p, amount, args[2], true);
+				int level = Integer.parseInt(args[3]);
+				int amount = Integer.parseInt(args[4]);
+				main.giveResearchPoints(p, amount, args[2], level, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
-			// /nr givepointsalias [player] [internalmob] [amount] [display]
+			// /nr givepointsalias [player] [internalmob] [level] [amount] [display]
 			else if (args[0].equalsIgnoreCase("givepointsalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				int amount = Integer.parseInt(args[3]);
-				String display = args[4];
-				for (int i = 5; i < args.length; i++) {
+				int level = Integer.parseInt(args[3]);
+				int amount = Integer.parseInt(args[4]);
+				String display = args[5];
+				for (int i = 6; i < args.length; i++) {
 					display += " " + args[i];
 				}
-				main.giveResearchPointsAlias(p, amount, args[2], display, true);
+				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 			}
 			// /nr givekills [player] [internalmob] [amount]

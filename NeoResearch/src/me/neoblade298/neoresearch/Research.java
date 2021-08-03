@@ -186,10 +186,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection con = DriverManager.getConnection(url, user, pass);
 					Statement stmt = con.createStatement();
-					ResultSet rs = stmt.executeQuery("SELECT * FROM research_updates WHERE uuid = '" + uuid + "';");
-					
-					
-					rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
+					ResultSet rs = stmt.executeQuery("SELECT * FROM research_accounts WHERE uuid = '" + uuid + "';");
 					
 					// Load in account info
 					if (rs.next()) {
@@ -240,7 +237,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						Statement stmt = con.createStatement();
 
 						// Save account
-						save(p, con, stmt);
+						save(p, con, stmt, true);
 					} catch (Exception ex) {
 						System.out.println(ex);
 					}
@@ -256,7 +253,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			Connection con = DriverManager.getConnection(url, user, pass);
 			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				save (p, con, stmt);
+				save (p, con, stmt, false);
 			}
 			stmt.executeBatch();
 			con.close();
@@ -265,7 +262,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public void save(Player p, Connection con, Statement stmt) {
+	public void save(Player p, Connection con, Statement stmt, boolean save) {
 		try {
 			UUID uuid = p.getUniqueId();
 			PlayerStats stats = playerStats.get(uuid);
@@ -289,6 +286,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				for (String item : stats.getCompletedResearchItems()) {
 					item = item.replaceAll("'", "''");
 					stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + item + "');");
+				}
+				if (save) {
+					stmt.executeBatch();
 				}
 			}
 		} catch (Exception ex) {
@@ -323,26 +323,36 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			int amount = Integer.parseInt(args[1]);
 			String display = main.getItemMeta().getLore().get(1);
 
-			if (playerStats.containsKey(p.getUniqueId())) {
-				String mob = new NBTItem(main).getString("internalmob");
-				HashMap<String, Integer> researchPoints = playerStats.get(p.getUniqueId()).getResearchPoints();
-				HashMap<String, Integer> mobKills = playerStats.get(p.getUniqueId()).getMobKills();
-				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-				
-				// Reveal mob in kills if not there
-				if (!mobKills.containsKey(mob)) {
-					mobKills.put(mob, 0);
-				}
-				
-				researchPoints.put(mob, points);
-				p.getInventory().removeItem(main);
-				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
-				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
-				checkItemCompletion(mob, p, points, display);
-			}
-			else {
+			if (!playerStats.containsKey(p.getUniqueId())) {
 				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
+				return;
 			}
+			NBTItem nbti = new NBTItem(main);
+			String mob = nbti.getString("internalmob");
+			int level = nbti.getInteger("level");
+			PlayerStats pStat = playerStats.get(p.getUniqueId());
+			HashMap<String, Integer> researchPoints = pStat.getResearchPoints();
+			HashMap<String, Integer> mobKills = pStat.getMobKills();
+			int pLevel = pStat.getLevel();
+			
+			if (level > pLevel) {
+				p.sendMessage("§4[§c§lMLMC§4] §cYou are too low level to research this mob!");
+				return;
+			}
+			
+			// Check if the player is sufficiently high level
+			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
+			
+			// Reveal mob in kills if not there
+			if (!mobKills.containsKey(mob)) {
+				mobKills.put(mob, 0);
+			}
+			
+			researchPoints.put(mob, points);
+			p.getInventory().removeItem(main);
+			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
+			p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
+			checkItemCompletion(mob, p, points, display);
 		}
 	}
 
@@ -405,50 +415,59 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		updateBonuses(p);
 	}
 	
-	public void giveResearchPoints(Player p, int amount, String mob, boolean announce) {
+	public void giveResearchPoints(Player p, int amount, String mob, int lvl, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
-			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
-			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-			researchPoints.put(mob, points);
-			if (!mobKills.containsKey(mob)) {
-				mobKills.put(mob, 0);
+			PlayerStats pStats = playerStats.get(uuid);
+			HashMap<String, Integer> mobKills = pStats.getMobKills();
+			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
+			int pLevel = pStats.getLevel();
+			if (pLevel >= lvl) {
+				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
+				researchPoints.put(mob, points);
+				if (!mobKills.containsKey(mob)) {
+					mobKills.put(mob, 0);
+				}
+				String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
+				if (announce) {
+					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+					msg = msg.replaceAll("&", "§");
+					p.sendMessage(msg);
+				}
+				checkItemCompletion(mob, p, points, display);
 			}
-			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
-			if (announce) {
-				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-				msg = msg.replaceAll("&", "§");
-				p.sendMessage(msg);
-			}
-			checkItemCompletion(mob, p, points, display);
 		}
 	}
 	
-	public void giveResearchPointsAlias(Player p, int amount, String mob, String display, boolean announce) {
+	public void giveResearchPointsAlias(Player p, int amount, String mob, int lvl, String display, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
-			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
-			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-			researchPoints.put(mob, points);
-			if (!mobKills.containsKey(mob)) {
-				mobKills.put(mob, 0);
+			PlayerStats pStats = playerStats.get(uuid);
+			HashMap<String, Integer> mobKills = pStats.getMobKills();
+			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
+			int pLevel = pStats.getLevel();
+			if (pLevel >= lvl) {
+				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
+				researchPoints.put(mob, points);
+				if (!mobKills.containsKey(mob)) {
+					mobKills.put(mob, 0);
+				}
+				if (announce) {
+					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+					msg = msg.replaceAll("&", "§");
+					p.sendMessage(msg);
+				}
+				checkItemCompletion(mob, p, points, display);
 			}
-			if (announce) {
-				String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-				msg = msg.replaceAll("&", "§");
-				p.sendMessage(msg);
-			}
-			checkItemCompletion(mob, p, points, display);
 		}
 	}
 
 	public void giveResearchKills(Player p, int amount, String mob) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
-			HashMap<String, Integer> mobKills = playerStats.get(uuid).getMobKills();
-			HashMap<String, Integer> researchPoints = playerStats.get(uuid).getResearchPoints();
+			PlayerStats pStats = playerStats.get(uuid);
+			HashMap<String, Integer> mobKills = pStats.getMobKills();
+			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
 			if (!researchPoints.containsKey(mob)) {
 				researchPoints.put(mob, 0);
 			}
