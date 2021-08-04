@@ -378,6 +378,37 @@ public class Main extends JavaPlugin implements Listener {
 		dead.remove(p.getUniqueId());
 		
 		// Remove player from all fights locally
+		for (String boss : activeFights.keySet()) {
+			if (activeFights.get(boss).contains(p)) {
+				activeFights.get(boss).remove(p);
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+			}
+			if (activeFights.get(boss).size() == 0) {
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
+				activeFights.remove(boss);
+				activeBosses.remove(boss);
+				if (activeWarnings.containsKey(boss)) {
+					for (BukkitRunnable runnable : activeWarnings.get(boss)) {
+						if (!runnable.isCancelled()) {
+							runnable.cancel();
+						}
+					}
+					activeWarnings.remove(boss);
+				}
+			}
+		}
+    	// Delete player from all fights in sql
+		String uuid = p.getUniqueId().toString();
+		try {
+			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+			
+			con.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		
 		BukkitRunnable handle = new BukkitRunnable() {
 			public void run() {
@@ -508,6 +539,10 @@ public class Main extends JavaPlugin implements Listener {
 			if (dead.containsKey(p.getUniqueId())) {
 				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
 			}
+			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
+				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
+			}
+			
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
@@ -520,6 +555,10 @@ public class Main extends JavaPlugin implements Listener {
 			if (dead.containsKey(p.getUniqueId())) {
 				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
 			}
+			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
+				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
+			}
+			
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
