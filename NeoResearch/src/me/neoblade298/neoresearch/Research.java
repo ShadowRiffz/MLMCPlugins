@@ -13,8 +13,6 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -23,7 +21,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -31,8 +28,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.sucy.skill.SkillAPI;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -532,26 +527,5 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public HashMap<Integer, Integer> getNextLvl() {
 		return toNextLvl;
-	}
-	
-	@EventHandler
-	public void onDeath(PlayerDeathEvent e) {
-		BukkitRunnable handle = new BukkitRunnable() {
-			public void run() {
-				// Check if player is still here
-				Player p = e.getEntity();
-				Location death = p.getLocation();
-				p.spigot().respawn();
-				p.teleport(death);
-				p.setAllowFlight(true);
-				System.out.println("Flight allowed? " + p.getAllowFlight());
-				p.setInvisible(true);
-				p.setInvulnerable(true);
-				p.setGameMode(GameMode.ADVENTURE);
-				SkillAPI.getPlayerAccountData(p).setAccount(13);
-				// message saying you died, leave with /boss return
-			}
-		};
-		handle.runTaskLater(this, 20L);
 	}
 }
