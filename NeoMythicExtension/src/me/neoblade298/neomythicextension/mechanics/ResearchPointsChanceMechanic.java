@@ -18,6 +18,7 @@ import me.neoblade298.neoresearch.Research;
 public class ResearchPointsChanceMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
+	protected int level;
 	protected final double basechance;
 	protected final double basicmult;
 	protected final double advancedmult;
@@ -32,6 +33,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
         
+        this.level = config.getInteger("l", 0);
         this.amount = config.getInteger("a");
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 1);
         this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1.2);
@@ -53,6 +55,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 			if (this.alias.equals("default")) {
 				ActiveMob amob = (ActiveMob) data.getCaster();
 				mob = amob.getType().getInternalName();
+				level = (int) amob.getLevel();
 			}
 			
 			// Check if player is holding a research charm
@@ -93,7 +96,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 			
 			// Check for successful drop
 			if (rand <= chance) {
-				nr.giveResearchPoints(p, this.amount, mob, true);
+				nr.giveResearchPoints(p, this.amount, mob, level, true);
 			}
 			return true;
 		}

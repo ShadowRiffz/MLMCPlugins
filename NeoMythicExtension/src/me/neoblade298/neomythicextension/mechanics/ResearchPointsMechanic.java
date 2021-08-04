@@ -13,6 +13,7 @@ import me.neoblade298.neoresearch.Research;
 public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
+	protected int level;
 	protected final String alias;
 	protected final Research nr;
 
@@ -20,7 +21,8 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
-        
+
+        this.level = config.getInteger("l", 0);
         this.amount = config.getInteger("a");
         this.alias = config.getString("alias", "default");
         
@@ -34,9 +36,10 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 			if (this.alias.equals("default")) {
 				ActiveMob amob = (ActiveMob) data.getCaster();
 				mob = amob.getType().getInternalName();
+				level = (int) amob.getLevel();
 			}
 			Player p = (Player) target.getBukkitEntity();
-			nr.giveResearchPoints(p, this.amount, mob, false);
+			nr.giveResearchPoints(p, this.amount, mob, level, false);
 			return true;
 		}
 		return false;
