@@ -58,7 +58,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 				level = (int) amob.getLevel();
 			}
 			
-			// Check if player is holding a research charm
+			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
 			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
 			
@@ -79,11 +79,11 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 				if (lore.size() > 1) {
 					for (int i = lore.size() - 2; i >= 0; i--) {
 						String line = lore.get(i);
-						if (line.contains("Advanced Research Charm")) {
+						if (line.contains("Advanced Drop Charm")) {
 							chance = this.advancedchance;
 							break;
 						}
-						else if (line.contains("Research Charm")) {
+						else if (line.contains("Drop Charm")) {
 							chance = this.basicchance;
 							break;
 						}
