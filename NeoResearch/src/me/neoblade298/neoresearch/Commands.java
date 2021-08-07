@@ -37,7 +37,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
 				sender.sendMessage("§c/nr setexp [player] [amt]");
 				sender.sendMessage("§c/nr takegoal [player] [goal]");
-				sender.sendMessage("§c/nr inspect [player] [mob]");
+				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr updateattrs [player]");
 			}
@@ -253,8 +253,15 @@ public class Commands implements CommandExecutor{
 				main.playerStats.get(p.getUniqueId()).setExp(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
 			}
+			// /nr inspect [player]
+			else if (args[0].equalsIgnoreCase("inspect") && args.length == 2) {
+				Player p = Bukkit.getPlayer(args[1]);
+				PlayerStats stats = main.getPlayerStats(p);
+				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
+						" §7with §e" + stats.getLevel() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
+			}
 			// /nr inspect [player] [internalmob]
-			else if (args[0].equalsIgnoreCase("inspect")) {
+			else if (args[0].equalsIgnoreCase("inspect") && args.length == 3) {
 				Player p = Bukkit.getPlayer(args[1]);
 				String mob = args[2];
 				PlayerStats stats = main.getPlayerStats(p);
