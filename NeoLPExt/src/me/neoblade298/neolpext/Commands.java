@@ -36,7 +36,6 @@ public class Commands implements CommandExecutor{
 		// lpext removecontains 
 		if (args.length == 0) {
 			sender.sendMessage("§cNeoLPExt (lpext.admin)");
-			sender.sendMessage("§cAll commands have a roughly 20 tick delay");
 			sender.sendMessage("§c/lpext debug - Sends debug to system");
 			sender.sendMessage("§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
 			sender.sendMessage("§c/lpext switch [player] [perm prefix] [new perm] - Removes all other prefixes, then adds new perm");
@@ -64,7 +63,7 @@ public class Commands implements CommandExecutor{
 					}
 					mngr.saveUser(user);
 				}};
-				update.runTaskLaterAsynchronously(main, 20L);
+				update.runTaskAsynchronously(main);
 				
 			}
 		}
@@ -88,7 +87,7 @@ public class Commands implements CommandExecutor{
 					}
 					mngr.saveUser(user);
 				}};
-				update.runTaskLaterAsynchronously(main, 20L);
+				update.runTaskAsynchronously(main);
 			}
 			// lpext switch [player] [perm prefix] [new perm]
 			else if (args[0].equalsIgnoreCase("switch")) {
@@ -106,7 +105,7 @@ public class Commands implements CommandExecutor{
 					user.data().add(Node.builder(args[3]).build());
 					mngr.saveUser(user);
 				}};
-				update.runTaskLaterAsynchronously(main, 20L);
+				update.runTaskAsynchronously(main);
 			}
 		}
 		
@@ -131,7 +130,7 @@ public class Commands implements CommandExecutor{
 					user.data().add(Node.builder(args[4]).build());
 					mngr.saveUser(user);
 				}};
-				update.runTaskLaterAsynchronously(main, 20L);
+				update.runTaskAsynchronously(main);
 			}
 		}
 		return true;
