@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -47,58 +48,59 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, ItemSet> itemSets;
 	public HashMap<String, String> typeConverter;
 	public Random gen;
-    private static Economy econ = null;
-	
+	private static Economy econ = null;
+
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoGear Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("gear").setExecutor(new Commands(this));
+		this.getCommand("gear").setExecutor(new Commands(this));
 		gen = new Random();
-		
-        if (!setupEconomy() ) {
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        
-        typeConverter = new HashMap<String, String>();
-        typeConverter.put("reinforced helmet", "rhelmet");
-        typeConverter.put("reinforced chestplate", "rchestplate");
-        typeConverter.put("reinforced leggings", "rleggings");
-        typeConverter.put("reinforced boots", "rboots");
-        typeConverter.put("infused helmet", "ihelmet");
-        typeConverter.put("infused chestplate", "ichestplate");
-        typeConverter.put("infused leggings", "ileggings");
-        typeConverter.put("infused boots", "iboots");
+
+		if (!setupEconomy()) {
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		typeConverter = new HashMap<String, String>();
+		typeConverter.put("reinforced helmet", "rhelmet");
+		typeConverter.put("reinforced chestplate", "rchestplate");
+		typeConverter.put("reinforced leggings", "rleggings");
+		typeConverter.put("reinforced boots", "rboots");
+		typeConverter.put("infused helmet", "ihelmet");
+		typeConverter.put("infused chestplate", "ichestplate");
+		typeConverter.put("infused leggings", "ileggings");
+		typeConverter.put("infused boots", "iboots");
 
 		loadConfigs();
 	}
-	
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
-    }
-	
-	public void onDisable() {
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoGear Disabled");
-	    super.onDisable();
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
 	}
-	
-	public void loadConfigs() {File cfg = new File(getDataFolder(), "config.yml");
+
+	public void onDisable() {
+		org.bukkit.Bukkit.getServer().getLogger().info("NeoGear Disabled");
+		super.onDisable();
+	}
+
+	public void loadConfigs() {
+		File cfg = new File(getDataFolder(), "config.yml");
 		File gearFolder = new File(getDataFolder().getPath() + "/gear");
-		
+
 		// Save config if doesn't exist
 		if (!cfg.exists()) {
 			saveResource("config.yml", false);
 		}
 		this.cfg = YamlConfiguration.loadConfiguration(cfg);
-		
+
 		// Load config
 		this.lvlInterval = this.cfg.getInt("lvl-interval");
 		this.lvlMax = this.cfg.getInt("lvl-max");
@@ -108,17 +110,18 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		ConfigurationSection raritySec = this.cfg.getConfigurationSection("rarities");
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
-			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"), specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"));
+			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"),
+					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"));
 			this.rarities.put(rarity, rarityObj);
 		}
-		
+
 		// Rarity sets
 		this.raritySets = new HashMap<String, ArrayList<String>>();
 		ConfigurationSection rareSets = this.cfg.getConfigurationSection("rarity-sets");
 		for (String set : rareSets.getKeys(false)) {
 			this.raritySets.put(set, (ArrayList<String>) rareSets.getStringList(set));
 		}
-		
+
 		// Item sets
 		this.itemSets = new HashMap<String, ItemSet>();
 		ConfigurationSection itemSets = this.cfg.getConfigurationSection("item-sets");
@@ -127,12 +130,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			ItemSet itemset = new ItemSet(this, setContents);
 			this.itemSets.put(set, itemset);
 		}
-		
+
 		// Set up gear folder
 		if (!gearFolder.exists()) {
 			gearFolder.mkdir();
 		}
-		
+
 		// Load in all gear files
 		this.settings = new HashMap<String, HashMap<Integer, GearConfig>>();
 		for (File file : gearFolder.listFiles()) {
@@ -141,44 +144,46 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			String display = gearCfg.getString("display");
 			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
 			double price = gearCfg.getDouble("price");
-			
+
 			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
 			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
 			ArrayList<String> displayNames = (ArrayList<String>) nameSec.getStringList("name");
-			
+
 			ConfigurationSection duraSec = gearCfg.getConfigurationSection("durability");
 			int duraMinBase = duraSec.getInt("base");
-			
+
 			// Parse enchantments
 			ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
 			ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
 			ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
 			int enchMin = enchSec.getInt("optional-min");
 			int enchMax = enchSec.getInt("optional-max");
-			
+
 			Attributes attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
-			
+
 			ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
 			HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
 			// Load in rarities
 			for (String rarity : this.rarities.keySet()) {
 				ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
 				if (specificRareSec != null) {
-					rarities.put(rarity, new RarityBonuses(parseAttributes(specificRareSec), specificRareSec.getInt("added-durability"),
-							(ArrayList<String>) specificRareSec.getStringList("prefix")));
+					rarities.put(rarity,
+							new RarityBonuses(parseAttributes(specificRareSec),
+									specificRareSec.getInt("added-durability"),
+									(ArrayList<String>) specificRareSec.getStringList("prefix")));
 				}
 				else {
-					rarities.put(rarity,  new RarityBonuses());
+					rarities.put(rarity, new RarityBonuses());
 				}
 			}
-			
+
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 			if (overrideSec != null) {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames, duraMinBase, reqEnchList, optEnchList,
-							enchMin, enchMax, attributes, rarities, price);
-	
+					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames,
+							duraMinBase, reqEnchList, optEnchList, enchMin, enchMax, attributes, rarities, price);
+
 					// Level override
 					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
 					if (lvlOverride != null) {
@@ -190,17 +195,18 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private ArrayList<Enchant> parseEnchantments(ArrayList<String> enchList) {
 		ArrayList<Enchant> enchantments = new ArrayList<Enchant>();
 		for (String ench : enchList) {
 			String[] enchParams = ench.split(":");
-			enchantments.add(new Enchant(Enchantment.getByName(enchParams[0]), Integer.parseInt(enchParams[1]), Integer.parseInt(enchParams[2])));
+			enchantments.add(new Enchant(Enchantment.getByName(enchParams[0]), Integer.parseInt(enchParams[1]),
+					Integer.parseInt(enchParams[2])));
 		}
 		return enchantments;
 	}
-	
+
 	private Attributes parseAttributes(ConfigurationSection sec) {
 		int strBase = sec.getInt("str-base");
 		int strLvl = sec.getInt("str-per-lvl");
@@ -234,12 +240,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		int rgnLvl = sec.getInt("rgn-per-lvl");
 		int rgnRange = sec.getInt("rgn-range");
 		int rgnRounded = sec.getInt("rgn-rounded", 1);
-		
-		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase, intLvl,
-				intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange, prcRounded, endBase,
-				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase, rgnLvl, rgnRange, rgnRounded);
+
+		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase,
+				intLvl, intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange,
+				prcRounded, endBase, endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase,
+				rgnLvl, rgnRange, rgnRounded);
 	}
-	
+
 	private Attributes overrideAttributes(Attributes current, ConfigurationSection sec) {
 		int strBase = sec.getInt("str-base", -1) != -1 ? sec.getInt("str-base", -1) : current.strBase;
 		int strLvl = sec.getInt("str-per-lvl", -1) != -1 ? sec.getInt("str-per-lvl", -1) : current.strPerLvl;
@@ -274,36 +281,38 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		int rgnRange = sec.getInt("rgn-range", -1) != -1 ? sec.getInt("rgn-range", -1) : current.rgnRange;
 		int rgnRounded = sec.getInt("rgn-rounded", -1) != -1 ? sec.getInt("rgn-rounded", -1) : current.rgnRounded;
 
-		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase, intLvl,
-				intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange, prcRounded, endBase,
-				endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase, rgnLvl, rgnRange, rgnRounded);
+		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase,
+				intLvl, intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange,
+				prcRounded, endBase, endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase,
+				rgnLvl, rgnRange, rgnRounded);
 	}
-	
+
 	private RarityBonuses overrideRarities(RarityBonuses current, ConfigurationSection sec) {
 		Attributes currAttr = current.attributes;
 		Attributes newAttr = overrideAttributes(currAttr, sec);
-		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1) : current.duraBonus;
+		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1)
+				: current.duraBonus;
 		ArrayList<String> currPrefixes = current.prefixes;
 		ArrayList<String> newPrefixes = (ArrayList<String>) sec.getStringList("prefix");
 		ArrayList<String> changedPrefixes = currPrefixes;
 		if (newPrefixes != null) {
 			changedPrefixes = currPrefixes.equals(newPrefixes) ? currPrefixes : newPrefixes;
 		}
-		
+
 		return new RarityBonuses(newAttr, addedDura, changedPrefixes);
 	}
-	
+
 	private void overrideLevel(int level, GearConfig conf, ConfigurationSection sec) {
 		Material material = Material.getMaterial(sec.getString("material", "STONE").toUpperCase());
 		if (material != null && !material.equals(Material.STONE)) {
 			conf.material = material;
 		}
-		
+
 		double price = sec.getDouble("price", -1);
 		if (price != -1) {
 			conf.price = price;
 		}
-		
+
 		ConfigurationSection nameSec = sec.getConfigurationSection("display-name");
 		if (nameSec != null) {
 			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
@@ -315,7 +324,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				conf.displayNames = displayNames;
 			}
 		}
-		
+
 		ConfigurationSection duraSec = sec.getConfigurationSection("durability");
 		if (duraSec != null) {
 			int duraBase = duraSec.getInt("base", -1);
@@ -323,7 +332,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				conf.duraBase = duraBase;
 			}
 		}
-		
+
 		// Parse enchantments
 		ConfigurationSection enchSec = sec.getConfigurationSection("enchantments");
 		if (enchSec != null) {
@@ -344,12 +353,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				conf.enchantmentMax = enchMax;
 			}
 		}
-		
+
 		ConfigurationSection attrSec = sec.getConfigurationSection("attributes");
 		if (attrSec != null) {
 			conf.attributes = overrideAttributes(conf.attributes, attrSec);
 		}
-		
+
 		ConfigurationSection raresSec = sec.getConfigurationSection("rarity");
 		// Load in rarities
 		if (raresSec != null) {
@@ -361,7 +370,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
 		ItemStack[] arrayOfItemStack;
@@ -376,13 +385,13 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onChangeWorlds(PlayerTeleportEvent e) {
 		Player p = e.getPlayer();
 		String from = e.getFrom().getWorld().getName();
 		String to = e.getTo().getWorld().getName();
-		
+
 		// Only consider changing worlds
 		if (!from.equals(to)) {
 			if (!to.equals("Argyll") && !to.equals("ClassPVP")) {
@@ -396,7 +405,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 						else {
 							e.setCancelled(true);
-							p.sendMessage("§c[§4§lMLMC§4] §cYou must take off your quest armor before changing worlds!");
+							p.sendMessage(
+									"§c[§4§lMLMC§4] §cYou must take off your quest armor before changing worlds!");
 							break;
 						}
 					}
@@ -405,7 +415,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
@@ -417,8 +427,16 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 			}
 		}
+		else {
+			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				if (isArmor(item)) {
+					e.setCancelled(true);
+					p.sendMessage("§c[§4§lMLMC§4] §cEquipping armor via right click is disabled in quest worlds!");
+				}
+			}
+		}
 	}
-	
+
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent e) {
 		String world = e.getEntity().getWorld().getName();
@@ -436,7 +454,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onShoot(EntityShootBowEvent e) {
 		String world = e.getEntity().getWorld().getName();
@@ -451,16 +469,17 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			PlayerInventory inv = (PlayerInventory) e.getView().getBottomInventory();
 			InventoryAction action = e.getAction();
-			
+
 			// Disable shift clicking armor
-			if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && e.isShiftClick() && e.getView().getType().equals(InventoryType.CRAFTING)) {
+			if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && e.isShiftClick()
+					&& e.getView().getType().equals(InventoryType.CRAFTING)) {
 				ItemStack item = e.getCurrentItem();
 				if (item.getType().toString().endsWith("HELMET")) {
 					if (inv.getContents()[39] == null && isQuestGear(item)) {
@@ -487,7 +506,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					}
 				}
 			}
-			
+
 			// Disable hotbar keying armor
 			else if (action.equals(InventoryAction.HOTBAR_SWAP) && e.getSlot() >= 36 && e.getSlot() <= 39) {
 				ItemStack item = inv.getContents()[e.getHotbarButton()];
@@ -496,17 +515,17 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					return;
 				}
 			}
-			
+
 			// Disable dropping armor
-			else if (action.equals(InventoryAction.PLACE_ALL) || action.equals(InventoryAction.PLACE_ONE) ||
-					action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
+			else if (action.equals(InventoryAction.PLACE_ALL) || action.equals(InventoryAction.PLACE_ONE)
+					|| action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
 				if (e.getSlotType().equals(SlotType.ARMOR) && isQuestGear(e.getCursor())) {
 					e.setCancelled(true);
 					return;
 				}
 			}
 		}
-		
+
 		// Disable netheriting quest gear
 		if (e.getView().getTopInventory().getType().equals(InventoryType.SMITHING)) {
 			SmithingInventory smith = (SmithingInventory) e.getView().getTopInventory();
@@ -516,12 +535,37 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	public boolean isQuestGear(ItemStack item) {
-		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier")
-				&& !item.getType().equals(Material.PLAYER_HEAD);
+		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
+				&& item.getItemMeta().getLore().get(0).contains("Tier") && !item.getType().equals(Material.PLAYER_HEAD);
 	}
 	
+	public boolean isArmor(ItemStack item) {
+		Material mat = item.getType();
+		return
+				mat.equals(Material.LEATHER_HELMET) ||
+				mat.equals(Material.GOLDEN_HELMET) ||
+				mat.equals(Material.IRON_HELMET) ||
+				mat.equals(Material.DIAMOND_HELMET) ||
+				mat.equals(Material.NETHERITE_HELMET) ||
+				mat.equals(Material.LEATHER_CHESTPLATE) ||
+				mat.equals(Material.GOLDEN_CHESTPLATE) ||
+				mat.equals(Material.IRON_CHESTPLATE) ||
+				mat.equals(Material.DIAMOND_CHESTPLATE) ||
+				mat.equals(Material.NETHERITE_CHESTPLATE) ||
+				mat.equals(Material.LEATHER_LEGGINGS) ||
+				mat.equals(Material.GOLDEN_LEGGINGS) ||
+				mat.equals(Material.IRON_LEGGINGS) ||
+				mat.equals(Material.DIAMOND_LEGGINGS) ||
+				mat.equals(Material.NETHERITE_LEGGINGS) ||
+				mat.equals(Material.LEATHER_BOOTS) ||
+				mat.equals(Material.GOLDEN_BOOTS) ||
+				mat.equals(Material.IRON_BOOTS) ||
+				mat.equals(Material.DIAMOND_BOOTS) ||
+				mat.equals(Material.NETHERITE_BOOTS);
+	}
+
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
@@ -538,7 +582,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onDispenseArmor(BlockDispenseArmorEvent e) {
 		String world = e.getBlock().getWorld().getName();
@@ -551,9 +595,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
-	@EventHandler
-	
+
 	public Economy getEcon() {
 		return econ;
 	}
