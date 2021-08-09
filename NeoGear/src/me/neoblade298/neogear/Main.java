@@ -518,7 +518,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	public boolean isQuestGear(ItemStack item) {
-		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier");
+		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Tier")
+				&& !item.getType().equals(Material.PLAYER_HEAD);
 	}
 	
 	@EventHandler
