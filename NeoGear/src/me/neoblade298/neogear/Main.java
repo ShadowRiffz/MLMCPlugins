@@ -10,12 +10,14 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -592,6 +594,16 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					e.setCancelled(true);
 					e.getTargetEntity().sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onTridentThrow(ProjectileLaunchEvent e) {
+		String world = e.getEntity().getLocation().getWorld().getName();
+		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+			if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
+				e.setCancelled(true);
 			}
 		}
 	}
