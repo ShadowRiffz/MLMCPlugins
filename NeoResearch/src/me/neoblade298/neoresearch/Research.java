@@ -449,7 +449,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					msg = msg.replaceAll("&", "§");
 					p.sendMessage(msg);
 				}
-				String msg = display + " - §e" + points + " &eRP";
+				String msg = display + " - §e" + points + " RP";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
