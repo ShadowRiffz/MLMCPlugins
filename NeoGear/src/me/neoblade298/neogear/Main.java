@@ -545,6 +545,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	public boolean isArmor(ItemStack item) {
+		if (item == null) return false;
 		Material mat = item.getType();
 		return
 				mat.equals(Material.LEATHER_HELMET) ||
