@@ -423,9 +423,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
+		if (item == null) return;
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
-			if (item != null && isQuestGear(item)) {
+			if (isQuestGear(item)) {
 				e.setCancelled(true);
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 			}
