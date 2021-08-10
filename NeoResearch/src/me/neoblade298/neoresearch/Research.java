@@ -32,6 +32,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
@@ -434,6 +436,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					msg = msg.replaceAll("&", "§");
 					p.sendMessage(msg);
 				}
+				String msg = display + " - §e" + points + " &eRP";
+				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
 		}
