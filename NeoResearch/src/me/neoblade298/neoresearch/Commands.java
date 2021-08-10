@@ -336,10 +336,10 @@ public class Commands implements CommandExecutor{
 			}
 
 			p.sendMessage("§c[§4§lMLMC§4] §7Converting your collections...");
-			int max = 2000;
+			int max = 950;
 			if (args.length == 2) {
 				max = Integer.parseInt(args[1]);
-				if (max > 2000) max = 2000;
+				if (max > 950) max = 950;
 			}
 			int minimax = max / 10;
 			
