@@ -265,7 +265,7 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				PlayerStats stats = main.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
-						" §7with §e" + stats.getLevel() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
+						" §7with §e" + stats.getExp() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
 			}
 			// /nr inspect [player] [internalmob]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 3) {
