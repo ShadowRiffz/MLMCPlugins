@@ -44,6 +44,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
 	public HashMap<UUID, Attributes> playerAttrs;
+	public HashMap<String, HashMap<String, Integer>> converter;
 	public ArrayList<String> attrs;
 	public Random rand;
 	public boolean isInstance;
@@ -69,6 +70,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		File file = new File(getDataFolder(), "config.yml");
 		playerStats = new HashMap<UUID, PlayerStats>();
 		playerAttrs = new HashMap<UUID, Attributes>();
+		converter = new HashMap<String, HashMap<String, Integer>>();
 		rand = new Random();
 
 		// Save config if doesn't exist
@@ -155,6 +157,17 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			} catch (Exception e) {
 				System.out.println("Failed to load research item: " + rItem);
 			}
+		}
+	
+		// Converter
+		ConfigurationSection collections = cfg.getConfigurationSection("converter");
+		for (String col : collections.getKeys(false)) {
+			ConfigurationSection colMobs = collections.getConfigurationSection(col);
+			HashMap<String, Integer> mobValues = new HashMap<String, Integer>();
+			for (String mob : colMobs.getKeys(false)) {
+				mobValues.put(mob, colMobs.getInt(mob));
+			}
+			converter.put(col, mobValues);
 		}
 		
 		// Finally, load in all online players

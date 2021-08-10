@@ -35,7 +35,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [level (pts only)] [amt] (display)");
 				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [level (pts only)] [amt]");
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
-				sender.sendMessage("§c/nr setexp [player] [amt]");
+				sender.sendMessage("§c/nr add/setexp [player] [amt]");
 				sender.sendMessage("§c/nr takegoal [player] [goal]");
 				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
@@ -252,6 +252,13 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[2]);
 				main.playerStats.get(p.getUniqueId()).setExp(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
+			}
+			// /nr addexp [player] [amount]
+			else if (args[0].equalsIgnoreCase("addexp")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				int amount = Integer.parseInt(args[2]);
+				main.playerStats.get(p.getUniqueId()).addExp(p, amount);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Added exp for " + p.getName() + " §7to §e" + amount);
 			}
 			// /nr inspect [player]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 2) {
