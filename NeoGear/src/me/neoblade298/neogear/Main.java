@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
@@ -600,10 +601,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onTridentThrow(ProjectileLaunchEvent e) {
-		String world = e.getEntity().getLocation().getWorld().getName();
-		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
-			if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
-				e.setCancelled(true);
+		Projectile proj = e.getEntity();
+		if (proj.getShooter() instanceof Player) {
+			Player p = (Player) proj.getShooter();
+			String world = e.getEntity().getLocation().getWorld().getName();
+			if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
+				if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
+					e.setCancelled(true);
+					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot throw tridents in this world!");
+				}
 			}
 		}
 	}
