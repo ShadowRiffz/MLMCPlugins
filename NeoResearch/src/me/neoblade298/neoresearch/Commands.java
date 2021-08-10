@@ -1,7 +1,9 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -40,12 +42,15 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr updateattrs [player]");
+				sender.sendMessage("§c/nr convert [max]");
+				return true;
 			}
 
 			// /nr reload
 			else if (args[0].equalsIgnoreCase("reload")) {
 				main.loadConfig();
 				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded config");
+				return true;
 			}
 
 			// /nr spawnbook [player] [internalmob] [point amt]
@@ -73,6 +78,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", args[2]);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + display + " §7to player §e" + p.getName());
+				return true;
 			}
 			
 			// /nr spawnbookalias [player] [mobalias] [point amt] [display]
@@ -100,6 +106,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", args[2]);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + display + " §7to player §e" + p.getName());
+				return true;
 			}
 
 			// /nr createbook [player] [internalmob] [point amt]
@@ -148,6 +155,7 @@ public class Commands implements CommandExecutor{
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
+				return true;
 			}
 
 			// /nr createbookalias [player] [alias] [point amt] [display]
@@ -196,6 +204,7 @@ public class Commands implements CommandExecutor{
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
+				return true;
 			}
 			
 			// /nr givepoints [player] [internalmob] [level] [amount]
@@ -205,6 +214,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[4]);
 				main.giveResearchPoints(p, amount, args[2], level, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
+				return true;
 			}
 			// /nr givepointsalias [player] [internalmob] [level] [amount] [display]
 			else if (args[0].equalsIgnoreCase("givepointsalias")) {
@@ -217,6 +227,7 @@ public class Commands implements CommandExecutor{
 				}
 				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
+				return true;
 			}
 			// /nr givekills [player] [internalmob] [amount]
 			else if (args[0].equalsIgnoreCase("givekills")) {
@@ -224,6 +235,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[3]);
 				main.giveResearchKills(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
+				return true;
 			}
 			// /nr setpoints [player] [internalmob] [amount]
 			else if (args[0].equalsIgnoreCase("setpoints")) {
@@ -231,6 +243,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchPoints(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set points for " + args[2] + " §7to §e" + amount);
+				return true;
 			}
 			// /nr setkills [player] [internalmob] [amount]
 			else if (args[0].equalsIgnoreCase("setkills")) {
@@ -238,6 +251,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[3]);
 				main.setResearchKills(p, amount, args[2]);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set kills for " + args[2] + " §7to §e" + amount);
+				return true;
 			}
 			// /nr setlevel [player] [amount]
 			else if (args[0].equalsIgnoreCase("setlevel")) {
@@ -245,6 +259,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[2]);
 				main.playerStats.get(p.getUniqueId()).setLevel(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set level for " + p.getName() + " §7to §e" + amount);
+				return true;
 			}
 			// /nr setexp [player] [amount]
 			else if (args[0].equalsIgnoreCase("setexp")) {
@@ -252,6 +267,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[2]);
 				main.playerStats.get(p.getUniqueId()).setExp(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
+				return true;
 			}
 			// /nr addexp [player] [amount]
 			else if (args[0].equalsIgnoreCase("addexp")) {
@@ -259,6 +275,7 @@ public class Commands implements CommandExecutor{
 				int amount = Integer.parseInt(args[2]);
 				main.playerStats.get(p.getUniqueId()).addExp(p, amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Added exp for " + p.getName() + " §7to §e" + amount);
+				return true;
 			}
 			// /nr inspect [player]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 2) {
@@ -266,6 +283,7 @@ public class Commands implements CommandExecutor{
 				PlayerStats stats = main.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
 						" §7with §e" + stats.getExp() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
+				return true;
 			}
 			// /nr inspect [player] [internalmob]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 3) {
@@ -274,6 +292,7 @@ public class Commands implements CommandExecutor{
 				PlayerStats stats = main.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
 						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
+				return true;
 			}
 			// /nr inspectgoals [player]
 			else if (args[0].equalsIgnoreCase("inspectgoals")) {
@@ -285,6 +304,7 @@ public class Commands implements CommandExecutor{
 					msg += iter.next() + " ";
 				}
 				sender.sendMessage(msg);
+				return true;
 			}
 			// /nr takegoal [player] [goal]
 			else if (args[0].equalsIgnoreCase("takegoal")) {
@@ -298,12 +318,65 @@ public class Commands implements CommandExecutor{
 						break;
 					}
 				}
+				return true;
 			}
 			// /nr updateattrs [player]
 			else if (args[0].equalsIgnoreCase("updateattrs")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				main.updateBonuses(p);
+				return true;
 			}
+		}
+		// /nr convert [amount]
+		if (args[0].equalsIgnoreCase("convert") && sender instanceof Player) {
+			Player p = (Player) sender;
+			if (p.hasPermission("research.converted")) {
+				p.sendMessage("§c[§4§lMLMC§4] §cYou have already converted once!");
+				return true;
+			}
+
+			p.sendMessage("§c[§4§lMLMC§4] §7Converting your collections...");
+			int max = 2000;
+			if (args.length == 2) {
+				max = Integer.parseInt(args[1]);
+				if (max > 2000) max = 2000;
+			}
+			int minimax = max / 10;
+			
+			HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
+			for (String perm : main.converter.keySet()) {
+				if (p.hasPermission(perm)) {
+					HashMap<String, Integer> mobs = main.converter.get(perm);
+					
+					// Tally up points for each mob
+					for (String mob : mobs.keySet()) {
+						if (mobKills.containsKey(mob)) {
+							mobKills.put(mob, mobKills.get(mob) + mobs.get(mob));
+						}
+						else {
+							mobKills.put(mob, mobs.get(mob));
+						}
+					}
+				}
+			}
+			
+			// Give all the tallies
+			for (Entry<String, Integer> entry : mobKills.entrySet()) {
+				main.giveResearchKills(p, entry.getValue(), entry.getKey());
+				int points = 0;
+				if (main.minibosses.contains(entry.getKey())) {
+					points = entry.getValue() >= minimax ? minimax : entry.getValue();
+				}
+				else {
+					points = entry.getValue() >= max ? max : entry.getValue();
+				}
+				main.giveResearchPointsBypass(p, points, entry.getKey());
+			}
+			
+			// Get rid of perms
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + p.getName() + " collections.");
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set research.converted");
+			p.sendMessage("§c[§4§lMLMC§4] §7Conversion complete!");
 			return true;
 		}
 		return false;
