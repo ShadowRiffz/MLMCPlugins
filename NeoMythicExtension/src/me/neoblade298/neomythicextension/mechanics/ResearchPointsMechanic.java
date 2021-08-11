@@ -16,6 +16,7 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 	protected int level;
 	protected final String alias;
 	protected final Research nr;
+	protected String display;
 
 	public ResearchPointsMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
@@ -25,6 +26,7 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
         this.level = config.getInteger("l", 0);
         this.amount = config.getInteger("a");
         this.alias = config.getString("alias", "default");
+        this.display = config.getString("d", "default").replaceAll("_", " ").replaceAll("&", "§").replaceAll("@", "&");
         
         nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 	}
@@ -33,13 +35,16 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
 			String mob = this.alias;
+			Player p = (Player) target.getBukkitEntity();
 			if (this.alias.equals("default")) {
 				ActiveMob amob = (ActiveMob) data.getCaster();
 				mob = amob.getType().getInternalName();
 				level = (int) amob.getLevel();
+				nr.giveResearchPoints(p, this.amount, mob, level, false);
 			}
-			Player p = (Player) target.getBukkitEntity();
-			nr.giveResearchPoints(p, this.amount, mob, level, false);
+			else {
+				nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
+			}
 			return true;
 		}
 		return false;
