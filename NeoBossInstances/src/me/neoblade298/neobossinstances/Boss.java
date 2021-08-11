@@ -1,6 +1,5 @@
 package me.neoblade298.neobossinstances;
 
-
 import java.util.ArrayList;
 
 import org.bukkit.Location;
@@ -14,16 +13,19 @@ public class Boss {
 	private int timeLimit = 0;
 	private String permission = null;
 	private ArrayList<RaidBoss> raidBosses = null;
+	private String placeholder = null;
 
-	public Boss (Location coords, String cmd, int cooldown, String displayName, String permission){
+	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
 		this.setPermission(permission);
+		this.setPlaceholder(placeholder);
 	}
 
-	public Boss (Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit, String permission){
+	public Boss(Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
+			String permission, String placeholder) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
@@ -32,8 +34,9 @@ public class Boss {
 		this.timeLimit = timeLimit;
 		this.setPermission(permission);
 		this.raidBosses = new ArrayList<RaidBoss>();
+		this.setPlaceholder(placeholder.replaceAll("&", "§").replaceAll("@", "&"));
 	}
-	
+
 	public boolean isRaid() {
 		return isRaid;
 	}
@@ -73,11 +76,11 @@ public class Boss {
 	public void setCooldown(int cooldown) {
 		this.cooldown = cooldown;
 	}
-	
+
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
@@ -96,5 +99,13 @@ public class Boss {
 
 	public void setRaidBosses(ArrayList<RaidBoss> raidBosses) {
 		this.raidBosses = raidBosses;
+	}
+
+	public String getPlaceholder() {
+		return placeholder;
+	}
+
+	public void setPlaceholder(String placeholder) {
+		this.placeholder = placeholder;
 	}
 }

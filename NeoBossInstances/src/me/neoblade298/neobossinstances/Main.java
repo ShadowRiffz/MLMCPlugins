@@ -115,9 +115,10 @@ public class Main extends JavaPlugin implements Listener {
 			int timeLimit = bossSection.getInt("Time-Limit");
 			String permission = bossSection.getString("Permission");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
+			String placeholder = bossSection.getString("Placeholder");
 			
 			if (isRaid) {
-				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission);
+				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder);
 				
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
@@ -134,7 +135,7 @@ public class Main extends JavaPlugin implements Listener {
 				bossInfo.put(boss, info);
 			}
 			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission));
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder));
 			}
 		}
 		
@@ -453,20 +454,21 @@ public class Main extends JavaPlugin implements Listener {
 			if (!p.hasPermission(bossInfo.get(name).getPermission())) {
 				return "§c???";
 			}
+			String msg = bossInfo.get(name).getPlaceholder() + "§7: ";
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				if (currTime > lastUse + cooldown) {
-	    			return "§aReady!";
+	    			return msg + " §aReady!";
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 1000;
-					return "§c" + temp + "s";
+					return msg + " §c" + temp + "s";
 				}
 			}
 			else {
-    			return "§aReady!";
+    			return msg + " §aReady!";
 			}
 		}
 		return "Loading...";
