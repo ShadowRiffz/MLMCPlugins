@@ -60,9 +60,13 @@ public class PlayerStats {
 		int remainingExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it, else just add
+		boolean levelup = false;
 		while (main.toNextLvl.containsKey(this.level) && remainingExp >= main.toNextLvl.get(this.level)) {
 			remainingExp -= main.toNextLvl.get(this.level);
 			this.level++;
+			levelup = true;
+		}
+		if (levelup) {
 			p.sendMessage(main.levelup.replaceAll("%level%", "" + this.level).replaceAll("%previous%", "" + prevLvl));
 			p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 		}
