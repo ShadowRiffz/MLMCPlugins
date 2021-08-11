@@ -69,6 +69,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public void loadConfig() {
+		saveAll();
+		
 		File file = new File(getDataFolder(), "config.yml");
 		playerStats = new HashMap<UUID, PlayerStats>();
 		playerAttrs = new HashMap<UUID, Attributes>();
