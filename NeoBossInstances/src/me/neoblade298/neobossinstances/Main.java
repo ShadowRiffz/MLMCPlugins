@@ -460,15 +460,15 @@ public class Main extends JavaPlugin implements Listener {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
 				if (currTime > lastUse + cooldown) {
-	    			return msg + " §aReady!";
+	    			return msg + "§aReady!";
 				}
 				else {
 					double temp = (lastUse + cooldown - currTime) / 1000;
-					return msg + " §c" + temp + "s";
+					return msg + "§c" + temp + "s";
 				}
 			}
 			else {
-    			return msg + " §aReady!";
+    			return msg + "§aReady!";
 			}
 		}
 		return "Loading...";
