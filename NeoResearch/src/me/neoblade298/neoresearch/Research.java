@@ -594,6 +594,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		pAttrs.applyAttributes(p);
 	}
 	
+	public void resetBonuses(Player p) {
+		UUID uuid = p.getUniqueId();
+		if (playerAttrs.containsKey(uuid)) {
+			Attributes pAttrs = playerAttrs.get(uuid);
+			pAttrs.resetAttributes();
+		}
+	}
+	
 	public void removeBonuses(Player p) {
 		UUID uuid = p.getUniqueId();
 		if (playerAttrs.containsKey(uuid)) {
