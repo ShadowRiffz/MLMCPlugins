@@ -2,9 +2,12 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -43,6 +46,10 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 				nr.giveResearchPoints(p, this.amount, mob, level, false);
 			}
 			else {
+				MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(mob);
+				if (mm != null) {
+					display = mm.getDisplayName().get();
+				}
 				nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
 			}
 			return true;
