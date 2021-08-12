@@ -53,25 +53,45 @@ public class OtherSkillAPIPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length != 1) return "Invalid placeholder";
 		if (args[0].equalsIgnoreCase("account")) {
-			return "" + SkillAPI.getPlayerAccountData(p).getActiveId();
+			if (args.length == 1) {
+				return "" + SkillAPI.getPlayerAccountData(p).getActiveId();
+			}
+			// %nsapi_account_#_class%
+			// %nsapi_account_#_profession%
+			// %nsapi_account_#_level%
+			else if (args.length == 3) {
+				int acc = Integer.parseInt(args[1]);
+				PlayerData data = SkillAPI.getPlayerAccountData(p).getData(acc);
+				if (data != null) {
+					PlayerClass pClass = data.getClass("class");
+					PlayerClass pProf = data.getClass("profession");
+					if (pClass != null) {
+						if (args[2].equalsIgnoreCase("level")) return "§e" + pClass.getLevel();
+						else if (args[2].equalsIgnoreCase("class")) return "§e" + pClass.getData().getName();
+					}
+					if (pProf != null) {
+						if (args[2].equalsIgnoreCase("profession")) return "§e" + pProf.getData().getName();
+					}
+				}
+				return "§cN/A";
+			}
 		}
-		if (args[0].equalsIgnoreCase("profession")) {
+		else if (args[0].equalsIgnoreCase("profession")) {
 			PlayerClass prof = SkillAPI.getPlayerData(p).getClass("profession");
 			if (prof != null) {
 				return prof.getData().getPrefix();
 			}
 			return "N/A";
 		}
-		if (args[0].equalsIgnoreCase("mana")) {
+		else if (args[0].equalsIgnoreCase("mana")) {
 			PlayerData data = SkillAPI.getPlayerData(p);
 			if (data != null) {
 				return "" + (int) data.getMana();
 			}
 			return "0";
 		}
-		if (args[0].equalsIgnoreCase("profession")) {
+		else if (args[0].equalsIgnoreCase("profession")) {
 			PlayerData data = SkillAPI.getPlayerData(p);
 			if (data != null) {
 				return "" + (int) data.getMaxMana();
