@@ -9,6 +9,7 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.classes.RPGClass;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
@@ -55,17 +56,24 @@ public class SkillAPIPlaceholders {
 				boolean online = e.isOnline();
 				Player p = e.getPlayer();
 				String placeholder = "Loading...";
+				
 
 				if (online && p != null) {
 					double health = p.getHealth();
+					placeholder = "";
+					// Check if cursed
+					if (FlagManager.hasFlag(p, "curse")) {
+						placeholder = "§8";
+					}
+					
 					if (health >= 10000) {
-						placeholder = df10k.format(health / 1000);
+						placeholder += df10k.format(health / 1000);
 					}
 					else if (health >= 1000) {
-						placeholder = df1k.format(health / 1000);
+						placeholder += df1k.format(health / 1000);
 					}
 					else {
-						placeholder = df.format(health);
+						placeholder += df.format(health);
 					}
 					return placeholder;
 				}
