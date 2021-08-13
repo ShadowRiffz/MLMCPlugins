@@ -41,7 +41,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr takegoal [player] [goal]");
 				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
-				sender.sendMessage("§c/nr updateattrs [player]");
+				sender.sendMessage("§c/nr update/resetattrs [player]");
 				sender.sendMessage("§c/nr convert [max]");
 				return true;
 			}
@@ -327,7 +327,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			// /nr resetattrs [player]
-			else if (args[0].equalsIgnoreCase("removeattrs")) {
+			else if (args[0].equalsIgnoreCase("resetattrs")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				main.resetBonuses(p);
 				return true;
