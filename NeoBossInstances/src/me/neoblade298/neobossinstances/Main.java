@@ -68,6 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> activeWarnings = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
 	public ConcurrentHashMap<UUID, Integer> dead = new ConcurrentHashMap<UUID, Integer>();
+	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -247,6 +248,18 @@ public class Main extends JavaPlugin implements Listener {
 	    							activeFights.get(boss).add(p);
 	    						}
 	    						
+	    						// Recalculate everyone's health bars every time someone joins
+	    						for (Player partyMember : activeFights.get(boss)) {
+	    							ArrayList<String> healthList = new ArrayList<String>();
+		    						healthbars.put(partyMember.getName(), healthList);
+		    						for (Player bossFighter : activeFights.get(boss)) {
+		    							if (!bossFighter.equals(partyMember)) {
+		    								healthList.add(bossFighter.getName());
+		    							}
+		    						}
+		    						Collections.sort(healthList);
+	    						}
+	    						
 	    						// Handle raid starts
 	    						if (bossInfo.get(boss).isRaid()) {
 	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
@@ -379,9 +392,14 @@ public class Main extends JavaPlugin implements Listener {
 		dead.remove(p.getUniqueId());
 		
 		// Remove player from all fights locally
+		healthbars.remove(p.getName());
 		for (String boss : activeFights.keySet()) {
 			if (activeFights.get(boss).contains(p)) {
 				activeFights.get(boss).remove(p);
+				// Remove health bar from everyone else in the boss fight
+				for (Player player : activeFights.get(boss)) {
+					healthbars.get(player.getName()).remove(p.getName());
+				}
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
 			}
 			if (activeFights.get(boss).size() == 0) {
@@ -496,10 +514,14 @@ public class Main extends JavaPlugin implements Listener {
 						SkillAPI.getPlayerAccountData(p).setAccount(13);
 						p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
 
+						healthbars.remove(p.getName());
 						for (String boss : activeFights.keySet()) {
 							if (activeFights.get(boss).contains(p)) {
 								activeFights.get(boss).remove(p);
 								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+								for (Player player : activeFights.get(boss)) {
+									healthbars.get(player.getName()).remove(p.getName());
+								}
 							}
 							if (activeFights.get(boss).size() == 0) {
 								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
@@ -589,5 +611,9 @@ public class Main extends JavaPlugin implements Listener {
 			Player p = (Player) e.getDamager();
 			if (dead.containsKey(p.getUniqueId())) e.setCancelled(true);
 		}
+	}
+	
+	public ArrayList<String> getHealthBars(Player p) {
+		return healthbars.get(p.getName());
 	}
 }
