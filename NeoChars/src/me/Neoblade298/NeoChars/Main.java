@@ -1,7 +1,7 @@
 package me.Neoblade298.NeoChars;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +29,7 @@ public class Main extends JavaPlugin implements Listener
     Bukkit.getServer().getLogger().info("NeoChars Disabled");
   }
   
-  public void sendPlayerCard(Player recipient, OfflinePlayer viewed) {
+  public void sendPlayerCard(Player recipient, Player viewed) {
   	if (!SkillAPI.hasPlayerData(viewed) || SkillAPI.getPlayerData(viewed).getClass("class") == null) {
   		Utilities.sendMessage(recipient, "&cThis player has no class");
   		return;
@@ -53,7 +53,7 @@ public class Main extends JavaPlugin implements Listener
   	}
   	Utilities.sendMessage(recipient, "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e" + pData.getAttribute("Dexterity") + " &cDEX&7 | &e" +
   			pData.getAttribute("Intelligence") + " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Perception") + " &cPRC&7 | &e" +
-  			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT");
+  			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT&7 | &e" + viewed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
   }
   
   @EventHandler
