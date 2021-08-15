@@ -15,13 +15,12 @@ public class Commands implements CommandExecutor{
 		this.main = main;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		
 		if(args.length == 1) {
 			if(Bukkit.getPlayer(args[0]) != null) {
-				main.sendPlayerCard((Player) sender, Bukkit.getOfflinePlayer(args[0]));
+				main.sendPlayerCard((Player) sender, Bukkit.getPlayer(args[0]));
 				return true;
 			}
 		}
