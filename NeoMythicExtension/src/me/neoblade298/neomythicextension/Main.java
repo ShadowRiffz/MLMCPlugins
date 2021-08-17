@@ -27,6 +27,7 @@ import me.neoblade298.neomythicextension.mechanics.ModManaMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
 import me.neoblade298.neomythicextension.mechanics.RandomizeGoldMechanic;
+import me.neoblade298.neomythicextension.mechanics.ReduceThreatMechanic;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchKillsMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchPointsChanceMechanic;
@@ -138,6 +139,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		else if (event.getMechanicName().equalsIgnoreCase("taunt")) {
 			TauntMechanic mechanic = new TauntMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		else if (event.getMechanicName().equalsIgnoreCase("reducethreat")) {
+			ReduceThreatMechanic mechanic = new ReduceThreatMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
