@@ -53,7 +53,7 @@ public class Main extends JavaPlugin implements Listener
   	}
   	Utilities.sendMessage(recipient, "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e" + pData.getAttribute("Dexterity") + " &cDEX&7 | &e" +
   			pData.getAttribute("Intelligence") + " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Perception") + " &cPRC&7 | &e" +
-  			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT&7 | &e" + viewed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() +
+  			pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality") + " &cVIT&7 | &e" + (int) viewed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() +
   			" &cHP");
   }
   
