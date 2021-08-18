@@ -52,7 +52,6 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length != 1) return "Invalid placeholder";
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 		PlayerStats stats = nr.getPlayerStats(p);
 		if (args[0].equalsIgnoreCase("level")) {
