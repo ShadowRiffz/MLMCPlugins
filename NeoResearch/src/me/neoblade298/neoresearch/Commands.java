@@ -212,7 +212,7 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				int level = Integer.parseInt(args[3]);
 				int amount = Integer.parseInt(args[4]);
-				main.giveResearchPoints(p, amount, args[2], level, true);
+				main.giveResearchPoints(p, amount, args[2], level, true, "admin");
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}
