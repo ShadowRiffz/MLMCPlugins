@@ -468,7 +468,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		updateBonuses(p);
 	}
 	
-	public void giveResearchPoints(Player p, int amount, String mob, int lvl, boolean announce) {
+	public void giveResearchPoints(Player p, int amount, String mob, int lvl, boolean announce, String via) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			PlayerStats pStats = playerStats.get(uuid);
@@ -491,6 +491,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				researchPoints.put(mob, points);
 				if (announce) {
 					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+					if (via != null) {
+						msg += " &7via " + via;
+					}
+					msg += "&7!";
 					msg = msg.replaceAll("&", "§");
 					p.sendMessage(msg);
 				}
