@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neoresearch.Attributes;
 import me.neoblade298.neoresearch.PlayerStats;
 import me.neoblade298.neoresearch.Research;
 
@@ -68,6 +69,18 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		}
 		if (args[0].equalsIgnoreCase("neededexp")) {
 			return "" + nr.getNextLvl().get(stats.getLevel());
+		}
+		if (args[0].equalsIgnoreCase("attr")) {
+			Attributes attr = nr.getPlayerAttributes(p);
+			switch (args[1]) {
+				case "str": return "" + attr.getStrength();
+				case "dex": return "" + attr.getDexterity();
+				case "int": return "" + attr.getIntelligence();
+				case "spr": return "" + attr.getSpirit();
+				case "prc": return "" + attr.getPerception();
+				case "end": return "" + attr.getEndurance();
+				case "vit": return "" + attr.getVitality();
+			}
 		}
     	return "§c???";
 	}
