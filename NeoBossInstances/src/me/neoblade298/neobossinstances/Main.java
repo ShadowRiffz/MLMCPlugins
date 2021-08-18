@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -67,8 +68,9 @@ public class Main extends JavaPlugin implements Listener {
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> activeWarnings = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
-	public ConcurrentHashMap<UUID, Integer> dead = new ConcurrentHashMap<UUID, Integer>();
+	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
+	public ConcurrentHashMap<UUID, Boss> spectatorBoss = new ConcurrentHashMap<UUID, Boss>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -389,7 +391,9 @@ public class Main extends JavaPlugin implements Listener {
 		// Remove spectator mode
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
-		dead.remove(p.getUniqueId());
+		p.setGameMode(GameMode.SURVIVAL);
+		spectatorAcc.remove(p.getUniqueId());
+		spectatorBoss.remove(p.getUniqueId());
 		
 		// Remove player from all fights locally
 		healthbars.remove(p.getName());
@@ -500,23 +504,13 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
 			Player p = e.getEntity();
-			Location death = p.getLocation();
 			BukkitRunnable save = new BukkitRunnable() {
 				public void run() {
 					if (p != null) {
-						if (p.isDead()) p.spigot().respawn();
-						p.teleport(death);
-    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
-						p.setGameMode(GameMode.ADVENTURE);
-						p.setInvulnerable(true);
-						PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
-						dead.put(p.getUniqueId(), accs.getActiveId());
-						SkillAPI.getPlayerAccountData(p).setAccount(13);
-						p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
-
 						healthbars.remove(p.getName());
 						for (String boss : activeFights.keySet()) {
 							if (activeFights.get(boss).contains(p)) {
+								spectatorBoss.put(p.getUniqueId(), bossInfo.get(boss));
 								activeFights.get(boss).remove(p);
 								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
 								for (Player player : activeFights.get(boss)) {
@@ -552,16 +546,30 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				}
 			};
-			save.runTaskLater(main, 10L);
+			save.runTaskAsynchronously(this);
 		}
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		Player p = e.getPlayer();
+		p.teleport(spectatorBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
+		p.setGameMode(GameMode.ADVENTURE);
+		p.setInvulnerable(true);
+		PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
+		spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
+		SkillAPI.getPlayerAccountData(p).setAccount(13);
+		p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+
 	}
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
-			if (dead.containsKey(p.getUniqueId())) {
-				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
+			if (spectatorAcc.containsKey(p.getUniqueId())) {
+				SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.get(p.getUniqueId()));
 			}
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
@@ -576,8 +584,8 @@ public class Main extends JavaPlugin implements Listener {
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
-			if (dead.containsKey(p.getUniqueId())) {
-				SkillAPI.getPlayerAccountData(p).setAccount(dead.get(p.getUniqueId()));
+			if (spectatorAcc.containsKey(p.getUniqueId())) {
+				SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.get(p.getUniqueId()));
 			}
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
@@ -592,7 +600,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDrop(PlayerDropItemEvent e) {
 		if (isInstance) {
 			String p = e.getPlayer().getName();
-			if (dead.containsKey(e.getPlayer().getUniqueId())) {
+			if (spectatorAcc.containsKey(e.getPlayer().getUniqueId())) {
 				e.setCancelled(true);
 				e.getPlayer().sendMessage("§cCan't drop items when you're dead!");
 				return;
@@ -609,7 +617,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
-			if (dead.containsKey(p.getUniqueId())) e.setCancelled(true);
+			if (spectatorAcc.containsKey(p.getUniqueId())) e.setCancelled(true);
 		}
 	}
 	
