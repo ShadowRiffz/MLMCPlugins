@@ -626,4 +626,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<Integer, Integer> getNextLvl() {
 		return toNextLvl;
 	}
+	
+	public Attributes getPlayerAttributes(Player p) {
+		return playerAttrs.get(p.getUniqueId());
+	}
 }
