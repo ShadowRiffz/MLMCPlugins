@@ -43,7 +43,7 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 				ActiveMob amob = (ActiveMob) data.getCaster();
 				mob = amob.getType().getInternalName();
 				level = (int) amob.getLevel();
-				nr.giveResearchPoints(p, this.amount, mob, level, false);
+				nr.giveResearchPoints(p, this.amount, mob, level, false, null);
 			}
 			else {
 				MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(mob);

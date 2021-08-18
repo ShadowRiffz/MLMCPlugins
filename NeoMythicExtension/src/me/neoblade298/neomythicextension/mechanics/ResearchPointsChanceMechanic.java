@@ -30,24 +30,24 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 
 	public ResearchPointsChanceMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        
-        this.level = config.getInteger("l", 0);
-        this.amount = config.getInteger("a");
-        this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 1);
-        this.basicmult = config.getDouble(new String[] {"basicmult", "bm"}, 1.2);
-        this.advancedmult = config.getDouble(new String[] {"advancedmult", "am"}, 1.5);
-        this.basicchance = basechance * basicmult;
-        this.advancedchance = basechance * advancedmult;
-        this.rand = new Random();
-        this.alias = config.getString("alias", "default");
-        
-        nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
+		this.setAsyncSafe(false);
+		this.setTargetsCreativePlayers(false);
+
+		this.level = config.getInteger("l", 0);
+		this.amount = config.getInteger("a");
+		this.basechance = config.getDouble(new String[] { "basechance", "bc" }, 1);
+		this.basicmult = config.getDouble(new String[] { "basicmult", "bm" }, 1.2);
+		this.advancedmult = config.getDouble(new String[] { "advancedmult", "am" }, 1.5);
+		this.basicchance = basechance * basicmult;
+		this.advancedchance = basechance * advancedmult;
+		this.rand = new Random();
+		this.alias = config.getString("alias", "default");
+
+		nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 	}
-	
+
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
 			double rand = this.rand.nextDouble();
 			double chance = this.basechance;
@@ -57,11 +57,13 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 				mob = amob.getType().getInternalName();
 				level = (int) amob.getLevel();
 			}
-			
+
 			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
-			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
-			
+			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(),
+					p.getInventory().getItemInOffHand() };
+			int dropType = 0;
+
 			for (ItemStack item : items) {
 				if (!item.hasItemMeta()) {
 					continue;
@@ -72,7 +74,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 				if (item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
 					continue;
 				}
-				
+
 				// Check for advanced or basic drop charm
 				ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 				int count = 0;
@@ -93,13 +95,21 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 					}
 				}
 			}
-			
+
 			// Check for successful drop
 			if (rand <= chance) {
-				nr.giveResearchPoints(p, this.amount, mob, level, true);
+				if (dropType == 1 && rand >= this.basechance) {
+					nr.giveResearchPoints(p, this.amount, mob, level, true, "Basic Drop Charm");
+				}
+				else if (dropType == 2 && rand >= this.basechance) {
+					nr.giveResearchPoints(p, this.amount, mob, level, true, "Advanced Drop Charm");
+				}
+				else {
+					nr.giveResearchPoints(p, this.amount, mob, level, true, null);
+				}
 			}
 			return true;
 		}
 		return false;
-    }
+	}
 }
