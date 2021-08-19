@@ -65,6 +65,9 @@ public class SkillAPIPlaceholders {
 					if (FlagManager.hasFlag(p, "curse")) {
 						placeholder = "§8";
 					}
+					else if (FlagManager.hasFlag(p, "stun") || FlagManager.hasFlag(p, "root") || FlagManager.hasFlag(p, "silence")) {
+						placeholder = "§b";
+					}
 					
 					if (health >= 10000) {
 						placeholder += df10k.format(health / 1000);

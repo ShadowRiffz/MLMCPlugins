@@ -79,15 +79,23 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			double percenthp = partyMember.getHealth() / partyMember.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			percenthp *= 100;
 			int php = (int) percenthp;
-			String color = "§a";
-			if (php < 50 && php >= 25) {
-				color = "§e";
-			}
-			else if (php < 25) {
-				color = "§c";
-			}
-			else if (FlagManager.hasFlag(partyMember, "curse")) {
+			String color = null;
+
+			if (FlagManager.hasFlag(partyMember, "curse")) {
 				color = "§8";
+			}
+			else if (FlagManager.hasFlag(p, "stun") || FlagManager.hasFlag(p, "root") || FlagManager.hasFlag(p, "silence")) {
+				color = "§b";
+			}
+			
+			if (color == null) {
+				color = "§a";
+				if (php < 50 && php >= 25) {
+					color = "§e";
+				}
+				else if (php < 25) {
+					color = "§c";
+				}
 			}
 			
 			String bar = "" + color;
