@@ -41,7 +41,8 @@ public class Commands implements CommandExecutor{
 			if(sender instanceof Player) {
 				Player p = (Player) sender;
 				if(p.getWorld().getName().equals("Argyll") ||
-						p.getWorld().getName().equals("ClassPVP")) {
+						p.getWorld().getName().equals("ClassPVP") ||
+						p.getWorld().getName().equals("Dev")) {
 					PlayerData data = SkillAPI.getPlayerData(p);
 					
 					// attrs reset

@@ -9,7 +9,7 @@ public class Main extends JavaPlugin implements Listener
   
   public void onEnable()
   {
-    Bukkit.getServer().getLogger().info("NeoChars Enabled");
+    Bukkit.getServer().getLogger().info("NeoAttrSetter Enabled");
     getServer().getPluginManager().registerEvents(this, this);
     
     // Get command listener
@@ -18,6 +18,6 @@ public class Main extends JavaPlugin implements Listener
   
   public void onDisable()
   {
-    Bukkit.getServer().getLogger().info("NeoChars Disabled");
+    Bukkit.getServer().getLogger().info("NeoAttrSetter Disabled");
   }
 }
