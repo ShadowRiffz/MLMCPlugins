@@ -130,7 +130,7 @@ public class Main extends JavaPlugin implements Listener{
 			ArrayList<String> toRemove = new ArrayList<String>();
 			for (String receiver : inBoss.keySet()) {
 				if(Bukkit.getPlayer(receiver) != null && inBoss.get(receiver).equals(deadBoss)) {
-					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7) [Time: §c" + timer + "§7]");
+					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7) [Time:§c" + timer + "§7]");
 					Bukkit.getPlayer(receiver).sendMessage("§7-----");
 					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 					for (String player : inBoss.keySet()) {
