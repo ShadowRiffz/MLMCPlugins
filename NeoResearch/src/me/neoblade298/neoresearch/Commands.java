@@ -323,13 +323,17 @@ public class Commands implements CommandExecutor{
 			// /nr updateattrs [player]
 			else if (args[0].equalsIgnoreCase("updateattrs")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				main.updateBonuses(p);
+				if (p != null) {
+					main.updateBonuses(p);
+				}
 				return true;
 			}
 			// /nr resetattrs [player]
 			else if (args[0].equalsIgnoreCase("resetattrs")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				main.resetBonuses(p);
+				if (p != null) {
+					main.resetBonuses(p);
+				}
 				return true;
 			}
 		}
