@@ -20,8 +20,8 @@ public class Boss {
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
-		this.setPermission(permission);
-		this.setPlaceholder(placeholder);
+		this.permission = permission;
+		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 	}
 
 	public Boss(Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
@@ -32,7 +32,7 @@ public class Boss {
 		this.displayName = displayName;
 		this.isRaid = isRaid;
 		this.timeLimit = timeLimit;
-		this.setPermission(permission);
+		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 	}
