@@ -84,7 +84,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			if (FlagManager.hasFlag(partyMember, "curse")) {
 				color = "§8";
 			}
-			else if (FlagManager.hasFlag(p, "stun") || FlagManager.hasFlag(p, "root") || FlagManager.hasFlag(p, "silence")) {
+			else if (FlagManager.hasFlag(partyMember, "stun") || FlagManager.hasFlag(partyMember, "root") || FlagManager.hasFlag(partyMember, "silence")) {
 				color = "§b";
 			}
 			
