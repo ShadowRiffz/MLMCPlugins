@@ -34,7 +34,7 @@ public class Boss {
 		this.timeLimit = timeLimit;
 		this.setPermission(permission);
 		this.raidBosses = new ArrayList<RaidBoss>();
-		this.setPlaceholder(placeholder.replaceAll("&", "§").replaceAll("@", "&"));
+		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 	}
 
 	public boolean isRaid() {
