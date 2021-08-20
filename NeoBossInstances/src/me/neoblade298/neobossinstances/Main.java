@@ -552,20 +552,22 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
-		BukkitRunnable respawn = new BukkitRunnable() {
-			public void run() {
-				Player p = e.getPlayer();
-				p.teleport(spectatorBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
-				p.setGameMode(GameMode.ADVENTURE);
-				p.setInvulnerable(true);
-				PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
-				spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
-				SkillAPI.getPlayerAccountData(p).setAccount(13);
-				p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
-			}
-		};
-		respawn.runTaskLater(this, 20L);
+		if (isInstance) {
+			BukkitRunnable respawn = new BukkitRunnable() {
+				public void run() {
+					Player p = e.getPlayer();
+					p.teleport(spectatorBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
+					p.setGameMode(GameMode.ADVENTURE);
+					p.setInvulnerable(true);
+					PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
+					spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
+					SkillAPI.getPlayerAccountData(p).setAccount(13);
+					p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+				}
+			};
+			respawn.runTaskLater(this, 20L);
+		}
 	}
 	
 	@EventHandler
