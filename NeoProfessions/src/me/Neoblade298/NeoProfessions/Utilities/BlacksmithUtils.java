@@ -70,4 +70,15 @@ public class BlacksmithUtils {
 		}
 		return false;
 	}
+	
+	public boolean isGear(ItemStack item) {
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			for (String line : item.getItemMeta().getLore()) {
+				if (line.contains("Tier:")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

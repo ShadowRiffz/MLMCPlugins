@@ -430,7 +430,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							ItemMeta im = item.getItemMeta();
 							((Damageable) im).setDamage(0);
 							item.setItemMeta(im);
-							util.setCurrentDurability(item, util.getMaxDurability(item));
+							if (bUtils.isGear(item)) {
+								util.setCurrentDurability(item, util.getMaxDurability(item));
+							}
 							util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
 						}
 						else {
