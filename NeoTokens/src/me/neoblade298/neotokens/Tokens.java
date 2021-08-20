@@ -39,7 +39,7 @@ public class Tokens extends JavaPlugin implements org.bukkit.event.Listener {
 		NBTItem nbti = new NBTItem(item);
 
 		if (item.getType().equals(Material.GOLD_INGOT) && item.hasItemMeta() && 
-				item.getItemMeta().getCustomModelData() == 101) {
+				item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(1).contains("Expires")) {
 
 			if (!p.getName().equals(nbti.getString("player"))) {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
