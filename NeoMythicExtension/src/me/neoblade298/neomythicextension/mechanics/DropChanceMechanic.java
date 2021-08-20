@@ -61,45 +61,52 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
 			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
-			
 			int dropType = 0;
-			for (ItemStack item : items) {
-				if (!item.hasItemMeta()) {
-					continue;
-				}
-				if (!item.getItemMeta().hasLore()) {
-					continue;
-				}
-				if (item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
-					continue;
-				}
-				
-				// Check for advanced or basic drop charm
-				ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-				int count = 0;
-				if (lore.size() > 1) {
-					for (int i = lore.size() - 2; i >= 0; i--) {
-						String line = lore.get(i);
-						if (line.contains("Advanced Drop Charm")) {
-							dropType = 2;
-							chance = this.advancedchance;
-							break;
-						}
-						else if (line.contains("Drop Charm")) {
-							dropType = 1;
-							chance = this.basicchance;
-							break;
-						}
-						else if (count >= 4) {
-							break;
-						}
+			
+			if (!this.type.equals("chest") && p.hasPermission("tokens.active.boss")) {
+				for (ItemStack item : items) {
+					if (!item.hasItemMeta()) {
+						continue;
+					}
+					if (!item.getItemMeta().hasLore()) {
+						continue;
+					}
+					if (item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
+						continue;
 					}
 					
-					// If found, break
-					if (dropType > 0) {
-						break;
+					// Check for advanced or basic drop charm
+					ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+					int count = 0;
+					if (lore.size() > 1) {
+						for (int i = lore.size() - 2; i >= 0; i--) {
+							String line = lore.get(i);
+							if (line.contains("Advanced Drop Charm")) {
+								dropType = 2;
+								chance = this.advancedchance;
+								break;
+							}
+							else if (line.contains("Drop Charm")) {
+								dropType = 1;
+								chance = this.basicchance;
+								break;
+							}
+							else if (count >= 4) {
+								break;
+							}
+						}
+						
+						// If found, break
+						if (dropType > 0) {
+							break;
+						}
 					}
 				}
+			}
+			else {
+				dropType = 3;
+				chance = 1;
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
 			}
 			
 			// Check for successful drop
@@ -113,6 +120,7 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 					String localMsg = msg;
 					if (dropType == 1 && rand >= this.basechance) localMsg += " via Basic Drop Charm";
 					if (dropType == 2 && rand >= this.basechance) localMsg += " via Advanced Drop Charm";
+					if (dropType == 3) localMsg += " via Boss Chest Token";
 					localMsg += "!";
 					p.sendMessage(localMsg);
 					if (this.announce) {
