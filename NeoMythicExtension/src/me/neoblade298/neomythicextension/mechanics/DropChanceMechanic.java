@@ -62,8 +62,13 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 			Player p = (Player) target.getBukkitEntity();
 			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand()};
 			int dropType = 0;
-			
-			if (!this.type.equals("chest") && p.hasPermission("tokens.active.boss")) {
+
+			if (this.type.equals("chest") && p.hasPermission("tokens.active.boss")) {
+				dropType = 3;
+				chance = 1;
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
+			}
+			else {
 				for (ItemStack item : items) {
 					if (!item.hasItemMeta()) {
 						continue;
@@ -102,11 +107,6 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 						}
 					}
 				}
-			}
-			else {
-				dropType = 3;
-				chance = 1;
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
 			}
 			
 			// Check for successful drop
