@@ -22,6 +22,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new MinibossShortPlaceholders().register();
 		new ChatColorPlaceholders().register();
 		new OtherSkillAPIPlaceholders().register();
+		new LordboardPlaceholders().register();
 	}
 
 	public void onDisable() {
