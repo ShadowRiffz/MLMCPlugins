@@ -607,7 +607,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		if (proj.getShooter() instanceof Player) {
 			Player p = (Player) proj.getShooter();
 			String world = e.getEntity().getLocation().getWorld().getName();
-			if (world.equals("Argyll") || !world.equals("ClassPVP") || !world.equals("Dev")) {
+			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 				if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
 					e.setCancelled(true);
 					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot throw tridents in this world!");
