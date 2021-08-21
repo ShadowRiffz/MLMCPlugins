@@ -104,10 +104,10 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 			return "Loading...";
 		}
 		else if (args[0].equalsIgnoreCase("resource")) {
-			return df.format(SkillAPI.getPlayerData(p).getMaxMana());
+			return df.format(SkillAPI.getPlayerData(p).getMana());
 		}
 		else if (args[0].equalsIgnoreCase("maxresource")) {
-			return df.format(SkillAPI.getPlayerData(p).getMana());
+			return df.format(SkillAPI.getPlayerData(p).getMaxMana());
 		}
 		else if (args[0].equalsIgnoreCase("world")) {
 			String world = p.getWorld().getName();
