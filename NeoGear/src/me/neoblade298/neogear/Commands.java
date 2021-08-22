@@ -24,11 +24,13 @@ public class Commands implements CommandExecutor{
 	private static final String DEFAULT_SET = "random";
 	private HashMap<Player, Long> sellConfirm;
 	private HashMap<Player, ItemStack> sellItem;
+	private long rightClickCooldown;
 	
 	public Commands(Main main) {
 		this.main = main;
 		sellConfirm = new HashMap<Player, Long>();
 		sellItem = new HashMap<Player, ItemStack>();
+		rightClickCooldown = System.currentTimeMillis();
 	}
 	
 	@Override
@@ -104,10 +106,17 @@ public class Commands implements CommandExecutor{
 			// Gear sell [player]
 			else if (args.length == 2 && args[0].equalsIgnoreCase("sell")) {
 				Player p = Bukkit.getPlayer(args[1]);
+				
+				// Make sure the command was not used recently
+				long now = System.currentTimeMillis();
+				if (now - rightClickCooldown < 1000) {
+					return true;
+				}
+				
 				// Confirm the sell
 				if (sellConfirm.containsKey(p)) {
 					long lastConfirm = sellConfirm.get(p);
-					if (System.currentTimeMillis() - lastConfirm < 5000 && p.getInventory().getItemInMainHand().equals(sellItem.get(p))) {
+					if (now - lastConfirm < 10000 && p.getInventory().getItemInMainHand().equals(sellItem.get(p))) {
 						sellHand(p);
 					}
 					else {
@@ -118,6 +127,7 @@ public class Commands implements CommandExecutor{
 				else {
 					initiateSell(p);
 				}
+				rightClickCooldown = now;
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 				main.loadConfigs();
