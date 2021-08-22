@@ -95,6 +95,7 @@ public class Main extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
+		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -123,7 +124,6 @@ public class Main extends JavaPlugin implements Listener {
 			
 			// Setup Event Listeners
 			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
-			getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
 			getServer().getPluginManager().registerEvents(masonListeners, this);
 	
 			// Setup recipes (make sure the recipes haven't been added before)
