@@ -40,6 +40,7 @@ public class Commands implements CommandExecutor {
 					String instance = main.findInstance(boss);
 					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+						p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
 						
 						// Only give cooldown if they've beaten the boss before or it's a raid
@@ -75,7 +76,7 @@ public class Commands implements CommandExecutor {
 								}
 							}
 						};
-						addSql.runTaskLater(main, 40L);
+						addSql.runTaskLater(main, 60L);
 					}
 					else if (instance.equalsIgnoreCase("Not found")) {
 						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
@@ -97,6 +98,7 @@ public class Commands implements CommandExecutor {
 					String uuid = p.getUniqueId().toString();
 					String boss = WordUtils.capitalize(args[2]);
 					String instance = WordUtils.capitalize(args[3]);
+					p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
 
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
@@ -105,10 +107,17 @@ public class Commands implements CommandExecutor {
 					if (main.mainSpawn.getWorld() == null) {
 						main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
 					}
-					p.teleport(main.mainSpawn);
-	
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+					
+					BukkitRunnable sendThere = new BukkitRunnable() {
+						public void run() {
+							p.teleport(main.mainSpawn);
+							
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+									main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+						}
+					};
+					sendThere.runTaskLater(main, 60L);
+					
 					try {
 						// Connect
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -322,14 +331,14 @@ public class Commands implements CommandExecutor {
 			if (args.length == 1 && sender instanceof Player) {
 				Player p = (Player) sender;
 				SkillAPI.saveSingle(p);
-				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back...");
+				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back in 3 seconds...");
 				BukkitRunnable sendBack = new BukkitRunnable() {
 					public void run() {
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
 								main.returnCommand.replaceAll("%player%", p.getName()));
 					}
 				};
-				sendBack.runTaskLater(main, 20L);
+				sendBack.runTaskLater(main, 60L);
 				return true;
 			}
 			else {
@@ -341,7 +350,7 @@ public class Commands implements CommandExecutor {
 								main.returnCommand.replaceAll("%player%", args[1]));
 					}
 				};
-				sendBack.runTaskLater(main, 20L);
+				sendBack.runTaskLater(main, 60L);
 				return true;
 			}
 		}
