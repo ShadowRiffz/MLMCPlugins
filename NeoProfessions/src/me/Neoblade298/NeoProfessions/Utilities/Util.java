@@ -129,19 +129,11 @@ public class Util {
 	}
 
 	public int getMaxDurability(ItemStack item) {
-		System.out.println("1" + item.getItemMeta());
-		System.out.println("2" + item.getItemMeta().hasLore());
-		System.out.println("3" + item.getItemMeta().getLore());
 		for (String line : item.getItemMeta().getLore()) {
-			System.out.println("Line: " + line);
 			if (line.contains("§7Durability")) {
-				System.out.println("1");
 				line = ChatColor.stripColor(line);
-				System.out.println("2");
 				line = line.substring(line.indexOf(" ") + 1);
-				System.out.println("3");
 				String[] numbers = line.split(" / ");
-				System.out.println("4");
 				return Integer.parseInt(numbers[1]);
 			}
 		}

@@ -85,7 +85,6 @@ public class CulinarianRecipeChecks {
 	}
 
 	public void checkBlackWidow(Player p, CraftingInventory inv) {
-		System.out.println("Check black widow");
 		if (p.hasPermission("recipes.drink1") && p.hasPermission("culinarian.bartender")) {
 			for (ItemStack i : drink.getBlackWidowRecipe()) {
 				if (i.getType().equals(Material.POTION)) {
@@ -93,7 +92,6 @@ public class CulinarianRecipeChecks {
 				}
 				else {
 					if (!inventoryContainsSimilar(i, inv)) {
-						System.out.println("Missing " + i);
 						inv.setResult(null);
 						break;
 					}
