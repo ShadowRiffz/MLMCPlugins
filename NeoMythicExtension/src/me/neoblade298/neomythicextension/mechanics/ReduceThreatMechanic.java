@@ -21,7 +21,6 @@ public class ReduceThreatMechanic extends SkillMechanic implements ITargetedEnti
 	
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		System.out.println("Reducing threat");
 		MythicMobs.inst().getAPIHelper().reduceThreat(data.getCaster().getEntity().getBukkitEntity(), (LivingEntity) target.getBukkitEntity(), this.amount);
     	return true;
     }
