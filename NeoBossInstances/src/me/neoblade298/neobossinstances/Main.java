@@ -67,7 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
-	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> activeWarnings = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
+	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossTimers = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
 	public ConcurrentHashMap<UUID, Boss> spectatorBoss = new ConcurrentHashMap<UUID, Boss>();
@@ -342,6 +342,14 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		kickPlayer.runTaskLater(main, ticks);
+		if (bossTimers.containsKey(boss)) {
+			bossTimers.get(boss).add(kickPlayer);
+		}
+		else {
+			ArrayList<BukkitRunnable> list = new ArrayList<BukkitRunnable>();
+			list.add(kickPlayer);
+			bossTimers.put(boss, list);
+		}
 	}
 	
 	public void scheduleWarning(int ticks, int timeToWarn, String time, String boss) {
@@ -355,13 +363,13 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		warnPlayer.runTaskLater(main, ticks - timeToWarn);
-		if (activeWarnings.containsKey(boss)) {
-			activeWarnings.get(boss).add(warnPlayer);
+		if (bossTimers.containsKey(boss)) {
+			bossTimers.get(boss).add(warnPlayer);
 		}
 		else {
 			ArrayList<BukkitRunnable> list = new ArrayList<BukkitRunnable>();
 			list.add(warnPlayer);
-			activeWarnings.put(boss, list);
+			bossTimers.put(boss, list);
 		}
 	}
 	
@@ -410,13 +418,13 @@ public class Main extends JavaPlugin implements Listener {
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
-				if (activeWarnings.containsKey(boss)) {
-					for (BukkitRunnable runnable : activeWarnings.get(boss)) {
+				if (bossTimers.containsKey(boss)) {
+					for (BukkitRunnable runnable : bossTimers.get(boss)) {
 						if (!runnable.isCancelled()) {
 							runnable.cancel();
 						}
 					}
-					activeWarnings.remove(boss);
+					bossTimers.remove(boss);
 				}
 			}
 		}
@@ -521,13 +529,13 @@ public class Main extends JavaPlugin implements Listener {
 								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 								activeFights.remove(boss);
 								activeBosses.remove(boss);
-								if (activeWarnings.containsKey(boss)) {
-									for (BukkitRunnable runnable : activeWarnings.get(boss)) {
+								if (bossTimers.containsKey(boss)) {
+									for (BukkitRunnable runnable : bossTimers.get(boss)) {
 										if (!runnable.isCancelled()) {
 											runnable.cancel();
 										}
 									}
-									activeWarnings.remove(boss);
+									bossTimers.remove(boss);
 								}
 							}
 						}
