@@ -46,7 +46,7 @@ public class FileManager {
 					PotionEffect effect = new PotionEffect(type, duration, amp);
 					effects.add(effect);
 				}
-				Object attribs = new ArrayList<Object>();
+				ArrayList<AttributeEffect> attribs = new ArrayList<AttributeEffect>();
 				String attribName;
 				for (String potion : foodConfig.getStringList(s + ".attributes")) {
 					String[] split = potion.split(",");
@@ -54,13 +54,13 @@ public class FileManager {
 					int amp = Integer.parseInt(split[1]);
 					int duration = Integer.parseInt(split[2]) * 20;
 					AttributeEffect attrib = new AttributeEffect(attribName, amp, duration);
-					((ArrayList<AttributeEffect>) attribs).add(attrib);
+					attribs.add(attrib);
 				}
-				Object sounds = new ArrayList<Object>();
+				ArrayList<Sound> sounds = new ArrayList<Sound>();
 				for (String sname : foodConfig.getStringList(s + ".sound-effects")) {
 					Sound sound = Sound.valueOf(sname.toUpperCase());
 					if (sound != null) {
-						((ArrayList<Sound>) sounds).add(sound);
+						sounds.add(sound);
 					}
 				}
 				double sat = foodConfig.getDouble(s + ".saturation");

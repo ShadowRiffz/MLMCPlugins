@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -122,7 +122,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			}
 		} else {
 			for (String name : this.foods.keySet()) {
-				if (name.equalsIgnoreCase(meta.getDisplayName())) {
+				if (name.contains(meta.getDisplayName())) {
 					food = (Food) this.foods.get(name);
 					break;
 				}
@@ -136,8 +136,16 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!food.getLore().isEmpty()) {
-			for (String lore : food.getLore()) {
-				if (!meta.getLore().contains(lore)) {
+			if (!meta.hasLore()) return;
+			
+			ArrayList<String> flore = food.getLore();
+			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
+			
+			if (mlore.size() != flore.size()) return;
+			for (int i = 0; i < flore.size(); i++) {
+				String fLine = food.getLore().get(i);
+				String mLine = mlore.get(i);
+				if (!mLine.contains(fLine)) {
 					return;
 				}
 			}
@@ -222,7 +230,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		// Work on skillapi attributes
 		HashMap<String, int[]> playerAttribs;
 		if (!this.effects.containsKey(p.getUniqueId())) {
-			playerAttribs = new HashMap();
+			playerAttribs = new HashMap<String, int[]>();
 			this.effects.put(p.getUniqueId(), playerAttribs);
 		} else {
 			playerAttribs = (HashMap<String, int[]>) this.effects.get(p.getUniqueId());
@@ -255,7 +263,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		final int finalMana = mana;
 		if (food.getHealthTime() == 0) {
 			if (p.isValid()) {
-				p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
+				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + finalHealth));
 			}
 		} else {
 			BukkitRunnable healthTask = new BukkitRunnable() {
@@ -264,7 +272,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 				public void run() {
 					if (p.isValid()) {
 						this.rep -= 1;
-						p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + finalHealth));
+						p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + finalHealth));
 						if (this.rep <= 0) {
 							this.cancel();
 						}
@@ -320,7 +328,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		Player p = e.getPlayer();
 		if (this.effects.containsKey(p.getUniqueId())) {
 			PlayerData data = SkillAPI.getPlayerData(p);
-			HashMap<String, int[]> playerAttribs = (HashMap) this.effects.get(p.getUniqueId());
+			HashMap<String, int[]> playerAttribs = this.effects.get(p.getUniqueId());
 			for (String s : playerAttribs.keySet()) {
 				data.addBonusAttributes(s, ((int[]) playerAttribs.get(s))[1]);
 			}
