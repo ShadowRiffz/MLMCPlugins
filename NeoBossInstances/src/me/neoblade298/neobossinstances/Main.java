@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,6 +35,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerAccounts;
+import com.sucy.skill.api.player.PlayerData;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -220,7 +222,6 @@ public class Main extends JavaPlugin implements Listener {
     		BukkitRunnable sendPlayer = new BukkitRunnable() {
     			int count = 0;
     			
-    			@SuppressWarnings("deprecation")
 				public void run() {
     				try {
     					// Connect
@@ -266,7 +267,12 @@ public class Main extends JavaPlugin implements Listener {
 	    						if (bossInfo.get(boss).isRaid()) {
 	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
 	    				    			public void run() {
-	    		    						p.setHealth(p.getMaxHealth());
+	    		    						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+	    		    						// Set mana if possible
+	    		    						PlayerData pd = SkillAPI.getPlayerData(p);
+	    		    						if (pd.getClass("class").getData().getManaName().contains("MP")) {
+	    		    							pd.setMana(pd.getMaxMana());
+	    		    						}
 
 	    		    						// Only start timer if it hasn't already been started
 	    		    						if (!activeBosses.contains(boss)) {
@@ -279,14 +285,19 @@ public class Main extends JavaPlugin implements Listener {
 	    		    						}
 	    				    			}
 	    				    		};
-	    				    		startRaid.runTaskLater(main, 60);
+	    				    		startRaid.runTaskLater(main, cmdDelay * 20);
 	    				    		this.cancel();
 	    						}
 	    						// Handle regular boss
 	    						else {
 	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
 	    				    			public void run() {
-	    		    						p.setHealth(p.getMaxHealth());
+	    		    						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+	    		    						// Set mana if possible
+	    		    						PlayerData pd = SkillAPI.getPlayerData(p);
+	    		    						if (pd.getClass("class").getData().getManaName().contains("MP")) {
+	    		    							pd.setMana(pd.getMaxMana());
+	    		    						}
 	    		    						
 	    		    						// Only spawn boss if the fight is not currently active
 	    		    						if (!activeBosses.contains(boss) && p.isOnline()) {
