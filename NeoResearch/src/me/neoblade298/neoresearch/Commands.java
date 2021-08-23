@@ -336,6 +336,14 @@ public class Commands implements CommandExecutor{
 				}
 				return true;
 			}
+			// /nr removeattrs [player]
+			else if (args[0].equalsIgnoreCase("removeattrs")) {
+				Player p = Bukkit.getPlayer(args[1]);
+				if (p != null) {
+					main.removeBonuses(p);
+				}
+				return true;
+			}
 		}
 		// /nr convert [amount]
 		if (args[0].equalsIgnoreCase("convert") && sender instanceof Player) {
