@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,6 +23,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -187,11 +189,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		loadPlayer(e.getPlayer());
+	public void onJoin(AsyncPlayerPreLoginEvent e) {
+		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
+		loadPlayer(p);
 	}
 	
-	private void loadPlayer(Player p) {
+	private void loadPlayer(OfflinePlayer p) {
 		UUID uuid = p.getUniqueId();
 		
 		// Add them to playerattrs
@@ -234,9 +237,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 	
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
-						
-						// Use completed research items to apply attributes
-						updateBonuses(p);
 					}
 					con.close();
 				} catch (Exception ex) {
@@ -246,7 +246,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		};
-		load.runTaskLaterAsynchronously(this, 100L);
+		load.runTaskAsynchronously(this);
 	}
 
 	private void handleLeave(Player p) {
