@@ -58,6 +58,7 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 		DecimalFormat df10k = new DecimalFormat("00.0k");
 		
 		String args[] = identifier.split("_");
+		if (!SkillAPI.isLoaded(p)) return "...";
 		
 		if (args[0].equalsIgnoreCase("health")) {
 			String placeholder = "Loading...";
