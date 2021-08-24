@@ -231,10 +231,10 @@ public class Main extends JavaPlugin implements Listener {
 				String boss;
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 				rs.next();
-				con.close();
 				boss = rs.getString(2);
 				Boss b = bossInfo.get(boss);
 				p.teleport(b.getCoords());
+				con.close();
 				
 				// Set up databases
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
@@ -287,22 +287,27 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
-		if (b.isRaid()) {
-			if (!activeBosses.contains(boss)) {
-				scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
-				activeBosses.add(boss);
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-				// Reset raid bosses fought
-				for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
-					raidBossesFought.remove(raidBoss.getName());
+		BukkitRunnable spawnBoss = new BukkitRunnable() {
+			public void run() {
+				if (b.isRaid()) {
+					if (!activeBosses.contains(boss)) {
+						scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
+						activeBosses.add(boss);
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+						// Reset raid bosses fought
+						for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
+							raidBossesFought.remove(raidBoss.getName());
+						}
+					}
+				}
+				else {
+					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
+					activeBosses.add(boss);
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
 				}
 			}
-		}
-		else {
-			Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
-			activeBosses.add(boss);
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-		}
+		};
+		spawnBoss.runTaskLater(this, 20L);
 	}
 	
 	public void scheduleTimer(int time, String boss) {
@@ -451,48 +456,43 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeaveFight(Player p) {
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				if (p != null) {
-					healthbars.remove(p.getName());
-					String boss = fightingBoss.remove(p.getUniqueId());
-					if (activeFights.get(boss).contains(p)) {
-						spectatingBoss.put(p.getUniqueId(), bossInfo.get(boss));
-						activeFights.get(boss).remove(p);
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
-						for (Player player : activeFights.get(boss)) {
-							healthbars.get(player.getName()).remove(p.getName());
-						}
-					}
-					if (activeFights.get(boss).size() == 0) {
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
-						activeFights.remove(boss);
-						activeBosses.remove(boss);
-						if (bossTimers.containsKey(boss)) {
-							for (BukkitRunnable runnable : bossTimers.get(boss)) {
-								if (!runnable.isCancelled()) {
-									runnable.cancel();
-								}
-							}
-							bossTimers.remove(boss);
-						}
-					}
-			    	// Delete player from all fights in sql
-					String uuid = p.getUniqueId().toString();
-					try {
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						Statement stmt = con.createStatement();
-						stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-						
-						con.close();
-					}
-					catch (Exception ex) {
-						ex.printStackTrace();
-					}
+		if (p != null) {
+			healthbars.remove(p.getName());
+			String boss = fightingBoss.remove(p.getUniqueId());
+			if (activeFights.get(boss).contains(p)) {
+				spectatingBoss.put(p.getUniqueId(), bossInfo.get(boss));
+				activeFights.get(boss).remove(p);
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+				for (Player player : activeFights.get(boss)) {
+					healthbars.get(player.getName()).remove(p.getName());
 				}
 			}
-		};
-		save.runTaskAsynchronously(this);
+			if (activeFights.get(boss).size() == 0) {
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
+				activeFights.remove(boss);
+				activeBosses.remove(boss);
+				if (bossTimers.containsKey(boss)) {
+					for (BukkitRunnable runnable : bossTimers.get(boss)) {
+						if (!runnable.isCancelled()) {
+							runnable.cancel();
+						}
+					}
+					bossTimers.remove(boss);
+				}
+			}
+	    	// Delete player from all fights in sql
+			String uuid = p.getUniqueId().toString();
+			try {
+				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Statement stmt = con.createStatement();
+				stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+				
+				con.close();
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 	
 	@EventHandler
