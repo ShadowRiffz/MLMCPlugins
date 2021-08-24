@@ -24,12 +24,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.sucy.skill.api.event.PlayerAccountChangeEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -48,9 +53,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<UUID, Attributes> playerAttrs;
 	public HashMap<String, HashMap<String, Integer>> converter;
 	public ArrayList<String> attrs;
+	ArrayList<String> enabledWorlds;
 	public HashSet<String> minibosses;
 	public Random rand;
 	public boolean isInstance;
+	
+	public HashMap<UUID, Long> lastSave;
 
 	public String broadcast, permcmd, levelup, discovery;
 
@@ -59,6 +67,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		if (!isInstance) getServer().getPluginManager().registerEvents(this, this);
 		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "prc", "vit", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
+		enabledWorlds = new ArrayList<String>();
+		enabledWorlds.add("Dev");
+		enabledWorlds.add("ClassPVP");
+		enabledWorlds.add("Argyll");
 
 		loadConfig();
 	}
@@ -77,6 +89,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		playerAttrs = new HashMap<UUID, Attributes>();
 		converter = new HashMap<String, HashMap<String, Integer>>();
 		minibosses = new HashSet<String>();
+		lastSave = new HashMap<UUID, Long>();
 		rand = new Random();
 
 		// Save config if doesn't exist
@@ -186,12 +199,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			loadPlayer(p);
 		}
 	}
-
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
-	}
 	
 	private void loadPlayer(OfflinePlayer p) {
 		UUID uuid = p.getUniqueId();
@@ -251,7 +258,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	private void handleLeave(Player p) {
 		UUID uuid = p.getUniqueId();
 		playerAttrs.remove(uuid);
+		if (lastSave.containsKey(uuid)) {
+			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
+				// If saved less than 10 seconds ago, don't save again
+				return;
+			}
+		}
 
+		lastSave.put(uuid, System.currentTimeMillis());
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
 				if (playerStats.containsKey(uuid)) {
@@ -318,16 +332,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
 	}
 
 	@EventHandler
@@ -628,5 +632,48 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public Attributes getPlayerAttributes(Player p) {
 		return playerAttrs.get(p.getUniqueId());
+	}
+	
+	// Below are situations where research should load
+	@EventHandler
+	public void onWorldChange(PlayerChangedWorldEvent e) {
+		Player p = e.getPlayer();
+		if (!enabledWorlds.contains(p.getWorld().getName())) {
+			removeBonuses(p);
+		}
+		else {
+			updateBonuses(p);
+		}
+	}
+	
+	@EventHandler
+	public void onLoadSQL(PlayerLoadCompleteEvent e) {
+		updateBonuses(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onSaveSQL(PlayerSaveEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onAccountChange(PlayerAccountChangeEvent e) {
+		updateBonuses(e.getAccountData().getPlayer());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerKickEvent e) {
+		handleLeave(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onJoin(AsyncPlayerPreLoginEvent e) {
+		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
+		loadPlayer(p);
 	}
 }
