@@ -462,6 +462,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void handleLeaveFight(Player p) {
 		if (p != null) {
 			healthbars.remove(p.getName());
+			if (!fightingBoss.containsKey(p.getUniqueId())) return;
 			String boss = fightingBoss.remove(p.getUniqueId());
 			if (activeFights.get(boss).contains(p)) {
 				spectatingBoss.put(p.getUniqueId(), bossInfo.get(boss));
