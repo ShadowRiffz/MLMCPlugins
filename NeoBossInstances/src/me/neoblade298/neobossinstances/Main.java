@@ -287,6 +287,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
+		// Wait 1 second so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
 				if (b.isRaid()) {
