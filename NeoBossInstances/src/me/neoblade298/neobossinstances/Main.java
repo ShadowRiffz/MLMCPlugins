@@ -230,12 +230,13 @@ public class Main extends JavaPlugin implements Listener {
 				// Check where the player should be, teleport them there
 				String boss;
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-				if (!rs.next()) {
+				rs.next();
+				boss = rs.getString(2);
+				if (boss == null) {
 					p.teleport(instanceSpawn);
 					return;
 				}
 				
-				boss = rs.getString(2);
 				Boss b = bossInfo.get(boss);
 				p.teleport(b.getCoords());
 				con.close();
