@@ -232,7 +232,6 @@ public class Main extends JavaPlugin implements Listener {
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 				if (!rs.next()) return;
 				
-				rs.next();
 				boss = rs.getString(2);
 				Boss b = bossInfo.get(boss);
 				p.teleport(b.getCoords());
