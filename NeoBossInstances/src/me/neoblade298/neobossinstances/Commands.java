@@ -41,6 +41,22 @@ public class Commands implements CommandExecutor {
 					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
 						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 						p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+						try {
+							// Connect
+							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
+									Main.sqlPass);
+							Statement stmt = con.createStatement();
+
+							if (main.isDebug) {
+								System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+										+ uuid + "','" + boss + "','" + instance + "');");
+							}
+							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
+									+ "','" + instance + "');");
+							con.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
 						
 						// Only give cooldown if they've beaten the boss before or it's a raid
@@ -48,9 +64,7 @@ public class Commands implements CommandExecutor {
 							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 						}
 	
-						// Wait for everyone to enter, then update sql so the instance still shows as
-						// empty until everyone leaves
-						BukkitRunnable addSql = new BukkitRunnable() {
+						BukkitRunnable teleport = new BukkitRunnable() {
 							public void run() {
 								if (main.mainSpawn.getWorld() == null) {
 									main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
@@ -58,25 +72,9 @@ public class Commands implements CommandExecutor {
 								p.teleport(main.mainSpawn);
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
 										.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-								try {
-									// Connect
-									Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
-											Main.sqlPass);
-									Statement stmt = con.createStatement();
-	
-									if (main.isDebug) {
-										System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-												+ uuid + "','" + boss + "','" + instance + "');");
-									}
-									stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-											+ "','" + instance + "');");
-									con.close();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
 							}
 						};
-						addSql.runTaskLater(main, 60L);
+						teleport.runTaskLater(main, 60L);
 					}
 					else if (instance.equalsIgnoreCase("Not found")) {
 						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
@@ -99,6 +97,22 @@ public class Commands implements CommandExecutor {
 					String boss = WordUtils.capitalize(args[2]);
 					String instance = WordUtils.capitalize(args[3]);
 					p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+					try {
+						// Connect
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+	
+						if (main.isDebug) {
+							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
+									+ boss + "','" + instance + "');");
+						}
+						stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
+								+ instance + "');");
+						con.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
@@ -117,23 +131,6 @@ public class Commands implements CommandExecutor {
 						}
 					};
 					sendThere.runTaskLater(main, 60L);
-					
-					try {
-						// Connect
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						Statement stmt = con.createStatement();
-	
-						if (main.isDebug) {
-							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
-									+ boss + "','" + instance + "');");
-						}
-						stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
-								+ instance + "');");
-						con.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
 				}
 				else {
 					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");

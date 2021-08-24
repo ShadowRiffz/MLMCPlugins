@@ -34,6 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
 
@@ -72,7 +73,8 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossTimers = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
-	public ConcurrentHashMap<UUID, Boss> spectatorBoss = new ConcurrentHashMap<UUID, Boss>();
+	public ConcurrentHashMap<UUID, Boss> spectatingBoss = new ConcurrentHashMap<UUID, Boss>();
+	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -217,114 +219,89 @@ public class Main extends JavaPlugin implements Listener {
 		// If instance, check where to send a player
 		if (isInstance) {
 			Player p = e.getPlayer();
-			p.teleport(instanceSpawn);
 			String uuid = p.getUniqueId().toString();
-    		BukkitRunnable sendPlayer = new BukkitRunnable() {
-    			int count = 0;
-    			
-				public void run() {
-    				try {
-    					// Connect
-    					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-    					Statement stmt = con.createStatement();
-    					ResultSet rs;
-    					
-
-        				if (count > 3) {
-        					this.cancel();
-        				}
-        				else {
-	    					// Check where the player should be
-	    					String boss;
-	    					rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-	    					rs.next();
-							boss = rs.getString(2);
-	    					if (boss != null) {
-	    						p.teleport(bossInfo.get(boss).getCoords());
-    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
-	    						if (!activeFights.containsKey(boss)) {
-	    							ArrayList<Player> players = new ArrayList<Player>();
-	    							players.add(p);
-	    							activeFights.put(boss, players);
-	    						}
-	    						else {
-	    							activeFights.get(boss).add(p);
-	    						}
-	    						
-	    						// Recalculate everyone's health bars every time someone joins
-	    						for (Player partyMember : activeFights.get(boss)) {
-	    							ArrayList<String> healthList = new ArrayList<String>();
-		    						healthbars.put(partyMember.getName(), healthList);
-		    						for (Player bossFighter : activeFights.get(boss)) {
-		    							if (!bossFighter.equals(partyMember)) {
-		    								healthList.add(bossFighter.getName());
-		    							}
-		    						}
-		    						Collections.sort(healthList);
-	    						}
-	    						
-	    						// Handle raid starts
-	    						if (bossInfo.get(boss).isRaid()) {
-	    				    		BukkitRunnable startRaid = new BukkitRunnable() {
-	    				    			public void run() {
-	    		    						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-	    		    						// Set mana if possible
-	    		    						PlayerData pd = SkillAPI.getPlayerData(p);
-	    		    						if (pd.getClass("class").getData().getManaName().contains("MP")) {
-	    		    							pd.setMana(pd.getMaxMana());
-	    		    						}
-
-	    		    						// Only start timer if it hasn't already been started
-	    		    						if (!activeBosses.contains(boss)) {
-	    		    							scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
-	    		    							activeBosses.add(boss);
-	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-	        	    							for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
-	        	    								raidBossesFought.remove(raidBoss.getName());
-	        	    							}
-	    		    						}
-	    				    			}
-	    				    		};
-	    				    		startRaid.runTaskLater(main, cmdDelay * 20);
-	    				    		this.cancel();
-	    						}
-	    						// Handle regular boss
-	    						else {
-	    				    		BukkitRunnable summonBoss = new BukkitRunnable() {
-	    				    			public void run() {
-	    		    						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-	    		    						// Set mana if possible
-	    		    						PlayerData pd = SkillAPI.getPlayerData(p);
-	    		    						if (pd.getClass("class").getData().getManaName().contains("MP")) {
-	    		    							pd.setMana(pd.getMaxMana());
-	    		    						}
-	    		    						
-	    		    						// Only spawn boss if the fight is not currently active
-	    		    						if (!activeBosses.contains(boss) && p.isOnline()) {
-	    		    							Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
-	    		    							activeBosses.add(boss);
-	        	    							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
-	    		    						}
-	    				    			}
-	    				    		};
-	    				    		summonBoss.runTaskLater(main, cmdDelay * 20);
-	    				    		this.cancel();
-	    						}
-	    					}
-	    					// Task failed, retry
-	    					else {
-	    						count++;
-	    					}
-	    					
-	    					con.close();
-        				}
-    				}
-    				catch (Exception e) {
-    					e.printStackTrace();
-    				}
+			
+			// Connect
+			try {
+				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Statement stmt = con.createStatement();
+				ResultSet rs;
+			
+				// Check where the player should be, teleport them there
+				String boss;
+				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+				rs.next();
+				con.close();
+				boss = rs.getString(2);
+				Boss b = bossInfo.get(boss);
+				p.teleport(b.getCoords());
+				
+				// Set up databases
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
+				if (!activeFights.containsKey(boss)) {
+					ArrayList<Player> players = new ArrayList<Player>();
+					players.add(p);
+					activeFights.put(boss, players);
 				}
-    		};
-    		sendPlayer.runTaskTimer(this, 60L, 100L);
+				else {
+					activeFights.get(boss).add(p);
+				}
+				fightingBoss.put(p.getUniqueId(), boss);
+				
+				// Recalculate everyone's health bars every time someone joins
+				for (Player partyMember : activeFights.get(boss)) {
+					ArrayList<String> healthList = new ArrayList<String>();
+					healthbars.put(partyMember.getName(), healthList);
+					for (Player bossFighter : activeFights.get(boss)) {
+						if (!bossFighter.equals(partyMember)) {
+							healthList.add(bossFighter.getName());
+						}
+					}
+					Collections.sort(healthList);
+				}
+				
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onLoad(PlayerLoadCompleteEvent e) {
+		Player p = e.getPlayer();
+		
+		// Full health and mana
+		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		PlayerData pd = SkillAPI.getPlayerData(p);
+		if (pd.getClass("class").getData().getManaName().contains("MP")) {
+			pd.setMana(pd.getMaxMana());
+		}
+		
+		// If last one to load, summon the boss, need to add to activebosses
+		String boss = fightingBoss.get(p.getUniqueId());
+		Boss b = bossInfo.get(boss);
+		for (Player fighter : activeFights.get(boss)) {
+			if (!SkillAPI.isLoaded(fighter)) {
+				return;
+			}
+		}
+		
+		if (b.isRaid()) {
+			if (!activeBosses.contains(boss)) {
+				scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
+				activeBosses.add(boss);
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+				// Reset raid bosses fought
+				for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
+					raidBossesFought.remove(raidBoss.getName());
+				}
+			}
+		}
+		else {
+			Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
+			activeBosses.add(boss);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
 		}
 	}
 	
@@ -405,62 +382,16 @@ public class Main extends JavaPlugin implements Listener {
 		return "Failed to connect";
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
 	public void handleLeave(Player p) {
 		// Remove spectator mode
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
 		p.setGameMode(GameMode.SURVIVAL);
 		spectatorAcc.remove(p.getUniqueId());
-		spectatorBoss.remove(p.getUniqueId());
+		spectatingBoss.remove(p.getUniqueId());
 		
 		// Remove player from all fights locally
-		healthbars.remove(p.getName());
-		for (String boss : activeFights.keySet()) {
-			if (activeFights.get(boss).contains(p)) {
-				activeFights.get(boss).remove(p);
-				// Remove health bar from everyone else in the boss fight
-				for (Player player : activeFights.get(boss)) {
-					healthbars.get(player.getName()).remove(p.getName());
-				}
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
-			}
-			if (activeFights.get(boss).size() == 0) {
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
-				activeFights.remove(boss);
-				activeBosses.remove(boss);
-				if (bossTimers.containsKey(boss)) {
-					for (BukkitRunnable runnable : bossTimers.get(boss)) {
-						if (!runnable.isCancelled()) {
-							runnable.cancel();
-						}
-					}
-					bossTimers.remove(boss);
-				}
-			}
-		}
-    	// Delete player from all fights in sql
-		String uuid = p.getUniqueId().toString();
-		try {
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-			
-			con.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		BukkitRunnable handle = new BukkitRunnable() {
-			public void run() {
-				// Check if player is still here
-				if (Bukkit.getPlayer(p.getName()) != null) {
-			    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-				}
-			}
-		};
-		handle.runTaskLater(main, 20L);
+		handleLeaveFight(p);
 	}
 	
 	public boolean getCooldown(String name, Player p) {
@@ -519,53 +450,56 @@ public class Main extends JavaPlugin implements Listener {
 		return activeFights;
 	}
 	
+	public void handleLeaveFight(Player p) {
+		BukkitRunnable save = new BukkitRunnable() {
+			public void run() {
+				if (p != null) {
+					healthbars.remove(p.getName());
+					String boss = fightingBoss.remove(p.getUniqueId());
+					if (activeFights.get(boss).contains(p)) {
+						spectatingBoss.put(p.getUniqueId(), bossInfo.get(boss));
+						activeFights.get(boss).remove(p);
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+						for (Player player : activeFights.get(boss)) {
+							healthbars.get(player.getName()).remove(p.getName());
+						}
+					}
+					if (activeFights.get(boss).size() == 0) {
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
+						activeFights.remove(boss);
+						activeBosses.remove(boss);
+						if (bossTimers.containsKey(boss)) {
+							for (BukkitRunnable runnable : bossTimers.get(boss)) {
+								if (!runnable.isCancelled()) {
+									runnable.cancel();
+								}
+							}
+							bossTimers.remove(boss);
+						}
+					}
+			    	// Delete player from all fights in sql
+					String uuid = p.getUniqueId().toString();
+					try {
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
+						
+						con.close();
+					}
+					catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+		};
+		save.runTaskAsynchronously(this);
+	}
+	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
 			Player p = e.getEntity();
-			BukkitRunnable save = new BukkitRunnable() {
-				public void run() {
-					if (p != null) {
-						healthbars.remove(p.getName());
-						for (String boss : activeFights.keySet()) {
-							if (activeFights.get(boss).contains(p)) {
-								spectatorBoss.put(p.getUniqueId(), bossInfo.get(boss));
-								activeFights.get(boss).remove(p);
-								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
-								for (Player player : activeFights.get(boss)) {
-									healthbars.get(player.getName()).remove(p.getName());
-								}
-							}
-							if (activeFights.get(boss).size() == 0) {
-								Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
-								activeFights.remove(boss);
-								activeBosses.remove(boss);
-								if (bossTimers.containsKey(boss)) {
-									for (BukkitRunnable runnable : bossTimers.get(boss)) {
-										if (!runnable.isCancelled()) {
-											runnable.cancel();
-										}
-									}
-									bossTimers.remove(boss);
-								}
-							}
-						}
-				    	// Delete player from all fights in sql
-						String uuid = p.getUniqueId().toString();
-						try {
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-							Statement stmt = con.createStatement();
-							stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-							
-							con.close();
-						}
-						catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-				}
-			};
-			save.runTaskAsynchronously(this);
+			handleLeaveFight(p);
 		}
 	}
 	
@@ -575,7 +509,7 @@ public class Main extends JavaPlugin implements Listener {
 			BukkitRunnable respawn = new BukkitRunnable() {
 				public void run() {
 					Player p = e.getPlayer();
-					p.teleport(spectatorBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
+					p.teleport(spectatingBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
 					p.setGameMode(GameMode.ADVENTURE);
 					p.setInvulnerable(true);
