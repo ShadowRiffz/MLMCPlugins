@@ -24,6 +24,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerAccountChangeEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+
 public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Set> sets;
 	public HashMap<UUID, PlayerSet> playersets;
@@ -135,17 +139,13 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	}
 	
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
-		
-	    // Wait 5 seconds to make sure skillapi loads them first
-		BukkitRunnable loadRelics = new BukkitRunnable() {
-			public void run() {
-				recalculateSetEffect(p);
-			}
-		};
-		loadRelics.runTaskLater(this, 100L);
+	public void onSQLLoad(PlayerLoadCompleteEvent e) {
+		recalculateSetEffect(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onAccountChange(PlayerAccountChangeEvent e) {
+		recalculateSetEffect(e.getAccountData().getPlayer());
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -175,6 +175,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	
 	// Used to calculate a set effect from scratch
 	private void recalculateSetEffect(Player p) {
+		if (!SkillAPI.isLoaded(p)) return;
 		ItemStack main = p.getInventory().getItemInMainHand();
 		ItemStack off = p.getInventory().getItemInOffHand();
 		ItemStack[] armor = p.getInventory().getArmorContents();
