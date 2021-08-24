@@ -230,6 +230,8 @@ public class Main extends JavaPlugin implements Listener {
 				// Check where the player should be, teleport them there
 				String boss;
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+				if (!rs.next()) return;
+				
 				rs.next();
 				boss = rs.getString(2);
 				Boss b = bossInfo.get(boss);
@@ -279,6 +281,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		// If last one to load, summon the boss, need to add to activebosses
+		if (!fightingBoss.containsKey(p.getUniqueId())) return;
 		String boss = fightingBoss.get(p.getUniqueId());
 		Boss b = bossInfo.get(boss);
 		for (Player fighter : activeFights.get(boss)) {
