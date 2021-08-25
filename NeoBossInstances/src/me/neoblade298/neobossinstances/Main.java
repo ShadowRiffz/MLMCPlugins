@@ -396,14 +396,17 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void handleLeave(Player p) {
 		// Remove spectator mode
+		handleLeaveSpectator(p);
+		// Remove player from all fights locally
+		handleLeaveFight(p);
+	}
+	
+	public void handleLeaveSpectator(Player p) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
 		p.setGameMode(GameMode.SURVIVAL);
 		spectatorAcc.remove(p.getUniqueId());
 		spectatingBoss.remove(p.getUniqueId());
-		
-		// Remove player from all fights locally
-		handleLeaveFight(p);
 	}
 	
 	public boolean getCooldown(String name, Player p) {
@@ -535,9 +538,6 @@ public class Main extends JavaPlugin implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
-			if (spectatorAcc.containsKey(p.getUniqueId())) {
-				SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.get(p.getUniqueId()));
-			}
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
 			}
@@ -551,9 +551,6 @@ public class Main extends JavaPlugin implements Listener {
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
 			Player p = e.getPlayer();
-			if (spectatorAcc.containsKey(p.getUniqueId())) {
-				SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.get(p.getUniqueId()));
-			}
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
 			}
