@@ -395,10 +395,10 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void handleLeave(Player p) {
-		// Remove spectator mode
-		handleLeaveSpectator(p);
 		// Remove player from all fights locally
 		handleLeaveFight(p);
+		// Remove spectator mode
+		handleLeaveSpectator(p);
 	}
 	
 	public void handleLeaveSpectator(Player p) {
