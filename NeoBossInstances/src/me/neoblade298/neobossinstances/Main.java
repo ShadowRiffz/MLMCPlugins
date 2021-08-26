@@ -405,7 +405,7 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
 		p.setGameMode(GameMode.SURVIVAL);
-		spectatorAcc.remove(p.getUniqueId());
+		SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.remove(p.getUniqueId());
 		spectatingBoss.remove(p.getUniqueId());
 	}
 	
