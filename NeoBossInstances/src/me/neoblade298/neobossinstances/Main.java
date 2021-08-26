@@ -405,8 +405,10 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
 		p.setGameMode(GameMode.SURVIVAL);
-		SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.remove(p.getUniqueId()));
-		spectatingBoss.remove(p.getUniqueId());
+		if (spectatorAcc.containsKey(p.getUniqueId())) {
+			SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.remove(p.getUniqueId()));
+			spectatingBoss.remove(p.getUniqueId());
+		}
 	}
 	
 	public boolean getCooldown(String name, Player p) {
