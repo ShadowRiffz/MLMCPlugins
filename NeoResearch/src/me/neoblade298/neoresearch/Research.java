@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.api.event.PlayerAccountChangeEvent;
+import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
@@ -635,16 +636,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	// Below are situations where research should load
-	@EventHandler
-	public void onWorldChange(PlayerChangedWorldEvent e) {
-		Player p = e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) {
-			removeBonuses(p);
-		}
-		else {
-			updateBonuses(p);
-		}
-	}
 	
 	@EventHandler
 	public void onLoadSQL(PlayerLoadCompleteEvent e) {
@@ -657,8 +648,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	@EventHandler
-	public void onAccountChange(PlayerAccountChangeEvent e) {
-		updateBonuses(e.getAccountData().getPlayer());
+	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
+		updateBonuses(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onAttributeUnload(PlayerAttributeLoadEvent e) {
+		resetBonuses(e.getPlayer());
 	}
 	
 	@EventHandler
@@ -667,7 +663,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	@EventHandler
-	public void onLeave(PlayerKickEvent e) {
+	public void onKick(PlayerKickEvent e) {
 		handleLeave(e.getPlayer());
 	}
 
