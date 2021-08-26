@@ -13,19 +13,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerAccountChangeEvent;
+import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
+import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listener {
@@ -98,14 +95,16 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	}
 	
 	@EventHandler
-	public void onWorldMove(PlayerChangedWorldEvent e) {
+	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
+		recalculateSetEffect(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
 		if (!enabledWorlds.contains(p.getWorld().getName()) && this.playersets.containsKey(uuid)) {
 			this.playersets.remove(uuid);
-		}
-		else if (enabledWorlds.contains(p.getWorld().getName())) {
-			recalculateSetEffect(p);
 		}
 	}
 	
@@ -141,11 +140,6 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	@EventHandler
 	public void onSQLLoad(PlayerLoadCompleteEvent e) {
 		recalculateSetEffect(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onAccountChange(PlayerAccountChangeEvent e) {
-		recalculateSetEffect(e.getAccountData().getPlayer());
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
