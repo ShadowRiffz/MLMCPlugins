@@ -328,7 +328,7 @@ public class Commands implements CommandExecutor {
 			if (args.length == 1 && sender instanceof Player) {
 				Player p = (Player) sender;
 				
-				if (main.spectatingBoss.contains(p.getUniqueId())) {
+				if (main.spectatingBoss.containsKey(p.getUniqueId())) {
 					p.teleport(main.instanceSpawn);
 					main.handleLeaveSpectator(p);
 				}
