@@ -154,6 +154,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", args[2]);
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
+				p.sendMessage("§4[§c§lMLMC§4] §7You created a §e" + amt + " §7point " + display + " §7research book!");
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
 				return true;
 			}
@@ -203,6 +204,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", args[2]);
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
+				p.sendMessage("§4[§c§lMLMC§4] §7You created a §e" + amt + " §7point " + display + " §7research book!");
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave research book " + display + " §7to player §e" + p.getName());
 				return true;
 			}
