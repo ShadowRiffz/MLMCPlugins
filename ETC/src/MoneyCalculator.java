@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class MoneyCalculator {
 	public static void main (String[] args) {
-		File file = new File("C:\\Users\\Alex\\Desktop\\error 2.txt");
+		File file = new File("C:\\Users\\Alex\\Desktop\\bugged acc.txt");
 		String account = new String();
 		try {
 			Scanner scan = new Scanner(file);
@@ -24,7 +24,7 @@ public class MoneyCalculator {
 		System.out.println(account);
 		DataSection data = YAMLParser.parseText(account);
 		System.out.println("Stop here");
-		System.out.println(data.getDouble("health"));
-		System.out.println(data.get)
+		System.out.println(data.getDouble("hunger"));
+		System.out.println(data.getSection("accounts").getSection("acc1").getSection("classes").getSection("Blacksmith").getInt("level"));
 	}
 }
