@@ -129,8 +129,8 @@ public class Commands implements CommandExecutor{
 					if (min < goal && goal < currentPoints) min = goal;
 				}
 
-				if (currentPoints - needed < min) {
-					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (needed + amt) + " §cresearch points to do this!");
+				if (currentPoints - needed <= min) {
+					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + " §cresearch points to do this!");
 					return true;
 				}
 				
@@ -179,7 +179,7 @@ public class Commands implements CommandExecutor{
 					if (min < goal && goal < currentPoints) min = goal;
 				}
 
-				if (currentPoints - needed < min) {
+				if (currentPoints - needed <= min) {
 					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + "§cresearch points to do this!");
 					return true;
 				}
