@@ -492,7 +492,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
 				researchPoints.put(mob, points);
 				if (announce) {
-					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
+					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display);
 					if (via != null) {
 						msg += " &7via " + via;
 					}
