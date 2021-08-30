@@ -44,7 +44,6 @@ public class InfiniteWater extends JavaPlugin implements org.bukkit.event.Listen
         final Material bucket = event.getBucket();
         final ItemStack item = event.getItemStack();
         final Player p = event.getPlayer();
-        System.out.println((p.hasPermission("neoinfinitewater.use")) + " " + (!notUsing.contains(p.getUniqueId())));
         if (p.hasPermission("neoinfinitewater.use") && !notUsing.contains(p.getUniqueId())) {
             if (bucket == Material.WATER_BUCKET) {
                 item.setType(event.getBucket());
