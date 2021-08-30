@@ -279,7 +279,7 @@ public class Main extends JavaPlugin implements Listener {
 		// Full health and mana
 		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		PlayerData pd = SkillAPI.getPlayerData(p);
-		if (pd.getClass() != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+		if (pd != null && pd.getClass() != null && pd.getClass("class").getData().getManaName().contains("MP")) {
 			pd.setMana(pd.getMaxMana());
 		}
 		
