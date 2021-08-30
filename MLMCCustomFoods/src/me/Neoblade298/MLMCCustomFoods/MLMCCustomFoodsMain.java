@@ -141,7 +141,6 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			ArrayList<String> flore = food.getLore();
 			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
 			
-			if (mlore.size() != flore.size()) return;
 			for (int i = 0; i < flore.size(); i++) {
 				String fLine = food.getLore().get(i);
 				String mLine = mlore.get(i);
