@@ -28,21 +28,20 @@ public class ReportsCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if (sender.hasPermission("neoreports.user") && sender instanceof Player) {
-			Player p = (Player) sender;
-			String author = p.getName();
+		if (sender.hasPermission("neoreports.user")) {
+			String author = sender.getName();
 			if(args.length == 0) {
-				p.sendMessage("§7--- §cNeoReports §7---");
-				p.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
-				p.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
-				p.sendMessage("§c/reports list §7- Lists all reports made by you");
-				p.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (do this after your bug is resolved!)");
+				sender.sendMessage("§7--- §cNeoReports §7---");
+				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
+				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
+				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
+				sender.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (do this after your bug is resolved!)");
 				if (sender.hasPermission("neoreports.admin")) {
-					p.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
-					p.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
-					p.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
-					p.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
-					p.sendMessage("§4/reports clean §7- Removes all resolved bugs");
+					sender.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
+					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
+					sender.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
+					sender.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
+					sender.sendMessage("§4/reports clean §7- Removes all resolved bugs");
 				}
 				return true;
 			}
@@ -56,18 +55,18 @@ public class ReportsCommand implements CommandExecutor {
 					while(rs.next()) {
 						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-						temp.list(p);
+						temp.list(sender);
 					}
-					p.sendMessage("§7=====");
+					sender.sendMessage("§7=====");
 					con.close();
 				}
 				catch(Exception e) {
 					System.out.println(e);
-					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1]) && !p.hasPermission("neoreports.admin")) {
+			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1]) && !sender.hasPermission("neoreports.admin")) {
 				try{  
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -91,22 +90,22 @@ public class ReportsCommand implements CommandExecutor {
 					// Delete the bug
 					int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + " AND user = '" + author +"';");
 					if (deleted > 0) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
+						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you the creator of the report?");
+						sender.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you the creator of the report?");
 					}
 					con.close();
 				}
 				catch(Exception e) {
 					System.out.println(e);
-					p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 				}
 				return true;
 			}
-			else if (p.hasPermission("neoreports.admin")) {
+			else if (sender.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
+					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
 					return true;
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
@@ -133,17 +132,17 @@ public class ReportsCommand implements CommandExecutor {
 						// Delete the bug
 						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (deleted > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
 						}
 						else {
-							p.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you sure the id is correct?");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you sure the id is correct?");
 						}
 						
 						con.close();
 					}
 					catch(Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 					return true;
 				}
@@ -160,18 +159,18 @@ public class ReportsCommand implements CommandExecutor {
 							while(rs.next()) {
 								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-								temp.list(p);
+								temp.list(sender);
 								count++;
 								if (count > NUM_REPORTS_PER_PAGE) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -188,19 +187,19 @@ public class ReportsCommand implements CommandExecutor {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(p);
+									temp.list(sender);
 								}
 								count++;
 								if (count > NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -218,18 +217,18 @@ public class ReportsCommand implements CommandExecutor {
 							while(rs.next()) {
 								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-								temp.list(p);
+								temp.list(sender);
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -246,19 +245,19 @@ public class ReportsCommand implements CommandExecutor {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(p);
+									temp.list(sender);
 								}
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -276,18 +275,18 @@ public class ReportsCommand implements CommandExecutor {
 							while(rs.next()) {
 								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-								temp.list(p);
+								temp.list(sender);
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -304,19 +303,19 @@ public class ReportsCommand implements CommandExecutor {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(p);
+									temp.list(sender);
 								}
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
 							}
-							p.sendMessage("§7=====");
+							sender.sendMessage("§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							System.out.println(e);
-							p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						return true;
 					}
@@ -337,10 +336,10 @@ public class ReportsCommand implements CommandExecutor {
 						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "', `resolver` = '" + author + 
 								"', `fixdate` = '" + dateformat.format(new Date()) + "' WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
 						}
 						else {
-							p.sendMessage("§4[§c§lMLMC§4] §7Failed to resolve report!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to resolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (rs.next()) {
@@ -359,7 +358,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 					return true;
 				}
@@ -371,10 +370,10 @@ public class ReportsCommand implements CommandExecutor {
 						ResultSet rs;
 						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 0 WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully unresolved report!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully unresolved report!");
 						}
 						else {
-							p.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						boolean is_urgent = rs.getInt(9) == 1;
@@ -388,7 +387,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 					return true;
 				}
@@ -403,16 +402,16 @@ public class ReportsCommand implements CommandExecutor {
 						Statement stmt = con.createStatement();
 						int edited = stmt.executeUpdate("UPDATE neoreports_bugs SET `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
 						if (edited > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully edited comment!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully edited comment!");
 						}
 						else {
-							p.sendMessage("§4[§c§lMLMC§4] §7Failed to edit comment!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to edit comment!");
 						}
 						con.close();
 					}
 					catch(Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 					return true;
 				}
@@ -423,22 +422,22 @@ public class ReportsCommand implements CommandExecutor {
 						Statement stmt = con.createStatement();
 						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE is_resolved = 1;");
 						if (deleted > 0) {
-							p.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + deleted + "§7 reports!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + deleted + "§7 reports!");
 							Main.numResolved = 0;
 						}
 						else {
-							p.sendMessage("§4[§c§lMLMC§4] §7No reports to clean!");
+							sender.sendMessage("§4[§c§lMLMC§4] §7No reports to clean!");
 						}
 						con.close();
 					}
 					catch(Exception e) {
 						System.out.println(e);
-						p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 					return true;
 				}
 				else {
-					p.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
+					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
 					return true;
 				}
 			}

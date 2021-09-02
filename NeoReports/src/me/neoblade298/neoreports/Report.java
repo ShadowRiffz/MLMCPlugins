@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Report {
@@ -96,7 +97,7 @@ public class Report {
 		return this.is_urgent;
 	}
 	
-	public void list(Player p) {
+	public void list(CommandSender p) {
 		String prefix = "§4";
 		if (is_urgent) {
 			prefix = "§4§l";
@@ -110,7 +111,7 @@ public class Report {
 		}
 	}
 	
-	public void post(Player p) {
+	public void post(CommandSender p) {
 		int resolved = 0, urgent = 0;
 		if (is_resolved) {
 			resolved = 1;
