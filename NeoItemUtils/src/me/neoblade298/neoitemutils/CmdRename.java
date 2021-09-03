@@ -53,6 +53,9 @@ public class CmdRename implements CommandExecutor {
 					econ.withdrawPlayer(p, RENAME_PRICE);
 					p.sendMessage("§4[§c§lMLMC§4] §7Successfully renamed item!");
 				}
+				else {
+					p.sendMessage("§4[§c§lMLMC§4] §cYou're not holding anything in your mainhand!");
+				}
 			}
 			else {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou don't have enough gold for this!");
