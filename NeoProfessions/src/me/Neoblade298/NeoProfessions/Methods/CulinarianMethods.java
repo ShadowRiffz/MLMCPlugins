@@ -1356,7 +1356,7 @@ public class CulinarianMethods {
 	public void parseDrink(Player p, String recipe) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
-				culinarianUtils.craftRecipeMax(p, econ, drink.getBlackWidowRecipe(), drink.getBlackWidow(), true, "Black Widow");
+				culinarianUtils.craftRecipeMax(p, econ, drink.getBlackWidowRecipe(), drink.getBlackWidow(), false, "Black Widow");
 			}
 			else if(recipe.equalsIgnoreCase("pink panther")) {
 				culinarianUtils.craftRecipeMax(p, econ, drink.getPinkPantherRecipe(), drink.getPinkPanther(), false, "Pink Panther");
@@ -1412,7 +1412,7 @@ public class CulinarianMethods {
 	public void parseDrink(Player p, String recipe, int amount) {
 		if(p.hasPermission("culinarian.craft.4")) {
 			if(recipe.equalsIgnoreCase("black widow")) {
-				culinarianUtils.craftRecipe(p, econ, amount, drink.getBlackWidowRecipe(), drink.getBlackWidow(), true, "Black Widow");
+				culinarianUtils.craftRecipe(p, econ, amount, drink.getBlackWidowRecipe(), drink.getBlackWidow(), false, "Black Widow");
 			}
 			else if(recipe.equalsIgnoreCase("pink panther")) {
 				culinarianUtils.craftRecipe(p, econ, amount, drink.getPinkPantherRecipe(), drink.getPinkPanther(), false, "Pink Panther");

@@ -275,6 +275,9 @@ public class CulinarianUtils {
 		else if (id[0].contains("Limited")) {
 			perm = "recipes.tler" + id[3];
 		}
+		else if (id[0].contains("Drink")) {
+			perm = "recipes.drink" + id[1];
+		}
 		else if (id[0].contains("Legendary")) {
 			perm = "recipes.tlegend" + id[2];
 		}
@@ -343,7 +346,7 @@ public class CulinarianUtils {
 			perm = "recipes.tler" + id[3];
 		}
 		else if (id[0].contains("Drink")) {
-			perm = "recipes.drink" + id[3];
+			perm = "recipes.drink" + id[1];
 		}
 		else if (id[0].contains("Legendary")) {
 			perm = "recipes.tlegend" + id[2];
@@ -390,7 +393,7 @@ public class CulinarianUtils {
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou lack the materials to craft " + amount + " of this recipe!");
+				util.sendMessage(p, "&cYou lack the ingredients to craft " + amount + " of this recipe!");
 			}
 		}
 		else {
