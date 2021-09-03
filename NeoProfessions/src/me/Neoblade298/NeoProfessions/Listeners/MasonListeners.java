@@ -75,7 +75,7 @@ public class MasonListeners implements Listener {
 			String expLine = null;
 
 			// First check what charms the player has
-			if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			if (!item.getType().equals(Material.PRISMARINE_CRYSTALS) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
 				for (String line : item.getItemMeta().getLore()) {
 					if (line.contains("Looting")) {
 						lootLine = line;
