@@ -116,7 +116,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, util.setAmount(drink.getMidnightBlue(), 3));
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.LAPIS_LAZULI);
+		recipe.addIngredient(Material.BLUE_DYE);
 		recipe.addIngredient(Material.SUGAR);
 		return recipe;
 	}
@@ -181,7 +181,7 @@ public class CulinarianRecipes {
 		ShapelessRecipe recipe = new ShapelessRecipe(key, util.setAmount(drink.getBlueMotorcycle(), 3));
 		recipe.addIngredient(Material.QUARTZ);
 		recipe.addIngredient(Material.POTION);
-		recipe.addIngredient(Material.LAPIS_LAZULI);
+		recipe.addIngredient(Material.BLUE_DYE);
 		recipe.addIngredient(Material.PLAYER_HEAD);
 		recipe.addIngredient(Material.ICE);
 		return recipe;
