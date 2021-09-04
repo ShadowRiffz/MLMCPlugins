@@ -1,8 +1,5 @@
 package me.neoblade298.neoitemutils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,12 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class CmdRename implements CommandExecutor {
 	private static int RENAME_PRICE = 500;
-	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 
 	ItemUtils main;
 	Economy econ;
@@ -46,8 +41,7 @@ public class CmdRename implements CommandExecutor {
 						rename += " " + args[i];
 					}
 
-					rename = translateHexCodes(rename);
-					rename = rename.replaceAll("&", "§");
+					rename = main.translateHexCodes(rename);
 					meta.setDisplayName(rename);
 					item.setItemMeta(meta);
 					econ.withdrawPlayer(p, RENAME_PRICE);
@@ -62,18 +56,5 @@ public class CmdRename implements CommandExecutor {
 			}
 		}
 		return true;
-	}
-
-	public String translateHexCodes(String textToTranslate) {
-
-		Matcher matcher = HEX_PATTERN.matcher(textToTranslate);
-		StringBuffer buffer = new StringBuffer();
-
-		while (matcher.find()) {
-			matcher.appendReplacement(buffer, ChatColor.of(matcher.group(1)).toString());
-		}
-
-		return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
-
 	}
 }
