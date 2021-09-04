@@ -525,7 +525,6 @@ public class Tier2RecipeItems {
 	public ArrayList<ItemStack> getWrappedChickenRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.COOKED_CHICKEN));
-		recipe.add(new ItemStack(Material.MILK_BUCKET));
 		recipe.add(util.setAmount(ingr.getCheese(), 2));
 		recipe.add(ingr.getPepper());
 		recipe.add(ingr.getTortilla());
