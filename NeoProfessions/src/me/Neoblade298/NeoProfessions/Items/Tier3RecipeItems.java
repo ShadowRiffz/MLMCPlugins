@@ -484,7 +484,7 @@ public class Tier3RecipeItems {
 	public ArrayList<ItemStack> getSmoothieRecipe() {
 		ArrayList<ItemStack> recipe = new ArrayList<ItemStack>();
 		recipe.add(new ItemStack(Material.APPLE));
-		recipe.add(new ItemStack(Material.MELON));
+		recipe.add(new ItemStack(Material.MELON_SLICE));
 		recipe.add(new ItemStack(Material.EGG));
 		recipe.add(new ItemStack(Material.ICE));
 		recipe.add(new ItemStack(Material.MILK_BUCKET));
