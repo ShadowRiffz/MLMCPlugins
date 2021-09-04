@@ -1,29 +1,38 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 public class PlayerCommander {
 	public static void main (String[] args) {
-		File file = new File("C:\\Users\\Alex\\Desktop\\100.txt");
-		ArrayList<String> players = new ArrayList<String>();
-		try {
-			Scanner scan = new Scanner(file);
-			while (scan.hasNext()) {
-					players.add(scan.next());
+		File irMain = new File("C:\\Users\\Alex\\Downloads\\Test");
+		
+		for (File directory : irMain.listFiles()) {
+			if (directory.isDirectory()) {
+				for (File save : directory.listFiles()) {
+					YamlConfiguration yml = YamlConfiguration.loadConfiguration(save);
+					
+					ConfigurationSection data = yml.getConfigurationSection("data");
+					for (String key : data.getKeys(false)) {
+						long time = Long.parseLong(key);
+						if (time + 2592000 < System.currentTimeMillis()) {
+							data.set(key, null);
+						}
+					}
+					yml.set("saves", data.getKeys(false).size());
+					try {
+						yml.save(save);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
-			scan.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		
-		System.out.println();
-		for (String p : players) {
-			System.out.println("  - /lp user " + p + " permission set deluxetags.tag.100");
-		}
-		
-		
 	}
 }
