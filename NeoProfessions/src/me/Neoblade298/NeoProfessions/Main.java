@@ -96,8 +96,6 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
 		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
-		masonListeners = new MasonListeners(this);
-		getServer().getPluginManager().registerEvents(masonListeners, this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -142,6 +140,9 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
+		// Must be after currencymanager is created
+		masonListeners = new MasonListeners(this);
+		getServer().getPluginManager().registerEvents(masonListeners, this);
 
 
 		// Setup charm timer
