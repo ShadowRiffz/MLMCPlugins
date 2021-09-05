@@ -38,6 +38,7 @@ import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
 import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
+import me.neoblade298.neomythicextension.triggers.StatusTrigger;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -52,6 +53,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		log = this.getLogger();
 		Bukkit.getPluginManager().registerEvents(this, this);
+		Bukkit.getPluginManager().registerEvents(new StatusTrigger(this), this);
 		globalscores = new ConcurrentHashMap<String, Integer>();
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
