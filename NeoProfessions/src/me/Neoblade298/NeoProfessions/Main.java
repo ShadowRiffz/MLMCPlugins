@@ -96,6 +96,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
 		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
+		masonListeners = new MasonListeners(this);
+		getServer().getPluginManager().registerEvents(masonListeners, this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -104,7 +106,6 @@ public class Main extends JavaPlugin implements Listener {
 			neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 	
 			masonUtils = new MasonUtils();
-			masonListeners = new MasonListeners(this);
 	
 			// Connect method classes to main
 			blacksmithMethods = new BlacksmithMethods(this);
@@ -124,7 +125,6 @@ public class Main extends JavaPlugin implements Listener {
 			
 			// Setup Event Listeners
 			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
-			getServer().getPluginManager().registerEvents(masonListeners, this);
 	
 			// Setup recipes (make sure the recipes haven't been added before)
 			culinarianRecipes = new CulinarianRecipes(this);

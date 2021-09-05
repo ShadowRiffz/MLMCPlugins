@@ -148,6 +148,7 @@ public class MasonListeners implements Listener {
 					masonUtils.breakSecondChance(item);
 					util.sendMessage(p, "&7Your second chance charm was broken!");
 					p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
+					e.setCancelled(true);
 				}
 			}
 		}
