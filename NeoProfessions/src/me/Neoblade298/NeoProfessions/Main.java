@@ -99,7 +99,12 @@ public class Main extends JavaPlugin implements Listener {
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
+		}
+
+		// Must be after currencymanager is created but before masonMethods
+		masonListeners = new MasonListeners(this);
 			
+		if (!isInstance) {
 			// NeoGear
 			neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 	
@@ -140,8 +145,6 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		// Must be after currencymanager is created
-		masonListeners = new MasonListeners(this);
 		getServer().getPluginManager().registerEvents(masonListeners, this);
 
 
