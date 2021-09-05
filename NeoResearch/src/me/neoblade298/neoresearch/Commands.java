@@ -180,7 +180,7 @@ public class Commands implements CommandExecutor{
 				}
 
 				if (currentPoints - needed < min) {
-					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + "§cresearch points to do this!");
+					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + " §cresearch points to do this!");
 					return true;
 				}
 				
