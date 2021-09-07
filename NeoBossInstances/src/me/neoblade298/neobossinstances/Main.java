@@ -296,8 +296,8 @@ public class Main extends JavaPlugin implements Listener {
 		// Wait 1 second so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
-				if (b.isRaid()) {
-					if (!activeBosses.contains(boss)) {
+				if (!activeBosses.contains(boss)) {
+					if (b.isRaid()) {
 						scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
 						activeBosses.add(boss);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
@@ -306,11 +306,11 @@ public class Main extends JavaPlugin implements Listener {
 							raidBossesFought.remove(raidBoss.getName());
 						}
 					}
-				}
-				else {
-					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
-					activeBosses.add(boss);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+					else {
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
+						activeBosses.add(boss);
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+					}
 				}
 			}
 		};
