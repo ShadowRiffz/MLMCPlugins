@@ -15,7 +15,7 @@ public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if(sender.hasPermission("*")) {
+		if(sender.hasPermission("mycommand.staff")) {
 			if(args.length == 3) {
 				
 				// neostats showdamage [Bossname] [DisplayName]

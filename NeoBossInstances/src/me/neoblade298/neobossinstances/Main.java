@@ -35,8 +35,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
+import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -65,16 +68,19 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>();
 	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
 	public ConcurrentHashMap<String, Long> dropCooldown = new ConcurrentHashMap<String, Long>();
-	public ArrayList<String> bossNames = new ArrayList<String>();
 	public ArrayList<String> raidBossesFought = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
+	public ConcurrentHashMap<String, ArrayList<Player>> inBoss = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossTimers = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
 	public ConcurrentHashMap<UUID, Boss> spectatingBoss = new ConcurrentHashMap<UUID, Boss>();
 	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
+	public ConcurrentHashMap<String, PlayerStat> playerStats = new ConcurrentHashMap<String, PlayerStat>();
+	public ConcurrentHashMap<String, String> mythicmobsMap = new ConcurrentHashMap<String, String>();
+	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -90,8 +96,9 @@ public class Main extends JavaPlugin implements Listener {
 		cooldowns.clear();
 		bossInfo.clear();
 		activeBosses.clear();
-		bossNames.clear();
 		activeFights.clear();
+		playerStats.clear();
+		mythicmobsMap.clear();
 		
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
@@ -112,7 +119,7 @@ public class Main extends JavaPlugin implements Listener {
 		ConfigurationSection bosses = getConfig().getConfigurationSection("Bosses");
 		instanceNames = (ArrayList<String>) getConfig().getStringList("Instances");
 
-		// Populate boss and raid  information
+		// Populate boss and raid information (stats too)
 		for (String boss : bosses.getKeys(false)) {
 			ConfigurationSection bossSection = bosses.getConfigurationSection(boss);
 			int cooldown = bossSection.getInt("Cooldown");
@@ -123,9 +130,11 @@ public class Main extends JavaPlugin implements Listener {
 			String permission = bossSection.getString("Permission");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
-			
+			String mythicmob = bossSection.getString("Mythicmob");
+			mythicmobsMap.put(mythicmob, boss);
+
 			if (isRaid) {
-				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder);
+				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmob);
 				
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
@@ -135,14 +144,16 @@ public class Main extends JavaPlugin implements Listener {
 						ConfigurationSection raidBossSection = raidBosses.getConfigurationSection(raidBoss);
 						String rcmd = raidBossSection.getString("Command");
 						Location rloc = parseLocation(raidBossSection.getString("Coordinates"));
-						raidBossList.add(new RaidBoss(rloc, rcmd, raidBoss));
+						String raidMythicmob = raidBossSection.getString("Mythicmob");
+						mythicmobsMap.put(raidMythicmob, boss);
+						raidBossList.add(new RaidBoss(rloc, rcmd, raidBoss, raidMythicmob));
 					}
 					info.setRaidBosses(raidBossList);
 				}
 				bossInfo.put(boss, info);
 			}
 			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder));
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder, mythicmob));
 			}
 		}
 		
@@ -156,7 +167,6 @@ public class Main extends JavaPlugin implements Listener {
 				for (String boss : bosses.getKeys(false)) {
 					ConcurrentHashMap<String, Long> cds = new ConcurrentHashMap<String, Long>();
 					cooldowns.put(boss, cds);
-					bossNames.add(boss);
 					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
 					while (rs.next()) {
 						cds.put(rs.getString(1), rs.getLong(3));
@@ -244,12 +254,16 @@ public class Main extends JavaPlugin implements Listener {
 				// Set up databases
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 				if (!activeFights.containsKey(boss)) {
-					ArrayList<Player> players = new ArrayList<Player>();
-					players.add(p);
-					activeFights.put(boss, players);
+					ArrayList<Player> activeFightsPlayers = new ArrayList<Player>();
+					ArrayList<Player> inBossPlayers = new ArrayList<Player>();
+					activeFightsPlayers.add(p);
+					inBossPlayers.add(p);
+					activeFights.put(boss, activeFightsPlayers);
+					inBoss.put(boss, inBossPlayers);
 				}
 				else {
 					activeFights.get(boss).add(p);
+					inBoss.get(boss).add(p);
 				}
 				fightingBoss.put(p.getUniqueId(), boss);
 				
@@ -467,6 +481,7 @@ public class Main extends JavaPlugin implements Listener {
 		return activeFights;
 	}
 	
+	// For when a player dies and goes into spectate mode
 	public void handleLeaveFight(Player p) {
 		if (p != null) {
 			healthbars.remove(p.getName());
@@ -483,6 +498,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (activeFights.get(boss).size() == 0) {
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
+				inBoss.remove(boss);
 				activeBosses.remove(boss);
 				if (bossTimers.containsKey(boss)) {
 					for (BukkitRunnable runnable : bossTimers.get(boss)) {
@@ -580,10 +596,85 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
+	public void onMMSpawn(MythicMobSpawnEvent e) {
+		String mob = e.getMobType().getInternalName();
+		if (mythicmobsMap.containsKey(mob)) {
+			String boss = mythicmobsMap.get(mob);
+			statTimers.put(boss, System.currentTimeMillis());
+			
+			// Only add players who are still alive
+			for (Player p : activeFights.get(boss)) {
+				playerStats.put(p.getName(), new PlayerStat(boss));
+				return;
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
+		// For now, this only matters in instances
+		if (!isInstance) {
+			return;
+		}
+		
+		// If the player is dealing damage
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
-			if (spectatorAcc.containsKey(p.getUniqueId())) e.setCancelled(true);
+			if (spectatorAcc.containsKey(p.getUniqueId())) {
+				e.setCancelled(true);
+				return;
+			}
+			
+			// Make sure their stats are currently being counted
+			if (!playerStats.containsKey(p.getName())) {
+				return;
+			}
+			
+			// Make sure self-damage isn't counted in stats
+			if (!(e.getEntity() instanceof Player)) {
+				if (!fightingBoss.containsKey(p.getUniqueId())) {
+					return;
+				}
+				PlayerStat stats = playerStats.get(p.getName());
+				stats.addDamageDealt(e.getFinalDamage());
+			}
+		}
+		
+		// If the player is taking damage
+		else if (e.getEntity() instanceof Player) {
+			// Make sure self-damage isn't counted
+			if (!(e.getDamager() instanceof Player)) {
+				Player p = (Player) e.getEntity();
+
+				if (!fightingBoss.containsKey(p.getUniqueId())) {
+					return;
+				}
+				if (!playerStats.containsKey(p.getName())) {
+					return;
+				}
+				PlayerStat stats = playerStats.get(p.getName());
+				stats.addDamageTaken(e.getFinalDamage());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onSkillHeal(SkillHealEvent e) {
+		if (!isInstance) {
+			return;
+		}
+		
+		String pName = e.getHealer().getName();
+		if(playerStats.containsKey(pName)) {
+			PlayerStat stats = playerStats.get(pName);
+			// Self healing
+			if(pName.equalsIgnoreCase(e.getTarget().getName())) {
+				stats.addSelfHeal(e.getEffectiveHeal());
+			}
+			// Ally healing
+			else {
+				stats.addAllyHeal(e.getEffectiveHeal());
+			}
 		}
 	}
 	

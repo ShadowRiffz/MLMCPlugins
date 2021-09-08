@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
@@ -18,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
+
+import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Commands implements CommandExecutor {
 	private Main main = null;
@@ -285,7 +288,8 @@ public class Commands implements CommandExecutor {
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
 				sender.sendMessage("§4/boss mini [name] [boss] [miniboss]§7- Teleports player to open miniboss");
-				sender.sendMessage("§4/boss disable §7- Toggles whether boss fights are enabled");
+				sender.sendMessage("§4/boss showstats [boss] [displayname] §7- Shows stats and clears them");
+				sender.sendMessage("§4/boss debugstats [boss] [displayname] §7- Shows stats to sender, no clear");
 				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
 				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
@@ -310,7 +314,7 @@ public class Commands implements CommandExecutor {
 				Player p = (Player) sender;
 				String name = WordUtils.capitalize(args[1]);
 				if (name.equalsIgnoreCase("all")) {
-					for (String boss : main.bossNames) {
+					for (String boss : main.bossInfo.keySet()) {
 						main.getCooldown(boss, p);
 					}
 					return true;
@@ -321,6 +325,109 @@ public class Commands implements CommandExecutor {
 			}
 			else {
 				sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
+			}
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("showstats")) {
+			// First, formulate the messages to send
+			ArrayList<String> messages = new ArrayList<String>();
+			String boss = args[1];
+			String display = args[2];
+			for (int i = 3; i < args.length; i++) {
+				display += " " + args[i];
+			}
+			display.replaceAll("&", "§");
+			display.replaceAll("@", "&");
+
+			// Calculate timer
+	        String timer = "n/a";
+			if (main.statTimers.containsKey(boss)) {
+				long time = System.currentTimeMillis() - main.statTimers.get(boss);
+				main.statTimers.remove(boss);
+				final long hr = TimeUnit.MILLISECONDS.toHours(time);
+		        final long min = TimeUnit.MILLISECONDS.toMinutes(time - TimeUnit.HOURS.toMillis(hr));
+		        final long sec = TimeUnit.MILLISECONDS.toSeconds(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
+		        final long ms = TimeUnit.MILLISECONDS.toMillis(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min) - TimeUnit.SECONDS.toMillis(sec));
+		        if (hr > 0) {
+		        	timer = String.format("%2d:%02d:%02d.%03d", hr, min, sec, ms);
+		        }
+		        else {
+		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
+		        }
+			}
+			messages.add("§cPost-battle Stats §7(§4§l" + display + "§7) [Time:§c" + timer + "§7]");
+			messages.add("§7-----");
+			messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+			
+			// Calculate each person's stats (and clear them)
+			for (Player p : main.inBoss.get(boss)) {
+				PlayerStat stats = main.playerStats.get(p.getName());
+				if (stats == null) continue;
+				String pClass = SkillAPI.getPlayerData(p).getClass("class").getData().getName();
+				int damageDealt = (int) Math.round((stats.getDamageDealt() * 100) / 100);
+				int damageTaken = (int) Math.round((stats.getDamageTaken() * 100) / 100);
+				int selfHeal = (int) Math.round((stats.getSelfHealed() * 100) / 100);
+				int allyHeal = (int) Math.round((stats.getAllyHealed() * 100) / 100);
+
+				messages.add("§e" + p.getName() + "§7 (§e" + pClass + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+				main.playerStats.remove(p.getName());
+			}
+			
+			// Send stats out to every player
+			for (Player receiver : main.inBoss.get(boss)) {
+				for (String msg : messages) {
+					receiver.sendMessage(msg);
+				}
+			}
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("debugstats")) {
+			// First, formulate the messages to send
+			ArrayList<String> messages = new ArrayList<String>();
+			String boss = args[1];
+			String display = args[2];
+			for (int i = 3; i < args.length; i++) {
+				display += " " + args[i];
+			}
+			display.replaceAll("&", "§");
+			display.replaceAll("@", "&");
+
+			// Calculate timer
+	        String timer = "n/a";
+			if (main.statTimers.containsKey(boss)) {
+				long time = System.currentTimeMillis() - main.statTimers.get(boss);
+				main.statTimers.remove(boss);
+				final long hr = TimeUnit.MILLISECONDS.toHours(time);
+		        final long min = TimeUnit.MILLISECONDS.toMinutes(time - TimeUnit.HOURS.toMillis(hr));
+		        final long sec = TimeUnit.MILLISECONDS.toSeconds(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));
+		        final long ms = TimeUnit.MILLISECONDS.toMillis(time - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min) - TimeUnit.SECONDS.toMillis(sec));
+		        if (hr > 0) {
+		        	timer = String.format("%2d:%02d:%02d.%03d", hr, min, sec, ms);
+		        }
+		        else {
+		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
+		        }
+			}
+			messages.add("§cPost-battle Stats §7(§4§l" + display + "§7) [Time:§c" + timer + "§7]");
+			messages.add("§7-----");
+			messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+
+			// Calculate each person's stats
+			for (Player p : main.inBoss.get(boss)) {
+				PlayerStat stats = main.playerStats.get(p.getName());
+				if (stats == null) continue;
+				String pClass = SkillAPI.getPlayerData(p).getClass("class").getData().getName();
+				int damageDealt = (int) Math.round((stats.getDamageDealt() * 100) / 100);
+				int damageTaken = (int) Math.round((stats.getDamageTaken() * 100) / 100);
+				int selfHeal = (int) Math.round((stats.getSelfHealed() * 100) / 100);
+				int allyHeal = (int) Math.round((stats.getAllyHealed() * 100) / 100);
+
+				messages.add("§e" + p.getName() + "§7 (§e" + pClass + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+			}
+			
+			// Send messages
+			for (String msg : messages) {
+				sender.sendMessage(msg);
 			}
 			return true;
 		}

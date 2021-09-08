@@ -14,18 +14,20 @@ public class Boss {
 	private String permission = null;
 	private ArrayList<RaidBoss> raidBosses = null;
 	private String placeholder = null;
+	private String mythicmob = null;
 
-	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder) {
+	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, String mythicmob) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
 		this.permission = permission;
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
+		this.mythicmob = mythicmob;
 	}
 
 	public Boss(Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
-			String permission, String placeholder) {
+			String permission, String placeholder, String mythicmob) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
@@ -35,6 +37,7 @@ public class Boss {
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
+		this.mythicmob = mythicmob;
 	}
 
 	public boolean isRaid() {
@@ -107,5 +110,13 @@ public class Boss {
 
 	public void setPlaceholder(String placeholder) {
 		this.placeholder = placeholder;
+	}
+	
+	public String getMythicMob() {
+		return mythicmob;
+	}
+	
+	public void setMythicMob(String mythicmob) {
+		this.mythicmob = mythicmob;
 	}
 }
