@@ -32,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
+import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
@@ -651,7 +652,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	@EventHandler
-	public void onAttributeUnload(PlayerAttributeLoadEvent e) {
+	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		resetBonuses(e.getPlayer());
 	}
 	
