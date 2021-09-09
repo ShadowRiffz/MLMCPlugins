@@ -38,7 +38,6 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Main extends JavaPlugin implements Listener {
@@ -50,7 +49,6 @@ public class Main extends JavaPlugin implements Listener {
 	String sendCommand = null;
 	int cmdDelay = 0;
 	boolean isInstance = false;
-	String instanceName = null;
 	Plugin main = this;
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
@@ -79,7 +77,6 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<UUID, Boss> spectatingBoss = new ConcurrentHashMap<UUID, Boss>();
 	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
 	public ConcurrentHashMap<String, PlayerStat> playerStats = new ConcurrentHashMap<String, PlayerStat>();
-	public ConcurrentHashMap<String, String> mythicmobsMap = new ConcurrentHashMap<String, String>();
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
 
 	public void onEnable() {
@@ -98,7 +95,10 @@ public class Main extends JavaPlugin implements Listener {
 		activeBosses.clear();
 		activeFights.clear();
 		playerStats.clear();
-		mythicmobsMap.clear();
+		
+		// See if this is an instance
+		File instanceFile = new File(getDataFolder(), "instance.yml");
+		isInstance = instanceFile.exists();
 		
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
@@ -111,8 +111,6 @@ public class Main extends JavaPlugin implements Listener {
 		sendCommand = getConfig().getString("Send_Command");
 		returnCommand = getConfig().getString("Return_Command");
 		cmdDelay = getConfig().getInt("Command_Delay");
-		isInstance = getConfig().getBoolean("Is_Instance");
-		instanceName = getConfig().getString("Instance_Name");
 		mainSpawn = parseLocation(getConfig().getString("Main_Spawn"));
 		instanceSpawn = parseLocation(getConfig().getString("Instance_Spawn"));
 
@@ -130,11 +128,10 @@ public class Main extends JavaPlugin implements Listener {
 			String permission = bossSection.getString("Permission");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
-			String mythicmob = bossSection.getString("Mythicmob");
-			mythicmobsMap.put(mythicmob, boss);
+			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
 
 			if (isRaid) {
-				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmob);
+				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmobs);
 				
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
@@ -144,16 +141,14 @@ public class Main extends JavaPlugin implements Listener {
 						ConfigurationSection raidBossSection = raidBosses.getConfigurationSection(raidBoss);
 						String rcmd = raidBossSection.getString("Command");
 						Location rloc = parseLocation(raidBossSection.getString("Coordinates"));
-						String raidMythicmob = raidBossSection.getString("Mythicmob");
-						mythicmobsMap.put(raidMythicmob, boss);
-						raidBossList.add(new RaidBoss(rloc, rcmd, raidBoss, raidMythicmob));
+						raidBossList.add(new RaidBoss(rloc, rcmd, raidBoss));
 					}
 					info.setRaidBosses(raidBossList);
 				}
 				bossInfo.put(boss, info);
 			}
 			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder, mythicmob));
+				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
 			}
 		}
 		
@@ -592,21 +587,6 @@ public class Main extends JavaPlugin implements Listener {
 				e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
 			}
 			dropCooldown.put(p, System.currentTimeMillis());
-		}
-	}
-	
-	@EventHandler
-	public void onMMSpawn(MythicMobSpawnEvent e) {
-		String mob = e.getMobType().getInternalName();
-		if (mythicmobsMap.containsKey(mob)) {
-			String boss = mythicmobsMap.get(mob);
-			statTimers.put(boss, System.currentTimeMillis());
-			
-			// Only add players who are still alive
-			for (Player p : activeFights.get(boss)) {
-				playerStats.put(p.getName(), new PlayerStat(boss));
-				return;
-			}
 		}
 	}
 	

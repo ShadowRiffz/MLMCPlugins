@@ -323,6 +323,17 @@ public class Commands implements CommandExecutor {
 			}
 			return true;
 		}
+		// boss startstats boss
+		else if (args[0].equalsIgnoreCase("startstats")) {
+			String boss = args[1];
+			main.statTimers.put(boss, System.currentTimeMillis());
+			
+			// Only add players who are still alive
+			for (Player p : main.activeFights.get(boss)) {
+				main.playerStats.put(p.getName(), new PlayerStat(boss));
+			}
+			return true;
+		}
 		else if (args[0].equalsIgnoreCase("showstats")) {
 			// First, formulate the messages to send
 			ArrayList<String> messages = new ArrayList<String>();
@@ -350,7 +361,7 @@ public class Commands implements CommandExecutor {
 		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 		        }
 			}
-			messages.add("§cPost-battle Stats §7(§4§l" + display + "§7) [Time:§c" + timer + "§7]");
+			messages.add("§cPost-battle Stats §7(§4§l" + display + "§7) [Time: §c" + timer + "§7]");
 			messages.add("§7-----");
 			messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 			

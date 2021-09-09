@@ -14,20 +14,20 @@ public class Boss {
 	private String permission = null;
 	private ArrayList<RaidBoss> raidBosses = null;
 	private String placeholder = null;
-	private String mythicmob = null;
+	private ArrayList<String> mythicmobs = null;
 
-	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, String mythicmob) {
+	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
 		this.permission = permission;
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
-		this.mythicmob = mythicmob;
+		this.mythicmobs = mythicmobs;
 	}
 
 	public Boss(Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
-			String permission, String placeholder, String mythicmob) {
+			String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
@@ -37,7 +37,7 @@ public class Boss {
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
-		this.mythicmob = mythicmob;
+		this.mythicmobs = mythicmobs;
 	}
 
 	public boolean isRaid() {
@@ -112,11 +112,11 @@ public class Boss {
 		this.placeholder = placeholder;
 	}
 	
-	public String getMythicMob() {
-		return mythicmob;
+	public ArrayList<String> getMythicMobs() {
+		return mythicmobs;
 	}
 	
-	public void setMythicMob(String mythicmob) {
-		this.mythicmob = mythicmob;
+	public void setMythicMobs(ArrayList<String> mythicmobs) {
+		this.mythicmobs = mythicmobs;
 	}
 }

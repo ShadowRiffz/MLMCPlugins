@@ -7,13 +7,11 @@ public class RaidBoss {
 	private Location coords = null;
 	private String cmd = null;
 	private String name = null;
-	private String mythicmob = null;
 
-	public RaidBoss (Location coords, String cmd, String name, String mythicmob){
+	public RaidBoss (Location coords, String cmd, String name){
 		this.coords = coords;
 		this.cmd = cmd;
 		this.name = name;
-		this.mythicmob = mythicmob;
 	}
 
 	public Location getCoords() {
@@ -38,13 +36,5 @@ public class RaidBoss {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getMythicmob() {
-		return mythicmob;
-	}
-
-	public void setMythicmob(String mythicmob) {
-		this.mythicmob = mythicmob;
 	}
 }
