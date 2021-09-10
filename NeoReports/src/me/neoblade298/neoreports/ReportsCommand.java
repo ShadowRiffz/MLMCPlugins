@@ -423,10 +423,8 @@ public class ReportsCommand implements CommandExecutor {
 					try{  
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						Statement stmt = con.createStatement();
-						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE is_resolved = 1;");
-						if (deleted > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + deleted + "§7 reports!");
+						if (Main.numResolved > 0) {
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + Main.numResolved + "§7 reports!");
 							Main.numResolved = 0;
 						}
 						else {
