@@ -41,10 +41,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			while (rs.next()) {
 				numUrgent = rs.getInt(1);
 			}
-			rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_resolved = 1");
-			while (rs.next()) {
-				numResolved = rs.getInt(1);
-			}
+			numResolved = 0;
 			con.close();
 		}
 		catch(Exception e) {
@@ -71,7 +68,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					if (numUrgent > 0) {
 						p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
 					}
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
+					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 
 				}
 			};

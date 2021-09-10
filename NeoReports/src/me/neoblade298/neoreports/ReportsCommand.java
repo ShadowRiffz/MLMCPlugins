@@ -51,7 +51,7 @@ public class ReportsCommand implements CommandExecutor {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs;
-					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "';");
+					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' AND is_resolved = 0;");
 					while(rs.next()) {
 						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
@@ -105,7 +105,7 @@ public class ReportsCommand implements CommandExecutor {
 			}
 			else if (sender.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
-					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved: §e" + Main.numResolved);
+					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 					return true;
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
