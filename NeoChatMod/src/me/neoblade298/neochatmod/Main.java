@@ -13,8 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.palmergames.bukkit.TownyChat.events.AsyncChatHookEvent;
+import org.mineacademy.chatcontrol.api.ChatChannelEvent;
 
 public class Main extends JavaPlugin implements Listener {
 	File file = null;
@@ -63,17 +62,20 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled=true)
-	public void onChat(AsyncChatHookEvent e) {
-		if (this.muteGlobal && !e.getPlayer().hasPermission("towny.chat.mod")) {
-			e.getPlayer().sendMessage("§4[§c§lMLMC§4] &cThere is currently a server mute!");
+	public void onChat(ChatChannelEvent e) {
+		if (this.muteGlobal && !e.getSender().hasPermission("towny.chat.mod")) {
+			e.getSender().sendMessage("§4[§c§lMLMC§4] &cThere is currently a server mute!");
 			e.setCancelled(true);
 			return;
 		}
+		if (!(e.getSender() instanceof Player)) {
+			return;
+		}
+		Player sender = (Player) e.getSender();
 		String msg = e.getMessage();
-		double x = e.getPlayer().getLocation().getX();
-		double z = e.getPlayer().getLocation().getZ();
-		World w = e.getPlayer().getWorld();
-		Player sender = e.getPlayer();
+		double x = sender.getLocation().getX();
+		double z = sender.getLocation().getZ();
+		World w = sender.getWorld();
 		
 		// Check if they're in the tutorial world
 		if (w.getName().equalsIgnoreCase("Argyll")) {
@@ -82,10 +84,10 @@ public class Main extends JavaPlugin implements Listener {
 			!sender.hasPermission("tutorial.chat.receive")) {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.chat.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7spoke in tutorial: §c" + msg);
 					}
 				}
-				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				sender.sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
 				e.setCancelled(true);
 			}
 			else if ((TOWNY_X_BOUND_1 <= x && x <= TOWNY_X_BOUND_2) &&
@@ -93,10 +95,10 @@ public class Main extends JavaPlugin implements Listener {
 			!sender.hasPermission("tutorial.chat.receive")) {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.chat.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7spoke in tutorial: §c" + msg);
+						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7spoke in tutorial: §c" + msg);
 					}
 				}
-				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				sender.sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
 				e.setCancelled(true);
 			}
 		}
@@ -107,20 +109,18 @@ public class Main extends JavaPlugin implements Listener {
 				e.setCancelled(true);
 				try {
 					for (String cmd : punishCmds) {
-						Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", e.getPlayer().getName())
+						Bukkit.getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", sender.getName())
 								.replaceAll("%word%", word))).get();
 					}
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.staff.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + e.getPlayer().getName() + " §7was punished for saying: §c" + msg);
+						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7was punished for saying: §c" + msg);
 					}
 				}
 				return;

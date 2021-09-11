@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="spigot-api-1.14.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/TownyChat.jar"/>
+	<classpathentry kind="lib" path="src/ChatControl-Red-10.6.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
