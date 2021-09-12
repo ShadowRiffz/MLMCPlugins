@@ -54,22 +54,25 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 		PlayerStats stats = nr.getPlayerStats(p);
-		if (args[0].equalsIgnoreCase("level")) {
+		if (args[0].equalsIgnoreCase("complete")) {
+			
+		}
+		else if (args[0].equalsIgnoreCase("level")) {
 			return "" + stats.getLevel();
 		}
-		if (args[0].equalsIgnoreCase("exp")) {
+		else if (args[0].equalsIgnoreCase("exp")) {
 			return "" + stats.getExp();
 		}
-		if (args[0].equalsIgnoreCase("completedresearch")) {
+		else if (args[0].equalsIgnoreCase("completedresearch")) {
 			return "" + stats.getCompletedResearchItems().size();
 		}
-		if (args[0].equalsIgnoreCase("remainingresearch")) {
+		else if (args[0].equalsIgnoreCase("remainingresearch")) {
 			return "" + (nr.getNumResearchItems() - stats.getCompletedResearchItems().size());
 		}
-		if (args[0].equalsIgnoreCase("neededexp")) {
+		else if (args[0].equalsIgnoreCase("neededexp")) {
 			return "" + nr.getNextLvl().get(stats.getLevel());
 		}
-		if (args[0].equalsIgnoreCase("attr")) {
+		else if (args[0].equalsIgnoreCase("attr")) {
 			Attributes attr = nr.getPlayerAttributes(p);
 			switch (args[1]) {
 				case "str": return "" + attr.getStrength();

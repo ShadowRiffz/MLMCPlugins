@@ -395,7 +395,6 @@ public class Commands implements CommandExecutor{
 			
 			// Get rid of perms
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + p.getName() + " collections.");
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set research.converted");
 			p.sendMessage("§c[§4§lMLMC§4] §7Conversion complete!");
 			return true;
 		}

@@ -9,25 +9,27 @@ import org.bukkit.entity.Player;
 
 public class PlayerStats {
 	private Research main;
-	private TreeSet<String> completedResearchItems;
+	private TreeSet<ResearchItem> completedResearchItems;
+	private TreeSet<String> researchPerms;
 	private HashMap<String, Integer> researchPoints;
 	private HashMap<String, Integer> mobKills;
 	private int exp;
 	private int level;
 	
-	public PlayerStats(Research main, int level, int exp, TreeSet<String> completedResearchItems, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
+	public PlayerStats(Research main, int level, int exp, TreeSet<ResearchItem> completedResearchItems, TreeSet<String> researchPerms, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
 		this.main = main;
 		this.level = level;
 		this.exp = exp;
 		this.completedResearchItems = completedResearchItems;
+		this.researchPerms = researchPerms;
 		this.researchPoints = researchPoints;
 		this.mobKills = mobKills;
 	}
 	
-	public TreeSet<String> getCompletedResearchItems() {
+	public TreeSet<ResearchItem> getCompletedResearchItems() {
 		return completedResearchItems;
 	}
-	public void setCompletedResearchItems(TreeSet<String> completedResearchItems) {
+	public void setCompletedResearchItems(TreeSet<ResearchItem> completedResearchItems) {
 		this.completedResearchItems = completedResearchItems;
 	}
 	public HashMap<String, Integer> getResearchPoints() {
@@ -87,5 +89,13 @@ public class PlayerStats {
 				break;
 			}
 		}
+	}
+
+	public TreeSet<String> getResearchPerms() {
+		return researchPerms;
+	}
+
+	public void setResearchPerms(TreeSet<String> researchPerms) {
+		this.researchPerms = researchPerms;
 	}
 }
