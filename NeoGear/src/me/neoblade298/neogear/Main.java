@@ -424,6 +424,9 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
 		if (item == null) return;
+		if (item.getEnchantmentLevel(Enchantment.QUICK_CHARGE) > 3) {
+			item.addEnchantment(Enchantment.QUICK_CHARGE, 3);
+		}
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (isQuestGear(item)) {
