@@ -55,7 +55,12 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 		PlayerStats stats = nr.getPlayerStats(p);
 		if (args[0].equalsIgnoreCase("complete")) {
-			
+			if (nr.isCompleted(p, args[1])) {
+				return "T";
+			}
+			else {
+				return "F";
+			}
 		}
 		else if (args[0].equalsIgnoreCase("level")) {
 			return "" + stats.getLevel();
