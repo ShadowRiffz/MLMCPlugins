@@ -7,7 +7,7 @@ public class ResearchItem {
 	private HashMap<String, Integer> goals;
 	private Attributes attrs;
 	private int exp;
-	private String permission;
+	private String id;
 	
 	public ResearchItem(String name) {
 		this.goals = new HashMap<String, Integer>();
@@ -48,11 +48,11 @@ public class ResearchItem {
 		this.name = name;
 	}
 
-	public String getPermission() {
-		return permission;
+	public String getId() {
+		return id;
 	}
 
-	public void setPermission(String permission) {
-		this.permission = permission;
+	public void setId(String id) {
+		this.id = id;
 	}
 }

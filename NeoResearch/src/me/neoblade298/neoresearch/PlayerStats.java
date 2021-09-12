@@ -1,7 +1,6 @@
 package me.neoblade298.neoresearch;
 
 import java.util.HashMap;
-import java.util.TreeSet;
 
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -9,27 +8,25 @@ import org.bukkit.entity.Player;
 
 public class PlayerStats {
 	private Research main;
-	private TreeSet<ResearchItem> completedResearchItems;
-	private TreeSet<String> researchPerms;
+	private HashMap<String, ResearchItem> completedResearchItems;
 	private HashMap<String, Integer> researchPoints;
 	private HashMap<String, Integer> mobKills;
 	private int exp;
 	private int level;
 	
-	public PlayerStats(Research main, int level, int exp, TreeSet<ResearchItem> completedResearchItems, TreeSet<String> researchPerms, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
+	public PlayerStats(Research main, int level, int exp, HashMap<String, ResearchItem> completedResearchItems, HashMap<String, Integer> researchPoints, HashMap<String, Integer> mobKills) {
 		this.main = main;
 		this.level = level;
 		this.exp = exp;
 		this.completedResearchItems = completedResearchItems;
-		this.researchPerms = researchPerms;
 		this.researchPoints = researchPoints;
 		this.mobKills = mobKills;
 	}
 	
-	public TreeSet<ResearchItem> getCompletedResearchItems() {
+	public HashMap<String, ResearchItem> getCompletedResearchItems() {
 		return completedResearchItems;
 	}
-	public void setCompletedResearchItems(TreeSet<ResearchItem> completedResearchItems) {
+	public void setCompletedResearchItems(HashMap<String, ResearchItem> completedResearchItems) {
 		this.completedResearchItems = completedResearchItems;
 	}
 	public HashMap<String, Integer> getResearchPoints() {
@@ -89,13 +86,5 @@ public class PlayerStats {
 				break;
 			}
 		}
-	}
-
-	public TreeSet<String> getResearchPerms() {
-		return researchPerms;
-	}
-
-	public void setResearchPerms(TreeSet<String> researchPerms) {
-		this.researchPerms = researchPerms;
 	}
 }

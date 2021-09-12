@@ -2,7 +2,6 @@ package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -301,9 +300,8 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				PlayerStats stats = main.getPlayerStats(p);
 				String msg = new String("§4[§c§lMLMC§4] §e" + p.getName() + " §7has: §e");
-				Iterator<ResearchItem> iter = stats.getCompletedResearchItems().iterator();
-				while (iter.hasNext()) {
-					msg += iter.next().getPermission() + " ";
+				for (String id : stats.getCompletedResearchItems().keySet()) {
+					msg += id + " ";
 				}
 				sender.sendMessage(msg);
 				return true;
@@ -312,11 +310,10 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("takegoal")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				PlayerStats stats = main.getPlayerStats(p);
-				Iterator<ResearchItem> iter = stats.getCompletedResearchItems().iterator();
-				while (iter.hasNext()) {
-					if (iter.next().getPermission().contains(args[2])) {
+				for (String id : stats.getCompletedResearchItems().keySet()) {
+					if (id.contains(args[2])) {
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully removed goal");
-						iter.remove();
+						stats.getCompletedResearchItems().remove(id);
 						break;
 					}
 				}
