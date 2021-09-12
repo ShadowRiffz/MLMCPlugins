@@ -1,4 +1,4 @@
-package me.neoblade298.neosapiaddons;
+package me.neoblade298.neosapiaddons.mechanics;
 
 import java.util.HashMap;
 import java.util.List;

@@ -21,6 +21,15 @@ import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.trigger.Trigger;
 
+import me.neoblade298.neosapiaddons.conditions.AbsorptionCondition;
+import me.neoblade298.neosapiaddons.conditions.AttackChargeCondition;
+import me.neoblade298.neosapiaddons.conditions.BlockingCondition;
+import me.neoblade298.neosapiaddons.conditions.ManaNameCondition;
+import me.neoblade298.neosapiaddons.mechanics.AddAbsorptionMechanic;
+import me.neoblade298.neosapiaddons.mechanics.IncreasePotionMechanic;
+import me.neoblade298.neosapiaddons.mechanics.SpawnMythicmobMechanic;
+import me.neoblade298.neosapiaddons.mechanics.ValueMaxMechanic;
+
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	HashMap<Player, Player> ironbond;
@@ -107,6 +116,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new ValueMaxMechanic(),
             new SpawnMythicmobMechanic(),
             new AddAbsorptionMechanic(),
+            new IncreasePotionMechanic(),
             new AbsorptionCondition(),
             new AttackChargeCondition(),
             new ManaNameCondition(),

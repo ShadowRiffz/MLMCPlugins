@@ -1,4 +1,4 @@
-package me.neoblade298.neosapiaddons;
+package me.neoblade298.neosapiaddons.conditions;
 
 import java.util.List;
 
@@ -6,39 +6,35 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableList;
-import com.sucy.skill.SkillAPI;
 import com.sucy.skill.dynamic.ComponentType;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.custom.EditorOption;
 
-public class ManaNameCondition extends CustomEffectComponent {
+public class BlockingCondition extends CustomEffectComponent {
 
 	@Override
 	public String getDescription() {
-		return "Check mana name of the player.";
+		return "Check if player is blocking with shield";
 	}
 
 	@Override
 	public List<EditorOption> getOptions() {
         return ImmutableList.of(
-                EditorOption.text(
-                        "mananame",
-                        "Mana Name",
-                        "Contains this mana name",
-                        "MP")
+                EditorOption.dropdown("type", "Type", "Is blocking", ImmutableList.of("Blocking", "Not Blocking"))
         );
 	}
 
 	@Override
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
-		String mananame = settings.getString("mananame");
-		if (!(caster instanceof Player)) return false;
-		return SkillAPI.getPlayerData((Player) caster).getClass("class").getData().getManaName().endsWith(mananame) && executeChildren(caster, lvl, targets);
+    	Player p = (Player) caster;
+        final boolean blocking = p.isBlocking();
+        final boolean wantBlocking = settings.getString("type", "blocking").equalsIgnoreCase("blocking");
+        return blocking == wantBlocking && executeChildren(caster, lvl, targets);
 	}
 
 	@Override
 	public String getKey() {
-		return "Mana Name";
+		return "Blocking";
 	}
 
 	@Override
