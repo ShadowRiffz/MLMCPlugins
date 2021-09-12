@@ -37,14 +37,13 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 		Collection<AttributeModifier> mods = ((Player) caster).getAttribute(Attribute.GENERIC_ATTACK_SPEED).getModifiers();
 		double amount = ((Player) caster).getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue();
 		for (AttributeModifier mod : mods) {
-			if (mod.getName().contains("Tool")) {
+			if (mod.getName().contains("modifier")) {
 				// Tool modifier, we want only this
 				amount += mod.getAmount();
 				break;
 			}
 		}
 		
-		System.out.println(amount);
 		String key = settings.getString("key");
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 		data.put(key, amount);
