@@ -27,7 +27,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
                 EditorOption.text(
                         "key",
                         "Key",
-                        "The key to place the max into",
+                        "The key to place attack speed into; Multiplies if it already exists",
                         "value")
         );
 	}
@@ -46,7 +46,12 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 		
 		String key = settings.getString("key");
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
-		data.put(key, amount);
+		if (data.containsKey(key)) {
+			data.put(key, (double) data.get(key) * amount);
+		}
+		else {
+			data.put(key, amount);
+		}
 		return true;
 	}
 
