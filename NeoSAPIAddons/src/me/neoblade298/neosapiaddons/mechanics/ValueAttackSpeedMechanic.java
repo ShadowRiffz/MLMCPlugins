@@ -27,7 +27,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
                 EditorOption.text(
                         "key",
                         "Key",
-                        "The key to place attack speed into; Multiplies if it already exists",
+                        "The key to place attack speed into; Divides if it already exists",
                         "value")
         );
 	}
@@ -38,7 +38,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 		double amount = ((Player) caster).getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue();
 		for (AttributeModifier mod : mods) {
 			if (mod.getName().contains("modifier")) {
-				// Tool modifier, we want only this
+				// Weapon/tool modifier, we want only this
 				amount += mod.getAmount();
 				break;
 			}
@@ -47,7 +47,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 		String key = settings.getString("key");
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 		if (data.containsKey(key)) {
-			data.put(key, (double) data.get(key) * amount);
+			data.put(key, (double) data.get(key) / amount);
 		}
 		else {
 			data.put(key, amount);
