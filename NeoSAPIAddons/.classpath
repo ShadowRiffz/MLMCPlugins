@@ -8,6 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="src/SkillAPI.jar"/>
 	<classpathentry kind="lib" path="src/MythicMobs-4.8.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="src/spigot-1.15.2.jar"/>
+	<classpathentry kind="lib" path="src/spigot-api-1.17.1-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
