@@ -301,9 +301,9 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				PlayerStats stats = main.getPlayerStats(p);
 				String msg = new String("§4[§c§lMLMC§4] §e" + p.getName() + " §7has: §e");
-				Iterator<String> iter = stats.getCompletedResearchItems().iterator();
+				Iterator<ResearchItem> iter = stats.getCompletedResearchItems().iterator();
 				while (iter.hasNext()) {
-					msg += iter.next() + " ";
+					msg += iter.next().getPermission() + " ";
 				}
 				sender.sendMessage(msg);
 				return true;
@@ -312,9 +312,9 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("takegoal")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				PlayerStats stats = main.getPlayerStats(p);
-				Iterator<String> iter = stats.getCompletedResearchItems().iterator();
+				Iterator<ResearchItem> iter = stats.getCompletedResearchItems().iterator();
 				while (iter.hasNext()) {
-					if (iter.next().contains(args[2])) {
+					if (iter.next().getPermission().contains(args[2])) {
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully removed goal");
 						iter.remove();
 						break;
