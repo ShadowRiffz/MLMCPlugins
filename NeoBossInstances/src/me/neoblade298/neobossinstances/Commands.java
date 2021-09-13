@@ -445,21 +445,7 @@ public class Commands implements CommandExecutor {
 		else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("return")) {
 			if (args.length == 1 && sender instanceof Player) {
 				Player p = (Player) sender;
-				
-				if (main.spectatingBoss.containsKey(p.getUniqueId())) {
-					p.teleport(main.instanceSpawn);
-					main.handleLeaveSpectator(p);
-				}
-				
-				SkillAPI.saveSingle(p);
-				sender.sendMessage("§4[§c§lBosses§4] §7Sending you back in 3 seconds...");
-				BukkitRunnable sendBack = new BukkitRunnable() {
-					public void run() {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								main.returnCommand.replaceAll("%player%", p.getName()));
-					}
-				};
-				sendBack.runTaskLater(main, 60L);
+				main.returnToMain(p);
 				return true;
 			}
 			else {

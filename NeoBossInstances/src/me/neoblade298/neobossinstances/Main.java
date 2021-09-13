@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -78,6 +79,8 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
 	public ConcurrentHashMap<String, PlayerStat> playerStats = new ConcurrentHashMap<String, PlayerStat>();
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
+	public HashSet<String> joiningPlayers = new HashSet<String>();
+	public HashSet<String> leavingPlayers = new HashSet<String>();
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -220,11 +223,16 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
+	public void on(PlayerJoinEvent e) {
 		// If instance, check where to send a player
 		if (isInstance) {
 			Player p = e.getPlayer();
 			String uuid = p.getUniqueId().toString();
+			joiningPlayers.add(p.getName());
+			
+			if (p.isDead()) {
+				p.spigot().respawn();
+			}
 			
 			// Connect
 			try {
@@ -273,10 +281,12 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					Collections.sort(healthList);
 				}
-				
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
+			}
+			finally {
+				joiningPlayers.remove(p.getName());
 			}
 		}
 	}
@@ -479,6 +489,7 @@ public class Main extends JavaPlugin implements Listener {
 	// For when a player dies and goes into spectate mode
 	public void handleLeaveFight(Player p) {
 		if (p != null) {
+			leavingPlayers.add(p.getName());
 			healthbars.remove(p.getName());
 			if (!fightingBoss.containsKey(p.getUniqueId())) return;
 			String boss = fightingBoss.remove(p.getUniqueId());
@@ -493,7 +504,6 @@ public class Main extends JavaPlugin implements Listener {
 			if (activeFights.get(boss).size() == 0) {
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
-				inBoss.remove(boss);
 				activeBosses.remove(boss);
 				if (bossTimers.containsKey(boss)) {
 					for (BukkitRunnable runnable : bossTimers.get(boss)) {
@@ -503,6 +513,19 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					bossTimers.remove(boss);
 				}
+				
+				// Send every spectator back, then remove from inBoss
+				p.spigot().respawn();
+				p.teleport(instanceSpawn);
+				BukkitRunnable sendAllBack = new BukkitRunnable() {
+					public void run() {
+						for (Player fighter : inBoss.get(boss)) {
+							returnToMain(fighter);
+						}
+						inBoss.remove(boss);
+					}
+				};
+				sendAllBack.runTaskLater(main, 20L);
 			}
 	    	// Delete player from all fights in sql
 			String uuid = p.getUniqueId().toString();
@@ -516,6 +539,7 @@ public class Main extends JavaPlugin implements Listener {
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			leavingPlayers.remove(p.getName());
 		}
 	}
 	
@@ -533,14 +557,23 @@ public class Main extends JavaPlugin implements Listener {
 			BukkitRunnable respawn = new BukkitRunnable() {
 				public void run() {
 					Player p = e.getPlayer();
-					p.teleport(spectatingBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
-					p.setGameMode(GameMode.ADVENTURE);
-					p.setInvulnerable(true);
-					PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
-					spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
-					SkillAPI.getPlayerAccountData(p).setAccount(13);
-					p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+					if (joiningPlayers.contains(p.getName())) return; // If a player logged in already dead
+					if (leavingPlayers.contains(p.getName())) return; // Don't let a newly respawned player spectate an empty boss
+					
+					// If everyone in the fight is dead, return everyone
+					if (spectatingBoss.containsKey(p.getUniqueId())) {
+						p.teleport(spectatingBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
+						p.setGameMode(GameMode.ADVENTURE);
+						p.setInvulnerable(true);
+						PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
+						spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
+						SkillAPI.getPlayerAccountData(p).setAccount(13);
+						p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+					}
+					else {
+						p.teleport(instanceSpawn);
+					}
 				}
 			};
 			respawn.runTaskLater(this, 20L);
@@ -660,5 +693,22 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public ArrayList<String> getHealthBars(Player p) {
 		return healthbars.get(p.getName());
+	}
+	
+	public void returnToMain(Player p) {
+		if (spectatingBoss.containsKey(p.getUniqueId())) {
+			p.teleport(instanceSpawn);
+			handleLeaveSpectator(p);
+		}
+		
+		SkillAPI.saveSingle(p);
+		p.sendMessage("§4[§c§lBosses§4] §7Sending you back in 3 seconds...");
+		BukkitRunnable sendBack = new BukkitRunnable() {
+			public void run() {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+						returnCommand.replaceAll("%player%", p.getName()));
+			}
+		};
+		sendBack.runTaskLater(main, 60L);
 	}
 }
