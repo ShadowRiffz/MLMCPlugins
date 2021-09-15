@@ -56,7 +56,7 @@ public class MinibossPlaceholders extends PlaceholderExpansion {
 		int seconds = MythicMobs.inst().getSpawnerManager().getSpawnerByName(miniboss).getRemainingCooldownSeconds();
 		int minutes = seconds / 60;
 		seconds = seconds % 60;
-		if (seconds > 0) return "§c" + minutes + ":" + seconds + " §7remaining!";
+		if (seconds > 0) return String.format("§c%d:%02d", minutes, seconds);
     	return "§aReady!";
 	}
 }
