@@ -64,7 +64,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler(ignoreCancelled=true)
 	public void onChat(ChatChannelEvent e) {
 		if (this.muteGlobal && !e.getSender().hasPermission("towny.chat.mod")) {
-			e.getSender().sendMessage("§4[§c§lMLMC§4] &cThere is currently a server mute!");
+			e.getSender().sendMessage("§4[§c§lMLMC§4] §cThere is currently a server mute!");
 			e.setCancelled(true);
 			return;
 		}
