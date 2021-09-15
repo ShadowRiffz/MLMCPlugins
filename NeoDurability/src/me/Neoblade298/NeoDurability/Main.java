@@ -193,7 +193,8 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDurabilityLoss(PlayerItemDamageEvent e) {
 		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore()
 				&& e.getItem().getItemMeta().getLore().get(0).contains("Tier")) {
-			if (e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll")) {
+			String world = e.getPlayer().getWorld().getName();
+			if (world.equalsIgnoreCase("Argyll") || world.equalsIgnoreCase("Dev")) {
 				e.setCancelled(true);
 			}
 		}
