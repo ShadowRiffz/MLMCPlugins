@@ -457,31 +457,22 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public String getCooldownPlaceholder(String name, Player p) {
-		if (cooldowns.containsKey(name)) {
-			if (!p.hasPermission(bossInfo.get(name).getPermission())) {
-				return "§c???";
+	public int getBossCooldown(String boss, Player p) {
+		if (cooldowns.containsKey(boss)) {
+			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
+				return -2;
 			}
-			String msg = bossInfo.get(name).getPlaceholder() + "§7: ";
-			int cooldown = bossInfo.get(name).getCooldown() * 1000;
-			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
-				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
+			int cooldown = bossInfo.get(boss).getCooldown() * 1000;
+			if (cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
+				long lastUse = cooldowns.get(boss).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
-				if (currTime > lastUse + cooldown) {
-	    			return msg + "§aReady!";
-				}
-				else {
-					int temp = (int) ((lastUse + cooldown - currTime) / 1000);
-					int minutes = temp / 60;
-					int seconds = temp % 60;
-					return msg + "§c" + minutes + ":" + seconds;
-				}
+				return (int) ((lastUse + cooldown - currTime) / 1000);
 			}
 			else {
-    			return msg + "§aReady!";
+    			return 0;
 			}
 		}
-		return "Loading...";
+		return -1;
 	}
 	
 	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
