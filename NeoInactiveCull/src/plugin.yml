@@ -1,0 +1,5 @@
+name: NeoInactiveCull
+main: me.neoblade298.neoinactivecull.Cull
+author: [Neoblade298]
+version: 1.0
+api-version: 1.16
