@@ -467,6 +467,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public int getBossCooldown(String boss, Player p) {
 		if (cooldowns.containsKey(boss)) {
+			// This is covered by getBossName so essentially is not used
 			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
 				return -2;
 			}
