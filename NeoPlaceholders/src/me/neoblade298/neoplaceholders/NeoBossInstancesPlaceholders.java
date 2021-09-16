@@ -68,8 +68,8 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				int seconds = time % 60;
 				return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
 			}
-			else {
-				return "§cInvalid boss!";
+			else if (time == -1) {
+				return display + "§7: " + "§aReady!";
 			}
 		}
 		// %bosses_partyhealth_1-5%
