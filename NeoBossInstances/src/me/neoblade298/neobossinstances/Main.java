@@ -460,7 +460,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String getBossName(String boss, Player p) {
 		Boss b = bossInfo.get(boss);
 		if (p.hasPermission(b.getPermission())) {
-			return b.getDisplayName();
+			return b.getPlaceholder();
 		}
 		return null;
 	}
