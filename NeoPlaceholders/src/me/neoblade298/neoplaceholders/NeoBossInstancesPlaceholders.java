@@ -68,7 +68,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				int seconds = time % 60;
 				return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
 			}
-			else if (time == -1) {
+			else if (time < 0) {
 				return display + "§7: " + "§aReady!";
 			}
 		}
