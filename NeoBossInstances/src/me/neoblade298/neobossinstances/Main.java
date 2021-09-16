@@ -457,6 +457,14 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public String getBossName(String boss, Player p) {
+		Boss b = bossInfo.get(boss);
+		if (p.hasPermission(b.getPermission())) {
+			return b.getDisplayName();
+		}
+		return null;
+	}
+	
 	public int getBossCooldown(String boss, Player p) {
 		if (cooldowns.containsKey(boss)) {
 			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
