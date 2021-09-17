@@ -5,6 +5,7 @@ import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +43,8 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		main = this;
 		this.fm = new FileManager();
 		this.foods = this.fm.loadFoods();
-		this.isInstance = this.fm.isInstance();
+		File instanceFile = new File(getDataFolder(), "instance.yml");
+		isInstance = instanceFile.exists();
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
@@ -84,6 +86,9 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!e.getHand().equals(EquipmentSlot.HAND)) {
+			return;
+		}
+		if (!SkillAPI.isLoaded(p)) {
 			return;
 		}
 		ItemStack item = p.getInventory().getItemInMainHand();
