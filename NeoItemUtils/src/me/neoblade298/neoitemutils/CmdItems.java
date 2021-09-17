@@ -66,6 +66,7 @@ public class CmdItems implements CommandExecutor{
 						lore.set(num, main.translateHexCodes(line));
 						meta.setLore(lore);
 						p.sendMessage("§7Successfully set lore");
+						item.setItemMeta(meta);
 					}
 					else if (args[1].equalsIgnoreCase("get")) {
 						int num = Integer.parseInt(args[2]);
@@ -85,6 +86,7 @@ public class CmdItems implements CommandExecutor{
 						
 						lore.add(main.translateHexCodes(line));
 						meta.setLore(lore);
+						item.setItemMeta(meta);
 						p.sendMessage("§7Successfully added lore");
 					}
 					else if (args[1].equalsIgnoreCase("rem")) {
@@ -96,6 +98,7 @@ public class CmdItems implements CommandExecutor{
 						
 						lore.remove(num);
 						meta.setLore(lore);
+						item.setItemMeta(meta);
 						p.sendMessage("§7Successfully removed lore");
 					}
 				}
