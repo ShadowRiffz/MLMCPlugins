@@ -125,10 +125,10 @@ public class Commands implements CommandExecutor{
 				int min = -1;
 				for (ResearchItem rItem : main.mobMap.get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
-					if (min < goal && goal < currentPoints) min = goal;
+					if (min < goal && goal <= currentPoints) min = goal;
 				}
 
-				if (currentPoints - needed < min) {
+				if (currentPoints < min + needed) {
 					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + " §cresearch points to do this!");
 					return true;
 				}
@@ -175,10 +175,10 @@ public class Commands implements CommandExecutor{
 				int min = -1;
 				for (ResearchItem rItem : main.mobMap.get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
-					if (min < goal && goal < currentPoints) min = goal;
+					if (min < goal && goal <= currentPoints) min = goal;
 				}
 
-				if (currentPoints - needed < min) {
+				if (currentPoints < min + needed) {
 					p.sendMessage("§4[§c§lMLMC§4] §cYou need at least §e" + (min + needed) + " §cresearch points to do this!");
 					return true;
 				}
