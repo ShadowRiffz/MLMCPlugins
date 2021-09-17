@@ -134,7 +134,7 @@ public class Main extends JavaPlugin implements Listener {
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
 
 			if (isRaid) {
-				Boss info = new Boss(loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmobs);
+				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmobs);
 				
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
@@ -151,7 +151,7 @@ public class Main extends JavaPlugin implements Listener {
 				bossInfo.put(boss, info);
 			}
 			else {
-				bossInfo.put(boss, new Boss(loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
+				bossInfo.put(boss, new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
 			}
 		}
 		
@@ -426,66 +426,9 @@ public class Main extends JavaPlugin implements Listener {
 		p.setGameMode(GameMode.SURVIVAL);
 		if (spectatorAcc.containsKey(p.getUniqueId())) {
 			SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.remove(p.getUniqueId()));
-			spectatingBoss.remove(p.getUniqueId());
+			String boss = spectatingBoss.remove(p.getUniqueId()).getName();
+			inBoss.get(boss).remove(p);
 		}
-	}
-	
-	public boolean getCooldown(String name, Player p) {
-		if (cooldowns.containsKey(name)) {
-			int cooldown = bossInfo.get(name).getCooldown() * 1000;
-			String displayName = bossInfo.get(name).getDisplayName();
-			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
-				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
-				long currTime = System.currentTimeMillis();
-				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
-				}
-				else {
-					double temp = (lastUse + cooldown - currTime) / 6000;
-					temp /= 10;
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
-				}
-			}
-			else {
-    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
-			}
-			return true;
-		}
-		else {
-			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
-			return true;
-		}
-	}
-	
-	public String getBossName(String boss, Player p) {
-		Boss b = bossInfo.get(boss);
-		if (p.hasPermission(b.getPermission())) {
-			return b.getPlaceholder();
-		}
-		return null;
-	}
-	
-	public int getBossCooldown(String boss, Player p) {
-		if (cooldowns.containsKey(boss)) {
-			// This is covered by getBossName so essentially is not used
-			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
-				return -2;
-			}
-			int cooldown = bossInfo.get(boss).getCooldown() * 1000;
-			if (cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
-				long lastUse = cooldowns.get(boss).get(p.getUniqueId().toString());
-				long currTime = System.currentTimeMillis();
-				return (int) ((lastUse + cooldown - currTime) / 1000);
-			}
-			else {
-    			return 0;
-			}
-		}
-		return -1;
-	}
-	
-	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
-		return activeFights;
 	}
 	
 	// For when a player dies and goes into spectate mode
@@ -545,6 +488,64 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	
+	public boolean getCooldown(String name, Player p) {
+		if (cooldowns.containsKey(name)) {
+			int cooldown = bossInfo.get(name).getCooldown() * 1000;
+			String displayName = bossInfo.get(name).getDisplayName();
+			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
+				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
+				long currTime = System.currentTimeMillis();
+				if (currTime > lastUse + cooldown) {
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
+				}
+				else {
+					double temp = (lastUse + cooldown - currTime) / 6000;
+					temp /= 10;
+	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
+				}
+			}
+			else {
+    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
+			}
+			return true;
+		}
+		else {
+			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
+			return true;
+		}
+	}
+	
+	public String getBossName(String boss, Player p) {
+		Boss b = bossInfo.get(boss);
+		if (p.hasPermission(b.getPermission())) {
+			return b.getPlaceholder();
+		}
+		return null;
+	}
+	
+	public int getBossCooldown(String boss, Player p) {
+		if (cooldowns.containsKey(boss)) {
+			// This is covered by getBossName so essentially is not used
+			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
+				return -2;
+			}
+			int cooldown = bossInfo.get(boss).getCooldown() * 1000;
+			if (cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
+				long lastUse = cooldowns.get(boss).get(p.getUniqueId().toString());
+				long currTime = System.currentTimeMillis();
+				return (int) ((lastUse + cooldown - currTime) / 1000);
+			}
+			else {
+    			return 0;
+			}
+		}
+		return -1;
+	}
+	
+	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
+		return activeFights;
+	}
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {

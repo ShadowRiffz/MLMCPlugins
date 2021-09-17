@@ -6,6 +6,7 @@ import org.bukkit.Location;
 
 public class Boss {
 	private Location coords = null;
+	private String name = null;
 	private String cmd = null;
 	private int cooldown = 0;
 	private String displayName = null;
@@ -16,7 +17,8 @@ public class Boss {
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
 
-	public Boss(Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
+		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
@@ -26,8 +28,9 @@ public class Boss {
 		this.mythicmobs = mythicmobs;
 	}
 
-	public Boss(Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
 			String permission, String placeholder, ArrayList<String> mythicmobs) {
+		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
@@ -38,6 +41,14 @@ public class Boss {
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public boolean isRaid() {
