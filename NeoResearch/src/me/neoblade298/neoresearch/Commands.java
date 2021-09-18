@@ -31,6 +31,7 @@ public class Commands implements CommandExecutor{
 		if (sender.hasPermission("mycommand.staff") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§c/nr reload");
+				sender.sendMessage("§c/nr debug [player]");
 				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [points] (display)");
 				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [points] (display)");
 				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [level (pts only)] [amt] (display)");
@@ -49,6 +50,12 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("reload")) {
 				main.loadConfig();
 				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded config");
+				return true;
+			}
+			
+			// /nr debug [player]
+			else if (args[0].equalsIgnoreCase("debug")) {
+				sender.sendMessage(main.getPlayerAttributes(Bukkit.getPlayer(args[1])).toString());
 				return true;
 			}
 
