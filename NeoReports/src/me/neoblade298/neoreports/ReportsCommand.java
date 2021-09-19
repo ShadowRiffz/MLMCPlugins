@@ -342,6 +342,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					return true;
 				}
+			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
 				return true;
