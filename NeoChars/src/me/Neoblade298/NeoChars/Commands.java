@@ -8,37 +8,36 @@ import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
 
+public class Commands implements CommandExecutor {
 
-public class Commands implements CommandExecutor{
-	
 	Main main;
-	
+
 	public Commands(Main main) {
 		this.main = main;
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		
-		if(args.length == 1) {
-			if(Bukkit.getPlayer(args[0]) != null) {
+		if (args.length == 1) {
+			if (Bukkit.getPlayer(args[0]) != null) {
 				main.sendPlayerCard((Player) sender, Bukkit.getPlayer(args[0]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("all")) {
-				  for (Player p : Bukkit.getOnlinePlayers()) {
-					  if (SkillAPI.getPlayerData(p) == null) {
-						  sender.sendMessage("§cNull data detected: " + p.getName());
-					  }
-				  }
+				sender.sendMessage("§7Searching for broken classes...");
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					if (SkillAPI.getPlayerData(p) == null) {
+						sender.sendMessage("§cNull data detected: " + p.getName());
+					}
+				}
 			}
 		}
-		
-		if(args.length == 0) {
+
+		if (args.length == 0) {
 			main.sendPlayerCard((Player) sender, (Player) sender);
 		}
-		
+
 		return true;
-		
+
 	}
 }
