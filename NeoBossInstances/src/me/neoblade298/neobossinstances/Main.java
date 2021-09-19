@@ -424,8 +424,10 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
 		p.setGameMode(GameMode.SURVIVAL);
-		if (spectatorAcc.containsKey(p.getUniqueId())) {
+		if (spectatorAcc.containsKey(p.getUniqueId())) { // This happens only if they died
 			SkillAPI.getPlayerAccountData(p).setAccount(spectatorAcc.remove(p.getUniqueId()));
+		}
+		if (spectatingBoss.containsKey(p.getUniqueId())) { // This happens regardless of if they died or not
 			String boss = spectatingBoss.remove(p.getUniqueId()).getName();
 			inBoss.get(boss).remove(p);
 		}
@@ -465,7 +467,9 @@ public class Main extends JavaPlugin implements Listener {
 				BukkitRunnable sendAllBack = new BukkitRunnable() {
 					public void run() {
 						for (Player fighter : inBoss.get(boss)) {
-							returnToMain(fighter);
+							if (fighter.isOnline()) {
+								returnToMain(fighter);
+							}
 						}
 						inBoss.remove(boss);
 					}
