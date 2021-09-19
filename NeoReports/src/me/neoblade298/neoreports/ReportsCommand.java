@@ -35,13 +35,11 @@ public class ReportsCommand implements CommandExecutor {
 				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
 				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
 				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
-				sender.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (do this after your bug is resolved!)");
 				if (sender.hasPermission("neoreports.admin")) {
 					sender.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
 					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
 					sender.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
 					sender.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
-					sender.sendMessage("§4/reports clean §7- Removes all resolved bugs");
 				}
 				return true;
 			}
@@ -66,84 +64,9 @@ public class ReportsCommand implements CommandExecutor {
 				}
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1]) && !sender.hasPermission("neoreports.admin")) {
-				try{  
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-					Statement stmt = con.createStatement();
-					ResultSet rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
-					
-					// Modify counter if necessary
-					if(rs.next()) {
-						boolean is_resolved = rs.getInt(8) == 1;
-						boolean is_urgent = rs.getInt(9) == 1;
-						if (!is_resolved) {
-							if (is_urgent) {
-								Main.numUrgent--;
-							}
-							else {
-								Main.numBugs--;
-							}
-						}
-					}
-					
-					// Delete the bug
-					int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + " AND user = '" + author +"';");
-					if (deleted > 0) {
-						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
-					}
-					else {
-						sender.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you the creator of the report?");
-					}
-					con.close();
-				}
-				catch(Exception e) {
-					System.out.println(e);
-					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
-				}
-				return true;
-			}
 			else if (sender.hasPermission("neoreports.admin")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
 					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
-					return true;
-				}
-				else if (args.length == 2 && args[0].equalsIgnoreCase("remove") && StringUtils.isNumeric(args[1])) {
-					try{  
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						Statement stmt = con.createStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
-						
-						// Modify counter if necessary
-						if(rs.next()) {
-							boolean is_resolved = rs.getInt(8) == 1;
-							boolean is_urgent = rs.getInt(9) == 1;
-							if (!is_resolved) {
-								if (is_urgent) {
-									Main.numUrgent--;
-								}
-								else {
-									Main.numBugs--;
-								}
-							}
-						}
-
-						// Delete the bug
-						int deleted = stmt.executeUpdate("DELETE FROM neoreports_bugs WHERE id = " + args[1] + ";");
-						if (deleted > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully deleted report!");
-						}
-						else {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to delete report! Are you sure the id is correct?");
-						}
-						
-						con.close();
-					}
-					catch(Exception e) {
-						System.out.println(e);
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
-					}
 					return true;
 				}
 				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
@@ -419,30 +342,6 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					return true;
 				}
-				else if (args.length == 1 && args[0].equalsIgnoreCase("clean")) {
-					try{  
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						if (Main.numResolved > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully cleaned out §e" + Main.numResolved + "§7 reports!");
-							Main.numResolved = 0;
-						}
-						else {
-							sender.sendMessage("§4[§c§lMLMC§4] §7No reports to clean!");
-						}
-						con.close();
-					}
-					catch(Exception e) {
-						System.out.println(e);
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
-					}
-					return true;
-				}
-				else {
-					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
-					return true;
-				}
-			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
 				return true;
