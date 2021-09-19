@@ -18,7 +18,7 @@ public class Commands implements CommandExecutor{
 
 		if(sender.isOp() || sender.hasPermission("*")) {
 		    if(args.length == 1) {
-		    	main.resetPlayer(Bukkit.getPlayer(args[0]));
+		    	main.resetPlayer(Bukkit.getPlayer(args[0]), sender);
 		    	return true;
 			}
 		    sender.sendMessage("Something went wrong even though you're op.");
