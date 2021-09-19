@@ -60,8 +60,7 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 
 			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
-			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand(),
-					p.getInventory().getItemInOffHand() };
+			ItemStack[] items = new ItemStack[] { p.getInventory().getItemInMainHand() };
 			int dropType = 0;
 
 			for (ItemStack item : items) {
