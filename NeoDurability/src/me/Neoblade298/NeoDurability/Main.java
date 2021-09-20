@@ -59,25 +59,21 @@ public class Main extends JavaPlugin implements Listener {
 			ItemStack off = player.getEquipment().getItemInOffHand();
 			double random = gen.nextDouble();
 			if (random <= 0.5) {
-				if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-						&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+				if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(main, player, 0);
 				}
-				else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
-						&& off.getItemMeta().getLore().get(0).contains("Tier")) {
+				else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(off, player, 5);
 				}
 			}
 			else {
-				if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
-						&& off.getItemMeta().getLore().get(0).contains("Tier")) {
+				if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(off, player, 5);
 				}
-				else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-						&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+				else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(main, player, 0);
 				}
@@ -126,25 +122,21 @@ public class Main extends JavaPlugin implements Listener {
 			ItemStack off = player.getEquipment().getItemInOffHand();
 			double random = gen.nextDouble();
 			if (random <= 0.5) {
-				if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-						&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+				if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(main, player, 0);
 				}
-				else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore() &&
-						off.getItemMeta().getLore().get(0).contains("Tier")) {
+				else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(off, player, 5);
 				}
 			}
 			else {
-				if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
-						&& off.getItemMeta().getLore().get(0).contains("Tier")) {
+				if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(off, player, 5);
 				}
-				else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-						&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+				else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 					FlagManager.addFlag(player, "WeaponDur", 20);
 					reduceDurability(main, player, 0);
 				}
@@ -164,25 +156,21 @@ public class Main extends JavaPlugin implements Listener {
 		ItemStack off = player.getEquipment().getItemInOffHand();
 		double random = gen.nextDouble();
 		if (random <= 0.5) {
-			if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-					&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+			if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(main, player, 0);
 			}
-			else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
-					&& off.getItemMeta().getLore().get(0).contains("Tier")) {
+			else if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(off, player, 5);
 			}
 		}
 		else {
-			if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()
-					&& off.getItemMeta().getLore().get(0).contains("Tier")) {
+			if (off != null && off.hasItemMeta() && off.getItemMeta().hasLore()) {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(off, player, 5);
 			}
-			else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()
-					&& main.getItemMeta().getLore().get(0).contains("Tier")) {
+			else if (main != null && main.hasItemMeta() && main.getItemMeta().hasLore()) {
 				FlagManager.addFlag(player, "WeaponDur", 20);
 				reduceDurability(main, player, 0);
 			}
@@ -191,8 +179,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onDurabilityLoss(PlayerItemDamageEvent e) {
-		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore()
-				&& e.getItem().getItemMeta().getLore().get(0).contains("Tier")) {
+		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore()) {
+			if (!isQuestItem(e.getItem())) return;
+			
 			String world = e.getPlayer().getWorld().getName();
 			if (world.equalsIgnoreCase("Argyll") || world.equalsIgnoreCase("Dev")) {
 				e.setCancelled(true);
@@ -235,8 +224,20 @@ public class Main extends JavaPlugin implements Listener {
 			FlagManager.addFlag(player, "ArmorDur", 20);
 		}
 	}
+	
+	public boolean isQuestItem(ItemStack item) {
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			for (String line : item.getItemMeta().getLore()) {
+				if (line.contains("Tier")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public void reduceDurability(ItemStack item, Player player, int i) {
+		if (!isQuestItem(item)) return;
 		BukkitRunnable removeCrossbowMain = null;
 		BukkitRunnable removeCrossbowOff = null;
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasEnchant(Enchantment.DURABILITY))) {
