@@ -31,7 +31,7 @@ public class IncreasePotionMechanic extends CustomEffectComponent {
                 EditorOption.number(
                         "duration",
                         "Duration",
-                        "How long the potion effect should last",
+                        "How long the potion effect should last in seconds",
                         15,
                         0),
                 EditorOption.number(
@@ -58,7 +58,7 @@ public class IncreasePotionMechanic extends CustomEffectComponent {
 			}
 			else {
 				int newAmt = pe.getAmplifier() + amt > max ? max : pe.getAmplifier() + amt;
-				target.addPotionEffect(new PotionEffect(type, duration, newAmt));
+				target.addPotionEffect(new PotionEffect(type, duration * 20, newAmt));
 			}
 		}
 		return true;
