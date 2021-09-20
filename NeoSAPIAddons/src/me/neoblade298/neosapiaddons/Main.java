@@ -30,6 +30,7 @@ import me.neoblade298.neosapiaddons.mechanics.IncreasePotionMechanic;
 import me.neoblade298.neosapiaddons.mechanics.SpawnMythicmobMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueAttackSpeedMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueMaxMechanic;
+import me.neoblade298.neosapiaddons.mechanics.ValueSkillLevelMechanic;
 
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
@@ -119,6 +120,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new AddAbsorptionMechanic(),
             new IncreasePotionMechanic(),
             new ValueAttackSpeedMechanic(),
+            new ValueSkillLevelMechanic(),
             new AbsorptionCondition(),
             new AttackChargeCondition(),
             new ManaNameCondition(),

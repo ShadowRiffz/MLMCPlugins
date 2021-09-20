@@ -31,7 +31,7 @@ public class Commands implements CommandExecutor {
 
 			else if (args[0].equalsIgnoreCase("skillup")) {
 				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
-				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill);
+				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");
 				return true;
 			}

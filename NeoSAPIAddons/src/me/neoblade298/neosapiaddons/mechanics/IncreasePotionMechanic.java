@@ -46,9 +46,9 @@ public class IncreasePotionMechanic extends CustomEffectComponent {
 
 	@Override
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
-		int amt = settings.getInt("amount");
-		int duration = settings.getInt("duration");
-		int max = settings.getInt("max");
+		int amt = (int) parseValues(caster, "amount", lvl, 0);
+		int duration = (int) parseValues(caster, "duration", lvl, 0);
+		int max = (int) parseValues(caster, "max", lvl, 0);
 		PotionEffectType type = PotionEffectType.getByName(settings.getString("potion"));
 		
 		for (LivingEntity target : targets) {
