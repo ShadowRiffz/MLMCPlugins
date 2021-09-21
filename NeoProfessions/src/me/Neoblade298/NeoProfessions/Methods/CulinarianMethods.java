@@ -387,8 +387,8 @@ public class CulinarianMethods {
 									p.getInventory().addItem(util.setAmount(item, 1));
 									p.getInventory().removeItem(util.setAmount(oldItem, 1));
 									econ.withdrawPlayer(p, REMEDY_COST);
+									cm.subtract(p, "essence", foodLevel, REMEDY_ESSENCE);
 									if (i == repetitions - 1) {
-										cm.subtract(p, "essence", foodLevel, REMEDY_ESSENCE * (repetitions + 1));
 										util.sendMessage(p, "&7Successfully remedied dish!");
 									}
 								}
