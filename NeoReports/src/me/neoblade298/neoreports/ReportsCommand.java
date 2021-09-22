@@ -303,6 +303,7 @@ public class ReportsCommand implements CommandExecutor {
 							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
+						rs.next();
 						boolean is_urgent = rs.getInt(9) == 1;
 						if (is_urgent) {
 							Main.numUrgent++;
