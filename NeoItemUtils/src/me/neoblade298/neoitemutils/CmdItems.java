@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.tr7zw.nbtapi.NBTItem;
+
 
 public class CmdItems implements CommandExecutor{
 	
@@ -35,6 +37,44 @@ public class CmdItems implements CommandExecutor{
 				p.sendMessage("§c/nitem lore set/add/rem/get");
 				p.sendMessage("§c/nitem name set/get");
 				p.sendMessage("§c/nitem model set/get");
+				p.sendMessage("§c/nitem nbt set/get [int/double/string] [key] [value]");
+			}
+			else if (args[0].equalsIgnoreCase("nbt")) {
+				NBTItem nbti = new NBTItem(item);
+				if (args.length == 1) {
+					p.sendMessage("§c/nitem nbt set [int/double/string] [key] [value]");
+					p.sendMessage("§c/nitem nbt get [int/double/string] [key]");
+				}
+				else {
+					if (args[1].equalsIgnoreCase("set")) {
+						if (args[2].equalsIgnoreCase("int")) {
+							nbti.setInteger(args[3], Integer.parseInt(args[4]));
+							nbti.applyNBT(item);
+							p.sendMessage("§7Successfully set NBT");
+						}
+						else if (args[2].equalsIgnoreCase("double")) {
+							nbti.setDouble(args[3], Double.parseDouble(args[4]));
+							nbti.applyNBT(item);
+							p.sendMessage("§7Successfully set NBT");
+						}
+						else if (args[2].equalsIgnoreCase("string")) {
+							nbti.setString(args[3], args[4]);
+							nbti.applyNBT(item);
+							p.sendMessage("§7Successfully set NBT");
+						}
+					}
+					else if (args[1].equalsIgnoreCase("get")) {
+						if (args[2].equalsIgnoreCase("int")) {
+							p.sendMessage("" + nbti.getInteger(args[3]));
+						}
+						else if (args[2].equalsIgnoreCase("double")) {
+							p.sendMessage("" + nbti.getDouble(args[3]));
+						}
+						else if (args[2].equalsIgnoreCase("string")) {
+							p.sendMessage(nbti.getString(args[3]));
+						}
+					}
+				}
 			}
 			else if (args[0].equalsIgnoreCase("lore")) {
 				if (args.length == 1) {
