@@ -76,12 +76,17 @@ public class Commands implements CommandExecutor{
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
+				
+				String sLevel = display.split(" ")[1];
+				sLevel = sLevel.substring(0, sLevel.length() - 1);
+				int level = Integer.parseInt(sLevel);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
+				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + display + " §7to player §e" + p.getName());
 				return true;
@@ -104,12 +109,17 @@ public class Commands implements CommandExecutor{
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
+				
+				String sLevel = display.split(" ")[1];
+				sLevel = sLevel.substring(0, sLevel.length() - 1);
+				int level = Integer.parseInt(sLevel);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
 				nbti.setString("internalmob", args[2]);
+				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + display + " §7to player §e" + p.getName());
 				return true;
