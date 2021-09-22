@@ -257,8 +257,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		load.runTaskAsynchronously(this);
 	}
 
-	private void handleLeave(Player p) {
-		UUID uuid = p.getUniqueId();
+	private void handleLeave(UUID uuid) {
 		playerAttrs.remove(uuid);
 		if (lastSave.containsKey(uuid)) {
 			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
@@ -277,7 +276,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						Statement stmt = con.createStatement();
 
 						// Save account
-						save(p, con, stmt, true);
+						save(uuid, con, stmt, true);
 					} catch (Exception ex) {
 						System.out.println(ex);
 					}
@@ -293,7 +292,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			Connection con = DriverManager.getConnection(url, user, pass);
 			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				save (p, con, stmt, false);
+				save(p.getUniqueId(), con, stmt, false);
 			}
 			stmt.executeBatch();
 			con.close();
@@ -302,11 +301,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public void save(Player p, Connection con, Statement stmt, boolean save) {
+	public void save(UUID uuid, Connection con, Statement stmt, boolean save) {
 		try {
-			UUID uuid = p.getUniqueId();
 			PlayerStats stats = playerStats.get(uuid);
-			if (playerStats.containsKey(p.getUniqueId())) {
+			if (playerStats.containsKey(uuid)) {
 	
 				// Save account
 				stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
@@ -643,7 +641,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onSaveSQL(PlayerSaveEvent e) {
-		handleLeave(e.getPlayer());
+		handleLeave(e.getUUID());
 	}
 	
 	@EventHandler
@@ -658,12 +656,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
+		handleLeave(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
+		handleLeave(e.getPlayer().getUniqueId());
 	}
 
 	@EventHandler
