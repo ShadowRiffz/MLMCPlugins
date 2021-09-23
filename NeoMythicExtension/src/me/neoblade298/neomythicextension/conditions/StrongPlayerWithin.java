@@ -22,7 +22,7 @@ public class StrongPlayerWithin extends SkillCondition implements IEntityConditi
     		if (e instanceof Player) {
     			Player p = (Player) e;
     			ItemStack chestplate = p.getInventory().getArmorContents()[2];
-    			if (chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasCustomModelData()) {
+    			if (chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasLore()) {
     				return true;
     			}
     		}
