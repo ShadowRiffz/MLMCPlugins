@@ -45,7 +45,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 				amount += mod.getAmount();
 			}
 			else if (mod.getName().contains("GENERIC_ATTACK")) {
-				amount += mod.getAmount();
+				amount = 10;
 			}
 		}
 		
