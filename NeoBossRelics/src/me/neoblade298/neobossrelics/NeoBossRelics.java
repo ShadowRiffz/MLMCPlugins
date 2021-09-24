@@ -103,18 +103,14 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
-		if (!enabledWorlds.contains(p.getWorld().getName()) && this.playersets.containsKey(uuid)) {
-			this.playersets.remove(uuid);
-		}
+		this.playersets.remove(uuid);
 	}
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
-		if (this.playersets.containsKey(uuid)) {
-			this.playersets.remove(uuid);
-		}
+		this.playersets.remove(uuid);
 	}
 	
 	@EventHandler
