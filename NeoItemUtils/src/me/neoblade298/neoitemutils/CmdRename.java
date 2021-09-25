@@ -40,8 +40,15 @@ public class CmdRename implements CommandExecutor {
 					for (int i = 1; i < args.length; i++) {
 						rename += " " + args[i];
 					}
+					
 
 					rename = main.translateHexCodes(rename);
+					
+					if (rename.length() > 30 && !p.hasPermission("mycommand.staff")) {
+						p.sendMessage("§4[§c§lMLMC§4] §cName must be less than 30 characters!");
+						return true;
+					}
+					
 					meta.setDisplayName(rename);
 					item.setItemMeta(meta);
 					econ.withdrawPlayer(p, RENAME_PRICE);
