@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class CmdRename implements CommandExecutor {
@@ -44,7 +45,7 @@ public class CmdRename implements CommandExecutor {
 
 					rename = main.translateHexCodes(rename);
 					
-					if (rename.length() > 30 && !p.hasPermission("mycommand.staff")) {
+					if (ChatColor.stripColor(rename).length() > 30 && !p.hasPermission("mycommand.staff")) {
 						p.sendMessage("§4[§c§lMLMC§4] §cName must be less than 30 characters!");
 						return true;
 					}
