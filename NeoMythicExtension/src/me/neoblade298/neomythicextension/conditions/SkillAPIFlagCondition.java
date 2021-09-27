@@ -133,7 +133,8 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 					}
 				}
 				else {
-					result = false;
+					// Doesn't have flag, which with castinstead means cast (true). Otherwise don't.
+					result = castinstead;
 					break;
 				}
 			}
