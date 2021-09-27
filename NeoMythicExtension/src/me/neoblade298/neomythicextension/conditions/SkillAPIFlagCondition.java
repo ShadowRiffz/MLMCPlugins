@@ -97,6 +97,8 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 	
 					// Very specific behavior for stun rework
 					if (castinstead) {
+						// Set result to false if castinstead
+						result = false;
 						// Give the entity a stun tag
 						if (!am.getEntity().hasScoreboardTag("StunTag")) {
 							am.getEntity().addScoreboardTag("StunTag");
