@@ -39,6 +39,10 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
+
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Main extends JavaPlugin implements Listener {
@@ -636,6 +640,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (!isInstance) {
 			return;
 		}
+		BukkitAPIHelper api = MythicMobs.inst().getAPIHelper();
 		
 		// If the player is dealing damage
 		if (e.getDamager() instanceof Player) {
@@ -674,6 +679,27 @@ public class Main extends JavaPlugin implements Listener {
 				}
 				PlayerStat stats = playerStats.get(p.getName());
 				stats.addDamageTaken(e.getFinalDamage());
+			}
+		}
+		else if (api.isMythicMob(e.getDamager()) && api.isMythicMob(e.getEntity())) {
+			ActiveMob am = api.getMythicMobInstance(e.getDamager());
+			if (am.getOwner().isPresent()) {
+				Player p = Bukkit.getPlayer(am.getOwner().get());
+
+				if (spectatorAcc.containsKey(p.getUniqueId())) {
+					e.setCancelled(true);
+					return;
+				}
+				
+				if (!fightingBoss.containsKey(p.getUniqueId())) {
+					return;
+				}
+				
+				if (!playerStats.containsKey(p.getName())) {
+					return;
+				}
+				PlayerStat stats = playerStats.get(p.getName());
+				stats.addDamageDealt(e.getFinalDamage());
 			}
 		}
 	}
