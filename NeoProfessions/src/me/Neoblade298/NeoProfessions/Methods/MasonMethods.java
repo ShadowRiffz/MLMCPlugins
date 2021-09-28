@@ -224,8 +224,8 @@ public class MasonMethods {
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 								if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
 										|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
-										|| !(slotType.equalsIgnoreCase("aattribute")
-												|| slotType.equalsIgnoreCase("wattribute"))) {
+										|| (!slotType.equalsIgnoreCase("aattribute")
+												&& !slotType.equalsIgnoreCase("wattribute"))) {
 									if (econ.has(p, gold)) {
 										boolean success = false;
 										switch (slotType) {

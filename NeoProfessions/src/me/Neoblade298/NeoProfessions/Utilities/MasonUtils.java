@@ -437,8 +437,6 @@ public class MasonUtils {
 		String charmLine = item.getItemMeta().getLore().get(0);
 		if (line.contains("max durability")) {
 			return "durability";
-		} else if (charmLine.contains("Overloaded")) {
-			return "overload";
 		} else if (line.contains("Increases weapon")) {
 			return "wattribute";
 		} else if (line.contains("Increases armor")) {
