@@ -15,7 +15,7 @@ public class ClassExperience extends CustomReward {
 	public ClassExperience() {
 		this.setName("Class Exp Reward");
 		this.setAuthor("Neoblade298");
-		this.setRewardName("Class Exp");
+		this.setDisplay("Class Exp");
 		this.addStringPrompt("Experience", "How much experience to give", 50);
 	}
 
