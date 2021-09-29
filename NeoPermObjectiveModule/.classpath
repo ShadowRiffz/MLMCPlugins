@@ -7,7 +7,7 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="src/Citizens-2.0.24-b1628.jar"/>
-	<classpathentry kind="lib" path="src/spigot-api-1.12.2-R0.1-SNAPSHOT-shaded.jar"/>
-	<classpathentry kind="lib" path="src/Quests-3.7.4.jar"/>
+	<classpathentry kind="lib" path="src/quests-main-4.0.6.jar"/>
+	<classpathentry kind="lib" path="src/spigot-api-1.17.1-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
