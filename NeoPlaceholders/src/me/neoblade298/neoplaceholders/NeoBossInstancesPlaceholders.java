@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.sucy.skill.api.util.FlagManager;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neobossinstances.Main;
 
 public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	private me.neoblade298.neobossinstances.Main plugin;
@@ -21,8 +23,9 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	plugin = (me.neoblade298.neobossinstances.Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoBossInstances");
     	if (plugin == null) return false;
+    	this.plugin = (Main) plugin;
     	return super.register();
     }
 
