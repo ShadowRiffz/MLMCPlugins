@@ -65,14 +65,11 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			String display = plugin.getBossName(boss, p);
 			int time = plugin.getBossCooldown(boss, p);
 			if (display == null) return "§c???";
-			else if (time == 0) return display + "§7: " + "§aReady!";
+			else if (time <= 0) return display + "§7: " + "§aReady!";
 			else if (time > 0) {
 				int minutes = time / 60;
 				int seconds = time % 60;
 				return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
-			}
-			else if (time < 0) {
-				return display + "§7: " + "§aReady!";
 			}
 		}
 		// %bosses_partyhealth_1-5%
