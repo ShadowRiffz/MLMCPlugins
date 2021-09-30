@@ -22,7 +22,7 @@ import me.blackvein.quests.events.quester.QuesterPostCompleteQuestEvent;
 import me.blackvein.quests.events.quester.QuesterPostStartQuestEvent;
 
 public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener {
-	1vate Quests quests;
+	private Quests quests;
 	private GPSAPI gps;
 	public HashMap<String, HashMap<Integer, String>> gpsPoints;
 	
