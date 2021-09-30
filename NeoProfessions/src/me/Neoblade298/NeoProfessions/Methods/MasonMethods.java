@@ -222,23 +222,26 @@ public class MasonMethods {
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)
 									|| (itemToSlot.getType().equals(Material.QUARTZ))
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
-								if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
-										|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
-										|| (!slotType.equalsIgnoreCase("aattribute")
-												&& !slotType.equalsIgnoreCase("wattribute"))) {
+								if ((util.isArmor(itemWithSlot) && slotType.contains("armor"))
+										|| (util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
+										|| (!slotType.contains("armor")
+												&& !slotType.contains("weapon"))) {
 									if (econ.has(p, gold)) {
 										boolean success = false;
 										switch (slotType) {
 										case "durability":
 											success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
 											break;
-										case "wattribute":
+										case "weaponattribute":
 											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 											break;
-										case "aattribute":
+										case "armorattribute":
 											success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 											break;
-										case "overload":
+										case "weaponoverload":
+											success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+											break;
+										case "armoroverload":
 											success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 											break;
 										case "charm":

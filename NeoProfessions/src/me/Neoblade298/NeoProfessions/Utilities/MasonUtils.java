@@ -438,9 +438,15 @@ public class MasonUtils {
 		if (line.contains("max durability")) {
 			return "durability";
 		} else if (line.contains("Increases weapon")) {
-			return "wattribute";
+			if (charmLine.contains("Overload")) {
+				return "weaponoverload";
+			}
+			return "weaponattribute";
 		} else if (line.contains("Increases armor")) {
-			return "aattribute";
+			if (charmLine.contains("Overload")) {
+				return "armoroverload";
+			}
+			return "armorattribute";
 		} else if (charmLine.contains("Charm")) {
 			return "charm";
 		} else if (charmLine.contains("Relic")) {

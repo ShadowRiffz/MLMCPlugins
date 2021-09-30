@@ -198,10 +198,10 @@ public class MasonListeners implements Listener {
 							|| (itemToSlot.getType().equals(Material.QUARTZ))
 									&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 						int level = util.getItemLevel(itemWithSlot);
-						if ((util.isArmor(itemWithSlot) && slotType.equalsIgnoreCase("aattribute"))
-								|| (util.isWeapon(itemWithSlot) && slotType.equalsIgnoreCase("wattribute"))
-								|| (!slotType.equalsIgnoreCase("aattribute")
-										&& !slotType.equalsIgnoreCase("wattribute"))) {
+						if ((util.isArmor(itemWithSlot) && slotType.contains("armor"))
+								|| (util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
+								|| (!slotType.contains("armor")
+										&& !slotType.contains("weapon"))) {
 							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {
 								if (econ.has(p, SLOT_GOLD)) {
 									boolean success = false;
@@ -209,13 +209,16 @@ public class MasonListeners implements Listener {
 									case "durability":
 										success = masonUtils.parseDurability(itemWithSlot, itemToSlot, slot);
 										break;
-									case "wattribute":
+									case "weaponattribute":
 										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 										break;
-									case "aattribute":
+									case "armorattribute":
 										success = masonUtils.parseAttribute(itemWithSlot, itemToSlot, slot);
 										break;
-									case "overload":
+									case "weaponoverload":
+										success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
+										break;
+									case "armoroverload":
 										success = masonUtils.parseOverload(itemWithSlot, itemToSlot, slot);
 										break;
 									case "charm":
