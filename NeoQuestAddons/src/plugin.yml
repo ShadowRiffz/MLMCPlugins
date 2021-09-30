@@ -1,0 +1,13 @@
+name: NeoQuestAddons
+main: me.neoblade298.neoquestaddons.QuestAddons
+author: [Neoblade298]
+depend: [Quests]
+version: 1.0
+api-version: 1.16
+commands:
+   quitquest:
+      description: Quits the quest you're on
+      usage: /quitquest
+   viewquest:
+      description: Views the objectives of the quest someone's on
+      usage: /viewquest [player]
