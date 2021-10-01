@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -225,7 +226,13 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			this.playerCooldowns.put(p.getUniqueId(), Long.valueOf(System.currentTimeMillis()));
 			p.sendMessage(food.getName() + " §7was eaten");
 		}
-		p.setFoodLevel(Math.min(20, p.getFoodLevel() + food.getHunger()));
+		int foodLevel = Math.min(20, p.getFoodLevel() + food.getHunger());
+		FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, 0);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) {
+			return;
+		}
+		p.setFoodLevel(foodLevel);
 		p.setSaturation((float) Math.min(p.getFoodLevel(), food.getSaturation() + p.getSaturation()));
 		for (PotionEffect effect : food.getEffect()) {
 			p.addPotionEffect(effect);
