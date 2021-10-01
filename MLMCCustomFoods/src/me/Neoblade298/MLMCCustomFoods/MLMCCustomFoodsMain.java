@@ -227,7 +227,7 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			p.sendMessage(food.getName() + " §7was eaten");
 		}
 		int foodLevel = Math.min(20, p.getFoodLevel() + food.getHunger());
-		FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, 0);
+		FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) {
 			return;
