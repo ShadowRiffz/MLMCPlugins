@@ -1,10 +1,10 @@
 package me.neoblade298.neosapiaddons;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,15 +34,13 @@ import me.neoblade298.neosapiaddons.mechanics.ValueSkillLevelMechanic;
 
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
-	HashMap<Player, Player> ironbond;
 	public void onEnable() {
 		super.onEnable();
 		Bukkit.getServer().getLogger().info("NeoSAPIAddons Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(new HungerController(this), this);
 
 		getCommand("neosapiaddons").setExecutor(new Commands());
-		
-		ironbond = new HashMap<Player, Player>();
 	}
 
 	public void onDisable() {
@@ -126,5 +124,10 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new ManaNameCondition(),
             new BlockingCondition()
         );
+    }
+    
+    public boolean isQuestWorld(World w) {
+    	String name = w.getName();
+    	return name.equalsIgnoreCase("Argyll") || name.equalsIgnoreCase("Dev") || name.equalsIgnoreCase("ClassPVP");
     }
 }
