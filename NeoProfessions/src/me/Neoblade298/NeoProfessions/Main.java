@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -168,7 +169,17 @@ public class Main extends JavaPlugin implements Listener {
 									}
 								}
 								if (charmLine != null) {
-									p.setFoodLevel(19);
+									if (p.getFoodLevel() != 19) {
+										FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, 19);
+										Bukkit.getPluginManager().callEvent(event);
+										
+										// Override event cancellation if we're decreasing hunger so that
+										// it's not cancelled by NeoSAPIAddons
+										if (event.isCancelled() && p.getFoodLevel() <= 19) {
+											return;
+										}
+										p.setFoodLevel(19);
+									}
 								}
 							}
 						}
