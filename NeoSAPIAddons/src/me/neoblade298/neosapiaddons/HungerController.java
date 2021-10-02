@@ -72,6 +72,9 @@ public class HungerController implements Listener {
 			else {
 				if (hunger.containsKey(p)) {
 					int oldHunger = hunger.get(p);
+					if (e.getFoodLevel() == 20) {
+						hunger.put(p, 20 * FOOD_SCALE);
+					}
 					hunger.put(p, oldHunger + ((newFoodLevel - p.getFoodLevel()) * FOOD_SCALE));
 				}
 				else {
