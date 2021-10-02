@@ -685,6 +685,9 @@ public class Main extends JavaPlugin implements Listener {
 			ActiveMob am = api.getMythicMobInstance(e.getDamager());
 			if (am.getOwner().isPresent()) {
 				Player p = Bukkit.getPlayer(am.getOwner().get());
+				if (p == null) {
+					return;
+				}
 
 				if (spectatorAcc.containsKey(p.getUniqueId())) {
 					e.setCancelled(true);
