@@ -50,7 +50,7 @@ public class HungerController implements Listener {
 				}
 			}
 		};
-		foodTimer.runTaskTimerAsynchronously(main, 0, 20);
+		foodTimer.runTaskTimer(main, 0, 20);
 	}
 
 	@EventHandler
