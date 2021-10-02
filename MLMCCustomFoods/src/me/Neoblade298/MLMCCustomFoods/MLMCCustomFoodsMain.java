@@ -114,10 +114,10 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 				ItemStack invItem = contents[i];
 				if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 					ItemMeta invMeta = invItem.getItemMeta();
-					for (String name : this.foods.keySet()) {
-						food = (Food) this.foods.get(name);
-						if (food.canEat(p)) {
-							if (name.equalsIgnoreCase(invMeta.getDisplayName())) {
+					for (Food f : this.foods.values()) {
+						if (f.canEat(p)) {
+							if (f.getName().equalsIgnoreCase(invMeta.getDisplayName())) {
+								food = f;
 								item = invItem;
 								meta = invItem.getItemMeta();
 								break;
@@ -187,6 +187,16 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 			p.sendMessage(message);
 			return;
 		}
+		
+		// Food event only happens if hunger is changing
+		int foodLevel = Math.min(20, p.getFoodLevel() + food.getHunger());
+		if (food.getHunger() > 0) {
+			FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
+			Bukkit.getPluginManager().callEvent(event);
+			if (event.isCancelled()) {
+				return;
+			}
+		}
 
 		// Food can be eaten
 		boolean isGarnished = false, isSpiced = false;
@@ -225,12 +235,6 @@ public class MLMCCustomFoodsMain extends JavaPlugin implements Listener {
 		if (!food.getName().contains("Chest")) {
 			this.playerCooldowns.put(p.getUniqueId(), Long.valueOf(System.currentTimeMillis()));
 			p.sendMessage(food.getName() + " §7was eaten");
-		}
-		int foodLevel = Math.min(20, p.getFoodLevel() + food.getHunger());
-		FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
-		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled()) {
-			return;
 		}
 		p.setFoodLevel(foodLevel);
 		p.setSaturation((float) Math.min(p.getFoodLevel(), food.getSaturation() + p.getSaturation()));
