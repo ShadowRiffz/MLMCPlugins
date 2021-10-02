@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.rit.sucy.version.VersionManager;
 import com.sucy.skill.SkillAPI;
 
 public class Commands implements CommandExecutor {
@@ -20,7 +21,7 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (args.length == 1) {
 			if (Bukkit.getPlayer(args[0]) != null) {
-				main.sendPlayerCard((Player) sender, Bukkit.getPlayer(args[0]));
+				main.sendPlayerCard(sender, VersionManager.getOfflinePlayer(args[0], false));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("all")) {
