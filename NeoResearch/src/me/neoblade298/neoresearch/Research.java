@@ -531,6 +531,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
+			else {
+				String msg = display + " - §cResearch level too low!";
+				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
+			}
 		}
 	}
 	
