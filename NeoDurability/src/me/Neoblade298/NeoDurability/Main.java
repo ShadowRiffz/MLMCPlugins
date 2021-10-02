@@ -276,7 +276,7 @@ public class Main extends JavaPlugin implements Listener {
 					double dM = Integer.parseInt(numbers[1].trim());
 					
 					if (d == 25 && player.hasPermission("donator.warndurability")) {
-						player.sendMessage("&4[&c&lMLMC&4] §4WARNING: Your item, " + item.getItemMeta().getDisplayName() + "§4, is at 25 durability!");
+						player.sendMessage("§4[§c§lMLMC§4] §4WARNING: Your item, " + item.getItemMeta().getDisplayName() + "§4, is at 25 durability!");
 					}
 
 					d -= 1;
