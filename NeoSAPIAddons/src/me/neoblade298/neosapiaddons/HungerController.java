@@ -2,6 +2,8 @@ package me.neoblade298.neosapiaddons;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +33,15 @@ public class HungerController implements Listener {
 					if (hunger.containsKey(p)) {
 						int pHunger = hunger.get(p);
 						if (pHunger % FOOD_SCALE == 0) {
+							FoodLevelChangeEvent e = new FoodLevelChangeEvent(p, pHunger / FOOD_SCALE);
+							Bukkit.getPluginManager().callEvent(e);
+							if (e.isCancelled()) {
+								return;
+							}
 							p.setFoodLevel(pHunger / FOOD_SCALE);
 						}
+						
+						// Only happens if event is not cancelled
 						hunger.put(p, hunger.get(p) - 1);
 					}
 					else {
@@ -50,8 +59,15 @@ public class HungerController implements Listener {
 		int newFoodLevel = Math.min(20, e.getFoodLevel());
 		if (main.isQuestWorld(p.getWorld())) {
 			if (newFoodLevel < p.getFoodLevel()) {
-				e.setCancelled(true);
-				return;
+				if (hunger.containsKey(p)) {
+					if (hunger.get(p) / FOOD_SCALE != e.getFoodLevel()) {
+						
+						// Only allow decreased hunger if it roughly matches the hunger scale
+						// (When this plugin calls it, hunger % FOOD_SCALE = 1 actually)
+						e.setCancelled(true);
+						return;
+					}
+				}
 			}
 			else {
 				if (hunger.containsKey(p)) {
