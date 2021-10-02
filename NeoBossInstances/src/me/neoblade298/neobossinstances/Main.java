@@ -634,7 +634,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void onPlayerDamage(EntityDamageByEntityEvent e) {
 		// For now, this only matters in instances
 		if (!isInstance) {
@@ -704,7 +704,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void onSkillHeal(SkillHealEvent e) {
 		if (!isInstance) {
 			return;
