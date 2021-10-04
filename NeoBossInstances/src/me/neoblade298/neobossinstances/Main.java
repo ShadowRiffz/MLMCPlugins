@@ -633,9 +633,27 @@ public class Main extends JavaPlugin implements Listener {
 			dropCooldown.put(p, System.currentTimeMillis());
 		}
 	}
+
+	@EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
+	public void multiplyMobDamage(EntityDamageByEntityEvent e) {
+		// For now, this only matters in instances
+		if (!isInstance) {
+			return;
+		}
+		BukkitAPIHelper api = MythicMobs.inst().getAPIHelper();
+		
+		System.out.println(e.getEntity().getName() + " damaged " + api.isMythicMob(e.getDamager()) + " " + (e.getEntity() instanceof Player));
+		// If a mob is damaging a player
+		if (api.isMythicMob(e.getDamager()) && e.getEntity() instanceof Player) {
+			ActiveMob am = api.getMythicMobInstance(e.getDamager());
+			System.out.println("Damage was " + e.getDamage());
+			e.setDamage(e.getDamage() * (1 + (0.05 * (am.getLevel() - 1))));
+			System.out.println("Damage is " + e.getDamage());
+		}
+	}
 	
-	@EventHandler(ignoreCancelled=true)
-	public void onPlayerDamage(EntityDamageByEntityEvent e) {
+	@EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
+	public void monitorPlayerDamage(EntityDamageByEntityEvent e) {
 		// For now, this only matters in instances
 		if (!isInstance) {
 			return;
@@ -706,8 +724,8 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
-	@EventHandler(ignoreCancelled=true)
+
+	@EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
 	public void onSkillHeal(SkillHealEvent e) {
 		if (!isInstance) {
 			return;

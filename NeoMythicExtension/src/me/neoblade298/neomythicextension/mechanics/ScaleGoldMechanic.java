@@ -10,14 +10,14 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import me.neoblade298.neobossinstances.Main;
 
-public class RandomizeGoldMechanic extends SkillMechanic implements INoTargetSkill {
+public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
 	
 	protected final int min;
 	protected final int max;
 	protected final String boss;
 	protected final Main nbi;
 
-	public RandomizeGoldMechanic(MythicLineConfig config) {
+	public ScaleGoldMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
@@ -29,11 +29,14 @@ public class RandomizeGoldMechanic extends SkillMechanic implements INoTargetSki
 	}
 
 	@Override
-	public boolean cast(SkillMetadata arg0) {
+	public boolean cast(SkillMetadata data) {
+		double scale = 1 + (0.05 * (data.getCaster().getLevel() - 1));
+		double scaledMin = this.min * scale;
+		double scaledMax = this.max * scale;
 		ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
 
 		// Get gold min and max for party size, generate gold
-		double gold = Math.random() * (max - min) + min;
+		double gold = Math.random() * (scaledMax - scaledMin) + scaledMin;
 		gold = Math.round(gold / 25.0D) * 25L;
 		
 		// Give gold to each player

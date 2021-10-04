@@ -26,13 +26,15 @@ import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModManaMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
 import me.neoblade298.neomythicextension.mechanics.ModScore;
-import me.neoblade298.neomythicextension.mechanics.RandomizeGoldMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleGoldMechanic;
 import me.neoblade298.neomythicextension.mechanics.ReduceThreatMechanic;
 import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchKillsMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchPointsChanceMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchPointsMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleHealthMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleExpMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleHealMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleLevelMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
@@ -164,13 +166,13 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(mechanic);
 		}
 
-		else if (event.getMechanicName().equalsIgnoreCase("scalehealth")) {
-			ScaleHealthMechanic mechanic = new ScaleHealthMechanic(event.getConfig());
+		else if (event.getMechanicName().equalsIgnoreCase("scalelevel")) {
+			ScaleLevelMechanic mechanic = new ScaleLevelMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
-		else if (event.getMechanicName().equalsIgnoreCase("randomizegold")) {
-			RandomizeGoldMechanic mechanic = new RandomizeGoldMechanic(event.getConfig());
+		else if (event.getMechanicName().equalsIgnoreCase("scalegold")) {
+			ScaleGoldMechanic mechanic = new ScaleGoldMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
@@ -191,6 +193,16 @@ public class Main extends JavaPlugin implements Listener {
 
 		else if (event.getMechanicName().equalsIgnoreCase("modmana")) {
 			ModManaMechanic mechanic = new ModManaMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		else if (event.getMechanicName().equalsIgnoreCase("scaleheal")) {
+			ScaleHealMechanic mechanic = new ScaleHealMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
+		else if (event.getMechanicName().equalsIgnoreCase("scaleexp")) {
+			ScaleExpMechanic mechanic = new ScaleExpMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 	}

@@ -11,12 +11,12 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import me.neoblade298.neobossinstances.Main;
 
-public class ScaleHealthMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ScaleLevelMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	protected final String boss;
 	protected HashMap<Integer, Double> scale;
 	protected Main nbi;
 
-	public ScaleHealthMechanic(MythicLineConfig config) {
+	public ScaleLevelMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
