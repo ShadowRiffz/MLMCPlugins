@@ -227,7 +227,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
-	public void on(PlayerJoinEvent e) {
+	public void onJoin(PlayerJoinEvent e) {
 		// If instance, check where to send a player
 		if (isInstance) {
 			Player p = e.getPlayer();

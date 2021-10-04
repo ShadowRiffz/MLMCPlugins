@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.UUID;
@@ -295,6 +296,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss addtoboss [player] [boss] §7- Add player to active fight");
 				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
 				sender.sendMessage(
@@ -307,6 +309,37 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
 			sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
 			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+			return true;
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("addtoboss")) {
+			String boss = args[2];
+			Player p = Bukkit.getPlayer(args[1]);
+			if (!main.activeFights.containsKey(args[2])) {
+				ArrayList<Player> activeFightsPlayers = new ArrayList<Player>();
+				ArrayList<Player> inBossPlayers = new ArrayList<Player>();
+				activeFightsPlayers.add(p);
+				inBossPlayers.add(p);
+				main.activeFights.put(boss, activeFightsPlayers);
+				main.inBoss.put(boss, inBossPlayers);
+			}
+			else {
+				main.activeFights.get(boss).add(p);
+				main.inBoss.get(boss).add(p);
+			}
+			main.fightingBoss.put(p.getUniqueId(), boss);
+			
+			// Recalculate everyone's health bars every time someone joins
+			for (Player partyMember : main.activeFights.get(boss)) {
+				ArrayList<String> healthList = new ArrayList<String>();
+				main.healthbars.put(partyMember.getName(), healthList);
+				for (Player bossFighter : main.activeFights.get(boss)) {
+					if (!bossFighter.equals(partyMember)) {
+						healthList.add(bossFighter.getName());
+					}
+				}
+				Collections.sort(healthList);
+			}
+			sender.sendMessage("§4[§c§lBosses§4] §7Added §e" + p.getName() + "§7!");
 			return true;
 		}
 		else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
