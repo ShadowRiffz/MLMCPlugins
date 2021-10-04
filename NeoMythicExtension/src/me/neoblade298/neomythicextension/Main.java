@@ -34,7 +34,7 @@ import me.neoblade298.neomythicextension.mechanics.ResearchPointsChanceMechanic;
 import me.neoblade298.neomythicextension.mechanics.ResearchPointsMechanic;
 import me.neoblade298.neomythicextension.mechanics.ScaleExpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ScaleHealMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleLevelMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleToLevelMechanic;
 import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
 import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
@@ -166,8 +166,8 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(mechanic);
 		}
 
-		else if (event.getMechanicName().equalsIgnoreCase("scalelevel")) {
-			ScaleLevelMechanic mechanic = new ScaleLevelMechanic(event.getConfig());
+		else if (event.getMechanicName().equalsIgnoreCase("scaletolevel")) {
+			ScaleToLevelMechanic mechanic = new ScaleToLevelMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 

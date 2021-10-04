@@ -11,26 +11,22 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import me.neoblade298.neobossinstances.Main;
 
-public class ScaleLevelMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	protected final String boss;
-	protected HashMap<Integer, Double> scale;
+	protected final double exlevel, exhealth, xlevel, xhealth;
 	protected Main nbi;
 
-	public ScaleLevelMechanic(MythicLineConfig config) {
+	public ScaleToLevelMechanic(MythicLineConfig config) {
 		super(config.getLine(), config);
         this.setAsyncSafe(false);
         this.setTargetsCreativePlayers(false);
         this.nbi = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoBossInstances");
         
         this.boss = config.getString("boss", "Ratface");
-        this.scale = new HashMap<Integer, Double>();
-        this.scale.put(0, 1.0);
-        this.scale.put(1, config.getDouble("1", 0.8));
-        this.scale.put(2, config.getDouble("2", 1.2));
-        this.scale.put(3, config.getDouble("3", 1.4));
-        this.scale.put(4, config.getDouble("4", 1.55));
-        this.scale.put(5, config.getDouble("5", 1.7));
-        this.scale.put(6, config.getDouble("6", 1.8));
+        this.xlevel = config.getDouble("xlevel", -1);
+        this.xhealth = config.getDouble("xhealth", -1);
+        this.exlevel = config.getDouble("exlevel", -1);
+        this.exhealth = config.getDouble("exhealth", -1);
 	}
 	
 	@Override
@@ -41,9 +37,24 @@ public class ScaleLevelMechanic extends SkillMechanic implements ITargetedEntity
 	    	// Make sure target is a MythicMob
 	    	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
 	    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
+	    		if (am.getLevel() < numPlayers) {
+	    			am.setLevel(numPlayers);
+	    		}
+	    		
+	    		// Check if the boss is x or ex
 	    		AbstractEntity ent = am.getEntity();
-	    		ent.setMaxHealth(ent.getMaxHealth() * this.scale.get(numPlayers));
-	    		ent.setHealth(ent.getMaxHealth());
+	    		if (exlevel != -1 && am.getLevel() >= exlevel) {
+		    		ent.setMaxHealth(this.exhealth * (am.getLevel() / this.exlevel));
+		    		ent.setHealth(ent.getMaxHealth());
+	    		}
+	    		else if (xlevel != -1 && am.getLevel() >= xlevel) {
+		    		ent.setMaxHealth(this.xhealth * (am.getLevel() / this.xlevel));
+		    		ent.setHealth(ent.getMaxHealth());
+	    		}
+	    		else {
+		    		ent.setMaxHealth(ent.getMaxHealth() * am.getLevel());
+		    		ent.setHealth(ent.getMaxHealth());
+	    		}
 	    	}
 		}
     	return true;
