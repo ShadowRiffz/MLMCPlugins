@@ -4,7 +4,7 @@ main: me.neoblade298.neobossinstances.Main
 api-version: 1.16
 version: 1.0
 depend: [SkillAPI, LuckPerms]
-softdepend: [Multiverse-Core]
+softdepend: [Multiverse-Core, MythicMobs]
 commands:
   boss:
     description: Does its job
