@@ -311,7 +311,7 @@ public class Commands implements CommandExecutor {
 			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 			return true;
 		}
-		else if (args.length == 2 && args[0].equalsIgnoreCase("addtoboss")) {
+		else if (args.length == 3 && args[0].equalsIgnoreCase("addtoboss")) {
 			String boss = args[2];
 			Player p = Bukkit.getPlayer(args[1]);
 			if (!main.activeFights.containsKey(args[2])) {
