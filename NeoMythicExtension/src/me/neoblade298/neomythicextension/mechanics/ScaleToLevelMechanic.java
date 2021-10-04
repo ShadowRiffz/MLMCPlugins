@@ -50,10 +50,8 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 		    		ent.setHealth(ent.getMaxHealth());
 	    		}
 	    		else {
-	    			System.out.println(ent.getMaxHealth());
 		    		ent.setMaxHealth(ent.getMaxHealth() * am.getLevel());
 		    		ent.setHealth(ent.getMaxHealth());
-	    			System.out.println(ent.getMaxHealth());
 	    		}
 	    	}
 		}
