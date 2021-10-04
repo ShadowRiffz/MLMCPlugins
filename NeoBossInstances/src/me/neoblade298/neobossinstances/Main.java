@@ -645,7 +645,7 @@ public class Main extends JavaPlugin implements Listener {
 		// If a mob is damaging a player
 		if (api.isMythicMob(e.getDamager()) && e.getEntity() instanceof Player) {
 			ActiveMob am = api.getMythicMobInstance(e.getDamager());
-			e.setDamage(e.getDamage() * (1 + (0.06 * (am.getLevel() - 1))));
+			e.setDamage(e.getDamage() * (1 + (0.1 * (am.getLevel() - 1))));
 		}
 	}
 	
