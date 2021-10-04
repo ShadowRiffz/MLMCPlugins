@@ -642,13 +642,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		BukkitAPIHelper api = MythicMobs.inst().getAPIHelper();
 		
-		System.out.println(e.getEntity().getName() + " damaged " + api.isMythicMob(e.getDamager()) + " " + (e.getEntity() instanceof Player));
 		// If a mob is damaging a player
 		if (api.isMythicMob(e.getDamager()) && e.getEntity() instanceof Player) {
 			ActiveMob am = api.getMythicMobInstance(e.getDamager());
-			System.out.println("Damage was " + e.getDamage());
 			e.setDamage(e.getDamage() * (1 + (0.05 * (am.getLevel() - 1))));
-			System.out.println("Damage is " + e.getDamage());
 		}
 	}
 	
