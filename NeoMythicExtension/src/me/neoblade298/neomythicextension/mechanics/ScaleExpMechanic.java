@@ -27,7 +27,8 @@ public class ScaleExpMechanic extends SkillMechanic implements ITargetedEntitySk
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
 			Player p = (Player) target.getBukkitEntity();
-			SkillAPI.getPlayerData(p).giveExp(this.amount * (1 + (0.05 * (data.getCaster().getLevel() - 1))), ExpSource.MOB);
+			double exp = Math.round(this.amount * (1 + (0.05 * (data.getCaster().getLevel() - 1))));
+			SkillAPI.getPlayerData(p).giveExp(exp, ExpSource.MOB);
 			return true;
 		}
 		return false;
