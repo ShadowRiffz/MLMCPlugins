@@ -1,7 +1,5 @@
 package me.neoblade298.neomythicextension.mechanics;
 
-import java.util.HashMap;
-
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -52,8 +50,10 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 		    		ent.setHealth(ent.getMaxHealth());
 	    		}
 	    		else {
+	    			System.out.println(ent.getMaxHealth());
 		    		ent.setMaxHealth(ent.getMaxHealth() * am.getLevel());
 		    		ent.setHealth(ent.getMaxHealth());
+	    			System.out.println(ent.getMaxHealth());
 	    		}
 	    	}
 		}
