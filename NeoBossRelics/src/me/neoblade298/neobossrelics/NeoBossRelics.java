@@ -3,6 +3,7 @@ package me.neoblade298.neobossrelics;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -29,6 +30,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	public HashMap<String, Set> sets;
 	public HashMap<UUID, PlayerSet> playersets;
 	private ArrayList<String> enabledWorlds;
+	private HashSet<Player> disableRecalculate;
 	private File file;
 	public boolean debug;
 	
@@ -42,6 +44,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 			saveResource("config.yml", false);
 		}
 	    sets = new HashMap<String, Set>();
+	    disableRecalculate = new HashSet<Player>();
 	    playersets = new HashMap<UUID, PlayerSet>();
 	    enabledWorlds = new ArrayList<String>();
 	    loadConfig();
@@ -55,6 +58,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	public void loadConfig() {
 		// Load sets
 		sets.clear();
+		disableRecalculate.clear();
 		YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
 		
 		ConfigurationSection setSection = conf.getConfigurationSection("sets");
@@ -90,7 +94,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
-		
+
 		recalculateSetEffect(p);
 	}
 	
@@ -109,6 +113,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
+		disableRecalculate.add(p);
 		UUID uuid = p.getUniqueId();
 		this.playersets.remove(uuid);
 	}
@@ -116,10 +121,9 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	@EventHandler
 	public void onKicked(PlayerKickEvent e) {
 		Player p = e.getPlayer();
+		disableRecalculate.add(p);
 		UUID uuid = p.getUniqueId();
-		if (this.playersets.containsKey(uuid)) {
-			this.playersets.remove(uuid);
-		}
+		this.playersets.remove(uuid);
 	}
 	
 	@EventHandler
@@ -166,6 +170,10 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	// Used to calculate a set effect from scratch
 	private void recalculateSetEffect(Player p) {
 		if (!SkillAPI.isLoaded(p)) return;
+		
+		// InventoryCloseEvent happens after PlayerQuitEvent, so you have to
+		// briefly disable recalculation.
+		if (disableRecalculate.contains(p)) return;
 		ItemStack main = p.getInventory().getItemInMainHand();
 		ItemStack off = p.getInventory().getItemInOffHand();
 		ItemStack[] armor = p.getInventory().getArmorContents();
