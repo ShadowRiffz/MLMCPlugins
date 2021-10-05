@@ -36,7 +36,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			mobhealth.put(key, health);
 		}
 		
-		new MythicmobsPlaceholders(mobhealth);
+		new MythicmobsPlaceholders(mobhealth).register();
 		new SkillAPIPlaceholders(this).registerPlaceholders();
 		new EtcPlaceholders(this).registerPlaceholders();
 		new NeoprofessionsPlaceholders().register();
