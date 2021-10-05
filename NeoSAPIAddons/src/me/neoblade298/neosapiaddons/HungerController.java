@@ -19,7 +19,7 @@ public class HungerController implements Listener {
 	HashMap<Player, Integer> hunger;
 	
 	// How many seconds it takes for food to decrease by 1
-	final int FOOD_SCALE = 15;
+	final int FOOD_SCALE = 10;
 	
 	private Main main;
 	public HungerController(Main main) {
