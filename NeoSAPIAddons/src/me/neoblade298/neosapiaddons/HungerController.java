@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -98,7 +99,7 @@ public class HungerController implements Listener {
 	public void onSprint(PlayerToggleSprintEvent e) {
 		Player p = e.getPlayer();
 		if (main.isQuestWorld(p.getWorld())) {
-			if (e.isSprinting()) {
+			if (e.isSprinting() && p.getGameMode().equals(GameMode.SURVIVAL)) {
 				sprintingPlayers.add(p);
 			}
 			else {
