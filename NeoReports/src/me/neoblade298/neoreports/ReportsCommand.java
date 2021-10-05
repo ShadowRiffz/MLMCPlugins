@@ -49,11 +49,15 @@ public class ReportsCommand implements CommandExecutor {
 					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs;
-					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' AND is_resolved = 0;");
+					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' AND is_resolved = 0 ORDER BY id DESC;");
+					Stack<Report> reports = new Stack<Report>();
 					while(rs.next()) {
 						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-						temp.list(sender);
+						reports.push(temp);
+					}
+					while (!reports.isEmpty()) {
+						reports.pop().list(sender);
 					}
 					sender.sendMessage("§7=====");
 					con.close();
@@ -77,7 +81,7 @@ public class ReportsCommand implements CommandExecutor {
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 0 AND is_resolved = 0 ORDER BY id DESC;");
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 0 ORDER BY id DESC;");
 							int count = 1;
 							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
@@ -110,16 +114,20 @@ public class ReportsCommand implements CommandExecutor {
 							ResultSet rs;
 							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 0 AND is_resolved = 0 ORDER BY id DESC;");
 							int count = 1;
+							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(sender);
+									reports.push(temp);
 								}
 								count++;
 								if (count > NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
+							}
+							while (!reports.isEmpty()) {
+								reports.pop().list(sender);
 							}
 							sender.sendMessage("§7=====");
 							con.close();
@@ -139,16 +147,20 @@ public class ReportsCommand implements CommandExecutor {
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id;");
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id DESC;");
 							int count = 1;
+							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
 								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-								temp.list(sender);
+								reports.push(temp);
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE) {
 									break;
 								}
+							}
+							while (!reports.isEmpty()) {
+								reports.pop().list(sender);
 							}
 							sender.sendMessage("§7=====");
 							con.close();
@@ -166,18 +178,22 @@ public class ReportsCommand implements CommandExecutor {
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id;");
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0 ORDER BY id DESC;");
 							int count = 1;
+							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(sender);
+									reports.push(temp);
 								}
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
+							}
+							while (!reports.isEmpty()) {
+								reports.pop().list(sender);
 							}
 							sender.sendMessage("§7=====");
 							con.close();
@@ -197,16 +213,20 @@ public class ReportsCommand implements CommandExecutor {
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id;");
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id DESC;");
 							int count = 1;
+							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
 								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-								temp.list(sender);
+								reports.push(temp);
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE) {
 									break;
 								}
+							}
+							while (!reports.isEmpty()) {
+								reports.pop().list(sender);
 							}
 							sender.sendMessage("§7=====");
 							con.close();
@@ -224,18 +244,22 @@ public class ReportsCommand implements CommandExecutor {
 							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 							Statement stmt = con.createStatement();
 							ResultSet rs;
-							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id;");
+							rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE is_resolved = 1 ORDER BY id DESC;");
 							int count = 1;
+							Stack<Report> reports = new Stack<Report>();
 							while(rs.next()) {
 								if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
 									Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
 											rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-									temp.list(sender);
+									reports.push(temp);
 								}
 								count++;
 								if (count >= NUM_REPORTS_PER_PAGE * page) {
 									break;
 								}
+							}
+							while (!reports.isEmpty()) {
+								reports.pop().list(sender);
 							}
 							sender.sendMessage("§7=====");
 							con.close();
