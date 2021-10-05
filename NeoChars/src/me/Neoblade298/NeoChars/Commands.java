@@ -20,7 +20,7 @@ public class Commands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (args.length == 1) {
-			if (Bukkit.getPlayer(args[0]) != null) {
+			if (VersionManager.getOfflinePlayer(args[0], false) != null) {
 				main.sendPlayerCard(sender, VersionManager.getOfflinePlayer(args[0], false));
 				return true;
 			}
