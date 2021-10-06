@@ -80,7 +80,8 @@ public class CmdItems implements CommandExecutor{
 				if (args.length == 1) {
 					p.sendMessage("§c/nitem lore set # [lore]");
 					p.sendMessage("§c/nitem lore get #");
-					p.sendMessage("§c/nitem lore add[lore]");
+					p.sendMessage("§c/nitem lore add [lore]");
+					p.sendMessage("§c/nitem lore insert # [lore]");
 					p.sendMessage("§c/nitem lore rem #");
 				}
 				else {
@@ -119,12 +120,25 @@ public class CmdItems implements CommandExecutor{
 					}
 					else if (args[1].equalsIgnoreCase("add")) {
 						// Piece together the lore
+						String line = args[2];
+						for (int i = 3; i < args.length; i++) {
+							line += " " + args[i];
+						}
+						
+						lore.add(main.translateHexCodes(line));
+						meta.setLore(lore);
+						item.setItemMeta(meta);
+						p.sendMessage("§7Successfully added lore");
+					}
+					// nitem lore insert # [line]
+					else if (args[1].equalsIgnoreCase("insert")) {
+						// Piece together the lore
 						String line = args[3];
 						for (int i = 4; i < args.length; i++) {
 							line += " " + args[i];
 						}
 						
-						lore.add(main.translateHexCodes(line));
+						lore.add(Integer.parseInt(args[2]), main.translateHexCodes(line));
 						meta.setLore(lore);
 						item.setItemMeta(meta);
 						p.sendMessage("§7Successfully added lore");
