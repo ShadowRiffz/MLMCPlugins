@@ -98,6 +98,15 @@ public class OtherSkillAPIPlaceholders extends PlaceholderExpansion {
 			}
 			return "0";
 		}
+		else if (args[0].equalsIgnoreCase("warnings")) {
+			PlayerData data = SkillAPI.getPlayerData(p);
+			if (data != null) {
+				if (data.getAttributePoints() > 0) {
+					return "§cYou have " + data.getAttributePoints() + " unspent /attr!";
+				}
+			}
+			return "§8§m-|-------------|-";
+		}
 	 	return "Invalid placeholder";
 	}
 }
