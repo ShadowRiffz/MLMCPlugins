@@ -1,10 +1,13 @@
 package me.neoblade298.neoplaceholders;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.items.MythicItem;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class MythicmobsPlaceholders extends PlaceholderExpansion {
@@ -56,10 +59,25 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length != 1) return "Invalid placeholder";
-		if (health.containsKey(args[0])) {
-			return "" + health.get(args[0]);
+		if (args[0].equalsIgnoreCase("mhealth")) {
+			if (health.containsKey(args[1])) {
+				return "" + health.get(args[1]);
+			}
+			return "§cHealth not defined!";
 		}
-    	return "§cHealth not defined!";
+		else if (args[0].equalsIgnoreCase("itemlore")) {
+			Optional<MythicItem> item = MythicMobs.inst().getItemManager().getItem(args[1]);
+			if (item.isPresent() && item.get().getLore().size() > 0) {
+				String lore = item.get().getLore().get(0);
+				for (int i = 1; i < item.get().getLore().size(); i++) {
+					lore += "\n" + item.get().getLore().get(i);
+				}
+				return lore;
+			}
+			else {
+				return "§cLore not defined";
+			}
+		}
+    	return "§cInvalid placeholder!";
 	}
 }
