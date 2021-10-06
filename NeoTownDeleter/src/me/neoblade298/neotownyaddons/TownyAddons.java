@@ -1,4 +1,4 @@
-package me.neoblade298.neotowndeleter;
+package me.neoblade298.neotownyaddons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +12,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
-public class Main extends JavaPlugin implements org.bukkit.event.Listener {
+public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public List<Town> deletableTowns = new ArrayList<Town>();
 	public boolean debug = false;
 	
 	public void onEnable() {
-		Bukkit.getServer().getLogger().info("NeoTownDeleter Enabled");
+		Bukkit.getServer().getLogger().info("NeoTownyAddons Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 		
 	    // Get command listener
@@ -39,7 +40,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	public void onDisable() {
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter Disabled");
+	    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownyAddons Disabled");
 	    super.onDisable();
 	}
 	
@@ -157,7 +158,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			try {
 				town.getAccount().setBalance(0, "Town deleted");
 			} catch (EconomyException e) {
-				Bukkit.getServer().getLogger().info("NeoTownDeleter failed to remove town money");
+				Bukkit.getServer().getLogger().info("NeoTownyAddons failed to remove money from " + town.getName());
 				e.printStackTrace();
 			}
 			TownyAPI.getInstance().getDataSource().removeTown(town);
@@ -195,5 +196,15 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		};
 		msg.runTaskLater(this, 60L);
+	}
+	
+	@EventHandler
+	public void onTownCreate(NewTownEvent e) {
+		try {
+			e.getTown().getAccount().deposit(2500, "Starter money");
+		} catch (EconomyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

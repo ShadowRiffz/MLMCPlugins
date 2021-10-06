@@ -1,4 +1,4 @@
-package me.neoblade298.neotowndeleter;
+package me.neoblade298.neotownyaddons;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -13,9 +13,9 @@ import com.palmergames.bukkit.towny.object.Town;
 
 public class Commands implements CommandExecutor {
 	
-	Main main;
+	TownyAddons main;
 	
-	public Commands (Main main) {
+	public Commands (TownyAddons main) {
 		this.main = main;
 	}
 	

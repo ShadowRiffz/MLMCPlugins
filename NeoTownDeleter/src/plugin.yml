@@ -1,6 +1,6 @@
-name: NeoTownDeleter
+name: NeoTownyAddons
 author: Neoblade298
-main: me.neoblade298.neotowndeleter.Main
+main: me.neoblade298.neotownyaddons.TownyAddons
 depend: [Towny, Vault]
 version: 1.01
 api-version: 1.14
