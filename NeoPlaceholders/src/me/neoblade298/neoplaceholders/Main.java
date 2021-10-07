@@ -37,7 +37,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		
 		new MythicmobsPlaceholders(mobhealth).register();
-		new SkillAPIPlaceholders(this).registerPlaceholders();
+		new SkillAPIPlaceholders().register();
 		new EtcPlaceholders(this).registerPlaceholders();
 		new NeoprofessionsPlaceholders().register();
 		new NeoBossInstancesPlaceholders().register();
@@ -51,7 +51,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new MinibossPlaceholders().register();
 		new MinibossShortPlaceholders().register();
 		new ChatColorPlaceholders().register();
-		new OtherSkillAPIPlaceholders().register();
+		new SkillAPIPlaceholders().register();
 		new LordboardPlaceholders().register();
 	}
 
