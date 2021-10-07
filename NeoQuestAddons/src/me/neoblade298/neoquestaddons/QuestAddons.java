@@ -2,28 +2,16 @@ package me.neoblade298.neoquestaddons;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.live.bemmamin.gps.api.GPSAPI;
-
 import me.blackvein.quests.Quests;
-import me.blackvein.quests.Stage;
-import me.blackvein.quests.events.quest.QuestQuitEvent;
-import me.blackvein.quests.events.quester.QuesterPostChangeStageEvent;
-import me.blackvein.quests.events.quester.QuesterPostCompleteQuestEvent;
-import me.blackvein.quests.events.quester.QuesterPostStartQuestEvent;
 
 public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener {
 	private Quests quests;
-	private GPSAPI gps;
 	public HashMap<String, HashMap<Integer, String>> gpsPoints;
 	
 	public void onEnable() {
