@@ -1,0 +1,5 @@
+name: NeoSettings
+main: me.neoblade298.neosettings.NeoSettings
+author: [Neoblade298]
+version: 1.0
+api-version: 1.16
