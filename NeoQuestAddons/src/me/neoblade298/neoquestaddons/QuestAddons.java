@@ -35,15 +35,15 @@ public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener
 	    this.getCommand("quitquest").setExecutor(new CmdQuitQuest(this));
 	    this.getCommand("viewquest").setExecutor(new CmdViewQuest(this));
 	    quests = (Quests) Bukkit.getPluginManager().getPlugin("Quests");
-	    gps = new GPSAPI(this);
+	   //  gps = new GPSAPI(this);
 	}
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoQuestQuitter Disabled");
 	    for (Player p : Bukkit.getOnlinePlayers()) {
-	    	if (gps.gpsIsActive(p)) {
-	    		gps.stopGPS(p);
-	    	}
+	    	//if (gps.gpsIsActive(p)) {
+	    	//	gps.stopGPS(p);
+	    	//}
 	    }
 	    super.onDisable();
 	}
@@ -71,7 +71,8 @@ public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener
 			gpsPoints.put(quest, pointsInQuest);
 		}
 	}
-
+	
+	/*
     @EventHandler
     public void onQuitQuest(final QuestQuitEvent e) {
     	if (gps.gpsIsActive(e.getQuester().getPlayer())) {
@@ -128,4 +129,5 @@ public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener
 			}
 		}
     }
+    */
 }

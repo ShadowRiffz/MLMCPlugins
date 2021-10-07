@@ -1,7 +1,8 @@
 name: NeoQuestAddons
 main: me.neoblade298.neoquestaddons.QuestAddons
 author: [Neoblade298]
-depend: [Quests, GPS]
+depend: [Quests]
+softdepend: [GPS]
 version: 1.0
 api-version: 1.16
 commands:
