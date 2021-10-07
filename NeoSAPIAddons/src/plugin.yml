@@ -7,6 +7,6 @@
  softdepend: [MythicMobs]
  main: me.neoblade298.neosapiaddons.Main
  commands: 
-  neosapiaddons:
+  nsapi:
     description: Base command for usage
-    usage: /neosapiaddons [command] [player] [arg]
+    usage: /nsapi [command] [player] [arg]

@@ -12,6 +12,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
+	Main main;
+	public Commands(Main main) {
+		this.main = main;
+	}
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args.length == 0) {
@@ -30,6 +34,13 @@ public class Commands implements CommandExecutor {
 			}
 
 			else if (args[0].equalsIgnoreCase("skillup")) {
+				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
+				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
+				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");
+				return true;
+			}
+
+			else if (args[0].equalsIgnoreCase("debug")) {
 				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
 				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");

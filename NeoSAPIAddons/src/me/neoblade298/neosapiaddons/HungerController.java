@@ -106,5 +106,8 @@ public class HungerController implements Listener {
 				sprintingPlayers.remove(p);
 			}
 		}
+		else {
+			sprintingPlayers.remove(p);
+		}
 	}
 }

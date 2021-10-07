@@ -34,13 +34,15 @@ import me.neoblade298.neosapiaddons.mechanics.ValueSkillLevelMechanic;
 
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
+	private HungerController hc;
 	public void onEnable() {
 		super.onEnable();
+		hc = new HungerController(this);
 		Bukkit.getServer().getLogger().info("NeoSAPIAddons Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-		getServer().getPluginManager().registerEvents(new HungerController(this), this);
+		getServer().getPluginManager().registerEvents(hc, this);
 
-		getCommand("neosapiaddons").setExecutor(new Commands());
+		getCommand("nsapi").setExecutor(new Commands(this));
 	}
 
 	public void onDisable() {
