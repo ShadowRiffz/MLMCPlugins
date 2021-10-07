@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.blackvein.quests.Quests;
@@ -28,11 +27,11 @@ public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoQuestQuitter Disabled");
-	    for (Player p : Bukkit.getOnlinePlayers()) {
+	    //for (Player p : Bukkit.getOnlinePlayers()) {
 	    	//if (gps.gpsIsActive(p)) {
 	    	//	gps.stopGPS(p);
 	    	//}
-	    }
+	    //}
 	    super.onDisable();
 	}
 	
