@@ -30,15 +30,18 @@ public class Settings {
 			Bukkit.getLogger().log(Level.WARNING, "Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Key doesn't exist.");
 			return null;
 		}
-		if (values.containsKey(uuid)) {
-			HashMap<String, Object> pValues = values.get(uuid);
-			if (pValues.containsKey(key)) {
-				return pValues.get(key);
-			}
+		if (!values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
+			return defaults.get(key);
+		}
+		HashMap<String, Object> pValues = values.get(uuid);
+		if (pValues.containsKey(key)) {
+			return pValues.get(key);
 		}
 		return defaults.get(key);
 	}
 	
+	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
 	public void save(Connection con, Statement stmt, UUID uuid) {
 		if (values.containsKey(uuid)) {
 			HashMap<String, Object> pValues = values.get(uuid);
@@ -61,6 +64,7 @@ public class Settings {
 					e.printStackTrace();
 				}
 			}
+			values.remove(uuid);
 		}
 	}
 	
@@ -73,13 +77,25 @@ public class Settings {
 			while (rs.next()) {
 				String subsetting = rs.getString(3);
 				Object o = defaults.get(subsetting);
+				Object value = null;
 				if (o == null) {
 					Bukkit.getLogger().log(Level.WARNING, "Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
 					return;
 				}
 				else if (o instanceof String) {
-					rs.getString(4);
+					value = rs.getString(4);
 				}
+				else if (o instanceof Boolean) {
+					value = rs.getBoolean(4);
+				}
+				else if (o instanceof Integer) {
+					value = rs.getInt(4);
+				}
+				
+				if (value == null) {
+					Bukkit.getLogger().log(Level.WARNING, "Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
+				}
+				pSettings.put(subsetting, value);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -92,21 +108,49 @@ public class Settings {
 	}
 	
 	// Returns true if successful
-	public boolean changeSetting(String key, Object o, UUID uuid) {
+	public boolean changeSetting(String key, String v, UUID uuid) {
+		Object value = null;
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Key doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
 		}
-		if (defaults.get(key).getClass() != o.getClass()) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Class doesn't match.");
+		
+		// Try to change String o into the proper class
+		try {
+			if (defaults.get(key).getClass() == Boolean.class) {
+				value = Boolean.getBoolean(v);
+			}
+			else if (defaults.get(key).getClass() == String.class) {
+				value = v;
+			}
+			else if (defaults.get(key).getClass() == Integer.class) {
+				value = Integer.parseInt(v);
+			}
+		} catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Couldn't convert string to class.");
+			e.printStackTrace();
+			return false;
+		}
+		
+		if (values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			return false;
+		}
+		
+		values.get(uuid).put(key, value);
+		return true;
+	}
+	
+	public boolean resetSetting(String key, UUID uuid) {
+		if (!defaults.containsKey(key)) {
+			Bukkit.getLogger().log(Level.WARNING, "Failed to reset setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
 		}
 		if (values.containsKey(uuid)) {
 			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
-		
-		values.get(uuid).put(key, o);
+		values.get(uuid).remove(key);
 		return true;
 	}
 }

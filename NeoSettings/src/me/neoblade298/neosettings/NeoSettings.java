@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -69,6 +70,30 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		Settings newSettings = new Settings(key);
 		settings.put(key, newSettings);
 		return newSettings;
+	}
+	
+	public boolean changeSetting(String setting, String subsetting, String value, UUID uuid) {
+		if (this.settings.containsKey(setting)) {
+			return this.settings.get(setting).changeSetting(subsetting, value, uuid);
+		}
+		Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
+		return false;
+	}
+	
+	public boolean resetSetting(String setting, String subsetting, UUID uuid) {
+		if (this.settings.containsKey(setting)) {
+			return this.settings.get(setting).resetSetting(subsetting, uuid);
+		}
+		Bukkit.getLogger().log(Level.WARNING, "Failed to reset setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
+		return false;
+	}
+	
+	public Settings getSettings(String key) {
+		if (!settings.containsKey(key)) {
+			Bukkit.getLogger().log(Level.WARNING, "Failed to get setting of " + key + ". Setting doesn't exist.");
+			return null;
+		}
+		return settings.get(key);
 	}
 
 	@EventHandler
