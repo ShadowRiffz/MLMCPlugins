@@ -13,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
@@ -103,14 +103,14 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 
 	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
+	public void onJoin(PlayerJoinEvent e) {
 		BukkitRunnable load = new BukkitRunnable() {
 			public void run() {
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection con = DriverManager.getConnection(url, user, pass);
 					for (String key : settings.keySet()) {
-						settings.get(key).load(con, e.getUniqueId());
+						settings.get(key).load(con, e.getPlayer().getUniqueId());
 					}
 					con.close();
 				} catch (Exception e1) {

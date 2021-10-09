@@ -110,7 +110,7 @@ public class Main extends JavaPlugin implements Listener {
 		bossMultiplier.clear();
 		
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("BossMultipliers");
+		settings = nsettings.createSettings("BossMultipliers", this);
 		
 		
 		// See if this is an instance
@@ -182,7 +182,7 @@ public class Main extends JavaPlugin implements Listener {
 					cooldowns.put(boss, cds);
 					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
 					while (rs.next()) {
-						cds.put(rs.getString(1), rs.getLong(3));
+						cds.put(UUID.fromString(rs.getString(1)), rs.getLong(3));
 					}
 				}
 			}
@@ -206,8 +206,8 @@ public class Main extends JavaPlugin implements Listener {
 				// Then add the cooldowns from the ConcurrentHashMap into SQL
 				for (String boss : cooldowns.keySet()) {
 					int cooldown = bossInfo.get(boss).getCooldown();
-					ConcurrentHashMap<String, Long> lastFought = cooldowns.get(boss);
-					for (String uuid : lastFought.keySet()) {
+					ConcurrentHashMap<UUID, Long> lastFought = cooldowns.get(boss);
+					for (UUID uuid : lastFought.keySet()) {
 						// Only add to the cooldown list if it's still relevant
 						if ((System.currentTimeMillis() - lastFought.get(uuid)) < (cooldown * 1000)) {
 							stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + boss + "'," + lastFought.get(uuid) + ")");
@@ -515,8 +515,8 @@ public class Main extends JavaPlugin implements Listener {
 	public String getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
-			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
-				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
+			if (cooldowns.get(name).containsKey(p.getUniqueId())) {
+				long lastUse = cooldowns.get(name).get(p.getUniqueId());
 				long currTime = System.currentTimeMillis();
 				if (currTime < lastUse + cooldown) {
 					int time = (int) (((lastUse + cooldown) - currTime) / 1000);
@@ -544,8 +544,8 @@ public class Main extends JavaPlugin implements Listener {
 				return -2;
 			}
 			int cooldown = bossInfo.get(boss).getCooldown() * 1000;
-			if (cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
-				long lastUse = cooldowns.get(boss).get(p.getUniqueId().toString());
+			if (cooldowns.get(boss).containsKey(p.getUniqueId())) {
+				long lastUse = cooldowns.get(boss).get(p.getUniqueId());
 				long currTime = System.currentTimeMillis();
 				return (int) ((lastUse + cooldown - currTime) / 1000);
 			}

@@ -22,7 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Commands implements CommandExecutor {
@@ -55,10 +54,10 @@ public class Commands implements CommandExecutor {
 
 							if (main.isDebug) {
 								System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-										+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+										+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
 							}
 							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-									+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+									+ "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
 							con.close();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -99,7 +98,7 @@ public class Commands implements CommandExecutor {
 				if (!main.disableFights || (args.length == 5 && args[4].equalsIgnoreCase("force"))) {
 					Player p = Bukkit.getPlayer(args[1]);
 					SkillAPI.saveSingle(p);
-					String uuid = p.getUniqueId().toString();
+					UUID uuid = p.getUniqueId();
 					String boss = WordUtils.capitalize(args[2]);
 					String instance = WordUtils.capitalize(args[3]);
 					p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
@@ -110,7 +109,7 @@ public class Commands implements CommandExecutor {
 	
 						if (main.isDebug) {
 							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
-									+ boss + "','" + instance + "');");
+									+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 						}
 						stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
@@ -144,7 +143,7 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			// /boss send [player] [boss] [max] [radius]
-			else if (args.length == 3 && args[0].equalsIgnoreCase("send")) {
+			else if (args.length == 5 && args[0].equalsIgnoreCase("send")) {
 				String boss = args[2];
 				Player p = Bukkit.getPlayer(args[1]);
 				int max = Integer.parseInt(args[3]);
@@ -152,22 +151,27 @@ public class Commands implements CommandExecutor {
 				ArrayList<Entity> nearby = (ArrayList<Entity>) p.getNearbyEntities(radius, radius, radius);
 				ArrayList<Player> onCooldown = new ArrayList<Player>(); 
 				ArrayList<Player> targets = new ArrayList<Player>(); 
-				// Check for all cooldowns
+				targets.add(p);
+				// Add targets
 				for (Entity e : nearby) {
-					if (e instanceof Player) {
+					if (e instanceof Player && !e.getClass().getName().contains("PlayerNPC")) {
 						Player target = (Player) e;
 		    			targets.add(target);
-			    		if (main.cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
-				    		long lastUse = main.cooldowns.get(boss).get(p.getUniqueId().toString());
-				    		long currTime = System.currentTimeMillis();
-				    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
-				    		if (currTime < lastUse + cooldown) {
-				    			onCooldown.add(target);
-				    		}
-			    		}
 					}
 				}
 				
+				// Check cooldowns
+				for (Player target : targets) {
+		    		if (main.cooldowns.get(boss).containsKey(target.getUniqueId())) {
+			    		long lastUse = main.cooldowns.get(boss).get(target.getUniqueId());
+			    		long currTime = System.currentTimeMillis();
+			    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
+			    		if (currTime < lastUse + cooldown) {
+			    			onCooldown.add(target);
+			    		}
+		    		}
+				}
+	    		
 				if (targets.size() > max) {
 					for (Player target : targets) {
 						target.sendMessage("§4[§c§lMLMC§4] §cThere are too many players! Max is §e" + max + "§c, you have §e" + targets.size() + "§c.");
@@ -175,10 +179,10 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				
-				String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:\n";
+				String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:";
 				if (onCooldown.size() > 0) {
 					for (Player cd : onCooldown) {
-						msg += "§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
+						msg += "\n§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
 					}
 					for (Player target : targets) {
 						target.sendMessage(msg);
@@ -208,11 +212,11 @@ public class Commands implements CommandExecutor {
 
 						if (main.isDebug) {
 							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-									+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+									+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
 						}
 						// Add boss level here
 						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + target.getUniqueId() + "','" + boss
-								+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + ");");
+								+ "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -221,7 +225,7 @@ public class Commands implements CommandExecutor {
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
-						main.cooldowns.get(boss).put(uuid.toString(), System.currentTimeMillis());
+						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
 
 					BukkitRunnable teleport = new BukkitRunnable() {
@@ -229,9 +233,9 @@ public class Commands implements CommandExecutor {
 							if (main.mainSpawn.getWorld() == null) {
 								main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
 							}
-							p.teleport(main.mainSpawn);
+							target.teleport(main.mainSpawn);
 							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
-									.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+									.replaceAll("%player%", target.getName()).replaceAll("%instance%", instance));
 						}
 					};
 					teleport.runTaskLater(main, 60L);
@@ -289,9 +293,9 @@ public class Commands implements CommandExecutor {
 			// /boss resetcd player boss
 			else if (args.length == 3 && args[0].equalsIgnoreCase("resetcd") && !main.isInstance) {
 				if (main.cooldowns.get(WordUtils.capitalize(args[2]))
-						.containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
+						.containsKey(Bukkit.getPlayer(args[1]).getUniqueId())) {
 					main.cooldowns.get(WordUtils.capitalize(args[2]))
-							.remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
+							.remove(Bukkit.getPlayer(args[1]).getUniqueId());
 					sender.sendMessage("§4[§c§lBosses§4] §7Cleared cooldown!");
 				}
 				return true;
@@ -299,8 +303,8 @@ public class Commands implements CommandExecutor {
 			// /boss resetcds player
 			else if (args.length == 2 && args[0].equalsIgnoreCase("resetcds") && !main.isInstance) {
 				for (String boss : main.cooldowns.keySet()) {
-					if (main.cooldowns.get(boss).containsKey(Bukkit.getPlayer(args[1]).getUniqueId().toString())) {
-						main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId().toString());
+					if (main.cooldowns.get(boss).containsKey(Bukkit.getPlayer(args[1]).getUniqueId())) {
+						main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId());
 					}
 				}
 				sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns for player!");
