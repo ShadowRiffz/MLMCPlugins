@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -60,13 +61,14 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	private void loadBuiltinSettings() {
-		Settings testSettings = createSettings("Test");
+		Settings testSettings = createSettings("Test", this);
 		testSettings.addSetting("StringTest", "Default");
 		testSettings.addSetting("BooleanTest", false);
 		testSettings.addSetting("IntegerTest", 5);
 	}
 	
-	public Settings createSettings(String key) {
+	public Settings createSettings(String key, Plugin plugin) {
+		Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Created setting of " + key + " for plugin " + plugin.getName() + ".");
 		Settings newSettings = new Settings(key);
 		settings.put(key, newSettings);
 		return newSettings;

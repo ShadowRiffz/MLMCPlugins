@@ -61,8 +61,8 @@ public class Settings {
 						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
 						+ "','" + key + "','" + value + "');");
 					}
-					else if (value instanceof Double) {
-						stmt.addBatch("REPLACE INTO neosettings_integer VALUES ('" + uuid + "','" + this.getKey()
+					else if (value instanceof Integer) {
+						stmt.addBatch("REPLACE INTO neosettings_integers VALUES ('" + uuid + "','" + this.getKey()
 						+ "','" + key + "','" + value + "');");
 					}
 				} catch (Exception e) {
@@ -92,6 +92,22 @@ public class Settings {
 				}
 				else if (o instanceof Boolean) {
 					value = rs.getBoolean(4);
+				}
+				
+				if (value == null) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
+				}
+				pSettings.put(subsetting, value);
+			}
+			
+			rs = stmt.executeQuery("SELECT * FROM neosettings_integers WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			while (rs.next()) {
+				String subsetting = rs.getString(3);
+				Object o = defaults.get(subsetting);
+				Object value = null;
+				if (o == null) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
+					return;
 				}
 				else if (o instanceof Integer) {
 					value = rs.getInt(4);
