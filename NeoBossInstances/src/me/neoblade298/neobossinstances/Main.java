@@ -44,6 +44,8 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
+import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neosettings.objects.Settings;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -74,6 +76,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ArrayList<String> raidBossesFought = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
 	ArrayList<String> activeBosses = new ArrayList<String>();
+	public ConcurrentHashMap<String, Integer> bossMultiplier = new ConcurrentHashMap<String, Integer>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<Player>> inBoss = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossTimers = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
@@ -85,6 +88,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
 	public HashSet<String> joiningPlayers = new HashSet<String>();
 	public HashSet<String> leavingPlayers = new HashSet<String>();
+	public Settings settings;
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -93,6 +97,7 @@ public class Main extends JavaPlugin implements Listener {
 	    loadConfig();
 
 		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
+		
 	}
 	
 	public void loadConfig() {
@@ -102,6 +107,11 @@ public class Main extends JavaPlugin implements Listener {
 		activeBosses.clear();
 		activeFights.clear();
 		playerStats.clear();
+		bossMultiplier.clear();
+		
+		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		settings = nsettings.createSettings("BossMultipliers");
+		
 		
 		// See if this is an instance
 		File instanceFile = new File(getDataFolder(), "instance.yml");
@@ -136,6 +146,7 @@ public class Main extends JavaPlugin implements Listener {
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
+			settings.addSetting(boss, 1);
 
 			if (isRaid) {
 				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmobs);
@@ -245,10 +256,10 @@ public class Main extends JavaPlugin implements Listener {
 				ResultSet rs;
 			
 				// Check where the player should be, teleport them there
-				String boss;
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 				rs.next();
-				boss = rs.getString(2);
+				String boss = rs.getString(2);
+				int multiplier = rs.getInt(4);
 				if (boss == null) {
 					p.teleport(instanceSpawn);
 					return;
@@ -260,6 +271,7 @@ public class Main extends JavaPlugin implements Listener {
 				
 				// Set up databases
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
+				bossMultiplier.put(boss, multiplier);
 				if (!activeFights.containsKey(boss)) {
 					ArrayList<Player> activeFightsPlayers = new ArrayList<Player>();
 					ArrayList<Player> inBossPlayers = new ArrayList<Player>();
@@ -309,6 +321,8 @@ public class Main extends JavaPlugin implements Listener {
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
 		String boss = fightingBoss.get(p.getUniqueId());
+		
+		@SuppressWarnings("unused")
 		Boss b = bossInfo.get(boss);
 		for (Player fighter : activeFights.get(boss)) {
 			if (!SkillAPI.isLoaded(fighter)) {
@@ -323,7 +337,7 @@ public class Main extends JavaPlugin implements Listener {
 					if (b.isRaid()) {
 						scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
 						activeBosses.add(boss);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
 						// Reset raid bosses fought
 						for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
 							raidBossesFought.remove(raidBoss.getName());
@@ -332,7 +346,7 @@ public class Main extends JavaPlugin implements Listener {
 					else {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						activeBosses.add(boss);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd());
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss));
 					}
 				}
 			}
@@ -456,6 +470,7 @@ public class Main extends JavaPlugin implements Listener {
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
+				bossMultiplier.remove(boss);
 				if (bossTimers.containsKey(boss)) {
 					for (BukkitRunnable runnable : bossTimers.get(boss)) {
 						if (!runnable.isCancelled()) {
@@ -497,31 +512,22 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	
-	public boolean getCooldown(String name, Player p) {
+	public String getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
 			String displayName = bossInfo.get(name).getDisplayName();
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
-				if (currTime > lastUse + cooldown) {
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
-				}
-				else {
-					double temp = (lastUse + cooldown - currTime) / 6000;
-					temp /= 10;
-	    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7has §c" + temp + " §7minutes remaining!");
+				if (currTime < lastUse + cooldown) {
+					int time = (int) (((lastUse + cooldown) - currTime) / 1000);
+					int minutes = time / 60;
+					int seconds = time % 60;
+					if (time > 0) return String.format("§c%d:%02d", minutes, seconds);
 				}
 			}
-			else {
-    			p.sendMessage("§4[§c§lBosses§4] §l" + displayName + " §7is off cooldown!");
-			}
-			return true;
 		}
-		else {
-			p.sendMessage("§4[§c§lBosses§4] §7Invalid boss name!");
-			return true;
-		}
+		return "§c0";
 	}
 	
 	public String getBossName(String boss, Player p) {

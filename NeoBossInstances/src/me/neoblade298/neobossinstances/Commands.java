@@ -16,11 +16,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Commands implements CommandExecutor {
@@ -163,7 +165,7 @@ public class Commands implements CommandExecutor {
 						main.activeBosses.add(rboss.getName());
 						BukkitRunnable spawnBoss = new BukkitRunnable() {
 							public void run() {
-								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), frboss.getCmd());
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), frboss.getCmd().replaceAll("<multiplier>", "" + main.bossMultiplier.get(boss.getName())));
 								main.activeBosses.remove(frboss.getName());
 								main.raidBossesFought.add(frboss.getName());
 							}
@@ -296,6 +298,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss send [player] [boss] [max] [radius]§7- Send all nearby players to boss");
 				sender.sendMessage("§4/boss addtoboss [player] [boss] §7- Add player to active fight");
 				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
@@ -309,6 +312,101 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
 			sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
 			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
+			return true;
+		}
+		// /boss send [player] [boss] [max] [radius]
+		else if (args.length == 3 && args[0].equalsIgnoreCase("send")) {
+			String boss = args[2];
+			Player p = Bukkit.getPlayer(args[1]);
+			int max = Integer.parseInt(args[3]);
+			double radius = Double.parseDouble(args[4]);
+			ArrayList<Entity> nearby = (ArrayList<Entity>) p.getNearbyEntities(radius, radius, radius);
+			ArrayList<Player> onCooldown = new ArrayList<Player>(); 
+			ArrayList<Player> targets = new ArrayList<Player>(); 
+			// Check for all cooldowns
+			for (Entity e : nearby) {
+				if (e instanceof Player) {
+					Player target = (Player) e;
+	    			targets.add(target);
+		    		if (main.cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
+			    		long lastUse = main.cooldowns.get(boss).get(p.getUniqueId().toString());
+			    		long currTime = System.currentTimeMillis();
+			    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
+			    		if (currTime < lastUse + cooldown) {
+			    			onCooldown.add(target);
+			    		}
+		    		}
+				}
+			}
+			
+			if (targets.size() > max) {
+				for (Player target : targets) {
+					target.sendMessage("§4[§c§lMLMC§4] §cThere are too many players! Max is §e" + max + "§c, you have §e" + targets.size() + "§c.");
+				}
+				return true;
+			}
+			
+			String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:\n";
+			if (onCooldown.size() > 0) {
+				for (Player cd : onCooldown) {
+					msg += "§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
+				}
+				for (Player target : targets) {
+					target.sendMessage(msg);
+				}
+				return true;
+			}
+			
+			//Make it find and send to instance
+			String instance = main.findInstance(boss);
+			if (instance.equals("Not found") || instance.equals("Failed to Connect")) {
+				for (Player target : targets) {
+					target.sendMessage("§4[§c§lMLMC§4] §cFailed to connect to instance! Try again later.");
+				}
+				return true;
+			}
+			
+			// Actually send them
+			for (Player target : targets) {
+				SkillAPI.saveSingle(target);
+				UUID uuid = target.getUniqueId();
+				target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+				try {
+					// Connect
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
+							Main.sqlPass);
+					Statement stmt = con.createStatement();
+
+					if (main.isDebug) {
+						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+								+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+					}
+					// Add boss level here
+					stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + target.getUniqueId() + "','" + boss
+							+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + ");");
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
+				
+				// Only give cooldown if they've beaten the boss before or it's a raid
+				if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+					main.cooldowns.get(boss).put(uuid.toString(), System.currentTimeMillis());
+				}
+
+				BukkitRunnable teleport = new BukkitRunnable() {
+					public void run() {
+						if (main.mainSpawn.getWorld() == null) {
+							main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
+						}
+						p.teleport(main.mainSpawn);
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
+								.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+					}
+				};
+				teleport.runTaskLater(main, 60L);
+			}
 			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("addtoboss")) {
@@ -340,25 +438,6 @@ public class Commands implements CommandExecutor {
 				Collections.sort(healthList);
 			}
 			sender.sendMessage("§4[§c§lBosses§4] §7Added §e" + p.getName() + "§7!");
-			return true;
-		}
-		else if (args.length == 2 && args[0].equalsIgnoreCase("cd") && sender instanceof Player) {
-			if (!main.isInstance) {
-				Player p = (Player) sender;
-				String name = WordUtils.capitalize(args[1]);
-				if (name.equalsIgnoreCase("all")) {
-					for (String boss : main.bossInfo.keySet()) {
-						main.getCooldown(boss, p);
-					}
-					return true;
-				}
-				else {
-					return main.getCooldown(name, p);
-				}
-			}
-			else {
-				sender.sendMessage("§4[§c§lBosses§4] §7You can only check cooldowns on the main server!");
-			}
 			return true;
 		}
 		// boss startstats boss
