@@ -212,11 +212,11 @@ public class Commands implements CommandExecutor {
 
 						if (main.isDebug) {
 							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-									+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
+									+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(p.getUniqueId(), boss) + ");");
 						}
 						// Add boss level here
-						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + target.getUniqueId() + "','" + boss
-								+ "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
+						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
+								+ "','" + instance + "'," + main.settings.getValue(p.getUniqueId(), boss) + ");");
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
