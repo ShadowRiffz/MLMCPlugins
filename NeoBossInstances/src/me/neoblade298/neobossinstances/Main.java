@@ -485,7 +485,8 @@ public class Main extends JavaPlugin implements Listener {
 				p.teleport(instanceSpawn);
 				BukkitRunnable sendAllBack = new BukkitRunnable() {
 					public void run() {
-						for (Player fighter : inBoss.get(boss)) {
+						ArrayList<Player> fighters = inBoss.get(boss);
+						for (Player fighter : fighters) {
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
 							}
