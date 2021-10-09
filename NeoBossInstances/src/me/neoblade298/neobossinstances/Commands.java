@@ -40,7 +40,7 @@ public class Commands implements CommandExecutor {
 				if (!main.disableFights) {
 					String boss = WordUtils.capitalize(args[2]);
 					Player p = Bukkit.getPlayer(args[1]);
-					String uuid = p.getUniqueId().toString();
+					UUID uuid = p.getUniqueId();
 	
 					// Find an open instance
 					String instance = main.findInstance(boss);
@@ -55,10 +55,10 @@ public class Commands implements CommandExecutor {
 
 							if (main.isDebug) {
 								System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-										+ uuid + "','" + boss + "','" + instance + "');");
+										+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 							}
 							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-									+ "','" + instance + "');");
+									+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 							con.close();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -114,7 +114,7 @@ public class Commands implements CommandExecutor {
 						}
 						stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
-								+ instance + "');");
+								+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
 						con.close();
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -140,6 +140,101 @@ public class Commands implements CommandExecutor {
 				}
 				else {
 					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
+				}
+				return true;
+			}
+			// /boss send [player] [boss] [max] [radius]
+			else if (args.length == 3 && args[0].equalsIgnoreCase("send")) {
+				String boss = args[2];
+				Player p = Bukkit.getPlayer(args[1]);
+				int max = Integer.parseInt(args[3]);
+				double radius = Double.parseDouble(args[4]);
+				ArrayList<Entity> nearby = (ArrayList<Entity>) p.getNearbyEntities(radius, radius, radius);
+				ArrayList<Player> onCooldown = new ArrayList<Player>(); 
+				ArrayList<Player> targets = new ArrayList<Player>(); 
+				// Check for all cooldowns
+				for (Entity e : nearby) {
+					if (e instanceof Player) {
+						Player target = (Player) e;
+		    			targets.add(target);
+			    		if (main.cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
+				    		long lastUse = main.cooldowns.get(boss).get(p.getUniqueId().toString());
+				    		long currTime = System.currentTimeMillis();
+				    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
+				    		if (currTime < lastUse + cooldown) {
+				    			onCooldown.add(target);
+				    		}
+			    		}
+					}
+				}
+				
+				if (targets.size() > max) {
+					for (Player target : targets) {
+						target.sendMessage("§4[§c§lMLMC§4] §cThere are too many players! Max is §e" + max + "§c, you have §e" + targets.size() + "§c.");
+					}
+					return true;
+				}
+				
+				String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:\n";
+				if (onCooldown.size() > 0) {
+					for (Player cd : onCooldown) {
+						msg += "§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
+					}
+					for (Player target : targets) {
+						target.sendMessage(msg);
+					}
+					return true;
+				}
+				
+				//Make it find and send to instance
+				String instance = main.findInstance(boss);
+				if (instance.equals("Not found") || instance.equals("Failed to Connect")) {
+					for (Player target : targets) {
+						target.sendMessage("§4[§c§lMLMC§4] §cFailed: " + instance + ". Try again later!");
+					}
+					return true;
+				}
+				
+				// Actually send them
+				for (Player target : targets) {
+					SkillAPI.saveSingle(target);
+					UUID uuid = target.getUniqueId();
+					target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+					try {
+						// Connect
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
+								Main.sqlPass);
+						Statement stmt = con.createStatement();
+
+						if (main.isDebug) {
+							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+									+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+						}
+						// Add boss level here
+						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + target.getUniqueId() + "','" + boss
+								+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + ");");
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
+					
+					// Only give cooldown if they've beaten the boss before or it's a raid
+					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+						main.cooldowns.get(boss).put(uuid.toString(), System.currentTimeMillis());
+					}
+
+					BukkitRunnable teleport = new BukkitRunnable() {
+						public void run() {
+							if (main.mainSpawn.getWorld() == null) {
+								main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
+							}
+							p.teleport(main.mainSpawn);
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
+									.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+						}
+					};
+					teleport.runTaskLater(main, 60L);
 				}
 				return true;
 			}
@@ -312,101 +407,6 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
 			sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
 			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-			return true;
-		}
-		// /boss send [player] [boss] [max] [radius]
-		else if (args.length == 3 && args[0].equalsIgnoreCase("send")) {
-			String boss = args[2];
-			Player p = Bukkit.getPlayer(args[1]);
-			int max = Integer.parseInt(args[3]);
-			double radius = Double.parseDouble(args[4]);
-			ArrayList<Entity> nearby = (ArrayList<Entity>) p.getNearbyEntities(radius, radius, radius);
-			ArrayList<Player> onCooldown = new ArrayList<Player>(); 
-			ArrayList<Player> targets = new ArrayList<Player>(); 
-			// Check for all cooldowns
-			for (Entity e : nearby) {
-				if (e instanceof Player) {
-					Player target = (Player) e;
-	    			targets.add(target);
-		    		if (main.cooldowns.get(boss).containsKey(p.getUniqueId().toString())) {
-			    		long lastUse = main.cooldowns.get(boss).get(p.getUniqueId().toString());
-			    		long currTime = System.currentTimeMillis();
-			    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
-			    		if (currTime < lastUse + cooldown) {
-			    			onCooldown.add(target);
-			    		}
-		    		}
-				}
-			}
-			
-			if (targets.size() > max) {
-				for (Player target : targets) {
-					target.sendMessage("§4[§c§lMLMC§4] §cThere are too many players! Max is §e" + max + "§c, you have §e" + targets.size() + "§c.");
-				}
-				return true;
-			}
-			
-			String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:\n";
-			if (onCooldown.size() > 0) {
-				for (Player cd : onCooldown) {
-					msg += "§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
-				}
-				for (Player target : targets) {
-					target.sendMessage(msg);
-				}
-				return true;
-			}
-			
-			//Make it find and send to instance
-			String instance = main.findInstance(boss);
-			if (instance.equals("Not found") || instance.equals("Failed to Connect")) {
-				for (Player target : targets) {
-					target.sendMessage("§4[§c§lMLMC§4] §cFailed to connect to instance! Try again later.");
-				}
-				return true;
-			}
-			
-			// Actually send them
-			for (Player target : targets) {
-				SkillAPI.saveSingle(target);
-				UUID uuid = target.getUniqueId();
-				target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
-				try {
-					// Connect
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
-							Main.sqlPass);
-					Statement stmt = con.createStatement();
-
-					if (main.isDebug) {
-						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-								+ uuid + "','" + boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
-					}
-					// Add boss level here
-					stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + target.getUniqueId() + "','" + boss
-							+ "','" + instance + "','" + main.settings.getValue(uuid, boss) + ");");
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
-				
-				// Only give cooldown if they've beaten the boss before or it's a raid
-				if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
-					main.cooldowns.get(boss).put(uuid.toString(), System.currentTimeMillis());
-				}
-
-				BukkitRunnable teleport = new BukkitRunnable() {
-					public void run() {
-						if (main.mainSpawn.getWorld() == null) {
-							main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
-						}
-						p.teleport(main.mainSpawn);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
-								.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-					}
-				};
-				teleport.runTaskLater(main, 60L);
-			}
 			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("addtoboss")) {

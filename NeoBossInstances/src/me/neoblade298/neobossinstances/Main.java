@@ -70,7 +70,7 @@ public class Main extends JavaPlugin implements Listener {
 	// Databases
 	// Cooldowns: Key is boss name, payload is ConcurrentHashMap where key is playername and
 	// payload is last fought
-	public ConcurrentHashMap<String, ConcurrentHashMap<String, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>();
+	public ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>>();
 	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
 	public ConcurrentHashMap<String, Long> dropCooldown = new ConcurrentHashMap<String, Long>();
 	public ArrayList<String> raidBossesFought = new ArrayList<String>();
@@ -178,7 +178,7 @@ public class Main extends JavaPlugin implements Listener {
 				ResultSet rs;
 				
 				for (String boss : bosses.getKeys(false)) {
-					ConcurrentHashMap<String, Long> cds = new ConcurrentHashMap<String, Long>();
+					ConcurrentHashMap<UUID, Long> cds = new ConcurrentHashMap<UUID, Long>();
 					cooldowns.put(boss, cds);
 					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
 					while (rs.next()) {
@@ -346,7 +346,7 @@ public class Main extends JavaPlugin implements Listener {
 					else {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						activeBosses.add(boss);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss));
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
 					}
 				}
 			}
@@ -515,7 +515,6 @@ public class Main extends JavaPlugin implements Listener {
 	public String getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
-			String displayName = bossInfo.get(name).getDisplayName();
 			if (cooldowns.get(name).containsKey(p.getUniqueId().toString())) {
 				long lastUse = cooldowns.get(name).get(p.getUniqueId().toString());
 				long currTime = System.currentTimeMillis();
