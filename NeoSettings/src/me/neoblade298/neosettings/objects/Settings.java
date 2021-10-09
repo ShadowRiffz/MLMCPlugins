@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -25,13 +26,17 @@ public class Settings {
 		return key;
 	}
 	
+	public Set<String> getAllKeys() {
+		return this.defaults.keySet();
+	}
+	
 	public Object getValue(UUID uuid, String key) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Key doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Key doesn't exist.");
 			return null;
 		}
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
 			return defaults.get(key);
 		}
 		HashMap<String, Object> pValues = values.get(uuid);
@@ -79,7 +84,7 @@ public class Settings {
 				Object o = defaults.get(subsetting);
 				Object value = null;
 				if (o == null) {
-					Bukkit.getLogger().log(Level.WARNING, "Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
 					return;
 				}
 				else if (o instanceof String) {
@@ -93,7 +98,7 @@ public class Settings {
 				}
 				
 				if (value == null) {
-					Bukkit.getLogger().log(Level.WARNING, "Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
 				}
 				pSettings.put(subsetting, value);
 			}
@@ -111,14 +116,14 @@ public class Settings {
 	public boolean changeSetting(String key, String v, UUID uuid) {
 		Object value = null;
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
 		}
 		
 		// Try to change String o into the proper class
 		try {
 			if (defaults.get(key).getClass() == Boolean.class) {
-				value = Boolean.getBoolean(v);
+				value = Boolean.parseBoolean(v);
 			}
 			else if (defaults.get(key).getClass() == String.class) {
 				value = v;
@@ -127,13 +132,13 @@ public class Settings {
 				value = Integer.parseInt(v);
 			}
 		} catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Couldn't convert string to class.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Couldn't convert string to class.");
 			e.printStackTrace();
 			return false;
 		}
 		
-		if (values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+		if (!values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		
@@ -143,11 +148,11 @@ public class Settings {
 	
 	public boolean resetSetting(String key, UUID uuid) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to reset setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to reset setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
 		}
-		if (values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+		if (!values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		values.get(uuid).remove(key);
