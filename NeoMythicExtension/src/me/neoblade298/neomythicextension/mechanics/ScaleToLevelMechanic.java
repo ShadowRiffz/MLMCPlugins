@@ -35,24 +35,32 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    	// Make sure target is a MythicMob
 	    	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
 	    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
-	    		if (am.getLevel() < numPlayers) {
+	    		double level = am.getLevel();
+	    		if (level < numPlayers) {
 	    			am.setLevel(numPlayers);
+	    			level = numPlayers;
 	    		}
 	    		
 	    		// Check if the boss is x or ex
 	    		AbstractEntity ent = am.getEntity();
-	    		if (exlevel != -1 && am.getLevel() >= exlevel) {
-		    		ent.setMaxHealth(this.exhealth * (am.getLevel() / this.exlevel));
-		    		ent.setHealth(ent.getMaxHealth());
+	    		double oldHealth = ent.getMaxHealth();
+	    		double newHealth = oldHealth;
+	    		if (exlevel != -1 && level >= exlevel) {
+	    			
 	    		}
-	    		else if (xlevel != -1 && am.getLevel() >= xlevel) {
-		    		ent.setMaxHealth(this.xhealth * (am.getLevel() / this.xlevel));
-		    		ent.setHealth(ent.getMaxHealth());
+	    		else if (xlevel != -1 && level >= xlevel) {
+	    			
 	    		}
 	    		else {
-		    		ent.setMaxHealth(ent.getMaxHealth() * (0.5 + (am.getLevel() * 0.5)));
-		    		ent.setHealth(ent.getMaxHealth());
+	    			if (level <= 6) {
+	    				newHealth *= 0.5 + (level * 0.5);
+	    			}
+	    			if (level > 6) {
+	    				newHealth += (level - 6) * 0.2 * oldHealth;
+	    			}
 	    		}
+	    		ent.setMaxHealth(newHealth);
+	    		ent.setHealth(newHealth);
 	    	}
 		}
     	return true;
