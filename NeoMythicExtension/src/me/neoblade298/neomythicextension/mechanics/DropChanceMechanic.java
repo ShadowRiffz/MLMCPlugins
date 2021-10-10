@@ -57,6 +57,7 @@ public class DropChanceMechanic extends SkillMechanic implements ITargetedEntity
 		if (target.getBukkitEntity() instanceof Player) {
 			double rand = this.rand.nextDouble();
 			double chance = this.basechance;
+			// double addedmult = Math.min(2, 1 + (0.05 * (data.getCaster().getLevel() - 1)));;
 			
 			// Check if player is holding a drop charm
 			Player p = (Player) target.getBukkitEntity();
