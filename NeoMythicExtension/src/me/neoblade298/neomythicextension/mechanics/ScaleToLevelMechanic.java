@@ -53,7 +53,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    		}
 	    		else {
 	    			if (level <= 6) {
-	    				newHealth *= 0.5 + (level * 0.5);
+	    				newHealth *= 0.5 + (Math.min(6, level) * 0.5);
 	    			}
 	    			if (level > 6) {
 	    				newHealth += (level - 6) * 0.2 * oldHealth;
