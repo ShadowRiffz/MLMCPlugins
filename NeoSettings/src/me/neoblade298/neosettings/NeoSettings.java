@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -24,6 +25,7 @@ import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
 	private HashMap<String, Settings> settings;
+	public HashSet<UUID> changedSettings;
 	// SQL
 	public String url, user, pass;
 	
@@ -69,7 +71,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	
 	public Settings createSettings(String key, Plugin plugin) {
 		Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Created setting of " + key + " for plugin " + plugin.getName() + ".");
-		Settings newSettings = new Settings(key);
+		Settings newSettings = new Settings(this, key);
 		settings.put(key, newSettings);
 		return newSettings;
 	}
@@ -123,23 +125,26 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	
 	
 	public void handleLeave(UUID uuid) {
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(url, user, pass);
-					Statement stmt = con.createStatement();
-					for (String key : settings.keySet()) {
-						settings.get(key).save(con, stmt, uuid);
+		if (changedSettings.contains(uuid)) {
+			BukkitRunnable save = new BukkitRunnable() {
+				public void run() {
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(url, user, pass);
+						Statement stmt = con.createStatement();
+						for (String key : settings.keySet()) {
+							settings.get(key).save(con, stmt, uuid);
+						}
+						stmt.executeBatch();
+						con.close();
+						changedSettings.remove(uuid);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					stmt.executeBatch();
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-			}
-		};
-		save.runTaskAsynchronously(this);
+			};
+			save.runTaskAsynchronously(this);
+		}
 	}
 	
 	private void saveAll() {
@@ -148,8 +153,11 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 			Connection con = DriverManager.getConnection(url, user, pass);
 			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				for (String key : settings.keySet()) {
-					settings.get(key).save(con, stmt, p.getUniqueId());
+				if (changedSettings.contains(p.getUniqueId())) {
+					for (String key : settings.keySet()) {
+						settings.get(key).save(con, stmt, p.getUniqueId());
+					}
+					changedSettings.remove(p.getUniqueId());
 				}
 			}
 			stmt.executeBatch();

@@ -11,12 +11,16 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
+import me.neoblade298.neosettings.NeoSettings;
+
 public class Settings {
+	private NeoSettings main;
 	private final String key;
 	private HashMap<UUID, HashMap<String, Object>> values;
 	private HashMap<String, Object> defaults;
 	
-	public Settings (String key) {
+	public Settings (NeoSettings main, String key) {
+		this.main = main;
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Object>>();
 		this.defaults = new HashMap<String, Object>();
@@ -157,11 +161,16 @@ public class Settings {
 			return false;
 		}
 		
+		if (value.equals(defaults.get(key))) {
+			return resetSetting(key, uuid);
+		}
+		
 		if (!values.containsKey(uuid)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
-		
+
+		main.changedSettings.add(uuid);
 		values.get(uuid).put(key, value);
 		return true;
 	}
@@ -175,6 +184,7 @@ public class Settings {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
+		main.changedSettings.add(uuid);
 		values.get(uuid).remove(key);
 		return true;
 	}
