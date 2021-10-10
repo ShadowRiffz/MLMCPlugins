@@ -597,11 +597,11 @@ public class Commands implements CommandExecutor {
 						else {
 							String temp = "§e" + instance + "§7: §e"
 									+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4"
-									+ main.bossInfo.get(rs.getString(2)).getDisplayName() + rs.getInt(4) + "§7)";
+									+ main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
 							while (rs.next()) {
 								temp += "§7, §e"
 										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName()
-										+ " §7(§4" + main.bossInfo.get(rs.getString(2)).getDisplayName() + " x" + rs.getInt(4) + "§7)";
+										+ " §7(§4" + main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
 							}
 							if (temp != null) {
 								sender.sendMessage(temp);
