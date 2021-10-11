@@ -46,6 +46,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	
 	public void loadConfig() {
 	    this.settings = new HashMap<String, Settings>();
+	    this.changedSettings = new HashSet<UUID>();
 
 		// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
