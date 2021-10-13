@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class Settings {
 	private NeoSettings main;
 	private final String key;
 	private HashMap<UUID, HashMap<String, Object>> values;
+	private HashMap<UUID, ArrayList<String>> changedValues;
 	private HashMap<String, Object> defaults;
 	
 	public Settings (NeoSettings main, String key) {
@@ -24,6 +26,7 @@ public class Settings {
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Object>>();
 		this.defaults = new HashMap<String, Object>();
+		this.changedValues = new HashMap<UUID, ArrayList<String>>();
 	}
 	
 	public String getKey() {
@@ -52,9 +55,11 @@ public class Settings {
 	
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
 	public void save(Connection con, Statement stmt, UUID uuid) {
-		if (values.containsKey(uuid)) {
+		if (changedValues.containsKey(uuid)) {
 			HashMap<String, Object> pValues = values.get(uuid);
-			for (String key : pValues.keySet()) {
+			
+			// Only save changed values
+			for (String key : changedValues.get(uuid)) {
 				Object value = pValues.get(key);
 				try {
 					if (value instanceof String) {
@@ -74,12 +79,14 @@ public class Settings {
 				}
 			}
 			values.remove(uuid);
+			changedValues.remove(uuid);
 		}
 	}
 	
 	public void load(Connection con, UUID uuid) {
 		HashMap<String, Object> pSettings = new HashMap<String, Object>();
 		this.values.put(uuid, pSettings);
+		this.changedValues.put(uuid, new ArrayList<String>());
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neosettings_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
@@ -123,7 +130,6 @@ public class Settings {
 				pSettings.put(subsetting, value);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -170,7 +176,7 @@ public class Settings {
 			return false;
 		}
 
-		main.changedSettings.add(uuid);
+		changedValues.get(uuid).add(key);
 		values.get(uuid).put(key, value);
 		return true;
 	}
@@ -184,7 +190,7 @@ public class Settings {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
-		main.changedSettings.add(uuid);
+		changedValues.get(uuid).add(key);
 		values.get(uuid).remove(key);
 		return true;
 	}
