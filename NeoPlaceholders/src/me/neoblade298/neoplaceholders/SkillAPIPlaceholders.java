@@ -68,7 +68,9 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 					PlayerClass pClass = data.getClass("class");
 					PlayerClass pProf = data.getClass("profession");
 					if (pClass != null) {
-						if (args[2].equalsIgnoreCase("level")) return "§e" + pClass.getLevel();
+						if (args[2].equalsIgnoreCase("level")) {
+							return "§e" + pClass.getLevel();
+						}
 						else if (args[2].equalsIgnoreCase("class")) return "§e" + pClass.getData().getName();
 					}
 					if (pProf != null) {
@@ -98,6 +100,20 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 				return "" + (int) data.getMaxMana();
 			}
 			return "0";
+		}
+		else if (args[0].equalsIgnoreCase("level")) {
+			PlayerData data = SkillAPI.getPlayerData(p);
+			PlayerClass pClass = data.getClass("class");
+			String cName = pClass.getData().getName();
+			if (pClass.getLevel() == 10 && cName.equalsIgnoreCase("Beginner")) {
+				return "§c/warp advance";
+			}
+			else if (pClass.getLevel() == 30 && (cName.equalsIgnoreCase("Swordsman") ||
+					cName.equalsIgnoreCase("Archer") || cName.equalsIgnoreCase("Mage") ||
+					cName.equalsIgnoreCase("Thief"))) {
+				return "§c/warp advance";
+			}
+			return "" + pClass.getLevel();
 		}
 		else if (args[0].equalsIgnoreCase("warnings")) {
 			PlayerData data = SkillAPI.getPlayerData(p);
