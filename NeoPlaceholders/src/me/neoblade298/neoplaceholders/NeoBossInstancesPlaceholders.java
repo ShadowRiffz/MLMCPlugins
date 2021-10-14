@@ -1,5 +1,7 @@
 package me.neoblade298.neoplaceholders;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -14,6 +16,7 @@ import me.neoblade298.neobossinstances.Main;
 
 public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	private me.neoblade298.neobossinstances.Main plugin;
+	private DateFormat formatter = new SimpleDateFormat("m:ss");
 
     @Override
     public boolean canRegister(){
@@ -122,6 +125,31 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			
 			return color + partyMember.getName() + " " + bar;
 		}
+		else if (args[0].equalsIgnoreCase("timers")) {
+			// Boss timer only, no raid timer
+			long bossTimer = plugin.getBossTimer(p);
+			long raidTimer = plugin.getRaidTimer(p);
+			if (bossTimer != -1 && raidTimer == -1) {
+				return formatter.format(System.currentTimeMillis() - bossTimer);
+			}
+			// Raid timer only, no boss timer
+			else if (bossTimer == -1 && raidTimer != -1) {
+				return formatter.format(raidTimer - System.currentTimeMillis());
+			}
+			// Both
+			else if (bossTimer != -1 && raidTimer != -1) {
+				if ((System.currentTimeMillis() & 8191) > 4096) {
+					return formatter.format(raidTimer - System.currentTimeMillis());
+				}
+				else {
+					return formatter.format(System.currentTimeMillis() - bossTimer);
+				}
+			}
+			
+			// Neither
+			return "";
+		}
+		
 		return "Invalid Placeholder";
 	}
 }

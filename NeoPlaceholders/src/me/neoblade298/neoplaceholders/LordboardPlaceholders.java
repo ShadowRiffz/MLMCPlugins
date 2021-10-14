@@ -13,7 +13,7 @@ import com.sucy.skill.api.util.FlagManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class LordboardPlaceholders extends PlaceholderExpansion {
-
+	
     @Override
     public boolean canRegister(){
         return Bukkit.getPluginManager().getPlugin("SkillAPI") != null;

@@ -34,116 +34,56 @@ public class Commands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("bossinstances.admin") || sender.isOp()) {
-			// /boss tp player nameofboss
-			if (args.length == 3 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
-				if (!main.disableFights) {
-					String boss = WordUtils.capitalize(args[2]);
-					Player p = Bukkit.getPlayer(args[1]);
-					UUID uuid = p.getUniqueId();
-	
-					// Find an open instance
-					String instance = main.findInstance(boss);
-					if (!instance.equalsIgnoreCase("Not Found") && !instance.equalsIgnoreCase("Failed to connect")) {
-						SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
-						p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
-						try {
-							// Connect
-							Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
-									Main.sqlPass);
-							Statement stmt = con.createStatement();
-
-							if (main.isDebug) {
-								System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-										+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
-							}
-							stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-									+ "','" + instance + "'," + main.settings.getValue(uuid, boss) + ");");
-							con.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
-						
-						// Only give cooldown if they've beaten the boss before or it's a raid
-						if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
-							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-						}
-	
-						BukkitRunnable teleport = new BukkitRunnable() {
-							public void run() {
-								if (main.mainSpawn.getWorld() == null) {
-									main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
-								}
-								p.teleport(main.mainSpawn);
-								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), main.sendCommand
-										.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-							}
-						};
-						teleport.runTaskLater(main, 60L);
-					}
-					else if (instance.equalsIgnoreCase("Not found")) {
-						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7No available instances! Please wait until one is available! §c/boss instances");
-					}
-					else {
-						Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Failed to connect!");
-					}
-				}
-				else {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
-				}
-				return true;
-			}
 			// /boss tp player nameofboss instance
-			else if (args.length >= 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
-				if (!main.disableFights || (args.length == 5 && args[4].equalsIgnoreCase("force"))) {
-					Player p = Bukkit.getPlayer(args[1]);
-					SkillAPI.saveSingle(p);
-					UUID uuid = p.getUniqueId();
-					String boss = WordUtils.capitalize(args[2]);
-					String instance = WordUtils.capitalize(args[3]);
-					p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
-					try {
-						// Connect
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-						Statement stmt = con.createStatement();
-	
-						if (main.isDebug) {
-							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
-									+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
-						}
-						stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
-								+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
-						con.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
+			if (args.length >= 4 && args[0].equalsIgnoreCase("tp") && !main.isInstance) {
+				Player p = Bukkit.getPlayer(args[1]);
+				SkillAPI.saveSingle(p);
+				UUID uuid = p.getUniqueId();
+				String boss = WordUtils.capitalize(args[2]);
+				String instance = WordUtils.capitalize(args[3]);
+				p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+				try {
+					// Connect
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Statement stmt = con.createStatement();
+
+					if (main.isDebug) {
+						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
+								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					}
-	
-					// Only give cooldown if they've beaten the boss before or it's a raid
-					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
-						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-					}
-					if (main.mainSpawn.getWorld() == null) {
-						main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
-					}
-					
-					BukkitRunnable sendThere = new BukkitRunnable() {
-						public void run() {
-							p.teleport(main.mainSpawn);
-							
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-									main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
-						}
-					};
-					sendThere.runTaskLater(main, 60L);
+					stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
+					stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
+							+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-				else {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
+
+				// Only give cooldown if they've beaten the boss before or it's a raid
+				if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 				}
+				if (main.mainSpawn.getWorld() == null) {
+					main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
+				}
+				
+				BukkitRunnable sendThere = new BukkitRunnable() {
+					public void run() {
+						p.teleport(main.mainSpawn);
+						
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								main.sendCommand.replaceAll("%player%", args[1]).replaceAll("%instance%", instance));
+					}
+				};
+				sendThere.runTaskLater(main, 60L);
 				return true;
 			}
 			// /boss send [player] [boss] [max] [radius]
 			else if (args.length == 5 && args[0].equalsIgnoreCase("send")) {
+				if (main.disableFights) {
+					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
+					return true;
+				}
 				String boss = args[2];
 				Player p = Bukkit.getPlayer(args[1]);
 				int max = Integer.parseInt(args[3]);
@@ -388,7 +328,8 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage("§c/boss instances §7- Shows all players in instances");
 			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
-				sender.sendMessage("§4/boss tp [name] [boss]§7- Teleports player to open boss instance");
+				sender.sendMessage("§4/boss send [player] [boss] [max] [radius]§7- Send all nearby players to boss");
+				sender.sendMessage("§4/boss tp [name] [boss] [instance]§7- Ignores disabled fights");
 				sender.sendMessage("§4/boss mini [name] [boss] [miniboss]§7- Teleports player to open miniboss");
 				sender.sendMessage("§4/boss showstats [boss] [displayname] §7- Shows stats and clears them");
 				sender.sendMessage("§4/boss debugstats [boss] [displayname] §7- Shows stats to sender, no clear");
@@ -397,7 +338,6 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
 				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
 				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
-				sender.sendMessage("§4/boss send [player] [boss] [max] [radius]§7- Send all nearby players to boss");
 				sender.sendMessage("§4/boss addtoboss [player] [boss] §7- Add player to active fight");
 				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");

@@ -79,7 +79,8 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, Integer> bossMultiplier = new ConcurrentHashMap<String, Integer>();
 	public ConcurrentHashMap<String, ArrayList<Player>> activeFights = new ConcurrentHashMap<String, ArrayList<Player>>();
 	public ConcurrentHashMap<String, ArrayList<Player>> inBoss = new ConcurrentHashMap<String, ArrayList<Player>>();
-	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossTimers = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
+	public ConcurrentHashMap<String, ArrayList<BukkitRunnable>> bossRunnables = new ConcurrentHashMap<String, ArrayList<BukkitRunnable>>();
+	public ConcurrentHashMap<String, Long> bossRunnableTimers = new ConcurrentHashMap<String, Long>();
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
 	public ConcurrentHashMap<UUID, Boss> spectatingBoss = new ConcurrentHashMap<UUID, Boss>();
@@ -284,6 +285,7 @@ public class Main extends JavaPlugin implements Listener {
 					activeFights.get(boss).add(p);
 					inBoss.get(boss).add(p);
 				}
+				System.out.println("Added: " + p.getUniqueId() + " " + boss);
 				fightingBoss.put(p.getUniqueId(), boss);
 				
 				// Recalculate everyone's health bars every time someone joins
@@ -322,7 +324,6 @@ public class Main extends JavaPlugin implements Listener {
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
 		String boss = fightingBoss.get(p.getUniqueId());
 		
-		@SuppressWarnings("unused")
 		Boss b = bossInfo.get(boss);
 		for (Player fighter : activeFights.get(boss)) {
 			if (!SkillAPI.isLoaded(fighter)) {
@@ -356,6 +357,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void scheduleTimer(int time, String boss) {
 		int ticks = time * 20;
+		
+		// Set up raid timer for lordboard
+		bossRunnableTimers.put(boss, System.currentTimeMillis() + (time * 1000));
+		
 		// 30 minute warning
 		if (time > 1800) {
 			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
@@ -379,13 +384,13 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		kickPlayer.runTaskLater(main, ticks);
-		if (bossTimers.containsKey(boss)) {
-			bossTimers.get(boss).add(kickPlayer);
+		if (bossRunnables.containsKey(boss)) {
+			bossRunnables.get(boss).add(kickPlayer);
 		}
 		else {
 			ArrayList<BukkitRunnable> list = new ArrayList<BukkitRunnable>();
 			list.add(kickPlayer);
-			bossTimers.put(boss, list);
+			bossRunnables.put(boss, list);
 		}
 	}
 	
@@ -400,13 +405,13 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		warnPlayer.runTaskLater(main, ticks - timeToWarn);
-		if (bossTimers.containsKey(boss)) {
-			bossTimers.get(boss).add(warnPlayer);
+		if (bossRunnables.containsKey(boss)) {
+			bossRunnables.get(boss).add(warnPlayer);
 		}
 		else {
 			ArrayList<BukkitRunnable> list = new ArrayList<BukkitRunnable>();
 			list.add(warnPlayer);
-			bossTimers.put(boss, list);
+			bossRunnables.put(boss, list);
 		}
 	}
 	
@@ -471,13 +476,14 @@ public class Main extends JavaPlugin implements Listener {
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
 				bossMultiplier.remove(boss);
-				if (bossTimers.containsKey(boss)) {
-					for (BukkitRunnable runnable : bossTimers.get(boss)) {
+				bossRunnableTimers.remove(boss);
+				if (bossRunnables.containsKey(boss)) {
+					for (BukkitRunnable runnable : bossRunnables.get(boss)) {
 						if (!runnable.isCancelled()) {
 							runnable.cancel();
 						}
 					}
-					bossTimers.remove(boss);
+					bossRunnables.remove(boss);
 				}
 				
 				// Send every spectator back, then remove from inBoss
@@ -775,5 +781,19 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		};
 		sendBack.runTaskLater(main, 60L);
+	}
+	
+	public long getBossTimer(Player p) {
+		if (fightingBoss.containsKey(p.getUniqueId())) {
+			return statTimers.getOrDefault(fightingBoss.get(p.getUniqueId()), -1L);
+		}
+		return -1;
+	}
+	
+	public long getRaidTimer(Player p) {
+		if (fightingBoss.containsKey(p.getUniqueId())) {
+			return bossRunnableTimers.getOrDefault(fightingBoss.get(p.getUniqueId()), -1L);
+		}
+		return -1;
 	}
 }
