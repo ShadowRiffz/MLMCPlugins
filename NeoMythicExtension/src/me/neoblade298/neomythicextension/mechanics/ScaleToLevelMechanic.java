@@ -57,8 +57,11 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    				newHealth += (level - 6) * 0.2 * oldHealth;
 	    			}
 	    		}
-	    		ent.setMaxHealth(newHealth);
-	    		ent.setHealth(newHealth);
+	    		
+	    		if (ent.isDead()) {
+		    		ent.setMaxHealth(newHealth);
+		    		ent.setHealth(newHealth);
+	    		}
 	    	}
 		}
     	return true;
