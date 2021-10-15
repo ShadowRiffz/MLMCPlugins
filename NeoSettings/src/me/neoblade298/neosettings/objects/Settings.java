@@ -15,14 +15,12 @@ import org.bukkit.Bukkit;
 import me.neoblade298.neosettings.NeoSettings;
 
 public class Settings {
-	private NeoSettings main;
 	private final String key;
 	private HashMap<UUID, HashMap<String, Object>> values;
 	private HashMap<UUID, ArrayList<String>> changedValues;
 	private HashMap<String, Object> defaults;
 	
 	public Settings (NeoSettings main, String key) {
-		this.main = main;
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Object>>();
 		this.defaults = new HashMap<String, Object>();
@@ -178,6 +176,41 @@ public class Settings {
 
 		changedValues.get(uuid).add(key);
 		values.get(uuid).put(key, value);
+		return true;
+	}
+	
+	// Returns true if successful
+	public boolean addToSetting(String key, int v, UUID uuid) {
+		if (!defaults.containsKey(key)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
+			return false;
+		}
+		
+		// Make sure the changed setting is an integer
+		if (defaults.get(key).getClass() != Integer.class) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting was not of type Integer.");
+			return false;
+		}
+		
+		if (!values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			return false;
+		}
+		
+		int original = (int) values.get(uuid).getOrDefault(key, defaults.get(key));
+		int newValue = original + v;
+		
+		if (newValue > 100000 || newValue < 1) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Value was out of bounds.");
+			return false;
+		}
+		
+		if (newValue == (int) defaults.get(key)) {
+			return resetSetting(key, uuid);
+		}
+
+		changedValues.get(uuid).add(key);
+		values.get(uuid).put(key, newValue);
 		return true;
 	}
 	

@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -78,6 +77,14 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	public boolean changeSetting(String setting, String subsetting, String value, UUID uuid) {
 		if (this.settings.containsKey(setting)) {
 			return this.settings.get(setting).changeSetting(subsetting, value, uuid);
+		}
+		Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
+		return false;
+	}
+	
+	public boolean addToSetting(String setting, String subsetting, int value, UUID uuid) {
+		if (this.settings.containsKey(setting)) {
+			return this.settings.get(setting).addToSetting(subsetting, value, uuid);
 		}
 		Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 		return false;
