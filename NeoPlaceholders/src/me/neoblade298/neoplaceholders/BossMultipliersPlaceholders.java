@@ -1,5 +1,7 @@
 package me.neoblade298.neoplaceholders;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -9,6 +11,12 @@ import me.neoblade298.neosettings.NeoSettings;
 
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 	private NeoSettings plugin;
+	private HashMap<String, Integer> health;
+
+	public BossMultipliersPlaceholders(HashMap<String, Integer> health) {
+		this.health = health;
+	}
+
 
     @Override
     public boolean canRegister(){
@@ -56,16 +64,35 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		String boss = args[0];
 		String id = args[1];
+		int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
-			int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
 			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
 			return "" + scale;
 		}
 		else if (id.equalsIgnoreCase("chest")) {
-			int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
 			double scale = Math.min(50, 25 + (0.25 * (level - 1)));
 			return "" + scale;
+		}
+		else if (id.equalsIgnoreCase("damage")) {
+
+			if (level <= 6) {
+				double scale = 1 + (0.1 * (level - 1));
+				return "" + scale;
+			}
+			else {
+				double scale = 1 + (0.3 * (level - 1));
+				return "" + scale;
+			}
+		}
+		else if (id.equalsIgnoreCase("health")) {
+    		double oldHealth = this.health.get(boss);
+    		double newHealth = oldHealth;
+			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
+			if (level > 6) {
+				newHealth += (level - 6) * 0.2 * oldHealth;
+			}
+			return "" + newHealth;
 		}
 		return "Invalid placeholder";
 	}
