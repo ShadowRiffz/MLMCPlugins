@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neosettings.events.LoadSettingsEvent;
 import me.neoblade298.neosettings.objects.Settings;
 
 public class Main extends JavaPlugin implements Listener {
@@ -739,6 +741,15 @@ public class Main extends JavaPlugin implements Listener {
 				PlayerStat stats = playerStats.get(p.getName());
 				stats.addDamageDealt(e.getFinalDamage());
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onSettingsLoad(LoadSettingsEvent e) {
+		Settings settings = e.getPlugin().createSettings("BossMultipliers", this);
+		Enumeration<String> enu = bossInfo.keys();
+		while (enu.hasMoreElements()) {
+			settings.addSetting(enu.nextElement(), 1);
 		}
 	}
 
