@@ -104,6 +104,9 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 		else if (args[0].equalsIgnoreCase("level")) {
 			PlayerData data = SkillAPI.getPlayerData(p);
 			PlayerClass pClass = data.getClass("class");
+			if (pClass == null) {
+				return "";
+			}
 			String cName = pClass.getData().getName();
 			if (pClass.getLevel() == 10 && cName.equalsIgnoreCase("Beginner")) {
 				return "§c/warp advance";

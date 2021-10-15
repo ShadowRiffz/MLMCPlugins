@@ -1,7 +1,5 @@
 package me.neoblade298.neoplaceholders;
 
-import java.util.Formatter;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -11,7 +9,6 @@ import me.neoblade298.neosettings.NeoSettings;
 
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 	private NeoSettings plugin;
-    private Formatter formatter = new Formatter();
 
     @Override
     public boolean canRegister(){
@@ -63,12 +60,12 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		if (id.equalsIgnoreCase("gold")) {
 			int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
 			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
-			return formatter.format("%.2f", scale).toString();
+			return "" + scale;
 		}
 		else if (id.equalsIgnoreCase("chest")) {
 			int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
 			double scale = Math.min(50, 25 + (0.25 * (level - 1)));
-			return formatter.format("%.2f", scale).toString();
+			return "" + scale;
 		}
 		return "Invalid placeholder";
 	}
