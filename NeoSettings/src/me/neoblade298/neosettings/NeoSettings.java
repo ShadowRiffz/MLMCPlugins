@@ -20,6 +20,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neosettings.events.LoadSettingsEvent;
 import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
@@ -58,6 +59,9 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 				sql.getString("db") + sql.getString("flags");
 		user = sql.getString("username");
 		pass = sql.getString("password");
+		
+		// Get settings from external plugins
+		Bukkit.getPluginManager().callEvent(new LoadSettingsEvent(this));
 	}
 	
 	private void loadBuiltinSettings() {
