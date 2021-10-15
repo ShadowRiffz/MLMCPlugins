@@ -746,7 +746,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onSettingsLoad(LoadSettingsEvent e) {
-		Settings settings = e.getPlugin().createSettings("BossMultipliers", this);
+		settings = e.getPlugin().createSettings("BossMultipliers", this);
 		Enumeration<String> enu = bossInfo.keys();
 		while (enu.hasMoreElements()) {
 			settings.addSetting(enu.nextElement(), 1);
