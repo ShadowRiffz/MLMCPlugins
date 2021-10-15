@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="src/NeoResearch.jar"/>
 	<classpathentry kind="lib" path="src/MythicMobs-5.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="src/me/neoblade298/neoplaceholders/Vault.jar"/>
+	<classpathentry kind="lib" path="src/NeoSettings.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
