@@ -1,18 +1,10 @@
 package me.neoblade298.neoplaceholders;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.sucy.skill.api.util.FlagManager;
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neobossinstances.Main;
 import me.neoblade298.neosettings.NeoSettings;
 
 public class NeoSettingsPlaceholders extends PlaceholderExpansion {
