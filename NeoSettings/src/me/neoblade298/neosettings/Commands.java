@@ -2,6 +2,7 @@ package me.neoblade298.neosettings;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,47 +24,53 @@ public class Commands implements CommandExecutor{
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
-				sender.sendMessage("§c/settings set [setting] [subsetting] [value]");
-				sender.sendMessage("§c/settings reset [setting] [subsetting]");
-				sender.sendMessage("§c/settings get [setting] [subsetting]");
-				sender.sendMessage("§c/settings list");
+				sender.sendMessage("§c/settings <player> set [setting] [subsetting] [value]");
+				sender.sendMessage("§c/settings <player> reset [setting] [subsetting]");
+				sender.sendMessage("§c/settings <player> get [setting] [subsetting]");
+				sender.sendMessage("§c/settings <player> list");
 				return true;
 			}
 			else {
 				// /settings set setting subsetting value
-				if (args[0].equalsIgnoreCase("set")) {
-					if (main.changeSetting(args[1], args[2], args[3], p.getUniqueId())) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[1] + "." + args[2] + " §7successfully changed!");
+				Player target = p;
+				int cmdArg = 0;
+				if (Bukkit.getPlayer(args[0]) != null && p.hasPermission("mycommand.staff")) {
+					target = Bukkit.getPlayer(args[0]);
+					cmdArg = 1;
+				}
+				if (args[cmdArg].equalsIgnoreCase("set")) {
+					if (main.changeSetting(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId())) {
+						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully changed!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting " + args[1] + "." + args[2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
-				else if (args[0].equalsIgnoreCase("reset")) {
-					if (main.resetSetting(args[1], args[2], p.getUniqueId())) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[1] + "." + args[2] + " §7successfully reset!");
+				else if (args[cmdArg].equalsIgnoreCase("reset")) {
+					if (main.resetSetting(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId())) {
+						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully reset!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to reset setting " + args[1] + "." + args[2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to reset setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
-				else if (args[0].equalsIgnoreCase("get")) {
-					Settings settings = main.getSettings(args[1]);
+				else if (args[cmdArg].equalsIgnoreCase("get")) {
+					Settings settings = main.getSettings(args[cmdArg + 1]);
 					if (settings != null) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[1] + "." + args[2] + " §7set to: §e" + settings.getValue(p.getUniqueId(), args[2]));
+						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7set to: §e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to get setting " + args[1] + "." + args[2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to get setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
-				else if (args[0].equalsIgnoreCase("list")) {
+				else if (args[cmdArg].equalsIgnoreCase("list")) {
 					HashMap<String, Settings> settings = main.getAllSettings();
 					for (String key : settings.keySet()) {
 						for (String subkey : settings.get(key).getAllKeys()) {
-							p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(p.getUniqueId(), subkey));
+							p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(target.getUniqueId(), subkey));
 						}
 					}
 					return true;
