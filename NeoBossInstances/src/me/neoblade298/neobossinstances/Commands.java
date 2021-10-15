@@ -140,6 +140,7 @@ public class Commands implements CommandExecutor {
 				}
 				
 				// Actually send them
+				int level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
 				for (Player target : targets) {
 					SkillAPI.saveSingle(target);
 					UUID uuid = target.getUniqueId();
@@ -152,16 +153,16 @@ public class Commands implements CommandExecutor {
 
 						if (main.isDebug) {
 							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
-									+ uuid + "','" + boss + "','" + instance + "'," + main.settings.getValue(p.getUniqueId(), boss) + ");");
+									+ uuid + "','" + boss + "','" + instance + "'," + level + ");");
 						}
 						// Add boss level here
 						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-								+ "','" + instance + "'," + main.settings.getValue(p.getUniqueId(), boss) + ");");
+								+ "','" + instance + "'," + level + ");");
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + ".");
+					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
