@@ -39,7 +39,7 @@ public class Commands implements CommandExecutor{
 					cmdArg = 1;
 				}
 				if (args[cmdArg].equalsIgnoreCase("set")) {
-					if (main.changeSetting(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId())) {
+					if (main.changeSetting(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId(), p)) {
 						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully changed!");
 					}
 					else {
@@ -48,7 +48,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("reset")) {
-					if (main.resetSetting(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId())) {
+					if (main.resetSetting(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId(), p)) {
 						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully reset!");
 					}
 					else {
@@ -57,7 +57,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("get")) {
-					Settings settings = main.getSettings(args[cmdArg + 1]);
+					Settings settings = main.getSettings(args[cmdArg + 1], p);
 					if (settings != null) {
 						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7set to: §e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
 					}
@@ -69,8 +69,11 @@ public class Commands implements CommandExecutor{
 				else if (args[cmdArg].equalsIgnoreCase("list")) {
 					HashMap<String, Settings> settings = main.getAllSettings();
 					for (String key : settings.keySet()) {
-						for (String subkey : settings.get(key).getAllKeys()) {
-							p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(target.getUniqueId(), subkey));
+						Settings subsettings = settings.get(key);
+						if (!subsettings.isHidden() || p.hasPermission("mycommand.staff")) {
+							for (String subkey : settings.get(key).getAllKeys()) {
+								p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(target.getUniqueId(), subkey));
+							}
 						}
 					}
 					return true;

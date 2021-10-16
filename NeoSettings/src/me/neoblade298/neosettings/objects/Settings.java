@@ -19,12 +19,14 @@ public class Settings {
 	private HashMap<UUID, HashMap<String, Object>> values;
 	private HashMap<UUID, ArrayList<String>> changedValues;
 	private HashMap<String, Object> defaults;
+	private final boolean hidden;
 	
-	public Settings (NeoSettings main, String key) {
+	public Settings (NeoSettings main, String key, boolean hidden) {
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Object>>();
 		this.defaults = new HashMap<String, Object>();
 		this.changedValues = new HashMap<UUID, ArrayList<String>>();
+		this.hidden = hidden;
 	}
 	
 	public String getKey() {
@@ -226,5 +228,9 @@ public class Settings {
 		changedValues.get(uuid).add(key);
 		values.get(uuid).remove(key);
 		return true;
+	}
+	
+	public boolean isHidden() {
+		return hidden;
 	}
 }
