@@ -16,14 +16,14 @@ import me.neoblade298.neosettings.NeoSettings;
 
 public class Settings {
 	private final String key;
-	private HashMap<UUID, HashMap<String, Object>> values;
+	private HashMap<UUID, HashMap<String, Value>> values;
 	private HashMap<UUID, ArrayList<String>> changedValues;
 	private HashMap<String, Object> defaults;
 	private final boolean hidden;
 	
 	public Settings (NeoSettings main, String key, boolean hidden) {
 		this.key = key;
-		this.values = new HashMap<UUID, HashMap<String, Object>>();
+		this.values = new HashMap<UUID, HashMap<String, Value>>();
 		this.defaults = new HashMap<String, Object>();
 		this.changedValues = new HashMap<UUID, ArrayList<String>>();
 		this.hidden = hidden;
@@ -46,9 +46,15 @@ public class Settings {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
 			return defaults.get(key);
 		}
-		HashMap<String, Object> pValues = values.get(uuid);
+		HashMap<String, Value> pValues = values.get(uuid);
 		if (pValues.containsKey(key)) {
-			return pValues.get(key);
+			// If value has expired, remove it
+			if (pValues.get(key).getExpiration() < System.currentTimeMillis()) {
+				pValues.remove(key);
+			}
+			else {
+				return pValues.get(key).getValue();
+			}
 		}
 		return defaults.get(key);
 	}
@@ -56,23 +62,31 @@ public class Settings {
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
 	public void save(Connection con, Statement stmt, UUID uuid) {
 		if (changedValues.containsKey(uuid)) {
-			HashMap<String, Object> pValues = values.get(uuid);
+			HashMap<String, Value> pValues = values.get(uuid);
 			
 			// Only save changed values
 			for (String key : changedValues.get(uuid)) {
-				Object value = pValues.get(key);
+				Object value = pValues.get(key).getValue();
+				long expiration = pValues.get(key).getExpiration();
+				
+				// Skip expired values
+				if (pValues.get(key).getExpiration() < System.currentTimeMillis()) {
+					continue;
+				}
+				
+				
 				try {
 					if (value instanceof String) {
 						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "');");
+						+ "','" + key + "','" + value + "'," + expiration + ");");
 					}
 					else if (value instanceof Boolean) {
 						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "');");
+						+ "','" + key + "','" + value + "'," + expiration + ");");
 					}
 					else if (value instanceof Integer) {
 						stmt.addBatch("REPLACE INTO neosettings_integers VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "');");
+						+ "','" + key + "','" + value + "'," + expiration + ");");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,7 +98,7 @@ public class Settings {
 	}
 	
 	public void load(Connection con, UUID uuid) {
-		HashMap<String, Object> pSettings = new HashMap<String, Object>();
+		HashMap<String, Value> pSettings = new HashMap<String, Value>();
 		this.values.put(uuid, pSettings);
 		this.changedValues.put(uuid, new ArrayList<String>());
 		try {
@@ -92,6 +106,7 @@ public class Settings {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neosettings_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
 			while (rs.next()) {
 				String subsetting = rs.getString(3);
+				long expiration = rs.getLong(5);
 				Object o = defaults.get(subsetting);
 				Object value = null;
 				if (o == null) {
@@ -108,12 +123,13 @@ public class Settings {
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
 				}
-				pSettings.put(subsetting, value);
+				pSettings.put(subsetting, new Value(value, expiration));
 			}
 			
 			rs = stmt.executeQuery("SELECT * FROM neosettings_integers WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
 			while (rs.next()) {
 				String subsetting = rs.getString(3);
+				long expiration = rs.getLong(5);
 				Object o = defaults.get(subsetting);
 				Object value = null;
 				if (o == null) {
@@ -127,7 +143,7 @@ public class Settings {
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
 				}
-				pSettings.put(subsetting, value);
+				pSettings.put(subsetting, new Value(value, expiration));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -138,8 +154,12 @@ public class Settings {
 		this.defaults.put(key, def);
 	}
 	
-	// Returns true if successful
 	public boolean changeSetting(String key, String v, UUID uuid) {
+		return changeSetting(key, v, uuid, -1);
+	}
+	
+	// If expiration is 0, the original expiration is kept
+	public boolean changeSetting(String key, String v, UUID uuid, long expiration) {
 		Object value = null;
 		if (!defaults.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
@@ -177,12 +197,21 @@ public class Settings {
 		}
 
 		changedValues.get(uuid).add(key);
-		values.get(uuid).put(key, value);
+		Value curr = values.get(uuid).get(key);
+		curr.setValue(value);
+		if (expiration != 0) {
+			curr.setExpiration(expiration);
+		}
 		return true;
 	}
 	
-	// Returns true if successful
 	public boolean addToSetting(String key, int v, UUID uuid) {
+		// Default to no expiration change
+		return addToSetting(key, v, uuid, 0);
+	}
+	
+	// Returns true if successful
+	public boolean addToSetting(String key, int v, UUID uuid, long expiration) {
 		if (!defaults.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
@@ -199,7 +228,10 @@ public class Settings {
 			return false;
 		}
 		
-		int original = (int) values.get(uuid).getOrDefault(key, defaults.get(key));
+		int original = (int) defaults.get(key);
+		if (values.containsKey(uuid)) {
+			original = (int) values.get(uuid).get(key).getValue();
+		}
 		int newValue = original + v;
 		
 		if (newValue > 100000 || newValue < 1) {
@@ -212,7 +244,11 @@ public class Settings {
 		}
 
 		changedValues.get(uuid).add(key);
-		values.get(uuid).put(key, newValue);
+		Value curr = values.get(uuid).get(key);
+		curr.setValue(newValue);
+		if (expiration != 0) {
+			curr.setExpiration(expiration);
+		}
 		return true;
 	}
 	

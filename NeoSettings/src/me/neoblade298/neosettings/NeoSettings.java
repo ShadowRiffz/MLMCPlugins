@@ -78,49 +78,49 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		return newSettings;
 	}
 	
-	public boolean changeSetting(String setting, String subsetting, String value, UUID uuid, Player user) {
+	public boolean changeSetting(String setting, String subsetting, String value, UUID uuid, boolean canAccessHidden) {
 		if (!this.settings.containsKey(setting)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 			return false;
 		}
-		if (settings.get(setting).isHidden() && !canAccessHidden(user)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden to " + user.getName() + ".");
+		if (settings.get(setting).isHidden() && canAccessHidden) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
 		return this.settings.get(setting).changeSetting(subsetting, value, uuid);
 	}
 	
-	public boolean addToSetting(String setting, String subsetting, int value, UUID uuid, Player user) {
+	public boolean addToSetting(String setting, String subsetting, int value, UUID uuid, boolean canAccessHidden) {
 		if (!this.settings.containsKey(setting)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 			return false;
 		}
-		if (settings.get(setting).isHidden() && !canAccessHidden(user)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden to " + user.getName() + ".");
+		if (settings.get(setting).isHidden() && canAccessHidden) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
 		return this.settings.get(setting).addToSetting(subsetting, value, uuid);
 	}
 	
-	public boolean resetSetting(String setting, String subsetting, UUID uuid, Player user) {
+	public boolean resetSetting(String setting, String subsetting, UUID uuid, boolean canAccessHidden) {
 		if (this.settings.containsKey(setting)) {
 			return this.settings.get(setting).resetSetting(subsetting, uuid);
 		}
-		if (settings.get(setting).isHidden() && !canAccessHidden(user)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden to " + user.getName() + ".");
+		if (settings.get(setting).isHidden() && canAccessHidden) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
 		Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to reset setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 		return false;
 	}
 	
-	public Settings getSettings(String key, Player user) {
+	public Settings getSettings(String key, boolean canAccessHidden) {
 		if (!settings.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting doesn't exist.");
 			return null;
 		}
-		if (settings.get(key).isHidden() && !canAccessHidden(user)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting is hidden to " + user.getName() + ".");
+		if (settings.get(key).isHidden() && canAccessHidden) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting is hidden.");
 			return null;
 		}
 		return settings.get(key);
@@ -185,10 +185,6 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
-	}
-	
-	private boolean canAccessHidden(Player p) {
-		return p.hasPermission("mycommand.staff");
 	}
 	
 	@EventHandler
