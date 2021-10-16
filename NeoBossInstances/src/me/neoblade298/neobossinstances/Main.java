@@ -113,7 +113,7 @@ public class Main extends JavaPlugin implements Listener {
 		bossMultiplier.clear();
 		
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("BossMultipliers", this);
+		settings = nsettings.createSettings("BossMultipliers", this, false);
 		
 		
 		// See if this is an instance
@@ -746,7 +746,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onSettingsLoad(LoadSettingsEvent e) {
-		settings = e.getPlugin().createSettings("BossMultipliers", this);
+		settings = e.getPlugin().createSettings("BossMultipliers", this, false);
 		Enumeration<String> enu = bossInfo.keys();
 		while (enu.hasMoreElements()) {
 			settings.addSetting(enu.nextElement(), 1);
