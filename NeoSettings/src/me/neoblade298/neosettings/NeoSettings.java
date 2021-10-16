@@ -83,7 +83,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 			return false;
 		}
-		if (settings.get(setting).isHidden() && canAccessHidden) {
+		if (settings.get(setting).isHidden() && !canAccessHidden) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
@@ -95,7 +95,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + setting + "." + subsetting + " for " + uuid + ". Setting doesn't exist.");
 			return false;
 		}
-		if (settings.get(setting).isHidden() && canAccessHidden) {
+		if (settings.get(setting).isHidden() && !canAccessHidden) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
@@ -106,7 +106,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		if (this.settings.containsKey(setting)) {
 			return this.settings.get(setting).resetSetting(subsetting, uuid);
 		}
-		if (settings.get(setting).isHidden() && canAccessHidden) {
+		if (settings.get(setting).isHidden() && !canAccessHidden) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + setting + ". Setting is hidden.");
 			return false;
 		}
@@ -119,7 +119,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting doesn't exist.");
 			return null;
 		}
-		if (settings.get(key).isHidden() && canAccessHidden) {
+		if (settings.get(key).isHidden() && !canAccessHidden) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting is hidden.");
 			return null;
 		}

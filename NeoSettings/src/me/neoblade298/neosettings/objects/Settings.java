@@ -49,7 +49,7 @@ public class Settings {
 		HashMap<String, Value> pValues = values.get(uuid);
 		if (pValues.containsKey(key)) {
 			// If value has expired, remove it
-			if (pValues.get(key).getExpiration() == -1 || pValues.get(key).getExpiration() < System.currentTimeMillis()) {
+			if (pValues.get(key).getExpiration() != -1 && pValues.get(key).getExpiration() < System.currentTimeMillis()) {
 				pValues.remove(key);
 			}
 			else {
@@ -70,7 +70,7 @@ public class Settings {
 				long expiration = pValues.get(key).getExpiration();
 				
 				// Skip expired values
-				if (pValues.get(key).getExpiration() == -1 || pValues.get(key).getExpiration() < System.currentTimeMillis()) {
+				if (pValues.get(key).getExpiration() != -1 && pValues.get(key).getExpiration() < System.currentTimeMillis()) {
 					continue;
 				}
 				
@@ -197,11 +197,19 @@ public class Settings {
 		}
 
 		changedValues.get(uuid).add(key);
-		Value curr = values.get(uuid).get(key);
-		curr.setValue(value);
-		if (expiration != 0) {
-			curr.setExpiration(expiration);
+		
+		if (values.get(uuid).containsKey(key)) {
+			Value curr = values.get(uuid).get(key);
+			curr.setValue(value);
+			if (expiration != 0) {
+				curr.setExpiration(expiration);
+			}
 		}
+		else {
+			values.get(uuid).put(key, new Value(value, expiration));
+		}
+		
+		
 		return true;
 	}
 	
