@@ -64,7 +64,7 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		String boss = args[0];
 		String id = args[1];
-		int level = (int) plugin.getSettings("BossMultipliers").getValue(p.getUniqueId(), boss);
+		int level = (int) plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
 			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
