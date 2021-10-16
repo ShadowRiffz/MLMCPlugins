@@ -57,6 +57,6 @@ public class NeoSettingsPlaceholders extends PlaceholderExpansion {
 		String key = args[0];
 		String subkey = args[1];
 		
-		return "" + plugin.getSettings(key).getValue(p.getUniqueId(), subkey);
+		return "" + plugin.getSettings(key, true).getValue(p.getUniqueId(), subkey);
 	}
 }
