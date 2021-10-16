@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -746,10 +747,13 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onSettingsLoad(LoadSettingsEvent e) {
+		Bukkit.getLogger().log(Level.INFO, "[NeoBossInstances] Creating setting BossMultipliers");
 		settings = e.getPlugin().createSettings("BossMultipliers", this, false);
 		Enumeration<String> enu = bossInfo.keys();
 		while (enu.hasMoreElements()) {
-			settings.addSetting(enu.nextElement(), 1);
+			String subsetting = enu.nextElement();
+			Bukkit.getLogger().log(Level.INFO, "[NeoBossInstances] Adding BossMultipliers." + subsetting);
+			settings.addSetting(subsetting, 1);
 		}
 	}
 
