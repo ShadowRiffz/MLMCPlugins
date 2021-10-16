@@ -747,12 +747,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onSettingsLoad(LoadSettingsEvent e) {
-		Bukkit.getLogger().log(Level.INFO, "[NeoBossInstances] Creating setting BossMultipliers");
 		settings = e.getPlugin().createSettings("BossMultipliers", this, false);
 		Enumeration<String> enu = bossInfo.keys();
 		while (enu.hasMoreElements()) {
 			String subsetting = enu.nextElement();
-			Bukkit.getLogger().log(Level.INFO, "[NeoBossInstances] Adding BossMultipliers." + subsetting);
 			settings.addSetting(subsetting, 1);
 		}
 	}
