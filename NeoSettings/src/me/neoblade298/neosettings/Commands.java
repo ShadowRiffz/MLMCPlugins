@@ -33,7 +33,7 @@ public class Commands implements CommandExecutor{
 			}
 			else if (args[0].equalsIgnoreCase("debug") && p.hasPermission("mycommand.staff")) {
 				main.debug = !main.debug;
-				p.sendMessage("§4[§c§lMLMC§4] §7Debug set to §e" + main.debug + " §7!");
+				p.sendMessage("§4[§c§lMLMC§4] §7Debug set to §e" + main.debug + "§7!");
 				return true;
 			}
 			else {
