@@ -1,6 +1,7 @@
 name: NeoSettings
 main: me.neoblade298.neosettings.NeoSettings
 author: [Neoblade298]
+depend: [SkillAPI]
 version: 1.0
 api-version: 1.16
 commands:

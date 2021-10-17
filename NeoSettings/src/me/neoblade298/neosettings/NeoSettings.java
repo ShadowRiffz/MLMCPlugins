@@ -20,7 +20,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.neoblade298.neosettings.events.LoadSettingsEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.PlayerSaveEvent;
+
 import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
@@ -28,6 +30,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	// SQL
 	public String url, user, pass;
 	public boolean debug;
+	public HashMap<UUID, Long> lastSave;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoSettings Enabled");
@@ -47,6 +50,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	
 	public void loadConfig() {
 	    this.settings = new HashMap<String, Settings>();
+	    this.lastSave = new HashMap<UUID, Long>();
 
 		// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
@@ -61,9 +65,6 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 				sql.getString("db") + sql.getString("flags");
 		user = sql.getString("username");
 		pass = sql.getString("password");
-		
-		// Get settings from external plugins
-		Bukkit.getPluginManager().callEvent(new LoadSettingsEvent(this));
 	}
 	
 	private void loadBuiltinSettings() {
@@ -153,6 +154,13 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	
 	
 	public void handleLeave(UUID uuid) {
+		if (lastSave.containsKey(uuid)) {
+			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
+				// If saved less than 10 seconds ago, don't save again
+				return;
+			}
+		}
+		
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
 				try {
