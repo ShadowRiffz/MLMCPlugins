@@ -162,7 +162,7 @@ public class Commands implements CommandExecutor {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
+					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + target.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
 					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
