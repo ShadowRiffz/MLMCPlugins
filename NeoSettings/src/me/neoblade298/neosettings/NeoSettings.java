@@ -20,9 +20,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
-import com.sucy.skill.api.event.PlayerSaveEvent;
-
 import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
