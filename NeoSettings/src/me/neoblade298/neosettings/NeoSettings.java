@@ -27,11 +27,13 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	private HashMap<String, Settings> settings;
 	// SQL
 	public String url, user, pass;
+	public boolean debug;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoSettings Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 	    this.getCommand("settings").setExecutor(new Commands(this));
+	    this.debug = false;
 	    
 	    loadConfig();
 	    loadBuiltinSettings();

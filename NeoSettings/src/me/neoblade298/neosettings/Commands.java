@@ -28,6 +28,12 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/settings <player> reset [setting] [subsetting]");
 				sender.sendMessage("§c/settings <player> get [setting] [subsetting]");
 				sender.sendMessage("§c/settings <player> list");
+				sender.sendMessage("§c/settings debug");
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("debug") && p.hasPermission("mycommand.staff")) {
+				main.debug = !main.debug;
+				p.sendMessage("§4[§c§lMLMC§4] §7Debug set to §e" + main.debug + " §7!");
 				return true;
 			}
 			else {

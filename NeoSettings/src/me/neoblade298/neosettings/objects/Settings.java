@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import me.neoblade298.neosettings.NeoSettings;
 
 public class Settings {
+	private NeoSettings main;
 	private final String key;
 	private HashMap<UUID, HashMap<String, Value>> values;
 	private HashMap<UUID, ArrayList<String>> changedValues;
@@ -22,6 +23,7 @@ public class Settings {
 	private final boolean hidden;
 	
 	public Settings (NeoSettings main, String key, boolean hidden) {
+		this.main = main;
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Value>>();
 		this.defaults = new HashMap<String, Object>();
@@ -63,6 +65,9 @@ public class Settings {
 	public void save(Connection con, Statement stmt, UUID uuid) {
 		if (changedValues.containsKey(uuid)) {
 			HashMap<String, Value> pValues = values.get(uuid);
+			if (main.debug) {
+				Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Changed values: " + this.getKey() + " " + changedValues.get(uuid) + " for " + uuid + ".");
+			}
 			
 			// Only save changed values
 			for (String key : changedValues.get(uuid)) {
@@ -76,6 +81,9 @@ public class Settings {
 				
 				
 				try {
+					if (main.debug) {
+						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " for " + uuid + ".");
+					}
 					if (value instanceof String) {
 						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
 						+ "','" + key + "','" + value + "'," + expiration + ");");
@@ -123,6 +131,9 @@ public class Settings {
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
 				}
+				if (main.debug) {
+					Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Loading setting: " + this.getKey() + "." + subsetting + " for " + uuid + ".");
+				}
 				pSettings.put(subsetting, new Value(value, expiration));
 			}
 			
@@ -142,6 +153,9 @@ public class Settings {
 				
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Value is null.");
+				}
+				if (main.debug) {
+					Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Loading setting: " + this.getKey() + "." + subsetting + " for " + uuid + ".");
 				}
 				pSettings.put(subsetting, new Value(value, expiration));
 			}
