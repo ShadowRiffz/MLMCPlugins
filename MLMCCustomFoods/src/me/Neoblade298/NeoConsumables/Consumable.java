@@ -17,10 +17,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 
-public class Food {
+public class Consumable {
 	NeoConsumables main;
-	ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
-	ArrayList<AttributeEffect> attributes = new ArrayList<AttributeEffect>();
+	ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
+	Attributes attributes;
+	int attributeTime;
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
 	ArrayList<String> commands = new ArrayList<String>();
 	ArrayList<String> worlds = new ArrayList<String>();
@@ -30,7 +31,7 @@ public class Food {
 	int hunger;
 	int health, healthTime, healthDelay;
 	int mana, manaTime, manaDelay;
-	int cooldown = 0;
+	long cooldown = 0;
 	boolean ignoreGcd = false;
 
 	public void setCommands(List<String> commands) {
@@ -51,7 +52,7 @@ public class Food {
 		this.mana = mana;
 	}
 
-	public void setCooldown(int cooldown) {
+	public void setCooldown(long cooldown) {
 		this.cooldown = cooldown;
 	}
 
@@ -103,32 +104,13 @@ public class Food {
 		return this.worlds;
 	}
 
-	public Food(NeoConsumables main, String name, int hunger, double saturation, String... lore) {
+	public Consumable(NeoConsumables main, String name) {
 		this.main = main;
 		this.name = name;
-		this.hunger = hunger;
-		this.saturation = saturation;
-		this.lore = new ArrayList<String>(Arrays.asList(lore));
-	}
-
-	public Food(NeoConsumables main, String name, int hunger, double saturation, ArrayList<String> lore,
-			ArrayList<PotionEffect> effects, ArrayList<AttributeEffect> attributes, ArrayList<Sound> sounds) {
-		this.main = main;
-		this.name = name;
-		this.lore = lore;
-		this.hunger = hunger;
-		this.saturation = saturation;
-		this.effects = effects;
-		this.attributes = attributes;
-		this.sounds = sounds;
 	}
 
 	public void addEffect(PotionEffect effect) {
-		this.effects.add(effect);
-	}
-
-	public void addAttribute(AttributeEffect effect) {
-		this.attributes.add(effect);
+		this.potions.add(effect);
 	}
 
 	public ArrayList<String> getLore() {
@@ -140,11 +122,15 @@ public class Food {
 	}
 
 	public ArrayList<PotionEffect> getEffect() {
-		return this.effects;
+		return this.potions;
 	}
 
-	public ArrayList<AttributeEffect> getAttributes() {
+	public Attributes getAttributes() {
 		return this.attributes;
+	}
+	
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
 	}
 
 	public int getHunger() {
@@ -186,8 +172,7 @@ public class Food {
 		// Check gcd
 		UUID uuid = p.getUniqueId();
 		if (!main.isOffGcd(p) && !ignoreGcd) {
-			long remainingCooldown = 20000L;
-			remainingCooldown -= System.currentTimeMillis() - main.globalCooldowns.get(p.getUniqueId());
+			long remainingCooldown = main.globalCooldowns.get(p.getUniqueId()) - System.currentTimeMillis();
 			remainingCooldown /= 1000L;
 			String message = "&cYou cannot use any consumables for another " + remainingCooldown + " seconds";
 			message = message.replaceAll("&", "§");
@@ -197,10 +182,9 @@ public class Food {
 
 		// Check per-consumable cooldown
 		if (main.foodCooldowns.containsKey(uuid) && main.foodCooldowns.get(uuid).containsKey(this)) {
-			long lastEaten = main.foodCooldowns.get(uuid).get(this);
-			if (System.currentTimeMillis() - lastEaten > this.cooldown) {
-				long remainingCooldown = this.cooldown;
-				remainingCooldown -= System.currentTimeMillis() - lastEaten;
+			long nextEat = main.foodCooldowns.get(uuid).get(this);
+			if (System.currentTimeMillis() < nextEat) {
+				long remainingCooldown = nextEat - System.currentTimeMillis();
 				remainingCooldown /= 1000L;
 				String message = "&cYou cannot use this consumables for another " + remainingCooldown + " seconds";
 				message = message.replaceAll("&", "§");
@@ -231,67 +215,62 @@ public class Food {
 		if (getHunger() > 0) {
 			FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
 			Bukkit.getPluginManager().callEvent(event);
-			if (event.isCancelled()) {
-				return;
+			if (!event.isCancelled()) {
+				p.setFoodLevel(foodLevel);
+				p.setSaturation((float) Math.min(p.getFoodLevel(), this.getSaturation() + p.getSaturation()));
 			}
 		}
 
-		long toSubtract = (long) (this.cooldown * (1 - preserve));
-		long ticks = (long) (((double) this.cooldown) * preserve);
 
-		// Some items ignore global cooldown and also don't set it
+		// Set cooldowns
+		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 1000L * (1 - preserve));
+		long ticks = (long) (this.cooldown * preserve);
 		if (!ignoreGcd) {
-			main.foodCooldowns.get(uuid).put(this, Long.valueOf(System.currentTimeMillis() - toSubtract));
+			main.globalCooldowns.put(uuid, System.currentTimeMillis() + 20000L);
 		}
 		if (this.cooldown > 0) {
+			main.foodCooldowns.get(uuid).put(this, nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
-					String message = Food.this.name + "&7 can be eaten again.";
+					String message = Consumable.this.name + "&7 can be eaten again.";
 					message = message.replaceAll("&", "§");
 					p.sendMessage(message);
 				}
 			}, (ticks) / 50);
 		}
 
-		p.setFoodLevel(foodLevel);
-		p.setSaturation((float) Math.min(p.getFoodLevel(), this.getSaturation() + p.getSaturation()));
+		// Potion effects
 		for (PotionEffect effect : this.getEffect()) {
 			p.addPotionEffect(effect);
 		}
 
 		// SkillAPI Attributes
 		// Work on skillapi attributes
-		HashMap<String, int[]> playerAttribs;
-		if (!main.effects.containsKey(p.getUniqueId())) {
+		PlayerData data = SkillAPI.getPlayerData(p);
+		/*HashMap<String, int[]> playerAttribs;
+		if (!this.effects.containsKey(p.getUniqueId())) {
 			playerAttribs = new HashMap<String, int[]>();
 			main.effects.put(p.getUniqueId(), playerAttribs);
 		}
 		else {
-			playerAttribs = (HashMap<String, int[]>) this.effects.get(p.getUniqueId());
+			playerAttribs = (HashMap<String, int[]>) main.effects.get(p.getUniqueId());
 		}
-		PlayerData data = SkillAPI.getPlayerData(p);
 		for (AttributeEffect attrib : this.getAttributes()) {
 			// If an attribute currently exists, remove it
 			int duration = attrib.getDuration();
 			int amp = attrib.getAmp();
-			if (garnish != -1) {
-				amp *= garnish;
-			}
+			amp *= garnish;
 			if (playerAttribs.containsKey(attrib.getName())) {
 				int[] oldData = (int[]) playerAttribs.get(attrib.getName());
 				data.addBonusAttributes(attrib.getName(), -oldData[1]);
 			}
 			data.addBonusAttributes(attrib.getName(), amp);
 			playerAttribs.put(attrib.getName(), new int[] { duration, amp });
-		}
+		}*/
 
 		// Health and mana regen
-		double finalHealth = health;
-		double finalMana = mana;
-		if (spice != -1) {
-			finalHealth *= spice;
-			finalMana *= spice;
-		}
+		final double finalHealth = health * spice;
+		final double finalMana = mana * spice;
 
 		if (getHealthTime() == 0 && !p.isDead()) {
 				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + finalHealth));
@@ -336,5 +315,73 @@ public class Food {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 		executeCommands(p);
+	}
+
+	public NeoConsumables getMain() {
+		return main;
+	}
+
+	public void setMain(NeoConsumables main) {
+		this.main = main;
+	}
+
+	public ArrayList<PotionEffect> getPotions() {
+		return potions;
+	}
+
+	public void setPotions(ArrayList<PotionEffect> effects) {
+		this.potions = effects;
+	}
+
+	public int getAttributeTime() {
+		return attributeTime;
+	}
+
+	public void setAttributeTime(int attributeTime) {
+		this.attributeTime = attributeTime;
+	}
+
+	public ArrayList<String> getCommands() {
+		return commands;
+	}
+
+	public void setCommands(ArrayList<String> commands) {
+		this.commands = commands;
+	}
+
+	public boolean isIgnoreGcd() {
+		return ignoreGcd;
+	}
+
+	public void setIgnoreGcd(boolean ignoreGcd) {
+		this.ignoreGcd = ignoreGcd;
+	}
+
+	public long getCooldown() {
+		return cooldown;
+	}
+
+	public void setSounds(ArrayList<Sound> sounds) {
+		this.sounds = sounds;
+	}
+
+	public void setWorlds(ArrayList<String> worlds) {
+		this.worlds = worlds;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setLore(ArrayList<String> lore) {
+		this.lore = lore;
+	}
+
+	public void setSaturation(double saturation) {
+		this.saturation = saturation;
+	}
+
+	public void setHunger(int hunger) {
+		this.hunger = hunger;
 	}
 }

@@ -35,10 +35,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class NeoConsumables extends JavaPlugin implements Listener {
-	HashMap<String, Food> foods = new HashMap<String, Food>();
-	HashMap<UUID, HashMap<String, int[]>> effects = new HashMap<UUID, HashMap<String, int[]>>();
+	HashMap<String, Consumable> foods = new HashMap<String, Consumable>();
+	HashMap<UUID, ArrayList<BukkitRunnable>> attributes = new HashMap<UUID, ArrayList<BukkitRunnable>>();
 	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
-	HashMap<UUID, HashMap<Food, Long>> foodCooldowns = new HashMap<UUID, HashMap<Food, Long>>();
+	HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
 	boolean isInstance = false;
 
 	public void onEnable() {
@@ -51,95 +51,73 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		
 		
 		Bukkit.getPluginManager().registerEvents(this, this);
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-			public void run() {
-				for (Iterator<UUID> uuidIterator = NeoConsumables.this.effects.keySet().iterator(); uuidIterator
-						.hasNext();) {
-					UUID u = (UUID) uuidIterator.next();
-					Player p = Bukkit.getPlayer(u);
-					if (p != null) {
-						PlayerData data = SkillAPI.getPlayerData(p);
-						HashMap<String, int[]> playerAttribs = (HashMap<String, int[]>) NeoConsumables.this.effects
-								.get(p.getUniqueId());
-						for (Iterator<String> attribIterator = playerAttribs.keySet().iterator(); attribIterator
-								.hasNext();) {
-							String attrib = (String) attribIterator.next();
-							int[] time = (int[]) playerAttribs.get(attrib);
-							if (time[0] <= 0) {
-								data.addBonusAttributes(attrib, -time[1]);
-								attribIterator.remove();
-							}
-							else {
-								playerAttribs.put(attrib, new int[] { time[0] - 1, time[1] });
-							}
-						}
-					}
-				}
-			}
-		}, 0L, 1L);
 	}
 	
 	public void loadConfigs() {
+		foods.clear();
+		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
-			FileConfiguration foodConfig = YamlConfiguration.loadConfiguration(file);
-			HashMap<String, Food> foods = new HashMap<String, Food>();
-			for (String s : foodConfig.getKeys(false)) {
-				if (!s.equalsIgnoreCase("is-instance")) {
-					String name = foodConfig.getString(s + ".name").replaceAll("&", "ยง");
-					ArrayList<String> lore = new ArrayList<String>();
-					for (String loreLine : foodConfig.getStringList(s + ".lore")) {
-						lore.add(loreLine.replaceAll("&", "ยง"));
-					}
-					ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
-					PotionEffectType type;
-					for (String potion : foodConfig.getStringList(s + ".effects")) {
-						String[] split = potion.split(",");
-						type = PotionEffectType.getByName(split[0]);
-						int amp = Integer.parseInt(split[1]);
-						int duration = Integer.parseInt(split[2]) * 20;
-						PotionEffect effect = new PotionEffect(type, duration, amp);
-						effects.add(effect);
-					}
-					ArrayList<AttributeEffect> attribs = new ArrayList<AttributeEffect>();
-					String attribName;
-					for (String potion : foodConfig.getStringList(s + ".attributes")) {
-						String[] split = potion.split(",");
-						attribName = split[0];
-						int amp = Integer.parseInt(split[1]);
-						int duration = Integer.parseInt(split[2]) * 20;
-						AttributeEffect attrib = new AttributeEffect(attribName, amp, duration);
-						attribs.add(attrib);
-					}
-					ArrayList<Sound> sounds = new ArrayList<Sound>();
-					for (String sname : foodConfig.getStringList(s + ".sound-effects")) {
-						Sound sound = Sound.valueOf(sname.toUpperCase());
-						if (sound != null) {
-							sounds.add(sound);
-						}
-					}
-					double sat = foodConfig.getDouble(s + ".saturation");
-					int hung = foodConfig.getInt(s + ".hunger");
-					Food food = new Food(this, name, hung, sat, lore, effects, (ArrayList<AttributeEffect>) attribs,
-							(ArrayList<Sound>) sounds);
-					food.setHealth(foodConfig.getInt(s + ".health.amount"));
-					food.setHealthDelay(foodConfig.getInt(s + ".health.delay"));
-					food.setHealthTime(foodConfig.getInt(s + ".health.repetitions"));
-					food.setMana(foodConfig.getInt(s + ".mana.amount"));
-					food.setManaDelay(foodConfig.getInt(s + ".mana.delay"));
-					food.setManaTime(foodConfig.getInt(s + ".mana.repetitions"));
-					food.setCooldown(foodConfig.getInt(s + ".cooldown"));
-					food.setCommands(foodConfig.getStringList(s + ".commands"));
-					food.setWorlds(foodConfig.getStringList(s + ".worlds"));
-					foods.put(name, food);
+			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
+			for (String s : itemConfig.getKeys(false)) {
+				String name = itemConfig.getString(s + ".name").replaceAll("&", "ง");
+				Consumable cons = new Consumable(this, name);
+				
+				// Lore
+				ArrayList<String> lore = new ArrayList<String>();
+				for (String loreLine : itemConfig.getStringList(s + ".lore")) {
+					lore.add(loreLine.replaceAll("&", "ง"));
 				}
+				cons.setLore(lore);
+				
+				// Potion effects
+				ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
+				PotionEffectType type;
+				for (String potion : itemConfig.getStringList(s + ".effects")) {
+					String[] split = potion.split(",");
+					type = PotionEffectType.getByName(split[0]);
+					int amp = Integer.parseInt(split[1]);
+					int duration = Integer.parseInt(split[2]) * 20;
+					PotionEffect effect = new PotionEffect(type, duration, amp);
+					potions.add(effect);
+				}
+				cons.setPotions(potions);
+				
+				// Attributes
+				Attributes attribs = new Attributes();
+				for (String potion : itemConfig.getStringList(s + ".attributes")) {
+					String[] split = potion.split(",");
+					String attr = split[0];
+					int amp = Integer.parseInt(split[1]);
+					attribs.addAttribute(attr, amp);
+				}
+				if (!attribs.isEmpty()) {
+					cons.setAttributes(attribs);
+				}
+				
+				ArrayList<Sound> sounds = new ArrayList<Sound>();
+				for (String sname : itemConfig.getStringList(s + ".sound-effects")) {
+					Sound sound = Sound.valueOf(sname.toUpperCase());
+					if (sound != null) {
+						sounds.add(sound);
+					}
+				}
+				cons.setSounds(sounds);
+				
+				cons.setSaturation(itemConfig.getDouble(s + ".saturation"));
+				cons.setHunger(itemConfig.getInt(s + ".hunger"));
+				cons.setHealth(itemConfig.getInt(s + ".health.amount"));
+				cons.setHealthDelay(itemConfig.getInt(s + ".health.delay"));
+				cons.setHealthTime(itemConfig.getInt(s + ".health.repetitions"));
+				cons.setMana(itemConfig.getInt(s + ".mana.amount"));
+				cons.setManaDelay(itemConfig.getInt(s + ".mana.delay"));
+				cons.setManaTime(itemConfig.getInt(s + ".mana.repetitions"));
+				cons.setCooldown(itemConfig.getLong(s + ".cooldown"));
+				cons.setCommands(itemConfig.getStringList(s + ".commands"));
+				cons.setWorlds(itemConfig.getStringList(s + ".worlds"));
+				cons.setIgnoreGcd(itemConfig.getBoolean(s + ".ignore-gcd"));
+				foods.put(name, cons);
 			}
 		}
-	}
-
-	@EventHandler
-	public void onPlayerDeathEvent(PlayerDeathEvent e) {
-		UUID id = e.getEntity().getUniqueId();
-		this.effects.remove(id);
 	}
 
 	@EventHandler
@@ -170,7 +148,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 
 		// Find the food in the inv
-		Food food = null;
+		Consumable food = null;
 		if (quickEat) {
 			ItemStack[] contents = p.getInventory().getContents();
 			for (int i = 0; i < 36; i++) {
@@ -207,7 +185,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return;
 		}
 		// Food can be eaten, calculate multipliers and remove flags
-		double garnishMultiplier = -1, preserveMultiplier = -1, spiceMultiplier = -1;
+		double garnishMultiplier = 1, preserveMultiplier = 1, spiceMultiplier = 1;
 		for (String line : meta.getLore()) {
 			if (line.contains("Garnished")) {
 				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
@@ -237,6 +215,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			}
 		}
 		
+		// Use consumable
 		food.eat(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
 		ItemStack clone = item.clone();
 		clone.setAmount(1);
@@ -246,15 +225,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerQuitEvent(PlayerQuitEvent e) {
-		Player p = e.getPlayer();
-		if (this.effects.containsKey(p.getUniqueId())) {
-			PlayerData data = SkillAPI.getPlayerData(p);
-			HashMap<String, int[]> playerAttribs = this.effects.get(p.getUniqueId());
-			for (String s : playerAttribs.keySet()) {
-				data.addBonusAttributes(s, ((int[]) playerAttribs.get(s))[1]);
-			}
-			this.effects.remove(p.getUniqueId());
-		}
+		// Add way to delete attribute tasks
 	}
 
 	@EventHandler
@@ -279,7 +250,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 
 	public boolean isOffGcd(Player p) {
 		if (this.globalCooldowns.containsKey(p.getUniqueId())) {
-			return System.currentTimeMillis() - ((Long) this.globalCooldowns.get(p.getUniqueId())).longValue() > 20000L;
+			return System.currentTimeMillis() > this.globalCooldowns.get(p.getUniqueId());
 		}
 		return true;
 	}

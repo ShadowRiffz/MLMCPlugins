@@ -1,5 +1,5 @@
 package me.Neoblade298.NeoConsumables;
 
-public enum FoodTypes {
+public enum ConsumableTypes {
 	FOOD, CHEST, TOKEN
 }
