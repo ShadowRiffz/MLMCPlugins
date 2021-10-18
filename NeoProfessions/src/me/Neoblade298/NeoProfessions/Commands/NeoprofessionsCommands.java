@@ -323,15 +323,18 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("add")) {
 					if (args[1].equalsIgnoreCase("randomore")) {
 						Random gen = new Random();
-						this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
-								Integer.parseInt(args[3]));
-						util.sendMessage(sender, "&7Successfully added ore!");
+						String type = CurrencyManager.types[gen.nextInt(7) + 1];
+						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
+						int amount = Integer.parseInt(args[3]);
+						this.main.cManager.add(p, type, level, amount);
+						util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
 						return true;
 					}
 					else {
-						this.main.cManager.add(p, args[1], util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL),
-								Integer.parseInt(args[3]));
-						util.sendMessage(sender, "&7Successfully added essence!");
+						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
+						int amount = Integer.parseInt(args[3]);
+						this.main.cManager.add(p, args[1], level, amount);
+						util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " essence to + " + p.getName() + "!");
 						return true;
 					}
 				}
@@ -566,15 +569,18 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args[1].equalsIgnoreCase("add")) {
 						if (args[2].equalsIgnoreCase("randomore")) {
 							Random gen = new Random();
-							this.main.cManager.add(p, CurrencyManager.types[gen.nextInt(7) + 1], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
-									Integer.parseInt(args[4]));
-							util.sendMessage(sender, "&7Successfully added ore!");
+							String type = CurrencyManager.types[gen.nextInt(7) + 1];
+							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
+							int amount = Integer.parseInt(args[4]);
+							this.main.cManager.add(p, type, level, amount);
+							util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
 							return true;
 						}
 						else {
-							this.main.cManager.add(p, args[2], util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL),
-									Integer.parseInt(args[4]));
-							util.sendMessage(sender, "&7Successfully added essence!");
+							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
+							int amount = Integer.parseInt(args[4]);
+							this.main.cManager.add(p, args[2], level, amount);
+							util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + "essence to + " + p.getName() + "!");
 							return true;
 						}
 					}
