@@ -21,7 +21,7 @@ import me.neoblade298.neomythicextension.conditions.ScoreCondition;
 import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
 import me.neoblade298.neomythicextension.conditions.StrongPlayerWithin;
 import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
-import me.neoblade298.neomythicextension.mechanics.DropChanceMechanic;
+import me.neoblade298.neomythicextension.mechanics.ScaleChestMechanic;
 import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModManaMechanic;
 import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
@@ -41,6 +41,7 @@ import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
 import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
 import me.neoblade298.neomythicextension.triggers.StatusTrigger;
+import me.neoblade298.neosettings.NeoSettings;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -50,6 +51,7 @@ public class Main extends JavaPlugin implements Listener {
 	// integers
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
+	private NeoSettings settings;
 
 	@Override
 	public void onEnable() {
@@ -59,7 +61,10 @@ public class Main extends JavaPlugin implements Listener {
 		globalscores = new ConcurrentHashMap<String, Integer>();
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
-
+		
+		// Create Settings
+		settings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
@@ -161,8 +166,8 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(mechanic);
 		}
 
-		else if (event.getMechanicName().equalsIgnoreCase("dropchance")) {
-			DropChanceMechanic mechanic = new DropChanceMechanic(event.getConfig());
+		else if (event.getMechanicName().equalsIgnoreCase("scalechest")) {
+			ScaleChestMechanic mechanic = new ScaleChestMechanic(event.getConfig());
 			event.register(mechanic);
 		}
 
