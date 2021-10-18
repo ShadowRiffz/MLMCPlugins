@@ -284,7 +284,6 @@ public class Main extends JavaPlugin implements Listener {
 					activeFights.get(boss).add(p);
 					inBoss.get(boss).add(p);
 				}
-				System.out.println("Added: " + p.getUniqueId() + " " + boss);
 				fightingBoss.put(p.getUniqueId(), boss);
 				
 				// Recalculate everyone's health bars every time someone joins
@@ -330,7 +329,14 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
-		// Wait 1 second so everyone can reorient themselves
+		// Double check that they're teleported
+		double px = p.getLocation().getX();
+		double pz = p.getLocation().getZ();
+		if (px >= 1555 && px <= 1570 && pz >= -725 && pz <= -709) {
+			p.teleport(b.getCoords());
+		}
+		
+		// Wait 3 seconds so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
 				if (!activeBosses.contains(boss)) {
@@ -347,11 +353,14 @@ public class Main extends JavaPlugin implements Listener {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						activeBosses.add(boss);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+						for (Player target : activeFights.get(boss)) {
+							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
+						}
 					}
 				}
 			}
 		};
-		spawnBoss.runTaskLater(this, 20L);
+		spawnBoss.runTaskLater(this, 60L);
 	}
 	
 	public void scheduleTimer(int time, String boss) {
