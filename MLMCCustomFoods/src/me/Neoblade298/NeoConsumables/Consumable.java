@@ -20,7 +20,7 @@ import com.sucy.skill.api.player.PlayerData;
 public class Consumable {
 	NeoConsumables main;
 	ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
-	Attributes attributes;
+	Attributes attributes = null;
 	int attributeTime;
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
 	ArrayList<String> commands = new ArrayList<String>();
@@ -33,6 +33,7 @@ public class Consumable {
 	int mana, manaTime, manaDelay;
 	long cooldown = 0;
 	boolean ignoreGcd = false;
+	ConsumableType type = ConsumableType.FOOD;
 
 	public void setCommands(List<String> commands) {
 		this.commands = new ArrayList<String>(commands);
@@ -144,6 +145,14 @@ public class Consumable {
 	public ArrayList<Sound> getSounds() {
 		return this.sounds;
 	}
+	
+	public void setType(ConsumableType type) {
+		this.type = type;
+	}
+	
+	public ConsumableType getType() {
+		return this.type;
+	}
 
 	public boolean isSimilar(ItemMeta meta) {
 		if ((!meta.hasLore()) && (!getLore().isEmpty())) {
@@ -223,7 +232,7 @@ public class Consumable {
 
 
 		// Set cooldowns
-		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 1000L * (1 - preserve));
+		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 50L * (1 - preserve));
 		long ticks = (long) (this.cooldown * preserve);
 		if (!ignoreGcd) {
 			main.globalCooldowns.put(uuid, System.currentTimeMillis() + 20000L);
@@ -236,7 +245,7 @@ public class Consumable {
 					message = message.replaceAll("&", "§");
 					p.sendMessage(message);
 				}
-			}, (ticks) / 50);
+			}, ticks);
 		}
 
 		// Potion effects
@@ -245,72 +254,38 @@ public class Consumable {
 		}
 
 		// SkillAPI Attributes
-		// Work on skillapi attributes
-		PlayerData data = SkillAPI.getPlayerData(p);
-		/*HashMap<String, int[]> playerAttribs;
-		if (!this.effects.containsKey(p.getUniqueId())) {
-			playerAttribs = new HashMap<String, int[]>();
-			main.effects.put(p.getUniqueId(), playerAttribs);
-		}
-		else {
-			playerAttribs = (HashMap<String, int[]>) main.effects.get(p.getUniqueId());
-		}
-		for (AttributeEffect attrib : this.getAttributes()) {
-			// If an attribute currently exists, remove it
-			int duration = attrib.getDuration();
-			int amp = attrib.getAmp();
-			amp *= garnish;
-			if (playerAttribs.containsKey(attrib.getName())) {
-				int[] oldData = (int[]) playerAttribs.get(attrib.getName());
-				data.addBonusAttributes(attrib.getName(), -oldData[1]);
+		if (attributes != null) {
+			// If the food's attributes still exist, just delay the remove attribute task
+			if (main.attributes.get(uuid).containsKey(this)) {
+				main.attributes.get(uuid).get(this).cancel();
+				main.attributes.get(uuid).put(this, new AttributeRunnable(p, this.getAttributes()).runTaskLater(main, this.attributeTime));
 			}
-			data.addBonusAttributes(attrib.getName(), amp);
-			playerAttribs.put(attrib.getName(), new int[] { duration, amp });
-		}*/
+			else {
+				attributes.applyAttributes(p);
+				main.attributes.get(uuid).put(this, new AttributeRunnable(p, this.getAttributes()).runTaskLater(main, this.attributeTime));
+			}
+		}
 
 		// Health and mana regen
-		final double finalHealth = health * spice;
-		final double finalMana = mana * spice;
+		PlayerData data = SkillAPI.getPlayerData(p);
 
 		if (getHealthTime() == 0 && !p.isDead()) {
-				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + finalHealth));
+				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + (health * spice)));
 		}
-		else {
-			BukkitRunnable healthTask = new BukkitRunnable() {
-				int rep = getHealthTime();
-				public void run() {
-					if (p.isValid()) {
-						this.rep -= 1;
-						p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + finalHealth));
-						if (this.rep <= 0) {
-							this.cancel();
-						}
-					}
-				}
-			};
-			healthTask.runTaskTimer(main, 0, getHealthDelay());
+		else if (getHealthTime() > 0 && !p.isDead()) {
+			new HealthRunnable(p, health * spice, getHealthTime()).runTaskTimer(main, 0, getHealthDelay());
 		}
 		
 		if (data.getMainClass().getData().getManaName().contains("MP")) {
 			if (getManaTime() == 0 && !p.isDead()) {
-				data.setMana(Math.min(data.getMaxMana(), data.getMana() + finalMana));
+				data.setMana(Math.min(data.getMaxMana(), data.getMana() + (mana * spice)));
 			}
-			else {
-				BukkitRunnable manaTask = new BukkitRunnable() {
-					int rep = getManaTime();
-					public void run() {
-						if (p.isValid()) {
-							this.rep -= 1;
-							data.setMana(Math.min(data.getMaxMana(), data.getMana() + finalMana));
-							if (this.rep <= 0) {
-								this.cancel();
-							}
-						}
-					}
-				};
-				manaTask.runTaskTimer(main, 0, getManaDelay());
+			else if (getManaTime() > 0 && !p.isDead()) {
+				new ManaRunnable(p, mana * spice, getHealthTime()).runTaskTimer(main, 0, getManaDelay());
 			}
 		}
+		
+		// Sounds, commands
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}

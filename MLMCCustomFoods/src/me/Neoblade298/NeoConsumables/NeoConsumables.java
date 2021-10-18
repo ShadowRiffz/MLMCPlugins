@@ -1,19 +1,16 @@
 package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -21,8 +18,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -33,10 +28,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class NeoConsumables extends JavaPlugin implements Listener {
 	HashMap<String, Consumable> foods = new HashMap<String, Consumable>();
-	HashMap<UUID, ArrayList<BukkitRunnable>> attributes = new HashMap<UUID, ArrayList<BukkitRunnable>>();
+	// These runnables take away attributes from players when they're done being used
+	HashMap<UUID, HashMap<Consumable, BukkitTask>> attributes = new HashMap<UUID, HashMap<Consumable, BukkitTask>>();
 	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
 	HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
 	boolean isInstance = false;
@@ -48,7 +45,6 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 		loadConfigs();
-		
 		
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
@@ -102,7 +98,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					}
 				}
 				cons.setSounds(sounds);
-				
+
 				cons.setSaturation(itemConfig.getDouble(s + ".saturation"));
 				cons.setHunger(itemConfig.getInt(s + ".hunger"));
 				cons.setHealth(itemConfig.getInt(s + ".health.amount"));
@@ -115,6 +111,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				cons.setCommands(itemConfig.getStringList(s + ".commands"));
 				cons.setWorlds(itemConfig.getStringList(s + ".worlds"));
 				cons.setIgnoreGcd(itemConfig.getBoolean(s + ".ignore-gcd"));
+				cons.setType(ConsumableType.fromString(itemConfig.getString(s + ".type")));
 				foods.put(name, cons);
 			}
 		}
@@ -234,7 +231,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (isInstance) {
 			// Remove cooldowns for food if joining a boss instance
 			UUID uuid = p.getUniqueId();
-			foodCooldowns.remove(uuid);
+			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
+			attributes.put(uuid, new HashMap<Consumable, BukkitTask>());
 			globalCooldowns.remove(uuid);
 		}
 	}
