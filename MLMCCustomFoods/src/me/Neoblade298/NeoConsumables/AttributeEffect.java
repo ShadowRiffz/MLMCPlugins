@@ -1,4 +1,4 @@
-package me.Neoblade298.MLMCCustomFoods;
+package me.Neoblade298.NeoConsumables;
 
 public class AttributeEffect
 {
