@@ -63,6 +63,7 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 			if (p.hasPermission("tokens.active.boss")) {
 				dropType = 3;
 				chance = 1;
+				moddedChance = 1;
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
 			}
 			else {
