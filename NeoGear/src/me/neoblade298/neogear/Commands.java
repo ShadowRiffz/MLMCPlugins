@@ -58,10 +58,10 @@ public class Commands implements CommandExecutor{
 				}
 				int failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
 				if (failures > 0) {
-					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give item, inventory full");
+					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to get " + rarity + " " + type + " to " + p.getName() + ", inventory full");
 				}
 				else {
-					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned item");
+					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned " + rarity + " " + type + " for " + p.getName());
 				}
 			}
 
@@ -97,10 +97,10 @@ public class Commands implements CommandExecutor{
 					System.out.println("[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
 				}
 				if (failures > 0) {
-					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give item");
+					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to give " + rarity + " " + type + " to " + p.getName() + ", inventory full");
 				}
 				else {
-					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned item");
+					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned " + rarity + " " + type + " for " + p.getName());
 				}
 			}
 			// Gear sell [player]
