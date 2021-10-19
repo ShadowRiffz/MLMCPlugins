@@ -215,8 +215,12 @@ public class Consumable {
 		}
 		return true;
 	}
+	
+	public void consume(final Player p) {
+		consume(p, 1, 1, 1);
+	}
 
-	public void eat(final Player p, double garnish, double spice, double preserve) {
+	public void consume(final Player p, double garnish, double spice, double preserve) {
 		// Sounds, commands
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);

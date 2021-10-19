@@ -38,7 +38,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 public class NeoConsumables extends JavaPlugin implements Listener {
-	HashMap<String, Consumable> foods = new HashMap<String, Consumable>();
+	HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	// These runnables take away attributes from players when they're done being used
 	HashMap<UUID, HashMap<Consumable, BukkitTask>> attributes = new HashMap<UUID, HashMap<Consumable, BukkitTask>>();
 	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
@@ -59,7 +59,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	}
 	
 	public void loadConfigs() {
-		foods.clear();
+		consumables.clear();
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		settings = nsettings.createSettings("Consumables", this, false);
 		settings.addSetting("InventoryUse", false);
@@ -126,7 +126,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				cons.setWorlds(itemConfig.getStringList(s + ".worlds"));
 				cons.setIgnoreGcd(itemConfig.getBoolean(s + ".ignore-gcd"));
 				cons.setType(ConsumableType.fromString(itemConfig.getString(s + ".type")));
-				foods.put(name, cons);
+				consumables.put(name, cons);
 			}
 		}
 	}
@@ -160,7 +160,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 
 		// Find the food in the inv
-		Consumable food = null;
+		Consumable consumable = null;
 		if (quickEat) {
 			ItemStack[] contents = p.getInventory().getContents();
 			for (int i = 0; i < 36; i++) {
@@ -168,14 +168,14 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 					ItemMeta invMeta = invItem.getItemMeta();
 					String invName = ChatColor.stripColor(invMeta.getDisplayName());
-					if (!foods.containsKey(invName)) {
+					if (!consumables.containsKey(invName)) {
 						continue;
 					}
-					food = foods.get(invName);
-					if (!food.isSimilar(invMeta)) {
+					consumable = consumables.get(invName);
+					if (!consumable.isSimilar(invMeta)) {
 						continue;
 					}
-					if (!food.canEat(p)) {
+					if (!consumable.canEat(p)) {
 						continue;
 					}
 					break;
@@ -183,18 +183,18 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			}
 		}
 		else {
-			if (foods.containsKey(name)) {
-				food = foods.get(name);
-				if (!food.isSimilar(meta)) {
+			if (consumables.containsKey(name)) {
+				consumable = consumables.get(name);
+				if (!consumable.isSimilar(meta)) {
 					return;
 				}
-				if (!food.canEat(p)) {
+				if (!consumable.canEat(p)) {
 					return;
 				}
 			}
 		}
 		
-		if (food == null) {
+		if (consumable == null) {
 			return;
 		}
 		// Food can be eaten, calculate multipliers and remove flags
@@ -229,7 +229,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		
 		// Use consumable
-		food.eat(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
+		consumable.consume(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
 		ItemStack clone = item.clone();
 		clone.setAmount(1);
 		p.getInventory().removeItem(clone);
@@ -241,6 +241,34 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (!e.isRightClick()) {
 			return;
 		}
+		Player p = (Player) e.getWhoClicked();
+		if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
+			return;
+		}
+		ItemStack item = e.getClickedInventory().getItem(e.getSlot());
+		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		ItemMeta meta = item.getItemMeta();
+		String name = ChatColor.stripColor(meta.getDisplayName());
+		
+		if (!consumables.containsKey(name)) {
+			return;
+		}
+		Consumable cons = consumables.get(name);
+		
+		// Only food can be inventory click eaten
+		if (cons.getType() != ConsumableType.FOOD) {
+			return;
+		}
+		if (!cons.isSimilar(meta)) {
+			return;
+		}
+		if (!cons.canEat(p)) {
+			return;
+		}
+		
+		cons.consume(p);
 	}
 	
 	@EventHandler
