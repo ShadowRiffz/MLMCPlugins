@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
@@ -175,7 +174,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					if (!consumable.isSimilar(invMeta)) {
 						continue;
 					}
-					if (!consumable.canEat(p)) {
+					if (!consumable.canUse(p)) {
 						continue;
 					}
 					break;
@@ -188,7 +187,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				if (!consumable.isSimilar(meta)) {
 					return;
 				}
-				if (!consumable.canEat(p)) {
+				if (!consumable.canUse(p)) {
 					return;
 				}
 			}
@@ -229,7 +228,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		
 		// Use consumable
-		consumable.consume(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
+		consumable.use(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
 		ItemStack clone = item.clone();
 		clone.setAmount(1);
 		p.getInventory().removeItem(clone);
@@ -264,11 +263,11 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (!cons.isSimilar(meta)) {
 			return;
 		}
-		if (!cons.canEat(p)) {
+		if (!cons.canUse(p)) {
 			return;
 		}
 		
-		cons.consume(p);
+		cons.use(p);
 	}
 	
 	@EventHandler

@@ -173,7 +173,7 @@ public class Consumable {
 		return true;
 	}
 
-	public boolean canEat(Player p) {
+	public boolean canUse(Player p) {
 		if (type == ConsumableType.CHEST) {
 			// Check if it's a chest
 			if (main.isInstance) {
@@ -216,11 +216,11 @@ public class Consumable {
 		return true;
 	}
 	
-	public void consume(final Player p) {
-		consume(p, 1, 1, 1);
+	public void use(final Player p) {
+		use(p, 1, 1, 1);
 	}
 
-	public void consume(final Player p, double garnish, double spice, double preserve) {
+	public void use(final Player p, double garnish, double spice, double preserve) {
 		// Sounds, commands
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
