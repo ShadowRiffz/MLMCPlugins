@@ -308,10 +308,8 @@ public class Consumable {
 			// If food already consumed before, remove the attributes, cancel the remove task, then add new
 			if (main.attributes.get(uuid).containsKey(this)) {
 				AttributeTask at = main.attributes.get(uuid).get(this);
-				if (at.getTask().isCancelled()) {
-					at.getAttr().removeAttributes(p);
-					at.getTask().cancel();
-				}
+				at.getAttr().removeAttributes(p);
+				at.getTask().cancel();
 			}
 			Attributes newAttr = attributes.clone();
 			newAttr.multiply(garnish);
