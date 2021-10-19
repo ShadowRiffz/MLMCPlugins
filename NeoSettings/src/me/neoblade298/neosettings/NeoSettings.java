@@ -20,6 +20,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.api.event.PlayerSaveEvent;
+
 import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
@@ -150,7 +152,7 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	
-	public void handleLeave(UUID uuid) {
+	public void handleSave(UUID uuid) {
 		if (lastSave.containsKey(uuid)) {
 			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
 				// If saved less than 10 seconds ago, don't save again
@@ -195,12 +197,17 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	@EventHandler
+	public void onSave(PlayerSaveEvent e) {
+		handleSave(e.getUUID());
+	}
+	
+	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
+		handleSave(e.getPlayer().getUniqueId());
 	}
 
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
+		handleSave(e.getPlayer().getUniqueId());
 	}
 }
