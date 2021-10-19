@@ -67,10 +67,10 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	private void loadBuiltinSettings() {
-		Settings testSettings = createSettings("Test", this, true);
-		testSettings.addSetting("StringTest", "Default");
-		testSettings.addSetting("BooleanTest", false);
-		testSettings.addSetting("IntegerTest", 5);
+		// Settings testSettings = createSettings("Test", this, true);
+		// testSettings.addSetting("StringTest", "Default");
+		// testSettings.addSetting("BooleanTest", false);
+		// testSettings.addSetting("IntegerTest", 5);
 	}
 	
 	public Settings createSettings(String key, Plugin plugin, boolean hidden) {
