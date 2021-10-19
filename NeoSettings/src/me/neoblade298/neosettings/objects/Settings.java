@@ -71,7 +71,7 @@ public class Settings {
 	
 	public boolean exists(String subkey, UUID uuid) {
 		if (!defaults.containsKey(subkey)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + subkey + " for " + uuid + ". Subsetting doesn't exist.");
 			return false;
 		}
 		if (!values.containsKey(uuid)) {
