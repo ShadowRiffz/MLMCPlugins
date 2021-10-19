@@ -26,8 +26,6 @@ public class Attributes {
 
 	public void applyAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
-		System.out.println(data.getAttributes());
-		System.out.println(dexterity);
 		data.addBonusAttributes("Strength", strength);
 		data.addBonusAttributes("Dexterity", dexterity);
 		data.addBonusAttributes("Intelligence", intelligence);
@@ -35,11 +33,9 @@ public class Attributes {
 		data.addBonusAttributes("Perception", perception);
 		data.addBonusAttributes("Endurance", endurance);
 		data.addBonusAttributes("Vitality", vitality);
-		System.out.println(data.getAttributes());
 	}
 
 	public void removeAttributes(Player p) {
-		System.out.println("Removed attributes " + dexterity);
 		PlayerData data = SkillAPI.getPlayerData(p);
 		data.addBonusAttributes("Strength", -strength);
 		data.addBonusAttributes("Dexterity", -dexterity);

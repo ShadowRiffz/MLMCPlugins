@@ -44,10 +44,6 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	public Settings hiddenSettings;
 
 	public void onEnable() {
-		File file = new File(getDataFolder(), "foods.yml");
-		if (!file.exists()) {
-			saveResource("foods.yml", false);
-		}
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 		loadConfigs();
 		
@@ -65,8 +61,6 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		consumables.clear();
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		settings = nsettings.createSettings("Consumables", this, false);
-		settings.addSetting("InventoryUse", false);
-		hiddenSettings = nsettings.createSettings("HiddenTokens", this, true);
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
