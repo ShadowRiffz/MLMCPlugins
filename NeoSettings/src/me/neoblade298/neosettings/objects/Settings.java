@@ -71,33 +71,56 @@ public class Settings {
 			
 			// Only save changed values
 			for (String key : changedValues.get(uuid)) {
-				Object value = pValues.get(key).getValue();
-				long expiration = pValues.get(key).getExpiration();
 				
-				// Skip expired values
-				if (pValues.get(key).getExpiration() != -1 && pValues.get(key).getExpiration() < System.currentTimeMillis()) {
-					continue;
+				// If value was changed to something else
+				if (pValues.containsKey(key)) {
+					Object value = pValues.get(key).getValue();
+					long expiration = pValues.get(key).getExpiration();
+					
+					// Skip expired values
+					if (pValues.get(key).getExpiration() != -1 && pValues.get(key).getExpiration() < System.currentTimeMillis()) {
+						continue;
+					}
+					
+					
+					try {
+						if (main.debug) {
+							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " for " + uuid + ".");
+						}
+						if (value instanceof String) {
+							stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
+							+ "','" + key + "','" + value + "'," + expiration + ");");
+						}
+						else if (value instanceof Boolean) {
+							stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
+							+ "','" + key + "','" + value + "'," + expiration + ");");
+						}
+						else if (value instanceof Integer) {
+							stmt.addBatch("REPLACE INTO neosettings_integers VALUES ('" + uuid + "','" + this.getKey()
+							+ "','" + key + "','" + value + "'," + expiration + ");");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				
-				
-				try {
+				// If value was set back to default
+				else {
+					Object def = defaults.get(key);
 					if (main.debug) {
-						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " for " + uuid + ".");
+						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " for " + uuid + ".");
 					}
-					if (value instanceof String) {
-						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "'," + expiration + ");");
+					try {
+						if (def instanceof String || def instanceof Boolean) {
+							stmt.addBatch("DELETE FROM neosettings_strings WHERE setting = '" + this.getKey() + "' AND subsetting = '" + key +
+							"';");
+						}
+						else if (def instanceof Integer) {
+							stmt.addBatch("DELETE FROM neosettings_integers WHERE setting = '" + this.getKey() + "' AND subsetting = '" + key +
+							"';");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					else if (value instanceof Boolean) {
-						stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "'," + expiration + ");");
-					}
-					else if (value instanceof Integer) {
-						stmt.addBatch("REPLACE INTO neosettings_integers VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "'," + expiration + ");");
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 			values.remove(uuid);
