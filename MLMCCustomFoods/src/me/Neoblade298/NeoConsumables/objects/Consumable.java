@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -194,8 +192,32 @@ public class Consumable {
 		}
 		return true;
 	}
+	public boolean canUseToken(Player p, ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		if (!p.getName().equals(nbti.getString("player"))) {
+			p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
+			return false;
+		}
+		
+		long now = System.currentTimeMillis();
+		long usable = nbti.getLong("timestamp") + 86400000;
+		if (now > usable) {
+			p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
+			p.getInventory().remove(item);
+			return false;
+		}
+		
+		for (SettingsChanger sc : this.settingsChangers) {
+			System.out.println("Keys: " + sc.getSettings().getAllKeys());
+			if (!sc.getOverwrite() && sc.exists(p.getUniqueId())) {
+				p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
+				return false;
+			}
+		}
+		return true;
+	}
 
-	public boolean canUse(Player p) {
+	public boolean canUse(Player p, ItemStack item) {
 		if (type == ConsumableType.CHEST) {
 			// Check if it's a chest
 			if (main.isInstance) {
@@ -205,6 +227,10 @@ public class Consumable {
 				return false;
 			}
 			return true;
+		}
+		
+		if (type == ConsumableType.TOKEN) {
+			return canUseToken(p, item);
 		}
 		
 		// Check gcd
@@ -247,10 +273,15 @@ public class Consumable {
 		}
 		executeCommands(p);
 		if (type == ConsumableType.CHEST) {
+			p.sendMessage(displayname + " §7was opened.");
+			ItemStack clone = item.clone();
+			clone.setAmount(1);
+			p.getInventory().removeItem(clone);
 			return;
 		}
 		if (type == ConsumableType.TOKEN) {
 			useToken(p, item);
+			return;
 		}
 		
 		
@@ -364,35 +395,15 @@ public class Consumable {
 		item.setAmount(1);
 		UUID uuid = p.getUniqueId();
 
-		NBTItem nbti = new NBTItem(item);
-		if (!p.getName().equals(nbti.getString("player"))) {
-			p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
-			return;
-		}
-		
-		long now = System.currentTimeMillis();
-		long usable = nbti.getLong("timestamp") + 86400000;
-		if (now > usable) {
-			p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
-			p.getInventory().remove(item);
-			return;
-		}
-		
-		for (SettingsChanger sc : this.settingsChangers) {
-			if (sc.exists(uuid)) {
-				p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
-				return;
-			}
-		}
-		
 		for (SettingsChanger sc : this.settingsChangers) {
 			if (!sc.changeSetting(uuid)) {
+				System.out.println("Here: " + sc.getSubsetting());
 				p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting!");
 				return;
 			}
 		}
-		
-		p.sendMessage("§4[§c§lMLMC§4] §7Boss token successfully activated!");
+
+		p.sendMessage(displayname + " §7was used.");
 		p.getInventory().removeItem(item);
 	}
 

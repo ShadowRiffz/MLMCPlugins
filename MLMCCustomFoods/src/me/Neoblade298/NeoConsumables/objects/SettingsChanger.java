@@ -9,11 +9,30 @@ public class SettingsChanger {
 	private String subsetting;
 	private Object value;
 	private long expiration;
+	private boolean overwrite;
 
-	public SettingsChanger(Settings settings, String subsetting, Object value, long expiration) {
+	public SettingsChanger(Settings settings, String subsetting, Object value, long expiration, boolean overwrite) {
+		this.settings = settings;
 		this.subsetting = subsetting;
 		this.value = value;
 		this.expiration = expiration;
+		this.overwrite = overwrite;
+	}
+	
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
+
+	public void setOverwrite(boolean overwrite) {
+		this.overwrite = overwrite;
+	}
+	
+	public boolean getOverwrite() {
+		return this.overwrite;
 	}
 	
 	public boolean exists(UUID uuid) {

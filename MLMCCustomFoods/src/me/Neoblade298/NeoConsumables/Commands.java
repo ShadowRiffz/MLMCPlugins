@@ -30,6 +30,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 			}
+			return true;
 		}
 		return false;
 	}

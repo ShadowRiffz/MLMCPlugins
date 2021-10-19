@@ -19,6 +19,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -69,7 +70,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		settings = nsettings.createSettings("Consumables", this, false);
 		settings.addSetting("InventoryUse", false);
 		hiddenSettings = nsettings.createSettings("Tokens", this, true);
-		hiddenSettings.addSetting("boss", false);
+		hiddenSettings.addSetting("Boss", false);
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
@@ -86,10 +87,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				
 				// Potion effects
 				ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
-				PotionEffectType type;
 				for (String potion : itemConfig.getStringList(s + ".effects")) {
 					String[] split = potion.split(",");
-					type = PotionEffectType.getByName(split[0]);
+					PotionEffectType type = PotionEffectType.getByName(split[0]);
 					int amp = Integer.parseInt(split[1]);
 					int duration = Integer.parseInt(split[2]);
 					PotionEffect effect = new PotionEffect(type, duration, amp);
@@ -120,24 +120,28 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				cons.setSounds(sounds);
 				
 				ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
-				for (String settingString : itemConfig.getStringList(s + ".settings")) {
-					String[] args = settingString.split(" ");
-					String setting = args[0].substring(0, args[0].indexOf('.'));
-					String subsetting = args[0].substring(args[0].indexOf('.') + 1);
-					Object value = null;
-					long expiration = Long.parseLong(args[2]);
-					if (args[3].equalsIgnoreCase("string")) {
-						value = args[1];
+				ConfigurationSection scConfig = itemConfig.getConfigurationSection(s + ".settings");
+				if (scConfig != null) {
+					for (String settingsChangerKey : scConfig.getKeys(false)) {
+						ConfigurationSection sckConfig = scConfig.getConfigurationSection(settingsChangerKey);
+						String subsetting = sckConfig.getString("subkey");
+						String type = sckConfig.getString("type");
+						Object value = null;
+						long expiration = sckConfig.getLong("expiration");
+						boolean overwrite = sckConfig.getBoolean("overwrite");
+						if (type.equalsIgnoreCase("string")) {
+							value = sckConfig.getString("value");
+						}
+						else if (type.equalsIgnoreCase("boolean")) {
+							value = sckConfig.getBoolean("value");
+						}
+						else if (type.equalsIgnoreCase("integer")) {
+							value = sckConfig.getInt("value");
+						}
+						settingsChangers.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
 					}
-					else if (args[3].equalsIgnoreCase("boolean")) {
-						value = Boolean.parseBoolean(args[1]);
-					}
-					else if (args[3].equalsIgnoreCase("integer")) {
-						value = Integer.parseInt(args[1]);
-					}
-					settingsChangers.add(new SettingsChanger(this.settings, subsetting, value, expiration));
+					cons.setSettingsChangers(settingsChangers);
 				}
-				cons.setSettingsChangers(settingsChangers);
 
 				cons.setSaturation(itemConfig.getDouble(s + ".saturation"));
 				cons.setHunger(itemConfig.getInt(s + ".hunger"));
@@ -198,13 +202,13 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 						continue;
 					}
 					consumable = consumables.get(invName);
+					if (consumable.getType() != ConsumableType.FOOD) {
+						continue;
+					}
 					if (!consumable.isSimilar(invMeta)) {
 						continue;
 					}
-					if (!consumable.canUse(p)) {
-						continue;
-					}
-					if (consumable.getType() != ConsumableType.FOOD) {
+					if (!consumable.canUse(p, item)) {
 						continue;
 					}
 					break;
@@ -217,7 +221,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				if (!consumable.isSimilar(meta)) {
 					return;
 				}
-				if (!consumable.canUse(p)) {
+				if (!consumable.canUse(p, item)) {
 					return;
 				}
 			}
@@ -260,7 +264,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (!cons.isSimilar(meta)) {
 			return;
 		}
-		if (!cons.canUse(p)) {
+		if (!cons.canUse(p, item)) {
 			return;
 		}
 		
