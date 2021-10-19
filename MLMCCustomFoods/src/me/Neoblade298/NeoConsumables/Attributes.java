@@ -17,6 +17,12 @@ public class Attributes {
 		this.endurance = 0;
 		this.vitality = 0;
 	}
+	
+	public Attributes clone() {
+		Attributes newAttr = new Attributes();
+		newAttr.addAttribute(this);
+		return newAttr;
+	}
 
 	public void applyAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
@@ -110,6 +116,16 @@ public class Attributes {
 		perception = 0;
 		vitality = 0;
 		endurance = 0;
+	}
+	
+	public void multiply(double multiplier) {
+		strength *= multiplier;
+		dexterity *= multiplier;
+		intelligence *= multiplier;
+		spirit *= multiplier;
+		perception *= multiplier;
+		vitality *= multiplier;
+		endurance *= multiplier;
 	}
 
 	public String toString() {

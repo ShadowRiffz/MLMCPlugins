@@ -8,10 +8,17 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitTask;
+
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
+import com.sucy.skill.api.util.StatusFlag;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class Consumable {
 	NeoConsumables main;
@@ -21,7 +28,7 @@ public class Consumable {
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
 	ArrayList<String> commands = new ArrayList<String>();
 	ArrayList<String> worlds = new ArrayList<String>();
-	String name;
+	String name, displayname;
 	ArrayList<String> lore;
 	double saturation;
 	int hunger;
@@ -103,7 +110,8 @@ public class Consumable {
 
 	public Consumable(NeoConsumables main, String name) {
 		this.main = main;
-		this.name = name;
+		this.displayname = name.replaceAll("&", "§");
+		this.name = ChatColor.stripColor(this.displayname);
 	}
 
 	public void addEffect(PotionEffect effect) {
@@ -202,7 +210,7 @@ public class Consumable {
 			if (System.currentTimeMillis() < nextEat) {
 				long remainingCooldown = nextEat - System.currentTimeMillis();
 				remainingCooldown /= 1000L;
-				String message = "&cYou cannot use this consumables for another " + remainingCooldown + " seconds";
+				String message = "&cYou cannot use " + this.displayname + " for another " + remainingCooldown + " seconds";
 				message = message.replaceAll("&", "§");
 				p.sendMessage(message);
 				return false;
@@ -211,16 +219,14 @@ public class Consumable {
 		
 		// Check world compatible
 		if (!getWorlds().contains(p.getWorld().getName())) {
+			String message = "&cYou cannot use this consumable in this world";
+			p.sendMessage(message);
 			return false;
 		}
 		return true;
 	}
-	
-	public void use(final Player p) {
-		use(p, 1, 1, 1);
-	}
 
-	public void use(final Player p, double garnish, double spice, double preserve) {
+	public void use(final Player p, ItemStack item) {
 		// Sounds, commands
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
@@ -242,10 +248,40 @@ public class Consumable {
 				p.setSaturation((float) Math.min(p.getFoodLevel(), this.getSaturation() + p.getSaturation()));
 			}
 		}
-
+		
+		// Calculate multipliers and remove flags
+		double garnish = 1, preserve = 1, spice = 1;
+		for (String line : item.getItemMeta().getLore()) {
+			if (line.contains("Garnished")) {
+				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+				garnish = Double.parseDouble(toParse);
+			}
+			if (line.contains("Preserved")) {
+				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+				preserve = Double.parseDouble(toParse);
+			}
+			if (line.contains("Spiced")) {
+				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
+				spice = Double.parseDouble(toParse);
+			}
+			if (line.contains("Remedies")) {
+				if (line.contains("Remedies stun")) {
+					FlagManager.removeFlag(p, StatusFlag.STUN);
+				}
+				else if (line.contains("Remedies curse")) {
+					FlagManager.removeFlag(p, "curse");
+				}
+				else if (line.contains("Remedies root")) {
+					FlagManager.removeFlag(p, StatusFlag.ROOT);
+				}
+				else if (line.contains("Remedies silence")) {
+					FlagManager.removeFlag(p, StatusFlag.SILENCE);
+				}
+			}
+		}
 
 		// Set cooldowns
-		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 50L * (1 - preserve));
+		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 50L * preserve);
 		long ticks = (long) (this.cooldown * preserve);
 		if (!ignoreGcd) {
 			main.globalCooldowns.put(uuid, System.currentTimeMillis() + 20000L);
@@ -254,12 +290,13 @@ public class Consumable {
 			main.foodCooldowns.get(uuid).put(this, nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
-					String message = Consumable.this.name + "&7 can be eaten again.";
+					String message = displayname + "&7 can be eaten again.";
 					message = message.replaceAll("&", "§");
 					p.sendMessage(message);
 				}
 			}, ticks);
 		}
+		p.sendMessage(displayname + " §7was eaten.");
 
 		// Potion effects
 		for (PotionEffect effect : this.getEffect()) {
@@ -268,15 +305,16 @@ public class Consumable {
 
 		// SkillAPI Attributes
 		if (attributes != null) {
-			// If the food's attributes still exist, just delay the remove attribute task
+			// If food already consumed before, remove the attributes, cancel the remove task, then add new
 			if (main.attributes.get(uuid).containsKey(this)) {
-				main.attributes.get(uuid).get(this).cancel();
-				main.attributes.get(uuid).put(this, new AttributeRunnable(p, this.getAttributes()).runTaskLater(main, this.attributeTime));
+				AttributeTask at = main.attributes.get(uuid).get(this);
+				at.getAttr().removeAttributes(p);
+				at.getTask().cancel();
 			}
-			else {
-				attributes.applyAttributes(p);
-				main.attributes.get(uuid).put(this, new AttributeRunnable(p, this.getAttributes()).runTaskLater(main, this.attributeTime));
-			}
+			Attributes newAttr = attributes.clone();
+			newAttr.multiply(garnish);
+			BukkitTask newTask = new AttributeRunnable(p, newAttr).runTaskLater(main, this.attributeTime);
+			main.attributes.get(uuid).put(this, new AttributeTask(newTask, newAttr));
 		}
 
 		// Health and mana regen
@@ -297,6 +335,10 @@ public class Consumable {
 				new ManaRunnable(p, mana * spice, getHealthTime()).runTaskTimer(main, 0, getManaDelay());
 			}
 		}
+		
+		ItemStack clone = item.clone();
+		clone.setAmount(1);
+		p.getInventory().removeItem(clone);
 	}
 
 	public NeoConsumables getMain() {

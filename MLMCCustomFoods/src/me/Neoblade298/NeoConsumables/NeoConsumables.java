@@ -2,8 +2,6 @@ package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.util.FlagManager;
-import com.sucy.skill.api.util.StatusFlag;
 
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -34,12 +32,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 public class NeoConsumables extends JavaPlugin implements Listener {
 	HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	// These runnables take away attributes from players when they're done being used
-	HashMap<UUID, HashMap<Consumable, BukkitTask>> attributes = new HashMap<UUID, HashMap<Consumable, BukkitTask>>();
+	HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
 	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
 	HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
 	boolean isInstance = false;
@@ -54,6 +51,13 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 		loadConfigs();
 		
+		// Setup databases
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			UUID uuid = p.getUniqueId();
+			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
+			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
+		}
+		
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 	
@@ -67,7 +71,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
 			for (String s : itemConfig.getKeys(false)) {
-				String name = ChatColor.stripColor(itemConfig.getString(s + ".name").replaceAll("&", "§"));
+				String name = itemConfig.getString(s + ".name");
 				Consumable cons = new Consumable(this, name);
 				
 				// Lore
@@ -125,7 +129,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				cons.setWorlds(itemConfig.getStringList(s + ".worlds"));
 				cons.setIgnoreGcd(itemConfig.getBoolean(s + ".ignore-gcd"));
 				cons.setType(ConsumableType.fromString(itemConfig.getString(s + ".type")));
-				consumables.put(name, cons);
+				consumables.put(cons.getName(), cons);
 			}
 		}
 	}
@@ -196,42 +200,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (consumable == null) {
 			return;
 		}
-		// Food can be eaten, calculate multipliers and remove flags
-		double garnishMultiplier = 1, preserveMultiplier = 1, spiceMultiplier = 1;
-		for (String line : meta.getLore()) {
-			if (line.contains("Garnished")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				garnishMultiplier = Double.parseDouble(toParse);
-			}
-			if (line.contains("Preserved")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				preserveMultiplier = Double.parseDouble(toParse);
-			}
-			if (line.contains("Spiced")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				spiceMultiplier = Double.parseDouble(toParse);
-			}
-			if (line.contains("Remedies")) {
-				if (line.contains("Remedies stun")) {
-					FlagManager.removeFlag(p, StatusFlag.STUN);
-				}
-				else if (line.contains("Remedies curse")) {
-					FlagManager.removeFlag(p, "curse");
-				}
-				else if (line.contains("Remedies root")) {
-					FlagManager.removeFlag(p, StatusFlag.ROOT);
-				}
-				else if (line.contains("Remedies silence")) {
-					FlagManager.removeFlag(p, StatusFlag.SILENCE);
-				}
-			}
-		}
 		
 		// Use consumable
-		consumable.use(p, garnishMultiplier, spiceMultiplier, preserveMultiplier);
-		ItemStack clone = item.clone();
-		clone.setAmount(1);
-		p.getInventory().removeItem(clone);
+		consumable.use(p, item);
 		e.setCancelled(true);
 	}
 	
@@ -267,7 +238,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		cons.use(p);
+		e.setCancelled(true);
+		cons.use(p, item);
 	}
 	
 	@EventHandler
@@ -278,7 +250,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
 		}
 		if (!attributes.containsKey(uuid)) {
-			attributes.put(uuid, new HashMap<Consumable, BukkitTask>());
+			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
 		}
 		
 		if (isInstance) {
@@ -306,9 +278,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	}
 	
 	private void resetAttributes(Player p) {
-		HashMap<Consumable, BukkitTask> tasks = attributes.get(p.getUniqueId());
+		HashMap<Consumable, AttributeTask> tasks = attributes.get(p.getUniqueId());
 		for (Consumable c : tasks.keySet()) {
-			tasks.get(c).cancel();
+			tasks.get(c).getTask().cancel();
 		}
 		tasks.clear();
 	}
