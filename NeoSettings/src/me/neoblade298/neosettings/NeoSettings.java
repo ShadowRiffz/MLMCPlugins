@@ -128,6 +128,18 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		return settings.get(key);
 	}
 	
+	public boolean exists(String key, String subkey, UUID uuid, boolean canAccessHidden) {
+		if (!settings.containsKey(key)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting doesn't exist.");
+			return false;
+		}
+		if (settings.get(key).isHidden() && !canAccessHidden) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + key + ". Setting is hidden.");
+			return false;
+		}
+		return settings.get(key).exists(subkey);
+	}
+	
 	public HashMap<String, Settings> getAllSettings() {
 		return settings;
 	}

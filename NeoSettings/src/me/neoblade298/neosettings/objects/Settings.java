@@ -41,7 +41,7 @@ public class Settings {
 	
 	public Object getValue(UUID uuid, String key) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Key doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
 			return null;
 		}
 		if (!values.containsKey(uuid)) {
@@ -59,6 +59,25 @@ public class Settings {
 			}
 		}
 		return defaults.get(key);
+	}
+	
+	public Object getDefault(String key) {
+		if (!defaults.containsKey(key)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get default setting of " + this.getKey() + "." + key + ". Subsetting doesn't exist.");
+			return null;
+		}
+		return defaults.get(key);
+	}
+	
+	public boolean exists(String subkey, UUID uuid) {
+		if (!defaults.containsKey(subkey)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". Subsetting doesn't exist.");
+			return false;
+		}
+		if (!values.containsKey(uuid)) {
+			return false;
+		}
+		return true;
 	}
 	
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
@@ -141,7 +160,7 @@ public class Settings {
 				Object o = defaults.get(subsetting);
 				Object value = null;
 				if (o == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Subsetting doesn't exist.");
 					return;
 				}
 				else if (o instanceof String) {
@@ -167,7 +186,7 @@ public class Settings {
 				Object o = defaults.get(subsetting);
 				Object value = null;
 				if (o == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Key doesn't exist.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to load setting of " + this.getKey() + "." + subsetting + " for " + uuid + ". Subsetting doesn't exist.");
 					return;
 				}
 				else if (o instanceof Integer) {
