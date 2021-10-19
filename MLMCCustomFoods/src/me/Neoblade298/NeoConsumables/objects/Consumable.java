@@ -1,10 +1,12 @@
-package me.Neoblade298.NeoConsumables;
+package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -18,6 +20,12 @@ import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.runnables.AttributeRunnable;
+import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
+import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
+import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 import net.md_5.bungee.api.ChatColor;
 
 public class Consumable {
@@ -34,6 +42,9 @@ public class Consumable {
 	int hunger;
 	int health, healthTime, healthDelay;
 	int mana, manaTime, manaDelay;
+	String setting, subsetting;
+	Object settingValue;
+	long settingExpiration;
 	long cooldown = 0;
 	boolean ignoreGcd = false;
 	ConsumableType type = ConsumableType.FOOD;
@@ -159,9 +170,6 @@ public class Consumable {
 	}
 
 	public boolean isSimilar(ItemMeta meta) {
-		if ((!meta.hasLore()) && (!getLore().isEmpty())) {
-			return false;
-		}
 		if (!getLore().isEmpty()) {
 			if (!meta.hasLore()) {
 				return false;
@@ -234,6 +242,9 @@ public class Consumable {
 		executeCommands(p);
 		if (type == ConsumableType.CHEST) {
 			return;
+		}
+		if (type == ConsumableType.TOKEN) {
+			useToken(p, item);
 		}
 		
 		
@@ -340,6 +351,34 @@ public class Consumable {
 		ItemStack clone = item.clone();
 		clone.setAmount(1);
 		p.getInventory().removeItem(clone);
+	}
+	
+	private void useToken(Player p, ItemStack original) {
+		ItemStack item = original.clone();
+		item.setAmount(1);
+
+		NBTItem nbti = new NBTItem(item);
+		if (!p.getName().equals(nbti.getString("player"))) {
+			p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
+			return;
+		}
+		
+		long now = System.currentTimeMillis();
+		long usable = nbti.getLong("timestamp") + 86400000;
+		if (now > usable) {
+			p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
+			p.getInventory().remove(item);
+			return;
+		}
+		
+		if (p.hasPermission("Temp")) {
+			p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
+			return;
+		}
+		
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set " + "temp");
+		p.sendMessage("§4[§c§lMLMC§4] §7Boss token successfully activated!");
+		p.getInventory().removeItem(item);
 	}
 
 	public NeoConsumables getMain() {

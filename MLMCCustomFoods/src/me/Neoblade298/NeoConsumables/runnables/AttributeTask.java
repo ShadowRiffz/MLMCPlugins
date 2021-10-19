@@ -1,6 +1,8 @@
-package me.Neoblade298.NeoConsumables;
+package me.Neoblade298.NeoConsumables.runnables;
 
 import org.bukkit.scheduler.BukkitTask;
+
+import me.Neoblade298.NeoConsumables.objects.Attributes;
 
 public class AttributeTask {
 	BukkitTask task;

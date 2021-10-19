@@ -3,6 +3,10 @@ package me.Neoblade298.NeoConsumables;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
+import me.Neoblade298.NeoConsumables.objects.Attributes;
+import me.Neoblade298.NeoConsumables.objects.Consumable;
+import me.Neoblade298.NeoConsumables.objects.ConsumableType;
+import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 import net.md_5.bungee.api.ChatColor;
@@ -36,10 +40,10 @@ import org.bukkit.potion.PotionEffectType;
 public class NeoConsumables extends JavaPlugin implements Listener {
 	HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	// These runnables take away attributes from players when they're done being used
-	HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
-	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
-	HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
-	boolean isInstance = false;
+	public HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
+	public HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
+	public HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
+	public boolean isInstance = false;
 	public Settings settings;
 	public Settings hiddenSettings;
 
@@ -53,7 +57,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
 			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
 		}
-		
+
+	    getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 	
@@ -61,6 +66,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		consumables.clear();
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		settings = nsettings.createSettings("Consumables", this, false);
+		settings.addSetting("InventoryUse", false);
+		hiddenSettings = nsettings.createSettings("Tokens", this, true);
+		hiddenSettings.addSetting("boss", false);
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
@@ -175,6 +183,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					if (!consumable.canUse(p)) {
 						continue;
 					}
+					if (!consumable.getType() != ConsumableType.FOOD) {
+						continue;
+					}
 					break;
 				}
 			}
@@ -258,7 +269,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerPlace(BlockPlaceEvent e) {
 		ItemStack item = e.getItemInHand();
-		if (item.hasItemMeta() && item.getItemMeta().hasLore()
+		if (item.getType().equals(Material.CHEST) && item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Potential Rewards")) {
 			e.setCancelled(true);
 		}

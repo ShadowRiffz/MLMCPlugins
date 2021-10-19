@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoConsumables;
+package me.Neoblade298.NeoConsumables.objects;
 
 public enum ConsumableType {
 	FOOD, CHEST, TOKEN;

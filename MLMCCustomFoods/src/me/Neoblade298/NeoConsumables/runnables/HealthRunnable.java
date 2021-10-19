@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoConsumables;
+package me.Neoblade298.NeoConsumables.runnables;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;

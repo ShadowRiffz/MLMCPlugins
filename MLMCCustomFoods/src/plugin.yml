@@ -5,3 +5,7 @@
  depend: [NeoSettings, SkillAPI]
  author: Neoblade298, bananapuncher714
  main: me.Neoblade298.NeoConsumables.NeoConsumables
+ commands:
+   cons:
+     description: Does its job
+     usage: /cons
