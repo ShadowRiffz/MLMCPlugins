@@ -265,24 +265,34 @@ public class Consumable {
 		}
 		return true;
 	}
-
-	public void use(final Player p, ItemStack item) {
-		// Sounds, commands
+	
+	public void useChest(Player p, ItemStack item) {
+		p.sendMessage(displayname + " §7was opened.");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 		executeCommands(p);
+		ItemStack clone = item.clone();
+		clone.setAmount(1);
+		p.getInventory().removeItem(clone);
+		return;
+	}
+
+	public void use(final Player p, ItemStack item) {
 		if (type == ConsumableType.CHEST) {
-			p.sendMessage(displayname + " §7was opened.");
-			ItemStack clone = item.clone();
-			clone.setAmount(1);
-			p.getInventory().removeItem(clone);
+			useChest(p, item);
 			return;
 		}
 		if (type == ConsumableType.TOKEN) {
 			useToken(p, item);
 			return;
 		}
+		
+		// Sounds, commands
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
+		executeCommands(p);
 		
 		
 		// Food event only happens if hunger is changing
