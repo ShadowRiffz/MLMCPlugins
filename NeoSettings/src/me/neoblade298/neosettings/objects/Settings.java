@@ -75,9 +75,19 @@ public class Settings {
 			return false;
 		}
 		if (!values.containsKey(uuid)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to get setting of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
-		return true;
+		HashMap<String, Value> pValues = values.get(uuid);
+		if (pValues.containsKey(subkey)) {
+			// If value has expired, remove it
+			if (pValues.get(subkey).getExpiration() != -1 && pValues.get(subkey).getExpiration() < System.currentTimeMillis()) {
+				pValues.remove(subkey);
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
