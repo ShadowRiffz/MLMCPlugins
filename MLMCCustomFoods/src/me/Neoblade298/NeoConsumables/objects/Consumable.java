@@ -42,9 +42,7 @@ public class Consumable {
 	int hunger;
 	int health, healthTime, healthDelay;
 	int mana, manaTime, manaDelay;
-	String setting, subsetting;
-	Object settingValue;
-	long settingExpiration;
+	ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 	long cooldown = 0;
 	boolean ignoreGcd = false;
 	ConsumableType type = ConsumableType.FOOD;
@@ -117,6 +115,14 @@ public class Consumable {
 
 	public List<String> getWorlds() {
 		return this.worlds;
+	}
+	
+	public ArrayList<SettingsChanger> getSettingsChangers() {
+		return this.settingsChangers;
+	}
+	
+	public void setSettingsChangers(ArrayList<SettingsChanger> settingsChangers) {
+		this.settingsChangers = settingsChangers;
 	}
 
 	public Consumable(NeoConsumables main, String name) {
@@ -356,6 +362,7 @@ public class Consumable {
 	private void useToken(Player p, ItemStack original) {
 		ItemStack item = original.clone();
 		item.setAmount(1);
+		UUID uuid = p.getUniqueId();
 
 		NBTItem nbti = new NBTItem(item);
 		if (!p.getName().equals(nbti.getString("player"))) {
@@ -371,12 +378,20 @@ public class Consumable {
 			return;
 		}
 		
-		if (p.hasPermission("Temp")) {
-			p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
-			return;
+		for (SettingsChanger sc : this.settingsChangers) {
+			if (sc.exists(uuid)) {
+				p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
+				return;
+			}
 		}
 		
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set " + "temp");
+		for (SettingsChanger sc : this.settingsChangers) {
+			if (!sc.changeSetting(uuid)) {
+				p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting!");
+				return;
+			}
+		}
+		
 		p.sendMessage("§4[§c§lMLMC§4] §7Boss token successfully activated!");
 		p.getInventory().removeItem(item);
 	}

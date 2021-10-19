@@ -6,6 +6,7 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import me.Neoblade298.NeoConsumables.objects.Attributes;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.ConsumableType;
+import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
 import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -117,6 +118,26 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					}
 				}
 				cons.setSounds(sounds);
+				
+				ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
+				for (String settingString : itemConfig.getStringList(s + ".settings")) {
+					String[] args = settingString.split(" ");
+					String setting = args[0].substring(0, args[0].indexOf('.'));
+					String subsetting = args[0].substring(args[0].indexOf('.') + 1);
+					Object value = null;
+					long expiration = Long.parseLong(args[2]);
+					if (args[3].equalsIgnoreCase("string")) {
+						value = args[1];
+					}
+					else if (args[3].equalsIgnoreCase("boolean")) {
+						value = Boolean.parseBoolean(args[1]);
+					}
+					else if (args[3].equalsIgnoreCase("integer")) {
+						value = Integer.parseInt(args[1]);
+					}
+					settingsChangers.add(new SettingsChanger(this.settings, subsetting, value, expiration));
+				}
+				cons.setSettingsChangers(settingsChangers);
 
 				cons.setSaturation(itemConfig.getDouble(s + ".saturation"));
 				cons.setHunger(itemConfig.getInt(s + ".hunger"));
@@ -183,7 +204,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					if (!consumable.canUse(p)) {
 						continue;
 					}
-					if (!consumable.getType() != ConsumableType.FOOD) {
+					if (consumable.getType() != ConsumableType.FOOD) {
 						continue;
 					}
 					break;
