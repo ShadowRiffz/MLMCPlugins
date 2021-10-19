@@ -316,7 +316,7 @@ public class Consumable {
 			Attributes newAttr = attributes.clone();
 			newAttr.multiply(garnish);
 			newAttr.applyAttributes(p);
-			BukkitTask newTask = new AttributeRunnable(p, newAttr).runTaskLater(main, this.attributeTime);
+			BukkitTask newTask = new AttributeRunnable(main, p, newAttr, this).runTaskLater(main, this.attributeTime);
 			main.attributes.get(uuid).put(this, new AttributeTask(newTask, newAttr));
 		}
 
