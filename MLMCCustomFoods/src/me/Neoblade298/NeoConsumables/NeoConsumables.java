@@ -1,8 +1,14 @@
 package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
+import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
+
+import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neosettings.objects.Settings;
+import net.md_5.bungee.api.ChatColor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,7 +24,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -27,7 +35,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class NeoConsumables extends JavaPlugin implements Listener {
@@ -37,6 +44,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
 	HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
 	boolean isInstance = false;
+	public Settings settings;
+	public Settings hiddenSettings;
 
 	public void onEnable() {
 		File file = new File(getDataFolder(), "foods.yml");
@@ -51,11 +60,15 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	
 	public void loadConfigs() {
 		foods.clear();
+		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		settings = nsettings.createSettings("Consumables", this, false);
+		settings.addSetting("InventoryUse", false);
+		hiddenSettings = nsettings.createSettings("HiddenTokens", this, true);
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
 			for (String s : itemConfig.getKeys(false)) {
-				String name = itemConfig.getString(s + ".name").replaceAll("&", "§");
+				String name = ChatColor.stripColor(itemConfig.getString(s + ".name").replaceAll("&", "§"));
 				Consumable cons = new Consumable(this, name);
 				
 				// Lore
@@ -72,7 +85,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					String[] split = potion.split(",");
 					type = PotionEffectType.getByName(split[0]);
 					int amp = Integer.parseInt(split[1]);
-					int duration = Integer.parseInt(split[2]) * 20;
+					int duration = Integer.parseInt(split[2]);
 					PotionEffect effect = new PotionEffect(type, duration, amp);
 					potions.add(effect);
 				}
@@ -88,6 +101,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				}
 				if (!attribs.isEmpty()) {
 					cons.setAttributes(attribs);
+					cons.setAttributeTime(itemConfig.getInt(s + " attributetime"));
 				}
 				
 				ArrayList<Sound> sounds = new ArrayList<Sound>();
@@ -135,6 +149,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		
 		ItemMeta meta = item.getItemMeta();
+		String name = ChatColor.stripColor(meta.getDisplayName());
 		boolean quickEat = false;
 		if (meta.hasLore()) {
 			for (String line : meta.getLore()) {
@@ -152,10 +167,11 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				ItemStack invItem = contents[i];
 				if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
 					ItemMeta invMeta = invItem.getItemMeta();
-					if (!foods.containsKey(invMeta.getDisplayName())) {
+					String invName = ChatColor.stripColor(invMeta.getDisplayName());
+					if (!foods.containsKey(invName)) {
 						continue;
 					}
-					food = foods.get(invMeta.getDisplayName());
+					food = foods.get(invName);
 					if (!food.isSimilar(invMeta)) {
 						continue;
 					}
@@ -167,8 +183,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			}
 		}
 		else {
-			if (!foods.containsKey(meta.getDisplayName())) {
-				food = foods.get(meta.getDisplayName());
+			if (foods.containsKey(name)) {
+				food = foods.get(name);
 				if (!food.isSimilar(meta)) {
 					return;
 				}
@@ -219,20 +235,29 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		p.getInventory().removeItem(clone);
 		e.setCancelled(true);
 	}
-
+	
 	@EventHandler
-	public void onPlayerQuitEvent(PlayerQuitEvent e) {
-		// Add way to delete attribute tasks
+	public void onInventoryClick(InventoryClickEvent e) {
+		if (!e.isRightClick()) {
+			return;
+		}
 	}
-
+	
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
+		UUID uuid = p.getUniqueId();
+		if (!foodCooldowns.containsKey(uuid)) {
+			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
+		}
+		if (!attributes.containsKey(uuid)) {
+			attributes.put(uuid, new HashMap<Consumable, BukkitTask>());
+		}
+		
 		if (isInstance) {
 			// Remove cooldowns for food if joining a boss instance
-			UUID uuid = p.getUniqueId();
-			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
-			attributes.put(uuid, new HashMap<Consumable, BukkitTask>());
+			foodCooldowns.get(uuid).clear();
+			attributes.get(uuid).clear();
 			globalCooldowns.remove(uuid);
 		}
 	}
@@ -251,5 +276,28 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return System.currentTimeMillis() > this.globalCooldowns.get(p.getUniqueId());
 		}
 		return true;
+	}
+	
+	private void resetAttributes(Player p) {
+		HashMap<Consumable, BukkitTask> tasks = attributes.get(p.getUniqueId());
+		for (Consumable c : tasks.keySet()) {
+			tasks.get(c).cancel();
+		}
+		tasks.clear();
+	}
+	
+	@EventHandler
+	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
+		resetAttributes(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e) {
+		resetAttributes(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent e) {
+		resetAttributes(e.getPlayer());
 	}
 }

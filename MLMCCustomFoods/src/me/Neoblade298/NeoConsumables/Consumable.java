@@ -1,8 +1,6 @@
 package me.Neoblade298.NeoConsumables;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -12,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 
@@ -178,6 +174,17 @@ public class Consumable {
 	}
 
 	public boolean canEat(Player p) {
+		if (type == ConsumableType.CHEST) {
+			// Check if it's a chest
+			if (main.isInstance) {
+				String message = "&cYou cannot open chests in a boss fight!";
+				message = message.replaceAll("&", "§");
+				p.sendMessage(message);
+				return false;
+			}
+			return true;
+		}
+		
 		// Check gcd
 		UUID uuid = p.getUniqueId();
 		if (!main.isOffGcd(p) && !ignoreGcd) {
@@ -201,23 +208,25 @@ public class Consumable {
 				return false;
 			}
 		}
-
+		
 		// Check world compatible
 		if (!getWorlds().contains(p.getWorld().getName())) {
-			return false;
-		}
-
-		// Check if it's a chest
-		if (getName().contains("Chest") && main.isInstance) {
-			String message = "&cYou cannot open chests in a boss fight!";
-			message = message.replaceAll("&", "§");
-			p.sendMessage(message);
 			return false;
 		}
 		return true;
 	}
 
 	public void eat(final Player p, double garnish, double spice, double preserve) {
+		// Sounds, commands
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
+		executeCommands(p);
+		if (type == ConsumableType.CHEST) {
+			return;
+		}
+		
+		
 		// Food event only happens if hunger is changing
 		UUID uuid = p.getUniqueId();
 		int foodLevel = Math.min(20, p.getFoodLevel() + getHunger());
@@ -284,12 +293,6 @@ public class Consumable {
 				new ManaRunnable(p, mana * spice, getHealthTime()).runTaskTimer(main, 0, getManaDelay());
 			}
 		}
-		
-		// Sounds, commands
-		for (Sound sound : getSounds()) {
-			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
-		}
-		executeCommands(p);
 	}
 
 	public NeoConsumables getMain() {
