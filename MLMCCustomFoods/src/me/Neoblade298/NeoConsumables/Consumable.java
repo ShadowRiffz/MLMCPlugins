@@ -210,7 +210,7 @@ public class Consumable {
 			if (System.currentTimeMillis() < nextEat) {
 				long remainingCooldown = nextEat - System.currentTimeMillis();
 				remainingCooldown /= 1000L;
-				String message = "&cYou cannot use " + this.displayname + " for another " + remainingCooldown + " seconds";
+				String message = "&cYou cannot use " + this.displayname + " §cfor another " + remainingCooldown + " seconds";
 				message = message.replaceAll("&", "§");
 				p.sendMessage(message);
 				return false;
@@ -219,7 +219,7 @@ public class Consumable {
 		
 		// Check world compatible
 		if (!getWorlds().contains(p.getWorld().getName())) {
-			String message = "&cYou cannot use this consumable in this world";
+			String message = "§cYou cannot use this consumable in this world";
 			p.sendMessage(message);
 			return false;
 		}
@@ -308,11 +308,14 @@ public class Consumable {
 			// If food already consumed before, remove the attributes, cancel the remove task, then add new
 			if (main.attributes.get(uuid).containsKey(this)) {
 				AttributeTask at = main.attributes.get(uuid).get(this);
-				at.getAttr().removeAttributes(p);
-				at.getTask().cancel();
+				if (at.getTask().isCancelled()) {
+					at.getAttr().removeAttributes(p);
+					at.getTask().cancel();
+				}
 			}
 			Attributes newAttr = attributes.clone();
 			newAttr.multiply(garnish);
+			newAttr.applyAttributes(p);
 			BukkitTask newTask = new AttributeRunnable(p, newAttr).runTaskLater(main, this.attributeTime);
 			main.attributes.get(uuid).put(this, new AttributeTask(newTask, newAttr));
 		}

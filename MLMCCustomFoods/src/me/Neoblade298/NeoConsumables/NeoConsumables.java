@@ -96,15 +96,15 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				
 				// Attributes
 				Attributes attribs = new Attributes();
-				for (String potion : itemConfig.getStringList(s + ".attributes")) {
-					String[] split = potion.split(",");
+				for (String attribute : itemConfig.getStringList(s + ".attributes")) {
+					String[] split = attribute.split(",");
 					String attr = split[0];
 					int amp = Integer.parseInt(split[1]);
 					attribs.addAttribute(attr, amp);
 				}
 				if (!attribs.isEmpty()) {
 					cons.setAttributes(attribs);
-					cons.setAttributeTime(itemConfig.getInt(s + " attributetime"));
+					cons.setAttributeTime(itemConfig.getInt(s + ".attributetime"));
 				}
 				
 				ArrayList<Sound> sounds = new ArrayList<Sound>();
