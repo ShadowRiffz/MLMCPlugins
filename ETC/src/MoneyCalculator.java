@@ -22,9 +22,6 @@ public class MoneyCalculator {
 			e.printStackTrace();
 		}
 		System.out.println(account);
-		DataSection data = YAMLParser.parseText(account);
 		System.out.println("Stop here");
-		System.out.println(data.getDouble("hunger"));
-		System.out.println(data.getSection("accounts").getSection("acc1").getSection("classes").getSection("Blacksmith").getInt("level"));
 	}
 }
