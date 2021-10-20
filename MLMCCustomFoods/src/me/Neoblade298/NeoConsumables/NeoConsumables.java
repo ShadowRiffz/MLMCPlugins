@@ -4,9 +4,12 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
 import me.Neoblade298.NeoConsumables.objects.Attributes;
+import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
-import me.Neoblade298.NeoConsumables.objects.ConsumableType;
+import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
+import me.Neoblade298.NeoConsumables.objects.RecipeConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
+import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -74,91 +77,124 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
-			for (String s : itemConfig.getKeys(false)) {
-				String name = itemConfig.getString(s + ".name");
-				Consumable cons = new Consumable(this, name);
-				
-				// Lore
-				ArrayList<String> lore = new ArrayList<String>();
-				for (String loreLine : itemConfig.getStringList(s + ".lore")) {
-					lore.add(loreLine.replaceAll("&", "§"));
-				}
-				cons.setLore(lore);
-				
-				// Potion effects
-				ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
-				for (String potion : itemConfig.getStringList(s + ".effects")) {
-					String[] split = potion.split(",");
-					PotionEffectType type = PotionEffectType.getByName(split[0]);
-					int amp = Integer.parseInt(split[1]);
-					int duration = Integer.parseInt(split[2]);
-					PotionEffect effect = new PotionEffect(type, duration, amp);
-					potions.add(effect);
-				}
-				cons.setPotions(potions);
-				
-				// Attributes
-				Attributes attribs = new Attributes();
-				for (String attribute : itemConfig.getStringList(s + ".attributes")) {
-					String[] split = attribute.split(",");
-					String attr = split[0];
-					int amp = Integer.parseInt(split[1]);
-					attribs.addAttribute(attr, amp);
-				}
-				if (!attribs.isEmpty()) {
-					cons.setAttributes(attribs);
-					cons.setAttributeTime(itemConfig.getInt(s + ".attributetime"));
-				}
+			for (String key : itemConfig.getKeys(false)) {
+				ConfigurationSection sec = itemConfig.getConfigurationSection(key);
+				String name = sec.getString("name");
 				
 				ArrayList<Sound> sounds = new ArrayList<Sound>();
-				for (String sname : itemConfig.getStringList(s + ".sound-effects")) {
+				for (String sname : sec.getStringList("sound-effects")) {
 					Sound sound = Sound.valueOf(sname.toUpperCase());
 					if (sound != null) {
 						sounds.add(sound);
 					}
 				}
-				cons.setSounds(sounds);
-				
-				ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
-				ConfigurationSection scConfig = itemConfig.getConfigurationSection(s + ".settings");
-				if (scConfig != null) {
-					for (String settingsChangerKey : scConfig.getKeys(false)) {
-						ConfigurationSection sckConfig = scConfig.getConfigurationSection(settingsChangerKey);
-						String subsetting = sckConfig.getString("subkey");
-						String type = sckConfig.getString("type");
-						Object value = null;
-						long expiration = sckConfig.getLong("expiration");
-						boolean overwrite = sckConfig.getBoolean("overwrite");
-						if (type.equalsIgnoreCase("string")) {
-							value = sckConfig.getString("value");
-						}
-						else if (type.equalsIgnoreCase("boolean")) {
-							value = sckConfig.getBoolean("value");
-						}
-						else if (type.equalsIgnoreCase("integer")) {
-							value = sckConfig.getInt("value");
-						}
-						settingsChangers.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
-					}
-					cons.setSettingsChangers(settingsChangers);
+				ArrayList<String> lore = new ArrayList<String>();
+				for (String loreLine : sec.getStringList("lore")) {
+					lore.add(loreLine.replaceAll("&", "§"));
 				}
-
-				cons.setSaturation(itemConfig.getDouble(s + ".saturation"));
-				cons.setHunger(itemConfig.getInt(s + ".hunger"));
-				cons.setHealth(itemConfig.getInt(s + ".health.amount"));
-				cons.setHealthDelay(itemConfig.getInt(s + ".health.delay"));
-				cons.setHealthTime(itemConfig.getInt(s + ".health.repetitions"));
-				cons.setMana(itemConfig.getInt(s + ".mana.amount"));
-				cons.setManaDelay(itemConfig.getInt(s + ".mana.delay"));
-				cons.setManaTime(itemConfig.getInt(s + ".mana.repetitions"));
-				cons.setCooldown(itemConfig.getLong(s + ".cooldown"));
-				cons.setCommands(itemConfig.getStringList(s + ".commands"));
-				cons.setWorlds(itemConfig.getStringList(s + ".worlds"));
-				cons.setIgnoreGcd(itemConfig.getBoolean(s + ".ignore-gcd"));
-				cons.setType(ConsumableType.fromString(itemConfig.getString(s + ".type")));
-				consumables.put(cons.getName(), cons);
+				
+				String type = sec.getString("type", "FOOD");
+				if (type.equals("FOOD")) {
+					FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore);
+					consumables.put(food.getName(), food);
+				}
+				else if (type.equals("CHEST")) {
+					ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore);
+					consumables.put(chest.getName(), chest);
+				}
+				else if (type.equals("TOKEN")) {
+					TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore);
+					consumables.put(token.getName(), token);
+				}
+				else if (type.equals("RECIPE")) {
+					RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore);
+					consumables.put(recipe.getName(), recipe);
+				}
 			}
 		}
+	}
+	
+	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
+		FoodConsumable cons = new FoodConsumable(this, name, sounds, lore);
+		
+		// Potion effects
+		ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
+		for (String potion : config.getStringList("effects")) {
+			String[] split = potion.split(",");
+			PotionEffectType type = PotionEffectType.getByName(split[0]);
+			int amp = Integer.parseInt(split[1]);
+			int duration = Integer.parseInt(split[2]);
+			PotionEffect effect = new PotionEffect(type, duration, amp);
+			potions.add(effect);
+		}
+		cons.setPotions(potions);
+		
+		// Attributes
+		Attributes attribs = new Attributes();
+		for (String attribute : config.getStringList("attributes")) {
+			String[] split = attribute.split(",");
+			String attr = split[0];
+			int amp = Integer.parseInt(split[1]);
+			attribs.addAttribute(attr, amp);
+		}
+		if (!attribs.isEmpty()) {
+			cons.setAttributes(attribs);
+			cons.setAttributeTime(config.getInt("attributetime"));
+		}
+		
+		cons.setSaturation(config.getDouble("saturation"));
+		cons.setHunger(config.getInt("hunger"));
+		cons.setHealth(config.getInt("health.amount"));
+		cons.setHealthDelay(config.getInt("health.delay"));
+		cons.setHealthTime(config.getInt("health.repetitions"));
+		cons.setMana(config.getInt("mana.amount"));
+		cons.setManaDelay(config.getInt("mana.delay"));
+		cons.setManaTime(config.getInt("mana.repetitions"));
+		cons.setCooldown(config.getLong("cooldown"));
+		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
+		cons.setWorlds(config.getStringList("worlds"));
+		cons.setIgnoreGcd(config.getBoolean("ignore-gcd"));
+		return cons;
+	}
+
+	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
+		ChestConsumable cons = new ChestConsumable(this, name, sounds, lore);
+		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
+		return cons;
+	}
+
+	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
+		TokenConsumable cons = new TokenConsumable(this, name, sounds, lore);
+		ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
+		ConfigurationSection scConfig = config.getConfigurationSection("settings");
+		if (scConfig != null) {
+			for (String settingsChangerKey : scConfig.getKeys(false)) {
+				ConfigurationSection sckConfig = scConfig.getConfigurationSection(settingsChangerKey);
+				String subsetting = sckConfig.getString("subkey");
+				String type = sckConfig.getString("type");
+				Object value = null;
+				long expiration = sckConfig.getLong("expiration");
+				boolean overwrite = sckConfig.getBoolean("overwrite");
+				if (type.equalsIgnoreCase("string")) {
+					value = sckConfig.getString("value");
+				}
+				else if (type.equalsIgnoreCase("boolean")) {
+					value = sckConfig.getBoolean("value");
+				}
+				else if (type.equalsIgnoreCase("integer")) {
+					value = sckConfig.getInt("value");
+				}
+				settingsChangers.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
+			}
+			cons.setSettingsChangers(settingsChangers);
+		}
+		return cons;
+	}
+
+	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
+		RecipeConsumable cons = new RecipeConsumable(this, name, sounds, lore);
+		cons.setPermission(config.getString("permission"));
+		return cons;
 	}
 
 	@EventHandler
@@ -202,7 +238,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 						continue;
 					}
 					consumable = consumables.get(invName);
-					if (consumable.getType() != ConsumableType.FOOD) {
+					if (!(consumable instanceof FoodConsumable)) {
 						continue;
 					}
 					if (!consumable.isSimilar(invMeta)) {
@@ -242,9 +278,6 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return;
 		}
 		Player p = (Player) e.getWhoClicked();
-		if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
-			return;
-		}
 		ItemStack item = e.getClickedInventory().getItem(e.getSlot());
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
@@ -257,10 +290,17 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		Consumable cons = consumables.get(name);
 		
-		// Only food can be inventory click eaten
-		if (cons.getType() != ConsumableType.FOOD) {
+		// If food is a consumable, continue only if setting is set
+		if (cons instanceof FoodConsumable) {
+			if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
+				return;
+			}
+		}
+		// Recipes always work on right click in inventory
+		else if (!(cons instanceof RecipeConsumable)) {
 			return;
 		}
+		
 		if (!cons.isSimilar(meta)) {
 			return;
 		}
@@ -298,13 +338,6 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				&& item.getItemMeta().getLore().get(0).contains("Potential Rewards")) {
 			e.setCancelled(true);
 		}
-	}
-
-	public boolean isOffGcd(Player p) {
-		if (this.globalCooldowns.containsKey(p.getUniqueId())) {
-			return System.currentTimeMillis() > this.globalCooldowns.get(p.getUniqueId());
-		}
-		return true;
 	}
 	
 	private void resetAttributes(Player p) {
