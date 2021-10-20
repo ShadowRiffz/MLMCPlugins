@@ -77,41 +77,54 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 	public void loadConsumables() {
 		consumables.clear();
 		
-		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
-			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
-			for (String key : itemConfig.getKeys(false)) {
-				ConfigurationSection sec = itemConfig.getConfigurationSection(key);
-				String name = sec.getString("name");
-				
-				ArrayList<Sound> sounds = new ArrayList<Sound>();
-				for (String sname : sec.getStringList("sound-effects")) {
-					Sound sound = Sound.valueOf(sname.toUpperCase());
-					if (sound != null) {
-						sounds.add(sound);
-					}
+		loadDirectory(new File(getDataFolder(), "consumables"));
+	}
+	
+	private void loadDirectory(File file) {
+		for (File subfile : file.listFiles()) {
+			if (subfile.isDirectory()) {
+				loadDirectory(subfile);
+			}
+			else {
+				loadFile(subfile);
+			}
+		}
+	}
+	
+	private void loadFile(File file) {
+		FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
+		for (String key : itemConfig.getKeys(false)) {
+			ConfigurationSection sec = itemConfig.getConfigurationSection(key);
+			String name = sec.getString("name");
+			
+			ArrayList<Sound> sounds = new ArrayList<Sound>();
+			for (String sname : sec.getStringList("sound-effects")) {
+				Sound sound = Sound.valueOf(sname.toUpperCase());
+				if (sound != null) {
+					sounds.add(sound);
 				}
-				ArrayList<String> lore = new ArrayList<String>();
-				for (String loreLine : sec.getStringList("lore")) {
-					lore.add(loreLine.replaceAll("&", "§"));
-				}
-				
-				String type = sec.getString("type", "FOOD");
-				if (type.equals("FOOD")) {
-					FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore);
-					consumables.put(food.getName(), food);
-				}
-				else if (type.equals("CHEST")) {
-					ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore);
-					consumables.put(chest.getName(), chest);
-				}
-				else if (type.equals("TOKEN")) {
-					TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore);
-					consumables.put(token.getName(), token);
-				}
-				else if (type.equals("RECIPE")) {
-					RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore);
-					consumables.put(recipe.getName(), recipe);
-				}
+			}
+			ArrayList<String> lore = new ArrayList<String>();
+			for (String loreLine : sec.getStringList("lore")) {
+				lore.add(loreLine.replaceAll("&", "§"));
+			}
+			
+			String type = sec.getString("type", "FOOD");
+			if (type.equals("FOOD")) {
+				FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore);
+				consumables.put(food.getName(), food);
+			}
+			else if (type.equals("CHEST")) {
+				ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore);
+				consumables.put(chest.getName(), chest);
+			}
+			else if (type.equals("TOKEN")) {
+				TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore);
+				consumables.put(token.getName(), token);
+			}
+			else if (type.equals("RECIPE")) {
+				RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore);
+				consumables.put(recipe.getName(), recipe);
 			}
 		}
 	}
