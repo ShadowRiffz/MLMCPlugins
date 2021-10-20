@@ -61,8 +61,6 @@ public class TokenConsumable extends Consumable {
 	}
 	
 	public void use(Player p, ItemStack item) {
-		ItemStack clone = item.clone();
-		item.setAmount(1);
 		UUID uuid = p.getUniqueId();
 
 		for (SettingsChanger sc : this.settingsChangers) {
@@ -75,6 +73,8 @@ public class TokenConsumable extends Consumable {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 
+		ItemStack clone = item.clone();
+		clone.setAmount(1);
 		p.sendMessage("§4[§c§lMLMC§4] §7You used " + displayname + "§7!");
 		p.getInventory().removeItem(clone);
 	}
