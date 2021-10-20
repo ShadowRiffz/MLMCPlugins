@@ -18,7 +18,7 @@ public abstract class Consumable {
 
 	public Consumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
 		this.main = main;
-		this.displayname = name.replaceAll("&", "§");
+		this.displayname = name.replaceAll("&", "§").replaceAll("@", "&");
 		this.name = ChatColor.stripColor(this.displayname);
 		this.sounds = sounds;
 		this.lore = lore;
