@@ -352,10 +352,10 @@ public class Main extends JavaPlugin implements Listener {
 					else {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						activeBosses.add(boss);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
 						for (Player target : activeFights.get(boss)) {
 							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
 						}
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
 					}
 				}
 			}
