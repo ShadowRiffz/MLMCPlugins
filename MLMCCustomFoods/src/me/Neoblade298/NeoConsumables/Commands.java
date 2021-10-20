@@ -21,6 +21,7 @@ public class Commands implements CommandExecutor{
 			if (args.length == 0) {
 				sender.sendMessage("§7Permission: mycommand.staff");
 				sender.sendMessage("§c/cons give boss [player]");
+				sender.sendMessage("§c/cons reload");
 			}
 			else if (args[0].equalsIgnoreCase("give")) {
 				if (args[1].equalsIgnoreCase("boss")) {
@@ -29,6 +30,11 @@ public class Commands implements CommandExecutor{
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
 					return true;
 				}
+			}
+			else if (args[0].equalsIgnoreCase("reload")) {
+				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded consumables");
+				main.loadConsumables();
+				return true;
 			}
 			return true;
 		}

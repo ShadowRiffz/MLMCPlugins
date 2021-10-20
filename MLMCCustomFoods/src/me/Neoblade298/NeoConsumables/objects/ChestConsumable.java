@@ -47,13 +47,13 @@ public class ChestConsumable extends Consumable {
 	
 	public void use(Player p, ItemStack item) {
 		p.sendMessage(displayname + " §7was opened.");
-		for (Sound sound : getSounds()) {
-			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
-		}
 		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7!");
 		executeCommands(p);
 		ItemStack clone = item.clone();
 		clone.setAmount(1);
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
 		p.getInventory().removeItem(clone);
 		return;
 	}

@@ -46,8 +46,12 @@ public class RecipeConsumable extends Consumable {
 	public void use(Player p, ItemStack item) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set " + permission);
 		p.sendMessage("§4[§c§lMLMC§4] §7You learned " + displayname + "§7!");
+		p.sendMessage("§4[§c§lMLMC§4] §7Type §c/recipes §7to see it!");
 		ItemStack clone = item.clone();
 		item.setAmount(1);
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
 		p.getInventory().removeItem(clone);
 	}
 	

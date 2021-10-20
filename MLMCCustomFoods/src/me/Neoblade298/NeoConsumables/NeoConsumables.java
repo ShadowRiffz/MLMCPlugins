@@ -54,7 +54,13 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 
 	public void onEnable() {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
-		loadConfigs();
+		
+		// Settings
+		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		settings = nsettings.createSettings("Consumables", this, false);
+		settings.addSetting("InventoryUse", false);
+		hiddenSettings = nsettings.createSettings("Tokens", this, true);
+		hiddenSettings.addSetting("Boss", false);
 		
 		// Setup databases
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -63,17 +69,13 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
 		}
 
+		loadConsumables();
 	    getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 	
-	public void loadConfigs() {
+	public void loadConsumables() {
 		consumables.clear();
-		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("Consumables", this, false);
-		settings.addSetting("InventoryUse", false);
-		hiddenSettings = nsettings.createSettings("Tokens", this, true);
-		hiddenSettings.addSetting("Boss", false);
 		
 		for (File file : new File(getDataFolder(), "consumables").listFiles()) {
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);

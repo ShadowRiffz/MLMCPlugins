@@ -71,6 +71,9 @@ public class TokenConsumable extends Consumable {
 				return;
 			}
 		}
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
 
 		p.sendMessage("§4[§c§lMLMC§4] §7You used " + displayname + "§7!");
 		p.getInventory().removeItem(clone);
