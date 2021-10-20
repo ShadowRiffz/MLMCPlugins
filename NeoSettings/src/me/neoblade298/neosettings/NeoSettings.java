@@ -74,6 +74,10 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	public Settings createSettings(String key, Plugin plugin, boolean hidden) {
+		if (settings.containsKey(key)) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Setting " + key + " for plugin " + plugin.getName() + "already exists. Returning existing setting.");
+			return settings.get(key);
+		}
 		Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Created setting of " + key + " for plugin " + plugin.getName() + ", hidden: " + hidden + ".");
 		Settings newSettings = new Settings(this, key, hidden);
 		settings.put(key, newSettings);
