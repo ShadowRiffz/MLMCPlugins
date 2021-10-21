@@ -467,12 +467,15 @@ public class Main extends JavaPlugin implements Listener {
 	// For when a player dies and goes into spectate mode
 	public void handleLeaveFight(Player p) {
 		if (p != null) {
+			UUID uuid = p.getUniqueId();
 			leavingPlayers.add(p.getName());
 			healthbars.remove(p.getName());
-			if (!fightingBoss.containsKey(p.getUniqueId())) return;
-			String boss = fightingBoss.remove(p.getUniqueId());
+			if (!fightingBoss.containsKey(uuid) return;
+			String boss = fightingBoss.remove(uuid);
+			statTimers.remove(uuid);
+			bossRunnableTimers.remove(uuid);
 			if (activeFights.get(boss).contains(p)) {
-				spectatingBoss.put(p.getUniqueId(), bossInfo.get(boss));
+				spectatingBoss.put(uuid, bossInfo.get(boss));
 				activeFights.get(boss).remove(p);
 				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
 				for (Player player : activeFights.get(boss)) {
@@ -511,7 +514,6 @@ public class Main extends JavaPlugin implements Listener {
 				sendAllBack.runTaskLater(main, 20L);
 			}
 	    	// Delete player from all fights in sql
-			String uuid = p.getUniqueId().toString();
 			try {
 				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 				Statement stmt = con.createStatement();
