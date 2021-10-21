@@ -470,10 +470,10 @@ public class Main extends JavaPlugin implements Listener {
 			UUID uuid = p.getUniqueId();
 			leavingPlayers.add(p.getName());
 			healthbars.remove(p.getName());
-			if (!fightingBoss.containsKey(uuid) return;
+			if (!fightingBoss.containsKey(uuid)) return;
 			String boss = fightingBoss.remove(uuid);
-			statTimers.remove(uuid);
-			bossRunnableTimers.remove(uuid);
+			statTimers.remove(boss);
+			bossRunnableTimers.remove(boss);
 			if (activeFights.get(boss).contains(p)) {
 				spectatingBoss.put(uuid, bossInfo.get(boss));
 				activeFights.get(boss).remove(p);
