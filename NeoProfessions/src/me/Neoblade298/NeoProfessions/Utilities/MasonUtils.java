@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Utilities;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -208,6 +209,24 @@ public class MasonUtils {
 		}
 		return count;
 	}
+	
+	public ArrayList<String> getBonusSlots(ItemStack item) {
+		ArrayList<String> slots = new ArrayList<String>();
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		boolean hasBonus = false;
+		for (String line : lore) {
+			if (!hasBonus) {
+				if (line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			} else {
+				if (!line.contains("Durability")) {
+					slots.add(line);
+				}
+			}
+		}
+		return slots;
+	}
 
 	public boolean isSlotAvailable(ItemStack item, int slot) {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -231,6 +250,30 @@ public class MasonUtils {
 			}
 		}
 		return false;
+	}
+
+	public int getAvailableSlot(ItemStack item) {
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		int count = 0;
+		boolean hasBonus = false;
+		for(String line : lore) {
+			if (!hasBonus) {
+				if(line.contains("Bonus")) {
+					hasBonus = true;
+				}
+			}
+			else {
+				count++;
+				// If the matching slot is empty, return true
+				if (line.contains("Slot")) {
+					return count;
+				}
+			}
+		}
+		if (hasBonus) {
+			return 0;
+		}
+		return -1;
 	}
 
 	public boolean isSlotUsed(ItemStack item, int slot) {
@@ -426,6 +469,26 @@ public class MasonUtils {
 		} else {
 			return null;
 		}
+	}
+	
+	// Returns null if can slot, otherwise returns an error
+	public String canSlot(ItemStack item, ItemStack augment, int slotLevel, int augmentLevel, String type) {
+		// If augment is same level as slot
+		if (augmentLevel != slotLevel) {
+			return "&cThis augment must be same level as slot, " + augmentLevel + " does not equal " + slotLevel + "!";
+		}
+		if (augmentLevel > slotLevel && 
+				(augment.getType().equals(Material.PRISMARINE_CRYSTALS) ||
+				augment.getType().equals(Material.QUARTZ))) {
+			return "&cThis augment must be same level or below, " + augmentLevel + " is greater than " + slotLevel + "!";
+		}
+		if (util.isArmor(item) && type.contains("weapon")) {
+			return "&cThis augment does not work on armor!";
+		}
+		if (util.isWeapon(item) && type.contains("armor")) {
+			return "&cThis augment does not work on weapons!";
+		}
+		return null;
 	}
 
 	public String slotType(ItemStack item) {

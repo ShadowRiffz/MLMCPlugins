@@ -11,14 +11,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Inventories.ConfirmSlotInventory;
+import me.Neoblade298.NeoProfessions.Inventories.ReplaceSlotInventory;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -127,30 +129,64 @@ public class MasonListeners implements Listener {
 			}
 		}
 	}
-
+	
 	@EventHandler
-	public void onDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			if (e.getFinalDamage() > p.getHealth()) {
-				// First check what charms the player has
-				ItemStack item = p.getInventory().getItemInMainHand();
-				boolean hasChance = false;
-				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-					for (String line : item.getItemMeta().getLore()) {
-						if (line.contains("Second Chance")) {
-							hasChance = true;
-							break;
-						}
-					}
-				}
-				if (hasChance) {
-					masonUtils.breakSecondChance(item);
-					util.sendMessage(p, "&7Your second chance charm was broken!");
-					p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
-					e.setCancelled(true);
-				}
+	public void onAugmentSlot(InventoryClickEvent e) {
+		if (!e.isLeftClick()) {
+			return;
+		}
+		if (e.getCursor() == null) {
+			return;
+		}
+		if (e.getCurrentItem() == null) {
+			return;
+		}
+		
+		Player p = (Player) e.getWhoClicked();
+		ItemStack augment = e.getCursor();
+		ItemStack item = e.getCurrentItem();
+		
+		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		String slotType = masonUtils.slotType(augment);
+		if (slotType == null) {
+			return;
+		}
+		int slot = masonUtils.getAvailableSlot(item);
+		if (slot == -1) {
+			util.sendMessage(p, "&cNo slots available on this item!");
+			return;
+		}
+		/*
+		else if (slot == 0) {
+			int augmentLevel = masonUtils.getAugmentLevel(augment);
+			int gearLevel = util.getItemLevel(item);
+			String slotError = masonUtils.canSlot(item, augment, gearLevel, augmentLevel, slotType);
+			if (slotError != null) {
+				util.sendMessage(p, slotError);
+				return;
 			}
+			ItemStack clone = augment.clone();
+			clone.setAmount(1);
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+			new ReplaceSlotInventory(main, p, item, clone, masonUtils, slotType, util);
+		}
+			*/
+		else {
+			int slotLevel = masonUtils.getSlotLevel(slot, item);
+			int augmentLevel = masonUtils.getAugmentLevel(augment);
+			String slotError = masonUtils.canSlot(item, augment, slotLevel, augmentLevel, slotType);
+			if (slotError != null) {
+				util.sendMessage(p, slotError);
+				return;
+			}
+			ItemStack clone = augment.clone();
+			clone.setAmount(1);
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+			new ConfirmSlotInventory(main, p, item, clone, masonUtils, slotType, slot, util);
 		}
 	}
 
@@ -278,6 +314,32 @@ public class MasonListeners implements Listener {
 				util.sendMessage(p, "&cSomething went wrong! Please try again.");
 				slotItem.remove(p);
 				slotNum.remove(p);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			if (e.getFinalDamage() > p.getHealth()) {
+				// First check what charms the player has
+				ItemStack item = p.getInventory().getItemInMainHand();
+				boolean hasChance = false;
+				if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+					for (String line : item.getItemMeta().getLore()) {
+						if (line.contains("Second Chance")) {
+							hasChance = true;
+							break;
+						}
+					}
+				}
+				if (hasChance) {
+					masonUtils.breakSecondChance(item);
+					util.sendMessage(p, "&7Your second chance charm was broken!");
+					p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
+					e.setCancelled(true);
+				}
 			}
 		}
 	}
