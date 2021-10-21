@@ -20,7 +20,6 @@ import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Main;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmSlotInventory;
-import me.Neoblade298.NeoProfessions.Inventories.ReplaceSlotInventory;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -154,7 +153,7 @@ public class MasonListeners implements Listener {
 			return;
 		}
 		int slot = masonUtils.getAvailableSlot(item);
-		if (slot == -1) {
+		if (slot <= 0) {
 			util.sendMessage(p, "&cNo slots available on this item!");
 			return;
 		}
