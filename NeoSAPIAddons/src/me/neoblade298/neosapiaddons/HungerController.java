@@ -2,6 +2,7 @@ package me.neoblade298.neosapiaddons;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -30,8 +31,13 @@ public class HungerController implements Listener {
 		
 		BukkitRunnable foodTimer = new BukkitRunnable() {
 			public void run() {
-				for (Player p : sprintingPlayers) {
-					if (hunger.containsKey(p)) {
+				Iterator<Player> iter = sprintingPlayers.iterator();
+				while (iter.hasNext()) {
+					Player p = iter.next();
+					if (!main.isQuestWorld(p.getWorld())) {
+						iter.remove();
+					}
+					else if (hunger.containsKey(p)) {
 						int pHunger = hunger.get(p);
 						if (pHunger % FOOD_SCALE == 0) {
 							FoodLevelChangeEvent e = new FoodLevelChangeEvent(p, pHunger / FOOD_SCALE);
