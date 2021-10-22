@@ -128,7 +128,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 					Class.forName("com.mysql.jdbc.Driver");
 					Connection con = DriverManager.getConnection(url, user, pass);
 					Statement stmt = con.createStatement();
-					stmt.executeUpdate("REPLACE INTO analysis_players values('" + uuid + "'," + joined + "," + now + ",'" + pClass + 
+					stmt.executeUpdate("REPLACE INTO analysis_players values('" + uuid + "','" + p.getName() + "'," + joined + "," + now + ",'" + pClass + 
 							"'," + level + ",'" + quest + "','" + boss + "');");
 				}
 				catch (Exception e) {
