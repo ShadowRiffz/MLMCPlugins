@@ -70,6 +70,9 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 		bosses.add("drop.blight");
 		bosses.add("drop.dhaga");
 		bosses.add("drop.frostqueen");
+		bosses.add("drop.rhain");
+		bosses.add("drop.maleficent");
+		bosses.add("drop.salonden");
 	}
 	
 	public void onDisable() {
