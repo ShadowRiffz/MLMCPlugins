@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
@@ -502,8 +503,9 @@ public class Main extends JavaPlugin implements Listener {
 				p.teleport(instanceSpawn);
 				BukkitRunnable sendAllBack = new BukkitRunnable() {
 					public void run() {
-						ArrayList<Player> fighters = inBoss.get(boss);
-						for (Player fighter : fighters) {
+						Iterator<Player> fighters = inBoss.get(boss).iterator();
+						while (fighters.hasNext()) {
+							Player fighter = fighters.next();
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
 							}
