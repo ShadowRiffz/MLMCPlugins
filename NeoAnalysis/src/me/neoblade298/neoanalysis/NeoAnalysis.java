@@ -100,7 +100,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 			q = quest.getName();
 			break;
 		}
-		final String quest = q;
+		final String quest = q.replaceAll("'", "''");
 		
 		new BukkitRunnable() {
 			public void run() {
