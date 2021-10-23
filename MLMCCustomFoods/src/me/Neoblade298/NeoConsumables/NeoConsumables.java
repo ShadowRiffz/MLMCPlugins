@@ -292,6 +292,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (!e.isRightClick()) {
 			return;
 		}
+		if (e.getClickedInventory() == null) {
+			return;
+		}
 		Player p = (Player) e.getWhoClicked();
 		ItemStack item = e.getClickedInventory().getItem(e.getSlot());
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
