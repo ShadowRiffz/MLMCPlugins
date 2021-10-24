@@ -37,8 +37,12 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
 	    		double level = am.getLevel();
 	    		AbstractEntity ent = am.getEntity();
+	    		if (!ent.isValid() || ent.getHealth() <= 0) {
+	    			return true;
+	    		}
+	    		
 	    		if (level < numPlayers) {
-	    			if (!ent.isDead()) {
+	    			if (!ent.isValid()) {
 		    			am.setLevel(numPlayers);
 		    			level = numPlayers;
 	    			}
@@ -63,7 +67,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    			}
 	    		}
 	    		
-	    		if (!ent.isDead()) {
+	    		if (!ent.isValid()) {
 		    		ent.setMaxHealth(newHealth);
 		    		ent.setHealth(newHealth);
 	    		}
