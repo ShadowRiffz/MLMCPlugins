@@ -41,7 +41,6 @@ import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
 import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
 import me.neoblade298.neomythicextension.triggers.StatusTrigger;
-import me.neoblade298.neosettings.NeoSettings;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -51,7 +50,6 @@ public class Main extends JavaPlugin implements Listener {
 	// integers
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
-	private NeoSettings settings;
 
 	@Override
 	public void onEnable() {
@@ -63,7 +61,7 @@ public class Main extends JavaPlugin implements Listener {
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
 		
 		// Create Settings
-		settings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		// settings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
