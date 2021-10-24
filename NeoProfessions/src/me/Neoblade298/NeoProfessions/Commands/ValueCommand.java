@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,10 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
-import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 
 public class ValueCommand implements CommandExecutor {
