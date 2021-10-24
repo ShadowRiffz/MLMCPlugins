@@ -151,6 +151,6 @@ public class GearConfig {
 		NBTItem nbti = new NBTItem(item);
 		double price = level * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
-		return item;
+		return nbti.getItem();
 	}
 }
