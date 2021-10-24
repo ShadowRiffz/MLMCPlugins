@@ -11,6 +11,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neogear.Gear;
 
 public class GearConfig {
@@ -147,6 +148,9 @@ public class GearConfig {
 		meta.setLore(lore);
 		
 		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		double price = level * main.rarities.get(rarity).priceModifier;
+		nbti.setDouble("value", price);
 		return item;
 	}
 }
