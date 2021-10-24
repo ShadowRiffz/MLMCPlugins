@@ -21,13 +21,14 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class SellInventory implements ProfessionInventory {
+	private Professions main;
 	private final Inventory inv;
-	Util util;
 	private final int SELL_ICON = 8;
 	private final int MENU_MODEL = 5000;
 	private boolean sold = false;
 
 	public SellInventory(Professions main, Player p) {
+		this.main = main;
 		inv = Bukkit.createInventory(p, 54, "§cPlace items here to sell");
 		ItemStack[] contents = inv.getContents();
 		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell");
@@ -138,6 +139,7 @@ public class SellInventory implements ProfessionInventory {
 		contents[SELL_ICON] = totalReceipt;
 		inv.setContents(contents);
 		sold = true;
+		main.getEconomy().depositPlayer(p, totalSell);
 		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 		p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold §e" + numSold + " §7items for §a" + totalSell + "g§7.");
 	}
