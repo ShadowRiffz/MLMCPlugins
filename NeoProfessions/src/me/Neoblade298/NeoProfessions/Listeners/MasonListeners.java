@@ -72,41 +72,13 @@ public class MasonListeners implements Listener {
 		if (e.getKiller() instanceof Player) {
 			Player p = (Player) e.getKiller();
 			ItemStack item = p.getInventory().getItemInMainHand();
-			String lootLine = null;
 			String expLine = null;
 
 			// First check what charms the player has
 			if (!item.getType().equals(Material.PRISMARINE_CRYSTALS) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
 				for (String line : item.getItemMeta().getLore()) {
-					if (line.contains("Looting")) {
-						lootLine = line;
-					}
-					else if (line.contains("Exp")) {
+					if (line.contains("Exp")) {
 						expLine = line;
-					}
-				}
-			}
-
-			// Looting charm
-			if (lootLine != null) {
-				if (lootLine.contains("Advanced") && e.getMobType().getDisplayName() != null) {
-					String[] name = e.getMobType().getDisplayName().get().split(" ");
-					if (name.length > 2) {
-						if (name[1].contains("]")) {
-							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
-							amount = amount * (1 + gen.nextDouble());
-							econ.depositPlayer(p, amount);
-						}
-					}
-				}
-				else if (e.getMobType().getDisplayName() != null) {
-					String[] name = e.getMobType().getDisplayName().get().split(" ");
-					if (name.length > 2) {
-						if (name[1].contains("]")) {
-							double amount = Double.parseDouble(name[1].substring(0, name[1].length() - 1));
-							amount = amount * (0.5 + gen.nextDouble());
-							econ.depositPlayer(p, amount);
-						}
 					}
 				}
 			}
