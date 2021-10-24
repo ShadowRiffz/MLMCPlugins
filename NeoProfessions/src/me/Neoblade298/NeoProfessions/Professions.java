@@ -23,6 +23,7 @@ import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
+import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
@@ -126,6 +127,7 @@ public class Professions extends JavaPlugin implements Listener {
 			professionsMethods = new ProfessionsMethods(this);
 	
 			// Command listeners for all classes
+			this.getCommand("value").setExecutor(new ValueCommand(this));
 			this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
 			this.getCommand("mason").setExecutor(new MasonCommands(this));
 			this.getCommand("scutter").setExecutor(new StonecutterCommands(this));

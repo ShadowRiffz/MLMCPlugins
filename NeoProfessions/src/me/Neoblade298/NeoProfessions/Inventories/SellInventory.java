@@ -30,7 +30,7 @@ public class SellInventory implements ProfessionInventory {
 		this.main = main;
 		inv = Bukkit.createInventory(p, 54, "§cPlace items here to sell");
 		ItemStack[] contents = inv.getContents();
-		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell");
+		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell", "§7You can check the value of", "§7item with §c/value");
 		inv.setContents(contents);
 		main.viewingInventory.put(p, this);
 
