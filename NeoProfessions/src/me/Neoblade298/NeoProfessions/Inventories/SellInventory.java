@@ -54,7 +54,9 @@ public class SellInventory implements ProfessionInventory {
 		}
 		
 		else if (sold) {
-			e.setCancelled(true);
+			if (isUntouchable(e.getCurrentItem())) {
+				e.setCancelled(true);
+			}
 		}
 	}
 	
@@ -68,10 +70,7 @@ public class SellInventory implements ProfessionInventory {
 		Player p = (Player) e.getPlayer();
 		if (e.getInventory() == inv) {
 			for (ItemStack item : inv.getContents()) {
-				if (item == null) {
-					continue;
-				}
-				if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == MENU_MODEL) {
+				if (item == null || isUntouchable(item)) {
 					continue;
 				}
 				
@@ -81,6 +80,11 @@ public class SellInventory implements ProfessionInventory {
 				}
 			}
 		}
+	}
+	
+	private boolean isUntouchable(ItemStack item) {
+		return item != null && item.hasItemMeta() && item.getItemMeta().hasCustomModelData() &&
+				item.getItemMeta().getCustomModelData() == MENU_MODEL;
 	}
 	
 	private void confirmSell(Player p) {
