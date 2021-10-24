@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="src/MythicMobs-4.8.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="src/NeoGear.jar"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.16.1-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="src/item-nbt-api-plugin-2.8.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
