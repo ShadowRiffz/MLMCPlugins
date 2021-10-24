@@ -14,6 +14,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.Gear;
 import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithMethods {
@@ -24,7 +25,7 @@ public class BlacksmithMethods {
 	CommonItems common;
 	BlacksmithItems bItems;
 	CurrencyManager cm;
-	me.neoblade298.neogear.Main neogear;
+	Gear neogear;
 
 	// Constants
 	final int DURABILITY_ESSENCE = 5;
