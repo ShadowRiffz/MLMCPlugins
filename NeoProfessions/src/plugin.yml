@@ -5,6 +5,9 @@ version: 1.0
 api-version: 1.16
 depend: [MythicMobs, SkillAPI, NeoGear, Vault]
 commands:
+  value:
+    description: Value command
+    usage: /value
   prof:
     description: Admin commands
     usage: /prof [args]
