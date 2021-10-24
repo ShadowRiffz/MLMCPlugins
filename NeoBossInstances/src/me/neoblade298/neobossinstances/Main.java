@@ -461,7 +461,9 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		if (spectatingBoss.containsKey(p.getUniqueId())) { // This happens regardless of if they died or not
 			String boss = spectatingBoss.remove(p.getUniqueId()).getName();
-			inBoss.get(boss).remove(p);
+			if (boss != null) {
+				inBoss.get(boss).remove(p);
+			}
 		}
 	}
 	
