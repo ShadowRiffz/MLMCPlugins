@@ -24,14 +24,14 @@ import org.bukkit.inventory.ItemStack;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipeChecks;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.CulinarianUtils;
 
 public class CulinarianListeners implements Listener {
 
-	Main main;
+	Professions main;
 	CulinarianRecipes culinarianRecipes;
 	CulinarianUtils culinarianUtils;
 	CulinarianRecipeChecks check;
@@ -39,7 +39,7 @@ public class CulinarianListeners implements Listener {
 	HashMap<Player, Integer> numBonuses = new HashMap<Player, Integer>();
 	Random gen;
 
-	public CulinarianListeners(Main main) {
+	public CulinarianListeners(Professions main) {
 		this.main = main;
 		this.culinarianRecipes = main.culinarianRecipes;
 		culinarianUtils = new CulinarianUtils();

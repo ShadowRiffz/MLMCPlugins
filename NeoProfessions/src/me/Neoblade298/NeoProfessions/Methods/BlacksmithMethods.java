@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -18,7 +18,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class BlacksmithMethods {
 
-	Main main;
+	Professions main;
 	Economy econ;
 	Util util;
 	CommonItems common;
@@ -45,7 +45,7 @@ public class BlacksmithMethods {
 	HashMap<Integer, Integer> INCREASE_ENCHANTMENT_GOLD;
 	HashMap<Integer, Integer> REFORGE_GOLD;
 
-	public BlacksmithMethods(Main main) {
+	public BlacksmithMethods(Professions main) {
 		this.main = main;
 		this.econ = main.getEconomy();
 		util = new Util();

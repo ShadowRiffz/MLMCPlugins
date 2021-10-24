@@ -5,17 +5,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 
 public class CulinarianRecipeChecks {
 
-	Main main;
+	Professions main;
 	IngredientRecipeItems ingr;
 	DrinksRecipeItems drink;
 
-	public CulinarianRecipeChecks(Main main) {
+	public CulinarianRecipeChecks(Professions main) {
 		this.main = main;
 		ingr = new IngredientRecipeItems();
 		drink = new DrinksRecipeItems();

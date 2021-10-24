@@ -15,7 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -28,7 +28,7 @@ public class ReplaceSlotInventory implements Listener {
 	Util util;
 	ArrayList<String> bonusSlots;
 
-	public ReplaceSlotInventory(Main main, Player p, ItemStack item, ItemStack augment, MasonUtils masonUtils, String slotType, Util util) {
+	public ReplaceSlotInventory(Professions main, Player p, ItemStack item, ItemStack augment, MasonUtils masonUtils, String slotType, Util util) {
 		Bukkit.getServer().getPluginManager().registerEvents(this, main);
 		inv = Bukkit.createInventory(p, 9, "§cReplace an existing augment?");
 

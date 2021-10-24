@@ -10,16 +10,16 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class GeneralListeners implements Listener {
 	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
 
-	Main main;
+	Professions main;
 	Util util;
 
-	public GeneralListeners(Main main) {
+	public GeneralListeners(Professions main) {
 		this.main = main;
 		util = new Util();
 	}

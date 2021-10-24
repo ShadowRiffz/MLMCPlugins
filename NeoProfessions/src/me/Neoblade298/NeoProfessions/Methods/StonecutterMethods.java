@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Utilities.StonecutterUtils;
@@ -16,7 +16,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class StonecutterMethods {
 
-	Main main;
+	Professions main;
 	Economy econ;
 	StonecutterUtils stonecutterUtils;
 	StonecutterItems sItems;
@@ -38,7 +38,7 @@ public class StonecutterMethods {
 	HashMap<Integer, Integer> GEM_GOLD;
 	HashMap<Integer, Integer> REFINE_GOLD;
 
-	public StonecutterMethods(Main main) {
+	public StonecutterMethods(Professions main) {
 		this.main = main;
 		this.econ = main.getEconomy();
 		stonecutterUtils = new StonecutterUtils();

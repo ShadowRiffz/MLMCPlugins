@@ -23,7 +23,8 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
@@ -40,7 +41,7 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 public class NeoprofessionsCommands implements CommandExecutor {
 
 	private static final int LEVEL_INTERVAL = 5;
-	Main main;
+	Professions main;
 	BlacksmithMethods blacksmithMethods;
 	StonecutterMethods stonecutterMethods;
 	CulinarianMethods culinarianMethods;
@@ -54,7 +55,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	DrinksRecipeItems drink;
 	CurrencyManager cm;
 
-	public NeoprofessionsCommands(Main main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c,
+	public NeoprofessionsCommands(Professions main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c,
 			MasonMethods m) {
 		this.main = main;
 		this.blacksmithMethods = b;
@@ -275,6 +276,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
+				sender.sendMessage("§7- §4/prof sell [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
 				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
 				sender.sendMessage("§7- §4/prof <playername> get ingr [22-24]");
@@ -288,7 +290,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			else {
-				if (args[0].equalsIgnoreCase("debug")) {
+				if (args[0].equalsIgnoreCase("sell")) {
+					new SellInventory(main, Bukkit.getPlayer(args[1]));
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("debug")) {
 					main.debug = !main.debug;
 					p.sendMessage("Debug set to " + main.debug);
 					return true;

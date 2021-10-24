@@ -9,8 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -19,23 +17,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Main;
-import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class SellInventory implements Listener {
+public class SellInventory implements ProfessionInventory {
 	private final Inventory inv;
 	Util util;
 	private final int SELL_ICON = 8;
 	private final int MENU_MODEL = 5000;
 	private boolean sold = false;
 
-	public SellInventory(Main main, Player p) {
-		Bukkit.getServer().getPluginManager().registerEvents(this, main);
+	public SellInventory(Professions main, Player p) {
 		inv = Bukkit.createInventory(p, 54, "§cPlace items here to sell");
 		ItemStack[] contents = inv.getContents();
-		contents[SELL_ICON] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§aConfirm Sell", "§7Unsellable items will remain");
+		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell");
 		inv.setContents(contents);
+		main.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
 	}
@@ -50,9 +47,7 @@ public class SellInventory implements Listener {
 		return item;
 	}
 
-	// Check for clicks on items
-	@EventHandler
-	public void onInventoryClick(final InventoryClickEvent e) {
+	public void handleInventoryClick(final InventoryClickEvent e) {
 		if (!sold && e.getClickedInventory() == inv && e.getRawSlot() == SELL_ICON) {
 			e.setCancelled(true);
 			confirmSell((Player) e.getWhoClicked());
@@ -63,21 +58,23 @@ public class SellInventory implements Listener {
 		}
 	}
 	
-	@EventHandler
-	public void onInventoryDrag(final InventoryDragEvent e) {
+	public void handleInventoryDrag(final InventoryDragEvent e) {
 		if (sold) {
 			e.setCancelled(true);
 		}
 	}
 	
-	@EventHandler
-	public void onInventoryClose(final InventoryCloseEvent e) {
+	public void handleInventoryClose(final InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
 		if (e.getInventory() == inv) {
 			for (ItemStack item : inv.getContents()) {
+				if (item == null) {
+					continue;
+				}
 				if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == MENU_MODEL) {
 					continue;
 				}
+				
 				HashMap<Integer, ItemStack> failed = p.getInventory().addItem(item);
 				for (Entry<Integer, ItemStack> entry : failed.entrySet()) {
 					p.getWorld().dropItem(p.getLocation(), entry.getValue());
@@ -98,18 +95,26 @@ public class SellInventory implements Listener {
 				NBTItem nbti = new NBTItem(item);
 				
 				if (!nbti.hasKey("value")) continue;
+				double value = 0;
+				if (!nbti.getString("value").isBlank()) {
+					value = Double.parseDouble(nbti.getString("value"));
+				}
+				else {
+					value = nbti.getDouble("value");
+				}
 				
-				double value = nbti.getDouble("value");
-				totalSell += value;
+				totalSell += value * item.getAmount();
 				numSold += item.getAmount();
 				
 				ItemStack receipt = new ItemStack(Material.PAPER);
 				ItemMeta receiptMeta = receipt.getItemMeta();
 				
-				String name = item.hasItemMeta() ? item.getItemMeta().getDisplayName() : item.getType().name();
+				String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
 				receiptMeta.setDisplayName(name);
 				ArrayList<String> lore = new ArrayList<String>();
-				lore.add("§7Sold for: §a" + value + "g");
+				lore.add("§7Amount sold: §e" + item.getAmount() + "x");
+				lore.add("§7Price: §e" + value + "g");
+				lore.add("§7Total: §a" + value * item.getAmount() + "g");
 				receiptMeta.setLore(lore);
 				receiptMeta.setCustomModelData(MENU_MODEL);
 				receipt.setItemMeta(receiptMeta);
@@ -121,11 +126,15 @@ public class SellInventory implements Listener {
 		receiptMeta.setDisplayName("§aSuccessfully sold " + numSold + " items!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7Total gold gained: §a" + totalSell + "g");
-		lore.add("§7If any items remain, they cannot be sold.");
+		lore.add("§7Unsold items will be returned to your");
+		lore.add("§7inventory after you close this menu.");
 		receiptMeta.setLore(lore);
 		receiptMeta.setCustomModelData(MENU_MODEL);
 		totalReceipt.setItemMeta(receiptMeta);
 		contents[SELL_ICON] = totalReceipt;
+		inv.setContents(contents);
 		sold = true;
+		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+		p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold §e" + numSold + " §7items for §a" + totalSell + "g§7.");
 	}
 }

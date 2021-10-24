@@ -7,18 +7,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CulinarianRecipes {
 	
-	Main main;
+	Professions main;
 	IngredientRecipeItems ingr;
 	DrinksRecipeItems drink;
 	Util util;
-	public CulinarianRecipes(Main main) {
+	public CulinarianRecipes(Professions main) {
 		this.main = main;
 		ingr = new IngredientRecipeItems();
 		drink = new DrinksRecipeItems();

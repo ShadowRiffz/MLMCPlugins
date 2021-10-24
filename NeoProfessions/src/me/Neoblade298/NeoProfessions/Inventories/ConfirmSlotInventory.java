@@ -4,19 +4,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class ConfirmSlotInventory implements Listener {
+public class ConfirmSlotInventory implements ProfessionInventory {
 	private final Inventory inv;
 	ItemStack item;
 	ItemStack augment;
@@ -25,9 +24,9 @@ public class ConfirmSlotInventory implements Listener {
 	int slot;
 	Util util;
 
-	public ConfirmSlotInventory(Main main, Player p, ItemStack item, ItemStack augment, MasonUtils masonUtils, String slotType, int slot, Util util) {
-		Bukkit.getServer().getPluginManager().registerEvents(this, main);
+	public ConfirmSlotInventory(Professions main, Player p, ItemStack item, ItemStack augment, MasonUtils masonUtils, String slotType, int slot, Util util) {
 		inv = Bukkit.createInventory(p, 9, "§cAre you sure?");
+		main.viewingInventory.put(p, this);
 
 		inv.addItem(item);
 		inv.addItem(augment);
@@ -56,8 +55,7 @@ public class ConfirmSlotInventory implements Listener {
 	}
 
 	// Check for clicks on items
-	@EventHandler
-	public void onInventoryClick(final InventoryClickEvent e) {
+	public void handleInventoryClick(final InventoryClickEvent e) {
 		if (e.getInventory() != inv)
 			return;
 
@@ -119,10 +117,13 @@ public class ConfirmSlotInventory implements Listener {
 	}
 
 	// Cancel dragging in our inventory
-	@EventHandler
-	public void onInventoryClick(final InventoryDragEvent e) {
+	public void handleInventoryDrag(final InventoryDragEvent e) {
 		if (e.getInventory().equals(inv)) {
 			e.setCancelled(true);
 		}
+	}
+	
+	public void handleInventoryClose(final InventoryCloseEvent e) {
+		
 	}
 }

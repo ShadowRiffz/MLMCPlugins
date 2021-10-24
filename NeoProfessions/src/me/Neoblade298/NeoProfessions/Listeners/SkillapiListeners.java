@@ -6,13 +6,13 @@ import org.bukkit.event.Listener;
 
 import com.sucy.skill.api.event.PlayerSkillDowngradeEvent;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 
 public class SkillapiListeners implements Listener {
 	
-	Main main;
+	Professions main;
 	
-	public SkillapiListeners(Main main) {
+	public SkillapiListeners(Professions main) {
 		this.main = main;
 	}
 

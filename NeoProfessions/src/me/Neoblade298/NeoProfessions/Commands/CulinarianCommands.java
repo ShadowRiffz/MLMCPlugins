@@ -7,17 +7,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CulinarianCommands implements CommandExecutor {
 	
-	Main main;
+	Professions main;
 	CulinarianMethods culinarianMethods;
 	Util util;
 	
-	public CulinarianCommands(Main main) {
+	public CulinarianCommands(Professions main) {
 		this.main = main;
 		culinarianMethods = main.culinarianMethods;
 		util = new Util();

@@ -11,18 +11,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class BlacksmithListeners implements Listener {
 	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
 
-	Main main;
+	Professions main;
 	BlacksmithUtils blacksmithUtils;
 	Util util;
 
-	public BlacksmithListeners(Main main) {
+	public BlacksmithListeners(Professions main) {
 		this.main = main;
 		blacksmithUtils = new BlacksmithUtils();
 		util = new Util();

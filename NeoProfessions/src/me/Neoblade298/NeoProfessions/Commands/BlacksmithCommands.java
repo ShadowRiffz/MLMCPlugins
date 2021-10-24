@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
@@ -16,13 +16,13 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class BlacksmithCommands implements CommandExecutor {
 	
-	Main main;
+	Professions main;
 	Util util;
 	BlacksmithMethods blacksmithMethods;
 	BlacksmithItems bItems;
 	CommonItems common;
 	
-	public BlacksmithCommands(Main main) {
+	public BlacksmithCommands(Professions main) {
 		this.main = main;
 		this.blacksmithMethods = main.blacksmithMethods;
 		util = new Util();

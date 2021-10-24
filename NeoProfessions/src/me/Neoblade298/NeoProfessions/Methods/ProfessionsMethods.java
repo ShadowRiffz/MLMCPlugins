@@ -10,14 +10,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class ProfessionsMethods {
 
-	Main main;
+	Professions main;
 	Economy econ;
 	Util util;
 	CurrencyManager cm;
@@ -27,7 +27,7 @@ public class ProfessionsMethods {
 	// Prices
 	static final int ARTIFACT_PRICE = 1000000;
 
-	public ProfessionsMethods(Main main) {
+	public ProfessionsMethods(Professions main) {
 		this.main = main;
 		this.econ = main.getEconomy();
 		util = new Util();

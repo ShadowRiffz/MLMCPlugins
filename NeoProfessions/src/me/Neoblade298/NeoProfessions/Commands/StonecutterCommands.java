@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Utilities.StonecutterUtils;
@@ -16,14 +16,14 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class StonecutterCommands implements CommandExecutor {
 
-	Main main;
+	Professions main;
 	StonecutterMethods stonecutterMethods;
 	StonecutterUtils stonecutterUtils;
 	StonecutterItems sItems;
 	Util util;
 	CurrencyManager cm;
 
-	public StonecutterCommands(Main main) {
+	public StonecutterCommands(Professions main) {
 		this.main = main;
 		this.stonecutterMethods = main.stonecutterMethods;
 		stonecutterUtils = new StonecutterUtils();

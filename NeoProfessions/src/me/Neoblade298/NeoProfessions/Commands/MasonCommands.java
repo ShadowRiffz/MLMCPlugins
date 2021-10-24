@@ -7,19 +7,19 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class MasonCommands implements CommandExecutor {
 	
-	Main main;
+	Professions main;
 	MasonMethods masonMethods;
 	
 	static final int MAX_SLOTS = 3;
 	
 	Util util;
-	public MasonCommands(Main main) {
+	public MasonCommands(Professions main) {
 		this.main = main;
 		this.masonMethods = main.masonMethods;
 		util = new Util();

@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmSlotInventory;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -34,14 +34,14 @@ public class MasonListeners implements Listener {
 	static final int SLOT_ESSENCE = 3;
 	static final int SLOT_GOLD = 2000;
 
-	Main main;
+	Professions main;
 	Economy econ;
 	MasonUtils masonUtils;
 	Util util;
 	CommonItems common;
 	CurrencyManager cm;
 
-	public MasonListeners(Main main) {
+	public MasonListeners(Professions main) {
 		this.main = main;
 		econ = main.getEconomy();
 		masonUtils = new MasonUtils();

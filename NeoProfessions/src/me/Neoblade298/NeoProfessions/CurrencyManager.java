@@ -17,7 +17,7 @@ public class CurrencyManager {
 	public static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	private Util util;
 	
-	public CurrencyManager(Main main) {
+	public CurrencyManager(Professions main) {
 		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
 		util = new Util();
 	}
@@ -33,7 +33,7 @@ public class CurrencyManager {
 		
 		// Check if player exists on SQL
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(Main.connection, Main.properties);
+		Connection con = DriverManager.getConnection(Professions.connection, Professions.properties);
 		Statement stmt = con.createStatement();
 		ResultSet rs;
 		rs = stmt.executeQuery("SELECT * FROM neoprofessions_currency WHERE UUID = '" + p.getUniqueId() + "';");
@@ -70,7 +70,7 @@ public class CurrencyManager {
 	
 	public void savePlayer(Player p) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
 		Statement stmt = con.createStatement();
 		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
 		for (String type : types) {
@@ -85,7 +85,7 @@ public class CurrencyManager {
 	
 	public void cleanup() throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+		Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
 		Statement stmt = con.createStatement();
 		for (UUID uuid : currencies.keySet()) {
 			HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(uuid);

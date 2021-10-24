@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
@@ -29,7 +29,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class CulinarianMethods {
 	
-	Main main;
+	Professions main;
 	Economy econ;
 	CulinarianUtils culinarianUtils;
 	Util util;
@@ -66,7 +66,7 @@ public class CulinarianMethods {
 	final static int REMEDY_COST = 100;
 	final static int REMEDY_ESSENCE = 1;
 	
-	public CulinarianMethods(Main main) {
+	public CulinarianMethods(Professions main) {
 		this.main = main;
 		this.econ = main.getEconomy();
 		common = new CommonItems();

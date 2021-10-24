@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -22,9 +23,11 @@ import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
+import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
 import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
 import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
 import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
+import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
 import me.Neoblade298.NeoProfessions.Listeners.SkillapiListeners;
 import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
@@ -38,7 +41,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
-public class Main extends JavaPlugin implements Listener {
+public class Professions extends JavaPlugin implements Listener {
 	public boolean debug = false;
 	public boolean isInstance = false;
 
@@ -69,6 +72,8 @@ public class Main extends JavaPlugin implements Listener {
 	public CurrencyManager cManager;
 	
 	public me.neoblade298.neogear.Main neogear;
+	
+	public HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -97,6 +102,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
 		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
 		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
+		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);

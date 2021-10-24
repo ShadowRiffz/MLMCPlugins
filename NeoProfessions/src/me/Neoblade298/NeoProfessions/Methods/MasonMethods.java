@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sucy.skill.SkillAPI;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Main;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
@@ -20,7 +20,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class MasonMethods {
 
-	Main main;
+	Professions main;
 	Economy econ;
 	MasonListeners listeners;
 	MasonUtils masonUtils;
@@ -79,7 +79,7 @@ public class MasonMethods {
 	HashMap<Integer, Integer> EQUIP_SLOT_GOLD;
 	HashMap<Integer, Integer> UNEQUIP_SLOT_GOLD;
 
-	public MasonMethods(Main main) {
+	public MasonMethods(Professions main) {
 		this.main = main;
 		this.econ = main.getEconomy();
 		this.listeners = main.masonListeners;

@@ -4,10 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.Professions;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class NeoProfessionsPlaceholders extends PlaceholderExpansion {
-	private me.Neoblade298.NeoProfessions.Main plugin;
+	private Professions plugin;
 
     @Override
     public boolean canRegister(){
@@ -17,7 +18,7 @@ public class NeoProfessionsPlaceholders extends PlaceholderExpansion {
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	plugin = (me.Neoblade298.NeoProfessions.Main) Bukkit.getPluginManager().getPlugin("NeoProfessions");
+    	plugin = (Professions) Bukkit.getPluginManager().getPlugin("NeoProfessions");
     	if (plugin == null) return false;
     	return super.register();
     }
