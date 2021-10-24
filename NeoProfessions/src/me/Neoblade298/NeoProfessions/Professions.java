@@ -37,6 +37,7 @@ import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
+import me.neoblade298.neogear.Gear;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -71,7 +72,7 @@ public class Professions extends JavaPlugin implements Listener {
 	
 	public CurrencyManager cManager;
 	
-	public me.neoblade298.neogear.Main neogear;
+	public me.neoblade298.neogear.Gear neogear;
 	
 	public HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
 
@@ -88,7 +89,7 @@ public class Professions extends JavaPlugin implements Listener {
 		this.setupPermissions();
 		this.setupChat();
 		
-		neogear = (me.neoblade298.neogear.Main) Bukkit.getPluginManager().getPlugin("NeoGear");
+		neogear = (Gear) Bukkit.getPluginManager().getPlugin("NeoGear");
 		
 		// Configuration// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
@@ -113,7 +114,7 @@ public class Professions extends JavaPlugin implements Listener {
 			
 		if (!isInstance) {
 			// NeoGear
-			neogear = (me.neoblade298.neogear.Main) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
+			neogear = (Gear) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 	
 			masonUtils = new MasonUtils();
 	

@@ -41,7 +41,7 @@ import me.neoblade298.neogear.objects.Rarity;
 import me.neoblade298.neogear.objects.RarityBonuses;
 import net.milkbowl.vault.economy.Economy;
 
-public class Main extends JavaPlugin implements org.bukkit.event.Listener {
+public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, HashMap<Integer, GearConfig>> settings;
 	private YamlConfiguration cfg;
 	public int lvlMax;

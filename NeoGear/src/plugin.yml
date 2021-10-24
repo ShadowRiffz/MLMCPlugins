@@ -1,5 +1,5 @@
 name: NeoGear
-main: me.neoblade298.neogear.Main
+main: me.neoblade298.neogear.Gear
 author: [Neoblade298]
 depend: [SkillAPI, Vault]
 version: 1.0

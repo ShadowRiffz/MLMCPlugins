@@ -19,14 +19,14 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Commands implements CommandExecutor{
 	
-	Main main;
+	Gear main;
 	ArrayList<String> validAttrs;
 	private static final String DEFAULT_SET = "random";
 	private HashMap<Player, Long> sellConfirm;
 	private HashMap<Player, ItemStack> sellItem;
 	private long rightClickCooldown;
 	
-	public Commands(Main main) {
+	public Commands(Gear main) {
 		this.main = main;
 		sellConfirm = new HashMap<Player, Long>();
 		sellItem = new HashMap<Player, ItemStack>();

@@ -11,10 +11,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.neoblade298.neogear.Main;
+import me.neoblade298.neogear.Gear;
 
 public class GearConfig {
-	private Main main;
+	private Gear main;
 	public String name;
 	public String display;
 	public Material material;
@@ -29,7 +29,7 @@ public class GearConfig {
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
 	
-	public GearConfig(Main main, String name, String display, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
+	public GearConfig(Gear main, String name, String display, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
 			ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, int enchantmentMin, int enchantmentMax, Attributes attributes,
 			HashMap<String, RarityBonuses> rarities, double price) {
 		

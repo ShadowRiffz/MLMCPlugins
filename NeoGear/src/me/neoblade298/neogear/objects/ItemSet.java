@@ -2,14 +2,14 @@ package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
 
-import me.neoblade298.neogear.Main;
+import me.neoblade298.neogear.Gear;
 
 public class ItemSet {
 	ArrayList<String> orderedTypes;
 	ArrayList<Integer> orderedWeights;
-	Main main;
+	Gear main;
 	int maxWeight = 0;
-	public ItemSet (Main main, ArrayList<String> contents) {
+	public ItemSet (Gear main, ArrayList<String> contents) {
 		this.main = main;
 		
 		orderedTypes = new ArrayList<String>();
