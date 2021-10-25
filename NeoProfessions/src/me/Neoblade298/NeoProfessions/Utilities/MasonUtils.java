@@ -473,15 +473,15 @@ public class MasonUtils {
 	
 	// Returns null if can slot, otherwise returns an error
 	public String canSlot(ItemStack item, ItemStack augment, int slotLevel, int augmentLevel, String type) {
-		// If augment is same level as slot
-		if (augmentLevel != slotLevel) {
-			return "&cThis augment must be same level as slot, " + augmentLevel + " does not equal " + slotLevel + "!";
-		}
 		if (augmentLevel > slotLevel && 
 				(augment.getType().equals(Material.PRISMARINE_CRYSTALS) ||
 				augment.getType().equals(Material.QUARTZ))) {
 			return "&cThis augment must be same level or below, " + augmentLevel + " is greater than " + slotLevel + "!";
 		}
+		else if (augmentLevel != slotLevel) {
+			return "&cThis augment must be same level as slot, " + augmentLevel + " does not equal " + slotLevel + "!";
+		}
+		
 		if (util.isArmor(item) && type.contains("weapon")) {
 			return "&cThis augment does not work on armor!";
 		}
