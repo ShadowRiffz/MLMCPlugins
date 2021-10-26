@@ -31,7 +31,7 @@ public class ValueCommand implements CommandExecutor {
 				value = nbti.getDouble("value");
 			}
 			String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
-			p.sendMessage("§7Value of " + name + "§7: §e" + value);
+			p.sendMessage("§7Value of " + name + "§7: §e" + value + "g");
 			return true;
 		}
 		return false;
