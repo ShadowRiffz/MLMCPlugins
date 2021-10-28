@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -129,7 +130,19 @@ public class DurabilityListener implements Listener {
 	private void reduceDurability(Player p, ItemStack item, int slot) {
 		if (!isQuestItem(item)) return;
 
+		// Check unbreaking
 		ItemMeta im = item.getItemMeta();
+		if (im.hasEnchant(Enchantment.DURABILITY)) {
+			Random rand = new Random();
+			double ench = item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
+			if (ench >= 6) ench = 6;
+			double chance = rand.nextDouble();
+			if (chance - (ench * 0.05) <= 0) {
+				return;
+			}
+		}
+		
+		
 		ArrayList<String> lore = (ArrayList<String>) im.getLore();
 		String line = lore.get(lore.size() - 1);
 		
