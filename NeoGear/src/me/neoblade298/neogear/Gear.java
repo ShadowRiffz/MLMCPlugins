@@ -33,6 +33,7 @@ import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.Attributes;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
@@ -64,6 +65,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			return;
 		}
 
+		Bukkit.getPluginManager().registerEvents(new DurabilityListener(this), this);
 		typeConverter = new HashMap<String, String>();
 		typeConverter.put("reinforced helmet", "rhelmet");
 		typeConverter.put("reinforced chestplate", "rchestplate");
