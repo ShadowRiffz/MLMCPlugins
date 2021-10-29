@@ -42,7 +42,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    		}
 	    		
 	    		if (level < numPlayers) {
-	    			if (!ent.isValid()) {
+	    			if (ent.isValid()) {
 		    			am.setLevel(numPlayers);
 		    			level = numPlayers;
 	    			}
@@ -67,7 +67,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    			}
 	    		}
 	    		
-	    		if (!ent.isValid()) {
+	    		if (ent.isValid()) {
 		    		ent.setMaxHealth(newHealth);
 		    		ent.setHealth(newHealth);
 	    		}
