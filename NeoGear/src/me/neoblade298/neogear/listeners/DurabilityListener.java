@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.util.FlagManager;
 
@@ -27,7 +25,7 @@ import me.neoblade298.neogear.Gear;
 public class DurabilityListener implements Listener {
 	Gear main;
 	Random gen;
-	private final String DURABILITYSTRING = "Durability ";
+	private final String DURABILITYSTRING = "§7Durability ";
 	private final String WEAPONCD = "WeaponDurability";
 	private final String ARMORCD = "ArmorDurability";
 	private final int CDTIME = 20;
@@ -92,7 +90,7 @@ public class DurabilityListener implements Listener {
 	}
 	
 	private void reduceArmorDurability(Player p) {
-		if (!FlagManager.hasFlag(p, ARMORCD)) return;
+		if (FlagManager.hasFlag(p, ARMORCD)) return;
 		if (p.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
 			return;
 		}
@@ -113,17 +111,27 @@ public class DurabilityListener implements Listener {
 	}
 	
 	private void reduceWeaponDurability(Player p) {
-		if (!FlagManager.hasFlag(p, WEAPONCD)) return;
+		if (FlagManager.hasFlag(p, WEAPONCD)) return;
 		if (p.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
 			return;
 		}
 		
 		FlagManager.addFlag(p, WEAPONCD, CDTIME);
 		if (gen.nextDouble() > 0.5) {
-			reduceDurability(p, p.getInventory().getItemInMainHand(), 0);
+			if (isQuestItem(p.getInventory().getItemInMainHand())) {
+				reduceDurability(p, p.getInventory().getItemInMainHand(), 0);
+			}
+			else {
+				reduceDurability(p, p.getInventory().getItemInOffHand(), 5);
+			}
 		}
 		else {
-			reduceDurability(p, p.getInventory().getItemInOffHand(), 5);
+			if (isQuestItem(p.getInventory().getItemInOffHand())) {
+				reduceDurability(p, p.getInventory().getItemInOffHand(), 5);
+			}
+			else {
+				reduceDurability(p, p.getInventory().getItemInMainHand(), 0);
+			}
 		}
 	}
 	
@@ -141,7 +149,6 @@ public class DurabilityListener implements Listener {
 				return;
 			}
 		}
-		
 		
 		ArrayList<String> lore = (ArrayList<String>) im.getLore();
 		String line = lore.get(lore.size() - 1);
@@ -176,25 +183,8 @@ public class DurabilityListener implements Listener {
 	}
 	
 	private void breakItem(ItemStack item, Player p, int slot) {
-		if (item.getType().equals(Material.CROSSBOW) && (slot == 0 || slot == 5)) {
-			final boolean offhand = slot == 0 ? false : true;
-			new BukkitRunnable() {
-				public void run() {
-					Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(p, item));
-					if (offhand) {
-						p.getInventory().setItemInOffHand(null);
-					}
-					else {
-						p.getInventory().setItemInMainHand(null);
-					}
-					p.getWorld().playSound(p.getEyeLocation(), "entity.item.break", 1.0F, 1.0F);
-				}
-			}.runTaskLater(main, 1L);
-		}
-		else {
-			Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(p, item));
-			item.setAmount(0);
-			p.getWorld().playSound(p.getLocation(), "entity.item.break", 1.0F, 1.0F);
-		}
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(p, item));
+		item.setAmount(0);
+		p.getWorld().playSound(p.getLocation(), "entity.item.break", 1.0F, 1.0F);
 	}
 }
