@@ -95,7 +95,7 @@ public class DurabilityListener implements Listener {
 			return;
 		}
 		
-		FlagManager.addFlag(p, WEAPONCD, CDTIME);
+		FlagManager.addFlag(p, ARMORCD, CDTIME);
 		reduceDurability(p, p.getInventory().getHelmet(), 1);
 		reduceDurability(p, p.getInventory().getChestplate(), 2);
 		reduceDurability(p, p.getInventory().getLeggings(), 3);
