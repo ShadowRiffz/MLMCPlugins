@@ -21,10 +21,12 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	    super.onDisable();
 	}
 	
-	@EventHandler
-	public void onMend(PlayerItemMendEvent e) {
-		e.setRepairAmount((e.getRepairAmount() + 1) / 2);
-	}
+	//@EventHandler
+	//public void onMend(PlayerItemMendEvent e) {
+		// Currently broken, literally can't use this or the event will repeat
+		// forever, may want to manually do this later on
+		// e.setRepairAmount((e.getRepairAmount() + 1) / 2);
+	//}
 	
 	@EventHandler
 	public void onDurability(PlayerItemDamageEvent e) {
