@@ -49,12 +49,11 @@ public class ChestConsumable extends Consumable {
 		p.sendMessage(displayname + " §7was opened.");
 		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7!");
 		executeCommands(p);
-		ItemStack clone = item.clone();
-		clone.setAmount(1);
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
-		p.getInventory().removeItem(clone);
+		
+		item.setAmount(item.getAmount() - 1);
 		return;
 	}
 

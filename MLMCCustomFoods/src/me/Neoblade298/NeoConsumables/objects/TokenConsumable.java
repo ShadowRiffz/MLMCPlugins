@@ -73,10 +73,9 @@ public class TokenConsumable extends Consumable {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 
-		ItemStack clone = item.clone();
-		clone.setAmount(1);
 		p.sendMessage("§4[§c§lMLMC§4] §7You used " + displayname + "§7!");
-		p.getInventory().removeItem(clone);
+		
+		item.setAmount(item.getAmount() - 1);
 	}
 	
 	public ArrayList<SettingsChanger> getSettingsChangers() {

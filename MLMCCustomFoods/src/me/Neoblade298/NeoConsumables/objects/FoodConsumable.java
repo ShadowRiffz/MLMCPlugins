@@ -218,9 +218,7 @@ public class FoodConsumable extends Consumable {
 			}
 		}
 		
-		ItemStack clone = item.clone();
-		clone.setAmount(1);
-		p.getInventory().removeItem(clone);
+		item.setAmount(item.getAmount() - 1);
 	}
 
 	public void executeCommands(Player player) {
