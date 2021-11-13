@@ -495,6 +495,9 @@ public class MasonUtils {
 		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return null;
 		}
+		if (item.getItemMeta().getLore().size() < 2) {
+			return null;
+		}
 
 		String line = item.getItemMeta().getLore().get(1);
 		String charmLine = item.getItemMeta().getLore().get(0);
