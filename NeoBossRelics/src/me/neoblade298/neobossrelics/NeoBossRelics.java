@@ -172,7 +172,8 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		if (!SkillAPI.isLoaded(p)) return;
 		
 		// InventoryCloseEvent happens after PlayerQuitEvent, so you have to
-		// briefly disable recalculation.
+		// briefly disable recalculation. It reenables itself because Player
+		// object disappears on logout from hashset.
 		if (disableRecalculate.contains(p)) return;
 		ItemStack main = p.getInventory().getItemInMainHand();
 		ItemStack off = p.getInventory().getItemInOffHand();
