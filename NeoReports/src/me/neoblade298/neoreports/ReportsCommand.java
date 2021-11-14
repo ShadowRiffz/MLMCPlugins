@@ -30,17 +30,21 @@ public class ReportsCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neoreports.user")) {
 			String author = sender.getName();
-			if(args.length == 0) {
+			if (args.length == 0) {
 				sender.sendMessage("§7--- §cNeoReports §7---");
 				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
 				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
 				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
+				sender.sendMessage("§4/reports check §7- Summary of existing bugs");
 				if (sender.hasPermission("neoreports.admin")) {
-					sender.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
 					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
 					sender.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
 					sender.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
 				}
+				return true;
+			}
+			else if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
+				sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 				return true;
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
@@ -69,11 +73,7 @@ public class ReportsCommand implements CommandExecutor {
 				return true;
 			}
 			else if (sender.hasPermission("neoreports.admin")) {
-				if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
-					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
-					return true;
-				}
-				else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
+				if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("list") && args[1].equalsIgnoreCase("bug")) {
 					// Show first page only
 					if (args.length == 2) {
 						try{  
