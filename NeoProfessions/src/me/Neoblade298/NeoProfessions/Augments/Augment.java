@@ -1,7 +1,7 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
 public abstract class Augment {
-	private String name;
+	private static String name;
 	private int level;
 
 	public String getName() {
@@ -9,7 +9,7 @@ public abstract class Augment {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		Augment.name = name;
 	}
 
 	public int getLevel() {
@@ -22,5 +22,9 @@ public abstract class Augment {
 
 	public String getLine() {
 		return "§7[" + name + " Lv " + level + "]";
+	}
+	
+	public static void register() { 
+		
 	}
 }
