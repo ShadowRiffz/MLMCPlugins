@@ -1,8 +1,8 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
 public abstract class Augment {
-	private static String name;
-	private int level;
+	protected static String name;
+	protected int level;
 
 	public String getName() {
 		return name;
@@ -27,4 +27,6 @@ public abstract class Augment {
 	public static void register() { 
 		
 	}
+	
+	public abstract Augment createNew(int level);
 }

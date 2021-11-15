@@ -15,14 +15,9 @@ public class PlayerAugments {
 	private ArrayList<Augment> offAugs;
 	private Player p;
 	
-	private final static int MAX_SLOTS = 5;
-	
 	public PlayerAugments(Player p) {
 		this.p = p;
-		this.chestAugs = new ArrayList<Augment>();
-		this.legsAugs = new ArrayList<Augment>();
-		this.mainAugs = new ArrayList<Augment>();
-		this.offAugs = new ArrayList<Augment>();
+		recalculateAll();
 	}
 	
 	public void swapHands() {
@@ -48,7 +43,7 @@ public class PlayerAugments {
 		
 		if (item != null && !item.getType().isAir()) {
 			NBTItem nbti = new NBTItem(item);
-			for (int i = 1; i <= MAX_SLOTS; i++) {
+			for (int i = 1; i <= nbti.getInteger("totalSlots"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
 				if (AugmentManager.nameMap.containsKey(augmentName)) {
 					Augment aug = AugmentManager.nameMap.get(augmentName);
