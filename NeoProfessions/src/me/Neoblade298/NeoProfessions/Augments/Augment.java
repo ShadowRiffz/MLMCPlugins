@@ -1,5 +1,8 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 public abstract class Augment {
 	protected static String name;
 	protected int level;
@@ -29,4 +32,5 @@ public abstract class Augment {
 	}
 	
 	public abstract Augment createNew(int level);
+	public abstract ItemStack giveItem(Player p);
 }
