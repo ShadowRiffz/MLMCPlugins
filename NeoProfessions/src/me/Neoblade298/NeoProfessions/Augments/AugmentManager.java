@@ -20,7 +20,6 @@ public class AugmentManager {
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	public static ArrayList<Player> disableRecalculate = new ArrayList<Player>();
-	public final static int MAX_SLOTS = 5;
 	
 	static {
 		enabledWorlds.add("Argyll");

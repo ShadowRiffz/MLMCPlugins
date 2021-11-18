@@ -39,7 +39,7 @@ public class InitiatorAugment extends ModDamageDealtAugment {
 	}
 
 	@Override
-	public ItemStack giveItem(Player p) {
+	public ItemStack getItem() {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + name + " Augment");
