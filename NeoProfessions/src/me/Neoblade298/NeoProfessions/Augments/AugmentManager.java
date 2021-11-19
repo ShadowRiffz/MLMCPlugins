@@ -41,7 +41,6 @@ public class AugmentManager {
 	
 	public static boolean isAugment(ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
-		System.out.println(nameMap + " " + nbti.getString("augment"));
 		return nameMap.containsKey(nbti.getString("augment"));
 	}
 

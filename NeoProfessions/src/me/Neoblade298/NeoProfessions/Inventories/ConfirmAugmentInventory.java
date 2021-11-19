@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.AugmentEditor;
+import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -24,12 +24,12 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 	private final Inventory inv;
 	ItemStack item;
 	ItemStack augment;
-	AugmentEditor editor;
+	ItemEditor editor;
 
 	public ConfirmAugmentInventory(Professions main, Player p, ItemStack item, ItemStack augment) {
 		this.augment = augment;
 		this.item = item;
-		this.editor = new AugmentEditor(item);
+		this.editor = new ItemEditor(item);
 		
 		inv = Bukkit.createInventory(p, 9, "§cReplace which slot?");
 		main.viewingInventory.put(p, this);
@@ -38,17 +38,19 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		NBTItem nbti = new NBTItem(item);
 		inv.addItem(augment);
 		ItemStack[] contents = inv.getContents();
-		for (int i = 2; i < 8 - nbti.getInteger("slotsCreated"); i++) {
-			contents[i] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "");
+		for (int i = 2; i < 9 - nbti.getInteger("slotsCreated"); i++) {
+			contents[i] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
 		}
 		
 		int j = 1;
-		for (int i = 8 - nbti.getInteger("slotsCreated") + 1; i < 8; i++) {
-			String lore = editor.getAugment(j).getLine();
-			if (lore == null) {
-				lore = "§7Empty slot";
+		for (int i = 9 - nbti.getInteger("slotsCreated"); i < 9; i++) {
+			Augment oldAug = editor.getAugment(j);
+			if (oldAug == null) {
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, "§7Empty slot");
 			}
-			contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, lore);
+			else {
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, oldAug.getLine());
+			}
 			j++;
 		}
 		inv.setContents(contents);
@@ -87,14 +89,15 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 			NBTItem nbtaug = new NBTItem(this.augment);
 			Augment aug = AugmentManager.nameMap.get(nbtaug.getString("augment")).createNew(nbtaug.getInteger("level"));
 			
-			if (editor.setAugment(p, aug, selected)) {
+			String result = editor.setAugment(p, aug, selected);
+			if (result == null) {
 				Util.sendMessage(p, "&7Successfully slotted item!");
 				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 				p.getInventory().removeItem(augment);
 				p.closeInventory();
 			}
 			else {
-				Util.sendMessage(p, "&cFailed to slot item!");
+				Util.sendMessage(p, "Could not set augment on slot " + selected + ", " + result);
 			}
 		}
 	}

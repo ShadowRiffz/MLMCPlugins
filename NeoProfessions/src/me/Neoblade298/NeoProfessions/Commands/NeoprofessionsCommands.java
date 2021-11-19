@@ -24,7 +24,7 @@ import com.sucy.skill.api.player.PlayerClass;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Augments.AugmentEditor;
+import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
@@ -91,12 +91,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			AugmentEditor editor = new AugmentEditor(p.getInventory().getItemInMainHand());
-			if (editor.convertItem(p)) {
+			ItemEditor editor = new ItemEditor(p.getInventory().getItemInMainHand());
+			String result = editor.convertItem(p);
+			if (result == null) {
 				Util.sendMessage(p, "&7Successfully converted item!");
 			}
 			else {
-				Util.sendMessage(p, "&cItem conversion failed!");
+				Util.sendMessage(p, "&cItem conversion failed, " + result);
 			}
 			return true;
 		}

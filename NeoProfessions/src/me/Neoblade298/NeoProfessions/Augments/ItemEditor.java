@@ -3,9 +3,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -14,12 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class AugmentEditor {
+public class ItemEditor {
 	ItemStack item;
 	NBTItem nbti;
 	
-	public AugmentEditor(ItemStack item) {
+	public ItemEditor(ItemStack item) {
 		this.item = item;
 		this.nbti = new NBTItem(item);
 	}
@@ -33,19 +32,21 @@ public class AugmentEditor {
 		return null;
 	}
 	
-	public boolean setAugment(Player p, Augment aug, int i) {
-		String error = "[NeoProfessions] Could not set augment for " + p.getName() + " on slot " + i + ", ";
+	public String setAugment(Player p, Augment aug, int i) {
 		if (nbti.getInteger("version") == 0) {
-			Bukkit.getLogger().log(Level.INFO, error + "item not converted!");
-			return false;
+			return "item version is old!";
 		}
 		if (i < 1) {
-			Bukkit.getLogger().log(Level.INFO, error + "<1 slot number!");
-			return false;
+			return "<1 slot number!";
 		}
 		if (i > nbti.getInteger("slotsCreated")) {
-			Bukkit.getLogger().log(Level.INFO, error + "slot does not yet exist!");
-			return false;
+			return "slot does not yet exist!";
+		}
+		
+		for (int j = 1; j < nbti.getInteger("slotsCreated"); j++) {
+			if (nbti.getString("slot" + j + "Augment").equals(aug.getName())) {
+				return "same augment is already slotted!";
+			}
 		}
 		
 		ItemMeta meta = item.getItemMeta();
@@ -57,20 +58,17 @@ public class AugmentEditor {
 		nbti.setString("slot" + i + "Augment", aug.getName());
 		nbti.setInteger("slot" + i + "Level", aug.getLevel());
 		nbti.applyNBT(item);
-		return true;
+		return null;
 	}
 	
-	public boolean addSlot(Player p) {
-		String error = "[NeoProfessions] Could not add slot for " + p.getName() + ", ";
+	public String addSlot(Player p) {
 		if (nbti.getInteger("version") == 0) {
-			Bukkit.getLogger().log(Level.INFO, error + "item not converted!");
-			return false;
+			return "item not converted!";
 		}
 		int oldTotal = nbti.getInteger("slotsCreated");
 		int newTotal = oldTotal + 1;
 		if (newTotal > nbti.getInteger("slotsMax")) {
-			Bukkit.getLogger().log(Level.INFO, error + "max slots reached!");
-			return false;
+			return "max slots reached!";
 		}
 		
 		ItemMeta meta = item.getItemMeta();
@@ -84,19 +82,21 @@ public class AugmentEditor {
 		nbti.setInteger("slotsCreated", newTotal);
 		nbti.setInteger("slot" + newTotal + "Line", nbti.getInteger("slot" + oldTotal + "Line") + 1);
 		nbti.applyNBT(item);
-		return true;
+		return null;
 	}
 	
-	public boolean convertItem(Player p) {
-		String error = "[NeoProfessions] Could not convert item for " + p.getName() + ", ";
+	public String convertItem(Player p) {
 		if (nbti.getInteger("version") != 0) {
-			Bukkit.getLogger().log(Level.INFO, error + "item already converted!");
-			return false;
+			return "item already converted!";
 		}
 		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		MasonUtils masonUtils = new MasonUtils();
+		
+		if (Util.isWeapon(item) && !Util.isArmor(item)) {
+			return "item is not weapon or armor!";
+		}
 		
 		for (Enchantment ench : item.getEnchantments().keySet()) {
 			item.removeEnchantment(ench);
@@ -110,6 +110,7 @@ public class AugmentEditor {
 		int itemLevel = -1;
 		int slots = 0;
 		int slotsMax = 0;
+		int linesRemoved = 0;
 		HashMap<String, Integer> nbtData = new HashMap<String, Integer>();
 		for (int i = 0; i < lore.size(); i++) {
 			String line = lore.get(i);
@@ -176,14 +177,15 @@ public class AugmentEditor {
 		}
 
 		if (!hasLevel) {
-			Bukkit.getLogger().log(Level.INFO, error + "item is not eligible for conversion!");
-			return false;
+			return "item is not eligible for conversion!";
 		}
 		
 		if (bonusLine != -1) {
 			lore.remove(bonusLine);
+			linesRemoved++;
 		}
 		lore.remove("§9[Base Attributes]");
+		linesRemoved++;
 		
 		
 		meta.setLore(lore);
@@ -197,11 +199,11 @@ public class AugmentEditor {
 		nbti.setString("gear", "default");
 		nbti.setInteger("level", itemLevel);
 		for (String key : nbtData.keySet()) {
-			nbti.setInteger(key, nbtData.get(key));
+			nbti.setInteger(key, nbtData.get(key) - linesRemoved);
 		}
 		nbti.setInteger("slotsCreated", slots);
 		nbti.setInteger("slotsMax", slotsMax);
 		nbti.applyNBT(item);
-		return true;
+		return null;
 	}
 }
