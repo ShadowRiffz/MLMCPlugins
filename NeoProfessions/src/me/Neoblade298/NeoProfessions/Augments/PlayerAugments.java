@@ -31,6 +31,10 @@ public class PlayerAugments {
 		this.mainAugs = checkAugments(p.getInventory().getItemInMainHand());
 	}
 	
+	public void recalculateMainhand(ItemStack item) {
+		this.mainAugs = checkAugments(item);
+	}
+	
 	public void recalculateAll() {
 		PlayerInventory inv = p.getInventory();
 		this.chestAugs = checkAugments(inv.getChestplate());
@@ -44,7 +48,7 @@ public class PlayerAugments {
 		
 		if (item != null && !item.getType().isAir()) {
 			NBTItem nbti = new NBTItem(item);
-			for (int i = 1; i <= nbti.getInteger("totalSlots"); i++) {
+			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
 				if (AugmentManager.nameMap.containsKey(augmentName)) {
 					Augment aug = AugmentManager.nameMap.get(augmentName);

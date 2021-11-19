@@ -18,6 +18,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
 import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
 import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
@@ -105,6 +106,7 @@ public class Professions extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
 		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
+		getServer().getPluginManager().registerEvents(new AugmentManager(), this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);

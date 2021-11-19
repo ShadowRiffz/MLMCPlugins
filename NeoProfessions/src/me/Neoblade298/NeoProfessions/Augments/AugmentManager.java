@@ -2,15 +2,20 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -19,7 +24,7 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
 
-public class AugmentManager {
+public class AugmentManager implements Listener {
 	public static HashMap<String, Augment> nameMap = new HashMap<String, Augment>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
@@ -29,14 +34,12 @@ public class AugmentManager {
 		enabledWorlds.add("Argyll");
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
-		
-		// Load nameMap
-		nameMap.put("Finisher", new FinisherAugment());
-		nameMap.put("Initiator", new InitiatorAugment());
 	}
 	
 	public AugmentManager() {
 		// Load augments? Maybe don't need
+		nameMap.put("Finisher", new FinisherAugment());
+		nameMap.put("Initiator", new InitiatorAugment());
 	}
 	
 	public static boolean isAugment(ItemStack item) {
@@ -51,7 +54,7 @@ public class AugmentManager {
 		Player p = (Player) e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 		if (disableRecalculate.contains(p)) return;
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
@@ -63,7 +66,7 @@ public class AugmentManager {
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
 		Player p = e.getPlayer();
 		if (disableRecalculate.contains(p)) return;
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
@@ -99,7 +102,7 @@ public class AugmentManager {
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 		if (disableRecalculate.contains(p)) return;
 
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
@@ -110,7 +113,7 @@ public class AugmentManager {
 	@EventHandler
 	public void onSQLLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
@@ -123,7 +126,20 @@ public class AugmentManager {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
+			playerAugments.put(p, new PlayerAugments(p));
+		}
+		else {
+			playerAugments.get(p).recalculateMainhand(p.getInventory().getStorageContents()[e.getNewSlot()]);
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onSwapHand(PlayerSwapHandItemsEvent e) {
+		Player p = e.getPlayer();
+		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
@@ -136,11 +152,34 @@ public class AugmentManager {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 		
-		if (playerAugments.containsKey(p)) {
+		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
 			playerAugments.get(p).recalculateAll();
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if (e.getDamager() instanceof Player && e.getEntity() instanceof LivingEntity) {
+			System.out.println("1 " + e.getDamage());
+			Player p = (Player) e.getDamager();
+			double multiplier = 1;
+			double flat = 0;
+			if (AugmentManager.playerAugments.containsKey(p)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments()) {
+					if (augment instanceof ModDamageDealtAugment) {
+						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
+						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
+							multiplier += aug.getMultiplierBonus();
+							flat += aug.getFlatBonus();
+						}
+					}
+				}
+			}
+			System.out.println("3 " + (e.getDamage() * multiplier + flat));
+			e.setDamage(e.getDamage() * multiplier + flat);
 		}
 	}
 }

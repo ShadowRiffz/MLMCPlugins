@@ -43,7 +43,10 @@ public class ItemEditor {
 			return "slot does not yet exist!";
 		}
 		
-		for (int j = 1; j < nbti.getInteger("slotsCreated"); j++) {
+		for (int j = 1; j <= nbti.getInteger("slotsCreated"); j++) {
+			if (j == i) {
+				continue;
+			}
 			if (nbti.getString("slot" + j + "Augment").equals(aug.getName())) {
 				return "same augment is already slotted!";
 			}
@@ -94,7 +97,7 @@ public class ItemEditor {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		MasonUtils masonUtils = new MasonUtils();
 		
-		if (Util.isWeapon(item) && !Util.isArmor(item)) {
+		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
 			return "item is not weapon or armor!";
 		}
 		
