@@ -129,7 +129,7 @@ public class ProfessionsMethods {
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				
-				if (util.isArmor(item)) {
+				if (Util.isArmor(item)) {
 					util.setMaxDurability(item, util.getMaxDurability(item) + 100);
 				}
 				else {

@@ -119,7 +119,7 @@ public class MasonListeners implements Listener {
 		Player p = (Player) e.getWhoClicked();
 		ItemStack augment = e.getCursor();
 		ItemStack item = e.getCurrentItem();
-		
+
 		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
 		}
@@ -129,19 +129,22 @@ public class MasonListeners implements Listener {
 		
 		NBTItem nbti = new NBTItem(item);
 		NBTItem nbtaug = new NBTItem(augment);
-		if (nbti.getInteger("slotsCreated") <= 0) {
-			Util.sendMessage(p, "&cNo slots available on this item!");
+		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
 			return;
 		}
-		else if (nbti.getInteger("version") <= 0) {
+		if (nbti.getInteger("version") <= 0) {
 			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			return;
+		}
+		else if (nbti.getInteger("slotsCreated") <= 0) {
+			Util.sendMessage(p, "&cNo slots available on this item!");
 			return;
 		}
 		else if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return;
 		}
-		else if (!AugmentManager.isAugment(item)) {
+		else if (!AugmentManager.isAugment(augment)) {
 			return;
 		}
 		/*
@@ -213,8 +216,8 @@ public class MasonListeners implements Listener {
 							|| (itemToSlot.getType().equals(Material.QUARTZ))
 									&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
 						int level = util.getItemLevel(itemWithSlot);
-						if ((util.isArmor(itemWithSlot) && slotType.contains("armor"))
-								|| (util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
+						if ((Util.isArmor(itemWithSlot) && slotType.contains("armor"))
+								|| (Util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
 								|| (!slotType.contains("armor")
 										&& !slotType.contains("weapon"))) {
 							if (cm.hasEnough(p, "essence", level, SLOT_ESSENCE)) {

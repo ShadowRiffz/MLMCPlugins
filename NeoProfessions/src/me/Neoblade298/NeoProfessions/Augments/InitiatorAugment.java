@@ -13,6 +13,10 @@ import de.tr7zw.nbtapi.NBTItem;
 
 public class InitiatorAugment extends ModDamageDealtAugment {
 	
+	static {
+		InitiatorAugment.name = "Initiator";
+	}
+	
 	public InitiatorAugment() {
 		super();
 	}

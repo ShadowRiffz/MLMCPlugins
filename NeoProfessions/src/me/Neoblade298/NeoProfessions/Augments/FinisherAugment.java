@@ -12,6 +12,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class FinisherAugment extends ModDamageDealtAugment {
+	static {
+		FinisherAugment.name = "Finisher";
+	}
 	
 	public FinisherAugment() {
 		super();

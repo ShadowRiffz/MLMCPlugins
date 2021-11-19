@@ -89,7 +89,7 @@ public class Util {
 
 	}
 
-	public boolean isWeapon(ItemStack item) {
+	public static boolean isWeapon(ItemStack item) {
 		Material mat = item.getType();
 		return mat.equals(Material.WOODEN_SWORD) || mat.equals(Material.STONE_SWORD)
 				|| mat.equals(Material.GOLDEN_SWORD) || mat.equals(Material.IRON_SWORD)
@@ -102,7 +102,7 @@ public class Util {
 				|| mat.equals(Material.BOW) || mat.equals(Material.CROSSBOW) || mat.equals(Material.TRIDENT);
 	}
 
-	public boolean isArmor(ItemStack item) {
+	public static boolean isArmor(ItemStack item) {
 		Material mat = item.getType();
 		return mat.equals(Material.LEATHER_HELMET) || mat.equals(Material.GOLDEN_HELMET)
 				|| mat.equals(Material.IRON_HELMET) || mat.equals(Material.DIAMOND_HELMET)

@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -97,28 +98,64 @@ public class AugmentEditor {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		MasonUtils masonUtils = new MasonUtils();
 		
+		for (Enchantment ench : item.getEnchantments().keySet()) {
+			item.removeEnchantment(ench);
+		}
+		
 		boolean hasBonus = false;
 		boolean hasLevel = false;
+		boolean isEnchanted = false;
 		int bonusLine = -1;
 		Random gen = new Random();
 		int itemLevel = -1;
+		int slots = 0;
+		int slotsMax = 0;
+		HashMap<String, Integer> nbtData = new HashMap<String, Integer>();
 		for (int i = 0; i < lore.size(); i++) {
 			String line = lore.get(i);
-			if (line.contains("Level")) {
-				itemLevel = Integer.parseInt(line.split(" ")[2]);
-				hasLevel = true;
-				continue;
+			
+			if (!hasBonus) {
+				if (line.contains("Tier: ")) {
+					if (line.contains("Artifact")) {
+						isEnchanted = true;
+						slotsMax = 5;
+					}
+					else if (line.contains("Legendary")) {
+						isEnchanted = true;
+						slotsMax = 4;
+					}
+					else if (line.contains("Epic")) {
+						slotsMax = 3;
+					}
+					else if (line.contains("Rare")) {
+						slotsMax = 2;
+					}
+					else if (line.contains("Uncommon")) {
+						slotsMax = 1;
+					}
+					else if (line.contains("Common")) {
+						slotsMax = 0;
+					}
+				}
+				
+				if (line.contains("Level")) {
+					itemLevel = Integer.parseInt(line.split(" ")[2]);
+					hasLevel = true;
+					continue;
+				}
+				if (line.contains("Bonus Attributes")) {
+					bonusLine = i;
+					hasBonus = true;
+					continue;
+				}
 			}
 			
-			if (line.contains("Bonus Attributes")) {
-				bonusLine = i;
-				hasBonus = true;
-				continue;
-			}
 			
 			if (hasBonus) {
 				if (line.contains("Slot")) {
 					lore.set(i, "§8[Empty Slot]");
+					slots++;
+					nbtData.put("slot" + slots + "Line", i);
 				}
 				else if (line.contains("Durability")) {
 					break;
@@ -146,13 +183,24 @@ public class AugmentEditor {
 		if (bonusLine != -1) {
 			lore.remove(bonusLine);
 		}
+		lore.remove("§9[Base Attributes]");
+		
 		
 		meta.setLore(lore);
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
+		if (isEnchanted) {
+			item.addEnchantment(Enchantment.DURABILITY, 1);
+		}
 		nbti = new NBTItem(item);
 		nbti.setInteger("version", 1);
-		nbti.setString("type", "default");
+		nbti.setString("gear", "default");
 		nbti.setInteger("level", itemLevel);
+		for (String key : nbtData.keySet()) {
+			nbti.setInteger(key, nbtData.get(key));
+		}
+		nbti.setInteger("slotsCreated", slots);
+		nbti.setInteger("slotsMax", slotsMax);
 		nbti.applyNBT(item);
 		return true;
 	}

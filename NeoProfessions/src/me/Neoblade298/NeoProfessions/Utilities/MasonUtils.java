@@ -71,7 +71,7 @@ public class MasonUtils {
 		int slottedLevel = level;
 		int slotType = -1;
 		String attr = getSlotLineAttribute(line);
-		boolean isArmor = util.isArmor(item);
+		boolean isArmor = Util.isArmor(item);
 		int potency = -1;
 		int durabilityLoss = -1;
 		lore.set(getSlotNum(item, slot), "§8(Lv " + level + " Slot)");
@@ -482,10 +482,10 @@ public class MasonUtils {
 			return "&cThis augment must be same level as slot, " + augmentLevel + " does not equal " + slotLevel + "!";
 		}
 		
-		if (util.isArmor(item) && type.contains("weapon")) {
+		if (Util.isArmor(item) && type.contains("weapon")) {
 			return "&cThis augment does not work on armor!";
 		}
-		if (util.isWeapon(item) && type.contains("armor")) {
+		if (Util.isWeapon(item) && type.contains("armor")) {
 			return "&cThis augment does not work on weapons!";
 		}
 		return null;
@@ -599,7 +599,7 @@ public class MasonUtils {
 	}
 
 	public boolean parseCharm(Player p, ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
-		if (util.isArmor(itemWithSlot)) {
+		if (Util.isArmor(itemWithSlot)) {
 			Util.sendMessage(p, "&cCharms can only be slotted on weapons!");
 			return false;
 		}

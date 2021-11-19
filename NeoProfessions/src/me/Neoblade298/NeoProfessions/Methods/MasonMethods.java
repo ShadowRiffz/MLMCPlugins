@@ -222,8 +222,8 @@ public class MasonMethods {
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel)
 									|| (itemToSlot.getType().equals(Material.QUARTZ))
 											&& masonUtils.getAugmentLevel(itemToSlot) <= slotLevel) {
-								if ((util.isArmor(itemWithSlot) && slotType.contains("armor"))
-										|| (util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
+								if ((Util.isArmor(itemWithSlot) && slotType.contains("armor"))
+										|| (Util.isWeapon(itemWithSlot) && slotType.contains("weapon"))
 										|| (!slotType.contains("armor")
 												&& !slotType.contains("weapon"))) {
 									if (econ.has(p, gold)) {
@@ -480,7 +480,7 @@ public class MasonMethods {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		if (!item.getType().equals(Material.AIR)) {
 			if (masonUtils.isSlotAvailable(item, slot)) {
-				if (util.isArmor(item)) {
+				if (Util.isArmor(item)) {
 					int level = util.getItemLevel(item);
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 					if (perm < 1)
@@ -492,7 +492,7 @@ public class MasonMethods {
 						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 					}
 				}
-				else if (util.isWeapon(item)) {
+				else if (Util.isWeapon(item)) {
 					int level = util.getItemLevel(item);
 					int perm = ((level - LEVEL_INTERVAL) / 10) - 1;
 					if (perm < 1)

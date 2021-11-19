@@ -34,10 +34,6 @@ public abstract class Augment {
 		return "§7[" + name + " Lv " + level + "]";
 	}
 	
-	public static void register() { 
-		
-	}
-	
 	public abstract Augment createNew(int level);
 	public abstract ItemStack getItem();
 }

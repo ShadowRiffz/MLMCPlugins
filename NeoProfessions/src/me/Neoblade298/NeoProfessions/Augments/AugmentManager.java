@@ -31,8 +31,8 @@ public class AugmentManager {
 		enabledWorlds.add("ClassPVP");
 		
 		// Load nameMap
-		nameMap.put(FinisherAugment.name, new FinisherAugment());
-		nameMap.put(InitiatorAugment.name, new InitiatorAugment());
+		nameMap.put("Finisher", new FinisherAugment());
+		nameMap.put("Initiator", new InitiatorAugment());
 	}
 	
 	public AugmentManager() {
@@ -41,6 +41,7 @@ public class AugmentManager {
 	
 	public static boolean isAugment(ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
+		System.out.println(nameMap + " " + nbti.getString("augment"));
 		return nameMap.containsKey(nbti.getString("augment"));
 	}
 
