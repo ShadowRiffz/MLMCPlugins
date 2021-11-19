@@ -9,6 +9,7 @@ import org.bukkit.inventory.PlayerInventory;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class PlayerAugments {
+	private final int MAX_AUGMENTS = 30;
 	private ArrayList<Augment> chestAugs;
 	private ArrayList<Augment> legsAugs;
 	private ArrayList<Augment> mainAugs;
@@ -56,7 +57,7 @@ public class PlayerAugments {
 	}
 	
 	public ArrayList<Augment> getAugments() {
-		ArrayList<Augment> augments = new ArrayList<Augment>();
+		ArrayList<Augment> augments = new ArrayList<Augment>(MAX_AUGMENTS);
 		augments.addAll(chestAugs);
 		augments.addAll(legsAugs);
 		augments.addAll(mainAugs);

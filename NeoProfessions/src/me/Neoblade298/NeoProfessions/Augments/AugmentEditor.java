@@ -103,6 +103,12 @@ public class AugmentEditor {
 		Random gen = new Random();
 		for (int i = 0; i < lore.size(); i++) {
 			String line = lore.get(i);
+			if (line.contains("Level")) {
+				nbti.setInteger("level", Integer.parseInt(line.split(" ")[2]));
+				nbti.applyNBT(this.item);
+				continue;
+			}
+			
 			if (line.contains("Bonus Attributes")) {
 				bonusLine = i;
 				hasBonus = true;
@@ -129,6 +135,9 @@ public class AugmentEditor {
 					}
 				}
 			}
+		}
+		if (bonusLine != -1) {
+			lore.remove(bonusLine);
 		}
 		
 		meta.setLore(lore);

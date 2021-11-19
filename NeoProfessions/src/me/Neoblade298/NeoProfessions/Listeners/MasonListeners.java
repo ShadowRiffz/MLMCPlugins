@@ -14,11 +14,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmSlotInventory;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -120,13 +123,18 @@ public class MasonListeners implements Listener {
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
 		}
-		String slotType = masonUtils.slotType(augment);
-		if (slotType == null) {
+		NBTItem nbti = new NBTItem(item);
+		NBTItem nbtaug = new NBTItem(augment);
+		if (nbti.getInteger("slotsCreated") <= 0) {
+			util.sendMessage(p, "&cNo slots available on this item!");
 			return;
 		}
-		int slot = masonUtils.getAvailableSlot(item);
-		if (slot <= 0) {
-			util.sendMessage(p, "&cNo slots available on this item!");
+		else if (nbti.getInteger("version") <= 0) {
+			util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			return;
+		}
+		else if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
+			util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return;
 		}
 		/*
@@ -146,18 +154,11 @@ public class MasonListeners implements Listener {
 		}
 			*/
 		else {
-			int slotLevel = masonUtils.getSlotLevel(slot, item);
-			int augmentLevel = masonUtils.getAugmentLevel(augment);
-			String slotError = masonUtils.canSlot(item, augment, slotLevel, augmentLevel, slotType);
-			if (slotError != null) {
-				util.sendMessage(p, slotError);
-				return;
-			}
 			ItemStack clone = augment.clone();
 			clone.setAmount(1);
 			e.setCancelled(true);
 			p.getOpenInventory().close();
-			new ConfirmSlotInventory(main, p, item, clone, masonUtils, slotType, slot, util);
+			new ConfirmAugmentInventory();
 		}
 	}
 

@@ -12,9 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class FinisherAugment extends ModDamageDealtAugment {
+	
+	public FinisherAugment() {
+		super();
+	}
 
 	public FinisherAugment(int level) {
-		this.level = level;
+		super(level);
 	}
 
 	@Override

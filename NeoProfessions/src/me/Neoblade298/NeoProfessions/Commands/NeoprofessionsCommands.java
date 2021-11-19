@@ -24,6 +24,8 @@ import com.sucy.skill.api.player.PlayerClass;
 
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Augments.AugmentEditor;
+import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -80,13 +82,18 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
-			sender.sendMessage("§7- §c/prof convert §7- Converts all items in inventory from old to new system.");
+			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
 			sender.sendMessage(
 					"§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
 			sender.sendMessage(
 					"§7- §c/prof solidify [essence/oretype] [level] [amount] §7- Turns ore/essence into an item in inventory");
 			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
+		}
+		else if (args.length == 0 && args[0].equalsIgnoreCase("convert")) {
+			AugmentEditor editor = new AugmentEditor(p.getInventory().getItemInMainHand());
+			editor.convertItem(p);
+			return true;
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
 			if (Bukkit.getPlayer(args[1]) == null) {
@@ -280,6 +287,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
 				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
 				sender.sendMessage("§7- §4/prof <playername> get ingr [22-24]");
+				sender.sendMessage("§7- §4/prof <playername> get augment [name] [level]");
 				sender.sendMessage("§7- §4/prof <playername> get durability [weapon/armor] [level]");
 				sender.sendMessage("§7- §4/prof <playername> get ore [attribute or 1-7] [level] <amount>");
 				sender.sendMessage("§7- §4/prof <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
@@ -460,6 +468,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					else if (args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
+					}
+					else if (args[1].equalsIgnoreCase("augment")) {
+						p.getInventory().addItem(AugmentManager.nameMap.get(args[2]).createNew(Integer.parseInt(args[3])).getItem());
 					}
 					else if (args[1].equalsIgnoreCase("durability")) {
 						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));

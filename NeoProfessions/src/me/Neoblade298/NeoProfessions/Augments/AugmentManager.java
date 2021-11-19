@@ -27,11 +27,12 @@ public class AugmentManager {
 		enabledWorlds.add("ClassPVP");
 		
 		// Load nameMap
-		
+		nameMap.put(FinisherAugment.name, new FinisherAugment());
+		nameMap.put(InitiatorAugment.name, new InitiatorAugment());
 	}
 	
 	public AugmentManager() {
-		// Load augments
+		// Load augments? Maybe don't need
 	}
 
 	

@@ -12,9 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class InitiatorAugment extends ModDamageDealtAugment {
+	
+	public InitiatorAugment() {
+		super();
+	}
 
 	public InitiatorAugment(int level) {
-		this.level = level;
+		super(level);
 	}
 
 	@Override
