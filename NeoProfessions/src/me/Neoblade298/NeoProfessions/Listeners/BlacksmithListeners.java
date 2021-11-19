@@ -42,14 +42,14 @@ public class BlacksmithListeners implements Listener {
 		if (!selectedRepair.containsKey(p)) {
 			if (blacksmithUtils.isRepairItem(p.getInventory().getItemInMainHand())) {
 				selectedRepair.put(p, p.getInventory().getItemInMainHand());
-				util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
+				Util.sendMessage(p, "&7Hold the item you wish to repair in your main hand and right click!");
 
 				// Time out the repair in 10 seconds
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 					public void run() {
 						if (selectedRepair.containsKey(p)) {
 							selectedRepair.remove(p);
-							util.sendMessage(p, "&cRepair timed out");
+							Util.sendMessage(p, "&cRepair timed out");
 						}
 					}
 				}, 200L);
@@ -73,20 +73,20 @@ public class BlacksmithListeners implements Listener {
 							selectedRepair.remove(p);
 							util.setCurrentDurability(item,
 									util.getCurrentDurability(item) + (int) (percentage * util.getMaxDurability(item)));
-							util.sendMessage(p, "&7Successfully repaired item!");
+							Util.sendMessage(p, "&7Successfully repaired item!");
 						}
 						else {
-							util.sendMessage(p, "&cCannot repair more than one item at once!");
+							Util.sendMessage(p, "&cCannot repair more than one item at once!");
 						}
 					} else {
-						util.sendMessage(p, "&cSomething went wrong! Please try again.");
+						Util.sendMessage(p, "&cSomething went wrong! Please try again.");
 					}
 				} else {
-					util.sendMessage(p, "&cThis repair kit is incompatible with this item!");
+					Util.sendMessage(p, "&cThis repair kit is incompatible with this item!");
 				}
 			} else {
 				selectedRepair.remove(p);
-				util.sendMessage(p, "&cRepair kits only work on quest items!");
+				Util.sendMessage(p, "&cRepair kits only work on quest items!");
 			}
 		}
 	}

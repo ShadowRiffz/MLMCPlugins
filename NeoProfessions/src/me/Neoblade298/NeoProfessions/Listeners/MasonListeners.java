@@ -21,8 +21,8 @@ import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
-import me.Neoblade298.NeoProfessions.Inventories.ConfirmSlotInventory;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -56,7 +56,7 @@ public class MasonListeners implements Listener {
 	public void prepItemSlot(Player p, ItemStack item, int slot) {
 		slotItem.put(p, item);
 		slotNum.put(p, slot);
-		util.sendMessage(p, "&7Hold the item you wish to slot and right click!");
+		Util.sendMessage(p, "&7Hold the item you wish to slot and right click!");
 
 		// Time out the repair in 10 seconds
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
@@ -64,7 +64,7 @@ public class MasonListeners implements Listener {
 				if (slotItem.containsKey(p)) {
 					slotItem.remove(p);
 					slotNum.remove(p);
-					util.sendMessage(p, "&cSlot command timed out");
+					Util.sendMessage(p, "&cSlot command timed out");
 				}
 			}
 		}, 200L);
@@ -120,21 +120,28 @@ public class MasonListeners implements Listener {
 		ItemStack augment = e.getCursor();
 		ItemStack item = e.getCurrentItem();
 		
-		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
 		}
+		if (augment == null || augment.getType().isAir() || !augment.hasItemMeta() || !augment.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		
 		NBTItem nbti = new NBTItem(item);
 		NBTItem nbtaug = new NBTItem(augment);
 		if (nbti.getInteger("slotsCreated") <= 0) {
-			util.sendMessage(p, "&cNo slots available on this item!");
+			Util.sendMessage(p, "&cNo slots available on this item!");
 			return;
 		}
 		else if (nbti.getInteger("version") <= 0) {
-			util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
 			return;
 		}
 		else if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
-			util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
+			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
+			return;
+		}
+		else if (!AugmentManager.isAugment(item)) {
 			return;
 		}
 		/*
@@ -143,7 +150,7 @@ public class MasonListeners implements Listener {
 			int gearLevel = util.getItemLevel(item);
 			String slotError = masonUtils.canSlot(item, augment, gearLevel, augmentLevel, slotType);
 			if (slotError != null) {
-				util.sendMessage(p, slotError);
+				Util.sendMessage(p, slotError);
 				return;
 			}
 			ItemStack clone = augment.clone();
@@ -158,7 +165,7 @@ public class MasonListeners implements Listener {
 			clone.setAmount(1);
 			e.setCancelled(true);
 			p.getOpenInventory().close();
-			new ConfirmAugmentInventory();
+			new ConfirmAugmentInventory(main, p, item, clone);
 		}
 	}
 
@@ -237,7 +244,7 @@ public class MasonListeners implements Listener {
 											success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 										}
 										else {
-											util.sendMessage(p, "&cOnly one relic may be slotted per item!");
+											Util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 										}
 										break;
 									}
@@ -245,45 +252,45 @@ public class MasonListeners implements Listener {
 										p.getInventory().removeItem(util.setAmount(new ItemStack(itemToSlot), 1));
 										cm.subtract(p, "essence", level, SLOT_ESSENCE);
 										econ.withdrawPlayer(p, SLOT_GOLD);
-										util.sendMessage(p, "&7Successfully slotted item!");
+										Util.sendMessage(p, "&7Successfully slotted item!");
 									}
 									else {
-										util.sendMessage(p, "&cFailed to slot item!");
+										Util.sendMessage(p, "&cFailed to slot item!");
 									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to do this!");
+									Util.sendMessage(p, "&cYou lack the gold to do this!");
 									slotItem.remove(p);
 									slotNum.remove(p);
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the materials to do this!");
+								Util.sendMessage(p, "&cYou lack the materials to do this!");
 								slotItem.remove(p);
 								slotNum.remove(p);
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis augment is incompatible with this item type!");
+							Util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 							slotItem.remove(p);
 							slotNum.remove(p);
 						}
 					}
 					else {
-						util.sendMessage(p,
+						Util.sendMessage(p,
 								"&cThis item must be the same level as this slot (or be a charm/relic)!");
 						slotItem.remove(p);
 						slotNum.remove(p);
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis item cannot be slotted!");
+					Util.sendMessage(p, "&cThis item cannot be slotted!");
 					slotItem.remove(p);
 					slotNum.remove(p);
 				}
 			}
 			else {
-				util.sendMessage(p, "&cSomething went wrong! Please try again.");
+				Util.sendMessage(p, "&cSomething went wrong! Please try again.");
 				slotItem.remove(p);
 				slotNum.remove(p);
 			}
@@ -308,7 +315,7 @@ public class MasonListeners implements Listener {
 				}
 				if (hasChance) {
 					masonUtils.breakSecondChance(item);
-					util.sendMessage(p, "&7Your second chance charm was broken!");
+					Util.sendMessage(p, "&7Your second chance charm was broken!");
 					p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.8);
 					e.setCancelled(true);
 				}

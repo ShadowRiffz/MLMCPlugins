@@ -141,11 +141,11 @@ public class ProfessionsMethods {
 				econ.withdrawPlayer(p, ARTIFACT_PRICE);
 			}
 			else {
-				util.sendMessage(p, "&cYou don't have enough money!");
+				Util.sendMessage(p, "&cYou don't have enough money!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cItem is not valid for artifact conversion!");
+			Util.sendMessage(p, "&cItem is not valid for artifact conversion!");
 		}
 	}
 	
@@ -198,7 +198,7 @@ public class ProfessionsMethods {
 			item.setType(Material.NETHERITE_HOE);
 			break;
 		}
-		util.sendMessage(p, "&7Artifact fixed.");
+		Util.sendMessage(p, "&7Artifact fixed.");
 	}
 
 }

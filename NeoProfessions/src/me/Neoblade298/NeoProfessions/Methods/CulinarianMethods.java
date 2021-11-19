@@ -139,38 +139,38 @@ public class CulinarianMethods {
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, GARNISH_COST);
 										if (i == repetitions - 1) {
-											util.sendMessage(p, "&7Successfully garnished dish!");
+											Util.sendMessage(p, "&7Successfully garnished dish!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cYou lack the gold to garnish this!");
+										Util.sendMessage(p, "&cYou lack the gold to garnish this!");
 										break;
 									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the materials to garnish this!");
+									Util.sendMessage(p, "&cYou lack the materials to garnish this!");
 									break;
 								}
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis food cannot be boosted any further!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cCannot garnish this item!");
+						Util.sendMessage(p, "&cCannot garnish this item!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	
@@ -229,38 +229,38 @@ public class CulinarianMethods {
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, PRESERVE_COST);
 										if (i == repetitions - 1) {
-											util.sendMessage(p, "&7Successfully preserved dish!");
+											Util.sendMessage(p, "&7Successfully preserved dish!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cYou gold the materials to preserve  this!");
+										Util.sendMessage(p, "&cYou gold the materials to preserve  this!");
 										break;
 									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the materials to preserve this!");
+									Util.sendMessage(p, "&cYou lack the materials to preserve this!");
 									break;
 								}
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis food cannot be boosted any further!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cCannot preserve this item!");
+						Util.sendMessage(p, "&cCannot preserve this item!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	
@@ -319,38 +319,38 @@ public class CulinarianMethods {
 										p.getInventory().removeItem(util.setAmount(oldItem, 1));
 										econ.withdrawPlayer(p, SPICE_COST);
 										if (i == repetitions - 1) {
-											util.sendMessage(p, "&7Successfully spiced dish!");
+											Util.sendMessage(p, "&7Successfully spiced dish!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cYou lack the gold to spice this!");
+										Util.sendMessage(p, "&cYou lack the gold to spice this!");
 										break;
 									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the materials to spice this!");
+									Util.sendMessage(p, "&cYou lack the materials to spice this!");
 									break;
 								}
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis food cannot be boosted any further!");
+							Util.sendMessage(p, "&cThis food cannot be boosted any further!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cCannot spice this item!");
+						Util.sendMessage(p, "&cCannot spice this item!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	
@@ -389,34 +389,34 @@ public class CulinarianMethods {
 									econ.withdrawPlayer(p, REMEDY_COST);
 									cm.subtract(p, "essence", foodLevel, REMEDY_ESSENCE);
 									if (i == repetitions - 1) {
-										util.sendMessage(p, "&7Successfully remedied dish!");
+										Util.sendMessage(p, "&7Successfully remedied dish!");
 									}
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to remedy this!");
+									Util.sendMessage(p, "&cYou lack the gold to remedy this!");
 									break;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the materials to remedy this!");
+								Util.sendMessage(p, "&cYou lack the materials to remedy this!");
 								break;
 							}
 						}
 					}
 					else {
-						util.sendMessage(p, "&cCannot remedy this item!");
+						Util.sendMessage(p, "&cCannot remedy this item!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	
@@ -434,26 +434,26 @@ public class CulinarianMethods {
 							p.getInventory().removeItem(util.setAmount(item, 1));
 							cm.add(p, "essence", level, 1);
 							econ.withdrawPlayer(p, ASSIMILATE_COST);
-							util.sendMessage(p, "&7Successfully assimilated recipe!");
+							Util.sendMessage(p, "&7Successfully assimilated recipe!");
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the gold to assimilate this!");
+							Util.sendMessage(p, "&cYou lack the gold to assimilate this!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou may only assimilate recipe papers!");
+					Util.sendMessage(p, "&cYou may only assimilate recipe papers!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 	
@@ -480,7 +480,7 @@ public class CulinarianMethods {
 				}
 			}
 		}
-		util.sendMessage(p, "&7Successfully assimilated §e" + amount + "recipe(s)!");
+		Util.sendMessage(p, "&7Successfully assimilated §e" + amount + "recipe(s)!");
 	}
 	
 	public void giveSpecial(Player p) {
@@ -530,22 +530,22 @@ public class CulinarianMethods {
 						p.getInventory().addItem(item);
 						econ.withdrawPlayer(p, SPECIAL_COST);
 						specialCooldowns.put(p.getName(), true);
-						util.sendMessage(p, "&7Successfully received daily special!");
+						Util.sendMessage(p, "&7Successfully received daily special!");
 					}
 					else {
-						util.sendMessage(p, "&cYou already used this today!");
+						Util.sendMessage(p, "&cYou already used this today!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the gold to do this!");
+					Util.sendMessage(p, "&cYou lack the gold to do this!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -628,7 +628,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -711,7 +711,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -779,7 +779,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -847,7 +847,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -918,7 +918,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -989,7 +989,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1060,7 +1060,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1131,7 +1131,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1211,7 +1211,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1291,7 +1291,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1320,7 +1320,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1349,7 +1349,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1405,7 +1405,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	
@@ -1461,7 +1461,7 @@ public class CulinarianMethods {
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 		}
 	}
 	

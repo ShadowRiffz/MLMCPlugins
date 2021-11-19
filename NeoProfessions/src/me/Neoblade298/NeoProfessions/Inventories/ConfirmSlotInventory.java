@@ -97,18 +97,18 @@ public class ConfirmSlotInventory implements ProfessionInventory {
 					success = masonUtils.parseRelic(p, item, augment, slot);
 				}
 				else {
-					util.sendMessage(p, "&cOnly one relic may be slotted per item!");
+					Util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 				}
 				break;
 			}
 			if (success) {
-				util.sendMessage(p, "&7Successfully slotted item!");
+				Util.sendMessage(p, "&7Successfully slotted item!");
 				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 				p.getInventory().removeItem(augment);
 				p.closeInventory();
 			}
 			else {
-				util.sendMessage(p, "&cFailed to slot item!");
+				Util.sendMessage(p, "&cFailed to slot item!");
 			}
 		}
 		else if (e.getRawSlot() > 1) {

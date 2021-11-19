@@ -106,18 +106,18 @@ public class ReplaceSlotInventory implements Listener {
 					success = masonUtils.parseRelic(p, item, augment, 8 - e.getRawSlot() + bonusSlots.size());
 				}
 				else {
-					util.sendMessage(p, "&cOnly one relic may be slotted per item!");
+					Util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 				}
 				break;
 			}
 			if (success) {
-				util.sendMessage(p, "&7Successfully slotted item!");
+				Util.sendMessage(p, "&7Successfully slotted item!");
 				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 				p.getInventory().removeItem(augment);
 				p.closeInventory();
 			}
 			else {
-				util.sendMessage(p, "&cFailed to slot item!");
+				Util.sendMessage(p, "&cFailed to slot item!");
 			}
 		}
 		else if (e.getRawSlot() > 1) {

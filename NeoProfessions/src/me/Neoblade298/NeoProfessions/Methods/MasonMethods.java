@@ -187,22 +187,22 @@ public class MasonMethods {
 					if (econ.has(p, gold)) {
 						masonUtils.createSlot(item, level);
 						econ.withdrawPlayer(p, gold);
-						util.sendMessage(p, "&7Successfully created slot!");
+						Util.sendMessage(p, "&7Successfully created slot!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to purchase this!");
+						Util.sendMessage(p, "&cYou lack the gold to purchase this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou cannot buy any more slots!");
+					Util.sendMessage(p, "&cYou cannot buy any more slots!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis item is too high level!");
+				Util.sendMessage(p, "&cThis item is too high level!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cThis item cannot have slots!");
+			Util.sendMessage(p, "&cThis item cannot have slots!");
 		}
 	}
 
@@ -252,50 +252,50 @@ public class MasonMethods {
 												success = masonUtils.parseRelic(p, itemWithSlot, itemToSlot, slot);
 											}
 											else {
-												util.sendMessage(p, "&cOnly one relic may be slotted per item!");
+												Util.sendMessage(p, "&cOnly one relic may be slotted per item!");
 											}
 											break;
 										}
 										if (success) {
 											itemToSlot.setAmount(itemToSlot.getAmount() - 1);
 											econ.withdrawPlayer(p, gold);
-											util.sendMessage(p, "&7Successfully slotted item!");
+											Util.sendMessage(p, "&7Successfully slotted item!");
 										}
 										else {
-											util.sendMessage(p, "&cFailed to slot item!");
+											Util.sendMessage(p, "&cFailed to slot item!");
 										}
 									}
 									else {
-										util.sendMessage(p, "&cYou lack the gold to do this!");
+										Util.sendMessage(p, "&cYou lack the gold to do this!");
 									}
 								}
 								else {
-									util.sendMessage(p, "&cThis augment is incompatible with this item type!");
+									Util.sendMessage(p, "&cThis augment is incompatible with this item type!");
 								}
 							}
 							else {
-								util.sendMessage(p,
+								Util.sendMessage(p,
 										"&cThis item must be the same level as this slot (or be a charm/relic)!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cThis item is too high level!");
+							Util.sendMessage(p, "&cThis item is too high level!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cThis item cannot be slotted!");
+						Util.sendMessage(p, "&cThis item cannot be slotted!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis slot is unavailable!");
+					Util.sendMessage(p, "&cThis slot is unavailable!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cOffhand is empty!");
+				Util.sendMessage(p, "&cOffhand is empty!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -317,30 +317,30 @@ public class MasonMethods {
 								masonUtils.createSlot(item, level);
 								cm.subtract(p, "essence", level, essence);
 								econ.withdrawPlayer(p, CREATE_SLOT_GOLD.get(numSlots + 1).get(level));
-								util.sendMessage(p, "&7Successfully created slot!");
+								Util.sendMessage(p, "&7Successfully created slot!");
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to create this!");
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill to create more slots!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis item cannot have any more slots!");
+					Util.sendMessage(p, "&cThis item cannot have any more slots!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cThis item cannot have slots!");
+			Util.sendMessage(p, "&cThis item cannot have slots!");
 		}
 	}
 
@@ -388,22 +388,22 @@ public class MasonMethods {
 						cm.subtract(p, "essence", level, essence);
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
-						util.sendMessage(p, "&7Successfully created charm!");
+						Util.sendMessage(p, "&7Successfully created charm!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to create this!");
+						Util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the materials to create this!");
+					Util.sendMessage(p, "&cYou lack the materials to create this!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 		}
 	}
 
@@ -457,22 +457,22 @@ public class MasonMethods {
 						cm.subtract(p, "essence", level, essence);
 						econ.withdrawPlayer(p, gold);
 						p.getInventory().addItem(item);
-						util.sendMessage(p, "&7Successfully created charm!");
+						Util.sendMessage(p, "&7Successfully created charm!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to create this!");
+						Util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the materials to create this!");
+					Util.sendMessage(p, "&cYou lack the materials to create this!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYour inventory is full!");
+				Util.sendMessage(p, "&cYour inventory is full!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 		}
 	}
 
@@ -489,7 +489,7 @@ public class MasonMethods {
 						listeners.prepItemSlot(p, item, slot);
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 					}
 				}
 				else if (util.isWeapon(item)) {
@@ -501,19 +501,19 @@ public class MasonMethods {
 						listeners.prepItemSlot(p, item, slot);
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cThis item cannot be slotted!");
+					Util.sendMessage(p, "&cThis item cannot be slotted!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis slot is unavailable!");
+				Util.sendMessage(p, "&cThis slot is unavailable!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -535,31 +535,31 @@ public class MasonMethods {
 									cm.subtract(p, "essence", slottedLevel, UNSLOT_ESSENCE);
 									econ.withdrawPlayer(p, UNEQUIP_SLOT_GOLD.get(level));
 									p.getInventory().addItem(returned);
-									util.sendMessage(p, "&7Successfully unslotted item!");
+									Util.sendMessage(p, "&7Successfully unslotted item!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to do this!");
+								Util.sendMessage(p, "&cYou lack the gold to do this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to do this!");
+							Util.sendMessage(p, "&cYou lack the materials to do this!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYour inventory is full!");
+						Util.sendMessage(p, "&cYour inventory is full!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cThis slot is unused or does not exist!");
+				Util.sendMessage(p, "&cThis slot is unused or does not exist!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cItem is no longer supported by the server!");
+			Util.sendMessage(p, "&cItem is no longer supported by the server!");
 		}
 	}
 
@@ -578,30 +578,30 @@ public class MasonMethods {
 								cm.subtract(p, "essence", level, UNENGRAVE_ESSENCE);
 								econ.withdrawPlayer(p, REMOVE_SLOT_GOLD.get(level));
 								masonUtils.removeSlotLine(item, slot);
-								util.sendMessage(p, "&7Successfully removed slot!");
+								Util.sendMessage(p, "&7Successfully removed slot!");
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the gold to do this!");
+								Util.sendMessage(p, "&cYou lack the gold to do this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to do this!");
+							Util.sendMessage(p, "&cYou lack the materials to do this!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill for this tier!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid item!");
+					Util.sendMessage(p, "&cInvalid item!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cSlot either doesn't exist or is in use!");
+				Util.sendMessage(p, "&cSlot either doesn't exist or is in use!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 

@@ -114,7 +114,7 @@ public class MasonUtils {
 					return bItems.getDurabilityItem(slottedLevel, "weapon", potency);
 				}
 			} else {
-				util.sendMessage(p, "&cThis item will break if you unslot this!");
+				Util.sendMessage(p, "&cThis item will break if you unslot this!");
 				return null;
 			}
 			// Normal gem
@@ -600,7 +600,7 @@ public class MasonUtils {
 
 	public boolean parseCharm(Player p, ItemStack itemWithSlot, ItemStack itemToSlot, int slot) {
 		if (util.isArmor(itemWithSlot)) {
-			util.sendMessage(p, "&cCharms can only be slotted on weapons!");
+			Util.sendMessage(p, "&cCharms can only be slotted on weapons!");
 			return false;
 		}
 		ItemMeta meta = itemWithSlot.getItemMeta();

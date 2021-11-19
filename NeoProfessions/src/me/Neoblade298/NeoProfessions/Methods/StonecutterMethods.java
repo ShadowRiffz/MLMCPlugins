@@ -94,24 +94,24 @@ public class StonecutterMethods {
 									p.getInventory().addItem(sItems.getArmorGem(attr, level, false));
 								}
 								econ.withdrawPlayer(p, GEM_GOLD.get(level));
-								util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
+								Util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
 							} else {
-								util.sendMessage(p, "&cYou lack the gold to create this!");
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
 						} else {
-							util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
 						}
 					} else {
-						util.sendMessage(p, "&cYou lack the materials to create this!");
+						Util.sendMessage(p, "&cYou lack the materials to create this!");
 					}
 				} else {
-					util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
 				}
 			} else {
-				util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
 			}
 		} else {
-			util.sendMessage(p, "&cYour inventory is full!");
+			Util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 
@@ -134,25 +134,25 @@ public class StonecutterMethods {
 									p.getInventory().addItem(sItems.getArmorGem(attr, level, true));
 								}
 								econ.withdrawPlayer(p, GEM_GOLD.get(level));
-								util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
+								Util.sendMessage(p, "&7Successfully created level " + level + " " + attr + " gem!");
 							} else {
-								util.sendMessage(p, "&cYou lack the gold to create this!");
+								Util.sendMessage(p, "&cYou lack the gold to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou lack the materials to create this!");
+							Util.sendMessage(p, "&cYou lack the materials to create this!");
 						}
 					} else {
-						util.sendMessage(p, "&cYou lack the materials to create this!");
+						Util.sendMessage(p, "&cYou lack the materials to create this!");
 					}
 				} else {
-					util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill for this type of gem!");
 				}
 			} else {
-				util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill for this attribute!");
 			}
 		} else {
-			util.sendMessage(p, "&cYour inventory is full!");
+			Util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 
@@ -179,22 +179,22 @@ public class StonecutterMethods {
 						cm.subtract(p, type, oldLevel, cost * amount);
 						cm.add(p, type, level, amount);
 						econ.withdrawPlayer(p, REFINE_GOLD.get(oldLevel) * amount);
-						util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
+						Util.sendMessage(p, "&7Successfully refined &e" + amount + " " + type + "&7!");
 					} else {
-						util.sendMessage(p, "&cYou lack the materials to refine this!");
+						Util.sendMessage(p, "&cYou lack the materials to refine this!");
 						return;
 					}
 				} else {
-					util.sendMessage(p, "&cYou lack the gold to refine this!");
+					Util.sendMessage(p, "&cYou lack the gold to refine this!");
 					return;
 				}
 			}
 			else {
-				util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(p, "&cInvalid level!");
 				return;
 			}
 		} else {
-			util.sendMessage(p, "&cYou do not yet have the required skill!");
+			Util.sendMessage(p, "&cYou do not yet have the required skill!");
 			return;
 		}
 	}

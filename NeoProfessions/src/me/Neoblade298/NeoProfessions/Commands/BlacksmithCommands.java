@@ -40,18 +40,18 @@ public class BlacksmithCommands implements CommandExecutor {
 			}
 			
 			if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-				util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
-				util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
-				util.sendMessage(p, "&7- &c/blacksmith create repair [level]");
-				util.sendMessage(p, "&7- &c/blacksmith upgrade unbreaking");
-				util.sendMessage(p, "&7- &c/blacksmith upgrade protection");
-				util.sendMessage(p, "&7- &c/blacksmith reforge");
-				util.sendMessage(p, "&7- &c/blacksmith scrap");
-				util.sendMessage(p, "&7- &c/blacksmith deconstruct [level] [amount]");
+				Util.sendMessage(p, "&8&l[&cBlacksmith&8&l]");
+				Util.sendMessage(p, "&7- &c/blacksmith create durability [armor/weapon] [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith create repair [level]");
+				Util.sendMessage(p, "&7- &c/blacksmith upgrade unbreaking");
+				Util.sendMessage(p, "&7- &c/blacksmith upgrade protection");
+				Util.sendMessage(p, "&7- &c/blacksmith reforge");
+				Util.sendMessage(p, "&7- &c/blacksmith scrap");
+				Util.sendMessage(p, "&7- &c/blacksmith deconstruct [level] [amount]");
 				if(sender.hasPermission("blacksmith.admin")) {
-					util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
-					util.sendMessage(p, "&7- &4/blacksmith get repair [level]");
-					util.sendMessage(p, "&7- &4/blacksmith get durability [weapon/armor] [level]");
+					Util.sendMessage(p, "&7- &4/blacksmith get essence [level]");
+					Util.sendMessage(p, "&7- &4/blacksmith get repair [level]");
+					Util.sendMessage(p, "&7- &4/blacksmith get durability [weapon/armor] [level]");
 				}
 				return true;
 			}
@@ -73,22 +73,22 @@ public class BlacksmithCommands implements CommandExecutor {
 										return true;
 									}
 									else {
-										util.sendMessage(p, "&cInvalid level!");
+										Util.sendMessage(p, "&cInvalid level!");
 										return true;
 									}
 								}
 								else {
-									util.sendMessage(p, "&cInvalid level!");
+									Util.sendMessage(p, "&cInvalid level!");
 									return true;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cInvalid item type!");
+								Util.sendMessage(p, "&cInvalid item type!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid item!");
+							Util.sendMessage(p, "&cInvalid item!");
 							return true;
 						}
 					}
@@ -102,22 +102,22 @@ public class BlacksmithCommands implements CommandExecutor {
 									return true;
 								}
 								else {
-									util.sendMessage(p, "&cInvalid level!");
+									Util.sendMessage(p, "&cInvalid level!");
 									return true;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cInvalid level!");
+								Util.sendMessage(p, "&cInvalid level!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid parameters!");
+							Util.sendMessage(p, "&cInvalid parameters!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -135,12 +135,12 @@ public class BlacksmithCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							util.sendMessage(p, "&cInvalid upgrade parameter!");
+							Util.sendMessage(p, "&cInvalid upgrade parameter!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -152,7 +152,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -163,7 +163,7 @@ public class BlacksmithCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -177,17 +177,17 @@ public class BlacksmithCommands implements CommandExecutor {
 								return true;
 							}
 							else {
-								util.sendMessage(p, "&cInvalid level!");
+								Util.sendMessage(p, "&cInvalid level!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid argument!");
+							Util.sendMessage(p, "&cInvalid argument!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -199,48 +199,48 @@ public class BlacksmithCommands implements CommandExecutor {
 							if(StringUtils.isNumeric(args[2])) {
 								if(p.hasPermission("blacksmith.admin")) {
 									p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
-									util.sendMessage(p, "&7Successfully spawned Essence!");
+									Util.sendMessage(p, "&7Successfully spawned Essence!");
 									return true;
 								}
 								else {
-									util.sendMessage(p, "&cYou don't have permission to do that!");
+									Util.sendMessage(p, "&cYou don't have permission to do that!");
 									return true;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cInvalid number!");
+								Util.sendMessage(p, "&cInvalid number!");
 								return true;
 							}
 						}
 						else if (args[1].equalsIgnoreCase("durability")) {
 							if(p.hasPermission("blacksmith.admin")) {
 								p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
-								util.sendMessage(p, "&7Successfully spawned durability augment!");
+								Util.sendMessage(p, "&7Successfully spawned durability augment!");
 								return true;
 							}
 							else {
-								util.sendMessage(p, "&cYou don't have permission to do that!");
+								Util.sendMessage(p, "&cYou don't have permission to do that!");
 								return true;
 							}
 						}
 						else if (args[1].equalsIgnoreCase("repair")) {
 							if(p.hasPermission("blacksmith.admin")) {
 								p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
-								util.sendMessage(p, "&7Successfully spawned repair kit!");
+								Util.sendMessage(p, "&7Successfully spawned repair kit!");
 								return true;
 							}
 							else {
-								util.sendMessage(p, "&cYou don't have permission to do that!");
+								Util.sendMessage(p, "&cYou don't have permission to do that!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid item!");
+							Util.sendMessage(p, "&cInvalid item!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -254,7 +254,7 @@ public class BlacksmithCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							util.sendMessage(p, "&cPlayer not found!");
+							Util.sendMessage(p, "&cPlayer not found!");
 							return true;
 						}
 					}
@@ -264,13 +264,13 @@ public class BlacksmithCommands implements CommandExecutor {
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid subcommand!");
+					Util.sendMessage(p, "&cInvalid subcommand!");
 					return true;
 				}
 			}
 		}
 		else {
-			util.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
+			Util.sendMessage((Player)sender, "&cYou are not a Blacksmith!");
 			return true;
 		}
 		

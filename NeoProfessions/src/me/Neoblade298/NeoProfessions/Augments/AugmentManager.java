@@ -11,9 +11,13 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+
+import de.tr7zw.nbtapi.NBTItem;
 
 public class AugmentManager {
 	public static HashMap<String, Augment> nameMap = new HashMap<String, Augment>();
@@ -33,6 +37,11 @@ public class AugmentManager {
 	
 	public AugmentManager() {
 		// Load augments? Maybe don't need
+	}
+	
+	public static boolean isAugment(ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		return nameMap.containsKey(nbti.getString("augment"));
 	}
 
 	

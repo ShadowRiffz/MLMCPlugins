@@ -28,14 +28,14 @@ public class CulinarianUtils {
 		if (amount >= 30 && amount < 50) {
 			p.removePotionEffect(PotionEffectType.CONFUSION);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30 * 20, 0));
-			util.sendMessage(p, "&7You are now &esomewhat drunk&7 (" + amount + "/100).");
+			Util.sendMessage(p, "&7You are now &esomewhat drunk&7 (" + amount + "/100).");
 		}
 		else if (amount >= 50 && amount < 70) {
 			p.removePotionEffect(PotionEffectType.BLINDNESS);
 			p.removePotionEffect(PotionEffectType.CONFUSION);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0));
-			util.sendMessage(p, "&7You are now &6very drunk&7 (" + amount + "/100).");
+			Util.sendMessage(p, "&7You are now &6very drunk&7 (" + amount + "/100).");
 		}
 		else if (amount >= 70 && amount < 100) {
 			p.removePotionEffect(PotionEffectType.WITHER);
@@ -44,45 +44,45 @@ public class CulinarianUtils {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 10 * 20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60 * 20, 0));
-			util.sendMessage(p, "&7You are now &4dangerously drunk&7. (" + amount + "/100).");
+			Util.sendMessage(p, "&7You are now &4dangerously drunk&7. (" + amount + "/100).");
 		}
 		else if (amount > 100) {
 			double chance = gen.nextDouble();
 			if (chance >= 0.5) {
-				util.sendMessage(p,
+				Util.sendMessage(p,
 						"&7You throw up from being too drunk. Your drunkness is reduced to &6very drunk&7 (50/100).");
 				drunkness.put(p, 50);
 			}
 			else {
-				util.sendMessage(p, "&7You become too drunk and lose 80% of your current health.");
+				Util.sendMessage(p, "&7You become too drunk and lose 80% of your current health.");
 				p.damage(1);
 				p.setHealth(p.getHealth() * 0.2);
 				drunkness.put(p, 100);
 			}
 		}
 		else {
-			util.sendMessage(p, "&7You drink&7 (" + amount + "/100).");
+			Util.sendMessage(p, "&7You drink&7 (" + amount + "/100).");
 		}
 	}
 
 	public void checkAlcoholDown(Player p, int amount) {
 		if (amount == 0) {
-			util.sendMessage(p, "&7You are completely sober&7 (0/100).");
+			Util.sendMessage(p, "&7You are completely sober&7 (0/100).");
 		}
 		else if (amount == 29) {
-			util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
+			Util.sendMessage(p, "&7Your drunkness is reduced to &fsober&7 (29/100).");
 		}
 		else if (amount == 49) {
 			p.removePotionEffect(PotionEffectType.CONFUSION);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 5 * 20, 0));
-			util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7 (49/100).");
+			Util.sendMessage(p, "&7Your drunkness is reduced to &esomewhat drunk&7 (49/100).");
 		}
 		else if (amount == 69) {
 			p.removePotionEffect(PotionEffectType.BLINDNESS);
 			p.removePotionEffect(PotionEffectType.CONFUSION);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0));
-			util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7 (69/100).");
+			Util.sendMessage(p, "&7Your drunkness is reduced to &6very drunk&7 (69/100).");
 		}
 	}
 
@@ -317,18 +317,18 @@ public class CulinarianUtils {
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
-					util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
+					Util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the ingredients to craft any of this recipe!");
+					Util.sendMessage(p, "&cYou lack the ingredients to craft any of this recipe!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
+				Util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou have not yet unlocked this recipe!");
+			Util.sendMessage(p, "&cYou have not yet unlocked this recipe!");
 		}
 	}
 
@@ -386,18 +386,18 @@ public class CulinarianUtils {
 					}
 					econ.withdrawPlayer(p, CRAFT_COST * amount);
 					inv.addItem(util.setAmount(result, amount * NUM_PER_CRAFT));
-					util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
+					Util.sendMessage(p, "&7Successfully crafted &e" + amount * NUM_PER_CRAFT + " " + name);
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
+					Util.sendMessage(p, "&cYou lack the gold to craft " + amount + " of this recipe!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou lack the ingredients to craft " + amount + " of this recipe!");
+				Util.sendMessage(p, "&cYou lack the ingredients to craft " + amount + " of this recipe!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYou have not yet unlocked this recipe!");
+			Util.sendMessage(p, "&cYou have not yet unlocked this recipe!");
 		}
 	}
 

@@ -90,67 +90,72 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					"§7- §c/prof solidify [essence/oretype] [level] [amount] §7- Turns ore/essence into an item in inventory");
 			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
 		}
-		else if (args.length == 0 && args[0].equalsIgnoreCase("convert")) {
+		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			AugmentEditor editor = new AugmentEditor(p.getInventory().getItemInMainHand());
-			editor.convertItem(p);
+			if (editor.convertItem(p)) {
+				Util.sendMessage(p, "&7Successfully converted item!");
+			}
+			else {
+				Util.sendMessage(p, "&cItem conversion failed!");
+			}
 			return true;
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
 			if (Bukkit.getPlayer(args[1]) == null) {
-				util.sendMessage(p, "&cPlayer must be online!");
+				Util.sendMessage(p, "&cPlayer must be online!");
 				return true;
 			}
 			if (!main.cManager.validType(args[2])) {
-				util.sendMessage(p, "&cInvalid type!");
+				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
 			int level = Integer.parseInt(args[3]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
 			int amount = Integer.parseInt(args[4]);
 			if (amount <= 0 || amount >= 99999 || !main.cManager.hasEnough(p, args[2], level, amount)) {
-				util.sendMessage(p, "&cInvalid amount!");
+				Util.sendMessage(p, "&cInvalid amount!");
 				return true;
 			}
 			Player recipient = Bukkit.getPlayer(args[1]);
 			main.cManager.add(recipient, args[2], level, amount);
 			main.cManager.subtract(p, args[2], level, amount);
-			util.sendMessage(p,
+			Util.sendMessage(p,
 					"&7You paid &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
-			util.sendMessage(recipient,
+			Util.sendMessage(recipient,
 					"&e" + p.getName() + "&7 has paid you &e" + amount + " Lv " + level + " " + args[2]);
 			return true;
 		}
 		else if (args.length == 4 && args[0].equalsIgnoreCase("balance")) {
 			if (Bukkit.getPlayer(args[1]) == null) {
-				util.sendMessage(p, "&cPlayer must be online!");
+				Util.sendMessage(p, "&cPlayer must be online!");
 				return true;
 			}
 			if (!main.cManager.validType(args[2])) {
-				util.sendMessage(p, "&cInvalid type!");
+				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
 			int level = Integer.parseInt(args[3]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(Bukkit.getPlayer(args[1]), args[2], level));
+			Util.sendMessage(p, "&7Balance: &e" + main.cManager.get(Bukkit.getPlayer(args[1]), args[2], level));
 			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
 			if (!main.cManager.validType(args[1])) {
-				util.sendMessage(p, "&cInvalid type!");
+				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
 			int level = Integer.parseInt(args[2]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
+			Util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
 			return true;
 		}
 
@@ -176,37 +181,37 @@ public class NeoprofessionsCommands implements CommandExecutor {
 										notAdded += item.getValue().getAmount();
 									}
 									cm.subtract(p, args[1], level, amount - notAdded);
-									util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
+									Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
 									return true;
 								}
 								else {
 									cm.subtract(p, args[1], level, amount);
-									util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
+									Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
 									return true;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
+								Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid level!");
+							Util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cLevel and amount should be a number!");
+						Util.sendMessage(p, "&cLevel and amount should be a number!");
 						return true;
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid essence or ore type!");
+					Util.sendMessage(p, "&cInvalid essence or ore type!");
 					return true;
 				}
 			}
 			else {
-				util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
 				return true;
 			}
 		}
@@ -227,12 +232,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 										notAdded += item.getValue().getAmount();
 									}
 									cm.add(p, args[1], level, amount - notAdded);
-									util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+									Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
 									return true;
 								}
 								else {
 									cm.add(p, args[1], level, amount);
-									util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
+									Util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
 									return true;
 								}
 							}
@@ -245,37 +250,37 @@ public class NeoprofessionsCommands implements CommandExecutor {
 										notAdded += item.getValue().getAmount();
 									}
 									cm.add(p, args[1], level, amount - notAdded);
-									util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+									Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
 									return true;
 								}
 								else {
 									cm.add(p, args[1], level, amount);
-									util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
+									Util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
 									return true;
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
+								Util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
 								return true;
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid level!");
+							Util.sendMessage(p, "&cInvalid level!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cLevel and amount should be a number!");
+						Util.sendMessage(p, "&cLevel and amount should be a number!");
 						return true;
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid essence or ore type!");
+					Util.sendMessage(p, "&cInvalid essence or ore type!");
 					return true;
 				}
 			}
 			else {
-				util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
 				return true;
 			}
 		}
@@ -341,14 +346,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
 						int amount = Integer.parseInt(args[3]);
 						this.main.cManager.add(p, type, level, amount);
-						util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
 						return true;
 					}
 					else {
 						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
 						int amount = Integer.parseInt(args[3]);
 						this.main.cManager.add(p, args[1], level, amount);
-						util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " essence to + " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " essence to + " + p.getName() + "!");
 						return true;
 					}
 				}
@@ -375,7 +380,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("sober")) {
 					if (args.length == 2) {
 						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);
-						util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
+						Util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
 						return true;
 					}
 				}
@@ -392,10 +397,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (bUtils.isGear(item)) {
 								util.setCurrentDurability(item, util.getMaxDurability(item));
 							}
-							util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
+							Util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
 						}
 						else {
-							util.sendMessage(Bukkit.getPlayer(args[1]), "&cItem no longer supported by server!");
+							Util.sendMessage(Bukkit.getPlayer(args[1]), "&cItem no longer supported by server!");
 						}
 						return true;
 					}
@@ -408,7 +413,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (pClass.getLevel() < 60) {
 								pClass.setLevel(pClass.getLevel() + 1);
 								pClass.setPoints(pClass.getPoints() + 2);
-								util.sendMessage(Bukkit.getPlayer(args[1]),
+								Util.sendMessage(Bukkit.getPlayer(args[1]),
 										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
@@ -421,7 +426,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							if (pClass.getLevel() + levels <= 60) {
 								pClass.setLevel(pClass.getLevel() + levels);
 								pClass.setPoints(pClass.getPoints() + (2 * levels));
-								util.sendMessage(Bukkit.getPlayer(args[1]),
+								Util.sendMessage(Bukkit.getPlayer(args[1]),
 										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
 							}
 						}
@@ -434,7 +439,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int points = Integer.parseInt(args[2]);
 						if (pClass != null) {
 							pClass.setPoints(pClass.getPoints() + points);
-							util.sendMessage(Bukkit.getPlayer(args[1]),
+							Util.sendMessage(Bukkit.getPlayer(args[1]),
 									"&7You gained &e" + pClass.getLevel() + "profession points&7!");
 						}
 						return true;
@@ -590,14 +595,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
 							int amount = Integer.parseInt(args[4]);
 							this.main.cManager.add(p, type, level, amount);
-							util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
+							Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
 							return true;
 						}
 						else {
 							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
 							int amount = Integer.parseInt(args[4]);
 							this.main.cManager.add(p, args[2], level, amount);
-							util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + "essence to + " + p.getName() + "!");
+							Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + "essence to + " + p.getName() + "!");
 							return true;
 						}
 					}

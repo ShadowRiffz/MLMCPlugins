@@ -30,14 +30,14 @@ public class CulinarianCommands implements CommandExecutor {
 			Player p = (Player) sender;
 
 			if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-				util.sendMessage(p, "&8&l[&cCulinarian&8&l]");
-				util.sendMessage(p, "&7- &c/culinarian garnish [all]");
-				util.sendMessage(p, "&7- &c/culinarian spice [all]");
-				util.sendMessage(p, "&7- &c/culinarian preserve [all]");
-				util.sendMessage(p, "&7- &c/culinarian special");
-				util.sendMessage(p, "&7- &c/culinarian assimilate");
-				util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence] [all]");
-				util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limited/drink/legendary] [itemname] <amount>");
+				Util.sendMessage(p, "&8&l[&cCulinarian&8&l]");
+				Util.sendMessage(p, "&7- &c/culinarian garnish [all]");
+				Util.sendMessage(p, "&7- &c/culinarian spice [all]");
+				Util.sendMessage(p, "&7- &c/culinarian preserve [all]");
+				Util.sendMessage(p, "&7- &c/culinarian special");
+				Util.sendMessage(p, "&7- &c/culinarian assimilate");
+				Util.sendMessage(p, "&7- &c/culinarian remedy [stun/root/curse/silence] [all]");
+				Util.sendMessage(p, "&7- &c/culinarian craft [ingredient/tier1/tier2/tier3/limited/drink/legendary] [itemname] <amount>");
 				return true;
 			}
 			else if (args.length == 0) {
@@ -55,7 +55,7 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -69,7 +69,7 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -83,7 +83,7 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -97,7 +97,7 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -107,7 +107,7 @@ public class CulinarianCommands implements CommandExecutor {
 						return true;
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -118,7 +118,7 @@ public class CulinarianCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							util.sendMessage(p, "&cInvalid parameters!");
+							Util.sendMessage(p, "&cInvalid parameters!");
 							return true;
 						}
 					}
@@ -128,12 +128,12 @@ public class CulinarianCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							util.sendMessage(p, "&cInvalid parameters!");
+							Util.sendMessage(p, "&cInvalid parameters!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -308,12 +308,12 @@ public class CulinarianCommands implements CommandExecutor {
 							}
 						}
 						else {
-							util.sendMessage(p, "&cInvalid crafting argument!");
+							Util.sendMessage(p, "&cInvalid crafting argument!");
 							return true;
 						}
 					}
 					else {
-						util.sendMessage(p, "&cIncorrect number of arguments!");
+						Util.sendMessage(p, "&cIncorrect number of arguments!");
 						return true;
 					}
 				}
@@ -327,7 +327,7 @@ public class CulinarianCommands implements CommandExecutor {
 							return true;
 						}
 						else {
-							util.sendMessage(p, "&cPlayer not found!");
+							Util.sendMessage(p, "&cPlayer not found!");
 							return true;
 						}
 					}
@@ -337,13 +337,13 @@ public class CulinarianCommands implements CommandExecutor {
 					}
 				}
 				else {
-					util.sendMessage(p, "&cInvalid subcommand!");
+					Util.sendMessage(p, "&cInvalid subcommand!");
 					return true;
 				}
 			}
 		}
 		else {
-			util.sendMessage((Player) sender, "&cYou are not a culinarian!");
+			Util.sendMessage((Player) sender, "&cYou are not a culinarian!");
 			return true;
 		}
 	}

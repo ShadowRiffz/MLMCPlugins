@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Util {
-	public void sendMessage(CommandSender p, String m) {
+	public static void sendMessage(CommandSender p, String m) {
 		String message = "&4[&c&lMLMC&4] " + m;
 		p.sendMessage(message.replaceAll("&", "§"));
 	}

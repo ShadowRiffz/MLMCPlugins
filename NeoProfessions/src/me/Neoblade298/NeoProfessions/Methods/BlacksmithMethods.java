@@ -124,22 +124,22 @@ public class BlacksmithMethods {
 						p.getInventory().addItem(bItems.getDurabilityItem(level, itemtype));
 						cm.subtract(p, "essence", level, DURABILITY_ESSENCE);
 						econ.withdrawPlayer(p, CREATE_DURABILITY_GOLD.get(level));
-						util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
+						Util.sendMessage(p, "&7Successfully created level " + level + " durability gem!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to create this!");
+						Util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the essence to create this!");
+					Util.sendMessage(p, "&cYou lack the essence to create this!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYour inventory is full!");
+			Util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 
@@ -153,22 +153,22 @@ public class BlacksmithMethods {
 						p.getInventory().addItem(util.setAmount(bItems.getRepairItem(level), 2));
 						cm.subtract(p, "essence", level, REPAIR_ESSENCE);
 						econ.withdrawPlayer(p, CREATE_REPAIR_GOLD.get(level));
-						util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
+						Util.sendMessage(p, "&7Successfully created level " + level + " repair kit!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to create this!");
+						Util.sendMessage(p, "&cYou lack the gold to create this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou lack the essence to create this!");
+					Util.sendMessage(p, "&cYou lack the essence to create this!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not yet have the required skill!");
+				Util.sendMessage(p, "&cYou do not yet have the required skill!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cYour inventory is full!");
+			Util.sendMessage(p, "&cYour inventory is full!");
 		}
 	}
 
@@ -190,35 +190,35 @@ public class BlacksmithMethods {
 									cm.subtract(p, "essence", itemLevel,
 											(UNBREAKING_ESSENCE_PER_LVL * enchLevel) - UNBREAKING_ESSENCE_BASE);
 									econ.withdrawPlayer(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel);
-									util.sendMessage(p,
+									Util.sendMessage(p,
 											"&7Successfully upgraded unbreaking to level " + upgradeLevel + "!");
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									Util.sendMessage(p, "&cYou lack the gold to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the essence to create this!");
+								Util.sendMessage(p, "&cYou lack the essence to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+							Util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
+					Util.sendMessage(p, "&cCannot upgrade unbreaking any further!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cItem doesn't have an unbreaking enchantment to upgrade!");
+				Util.sendMessage(p, "&cItem doesn't have an unbreaking enchantment to upgrade!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -240,35 +240,35 @@ public class BlacksmithMethods {
 									cm.subtract(p, "essence", itemLevel,
 											(PROTECTION_ESSENCE_PER_LVL * enchLevel) - PROTECTION_ESSENCE_BASE);
 									econ.withdrawPlayer(p, INCREASE_ENCHANTMENT_GOLD.get(itemLevel) * enchLevel);
-									util.sendMessage(p,
+									Util.sendMessage(p,
 											"&7Successfully upgraded protection to level " + upgradeLevel + "!");
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									Util.sendMessage(p, "&cYou lack the gold to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the essence to create this!");
+								Util.sendMessage(p, "&cYou lack the essence to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
+							Util.sendMessage(p, "&cYou cannot upgrade non-quest items!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cCannot upgrade protection any further!");
+					Util.sendMessage(p, "&cCannot upgrade protection any further!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cItem doesn't have a protection enchantment to upgrade!");
+				Util.sendMessage(p, "&cItem doesn't have a protection enchantment to upgrade!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -320,34 +320,34 @@ public class BlacksmithMethods {
 									econ.withdrawPlayer(p, REFORGE_GOLD.get(itemLevel));
 									p.getInventory().addItem(
 											neogear.settings.get(type).get(itemLevel).generateItem(rarity, itemLevel));
-									util.sendMessage(p, "&7Successfully reforged item!");
+									Util.sendMessage(p, "&7Successfully reforged item!");
 								}
 								else {
-									util.sendMessage(p, "&cYou lack the gold to create this!");
+									Util.sendMessage(p, "&cYou lack the gold to create this!");
 								}
 							}
 							else {
-								util.sendMessage(p, "&cYou lack the essence to create this!");
+								Util.sendMessage(p, "&cYou lack the essence to create this!");
 							}
 						}
 						else {
-							util.sendMessage(p, "&cArtifacts cannot be rerolled!");
+							Util.sendMessage(p, "&cArtifacts cannot be rerolled!");
 						}
 					}
 					else {
-						util.sendMessage(p, "&cYou do not yet have the required skill!");
+						Util.sendMessage(p, "&cYou do not yet have the required skill!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+					Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou cannot reforge non-quest items!");
+				Util.sendMessage(p, "&cYou cannot reforge non-quest items!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -364,22 +364,22 @@ public class BlacksmithMethods {
 						p.getInventory().removeItem(item);
 						econ.withdrawPlayer(p, SCRAP_COST);
 						cm.add(p, "essence", itemLevel, 1);
-						util.sendMessage(p, "&7Successfully scrapped item!");
+						Util.sendMessage(p, "&7Successfully scrapped item!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to scrap this!");
+						Util.sendMessage(p, "&cYou lack the gold to scrap this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou cannot scrap non-quest items!");
+				Util.sendMessage(p, "&cYou cannot scrap non-quest items!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cMain hand is empty!");
+			Util.sendMessage(p, "&cMain hand is empty!");
 		}
 	}
 
@@ -391,22 +391,22 @@ public class BlacksmithMethods {
 						econ.withdrawPlayer(p, DECONSTRUCT_COST * amount);
 						cm.subtract(p, "essence", level, amount);
 						cm.add(p, "essence", level - LEVEL_INTERVAL, amount * DECONSTRUCT_AMOUNT);
-						util.sendMessage(p, "&7Successfully deconstructed!");
+						Util.sendMessage(p, "&7Successfully deconstructed!");
 					}
 					else {
-						util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
+						Util.sendMessage(p, "&cYou lack the gold to deconstruct this!");
 					}
 				}
 				else {
-					util.sendMessage(p, "&cYou do not yet have the required skill!");
+					Util.sendMessage(p, "&cYou do not yet have the required skill!");
 				}
 			}
 			else {
-				util.sendMessage(p, "&cYou do not have enough essence!");
+				Util.sendMessage(p, "&cYou do not have enough essence!");
 			}
 		}
 		else {
-			util.sendMessage(p, "&cDeconstructed essences must be at least level 10!");
+			Util.sendMessage(p, "&cDeconstructed essences must be at least level 10!");
 		}
 	}
 

@@ -47,14 +47,15 @@ public class AugmentEditor {
 			return false;
 		}
 		
-		nbti.setString("slot" + i + "Augment", aug.getName());
-		nbti.setInteger("slot" + i + "Level", aug.getLevel());
-		this.item = nbti.getItem();
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.set(nbti.getInteger("slot" + i + "Line"), aug.getLine());
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		nbti = new NBTItem(item);
+		nbti.setString("slot" + i + "Augment", aug.getName());
+		nbti.setInteger("slot" + i + "Level", aug.getLevel());
+		nbti.applyNBT(item);
 		return true;
 	}
 	
@@ -71,9 +72,6 @@ public class AugmentEditor {
 			return false;
 		}
 		
-		nbti.setInteger("slotsCreated", newTotal);
-		nbti.setInteger("slot" + newTotal + "Line", nbti.getInteger("slot" + oldTotal + "Line") + 1);
-		this.item = nbti.getItem();
 		ItemMeta meta = item.getItemMeta();
 		
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
@@ -81,6 +79,10 @@ public class AugmentEditor {
 		lore.add(slotNum, "§7[Empty Slot]");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		nbti = new NBTItem(item);
+		nbti.setInteger("slotsCreated", newTotal);
+		nbti.setInteger("slot" + newTotal + "Line", nbti.getInteger("slot" + oldTotal + "Line") + 1);
+		nbti.applyNBT(item);
 		return true;
 	}
 	
@@ -90,22 +92,21 @@ public class AugmentEditor {
 			Bukkit.getLogger().log(Level.INFO, error + "item already converted!");
 			return false;
 		}
-		nbti.setInteger("version", 1);
-		nbti.setString("type", "default");
-		this.item = nbti.getItem();
 		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		MasonUtils masonUtils = new MasonUtils();
 		
 		boolean hasBonus = false;
+		boolean hasLevel = false;
 		int bonusLine = -1;
 		Random gen = new Random();
+		int itemLevel = -1;
 		for (int i = 0; i < lore.size(); i++) {
 			String line = lore.get(i);
 			if (line.contains("Level")) {
-				nbti.setInteger("level", Integer.parseInt(line.split(" ")[2]));
-				nbti.applyNBT(this.item);
+				itemLevel = Integer.parseInt(line.split(" ")[2]);
+				hasLevel = true;
 				continue;
 			}
 			
@@ -136,12 +137,23 @@ public class AugmentEditor {
 				}
 			}
 		}
+
+		if (!hasLevel) {
+			Bukkit.getLogger().log(Level.INFO, error + "item is not eligible for conversion!");
+			return false;
+		}
+		
 		if (bonusLine != -1) {
 			lore.remove(bonusLine);
 		}
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		nbti = new NBTItem(item);
+		nbti.setInteger("version", 1);
+		nbti.setString("type", "default");
+		nbti.setInteger("level", itemLevel);
+		nbti.applyNBT(item);
 		return true;
 	}
 }
