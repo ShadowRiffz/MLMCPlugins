@@ -6,8 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
@@ -207,6 +211,20 @@ public class Main extends JavaPlugin implements Listener {
 		else if (event.getMechanicName().equalsIgnoreCase("scaleexp")) {
 			ScaleExpMechanic mechanic = new ScaleExpMechanic(event.getConfig());
 			event.register(mechanic);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onDummyDamage(EntityDamageByEntityEvent e) {
+		if (e.getEntity().getCustomName().contains("(Damage)")) {
+			if (e.getDamager() instanceof Player) {
+				Player p = (Player) e.getDamager();
+				for (Entity ent : e.getEntity().getNearbyEntities(5, 5, 5)) {
+					if (ent instanceof Player) {
+						ent.sendMessage("§e" + p.getName() + " §7did §c" + (Math.round(e.getFinalDamage() * 100) / 100) + " §7damage");
+					}
+				}
+			}
 		}
 	}
 
