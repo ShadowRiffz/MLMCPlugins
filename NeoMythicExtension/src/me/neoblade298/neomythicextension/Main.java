@@ -216,7 +216,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDummyDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity().getCustomName().contains("(Damage)")) {
+		String name = e.getEntity().getCustomName();
+		if (name != null && name.contains("(Damage)")) {
 			if (e.getDamager() instanceof Player) {
 				Player p = (Player) e.getDamager();
 				for (Entity ent : e.getEntity().getNearbyEntities(5, 5, 5)) {
