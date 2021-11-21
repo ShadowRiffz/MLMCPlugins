@@ -175,7 +175,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 					rarities.put(rarity,
 							new RarityBonuses(parseAttributes(specificRareSec),
 									specificRareSec.getInt("added-durability"),
-									(ArrayList<String>) specificRareSec.getStringList("prefix")));
+									(ArrayList<String>) specificRareSec.getStringList("prefix"),
+									specificRareSec.getString("material")));
 				}
 				else {
 					rarities.put(rarity, new RarityBonuses());
@@ -623,5 +624,9 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public Economy getEcon() {
 		return econ;
+	}
+	
+	public HashMap<String, HashMap<Integer, GearConfig>> getSettings() {
+		return settings;
 	}
 }

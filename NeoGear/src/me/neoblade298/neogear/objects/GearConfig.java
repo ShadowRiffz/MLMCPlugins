@@ -60,6 +60,10 @@ public class GearConfig {
 	
 	public ItemStack generateItem(String rarity, int level) {
 		ItemStack item = new ItemStack(material);
+		if (rarities.get(rarity).material != null) {
+			item = new ItemStack(material);
+		}
+		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
 		
