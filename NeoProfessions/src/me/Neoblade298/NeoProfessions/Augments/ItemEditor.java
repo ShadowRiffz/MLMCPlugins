@@ -2,8 +2,10 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -15,8 +17,28 @@ import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class ItemEditor {
+	private static HashMap<String, String> typeConverter = new HashMap<String, String>();
+	private static HashMap<String, Integer> maxSlotConverter = new HashMap<String, Integer>();
 	ItemStack item;
 	NBTItem nbti;
+	
+	static {
+		typeConverter.put("Reinforced Helmet", "rhelmet");
+		typeConverter.put("Reinforced Chestplate", "rchestplate");
+		typeConverter.put("Reinforced Leggings", "rleggings");
+		typeConverter.put("Reinforced Boots", "rboots");
+		typeConverter.put("Infused Helmet", "ihelmet");
+		typeConverter.put("Infused Chestplate", "ichestplate");
+		typeConverter.put("Infused Leggings", "ileggings");
+		typeConverter.put("Infused Boots", "iboots");
+		
+		maxSlotConverter.put("common", 0);
+		maxSlotConverter.put("uncommon", 1);
+		maxSlotConverter.put("rare", 2);
+		maxSlotConverter.put("epic", 3);
+		maxSlotConverter.put("legendary", 4);
+		maxSlotConverter.put("artifact", 5);
+	}
 	
 	public ItemEditor(ItemStack item) {
 		this.item = item;
@@ -102,44 +124,59 @@ public class ItemEditor {
 		}
 		
 		for (Enchantment ench : item.getEnchantments().keySet()) {
-			item.removeEnchantment(ench);
+			if (! ench.equals(Enchantment.QUICK_CHARGE)) {
+				item.removeEnchantment(ench);
+			}
 		}
 		
 		boolean hasBonus = false;
 		boolean hasLevel = false;
 		boolean isEnchanted = false;
-		int bonusLine = -1;
 		Random gen = new Random();
 		int itemLevel = -1;
 		int slots = 0;
 		int slotsMax = 0;
-		int linesRemoved = 0;
+		String rarity = "common";
+		String displayname = "Sword";
+		String name = "sword";
 		HashMap<String, Integer> nbtData = new HashMap<String, Integer>();
-		for (int i = 0; i < lore.size(); i++) {
-			String line = lore.get(i);
+		
+		lore.add(0, ""); // Placeholder for Title
+		lore.add(1, ""); // Placeholder for Type
+		ListIterator<String> iter = lore.listIterator();
+		int i = -1;
+		while (iter.hasNext()) {
+			i++;
+			String line = iter.next();
 			
 			if (!hasBonus) {
 				if (line.contains("Tier: ")) {
-					if (line.contains("Artifact")) {
-						isEnchanted = true;
-						slotsMax = 5;
+					String args[] = line.split(" ");
+					displayname = args[2];
+					for (int j = 3; j < args.length; j++) {
+						displayname += " " + args[j];
 					}
-					else if (line.contains("Legendary")) {
-						isEnchanted = true;
-						slotsMax = 4;
+					if (displayname.contains(" ")) {
+						name = typeConverter.get(displayname);
 					}
-					else if (line.contains("Epic")) {
-						slotsMax = 3;
+					else {
+						name = displayname.toLowerCase();
 					}
-					else if (line.contains("Rare")) {
-						slotsMax = 2;
+					
+					rarity = ChatColor.stripColor(args[1].toLowerCase());
+					slotsMax = maxSlotConverter.get(rarity);
+					if (rarity.contains("artifact") || rarity.contains("legendary")) {
+						meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+						if (isEnchanted) {
+							item.addEnchantment(Enchantment.LUCK, 1);
+						}
 					}
-					else if (line.contains("Uncommon")) {
-						slotsMax = 1;
-					}
-					else if (line.contains("Common")) {
-						slotsMax = 0;
-					}
+					iter.remove();
+					iter.add("§7Rarity: " + args[1]);
+				}
+				if (line.contains("Base Attr")) {
+					iter.remove();
+					iter.add("§8§m-----");
 				}
 				
 				if (line.contains("Level")) {
@@ -148,7 +185,8 @@ public class ItemEditor {
 					continue;
 				}
 				if (line.contains("Bonus Attributes")) {
-					bonusLine = i;
+					i--;
+					iter.remove();
 					hasBonus = true;
 					continue;
 				}
@@ -182,27 +220,19 @@ public class ItemEditor {
 		if (!hasLevel) {
 			return "item is not eligible for conversion!";
 		}
-		
-		if (bonusLine != -1) {
-			lore.remove(bonusLine);
-			linesRemoved++;
-		}
-		lore.remove("§9[Base Attributes]");
-		linesRemoved++;
-		
+
+		lore.set(0, "§7Title: Standard " + displayname);
+		lore.set(1, "§7Type: " + displayname);
 		
 		meta.setLore(lore);
-		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
-		if (isEnchanted) {
-			item.addEnchantment(Enchantment.DURABILITY, 1);
-		}
 		nbti = new NBTItem(item);
 		nbti.setInteger("version", 1);
-		nbti.setString("gear", "default");
+		nbti.setString("gear", name);
+		nbti.setString("rarity", rarity);
 		nbti.setInteger("level", itemLevel);
 		for (String key : nbtData.keySet()) {
-			nbti.setInteger(key, nbtData.get(key) - linesRemoved);
+			nbti.setInteger(key, nbtData.get(key));
 		}
 		nbti.setInteger("slotsCreated", slots);
 		nbti.setInteger("slotsMax", slotsMax);

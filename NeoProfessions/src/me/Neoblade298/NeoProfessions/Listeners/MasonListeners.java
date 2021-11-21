@@ -132,7 +132,10 @@ public class MasonListeners implements Listener {
 		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
 			return;
 		}
-		if (nbti.getInteger("version") <= 0) {
+		else if (!AugmentManager.isAugment(augment)) {
+			return;
+		}
+		else if (nbti.getInteger("version") <= 0) {
 			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
 			return;
 		}
@@ -142,9 +145,6 @@ public class MasonListeners implements Listener {
 		}
 		else if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
-			return;
-		}
-		else if (!AugmentManager.isAugment(augment)) {
 			return;
 		}
 		/*
