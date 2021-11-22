@@ -27,7 +27,7 @@ public class InventoryListeners implements Listener {
 	public void onInventoryDrag(InventoryDragEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		if (main.viewingInventory.containsKey(p)) {
-			main.viewingInventory.get(p).handleInventoryDrag(e);;
+			main.viewingInventory.get(p).handleInventoryDrag(e);
 		}
 	}
 
@@ -35,7 +35,8 @@ public class InventoryListeners implements Listener {
 	public void onInventoryClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
 		if (main.viewingInventory.containsKey(p)) {
-			main.viewingInventory.get(p).handleInventoryClose(e);;
+			main.viewingInventory.get(p).handleInventoryClose(e);
 		}
+		main.viewingInventory.remove(p);
 	}
 }

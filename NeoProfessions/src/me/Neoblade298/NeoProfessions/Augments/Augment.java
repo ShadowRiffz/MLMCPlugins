@@ -3,7 +3,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class Augment {
-	protected static String name;
+	protected String name;
 	protected int level;
 	
 	public Augment() {
@@ -19,7 +19,7 @@ public abstract class Augment {
 	}
 
 	public void setName(String name) {
-		Augment.name = name;
+		this.name = name;
 	}
 
 	public int getLevel() {

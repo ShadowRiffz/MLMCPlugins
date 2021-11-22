@@ -26,6 +26,7 @@ import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
+import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Items.CommonItems;
@@ -83,6 +84,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (args.length == 0) {
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
+			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
 			sender.sendMessage(
 					"§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
@@ -99,6 +101,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				Util.sendMessage(p, "&cItem conversion failed, " + result);
 			}
+			return true;
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {
+			new InspectAugmentsInventory(main, p, p.getInventory().getItemInMainHand());
 			return true;
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {

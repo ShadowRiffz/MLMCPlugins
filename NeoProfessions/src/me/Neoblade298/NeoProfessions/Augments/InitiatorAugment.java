@@ -13,16 +13,14 @@ import de.tr7zw.nbtapi.NBTItem;
 
 public class InitiatorAugment extends ModDamageDealtAugment {
 	
-	static {
-		InitiatorAugment.name = "Initiator";
-	}
-	
 	public InitiatorAugment() {
 		super();
+		this.name = "Initiator";
 	}
 
 	public InitiatorAugment(int level) {
 		super(level);
+		this.name = "Initiator";
 	}
 
 	@Override

@@ -147,22 +147,6 @@ public class MasonListeners implements Listener {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return;
 		}
-		/*
-		else if (slot == 0) {
-			int augmentLevel = masonUtils.getAugmentLevel(augment);
-			int gearLevel = util.getItemLevel(item);
-			String slotError = masonUtils.canSlot(item, augment, gearLevel, augmentLevel, slotType);
-			if (slotError != null) {
-				Util.sendMessage(p, slotError);
-				return;
-			}
-			ItemStack clone = augment.clone();
-			clone.setAmount(1);
-			e.setCancelled(true);
-			p.getOpenInventory().close();
-			new ReplaceSlotInventory(main, p, item, clone, masonUtils, slotType, util);
-		}
-			*/
 		else {
 			ItemStack clone = augment.clone();
 			clone.setAmount(1);
