@@ -168,27 +168,27 @@ public class ItemEditor {
 					if (rarity.contains("artifact") || rarity.contains("legendary")) {
 						meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 						if (isEnchanted) {
-							item.addEnchantment(Enchantment.LUCK, 1);
+							meta.addEnchant(Enchantment.LUCK, 1, true);
 						}
 					}
 					iter.remove();
 					iter.add("§7Rarity: " + args[1]);
 				}
-				if (line.contains("Base Attr")) {
+				else if (line.contains("Base Attr")) {
 					iter.remove();
 					iter.add("§8§m-----");
 				}
 				
-				if (line.contains("Level")) {
+				else if (line.contains("Level")) {
 					itemLevel = Integer.parseInt(line.split(" ")[2]);
-					hasLevel = true;
-					continue;
-				}
-				if (line.contains("Bonus Attributes")) {
-					i--;
 					iter.remove();
+					iter.add("§7Level: " + itemLevel);
+					hasLevel = true;
+				}
+				else if (line.contains("Bonus Attributes")) {
+					iter.remove();
+					iter.add("§8§m-----");
 					hasBonus = true;
-					continue;
 				}
 			}
 			

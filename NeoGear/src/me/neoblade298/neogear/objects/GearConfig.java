@@ -3,36 +3,42 @@ package me.neoblade298.neogear.objects;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neogear.Gear;
+import net.md_5.bungee.api.ChatColor;
 
 public class GearConfig {
 	private Gear main;
-	public String name;
-	public String display;
+	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
+	public String name, display, title;
 	public Material material;
-	public ArrayList<String> prefixes;
-	public ArrayList<String> displayNames;
+	public ArrayList<String> prefixes, displayNames;
 	public int duraBase;
-	public ArrayList<Enchant> requiredEnchants;
-	public ArrayList<Enchant> optionalEnchants;
-	public int enchantmentMin;
-	public int enchantmentMax;
+	public ArrayList<String> requiredAugments;
+	public ArrayList<Enchant> requiredEnchants, optionalEnchants;
+	public int enchantmentMin, enchantmentMax;
+	public int startingSlotsBase, startingSlotsRange;
+	public int slotsMax;
 	public Attributes attributes;
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
 	
-	public GearConfig(Gear main, String name, String display, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames, int duraBase,
-			ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, int enchantmentMin, int enchantmentMax, Attributes attributes,
-			HashMap<String, RarityBonuses> rarities, double price) {
+	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
+			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
+			int enchantmentMin, int enchantmentMax, Attributes attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
+			int startingSlotsBase, int startingSlotsRange, double price) {
 		
 		// Add color codes to all strings necessary
 		for (String prefix : prefixes) {
@@ -44,6 +50,12 @@ public class GearConfig {
 		
 		this.main = main;
 		this.name = name;
+		if (title == null) {
+			this.title = "§7Standard " + display;
+		}
+		else {
+			this.title = title;
+		}
 		this.display = display;
 		this.material = material;
 		this.prefixes = prefixes;
@@ -51,17 +63,21 @@ public class GearConfig {
 		this.duraBase = duraBase;
 		this.requiredEnchants = requiredEnchants;
 		this.optionalEnchants = optionalEnchants;
+		this.requiredAugments = requiredAugments;
 		this.enchantmentMax = enchantmentMax;
 		this.enchantmentMin = enchantmentMin;
 		this.attributes = attributes;
 		this.rarities = rarities;
 		this.price = price;
+		this.slotsMax = slotsMax;
+		this.startingSlotsBase = startingSlotsBase;
+		this.startingSlotsRange = startingSlotsRange;
 	}
 	
 	public ItemStack generateItem(String rarity, int level) {
 		ItemStack item = new ItemStack(material);
 		if (rarities.get(rarity).material != null) {
-			item = new ItemStack(material);
+			item = new ItemStack(rarities.get(rarity).material);
 		}
 		
 		ItemMeta meta = item.getItemMeta();
@@ -86,11 +102,16 @@ public class GearConfig {
 		String display = displayNames.get(main.gen.nextInt(displayNames.size()));
 		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
 		
+		
 		// Add required enchantments
+		if (main.rarities.get(rarity).isEnchanted) {
+			meta.addEnchant(Enchantment.LUCK, 1, true);
+		}
 		for (Enchant enchant : requiredEnchants) {
 			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
 			meta.addEnchant(enchant.enchantment, lv, true);
 		}
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
 		// Add optional enchantments
 		if (enchantmentMax > 0) {
@@ -107,7 +128,7 @@ public class GearConfig {
 			}
 		}
 		
-		// Lore
+		// Attributes
 		Attributes rarityAttrs = rarities.get(rarity).attributes;
 		int strength = attributes.strBase + (attributes.strPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.strRange + 1);
 		strength += rarityAttrs.strBase + (rarityAttrs.strPerLvl * (level / main.lvlInterval))
@@ -135,9 +156,32 @@ public class GearConfig {
 				+ main.gen.nextInt(rarityAttrs.rgnRange + 1);
 		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
 				+ main.gen.nextInt(rarityAttrs.vitRange + 1);
-		lore.add("§7Tier: " + main.rarities.get(rarity).displayName + " " + this.display);
-		lore.add("§7Level Req: " + level);
-		lore.add("§9[Base Attributes]");
+		
+		// Slots and augments
+		int maxSlots = slotsMax;
+		if (rarities.get(rarity).slotsMax != -1) {
+			maxSlots = rarities.get(rarity).slotsMax;
+		}
+		int currentSlot = 0;
+		int numSlots = startingSlotsBase;
+		if (rarities.get(rarity).startingSlotsBase != -1) {
+			numSlots = rarities.get(rarity).startingSlotsBase;
+		}
+		int slotsRange = startingSlotsRange;
+		if (rarities.get(rarity).startingSlotsRange != -1) {
+			slotsRange = rarities.get(rarity).startingSlotsRange;
+		}
+		if (slotsRange > 0) {
+			numSlots += main.gen.nextInt(slotsRange);
+		}
+		
+		// Lore part 1
+		lore.add(translateHexCodes("&7Title: " + this.title));
+		lore.add("§7Type: " + this.display);
+		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
+		lore.add("§7Level: " + level);
+		lore.add("§8§m-----");
+		// Lore part 2
 		if (strength > 0) { lore.add("§9Strength +" + (strength - (strength % attributes.strRounded))); }
 		if (dexterity > 0) { lore.add("§9Dexterity +" + (dexterity - (dexterity % attributes.dexRounded))); }
 		if (intelligence > 0) { lore.add("§9Intelligence +" + (intelligence - (intelligence % attributes.intRounded))); }
@@ -146,6 +190,23 @@ public class GearConfig {
 		if (endurance > 0) { lore.add("§9Endurance +" + (endurance - (endurance % attributes.endRounded))); }
 		if (vitality > 0) { lore.add("§9Vitality +" + (vitality - (vitality % attributes.vitRounded))); }
 		if (regeneration > 0) { lore.add("§9Regen +" + (regeneration - (regeneration % attributes.rgnRounded))); }
+		// Lore part 3, only add separator if there was at least 1 attribute
+		HashMap<String, Integer> nbtIntegers = new HashMap<String, Integer>();
+		HashMap<String, String> nbtStrings = new HashMap<String, String>();
+		if (lore.size() >= 6) { lore.add("§8§m-----"); }
+		for (String augment : requiredAugments) {
+			currentSlot++;
+			String args[] = augment.split(":");
+			lore.add(translateHexCodes(args[0]));
+			nbtIntegers.put("slot" + currentSlot + "Line", lore.size());
+			nbtIntegers.put("slot" + currentSlot + "Level", Integer.parseInt(args[2]));
+			nbtStrings.put("slot" + currentSlot + "Augment", args[1]);
+		}
+		for (int i = 0; i < numSlots; i++) {
+			currentSlot++;
+			lore.add("§8[Empty Slot]");
+			nbtIntegers.put("slot" + currentSlot + "Line", lore.size());
+		}
 		
 		int durability = duraBase + rarities.get(rarity).duraBonus;
 		lore.add("§7Durability " + durability + " / " + durability);
@@ -155,6 +216,29 @@ public class GearConfig {
 		NBTItem nbti = new NBTItem(item);
 		double price = level * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
+		nbti.setString("gear", name);
+		nbti.setInteger("version", 1);
+		nbti.setInteger("slotsMax", maxSlots);
+		nbti.setInteger("level", level);
+		nbti.setString("rarity", rarity.toLowerCase());
+		nbti.setInteger("slotsCreated", numSlots);
+		for (String key : nbtIntegers.keySet()) {
+			nbti.setInteger(key, nbtIntegers.get(key));
+		}
+		for (String key : nbtStrings.keySet()) {
+			nbti.setString(key, nbtStrings.get(key));
+		}
 		return nbti.getItem();
+	}
+	
+	private String translateHexCodes(String textToTranslate) {
+		Matcher matcher = HEX_PATTERN.matcher(textToTranslate);
+		StringBuffer buffer = new StringBuffer();
+
+		while (matcher.find()) {
+			matcher.appendReplacement(buffer, ChatColor.of(matcher.group(1)).toString());
+		}
+
+		return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
 	}
 }

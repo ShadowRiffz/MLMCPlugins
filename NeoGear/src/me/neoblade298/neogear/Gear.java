@@ -116,7 +116,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
 			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"),
-					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"));
+					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"),
+					specificRarity.getBoolean("is-enchanted"));
 			this.rarities.put(rarity, rarityObj);
 		}
 
@@ -147,6 +148,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
 			String name = gearCfg.getString("name");
 			String display = gearCfg.getString("display");
+			String title = gearCfg.getString("title");
 			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
 			double price = gearCfg.getDouble("price");
 
@@ -165,7 +167,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			int enchMax = enchSec.getInt("optional-max");
 
 			Attributes attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
-
+			
+			// Augments
+			ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
+			ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
+			
+			
 			ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
 			HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
 			// Load in rarities
@@ -176,19 +183,28 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 							new RarityBonuses(parseAttributes(specificRareSec),
 									specificRareSec.getInt("added-durability"),
 									(ArrayList<String>) specificRareSec.getStringList("prefix"),
-									specificRareSec.getString("material")));
+									specificRareSec.getString("material"),
+									specificRareSec.getInt("slots-max"),
+									specificRareSec.getInt("starting-slots-base"),
+									specificRareSec.getInt("starting-slots-range")));
 				}
 				else {
 					rarities.put(rarity, new RarityBonuses());
 				}
 			}
+			
+			// Slots
+			int slotsMax = gearCfg.getInt("slots-max");
+			int startingSlotsBase = gearCfg.getInt("starting-slots-base");
+			int startingSlotsRange = gearCfg.getInt("starting-slots-range");
 
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 			if (overrideSec != null) {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames,
-							duraMinBase, reqEnchList, optEnchList, enchMin, enchMax, attributes, rarities, price);
+					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
+							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
+							slotsMax, startingSlotsBase, startingSlotsRange, price);
 
 					// Level override
 					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
@@ -304,8 +320,24 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		if (newPrefixes != null) {
 			changedPrefixes = currPrefixes.equals(newPrefixes) ? currPrefixes : newPrefixes;
 		}
-
-		return new RarityBonuses(newAttr, addedDura, changedPrefixes);
+		String currMaterial = current.material.toString();
+		if (sec.getString("material") != null) {
+			currMaterial = sec.getString("material");
+		}
+		int changedSlotsMax = current.slotsMax;
+		if (sec.getInt("slots-max", -1) != -1) {
+			changedSlotsMax = sec.getInt("slots-max");
+		}
+		int changedStartingSlotsBase = current.startingSlotsBase;
+		if (sec.getInt("starting-slots-base", -1) != -1) {
+			changedSlotsMax = sec.getInt("starting-slots-base");
+		}
+		int changedStartingSlotsRange = current.startingSlotsRange;
+		if (sec.getInt("starting-slots-range", -1) != -1) {
+			changedSlotsMax = sec.getInt("starting-slots-range");
+		}
+		return new RarityBonuses(newAttr, addedDura, changedPrefixes, currMaterial,
+				changedSlotsMax, changedStartingSlotsBase, changedStartingSlotsRange);
 	}
 
 	private void overrideLevel(int level, GearConfig conf, ConfigurationSection sec) {
@@ -358,6 +390,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (enchMax != -1) {
 				conf.enchantmentMax = enchMax;
 			}
+		}
+		
+		// override augments
+		ConfigurationSection augSec = sec.getConfigurationSection("augments");
+		if (augSec != null) {
+			conf.requiredAugments = (ArrayList<String>) augSec.getStringList("required");
 		}
 
 		ConfigurationSection attrSec = sec.getConfigurationSection("attributes");
