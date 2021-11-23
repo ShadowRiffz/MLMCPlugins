@@ -287,7 +287,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		e.setCancelled(true);
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (!e.isRightClick()) {
 			return;
@@ -296,6 +296,9 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return;
 		}
 		Player p = (Player) e.getWhoClicked();
+		if (e.getClickedInventory() != p.getInventory()) {
+			return;
+		}
 		ItemStack item = e.getClickedInventory().getItem(e.getSlot());
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
