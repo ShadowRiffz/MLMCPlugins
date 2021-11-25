@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.tr7zw.nbtapi.NBTItem;
+
 public class BlacksmithItems {
 
 	// Durability
@@ -77,7 +79,10 @@ public class BlacksmithItems {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setInteger("level", level);
+		nbti.setDouble("potency", 40D);
 		
-		return item;
+		return nbti.getItem();
 	}
 }

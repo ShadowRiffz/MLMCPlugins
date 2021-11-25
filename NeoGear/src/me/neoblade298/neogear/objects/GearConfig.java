@@ -31,13 +31,13 @@ public class GearConfig {
 	public int enchantmentMin, enchantmentMax;
 	public int startingSlotsBase, startingSlotsRange;
 	public int slotsMax;
-	public Attributes attributes;
+	public HashMap<String, AttributeSet> attributes;
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
 	
 	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
-			int enchantmentMin, int enchantmentMax, Attributes attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
+			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
 			int startingSlotsBase, int startingSlotsRange, double price) {
 		
 		// Add color codes to all strings necessary
@@ -128,35 +128,6 @@ public class GearConfig {
 			}
 		}
 		
-		// Attributes
-		Attributes rarityAttrs = rarities.get(rarity).attributes;
-		int strength = attributes.strBase + (attributes.strPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.strRange + 1);
-		strength += rarityAttrs.strBase + (rarityAttrs.strPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.strRange + 1);
-		int dexterity = attributes.dexBase + (attributes.dexPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.dexRange + 1);
-		dexterity += rarityAttrs.dexBase + (rarityAttrs.dexPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.dexRange + 1);
-		int intelligence = attributes.intBase + (attributes.intPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.intRange + 1);
-		intelligence += rarityAttrs.intBase + (rarityAttrs.intPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.intRange + 1);
-		int spirit = attributes.sprBase + (attributes.sprPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.sprRange + 1);
-		spirit += rarityAttrs.sprBase + (rarityAttrs.sprPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.sprRange + 1);
-		int perception = attributes.prcBase + (attributes.prcPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.prcRange + 1);
-		perception += rarityAttrs.prcBase + (rarityAttrs.prcPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.prcRange + 1);
-		int endurance = attributes.endBase + (attributes.endPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.endRange + 1);
-		endurance += rarityAttrs.endBase + (rarityAttrs.endPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.endRange + 1);
-		int vitality = attributes.vitBase + (attributes.vitPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.vitRange + 1);
-		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.vitRange + 1);
-		int regeneration = attributes.rgnBase + (attributes.rgnPerLvl * (level / main.lvlInterval)) + main.gen.nextInt(attributes.rgnRange + 1);
-		regeneration += rarityAttrs.rgnBase + (rarityAttrs.rgnPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.rgnRange + 1);
-		vitality += rarityAttrs.vitBase + (rarityAttrs.vitPerLvl * (level / main.lvlInterval))
-				+ main.gen.nextInt(rarityAttrs.vitRange + 1);
-		
 		// Slots and augments
 		int maxSlots = slotsMax;
 		if (rarities.get(rarity).slotsMax != -1) {
@@ -175,6 +146,9 @@ public class GearConfig {
 			numSlots += main.gen.nextInt(slotsRange);
 		}
 		
+		if (level == 0) {
+			level = 1;
+		}
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
 		lore.add("§7Type: " + this.display);
@@ -182,14 +156,24 @@ public class GearConfig {
 		lore.add("§7Level: " + level);
 		lore.add("§8§m-----");
 		// Lore part 2
-		if (strength > 0) { lore.add("§9Strength +" + (strength - (strength % attributes.strRounded))); }
-		if (dexterity > 0) { lore.add("§9Dexterity +" + (dexterity - (dexterity % attributes.dexRounded))); }
-		if (intelligence > 0) { lore.add("§9Intelligence +" + (intelligence - (intelligence % attributes.intRounded))); }
-		if (spirit > 0) { lore.add("§9Spirit +" + (spirit - (spirit % attributes.strRounded))); }
-		if (perception > 0) { lore.add("§9Perception +" + (perception - (perception % attributes.prcRounded))); }
-		if (endurance > 0) { lore.add("§9Endurance +" + (endurance - (endurance % attributes.endRounded))); }
-		if (vitality > 0) { lore.add("§9Vitality +" + (vitality - (vitality % attributes.vitRounded))); }
-		if (regeneration > 0) { lore.add("§9Regen +" + (regeneration - (regeneration % attributes.rgnRounded))); }
+		for (String key : Gear.attributeOrder.keySet()) {
+			double amount = 0;
+			String line = null;
+			if (attributes.containsKey(key)) {
+				AttributeSet attr = attributes.get(key);
+				amount += attr.getBase() + (attr.getScale() * (level / main.lvlInterval)) + main.gen.nextInt(attr.getRange() + 1);
+				line = attr.format(amount);
+			}
+			if (rarities.get(rarity).attributes.containsKey(key)) {
+				AttributeSet attr = rarities.get(rarity).attributes.get(key);
+				amount += attr.getBase() + (attr.getScale() * (level / main.lvlInterval)) + main.gen.nextInt(attr.getRange() + 1);
+				line = attr.format(amount);
+			}
+			
+			if (amount > 0) {
+				lore.add(line);
+			}
+		}
 		// Lore part 3, only add separator if there was at least 1 attribute
 		HashMap<String, Integer> nbtIntegers = new HashMap<String, Integer>();
 		HashMap<String, String> nbtStrings = new HashMap<String, String>();
@@ -229,6 +213,10 @@ public class GearConfig {
 			nbti.setString(key, nbtStrings.get(key));
 		}
 		return nbti.getItem();
+	}
+	
+	public void updateAttributes(ItemStack item) {
+		
 	}
 	
 	private String translateHexCodes(String textToTranslate) {

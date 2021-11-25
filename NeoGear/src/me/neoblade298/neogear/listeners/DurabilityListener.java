@@ -5,13 +5,13 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,19 +20,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.util.FlagManager;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neogear.Gear;
 
 public class DurabilityListener implements Listener {
 	Gear main;
-	Random gen;
-	private final String DURABILITYSTRING = "§7Durability ";
-	private final String WEAPONCD = "WeaponDurability";
-	private final String ARMORCD = "ArmorDurability";
-	private final int CDTIME = 20;
+	private final static Random gen = new Random();
+	private final static String DURABILITYSTRING = "§7Durability ";
+	private final static String WEAPONCD = "WeaponDurability";
+	private final static String ARMORCD = "ArmorDurability";
+	private final static int CDTIME = 20;
 	
 	public DurabilityListener(Gear main) {
 		this.main = main;
-		gen = new Random();
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -78,13 +78,10 @@ public class DurabilityListener implements Listener {
 		}
 	}
 	
-	private boolean isQuestItem(ItemStack item) {
+	private static boolean isQuestItem(ItemStack item) {
 		if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			for (String line : item.getItemMeta().getLore()) {
-				if (line.contains("Tier")) {
-					return true;
-				}
-			}
+			NBTItem nbti = new NBTItem(item);
+			return nbti.hasKey("gear");
 		}
 		return false;
 	}
@@ -137,19 +134,8 @@ public class DurabilityListener implements Listener {
 	
 	private void reduceDurability(Player p, ItemStack item, int slot) {
 		if (!isQuestItem(item)) return;
-
-		// Check unbreaking
-		ItemMeta im = item.getItemMeta();
-		if (im.hasEnchant(Enchantment.DURABILITY)) {
-			Random rand = new Random();
-			double ench = item.getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
-			if (ench >= 6) ench = 6;
-			double chance = rand.nextDouble();
-			if (chance - (ench * 0.05) <= 0) {
-				return;
-			}
-		}
 		
+		ItemMeta im = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) im.getLore();
 		String line = lore.get(lore.size() - 1);
 		
@@ -182,9 +168,122 @@ public class DurabilityListener implements Listener {
 		item.setItemMeta(im);
 	}
 	
+	public static boolean repairItem(ItemStack item, double percentage) {
+		if (!isQuestItem(item)) return false;
+		
+		ItemMeta im = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) im.getLore();
+		String line = lore.get(lore.size() - 1);
+		
+		if (line.contains(DURABILITYSTRING)) {
+			String end = line.substring(line.indexOf(" ") + 1);
+			String[] numbers = end.split("/");
+			double d = Integer.parseInt(numbers[0].trim());
+			double dM = Integer.parseInt(numbers[1].trim());
+			
+			d += Math.round(dM * percentage);
+			d = Math.max(d, dM);
+			
+			line = DURABILITYSTRING + (int) d + " / " + (int) dM;
+			if ((!im.isUnbreakable()) && (item.getType().getMaxDurability() > 0)) {
+				double pct = 1.0D - d / dM;
+
+				double dN = pct * (item.getType().getMaxDurability() - 1);
+				((Damageable) im).setDamage((int) dN);
+			}
+		}
+		lore.set(lore.size() - 1, line);
+		im.setLore(lore);
+		item.setItemMeta(im);
+		return true;
+	}
+	
+	public static boolean fullRepairItem(ItemStack item) {
+		ItemMeta im = item.getItemMeta();
+		if (im.hasLore()) {
+			ArrayList<String> lore = (ArrayList<String>) im.getLore();
+			String line = lore.get(lore.size() - 1);
+			
+			if (line.contains(DURABILITYSTRING)) {
+				String end = line.substring(line.indexOf(" ") + 1);
+				String[] numbers = end.split("/");
+				double d = Integer.parseInt(numbers[0].trim());
+				double dM = Integer.parseInt(numbers[1].trim());
+				
+				line = DURABILITYSTRING + (int) dM + " / " + (int) dM;
+			}
+			lore.set(lore.size() - 1, line);
+			im.setLore(lore);
+		}
+		
+		if ((!im.isUnbreakable()) && (item.getType().getMaxDurability() > 0)) {
+			double dN = item.getType().getMaxDurability() - 1;
+			((Damageable) im).setDamage((int) dN);
+		}
+		item.setItemMeta(im);
+		
+		NBTItem nbti = new NBTItem(item);
+		if (nbti.hasKey("gear")) {
+			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(item);
+		}
+		
+		return true;
+	}
+	
 	private void breakItem(ItemStack item, Player p, int slot) {
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerItemBreakEvent(p, item));
 		item.setAmount(0);
 		p.getWorld().playSound(p.getLocation(), "entity.item.break", 1.0F, 1.0F);
+	}
+	
+
+	@EventHandler
+	public void onRepairItem(InventoryClickEvent e) {
+		if (!e.isLeftClick()) {
+			return;
+		}
+		if (e.getCursor() == null) {
+			return;
+		}
+		if (e.getCurrentItem() == null) {
+			return;
+		}
+		
+		Player p = (Player) e.getWhoClicked();
+		ItemStack repair = e.getCursor();
+		ItemStack item = e.getCurrentItem();
+
+		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		if (repair == null || repair.getType().isAir() || !repair.hasItemMeta() || !repair.getItemMeta().hasDisplayName()) {
+			return;
+		}
+
+		NBTItem nbtr = new NBTItem(repair);
+		NBTItem nbti = new NBTItem(item);
+		if (!nbti.hasKey("gear")) {
+			return;
+		}
+		if (!nbtr.hasKey("potency")) {
+			return;
+		}
+
+		int repairLevel = nbtr.getInteger("level");
+		double percentage = nbtr.getDouble("potency") / 100;
+		int itemLevel = nbti.getInteger("level");
+		
+		if (itemLevel > repairLevel) {
+			p.sendMessage("§4[§c§lMLMC§4] §cThis repair kit is incompatible with this item!");
+			return;
+		}
+		if (item.getAmount() != 1) {
+			p.sendMessage("§4[§c§lMLMC§4] §cCannot repair more than one item at a time!");
+			return;
+		}
+		
+		if (repairItem(item, percentage)) {
+			p.sendMessage("§4[§c§lMLMC§4] §7Successfully repaired item!");
+		}
 	}
 }

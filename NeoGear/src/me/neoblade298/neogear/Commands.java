@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
 
+import me.neoblade298.neogear.listeners.DurabilityListener;
 import net.md_5.bungee.api.ChatColor;
 
 
@@ -103,41 +104,21 @@ public class Commands implements CommandExecutor{
 					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully spawned " + rarity + " " + type + " for " + p.getName());
 				}
 			}
-			// Gear sell [player]
-			else if (args.length == 2 && args[0].equalsIgnoreCase("sell")) {
-				Player p = Bukkit.getPlayer(args[1]);
-				
-				// Make sure the command was not used recently
-				long now = System.currentTimeMillis();
-				if (now - rightClickCooldown < 1000) {
-					return true;
-				}
-				
-				// Confirm the sell
-				if (sellConfirm.containsKey(p)) {
-					long lastConfirm = sellConfirm.get(p);
-					if (now - lastConfirm < 10000 && p.getInventory().getItemInMainHand().equals(sellItem.get(p))) {
-						sellHand(p);
-					}
-					else {
-						initiateSell(p);
-					}
-				}
-				// Initiate the sell
-				else {
-					initiateSell(p);
-				}
-				rightClickCooldown = now;
-			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 				main.loadConfigs();
 				sender.sendMessage("§4§l[§cMLMC§4] §7Successfully reloaded");
+			}
+			else if (args.length == 2 && args[0].equalsIgnoreCase("repair")) {
+				if (DurabilityListener.fullRepairItem(Bukkit.getPlayer(args[1]).getInventory().getItemInMainHand())) {
+					sender.sendMessage("§4§l[§cMLMC§4] §7Successfully repaired item");
+				}
 			}
 			else {
 				sender.sendMessage("§4§l[§cMLMC§4] §c/gear get {rarity/set} {type/set/auto} {lvl/auto/range} §7- Spawns you gear");
 				sender.sendMessage("§4§l[§cMLMC§4] §c/gear give [player] {rarity/set} {type/set} {lvl/auto/range} §7- Spawns a player gear");
 				sender.sendMessage("§4§l[§cMLMC§4] §7{auto} gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
 				sender.sendMessage("§4§l[§cMLMC§4] §7Add :lvl to {auto} if you want to set a max level to the gear (auto:30)");
+				sender.sendMessage("§4§l[§cMLMC§4] §c/gear repair [player] §7- Repairs a player's mainhand");
 				sender.sendMessage("§4§l[§cMLMC§4] §c/gear reload §7- Reloads config");
 			}
 		}

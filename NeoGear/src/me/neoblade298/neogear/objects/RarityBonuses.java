@@ -1,11 +1,12 @@
 package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Material;
 
 public class RarityBonuses {
-	public Attributes attributes;
+	public HashMap<String, AttributeSet> attributes;
 	public int duraBonus;
 	public ArrayList<String> prefixes;
 	public Material material;
@@ -13,7 +14,7 @@ public class RarityBonuses {
 	public int startingSlotsBase;
 	public int startingSlotsRange;
 	
-	public RarityBonuses(Attributes attributes, int duraBonus, ArrayList<String> prefixes, String material,
+	public RarityBonuses(HashMap<String, AttributeSet> attributes, int duraBonus, ArrayList<String> prefixes, String material,
 			int slotsMax, int startingSlotsBase, int startingSlotsRange) {
 		this.attributes = attributes;
 		this.duraBonus = duraBonus;
@@ -30,7 +31,7 @@ public class RarityBonuses {
 	}
 	
 	public RarityBonuses() {
-		this.attributes = new Attributes();
+		this.attributes = new HashMap<String, AttributeSet>();
 		this.duraBonus = 0;
 		this.prefixes = null;
 		this.material = null;
