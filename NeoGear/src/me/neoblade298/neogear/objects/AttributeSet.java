@@ -61,6 +61,6 @@ public class AttributeSet {
 	}
 	
 	public String format(double amount) {
-		return this.format.replaceAll("$amt$", df.format(amount));
+		return "§9" + this.format.replaceAll("\\$amt\\$", df.format(amount));
 	}
 }

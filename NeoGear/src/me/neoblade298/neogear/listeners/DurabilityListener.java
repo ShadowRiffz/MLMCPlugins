@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -168,8 +169,8 @@ public class DurabilityListener implements Listener {
 		item.setItemMeta(im);
 	}
 	
-	public static boolean repairItem(ItemStack item, double percentage) {
-		if (!isQuestItem(item)) return false;
+	public static String repairItem(ItemStack item, double percentage) {
+		if (!isQuestItem(item)) return "Item is not a quest item!";
 		
 		ItemMeta im = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) im.getLore();
@@ -181,8 +182,12 @@ public class DurabilityListener implements Listener {
 			double d = Integer.parseInt(numbers[0].trim());
 			double dM = Integer.parseInt(numbers[1].trim());
 			
+			if (d == dM) {
+				return "Item is already fully repaired!";
+			}
+			
 			d += Math.round(dM * percentage);
-			d = Math.max(d, dM);
+			d = Math.min(d, dM);
 			
 			line = DURABILITYSTRING + (int) d + " / " + (int) dM;
 			if ((!im.isUnbreakable()) && (item.getType().getMaxDurability() > 0)) {
@@ -195,7 +200,7 @@ public class DurabilityListener implements Listener {
 		lore.set(lore.size() - 1, line);
 		im.setLore(lore);
 		item.setItemMeta(im);
-		return true;
+		return null;
 	}
 	
 	public static boolean fullRepairItem(ItemStack item) {
@@ -273,7 +278,7 @@ public class DurabilityListener implements Listener {
 		int itemLevel = nbti.getInteger("level");
 		
 		if (itemLevel > repairLevel) {
-			p.sendMessage("§4[§c§lMLMC§4] §cThis repair kit is incompatible with this item!");
+			p.sendMessage("§4[§c§lMLMC§4] §cThis repair kit's level is too low!");
 			return;
 		}
 		if (item.getAmount() != 1) {
@@ -281,8 +286,18 @@ public class DurabilityListener implements Listener {
 			return;
 		}
 		
-		if (repairItem(item, percentage)) {
+		ItemStack clone = repair.clone();
+		clone.setAmount(1);
+		String result = repairItem(item, percentage);
+		if (result == null) {
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+			p.getInventory().removeItem(clone);
+			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.sendMessage("§4[§c§lMLMC§4] §7Successfully repaired item!");
+		}
+		else {
+			p.sendMessage("§4[§c§lMLMC§4] §c" + result);
 		}
 	}
 }
