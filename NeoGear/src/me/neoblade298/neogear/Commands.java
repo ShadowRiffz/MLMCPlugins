@@ -1,21 +1,15 @@
 package me.neoblade298.neogear;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neogear.listeners.DurabilityListener;
-import net.md_5.bungee.api.ChatColor;
 
 
 public class Commands implements CommandExecutor{
@@ -23,15 +17,9 @@ public class Commands implements CommandExecutor{
 	Gear main;
 	ArrayList<String> validAttrs;
 	private static final String DEFAULT_SET = "random";
-	private HashMap<Player, Long> sellConfirm;
-	private HashMap<Player, ItemStack> sellItem;
-	private long rightClickCooldown;
 	
 	public Commands(Gear main) {
 		this.main = main;
-		sellConfirm = new HashMap<Player, Long>();
-		sellItem = new HashMap<Player, ItemStack>();
-		rightClickCooldown = System.currentTimeMillis();
 	}
 	
 	@Override
@@ -57,7 +45,7 @@ public class Commands implements CommandExecutor{
 					sender.sendMessage("§4§l[§cMLMC§4] §cIncorrect format: level");
 					return true;
 				}
-				int failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+				int failures = p.getInventory().addItem(Gear.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
 				if (failures > 0) {
 					sender.sendMessage("§4§l[§cMLMC§4] §cFailed to get " + rarity + " " + type + " to " + p.getName() + ", inventory full");
 				}
@@ -92,7 +80,7 @@ public class Commands implements CommandExecutor{
 				
 				int failures = 1;
 				try {
-					failures = p.getInventory().addItem(main.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+					failures = p.getInventory().addItem(Gear.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
 				}
 				catch (Exception e) {
 					System.out.println("[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
@@ -151,7 +139,7 @@ public class Commands implements CommandExecutor{
 			// First get the max possible weight
 			return main.itemSets.get(param).pickItem();
 		}
-		else if (main.settings.containsKey(param)) {
+		else if (Gear.settings.containsKey(param)) {
 			return param;
 		}
 		else if (param.equalsIgnoreCase("auto")) {
@@ -210,93 +198,5 @@ public class Commands implements CommandExecutor{
 			}
 		}
 		return level;
-	}
-	
-	private void sellHand(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
-		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			int level = -1;
-			String type = null;
-			String rarity = null;
-			for (String line : item.getItemMeta().getLore()) {
-				if (line.contains("Level")) {
-					level = Integer.parseInt(line.split(" ")[2]);
-				}
-				else if (line.contains("Tier")) {
-					String[] lineSplit = line.split(" ");
-					rarity = ChatColor.stripColor(lineSplit[1]).toLowerCase();
-					if (lineSplit.length == 3) {
-						type = lineSplit[2];
-					}
-					else if (lineSplit.length == 4) {
-						type = lineSplit[2] + " " + lineSplit[3];
-					}
-					type = ChatColor.stripColor(type).toLowerCase();
-					if (main.typeConverter.containsKey(type)) {
-						type = main.typeConverter.get(type);
-					}
-				}
-			}
-			if (level != -1 && type != null) {
-				double price = main.settings.get(type).get(level).price * main.rarities.get(rarity).priceModifier;
-				main.getEcon().depositPlayer(p, price);
-				p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-				p.sendMessage("§4[§c§lMLMC§4] §7You sold " + item.getItemMeta().getDisplayName() + " §7for §e" +
-						price + "g§7!");
-				sellConfirm.remove(p);
-				sellItem.remove(p);
-			}
-			else {
-				p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
-				return;
-			}
-		}
-		else {
-			p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
-			return;
-		}
-	}
-	
-	private void initiateSell(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
-		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-			int level = -1;
-			String type = null;
-			String rarity = null;
-			for (String line : item.getItemMeta().getLore()) {
-				if (line.contains("Level")) {
-					level = Integer.parseInt(line.split(" ")[2]);
-				}
-				else if (line.contains("Tier")) {
-					String[] lineSplit = line.split(" ");
-					rarity = ChatColor.stripColor(lineSplit[1]).toLowerCase();
-					if (lineSplit.length == 3) {
-						type = lineSplit[2];
-					}
-					else if (lineSplit.length == 4) {
-						type = lineSplit[2] + " " + lineSplit[3];
-					}
-					type = ChatColor.stripColor(type).toLowerCase();
-					if (main.typeConverter.containsKey(type)) {
-						type = main.typeConverter.get(type);
-					}
-				}
-			}
-			if (level != -1 && type != null) {
-				double price = main.settings.get(type).get(level).price * main.rarities.get(rarity).priceModifier;
-				p.sendMessage("§c[§4§lMLMC§c] §7Are you sure you want to sell " + item.getItemMeta().getDisplayName() + " §7for §e" +
-						price + "g§7?");
-				sellConfirm.put(p, System.currentTimeMillis());
-				sellItem.put(p, item);
-			}
-			else {
-				p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
-				return;
-			}
-		}
-		else {
-			p.sendMessage("§4§l[§cMLMC§4] §cThis item cannot be sold!");
-			return;
-		}
 	}
 }

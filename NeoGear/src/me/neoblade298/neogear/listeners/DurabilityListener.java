@@ -207,7 +207,6 @@ public class DurabilityListener implements Listener {
 			if (line.contains(DURABILITYSTRING)) {
 				String end = line.substring(line.indexOf(" ") + 1);
 				String[] numbers = end.split("/");
-				double d = Integer.parseInt(numbers[0].trim());
 				double dM = Integer.parseInt(numbers[1].trim());
 				
 				line = DURABILITYSTRING + (int) dM + " / " + (int) dM;

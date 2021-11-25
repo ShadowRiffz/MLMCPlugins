@@ -35,8 +35,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neogear.listeners.DurabilityListener;
-import me.neoblade298.neogear.objects.Attribute;
-import me.neoblade298.neogear.objects.Attributes;
+import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
 import me.neoblade298.neogear.objects.ItemSet;
@@ -182,7 +181,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			int enchMin = enchSec.getInt("optional-min");
 			int enchMax = enchSec.getInt("optional-max");
 
-			HashMap<String, Attribute> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
+			HashMap<String, AttributeSet> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
 			
 			// Augments
 			ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
@@ -245,26 +244,34 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		return enchantments;
 	}
 
-	private HashMap<String, Attribute> parseAttributes(ConfigurationSection sec) {
-		ArrayList<Attribute> attrs = new ArrayList<Attribute>(attributeOrder.size());
+	private HashMap<String, AttributeSet> parseAttributes(ConfigurationSection sec) {
+		HashMap<String, AttributeSet> attrs = new HashMap<String, AttributeSet>(attributeOrder.size());
 		for (String key : Gear.attributeOrder.keySet()) {
-			int base = sec.getInt(key + "-base");
-			int scale = sec.getInt(key + "-per-lvl");
-			int range = sec.getInt(key + "-range");
-			int rounded = sec.getInt(key + "-rounded");
-			attrs.add(new Attribute(key, Gear.attributeOrder.get(key), base, scale, range, rounded));
+			int base = sec.getInt(key + "-base", 0);
+			int scale = sec.getInt(key + "-per-lvl", 0);
+			int range = sec.getInt(key + "-range", 0);
+			int rounded = sec.getInt(key + "-rounded", 0);
+			attrs.put(key, new AttributeSet(key, Gear.attributeOrder.get(key), base, scale, range, rounded));
 		}
 
 		return attrs;
 	}
 
-	private HashMap<String, Attribute> overrideAttributes(ArrayList<Attribute> current, ConfigurationSection sec) {
-		return current;
+	private HashMap<String, AttributeSet> overrideAttributes(HashMap<String, AttributeSet> current, ConfigurationSection sec) {
+		HashMap<String, AttributeSet> attrs = new HashMap<String, AttributeSet>(attributeOrder.size());
+		for (String key : Gear.attributeOrder.keySet()) {
+			int base = sec.getInt(key + "-base", current.get(key).getBase());
+			int scale = sec.getInt(key + "-per-lvl", current.get(key).getScale());
+			int range = sec.getInt(key + "-range", current.get(key).getRange());
+			int rounded = sec.getInt(key + "-rounded", current.get(key).getRounded());
+			attrs.put(key, new AttributeSet(key, Gear.attributeOrder.get(key), base, scale, range, rounded));
+		}
+		return attrs;
 	}
 
 	private RarityBonuses overrideRarities(RarityBonuses current, ConfigurationSection sec) {
-		Attributes currAttr = current.attributes;
-		Attributes newAttr = overrideAttributes(currAttr, sec);
+		HashMap<String, AttributeSet> currAttr = current.attributes;
+		HashMap<String, AttributeSet> newAttr = overrideAttributes(currAttr, sec);
 		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1)
 				: current.duraBonus;
 		ArrayList<String> currPrefixes = current.prefixes;
