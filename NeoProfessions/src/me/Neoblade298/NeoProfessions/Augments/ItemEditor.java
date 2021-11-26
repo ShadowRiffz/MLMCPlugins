@@ -187,7 +187,7 @@ public class ItemEditor {
 					iter.add("§7Level: " + itemLevel);
 					hasLevel = true;
 				}
-				else if (line.contains("Bonus Attributes")) {
+				else if (line.contains("Bonus Attributes") || line.contains("Spirit")) {
 					iter.remove();
 					iter.add("§8§m-----");
 					hasBonus = true;
