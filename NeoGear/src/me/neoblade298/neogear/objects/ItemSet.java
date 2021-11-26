@@ -30,7 +30,7 @@ public class ItemSet {
 	}
 	
 	public String pickItem() {
-		int rand = main.gen.nextInt(maxWeight);
+		int rand = Gear.gen.nextInt(maxWeight);
 		for (int i = 0; i < orderedTypes.size(); i++) {
 			rand -= orderedWeights.get(i);
 			if (rand < 0) {

@@ -47,13 +47,13 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public static HashMap<String, HashMap<Integer, GearConfig>> settings;
 	public static LinkedHashMap<String, String> attributeOrder = new LinkedHashMap<String, String>();
 	private YamlConfiguration cfg;
-	public int lvlMax;
-	public int lvlInterval;
+	public static int lvlMax;
+	public static int lvlInterval;
 	public HashMap<String, Rarity> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
 	public HashMap<String, ItemSet> itemSets;
 	public HashMap<String, String> typeConverter;
-	public Random gen;
+	public static Random gen = new Random();
 	private static Economy econ = null;
 	
 	static {
@@ -73,7 +73,6 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Bukkit.getServer().getLogger().info("NeoGear Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("gear").setExecutor(new Commands(this));
-		gen = new Random();
 
 		if (!setupEconomy()) {
 			getServer().getPluginManager().disablePlugin(this);
@@ -122,8 +121,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		this.cfg = YamlConfiguration.loadConfiguration(cfg);
 
 		// Load config
-		this.lvlInterval = this.cfg.getInt("lvl-interval");
-		this.lvlMax = this.cfg.getInt("lvl-max");
+		Gear.lvlInterval = this.cfg.getInt("lvl-interval");
+		Gear.lvlMax = this.cfg.getInt("lvl-max");
 
 		// Rarities and color codes
 		this.rarities = new HashMap<String, Rarity>();
@@ -216,7 +215,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 			if (overrideSec != null) {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
-				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
+				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
 					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
 							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
 							slotsMax, startingSlotsBase, startingSlotsRange, price);

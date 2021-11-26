@@ -2,6 +2,8 @@ package me.neoblade298.neogear.objects;
 
 import java.text.DecimalFormat;
 
+import me.neoblade298.neogear.Gear;
+
 public class AttributeSet {
 	private static DecimalFormat df = new DecimalFormat("##.#");
 	private String attr;
@@ -62,5 +64,13 @@ public class AttributeSet {
 	
 	public String format(double amount) {
 		return "§9" + this.format.replaceAll("\\$amt\\$", df.format(amount));
+	}
+	
+	public int generateAmount(int level) {
+		return this.getBase() + (this.getScale() * (level / Gear.lvlInterval)) + Gear.gen.nextInt(this.getRange() + 1);
+	}
+	
+	public int getMinAmount(int level) {
+		return this.getBase() + (this.getScale() * (level / Gear.lvlInterval));
 	}
 }

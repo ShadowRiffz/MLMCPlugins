@@ -169,7 +169,7 @@ public class DurabilityListener implements Listener {
 		item.setItemMeta(im);
 	}
 	
-	public static String repairItem(ItemStack item, double percentage) {
+	public static String repairItem(Player p, ItemStack item, double percentage) {
 		if (!isQuestItem(item)) return "Item is not a quest item!";
 		
 		ItemMeta im = item.getItemMeta();
@@ -203,11 +203,11 @@ public class DurabilityListener implements Listener {
 		
 		// Update item
 		NBTItem nbti = new NBTItem(item);
-		Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(item);
+		Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(p, item);
 		return null;
 	}
 	
-	public static boolean fullRepairItem(ItemStack item) {
+	public static boolean fullRepairItem(Player p, ItemStack item) {
 		ItemMeta im = item.getItemMeta();
 		if (im.hasLore()) {
 			ArrayList<String> lore = (ArrayList<String>) im.getLore();
@@ -234,7 +234,7 @@ public class DurabilityListener implements Listener {
 		
 		// Update item
 		if (nbti.hasKey("gear")) {
-			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(item);
+			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(p, item);
 		}
 		
 		return true;
@@ -294,7 +294,7 @@ public class DurabilityListener implements Listener {
 		
 		ItemStack clone = repair.clone();
 		clone.setAmount(1);
-		String result = repairItem(item, percentage);
+		String result = repairItem(p, item, percentage);
 		if (result == null) {
 			e.setCancelled(true);
 			p.getOpenInventory().close();

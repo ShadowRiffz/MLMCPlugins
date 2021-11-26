@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -94,14 +95,14 @@ public class GearConfig {
 		String prefix;
 		ArrayList<String> rarityPrefixes = rarities.get(rarity).prefixes;
 		if (rarityPrefixes.size() != 0) {
-			prefix = rarityPrefixes.get(main.gen.nextInt(rarityPrefixes.size()));
+			prefix = rarityPrefixes.get(Gear.gen.nextInt(rarityPrefixes.size()));
 		}
 		else {
-			prefix = prefixes.get(main.gen.nextInt(prefixes.size()));
+			prefix = prefixes.get(Gear.gen.nextInt(prefixes.size()));
 		}
 		
 		// Rest of display
-		String display = displayNames.get(main.gen.nextInt(displayNames.size()));
+		String display = displayNames.get(Gear.gen.nextInt(displayNames.size()));
 		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
 		
 		
@@ -110,20 +111,20 @@ public class GearConfig {
 			meta.addEnchant(Enchantment.LUCK, 1, true);
 		}
 		for (Enchant enchant : requiredEnchants) {
-			int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
+			int lv = enchant.min + Gear.gen.nextInt(enchant.max - enchant.min + 1);
 			meta.addEnchant(enchant.enchantment, lv, true);
 		}
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
 		// Add optional enchantments
 		if (enchantmentMax > 0) {
-			int optEnchantNum = enchantmentMin + main.gen.nextInt(enchantmentMax - enchantmentMin);
+			int optEnchantNum = enchantmentMin + Gear.gen.nextInt(enchantmentMax - enchantmentMin);
 			ArrayList<Enchant> optEnchants = new ArrayList<Enchant>();
 			optEnchants.addAll(optionalEnchants);
 			if (optEnchants.size() > 0) {
 				for (int i = 0; i < optEnchantNum; i++) {
-					Enchant enchant = optEnchants.get(main.gen.nextInt(optEnchants.size()));
-					int lv = enchant.min + main.gen.nextInt(enchant.max - enchant.min + 1);
+					Enchant enchant = optEnchants.get(Gear.gen.nextInt(optEnchants.size()));
+					int lv = enchant.min + Gear.gen.nextInt(enchant.max - enchant.min + 1);
 					meta.addEnchant(enchant.enchantment, lv, true);
 					optEnchants.remove(enchant);
 				}
@@ -145,7 +146,7 @@ public class GearConfig {
 			slotsRange = rarities.get(rarity).startingSlotsRange;
 		}
 		if (slotsRange > 0) {
-			numSlots += main.gen.nextInt(slotsRange);
+			numSlots += Gear.gen.nextInt(slotsRange);
 		}
 		
 		if (level == 0) {
@@ -163,12 +164,12 @@ public class GearConfig {
 			String line = null;
 			if (attributes.containsKey(key)) {
 				AttributeSet attr = attributes.get(key);
-				amount += attr.getBase() + (attr.getScale() * (level / main.lvlInterval)) + main.gen.nextInt(attr.getRange() + 1);
+				amount += attr.generateAmount(level);
 				line = attr.format(amount);
 			}
 			if (rarities.get(rarity).attributes.containsKey(key)) {
 				AttributeSet attr = rarities.get(rarity).attributes.get(key);
-				amount += attr.getBase() + (attr.getScale() * (level / main.lvlInterval)) + main.gen.nextInt(attr.getRange() + 1);
+				amount += attr.generateAmount(level);
 				line = attr.format(amount);
 			}
 			
@@ -217,7 +218,7 @@ public class GearConfig {
 		return nbti.getItem();
 	}
 	
-	public void updateAttributes(ItemStack item) {
+	public void updateAttributes(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("version")) {
 			return;
@@ -235,6 +236,7 @@ public class GearConfig {
 		}
 		
 		String line = loreIter.next();
+		boolean hasChanged = false;
 		for (String key : Gear.attributeOrder.keySet()) {
 			String format = Gear.attributeOrder.get(key);
 			int formatIndex = format.indexOf('+');
@@ -242,6 +244,7 @@ public class GearConfig {
 				formatIndex = format.indexOf('-');
 			}
 			String attr = format.substring(0, formatIndex - 1);
+			
 			if (line.contains(attr)) {
 				int index = line.indexOf('+');
 				if (index == -1) {
@@ -253,19 +256,40 @@ public class GearConfig {
                 AttributeSet aset = attributes.get(key);
                 AttributeSet rset = rarities.get(rarity).attributes.get(key);
                 
-                int min = aset.getBase() + (aset.getScale() * (level / main.lvlInterval));
-                min += rset.getBase() + (rset.getScale() * (level / main.lvlInterval));
+                int min = aset.getMinAmount(level) + rset.getMinAmount(level);
                 int max = min + aset.getRange() + rset.getRange();
                 
+                // Attribute has updated value
                 if (amt < min || amt > max) {
+                	hasChanged = true;
                 	loreIter.remove();
-                	loreIter.add(aset.format(min + main.gen.nextInt(max - min + 1)));
+                	// If max = 0, attribute was deleted entirely
+                	if (max > 0) {
+                    	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+                	}
                 }
             	line = loreIter.next();
+			}
+			else {
+                AttributeSet aset = attributes.get(key);
+                AttributeSet rset = rarities.get(rarity).attributes.get(key);
+
+                int min = aset.getMinAmount(level) + rset.getMinAmount(level);
+                int max = min + aset.getRange() + rset.getRange();
+                // New attribute was added to gear
+                if (max > 0) {
+                	hasChanged = true;
+                	loreIter.previous();
+                	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+                	loreIter.next();
+                }
 			}
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		if (hasChanged) {
+			p.sendMessage("§4[§c§lMLMC§4] §7Your item's stats have been changed due to server balancing.");
+		}
 	}
 	
 	private String translateHexCodes(String textToTranslate) {
