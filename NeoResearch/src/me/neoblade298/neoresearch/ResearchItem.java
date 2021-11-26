@@ -5,13 +5,13 @@ import java.util.HashMap;
 public class ResearchItem {
 	private String name;
 	private HashMap<String, Integer> goals;
-	private Attributes attrs;
+	private int attrs;
 	private int exp;
 	private String id;
 	
 	public ResearchItem(String name) {
 		this.goals = new HashMap<String, Integer>();
-		this.attrs = new Attributes();
+		this.attrs = 0;
 		this.exp = 0;
 		this.name = name;
 	}
@@ -24,11 +24,11 @@ public class ResearchItem {
 		this.goals = goals;
 	}
 
-	public Attributes getAttrs() {
+	public int getAttrs() {
 		return attrs;
 	}
 
-	public void setAttrs(Attributes attrs) {
+	public void setAttrs(int attrs) {
 		this.attrs = attrs;
 	}
 
