@@ -67,7 +67,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
-		if (!isInstance) getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(this, this);
 		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "prc", "vit", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 		enabledWorlds = new ArrayList<String>();

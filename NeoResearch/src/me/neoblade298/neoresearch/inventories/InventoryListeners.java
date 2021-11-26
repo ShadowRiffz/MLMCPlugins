@@ -7,7 +7,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
-import me.Neoblade298.NeoProfessions.Professions;
 import me.neoblade298.neoresearch.Research;
 
 public class InventoryListeners implements Listener {
