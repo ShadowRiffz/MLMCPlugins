@@ -200,6 +200,10 @@ public class DurabilityListener implements Listener {
 		lore.set(lore.size() - 1, line);
 		im.setLore(lore);
 		item.setItemMeta(im);
+		
+		// Update item
+		NBTItem nbti = new NBTItem(item);
+		Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(item);
 		return null;
 	}
 	
@@ -227,6 +231,8 @@ public class DurabilityListener implements Listener {
 		item.setItemMeta(im);
 		
 		NBTItem nbti = new NBTItem(item);
+		
+		// Update item
 		if (nbti.hasKey("gear")) {
 			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(item);
 		}

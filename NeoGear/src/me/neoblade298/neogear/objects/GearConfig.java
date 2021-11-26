@@ -2,6 +2,8 @@ package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -216,7 +218,54 @@ public class GearConfig {
 	}
 	
 	public void updateAttributes(ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		if (!nbti.hasKey("version")) {
+			return;
+		}
+		String rarity = nbti.getString("rarity");
+		int level = nbti.getInteger("level");
 		
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = meta.getLore();
+		ListIterator<String> loreIter = lore.listIterator();
+		while (loreIter.hasNext()) {
+			if (loreIter.next().contains("---")) {
+				break;
+			}
+		}
+		
+		String line = loreIter.next();
+		for (String key : Gear.attributeOrder.keySet()) {
+			String format = Gear.attributeOrder.get(key);
+			int formatIndex = format.indexOf('+');
+			if (formatIndex == -1) {
+				formatIndex = format.indexOf('-');
+			}
+			String attr = format.substring(0, formatIndex - 1);
+			if (line.contains(attr)) {
+				int index = line.indexOf('+');
+				if (index == -1) {
+					index = line.indexOf('-');
+				}
+				String num = line.substring(index);
+                int amt = Integer.parseInt(num.replaceAll("[^0-9-]", ""));
+                
+                AttributeSet aset = attributes.get(key);
+                AttributeSet rset = rarities.get(rarity).attributes.get(key);
+                
+                int min = aset.getBase() + (aset.getScale() * (level / main.lvlInterval));
+                min += rset.getBase() + (rset.getScale() * (level / main.lvlInterval));
+                int max = min + aset.getRange() + rset.getRange();
+                
+                if (amt < min || amt > max) {
+                	loreIter.remove();
+                	loreIter.add(aset.format(min + main.gen.nextInt(max - min + 1)));
+                }
+            	line = loreIter.next();
+			}
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 	}
 	
 	private String translateHexCodes(String textToTranslate) {
