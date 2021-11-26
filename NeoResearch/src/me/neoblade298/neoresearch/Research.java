@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neoresearch.ResearchItem;
+import me.neoblade298.neoresearch.inventories.ResearchInventory;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
@@ -46,6 +47,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
 	public String url, user, pass;
+	public HashMap<Player, ResearchInventory> viewingInventory;
 	public HashMap<String, ResearchItem> researchItems;
 	public HashMap<String, ArrayList<ResearchItem>> mobMap;
 	public HashMap<String, String> displayNameMap;

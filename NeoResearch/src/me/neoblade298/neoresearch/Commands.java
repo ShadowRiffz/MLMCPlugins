@@ -412,6 +412,9 @@ public class Commands implements CommandExecutor{
 			p.sendMessage("§c[§4§lMLMC§4] §7Conversion complete!");
 			return true;
 		}
+		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
+			
+		}
 		return false;
 	}
 }
