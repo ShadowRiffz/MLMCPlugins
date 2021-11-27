@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import me.neoblade298.neoresearch.inventories.ResearchAttributesInventory;
 
 
 public class Commands implements CommandExecutor{
@@ -413,7 +414,9 @@ public class Commands implements CommandExecutor{
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
-			
+			Player p = (Player) sender;
+			new ResearchAttributesInventory(p, main.playerAttrs.get(p.getUniqueId()));
+			return true;
 		}
 		return false;
 	}

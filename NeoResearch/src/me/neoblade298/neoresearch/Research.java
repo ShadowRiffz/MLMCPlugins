@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neoresearch.ResearchItem;
+import me.neoblade298.neoresearch.inventories.InventoryListeners;
 import me.neoblade298.neoresearch.inventories.ResearchInventory;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -47,7 +48,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
 	public String url, user, pass;
-	public static HashMap<Player, ResearchInventory> viewingInventory;
+	public static HashMap<Player, ResearchInventory> viewingInventory = new HashMap<Player, ResearchInventory>();
 	public HashMap<String, ResearchItem> researchItems;
 	public HashMap<String, ArrayList<ResearchItem>> mobMap;
 	public HashMap<String, String> displayNameMap;
@@ -68,6 +69,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 		enabledWorlds = new ArrayList<String>();
@@ -85,8 +87,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public void loadConfig() {
-		saveAll();
-		
 		File file = new File(getDataFolder(), "config.yml");
 		playerStats = new HashMap<UUID, PlayerStats>();
 		playerAttrs = new HashMap<UUID, StoredAttributes>();
@@ -170,6 +170,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				researchItems.put(researchItem.getId(), researchItem);
 			} catch (Exception e) {
 				System.out.println("Failed to load research item: " + rItem);
+				e.printStackTrace();
 			}
 		}
 	
@@ -209,6 +210,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		BukkitRunnable load = new BukkitRunnable() {
 			public void run() {
 				int level = 5, exp = 0;
+				int expectedAttrs = 0;
 				HashMap<String, Integer> researchPoints = new HashMap<String, Integer>();
 				HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
 				HashMap<String, ResearchItem> completedResearchItems = new HashMap<String, ResearchItem>();
@@ -236,20 +238,32 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						rs = stmt.executeQuery("SELECT * FROM research_completed WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
 							ResearchItem rItem = researchItems.get(rs.getString(2));
+							expectedAttrs += rItem.getAttrs();
 							completedResearchItems.put(rItem.getId(), rItem);
 						}
 						
 						rs = stmt.executeQuery("SELECT * FROM research_attributes WHERE uuid = '" + uuid + "';");
 						StoredAttributes pAttrs = playerAttrs.get(uuid);
+						int actualAttrs = 0;
 						while (rs.next()) {
+							actualAttrs += rs.getInt(3);
 							pAttrs.addAttribute(rs.getString(2), rs.getInt(3));
+						}
+						System.out.println(expectedAttrs + " " + actualAttrs);
+						
+						if (expectedAttrs > actualAttrs) {
+							pAttrs.addAttribute("unused", expectedAttrs - actualAttrs);
+						}
+						else if (expectedAttrs < actualAttrs) {
+							pAttrs.removeStoredAttributes();
+							pAttrs.addAttribute("unused", expectedAttrs);
 						}
 	
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
 				} catch (Exception ex) {
-					System.out.println(ex);
+					ex.printStackTrace();
 				} finally {
 					playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 				}
@@ -259,7 +273,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	private void handleLeave(UUID uuid) {
-		playerAttrs.remove(uuid);
 		if (lastSave.containsKey(uuid)) {
 			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
 				// If saved less than 10 seconds ago, don't save again
@@ -279,7 +292,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						// Save account
 						save(uuid, con, stmt, true);
 					} catch (Exception ex) {
-						System.out.println(ex);
+						ex.printStackTrace();
 					}
 				}
 			}
@@ -298,7 +311,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			stmt.executeBatch();
 			con.close();
 		} catch (Exception ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 	}
 	
@@ -329,8 +342,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			
 				// Save attrs
 				for (Entry<String, Integer> attr : playerAttrs.get(uuid).getStoredAttrs().entrySet()) {
-					stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + attr.getKey() + "'," + attr.getValue() + ");");
+					stmt.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr.getKey() + "'," + attr.getValue() + ");");
 				}
+				playerAttrs.remove(uuid);
 				
 				// Set to false if you're saving several accounts at once
 				if (save) {
@@ -338,7 +352,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		} catch (Exception ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 	}
 
@@ -593,13 +607,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public void updateBonuses(Player p) {
-		// Make sure the player has no bonuses already equipped
-		removeBonuses(p);
-
-		// Activate the player's stored attrs
 		UUID uuid = p.getUniqueId();
-		
-		playerAttrs.get(uuid).applyAttributes(p);
+		if (playerAttrs.containsKey(uuid)) {
+			// Make sure the player has no bonuses already equipped
+			removeBonuses(p);
+
+			// Activate the player's stored attrs
+			playerAttrs.get(uuid).applyAttributes(p);
+		}
 	}
 	
 	public void resetBonuses(Player p) {

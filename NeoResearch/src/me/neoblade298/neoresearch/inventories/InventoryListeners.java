@@ -18,25 +18,25 @@ public class InventoryListeners implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
-		if (main.viewingInventory.containsKey(p)) {
-			main.viewingInventory.get(p).handleInventoryClick(e);
+		if (Research.viewingInventory.containsKey(p)) {
+			Research.viewingInventory.get(p).handleInventoryClick(e);
 		}
 	}
 
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
 		Player p = (Player) e.getWhoClicked();
-		if (main.viewingInventory.containsKey(p)) {
-			main.viewingInventory.get(p).handleInventoryDrag(e);
+		if (Research.viewingInventory.containsKey(p)) {
+			Research.viewingInventory.get(p).handleInventoryDrag(e);
 		}
 	}
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
-		if (main.viewingInventory.containsKey(p)) {
-			main.viewingInventory.get(p).handleInventoryClose(e);
+		if (Research.viewingInventory.containsKey(p)) {
+			Research.viewingInventory.get(p).handleInventoryClose(e);
 		}
-		main.viewingInventory.remove(p);
+		Research.viewingInventory.remove(p);
 	}
 }

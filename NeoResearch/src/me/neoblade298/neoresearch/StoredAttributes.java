@@ -34,6 +34,9 @@ public class StoredAttributes {
 			data.addBonusAttributes(attr, stored.get(attr));
 		}
 	}
+	public void removeStoredAttributes() {
+		stored.clear();
+	}
 
 	public void removeAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
@@ -64,7 +67,7 @@ public class StoredAttributes {
 	}
 	
 	public void addAttribute(String attr, int num) {
-		stored.put(attr, stored.get(attr) + num);
+		stored.put(attr, stored.getOrDefault(attr, 0) + num);
 	}
 	
 	public void investAttribute(String attr, int num) {

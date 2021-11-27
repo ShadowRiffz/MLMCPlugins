@@ -15,41 +15,46 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
 import me.neoblade298.neoresearch.Research;
 import me.neoblade298.neoresearch.StoredAttributes;
-import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 
 public class ResearchAttributesInventory implements ResearchInventory {
 	private final Inventory inv;
 	private StoredAttributes attr;
+	private Player p;
 
 	public ResearchAttributesInventory(Player p, StoredAttributes attr) {
-		
-		inv = Bukkit.createInventory(p, 9, "§cResearch Attributes");
+
+		int remaining = attr.getAttribute("unused");
+		inv = Bukkit.createInventory(p, 9, "§8Research Attrs (" + remaining + " points)");
 		this.attr = attr;
+		this.p = p;
 		
 		Research.viewingInventory.put(p, this);
 
 		ItemStack[] contents = inv.getContents();
 		contents[0] = createGuiItem(Material.RED_DYE, "§7[§4Strength§7 (§f" + attr.getAttribute("strength") + "§7)]",
 				"strength", 100003, "§7Increases §4Red§7 values in", "§c/skills §7by 1%.",
-				"", "§7§oLeft click increases, right click decreases,", "§7§oShift click for multiples of 10.");
+				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
+				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[1] = createGuiItem(Material.YELLOW_DYE, "§7[§eDexterity§7 (§f" + attr.getAttribute("dexterity") + "§7)]",
 				"dexterity", 100004, "§7Increases §eYellow§7 values in", "§c/skills §7by 1%.",
-				"", "§7§oLeft click increases, right click decreases,", "§7§oShift click for multiples of 10.");
+				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
+				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[2] = createGuiItem(Material.LIGHT_BLUE_DYE, "§7[§9Intelligence§7 (§f" + attr.getAttribute("intelligence") + "§7)]",
 				"intelligence", 100005, "§7Increases §9Blue§7 values in", "§c/skills §7by 1%.",
-				"", "§7§oLeft click increases, right click decreases,", "§7§oShift click for multiples of 10.");
+				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
+				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[3] = createGuiItem(Material.LIME_DYE, "§7[§aSpirit§7 (§f" + attr.getAttribute("spirit") + "§7)]",
 				"spirit", 100006, "§7Increases §aGreen§7 values in", "§c/skills §7by 1%.",
-				"", "§7§oLeft click increases, right click decreases,", "§7§oShift click for multiples of 10.");
+				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
+				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[4] = createGuiItem(Material.ORANGE_DYE, "§7[§6Endurance§7 (§f" + attr.getAttribute("endurance") + "§7)]",
 				"endurance", 100008, "§7Increases §6Orange§7 values in", "§c/skills §7by 1%.",
-				"", "§7§oLeft click increases, right click decreases,", "§7§oShift click for multiples of 10.");
+				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
+				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[8] = createGuiItem(Material.BOOK, "§7[Info]",
-				null, 0, "§7These attributes stack with §c/attr§7.");
+				null, 0, "§7You have §f" + attr.getAttribute("unused") + "§7points remaining.", "§7These attributes stack with §c/attr§7.");
 		inv.setContents(contents);
 
 		p.openInventory(inv);
@@ -76,6 +81,10 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		if (e.getInventory() != inv)
 			return;
 		
+		if (e.getCurrentItem().getType().isAir()) 
+			return;
+
+		e.setCancelled(true);
 		ItemStack item = e.getCurrentItem();
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("attribute")) 
@@ -84,23 +93,22 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		String attribute = nbti.getString("attribute");
 		if (e.getClick().equals(ClickType.LEFT)) {
 			attr.investAttribute(attribute, 1);
-			updateItem(item, attribute);
+			updateItems(item, attribute);
 		}
 		else if (e.getClick().equals(ClickType.RIGHT)) {
 			attr.unvestAttribute(attribute, 1);
-			updateItem(item, attribute);
+			updateItems(item, attribute);
 		}
 		else if (e.getClick().equals(ClickType.SHIFT_LEFT)) {
 			attr.investAttribute(attribute, 10);
-			updateItem(item, attribute);
+			updateItems(item, attribute);
 		}
 		else if (e.getClick().equals(ClickType.SHIFT_RIGHT)) {
 			attr.unvestAttribute(attribute, 10);
-			updateItem(item, attribute);
+			updateItems(item, attribute);
 		}
 
 		
-		e.setCancelled(true);
 	}
 
 	// Cancel dragging in this inventory
@@ -111,16 +119,35 @@ public class ResearchAttributesInventory implements ResearchInventory {
 	}
 	
 	public void handleInventoryClose(final InventoryCloseEvent e) {
-		
+		attr.applyAttributes(p);
 	}
 	
-	private void updateItem(ItemStack item, String attribute) {
+	private void updateItems(ItemStack item, String attribute) {
 		ItemMeta meta = item.getItemMeta();
 		String name = meta.getDisplayName();
-		name = name.substring(name.indexOf('(') + 1);
-		name += "§f" + attr.getAttribute(attribute) + "§7)";
-		System.out.println(name);
+		name = name.substring(0, name.indexOf('(') + 1);
+		name += "§f" + attr.getAttribute(attribute) + "§7)]";
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
+		
+		ItemStack[] contents = inv.getContents();
+		int remaining = attr.getAttribute("unused");
+		for (int i = 0; i <= 8; i++) {
+			if (i == 5) {
+				i = 7;
+				continue;
+			}
+			meta = contents[i].getItemMeta();
+			List<String> lore = meta.getLore();
+			if (i != 8) {
+				lore.set(5, "§7§oYou have §f" + remaining + " §7§opoints remaining.");
+			}
+			else {
+				lore.set(0, "§7§oYou have §f" + remaining + " §7§opoints remaining.");
+			}
+			meta.setLore(lore);
+			contents[i].setItemMeta(meta);
+		}
+		inv.setContents(contents);
 	}
 }
