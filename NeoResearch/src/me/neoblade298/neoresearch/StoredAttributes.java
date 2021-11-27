@@ -55,12 +55,30 @@ public class StoredAttributes {
 		return active;
 	}
 	
+	public int getAttribute(String attr) {
+		return stored.getOrDefault(attr, 0);
+	}
+	
 	public void setAttribute(String attr, int num) {
 		stored.put(attr, num);
 	}
 	
 	public void addAttribute(String attr, int num) {
 		stored.put(attr, stored.get(attr) + num);
+	}
+	
+	public void investAttribute(String attr, int num) {
+		if (stored.get("unused") >= num) {
+			stored.put("unused", stored.get("unused") - num);
+			stored.put(attr, stored.getOrDefault(attr, 0) + num);
+		}
+	}
+	
+	public void unvestAttribute(String attr, int num) {
+		if (stored.get(attr) >= num) {
+			stored.put("unused", stored.getOrDefault("unused", 0) + num);
+			stored.put(attr, stored.get(attr) - num);
+		}
 	}
 
 	public String toString() {

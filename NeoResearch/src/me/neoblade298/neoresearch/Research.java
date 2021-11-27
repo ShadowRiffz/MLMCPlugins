@@ -47,7 +47,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
 	public String url, user, pass;
-	public HashMap<Player, ResearchInventory> viewingInventory;
+	public static HashMap<Player, ResearchInventory> viewingInventory;
 	public HashMap<String, ResearchItem> researchItems;
 	public HashMap<String, ArrayList<ResearchItem>> mobMap;
 	public HashMap<String, String> displayNameMap;
@@ -55,7 +55,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<Integer, Integer> toNextLvl;
 	public HashMap<UUID, StoredAttributes> playerAttrs;
 	public HashMap<String, HashMap<String, Integer>> converter;
-	public ArrayList<String> attrs;
+	public static ArrayList<String> attrs;
 	ArrayList<String> enabledWorlds;
 	public HashSet<String> minibosses;
 	public Random rand;
@@ -68,7 +68,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "prc", "vit", "end"));
+		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 		enabledWorlds = new ArrayList<String>();
 		enabledWorlds.add("Dev");
