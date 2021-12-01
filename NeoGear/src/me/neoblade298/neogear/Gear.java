@@ -550,28 +550,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public boolean isArmor(ItemStack item) {
 		if (item == null) return false;
-		Material mat = item.getType();
+		String mat = item.getType().name();
 		return
-				mat.equals(Material.LEATHER_HELMET) ||
-				mat.equals(Material.GOLDEN_HELMET) ||
-				mat.equals(Material.IRON_HELMET) ||
-				mat.equals(Material.DIAMOND_HELMET) ||
-				mat.equals(Material.NETHERITE_HELMET) ||
-				mat.equals(Material.LEATHER_CHESTPLATE) ||
-				mat.equals(Material.GOLDEN_CHESTPLATE) ||
-				mat.equals(Material.IRON_CHESTPLATE) ||
-				mat.equals(Material.DIAMOND_CHESTPLATE) ||
-				mat.equals(Material.NETHERITE_CHESTPLATE) ||
-				mat.equals(Material.LEATHER_LEGGINGS) ||
-				mat.equals(Material.GOLDEN_LEGGINGS) ||
-				mat.equals(Material.IRON_LEGGINGS) ||
-				mat.equals(Material.DIAMOND_LEGGINGS) ||
-				mat.equals(Material.NETHERITE_LEGGINGS) ||
-				mat.equals(Material.LEATHER_BOOTS) ||
-				mat.equals(Material.GOLDEN_BOOTS) ||
-				mat.equals(Material.IRON_BOOTS) ||
-				mat.equals(Material.DIAMOND_BOOTS) ||
-				mat.equals(Material.NETHERITE_BOOTS);
+				mat.contains("HELMET") ||
+				mat.contains("CHESTPLATE") ||
+				mat.contains("LEGGINGS") ||
+				mat.contains("BOOTS");
 	}
 
 	@EventHandler
