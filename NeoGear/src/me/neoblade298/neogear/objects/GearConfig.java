@@ -94,7 +94,7 @@ public class GearConfig {
 		// Decide Prefix
 		String prefix;
 		ArrayList<String> rarityPrefixes = rarities.get(rarity).prefixes;
-		if (rarityPrefixes.size() != 0) {
+		if (rarityPrefixes != null && rarityPrefixes.size() != 0) {
 			prefix = rarityPrefixes.get(Gear.gen.nextInt(rarityPrefixes.size()));
 		}
 		else {
