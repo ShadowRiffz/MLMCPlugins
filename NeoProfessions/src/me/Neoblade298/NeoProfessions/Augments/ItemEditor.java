@@ -126,7 +126,7 @@ public class ItemEditor {
 		}
 		
 		for (Enchantment ench : item.getEnchantments().keySet()) {
-			if (! ench.equals(Enchantment.QUICK_CHARGE)) {
+			if (!ench.equals(Enchantment.QUICK_CHARGE)) {
 				item.removeEnchantment(ench);
 			}
 		}
