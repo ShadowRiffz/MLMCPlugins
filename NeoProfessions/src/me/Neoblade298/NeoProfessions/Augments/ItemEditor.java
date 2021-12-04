@@ -27,10 +27,10 @@ public class ItemEditor {
 		typeConverter.put("Reinforced Chestplate", "rchestplate");
 		typeConverter.put("Reinforced Leggings", "rleggings");
 		typeConverter.put("Reinforced Boots", "rboots");
-		typeConverter.put("Infused Helmet", "ihelmet");
-		typeConverter.put("Infused Chestplate", "ichestplate");
-		typeConverter.put("Infused Leggings", "ileggings");
-		typeConverter.put("Infused Boots", "iboots");
+		typeConverter.put("Infused Helmet", "ruhelmet");
+		typeConverter.put("Infused Chestplate", "ruchestplate");
+		typeConverter.put("Infused Leggings", "ruleggings");
+		typeConverter.put("Infused Boots", "ruboots");
 		
 		maxSlotConverter.put("common", 0);
 		maxSlotConverter.put("uncommon", 1);
@@ -160,6 +160,9 @@ public class ItemEditor {
 					}
 					if (displayname.contains(" ")) {
 						name = typeConverter.get(displayname);
+						if (name.startsWith("ru")) {
+							displayname.replaceFirst("Infused", "Ruinous");
+						}
 					}
 					else {
 						name = displayname.toLowerCase();
