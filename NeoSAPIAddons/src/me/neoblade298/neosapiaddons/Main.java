@@ -24,7 +24,6 @@ import com.sucy.skill.dynamic.trigger.Trigger;
 import me.neoblade298.neosapiaddons.conditions.AbsorptionCondition;
 import me.neoblade298.neosapiaddons.conditions.AttackChargeCondition;
 import me.neoblade298.neosapiaddons.conditions.BlockingCondition;
-import me.neoblade298.neosapiaddons.conditions.InfinityCondition;
 import me.neoblade298.neosapiaddons.conditions.ManaNameCondition;
 import me.neoblade298.neosapiaddons.mechanics.AddAbsorptionMechanic;
 import me.neoblade298.neosapiaddons.mechanics.IncreasePotionMechanic;
