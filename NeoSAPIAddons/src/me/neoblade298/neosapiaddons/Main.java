@@ -125,8 +125,7 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
             new AbsorptionCondition(),
             new AttackChargeCondition(),
             new ManaNameCondition(),
-            new BlockingCondition(),
-            new InfinityCondition()
+            new BlockingCondition()
         );
     }
     
