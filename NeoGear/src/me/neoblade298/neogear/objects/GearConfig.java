@@ -34,6 +34,7 @@ public class GearConfig {
 	public int enchantmentMin, enchantmentMax;
 	public int startingSlotsBase, startingSlotsRange;
 	public int slotsMax;
+	public int version;
 	public HashMap<String, AttributeSet> attributes;
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
@@ -41,7 +42,7 @@ public class GearConfig {
 	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
 			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
-			int startingSlotsBase, int startingSlotsRange, double price) {
+			int startingSlotsBase, int startingSlotsRange, double price, int version) {
 		
 		// Add color codes to all strings necessary
 		for (String prefix : prefixes) {
@@ -157,6 +158,7 @@ public class GearConfig {
 		lore.add("§7Type: " + this.display);
 		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
 		lore.add("§7Level: " + level);
+		lore.add("§7Max Slots: " + maxSlots);
 		lore.add("§8§m-----");
 		// Lore part 2
 		for (String key : Gear.attributeOrder.keySet()) {
@@ -204,7 +206,7 @@ public class GearConfig {
 		double price = level * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
 		nbti.setString("gear", name);
-		nbti.setInteger("version", 1);
+		nbti.setInteger("version", version);
 		nbti.setInteger("slotsMax", maxSlots);
 		nbti.setInteger("level", level);
 		nbti.setString("rarity", rarity.toLowerCase());

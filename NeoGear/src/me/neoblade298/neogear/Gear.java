@@ -211,6 +211,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			int slotsMax = gearCfg.getInt("slots-max");
 			int startingSlotsBase = gearCfg.getInt("starting-slots-base");
 			int startingSlotsRange = gearCfg.getInt("starting-slots-range");
+			int version = gearCfg.getInt("version");
 
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 			if (overrideSec != null) {
@@ -218,7 +219,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
 					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
 							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
-							slotsMax, startingSlotsBase, startingSlotsRange, price);
+							slotsMax, startingSlotsBase, startingSlotsRange, price, version);
 
 					// Level override
 					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
