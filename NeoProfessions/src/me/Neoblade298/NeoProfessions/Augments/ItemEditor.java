@@ -188,6 +188,7 @@ public class ItemEditor {
 					itemLevel = Integer.parseInt(line.split(" ")[2]);
 					iter.remove();
 					iter.add("§7Level: " + itemLevel);
+					iter.add("§7Max Slots: " + slotsMax);
 					hasLevel = true;
 				}
 				else if (line.contains("Bonus Attributes") || line.contains("Spirit")) {
