@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -57,7 +58,7 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 
@@ -69,7 +70,7 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 
@@ -105,7 +106,7 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 
@@ -116,12 +117,12 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-	public void onChangeSlot(PlayerItemHeldEvent e) {
+	public void onSwapHand(PlayerSwapHandItemsEvent e) {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 
@@ -129,11 +130,11 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent e) {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
@@ -142,7 +143,7 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculate();
+			playerAugments.get(p).inventoryChanged();
 		}
 	}
 	

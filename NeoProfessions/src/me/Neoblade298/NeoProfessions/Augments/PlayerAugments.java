@@ -13,16 +13,18 @@ import de.tr7zw.nbtapi.NBTItem;
 public class PlayerAugments {
 	private HashMap<EventType, ArrayList<Augment>> augments;
 	private Player p;
-	private boolean needsRecalculation;
+	private boolean invChanged;
+	private int prevSlot;
 	
 	public PlayerAugments(Player p) {
 		this.p = p;
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
-		recalculate();
+		this.invChanged = true;
+		this.prevSlot = -1;
 	}
 	
-	public void recalculate() {
-		needsRecalculation = true;
+	public void inventoryChanged() {
+		invChanged = true;
 	}
 	
 	public void checkAugments(ItemStack item) {
@@ -48,13 +50,18 @@ public class PlayerAugments {
 	}
 	
 	public List<Augment> getAugments(EventType etype) {
-		if (needsRecalculation) {
+		PlayerInventory inv = p.getInventory();
+		
+		// 2 cases for recalculation:
+		// 1: Mainhand has changed slots
+		// 2: Mainhand is same slot and inv has changed
+		if (inv.getHeldItemSlot() != prevSlot || invChanged) {
 			augments.clear();
-			PlayerInventory inv = p.getInventory();
 			checkAugments(inv.getChestplate());
 			checkAugments(inv.getLeggings());
 			checkAugments(inv.getItemInMainHand());
 			checkAugments(inv.getItemInOffHand());
+			prevSlot = inv.getHeldItemSlot();
 		}
 		return augments.getOrDefault(etype, null);
 	}
