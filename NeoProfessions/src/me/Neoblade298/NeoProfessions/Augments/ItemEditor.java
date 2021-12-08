@@ -55,7 +55,6 @@ public class ItemEditor {
 	}
 	
 	public String setAugment(Player p, Augment aug, int i) {
-		System.out.println("2 " + aug);
 		if (nbti.getInteger("version") == 0) {
 			return "item version is old!";
 		}
@@ -70,7 +69,6 @@ public class ItemEditor {
 			if (j == i) {
 				continue;
 			}
-			System.out.println(aug.getName() + " " + nbti.getString("slot" + j + "Augment") + " " + j);
 			if (nbti.getString("slot" + j + "Augment").equals(aug.getName())) {
 				return "same augment is already slotted!";
 			}

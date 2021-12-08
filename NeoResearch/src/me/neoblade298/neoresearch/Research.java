@@ -249,7 +249,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 							actualAttrs += rs.getInt(3);
 							pAttrs.addAttribute(rs.getString(2), rs.getInt(3));
 						}
-						System.out.println(expectedAttrs + " " + actualAttrs);
 						
 						if (expectedAttrs > actualAttrs) {
 							pAttrs.addAttribute("unused", expectedAttrs - actualAttrs);
