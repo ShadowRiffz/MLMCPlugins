@@ -1,7 +1,7 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.List;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
@@ -11,13 +11,13 @@ import org.bukkit.inventory.PlayerInventory;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class PlayerAugments {
-	private HashMap<EventType, List<Augment>> augments;
+	private HashMap<EventType, ArrayList<Augment>> augments;
 	private Player p;
 	private boolean needsRecalculation;
 	
 	public PlayerAugments(Player p) {
 		this.p = p;
-		this.augments = new HashMap<EventType, List<Augment>>();
+		this.augments = new HashMap<EventType, ArrayList<Augment>>();
 		recalculate();
 	}
 	
@@ -39,7 +39,8 @@ public class PlayerAugments {
 						augments.get(etype).add(aug);
 					}
 					else {
-						augments.put(etype, Arrays.asList(aug));
+						ArrayList<Augment> list = new ArrayList<Augment>();
+						augments.put(etype, list);
 					}
 				}
 			}
