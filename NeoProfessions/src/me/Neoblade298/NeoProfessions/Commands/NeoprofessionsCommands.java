@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.Damageable;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
@@ -104,7 +105,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {
-			new InspectAugmentsInventory(main, p, p.getInventory().getItemInMainHand());
+			ItemStack item = p.getInventory().getItemInMainHand();
+			if (item != null && !item.getType().isAir() && item.hasItemMeta()) {
+				if(new NBTItem(item).hasKey("version")) {
+					new InspectAugmentsInventory(main, p, item);
+					return true;
+				}
+			}
+			Util.sendMessage(p, "&cCould not inspect this item!");
 			return true;
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {

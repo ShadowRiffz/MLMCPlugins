@@ -41,7 +41,7 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 		for (int i = 9 - nbti.getInteger("slotsCreated"); i < 9; i++) {
 			Augment oldAug = editor.getAugment(j);
 			if (oldAug == null) {
-				contents[i] = createGuiItem(Material.ENDER_PEARL, "§7Empty slot");
+				contents[i] = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, "§7Empty slot");
 			}
 			else {
 				contents[i] = createGuiItem(Material.ENDER_PEARL, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore(), oldAug);
