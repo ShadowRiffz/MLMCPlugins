@@ -147,7 +147,7 @@ public class GearConfig {
 			slotsRange = rarities.get(rarity).startingSlotsRange;
 		}
 		if (slotsRange > 0) {
-			numSlots += Gear.gen.nextInt(slotsRange);
+			numSlots += Gear.gen.nextInt(slotsRange + 1);
 		}
 		
 		if (level == 0) {
