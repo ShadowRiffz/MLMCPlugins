@@ -319,7 +319,7 @@ public class BlacksmithMethods {
 									p.getInventory().removeItem(item);
 									econ.withdrawPlayer(p, REFORGE_GOLD.get(itemLevel));
 									p.getInventory().addItem(
-											neogear.settings.get(type).get(itemLevel).generateItem(rarity, itemLevel));
+											Gear.settings.get(type).get(itemLevel).generateItem(rarity, itemLevel));
 									Util.sendMessage(p, "&7Successfully reforged item!");
 								}
 								else {

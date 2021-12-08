@@ -13,6 +13,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.Gear;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
@@ -56,15 +57,15 @@ public class ProfessionsMethods {
 		String type = nbti.getString("gear");
 		
 		// Generate a random artifact of the same type
-		ItemStack artifact = main.neogear.settings.get(type).get(level).generateItem("artifact", level);
+		ItemStack artifact = Gear.settings.get(type).get(level).generateItem("artifact", level);
 		
 		// Before changing anything, check if the versions match, check if the item is legendary
 		if (new NBTItem(artifact).getInteger("version") != nbti.getInteger("version")) {
 			Util.sendMessage(p, "&cItem is outdated! Repair your item first to update it!");
 			return;
 		}
-		if (nbti.getString("rarity").equals("legendary")) {
-			Util.sendMessage(p, "&cItem is not a legendary! Only legendary items can be artifacted!");
+		if (!nbti.getString("rarity").equals("legendary")) {
+			Util.sendMessage(p, "&cItem is not legendary! Only legendary items can be artifacted!");
 			return;
 		}
 		
@@ -74,7 +75,7 @@ public class ProfessionsMethods {
 		}
 		
 		// Replace item tier
-		lore.set(0, "§7Rarity: §bArtifact " + type);
+		lore.set(2, "§7Rarity: §bArtifact " + type);
 		
 		// Change item type to netherite
 		String mat = item.getType().name();
@@ -105,7 +106,8 @@ public class ProfessionsMethods {
 		int start = -1, end = -1;
 		for (int i = 0; i < lore.size(); i++) {
 			String line = lore.get(i);
-			if (line.contains("-") && start == -1) {
+			
+			if (line.contains("-")) {
 				if (start == -1) {
 					start = i + 1;
 				}
