@@ -165,6 +165,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			String title = gearCfg.getString("title");
 			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
 			double price = gearCfg.getDouble("price");
+			int version = gearCfg.getInt("version");
 
 			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
 			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
@@ -211,7 +212,6 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			int slotsMax = gearCfg.getInt("slots-max");
 			int startingSlotsBase = gearCfg.getInt("starting-slots-base");
 			int startingSlotsRange = gearCfg.getInt("starting-slots-range");
-			int version = gearCfg.getInt("version");
 
 			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 			if (overrideSec != null) {

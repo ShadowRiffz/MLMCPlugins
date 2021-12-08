@@ -76,6 +76,7 @@ public class GearConfig {
 		this.slotsMax = slotsMax;
 		this.startingSlotsBase = startingSlotsBase;
 		this.startingSlotsRange = startingSlotsRange;
+		this.version = version;
 	}
 	
 	public ItemStack generateItem(String rarity, int level) {
