@@ -374,16 +374,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						main.professionsMethods.artifactItem((Player) sender);
 					}
 				}
-				// /prof artifactfix <playername>
-				else if (args[0].equalsIgnoreCase("artifactfix")) {
-					if (args.length == 2) {
-						main.professionsMethods.fixArtifact(Bukkit.getPlayer(args[1]));
-						return true;
-					}
-					else {
-						main.professionsMethods.fixArtifact((Player) sender);
-					}
-				}
 				else if (args[0].equalsIgnoreCase("sober")) {
 					if (args.length == 2) {
 						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);

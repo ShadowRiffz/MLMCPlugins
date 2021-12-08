@@ -1,16 +1,12 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import de.tr7zw.nbtapi.NBTItem;
 
 public class FinisherAugment extends ModDamageDealtAugment {
 	

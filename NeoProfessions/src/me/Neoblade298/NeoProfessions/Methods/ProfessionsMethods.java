@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -38,167 +39,105 @@ public class ProfessionsMethods {
 		PlayerInventory inv = p.getInventory();
 		ItemStack item = inv.getItemInMainHand();
 		
-		if (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(0).contains("Legendary")) {
-			if (econ.has(p, ARTIFACT_PRICE)) {
-				ItemMeta meta = item.getItemMeta();
-				ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-				
-				// Display name color change
-				meta.setDisplayName("§b" + ChatColor.stripColor(meta.getDisplayName()));
-				
-				// Get the item type and level
-				String tierLine = lore.get(0);
-				String levelLine = lore.get(1);
-				String type = tierLine.substring(tierLine.indexOf('y') + 2);
-				String parsedType = type.toLowerCase();
-				int level = Integer.parseInt(levelLine.split(" ")[2]);
-				
-				// Replace item tier
-				lore.set(0, "§7Tier: §bArtifact " + type);
-				
-				// Parse item type
-				switch (type) {
-				case "Reinforced Boots":
-					parsedType = "rboots";
-					item.setType(Material.NETHERITE_BOOTS);
-					break;
-				case "Reinforced Helmet":
-					parsedType = "rhelmet";
-					item.setType(Material.NETHERITE_HELMET);
-					break;
-				case "Reinforced Leggings":
-					parsedType = "rleggings";
-					item.setType(Material.NETHERITE_LEGGINGS);
-					break;
-				case "Reinforced Chestplate":
-					parsedType = "rchestplate";
-					item.setType(Material.NETHERITE_CHESTPLATE);
-					break;
-				case "Infused Boots":
-					parsedType = "iboots";
-					item.setType(Material.NETHERITE_BOOTS);
-					break;
-				case "Infused Helmet":
-					parsedType = "ihelmet";
-					item.setType(Material.NETHERITE_HELMET);
-					break;
-				case "Infused Leggings":
-					parsedType = "ileggings";
-					item.setType(Material.NETHERITE_LEGGINGS);
-					break;
-				case "Infused Chestplate":
-					parsedType = "ichestplate";
-					item.setType(Material.NETHERITE_CHESTPLATE);
-					break;
-				case "Sword":
-					item.setType(Material.NETHERITE_SWORD);
-					break;
-				case "Axe":
-					item.setType(Material.NETHERITE_AXE);
-					break;
-				case "Spellsword":
-					item.setType(Material.NETHERITE_SWORD);
-					break;
-				case "Wand":
-					item.setType(Material.NETHERITE_HOE);
-					break;
-				}
-				
-				// Generate a random artifact of the same type
-				ItemStack artifact = main.neogear.settings.get(parsedType).get(level).generateItem("artifact", level);
-				
-				// Find start and end of base attributes
-				int start = 0, end = 0;
-				for (int i = 0; i < lore.size(); i++) {
-					String line = lore.get(i);
-					if (line.contains("Base Attributes")) {
-						start = i + 1;
-					}
-					if (line.contains("Durability") || line.contains("Bonus Attributes")) {
-						end = i - 1;
-						break;
-					}
-				}
-				
-				// Replace attributes
-				ArrayList<String> artifactLore = (ArrayList<String>) artifact.getItemMeta().getLore();
-				for (int i = start; i <= end; i++) {
-					lore.set(i, artifactLore.get(i));
-				}
-				
-				meta.setLore(lore);
-				item.setItemMeta(meta);
-				
-				if (Util.isArmor(item)) {
-					util.setMaxDurability(item, util.getMaxDurability(item) + 100);
-				}
-				else {
-					util.setMaxDurability(item, util.getMaxDurability(item) + 200);
-				}
-				util.setCurrentDurability(item, util.getMaxDurability(item));
-				
-				Bukkit.broadcastMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has converted their item into an §bArtifact§7!");
-				econ.withdrawPlayer(p, ARTIFACT_PRICE);
-			}
-			else {
-				Util.sendMessage(p, "&cYou don't have enough money!");
-			}
+		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			Util.sendMessage(p, "&cItem is outdated! Repair your item first to update it!");
+			return;
 		}
-		else {
-			Util.sendMessage(p, "&cItem is not valid for artifact conversion!");
+		if (!econ.has(p, ARTIFACT_PRICE)) {
+			Util.sendMessage(p, "&cYou don't have enough money!!");
+			return;
 		}
-	}
-	
-	public void fixArtifact(Player p) {
-		PlayerInventory inv = p.getInventory();
-		ItemStack item = inv.getItemInMainHand();
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
 		// Get the item type and level
-		String tierLine = lore.get(0);
-		String type = tierLine.substring(tierLine.indexOf("ct") + 3);
+		NBTItem nbti = new NBTItem(item);
+		int level = nbti.getInteger("level");
+		String type = nbti.getString("gear");
 		
-		// Parse item type
-		switch (type) {
-		case "Reinforced Boots":
-			item.setType(Material.NETHERITE_BOOTS);
-			break;
-		case "Reinforced Helmet":
-			item.setType(Material.NETHERITE_HELMET);
-			break;
-		case "Reinforced Leggings":
-			item.setType(Material.NETHERITE_LEGGINGS);
-			break;
-		case "Reinforced Chestplate":
-			item.setType(Material.NETHERITE_CHESTPLATE);
-			break;
-		case "Infused Boots":
-			item.setType(Material.NETHERITE_BOOTS);
-			break;
-		case "Infused Helmet":
-			item.setType(Material.NETHERITE_HELMET);
-			break;
-		case "Infused Leggings":
-			item.setType(Material.NETHERITE_LEGGINGS);
-			break;
-		case "Infused Chestplate":
-			item.setType(Material.NETHERITE_CHESTPLATE);
-			break;
-		case "Sword":
-			item.setType(Material.NETHERITE_SWORD);
-			break;
-		case "Axe":
-			item.setType(Material.NETHERITE_AXE);
-			break;
-		case "Spellsword":
-			item.setType(Material.NETHERITE_SWORD);
-			break;
-		case "Wand":
-			item.setType(Material.NETHERITE_HOE);
-			break;
+		// Generate a random artifact of the same type
+		ItemStack artifact = main.neogear.settings.get(type).get(level).generateItem("artifact", level);
+		
+		// Before changing anything, check if the versions match, check if the item is legendary
+		if (new NBTItem(artifact).getInteger("version") != nbti.getInteger("version")) {
+			Util.sendMessage(p, "&cItem is outdated! Repair your item first to update it!");
+			return;
 		}
-		Util.sendMessage(p, "&7Artifact fixed.");
+		if (nbti.getString("rarity").equals("legendary")) {
+			Util.sendMessage(p, "&cItem is not a legendary! Only legendary items can be artifacted!");
+			return;
+		}
+		
+		// Display name color change only if it had the default legendary color
+		if (meta.getDisplayName().startsWith("§4")) {
+			meta.setDisplayName("§b" + ChatColor.stripColor(meta.getDisplayName()));
+		}
+		
+		// Replace item tier
+		lore.set(0, "§7Rarity: §bArtifact " + type);
+		
+		// Change item type to netherite
+		String mat = item.getType().name();
+		if (mat.endsWith("HELMET")) {
+			item.setType(Material.NETHERITE_HELMET);
+		}
+		else if (mat.endsWith("CHESTPLATE")) {
+			item.setType(Material.NETHERITE_HELMET);
+		}
+		else if (mat.endsWith("LEGGINGS")) {
+			item.setType(Material.NETHERITE_HELMET);
+		}
+		else if (mat.endsWith("BOOTS")) {
+			item.setType(Material.NETHERITE_HELMET);
+		}
+		else if (mat.endsWith("SWORD")) {
+			item.setType(Material.NETHERITE_SWORD);
+		}
+		else if (mat.endsWith("AXE")) {
+			item.setType(Material.NETHERITE_AXE);
+		}
+		else if (mat.endsWith("HOE")) {
+			item.setType(Material.NETHERITE_HOE);
+		}
+		
+		
+		// Find start and end of base attributes
+		int start = -1, end = -1;
+		for (int i = 0; i < lore.size(); i++) {
+			String line = lore.get(i);
+			if (line.contains("-") && start == -1) {
+				if (start == -1) {
+					start = i + 1;
+				}
+				else {
+					end = i + 1;
+				}
+			}
+		}
+		
+		// Replace attributes
+		ArrayList<String> artifactLore = (ArrayList<String>) artifact.getItemMeta().getLore();
+		for (int i = start; i <= end; i++) {
+			lore.set(i, artifactLore.get(i));
+		}
+		
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		
+		if (Util.isArmor(item)) {
+			util.setMaxDurability(item, util.getMaxDurability(item) + 100);
+		}
+		else {
+			util.setMaxDurability(item, util.getMaxDurability(item) + 200);
+		}
+		util.setCurrentDurability(item, util.getMaxDurability(item));
+		
+		// Change nbt rarity
+		nbti = new NBTItem(item);
+		nbti.setString("rarity", "artifact");
+		nbti.applyNBT(item);
+		
+		Bukkit.broadcastMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has converted their item into an §bArtifact§7!");
+		econ.withdrawPlayer(p, ARTIFACT_PRICE);
 	}
-
 }
