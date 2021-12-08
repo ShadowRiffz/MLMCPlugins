@@ -378,10 +378,9 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
-		ItemStack[] arrayOfItemStack;
-		int j = (arrayOfItemStack = e.getInventory().getContents()).length;
-		for (int i = 0; i < j; i++) {
-			ItemStack item = arrayOfItemStack[i];
+		ItemStack[] contents = e.getInventory().getContents();
+		for (int i = 0; i < contents.length; i++) {
+			ItemStack item = contents[i];
 			if (item != null) {
 				if (isQuestGear(item)) {
 					e.setResult(null);
