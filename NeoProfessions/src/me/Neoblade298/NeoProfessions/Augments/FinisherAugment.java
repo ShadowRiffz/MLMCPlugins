@@ -13,11 +13,13 @@ public class FinisherAugment extends ModDamageDealtAugment {
 	public FinisherAugment() {
 		super();
 		this.name = "Finisher";
+		this.etype = EventType.DAMAGE;
 	}
 
 	public FinisherAugment(int level) {
 		super(level);
 		this.name = "Finisher";
+		this.etype = EventType.DAMAGE;
 	}
 
 	@Override
@@ -50,6 +52,11 @@ public class FinisherAugment extends ModDamageDealtAugment {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	@Override
+	public boolean isPermanent() {
+		return false;
 	}
 
 }

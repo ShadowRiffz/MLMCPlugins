@@ -13,11 +13,13 @@ public class InitiatorAugment extends ModDamageDealtAugment {
 	public InitiatorAugment() {
 		super();
 		this.name = "Initiator";
+		this.etype = EventType.DAMAGE;
 	}
 
 	public InitiatorAugment(int level) {
 		super(level);
 		this.name = "Initiator";
+		this.etype = EventType.DAMAGE;
 	}
 
 	@Override
@@ -50,5 +52,10 @@ public class InitiatorAugment extends ModDamageDealtAugment {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	@Override
+	public boolean isPermanent() {
+		return false;
 	}
 }

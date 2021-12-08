@@ -11,6 +11,7 @@ import de.tr7zw.nbtapi.NBTItem;
 public abstract class Augment {
 	protected String name;
 	protected int level;
+	protected EventType etype;
 	
 	public Augment() {
 		this.level = 5;
@@ -41,6 +42,15 @@ public abstract class Augment {
 	}
 	
 	public abstract Augment createNew(int level);
+	public abstract boolean isPermanent();
+	
+	public void setEventType(EventType etype) {
+		this.etype = etype;
+	}
+	
+	public EventType getEventType() {
+		return etype;
+	}
 	
 	public ItemStack getItem() {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);

@@ -1,6 +1,8 @@
 package me.Neoblade298.NeoProfessions.Augments;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,63 +11,50 @@ import org.bukkit.inventory.PlayerInventory;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class PlayerAugments {
-	private final int MAX_AUGMENTS = 30;
-	private ArrayList<Augment> chestAugs;
-	private ArrayList<Augment> legsAugs;
-	private ArrayList<Augment> mainAugs;
-	private ArrayList<Augment> offAugs;
+	private HashMap<EventType, List<Augment>> augments;
 	private Player p;
+	private boolean needsRecalculation;
 	
 	public PlayerAugments(Player p) {
 		this.p = p;
-		recalculateAll();
+		this.augments = new HashMap<EventType, List<Augment>>();
+		recalculate();
 	}
 	
-	public void swapHands() {
-		ArrayList<Augment> temp = this.mainAugs;
-		this.mainAugs = this.offAugs;
-		this.mainAugs = temp;
+	public void recalculate() {
+		needsRecalculation = true;
 	}
 	
-	public void recalculateMainhand() {
-		this.mainAugs = checkAugments(p.getInventory().getItemInMainHand());
-	}
-	
-	public void recalculateMainhand(ItemStack item) {
-		this.mainAugs = checkAugments(item);
-	}
-	
-	public void recalculateAll() {
-		PlayerInventory inv = p.getInventory();
-		this.chestAugs = checkAugments(inv.getChestplate());
-		this.legsAugs = checkAugments(inv.getLeggings());
-		this.mainAugs = checkAugments(inv.getItemInMainHand());
-		this.offAugs = checkAugments(inv.getItemInOffHand());
-	}
-	
-	public ArrayList<Augment> checkAugments(ItemStack item) {
-		ArrayList<Augment> augs = new ArrayList<Augment>();
-		
+	public void checkAugments(ItemStack item) {
 		if (item != null && !item.getType().isAir()) {
 			NBTItem nbti = new NBTItem(item);
 			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
 				if (AugmentManager.nameMap.containsKey(augmentName)) {
 					Augment aug = AugmentManager.nameMap.get(augmentName);
-					augs.add(aug);
+					
+					// Add augment to hashmap
+					EventType etype = aug.getEventType();
+					if (augments.containsKey(etype)) {
+						augments.get(etype).add(aug);
+					}
+					else {
+						augments.put(etype, Arrays.asList(aug));
+					}
 				}
 			}
 		}
-		
-		return augs;
 	}
 	
-	public ArrayList<Augment> getAugments() {
-		ArrayList<Augment> augments = new ArrayList<Augment>(MAX_AUGMENTS);
-		augments.addAll(chestAugs);
-		augments.addAll(legsAugs);
-		augments.addAll(mainAugs);
-		augments.addAll(offAugs);
-		return augments;
+	public List<Augment> getAugments(EventType etype) {
+		if (needsRecalculation) {
+			augments.clear();
+			PlayerInventory inv = p.getInventory();
+			checkAugments(inv.getChestplate());
+			checkAugments(inv.getLeggings());
+			checkAugments(inv.getItemInMainHand());
+			checkAugments(inv.getItemInOffHand());
+		}
+		return augments.getOrDefault(etype, null);
 	}
 }

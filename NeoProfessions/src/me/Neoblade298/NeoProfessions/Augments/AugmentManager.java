@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -25,6 +24,7 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import de.tr7zw.nbtapi.NBTItem;
 
 public class AugmentManager implements Listener {
+	// event types
 	public static HashMap<String, Augment> nameMap = new HashMap<String, Augment>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
@@ -47,8 +47,7 @@ public class AugmentManager implements Listener {
 		return nameMap.containsKey(nbti.getString("augment"));
 	}
 
-	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClose(InventoryCloseEvent e) {
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
@@ -58,11 +57,11 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateAll();
+			playerAugments.get(p).recalculate();
 		}
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
 		Player p = e.getPlayer();
 		if (disableRecalculate.contains(p)) return;
@@ -70,17 +69,17 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateAll();
+			playerAugments.get(p).recalculate();
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		Player p = e.getPlayer();
 		playerAugments.remove(p);
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void onLeave(PlayerQuitEvent e) {
 		// disable recalculate stops onInventoryClose (which happens after
 		// onQuit) from recalculating after player leaves
@@ -88,15 +87,15 @@ public class AugmentManager implements Listener {
 		disableRecalculate.add(p);
 		playerAugments.remove(p);
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void onKicked(PlayerKickEvent e) {
 		Player p = e.getPlayer();
 		disableRecalculate.add(p);
 		playerAugments.remove(p);
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void onItemBreak(PlayerItemBreakEvent e) {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
@@ -106,18 +105,18 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateAll();
+			playerAugments.get(p).recalculate();
 		}
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void onSQLLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
 		if (!playerAugments.containsKey(p)) {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateAll();
+			playerAugments.get(p).recalculate();
 		}
 	}
 	
@@ -130,24 +129,11 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateMainhand(p.getInventory().getStorageContents()[e.getNewSlot()]);
+			playerAugments.get(p).recalculate();
 		}
 	}
-	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-	public void onSwapHand(PlayerSwapHandItemsEvent e) {
-		Player p = e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
 
-		if (!playerAugments.containsKey(p)) {
-			playerAugments.put(p, new PlayerAugments(p));
-		}
-		else {
-			playerAugments.get(p).swapHands();
-		}
-	}
-	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onDrop(PlayerDropItemEvent e) {
 		Player p = e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
@@ -156,7 +142,7 @@ public class AugmentManager implements Listener {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).recalculateAll();
+			playerAugments.get(p).recalculate();
 		}
 	}
 	
@@ -167,7 +153,7 @@ public class AugmentManager implements Listener {
 			double multiplier = 1;
 			double flat = 0;
 			if (AugmentManager.playerAugments.containsKey(p)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments()) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE)) {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
