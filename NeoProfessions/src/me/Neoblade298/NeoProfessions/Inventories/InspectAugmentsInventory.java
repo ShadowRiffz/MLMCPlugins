@@ -44,7 +44,7 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 				contents[i] = createGuiItem(Material.ENDER_PEARL, "§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(Material.ENDER_PEARL, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore());
+				contents[i] = createGuiItem(Material.ENDER_PEARL, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore(), oldAug);
 			}
 			j++;
 		}
@@ -62,10 +62,15 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 		return item;
 	}
 
-	protected ItemStack createGuiItem(final Material material, final String name, List<String> list) {
+	protected ItemStack createGuiItem(final Material material, final String name, List<String> list, Augment aug) {
 		final ItemStack item = new ItemStack(material, 1);
 		final ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(name);
+		if (aug.isPermanent()) {
+			meta.setDisplayName("§cThis augment cannot be swapped");
+		}
+		else {
+			meta.setDisplayName(name);
+		}
 		meta.setLore(list);
 		item.setItemMeta(meta);
 		return item;

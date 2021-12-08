@@ -56,6 +56,6 @@ public class InitiatorAugment extends ModDamageDealtAugment {
 
 	@Override
 	public boolean isPermanent() {
-		return false;
+		return true;
 	}
 }

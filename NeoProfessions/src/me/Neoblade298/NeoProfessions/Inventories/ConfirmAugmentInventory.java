@@ -47,10 +47,10 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		for (int i = 9 - nbti.getInteger("slotsCreated"); i < 9; i++) {
 			Augment oldAug = editor.getAugment(j);
 			if (oldAug == null) {
-				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, "§7Empty slot");
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aAdd to Slot " + j, "§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore());
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore(), oldAug);
 			}
 			j++;
 		}
@@ -68,11 +68,17 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		return item;
 	}
 
-	protected ItemStack createGuiItem(final Material material, final String name, final String line, List<String> list) {
-		final ItemStack item = new ItemStack(material, 1);
+	protected ItemStack createGuiItem(final Material material, final String name, final String line, List<String> list, Augment aug) {
+		final ItemStack item = new ItemStack(material);
 		final ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(name);
 		list.add(0, line);
+		if (aug.isPermanent()) {
+			meta.setDisplayName("§cThis augment cannot be swapped");
+			item.setType(Material.RED_STAINED_GLASS_PANE);
+		}
+		else {
+			meta.setDisplayName(name);
+		}
 		meta.setLore(list);
 		item.setItemMeta(meta);
 		return item;
