@@ -45,6 +45,10 @@ public class AugmentManager implements Listener {
 		NBTItem nbti = new NBTItem(item);
 		return nameMap.containsKey(nbti.getString("augment"));
 	}
+	
+	public boolean containsAugments(Player p, EventType etype) {
+		return playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClose(InventoryCloseEvent e) {
@@ -144,7 +148,7 @@ public class AugmentManager implements Listener {
 			Player p = (Player) e.getDamager();
 			double multiplier = 1;
 			double flat = 0;
-			if (AugmentManager.playerAugments.containsKey(p)) {
+			if (containsAugments(p, EventType.DAMAGE)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE)) {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;

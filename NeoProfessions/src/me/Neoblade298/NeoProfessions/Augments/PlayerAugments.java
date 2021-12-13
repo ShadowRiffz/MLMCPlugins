@@ -63,6 +63,10 @@ public class PlayerAugments {
 			checkAugments(inv.getItemInOffHand());
 			prevSlot = inv.getHeldItemSlot();
 		}
-		return augments.getOrDefault(etype, null);
+		return augments.get(etype);
+	}
+	
+	public boolean containsAugments(EventType etype) {
+		return augments.containsKey(etype);
 	}
 }
