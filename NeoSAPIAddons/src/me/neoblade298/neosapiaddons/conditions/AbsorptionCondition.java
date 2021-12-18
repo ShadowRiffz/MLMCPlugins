@@ -32,10 +32,10 @@ public class AbsorptionCondition extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		int min = settings.getInt("min");
 		int max = settings.getInt("max");
-		return min <= caster.getAbsorptionAmount() && caster.getAbsorptionAmount() <= max && executeChildren(caster, lvl, targets);
+		return min <= caster.getAbsorptionAmount() && caster.getAbsorptionAmount() <= max && executeChildren(caster, lvl, targets, critChance);
 	}
 
 	@Override

@@ -54,16 +54,16 @@ public class ValueSkillLevelMechanic extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		int skillLvl = SkillAPI.getPlayerData((Player) caster).getSkill(settings.getString("skill")).getLevel();
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 		String key = settings.getString("key");
 		if (skillLvl == 0) {
-			data.put(key, parseValues(caster, "default", lvl, 0));
+			data.put(key, parseValues(caster, "default", lvl, 0, critChance));
 		}
 		else {
-			double base = parseValues(caster, "base", lvl, 0);
-			double scale = parseValues(caster, "scale", lvl, 0);
+			double base = parseValues(caster, "base", lvl, 0, critChance);
+			double scale = parseValues(caster, "scale", lvl, 0, critChance);
 			double amt = base + (scale * (skillLvl - 1));
 			data.put(key, amt);
 		}

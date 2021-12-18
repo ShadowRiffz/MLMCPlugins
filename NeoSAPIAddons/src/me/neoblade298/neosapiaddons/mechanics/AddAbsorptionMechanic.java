@@ -27,7 +27,7 @@ public class AddAbsorptionMechanic extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		int amt = settings.getInt("amount");
 		caster.setAbsorptionAmount(caster.getAbsorptionAmount() + amt);
 		return true;

@@ -25,11 +25,11 @@ public class BlockingCondition extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
     	Player p = (Player) caster;
         final boolean blocking = p.isBlocking();
         final boolean wantBlocking = settings.getString("type", "blocking").equalsIgnoreCase("blocking");
-        return blocking == wantBlocking && executeChildren(caster, lvl, targets);
+        return blocking == wantBlocking && executeChildren(caster, lvl, targets, critChance);
 	}
 
 	@Override

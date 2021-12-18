@@ -33,7 +33,7 @@ public class ValueAttackSpeedMechanic extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		Collection<AttributeModifier> mods = ((Player) caster).getAttribute(Attribute.GENERIC_ATTACK_SPEED).getModifiers();
 		double amount = ((Player) caster).getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue();
 		for (AttributeModifier mod : mods) {

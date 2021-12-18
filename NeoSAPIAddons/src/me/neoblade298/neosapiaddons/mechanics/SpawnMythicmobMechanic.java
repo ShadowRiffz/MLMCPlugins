@@ -45,7 +45,7 @@ public class SpawnMythicmobMechanic extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		String mob = settings.getString("mob");
 		String levelKey = settings.getString("level");
 		HashMap<String, Object> data = DynamicSkill.getCastData(caster);
