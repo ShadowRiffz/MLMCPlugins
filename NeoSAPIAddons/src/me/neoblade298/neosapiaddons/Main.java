@@ -5,13 +5,17 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.AbstractArrow.PickupStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.google.common.collect.ImmutableList;
 import com.sucy.skill.SkillAPI;
@@ -78,6 +82,22 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 						e.setDamage(DamageModifier.BLOCKING, -15 + ((blocked + 15) * 0.5));
 					}
 				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onShootBow(EntityShootBowEvent e) {
+		if (e.getBow().getType().equals(Material.CROSSBOW) &&
+				e.getEntity() instanceof Player &&
+				e.getProjectile() instanceof Arrow) {
+			String world = e.getEntity().getWorld().getName();
+			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
+				Player p = (Player) e.getEntity();
+				p.getInventory().addItem(new ItemStack(Material.ARROW));
+				Arrow arrow = (Arrow) e.getProjectile();
+				arrow.setPickupStatus(PickupStatus.DISALLOWED);
+				return;
 			}
 		}
 	}
