@@ -64,8 +64,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		attributeOrder.put("end", "Endurance +$amt$");
 		attributeOrder.put("mhp", "Max HP +$amt$");
 		attributeOrder.put("mmp", "Max MP +$amt$");
-		attributeOrder.put("rgn", "Regen +$amt$/10s");
-		attributeOrder.put("mrgn", "Mana Regen +$amt$%");
+		attributeOrder.put("hrg", "Regen +$amt$/10s");
+		attributeOrder.put("mrg", "Resource Regen +$amt$%");
 		attributeOrder.put("hlr", "Healing Received +$amt$%");
 	}
 
