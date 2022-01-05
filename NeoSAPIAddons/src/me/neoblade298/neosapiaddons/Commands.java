@@ -19,10 +19,11 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args.length == 0) {
-				sender.sendMessage("§c/neosapiaddons takexp [player] [exp]");
-				sender.sendMessage("§c/neosapiaddons skillup [player] [skill]");
-				sender.sendMessage("§c/neosapiaddons points [player] [classtype] [amount]");
-				sender.sendMessage("§c/neosapiaddons refresh [player]");
+				sender.sendMessage("§c/nsapi takexp [player] [exp] - remove class exp");
+				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
+				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
+				sender.sendMessage("§c/nsapi refresh [player] - update equips");
+				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("takexp") && (StringUtils.isNumeric(args[2]))) {
@@ -56,6 +57,11 @@ public class Commands implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("refresh")) {
 	            Player p = Bukkit.getPlayer(args[1]);
                 SkillAPI.getPlayerData(p).getEquips().update(p);
+                return true;
+			}
+			else if (args[0].equalsIgnoreCase("attr")) {
+	            Player p = (Player) sender;
+                sender.sendMessage("§4[§c§lMLMC§4] §7Attribute has: " + SkillAPI.getPlayerData(p).getAttribute(args[1]) + ".");
                 return true;
 			}
 
