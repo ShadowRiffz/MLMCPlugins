@@ -173,7 +173,14 @@ public class GearConfig {
 			if (rarities.get(rarity).attributes.containsKey(key)) {
 				AttributeSet attr = rarities.get(rarity).attributes.get(key);
 				amount += attr.generateAmount(level);
-				line = attr.format(amount);
+				if (attr.getAttr().equals("hlr")) {
+					double amt = amount;
+					amt /= 10;
+					line = attr.format(amt);
+				}
+				else {
+					line = attr.format(amount);
+				}
 			}
 			
 			if (amount > 0) {
