@@ -341,7 +341,7 @@ public class CulinarianListeners implements Listener {
 
 	@EventHandler
 	public void onDrink(PlayerItemConsumeEvent e) {
-		ItemStack item = e.getItem(user);
+		ItemStack item = e.getItem();
 		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			return;
 		}

@@ -29,7 +29,7 @@ public class SentinelAugment extends ModDamageDealtAugment {
 
 	@Override
 	public double getFlatBonus(LivingEntity user) {
-		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() *;
+		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
 	}
 
 	@Override

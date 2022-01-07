@@ -483,9 +483,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					else if (args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
 					}
-					else if (args[1].equalsIgnoreCase("augment")) {
-						p.getInventory().addItem(AugmentManager.nameMap.get(args[2]).createNew(Integer.parseInt(args[3])).getItem(user));
-					}
 					else if (args[1].equalsIgnoreCase("durability")) {
 						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
 					}

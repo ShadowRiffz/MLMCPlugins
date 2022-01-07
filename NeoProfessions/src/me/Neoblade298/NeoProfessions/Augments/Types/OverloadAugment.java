@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.Augments.Types;
 
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +11,6 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ManaCost;
 import com.sucy.skill.api.player.PlayerData;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 

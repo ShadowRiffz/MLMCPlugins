@@ -50,7 +50,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aAdd to Slot " + j, "§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, oldAug.getLine(), oldAug.getItem(user).getItemMeta().getLore(), oldAug);
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aSwap Slot " + j, oldAug.getLine(), oldAug.getItem(p).getItemMeta().getLore(), oldAug);
 			}
 			j++;
 		}
