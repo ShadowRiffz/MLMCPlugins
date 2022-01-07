@@ -22,6 +22,12 @@ public class ValueCommand implements CommandExecutor {
 		if (args.length == 0 && sender instanceof Player) {
 			Player p = (Player) sender;
 			ItemStack item = p.getInventory().getItemInMainHand();
+			
+			if (item == null || item.getType().isAir()) {
+				p.sendMessage("§cYou're not holding anything!");
+				return true;
+			}
+			
 			NBTItem nbti = new NBTItem(item);
 			double value = 0;
 			if (!nbti.getString("value").isBlank()) {

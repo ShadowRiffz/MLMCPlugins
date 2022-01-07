@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments;
+package me.Neoblade298.NeoProfessions.Augments.Types;
 
 import java.util.List;
 
@@ -8,33 +8,36 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class FinisherAugment extends ModDamageDealtAugment {
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Augments.EventType;
+
+public class InitiatorAugment extends ModDamageDealtAugment {
 	
-	public FinisherAugment() {
+	public InitiatorAugment() {
 		super();
-		this.name = "Finisher";
+		this.name = "Initiator";
 		this.etype = EventType.DAMAGE;
 	}
 
-	public FinisherAugment(int level) {
+	public InitiatorAugment(int level) {
 		super(level);
-		this.name = "Finisher";
+		this.name = "Initiator";
 		this.etype = EventType.DAMAGE;
 	}
 
 	@Override
-	public double getFlatBonus() {
+	public double getFlatBonus(LivingEntity user) {
 		return 0;
 	}
 
 	@Override
-	public double getMultiplierBonus() {
-		return 0.02 * (level / 5);
+	public double getMultiplierBonus(LivingEntity user) {
+		return 0.05 * (level / 5);
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new FinisherAugment(level);
+		return new InitiatorAugment(level);
 	}
 
 	@Override
@@ -43,20 +46,14 @@ public class FinisherAugment extends ModDamageDealtAugment {
 		return percentage > 0.95;
 	}
 
-	public ItemStack getItem() {
-		ItemStack item = super.getItem();
+	public ItemStack getItem(Player user) {
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + getMultiplierBonus() + "% §7when dealing");
-		lore.add("§7damage to an enemy below 10% health.");
+		lore.add("§7Increases damage by §f" + getMultiplierBonus(user) + "% §7when dealing");
+		lore.add("§7damage to an enemy above 95% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
-
-	@Override
-	public boolean isPermanent() {
-		return false;
-	}
-
 }

@@ -22,6 +22,9 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Augments.Types.FinisherAugment;
+import me.Neoblade298.NeoProfessions.Augments.Types.InitiatorAugment;
+import me.Neoblade298.NeoProfessions.Augments.Types.ModDamageDealtAugment;
 
 public class AugmentManager implements Listener {
 	// event types
@@ -153,8 +156,8 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							multiplier += aug.getMultiplierBonus();
-							flat += aug.getFlatBonus();
+							multiplier += aug.getMultiplierBonus(null);
+							flat += aug.getFlatBonus(null);
 						}
 					}
 				}

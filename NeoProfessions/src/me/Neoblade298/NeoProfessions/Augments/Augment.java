@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -41,9 +42,6 @@ public abstract class Augment {
 		return "§7[" + name + " Lv " + level + "]";
 	}
 	
-	public abstract Augment createNew(int level);
-	public abstract boolean isPermanent();
-	
 	public void setEventType(EventType etype) {
 		this.etype = etype;
 	}
@@ -52,7 +50,7 @@ public abstract class Augment {
 		return etype;
 	}
 	
-	public ItemStack getItem() {
+	public ItemStack getItem(Player user) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + name + " Augment");
@@ -66,4 +64,6 @@ public abstract class Augment {
 		return nbti.getItem();
 	}
 
+	public abstract Augment createNew(int level);
+	public abstract boolean isPermanent();
 }

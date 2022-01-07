@@ -212,7 +212,7 @@ public class ItemEditor {
 					// Choose a random augment
 					String[] choices = (String[]) AugmentManager.nameMap.keySet().toArray();
 					Augment aug = AugmentManager.nameMap.get(choices[gen.nextInt(choices.length)]).createNew(level);
-					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem());
+					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(user));
 					for (Integer num : failed.keySet()) {
 						p.getWorld().dropItem(p.getLocation(), failed.get(num));
 					}

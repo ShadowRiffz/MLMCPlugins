@@ -312,6 +312,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof <playername> get ore [attribute or 1-7] [level] <amount>");
 				sender.sendMessage("§7- §4/prof <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
 				sender.sendMessage("§7- §4/prof <playername> get [basic/advanced] [charm]");
+				sender.sendMessage("§7- §4/prof <playername> get augment [name] [level]");
 				sender.sendMessage("§7- §4/prof <playername> add [essence/oretype] [level] [amount]");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
 				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
@@ -476,11 +477,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args[1].equalsIgnoreCase("essence")) {
 						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
 					}
+					else if (args[1].equalsIgnoreCase("augment")) {
+						p.getInventory().addItem(AugmentManager.nameMap.get(args[2]).createNew(Integer.parseInt(args[3])).getItem(p));
+					}
 					else if (args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
 					}
 					else if (args[1].equalsIgnoreCase("augment")) {
-						p.getInventory().addItem(AugmentManager.nameMap.get(args[2]).createNew(Integer.parseInt(args[3])).getItem());
+						p.getInventory().addItem(AugmentManager.nameMap.get(args[2]).createNew(Integer.parseInt(args[3])).getItem(user));
 					}
 					else if (args[1].equalsIgnoreCase("durability")) {
 						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
@@ -614,6 +618,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args[1].equalsIgnoreCase("get")) {
 						if (args[2].equalsIgnoreCase("essence")) {
 							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
+						}
+						else if (args[2].equalsIgnoreCase("augment")) {
+							p.getInventory().addItem(AugmentManager.nameMap.get(args[3]).createNew(Integer.parseInt(args[4])).getItem(p));
 						}
 						else if (args[2].equalsIgnoreCase("repair")) {
 							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));

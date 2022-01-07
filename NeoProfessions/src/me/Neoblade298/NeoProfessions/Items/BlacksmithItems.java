@@ -83,6 +83,6 @@ public class BlacksmithItems {
 		nbti.setInteger("level", level);
 		nbti.setDouble("potency", 40D);
 		
-		return nbti.getItem();
+		return nbti.getItem(user);
 	}
 }
