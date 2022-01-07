@@ -168,12 +168,21 @@ public class GearConfig {
 			if (attributes.containsKey(key)) {
 				AttributeSet attr = attributes.get(key);
 				amount += attr.generateAmount(level);
-				line = attr.format(amount);
+				String id = attr.getAttr();
+				if (id.equals("hlr") || id.equals("rrg")) {
+					double amt = amount;
+					amt /= 10;
+					line = attr.format(amt);
+				}
+				else {
+					line = attr.format(amount);
+				}
 			}
 			if (rarities.get(rarity).attributes.containsKey(key)) {
 				AttributeSet attr = rarities.get(rarity).attributes.get(key);
 				amount += attr.generateAmount(level);
-				if (attr.getAttr().equals("hlr")) {
+				String id = attr.getAttr();
+				if (id.equals("hlr") || id.equals("rrg")) {
 					double amt = amount;
 					amt /= 10;
 					line = attr.format(amt);
