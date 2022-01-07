@@ -57,8 +57,8 @@ public class CalmingAugment extends ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Reduces threat generated from dealing damage by");
-		lore.add("§f" + (int) (this.threatReduction * 100) + "%§7.");
+		lore.add("§7Reduces threat generated from dealing");
+		lore.add("§7damage by §f" + (int) (this.threatReduction * 100) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

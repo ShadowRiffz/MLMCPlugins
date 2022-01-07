@@ -22,13 +22,11 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Augments.Types.FinisherAugment;
-import me.Neoblade298.NeoProfessions.Augments.Types.InitiatorAugment;
-import me.Neoblade298.NeoProfessions.Augments.Types.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Augments.Types.*;
 
 public class AugmentManager implements Listener {
 	// event types
-	public static HashMap<String, Augment> nameMap = new HashMap<String, Augment>();
+	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
@@ -39,14 +37,22 @@ public class AugmentManager implements Listener {
 	}
 	
 	public AugmentManager() {
-		// Load augments? Maybe don't need
-		nameMap.put("Finisher", new FinisherAugment());
-		nameMap.put("Initiator", new InitiatorAugment());
+		// Load augments
+		augmentMap.put("Burst", new BurstAugment());
+		augmentMap.put("Calming", new CalmingAugment());
+		augmentMap.put("Desperation", new DesperationAugment());
+		augmentMap.put("Hearty", new HeartyAugment());
+		augmentMap.put("Opportunist", new OpportunistAugment());
+		augmentMap.put("Overload", new OverloadAugment());
+		augmentMap.put("Sentinel", new SentinelAugment());
+		augmentMap.put("Underdog", new UnderdogAugment());
+		augmentMap.put("Finisher", new FinisherAugment());
+		augmentMap.put("Initiator", new InitiatorAugment());
 	}
 	
 	public static boolean isAugment(ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
-		return nameMap.containsKey(nbti.getString("augment"));
+		return augmentMap.containsKey(nbti.getString("augment"));
 	}
 	
 	public boolean containsAugments(Player p, EventType etype) {
