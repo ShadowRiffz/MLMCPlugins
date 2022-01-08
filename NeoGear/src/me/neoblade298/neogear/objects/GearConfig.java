@@ -204,14 +204,14 @@ public class GearConfig {
 			currentSlot++;
 			String args[] = augment.split(":");
 			lore.add(translateHexCodes(args[0]));
-			nbtIntegers.put("slot" + currentSlot + "Line", lore.size());
+			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
 			nbtIntegers.put("slot" + currentSlot + "Level", Integer.parseInt(args[2]));
 			nbtStrings.put("slot" + currentSlot + "Augment", args[1]);
 		}
 		for (int i = 0; i < numSlots; i++) {
 			currentSlot++;
 			lore.add("§8[Empty Slot]");
-			nbtIntegers.put("slot" + currentSlot + "Line", lore.size());
+			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
 		}
 		
 		int durability = duraBase + rarities.get(rarity).duraBonus;
