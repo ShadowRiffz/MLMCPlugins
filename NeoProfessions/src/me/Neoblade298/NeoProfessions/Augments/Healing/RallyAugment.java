@@ -51,7 +51,7 @@ public class RallyAugment extends ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases healing by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7while");
+		lore.add("§7Increases healing by §f" + formatPercentage(getMultiplierBonus(user)) + "% §7while");
 		lore.add("§7above 70% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

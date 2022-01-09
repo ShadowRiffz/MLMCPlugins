@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoProfessions.Augments.Healing;
 
-import java.text.DecimalFormat;
-
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.api.player.PlayerData;
@@ -9,7 +7,6 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 
 public abstract class ModHealAugment extends Augment{
-	protected static DecimalFormat df = new DecimalFormat("##.#");
 	public ModHealAugment() {
 		super();
 	}
@@ -20,10 +17,6 @@ public abstract class ModHealAugment extends Augment{
 	
 	public void applyEffects(PlayerData user, double healing) {
 		// Empty unless overridden
-	}
-	
-	public String formatMultiplierBonus(Player user, double bonus) {
-		return df.format(getMultiplierBonus(user) * 100);
 	}
 	
 	public abstract double getFlatBonus(PlayerData user);

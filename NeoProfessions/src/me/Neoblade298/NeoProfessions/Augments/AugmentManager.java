@@ -236,7 +236,6 @@ public class AugmentManager implements Listener {
 	public void onBuff(SkillBuffEvent e) {
 		if (e.getCaster() instanceof Player) {
 			Player p = (Player) e.getCaster();
-			PlayerData data = SkillAPI.getPlayerData(p);
 			double tickMult = 1;
 			double multiplier = 1;
 			double flat = 0;
@@ -244,7 +243,7 @@ public class AugmentManager implements Listener {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.BUFF)) {
 					if (augment instanceof ModBuffAugment) {
 						ModBuffAugment aug = (ModBuffAugment) augment;
-						if (aug.canUse(p, e.getTarget())) {
+						if (aug.canUse(p, e.getTarget(), e)) {
 							multiplier += aug.getMultiplierBonus(p);
 							flat += aug.getFlatBonus(p);
 							tickMult += aug.getTimeMultiplier(p);

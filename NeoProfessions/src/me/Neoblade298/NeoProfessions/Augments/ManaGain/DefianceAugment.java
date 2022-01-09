@@ -50,7 +50,7 @@ public class DefianceAugment extends ModManaGainAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases mana regen by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7when");
+		lore.add("§7Increases mana regen by §f" + formatPercentage(getMultiplierBonus(user)) + "% §7when");
 		lore.add("§7below 30% mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
