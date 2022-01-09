@@ -1,39 +1,28 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
 import java.util.List;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.enums.ManaCost;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class OverloadAugment extends ModDamageDealtAugment {
-	double manaTaken;
+public class OpportunistAugment extends ModDamageDealtAugment {
 	
-	public OverloadAugment() {
+	public OpportunistAugment() {
 		super();
-		this.name = "Overload";
+		this.name = "Opportunist";
 		this.etype = EventType.DAMAGE;
-		this.manaTaken = (this.level / 5) * 0.5;
 	}
 
-	public OverloadAugment(int level) {
+	public OpportunistAugment(int level) {
 		super(level);
-		this.name = "Overload";
+		this.name = "Opportunist";
 		this.etype = EventType.DAMAGE;
-		this.manaTaken = (this.level / 5) * 0.5;
-	}
-	
-	@Override
-	public void applyEffects(Player user, LivingEntity target, double damage) {
-		SkillAPI.getPlayerData(user).useMana(this.manaTaken, ManaCost.SPECIAL);
 	}
 
 	@Override
@@ -48,13 +37,13 @@ public class OverloadAugment extends ModDamageDealtAugment {
 
 	@Override
 	public Augment createNew(int level) {
-		return new OverloadAugment(level);
+		return new OpportunistAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) > 0.1 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		return percentage < 0.1;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -62,11 +51,10 @@ public class OverloadAugment extends ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7when dealing");
-		lore.add("§7damage while above 10% mana. Costs");
-		lore.add("§f" + this.manaTaken + " §7mana per damage instance.");
-		lore.add("§cOnly works with mana.");
+		lore.add("§7damage while below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
+
 }

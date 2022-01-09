@@ -1,24 +1,25 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.ManaGain;
 
 import java.text.DecimalFormat;
 
 import org.bukkit.entity.Player;
 
+import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 
-public abstract class ModHealAugment extends Augment{
+public abstract class ModManaGainAugment extends Augment{
 	protected static DecimalFormat df = new DecimalFormat("##.#");
-	public ModHealAugment() {
+	public ModManaGainAugment() {
 		super();
 	}
 	
-	public ModHealAugment(int level) {
+	public ModManaGainAugment(int level) {
 		super(level);
 	}
 	
-	public void applyEffects(PlayerData user, double healing) {
+	public void applyEffects(PlayerData user, double mana) {
 		// Empty unless overridden
 	}
 	
@@ -28,5 +29,5 @@ public abstract class ModHealAugment extends Augment{
 	
 	public abstract double getFlatBonus(PlayerData user);
 	public abstract double getMultiplierBonus(Player user);
-	public abstract boolean canUse(PlayerData user);
+	public abstract boolean canUse(PlayerData user, ManaSource src);
 }

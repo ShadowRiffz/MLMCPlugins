@@ -1,30 +1,27 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
 import java.util.List;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class DesperationAugment extends ModDamageDealtAugment {
-	double manaTaken;
+public class HeartyAugment extends ModDamageDealtAugment {
 	
-	public DesperationAugment() {
+	public HeartyAugment() {
 		super();
-		this.name = "Desperation";
+		this.name = "Hearty";
 		this.etype = EventType.DAMAGE;
 	}
 
-	public DesperationAugment(int level) {
+	public HeartyAugment(int level) {
 		super(level);
-		this.name = "Desperation";
+		this.name = "Hearty";
 		this.etype = EventType.DAMAGE;
 	}
 
@@ -40,13 +37,13 @@ public class DesperationAugment extends ModDamageDealtAugment {
 
 	@Override
 	public Augment createNew(int level) {
-		return new DesperationAugment(level);
+		return new HeartyAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) < 0.2 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		return percentage > 0.95;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -54,8 +51,7 @@ public class DesperationAugment extends ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7when dealing");
-		lore.add("§7damage while below 20% mana.");
-		lore.add("§cOnly works with mana.");
+		lore.add("§7damage while above 95% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

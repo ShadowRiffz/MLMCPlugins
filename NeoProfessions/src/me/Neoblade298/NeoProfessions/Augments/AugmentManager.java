@@ -22,11 +22,25 @@ import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
+import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Augments.Types.*;
+import me.Neoblade298.NeoProfessions.Augments.Buffs.ModBuffAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.BurstAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.CalmingAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.DesperationAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.FinisherAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.HeartyAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.InitiatorAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OpportunistAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OverloadAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.SentinelAugment;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.UnderdogAugment;
+import me.Neoblade298.NeoProfessions.Augments.Healing.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 
 public class AugmentManager implements Listener {
 	// event types
@@ -215,6 +229,31 @@ public class AugmentManager implements Listener {
 				}
 			}
 			e.setAmount(e.getAmount() * multiplier + flat);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onBuff(SkillBuffEvent e) {
+		if (e.getCaster() instanceof Player) {
+			Player p = (Player) e.getCaster();
+			PlayerData data = SkillAPI.getPlayerData(p);
+			double tickMult = 1;
+			double multiplier = 1;
+			double flat = 0;
+			if (containsAugments(p, EventType.BUFF)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.BUFF)) {
+					if (augment instanceof ModBuffAugment) {
+						ModBuffAugment aug = (ModBuffAugment) augment;
+						if (aug.canUse(p, e.getTarget())) {
+							multiplier += aug.getMultiplierBonus(p);
+							flat += aug.getFlatBonus(p);
+							tickMult += aug.getTimeMultiplier(p);
+						}
+					}
+				}
+			}
+			e.setAmount(e.getAmount() * multiplier + flat);
+			e.setTicks((int) (e.getTicks() * tickMult));
 		}
 	}
 }

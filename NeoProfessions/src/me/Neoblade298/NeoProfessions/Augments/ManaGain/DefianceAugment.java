@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.ManaGain;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.Healing;
 
 import java.util.List;
 
@@ -10,19 +10,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.ModDamageDealtAugment;
 
-public class OpportunistAugment extends ModDamageDealtAugment {
+public class RallyAugment extends ModDamageDealtAugment {
 	
-	public OpportunistAugment() {
+	public RallyAugment() {
 		super();
-		this.name = "Opportunist";
-		this.etype = EventType.DAMAGE;
+		this.name = "Rally";
+		this.etype = EventType.HEAL;
 	}
 
-	public OpportunistAugment(int level) {
+	public RallyAugment(int level) {
 		super(level);
-		this.name = "Opportunist";
-		this.etype = EventType.DAMAGE;
+		this.name = "Rally";
+		this.etype = EventType.HEAL;
 	}
 
 	@Override
@@ -37,21 +38,21 @@ public class OpportunistAugment extends ModDamageDealtAugment {
 
 	@Override
 	public Augment createNew(int level) {
-		return new OpportunistAugment(level);
+		return new RallyAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.1;
+		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		return percentage > 0.7;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7when dealing");
-		lore.add("§7damage while below 30% health.");
+		lore.add("§7Increases healing by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7while");
+		lore.add("§7above 70% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

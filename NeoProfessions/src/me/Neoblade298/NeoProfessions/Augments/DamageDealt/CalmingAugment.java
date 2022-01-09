@@ -1,28 +1,36 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class UnderdogAugment extends ModDamageDealtAugment {
+public class CalmingAugment extends ModDamageDealtAugment {
+	double threatReduction;
 	
-	public UnderdogAugment() {
+	public CalmingAugment() {
 		super();
-		this.name = "Underdog";
+		this.name = "Calming";
 		this.etype = EventType.DAMAGE;
+		this.threatReduction = (this.level / 5) * 0.01;
 	}
 
-	public UnderdogAugment(int level) {
+	public CalmingAugment(int level) {
 		super(level);
-		this.name = "Underdog";
+		this.name = "Calming";
 		this.etype = EventType.DAMAGE;
+		this.threatReduction = (this.level / 5) * 0.01;
+	}
+	
+	@Override
+	public void applyEffects(Player user, LivingEntity target, double damage) {
+		MythicMobs.inst().getAPIHelper().reduceThreat(user, target, damage * this.threatReduction);
 	}
 
 	@Override
@@ -32,26 +40,25 @@ public class UnderdogAugment extends ModDamageDealtAugment {
 
 	@Override
 	public double getMultiplierBonus(LivingEntity user) {
-		return 0.05 * (level / 5);
+		return 0;
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new UnderdogAugment(level);
+		return new CalmingAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.1;
+		return true;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7Reduces threat generated from dealing");
+		lore.add("§7damage by §f" + (int) (this.threatReduction * 100) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments.Types;
+package me.Neoblade298.NeoProfessions.Augments.Buffs;
 
 import java.text.DecimalFormat;
 
@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 
-public abstract class ModDamageDealtAugment extends Augment{
+public abstract class ModBuffAugment extends Augment{
 	protected static DecimalFormat df = new DecimalFormat("##.#");
-	public ModDamageDealtAugment() {
+	public ModBuffAugment() {
 		super();
 	}
 	
-	public ModDamageDealtAugment(int level) {
+	public ModBuffAugment(int level) {
 		super(level);
 	}
 	
@@ -21,11 +21,17 @@ public abstract class ModDamageDealtAugment extends Augment{
 		// Empty unless overridden
 	}
 	
-	public String formatMultiplierBonus(LivingEntity user, double bonus) {
+	public String formatTimeMultiplier(LivingEntity user) {
+		return df.format(getTimeMultiplier(user) * 100);
+	}
+	
+	public String formatMultiplierBonus(LivingEntity user) {
 		return df.format(getMultiplierBonus(user) * 100);
 	}
 	
+	public abstract double getTimeMultiplier(LivingEntity user);
 	public abstract double getFlatBonus(LivingEntity user);
 	public abstract double getMultiplierBonus(LivingEntity user);
+	
 	public abstract boolean canUse(Player user, LivingEntity target);
 }
