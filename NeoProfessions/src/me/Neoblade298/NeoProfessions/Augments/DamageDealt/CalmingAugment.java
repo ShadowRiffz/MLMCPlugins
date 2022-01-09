@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.LivingEntity;
@@ -11,36 +12,26 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class CalmingAugment extends ModDamageDealtAugment {
+public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 	double threatReduction;
 	
 	public CalmingAugment() {
 		super();
 		this.name = "Calming";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 		this.threatReduction = (this.level / 5) * 0.01;
 	}
 
 	public CalmingAugment(int level) {
 		super(level);
 		this.name = "Calming";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 		this.threatReduction = (this.level / 5) * 0.01;
 	}
 	
 	@Override
 	public void applyEffects(Player user, LivingEntity target, double damage) {
 		MythicMobs.inst().getAPIHelper().reduceThreat(user, target, damage * this.threatReduction);
-	}
-
-	@Override
-	public double getFlatBonus(LivingEntity user) {
-		return 0;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
-		return 0;
 	}
 
 	@Override

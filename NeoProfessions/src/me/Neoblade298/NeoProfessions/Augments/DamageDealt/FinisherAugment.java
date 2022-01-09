@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
@@ -11,27 +12,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class FinisherAugment extends ModDamageDealtAugment {
+public class FinisherAugment extends Augment implements ModDamageDealtAugment {
 	
 	public FinisherAugment() {
 		super();
 		this.name = "Finisher";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
 	public FinisherAugment(int level) {
 		super(level);
 		this.name = "Finisher";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
 	@Override
-	public double getFlatBonus(LivingEntity user) {
-		return 0;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
+	public double getDamageDealtMult(LivingEntity user) {
 		return 0.025 * (level / 5);
 	}
 
@@ -50,7 +46,7 @@ public class FinisherAugment extends ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(getMultiplierBonus(user)) + "% §7when dealing");
+		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
 		lore.add("§7damage to an enemy below 10% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

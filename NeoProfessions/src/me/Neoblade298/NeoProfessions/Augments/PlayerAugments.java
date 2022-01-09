@@ -36,13 +36,14 @@ public class PlayerAugments {
 					Augment aug = AugmentManager.augmentMap.get(augmentName);
 					
 					// Add augment to hashmap
-					EventType etype = aug.getEventType();
-					if (augments.containsKey(etype)) {
-						augments.get(etype).add(aug);
-					}
-					else {
-						ArrayList<Augment> list = new ArrayList<Augment>();
-						augments.put(etype, list);
+					for (EventType etype : aug.getEventTypes()) {
+						if (augments.containsKey(etype)) {
+							augments.get(etype).add(aug);
+						}
+						else {
+							ArrayList<Augment> list = new ArrayList<Augment>();
+							augments.put(etype, list);
+						}
 					}
 				}
 			}

@@ -5,22 +5,19 @@ import org.bukkit.entity.Player;
 import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.Neoblade298.NeoProfessions.Augments.Augment;
-
-public abstract class ModManaGainAugment extends Augment{
-	public ModManaGainAugment() {
-		super();
-	}
+public interface ModManaGainAugment {
 	
-	public ModManaGainAugment(int level) {
-		super(level);
-	}
-	
-	public void applyEffects(PlayerData user, double mana) {
+	public default void applyEffects(PlayerData user, double mana) {
 		// Empty unless overridden
 	}
 	
-	public abstract double getFlatBonus(PlayerData user);
-	public abstract double getMultiplierBonus(Player user);
+	public default double getManaGainFlat(PlayerData user) {
+		return 0;
+	}
+	
+	public default double getManaGainMult(Player user) {
+		return 0;
+	}
+	
 	public abstract boolean canUse(PlayerData user, ManaSource src);
 }

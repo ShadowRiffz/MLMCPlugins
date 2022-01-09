@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ import de.tr7zw.nbtapi.NBTItem;
 public abstract class Augment {
 	protected String name;
 	protected int level;
-	protected EventType etype;
+	protected List<EventType> etypes;
 	protected static DecimalFormat df = new DecimalFormat("##.#");
 	
 	public Augment() {
@@ -44,12 +45,12 @@ public abstract class Augment {
 		return "§7[" + name + " Lv " + level + "]";
 	}
 	
-	public void setEventType(EventType etype) {
-		this.etype = etype;
+	public void setEventType(List<EventType> etypes) {
+		this.etypes = etypes;
 	}
 	
-	public EventType getEventType() {
-		return etype;
+	public List<EventType> getEventTypes() {
+		return etypes;
 	}
 	
 	public String formatPercentage(double bonus) {

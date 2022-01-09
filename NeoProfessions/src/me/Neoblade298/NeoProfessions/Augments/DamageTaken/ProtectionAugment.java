@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
+package me.Neoblade298.NeoProfessions.Augments.DamageTaken;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,42 +12,40 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
+public class ProtectionAugment extends Augment implements ModDamageTakenAugment {
 	
-	public UnderdogAugment() {
+	public ProtectionAugment() {
 		super();
-		this.name = "Underdog";
-		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
+		this.name = "Protection";
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
-	public UnderdogAugment(int level) {
+	public ProtectionAugment(int level) {
 		super(level);
-		this.name = "Underdog";
-		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
+		this.name = "Protection";
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
 	@Override
-	public double getDamageDealtMult(LivingEntity user) {
-		return 0.05 * (level / 5);
+	public double getDamageTakenMult(LivingEntity user) {
+		return 0.004 * (level / 5);
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new UnderdogAugment(level);
+		return new ProtectionAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.1;
+		return true;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7Decreases damage taken by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

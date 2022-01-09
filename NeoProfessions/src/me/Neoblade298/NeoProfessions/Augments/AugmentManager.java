@@ -175,13 +175,13 @@ public class AugmentManager implements Listener {
 			Player p = (Player) e.getDamager();
 			double multiplier = 1;
 			double flat = 0;
-			if (containsAugments(p, EventType.DAMAGE)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE)) {
+			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							multiplier += aug.getMultiplierBonus(p);
-							flat += aug.getFlatBonus(p);
+							multiplier += aug.getDamageDealtMult(p);
+							flat += aug.getDamageDealtFlat(p);
 						}
 					}
 				}
@@ -201,8 +201,8 @@ public class AugmentManager implements Listener {
 				if (augment instanceof ModManaGainAugment) {
 					ModManaGainAugment aug = (ModManaGainAugment) augment;
 					if (aug.canUse(data, e.getSource())) {
-						multiplier += aug.getMultiplierBonus(data.getPlayer());
-						flat += aug.getFlatBonus(data);
+						multiplier += aug.getManaGainMult(data.getPlayer());
+						flat += aug.getManaGainFlat(data);
 					}
 				}
 			}
@@ -222,8 +222,8 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModHealAugment) {
 						ModHealAugment aug = (ModHealAugment) augment;
 						if (aug.canUse(data)) {
-							multiplier += aug.getMultiplierBonus(data.getPlayer());
-							flat += aug.getFlatBonus(data);
+							multiplier += aug.getHealMult(data.getPlayer());
+							flat += aug.getHealFlat(data);
 						}
 					}
 				}
@@ -244,9 +244,9 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModBuffAugment) {
 						ModBuffAugment aug = (ModBuffAugment) augment;
 						if (aug.canUse(p, e.getTarget(), e)) {
-							multiplier += aug.getMultiplierBonus(p);
-							flat += aug.getFlatBonus(p);
-							tickMult += aug.getTimeMultiplier(p);
+							multiplier += aug.getBuffMult(p);
+							flat += aug.getBuffFlat(p);
+							tickMult += aug.getBuffTimeMult(p);
 						}
 					}
 				}

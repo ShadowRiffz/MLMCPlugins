@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
@@ -11,30 +12,25 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class SentinelAugment extends ModDamageDealtAugment {
+public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	double maxHealthMod;
 	
 	public SentinelAugment() {
 		super();
 		this.name = "Sentinel";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 		this.maxHealthMod = (this.level / 5) * 0.001;
 	}
 
 	public SentinelAugment(int level) {
 		super(level);
 		this.name = "Sentinel";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
 	@Override
-	public double getFlatBonus(LivingEntity user) {
+	public double getDamageDealtFlat(LivingEntity user) {
 		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
-		return 0;
 	}
 
 	@Override
@@ -52,7 +48,7 @@ public class SentinelAugment extends ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + getFlatBonus(user) + "% §7when dealing");
+		lore.add("§7Increases damage by §f" + getDamageDealtFlat(user) + "% §7when dealing");
 		lore.add("§7damage to an enemy above 95% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

@@ -4,22 +4,18 @@ import org.bukkit.entity.Player;
 
 import com.sucy.skill.api.player.PlayerData;
 
-import me.Neoblade298.NeoProfessions.Augments.Augment;
-
-public abstract class ModHealAugment extends Augment{
-	public ModHealAugment() {
-		super();
+public interface ModHealAugment {
+	
+	public default void applyEffects(PlayerData user, double healing) {
+		
 	}
 	
-	public ModHealAugment(int level) {
-		super(level);
+	public default double getHealFlat(PlayerData user) {
+		return 0;
 	}
 	
-	public void applyEffects(PlayerData user, double healing) {
-		// Empty unless overridden
+	public default double getHealMult(Player user) {
+		return 0;
 	}
-	
-	public abstract double getFlatBonus(PlayerData user);
-	public abstract double getMultiplierBonus(Player user);
 	public abstract boolean canUse(PlayerData user);
 }

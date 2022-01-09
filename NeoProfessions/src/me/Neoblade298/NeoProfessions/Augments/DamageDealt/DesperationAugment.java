@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.LivingEntity;
@@ -13,28 +14,23 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class DesperationAugment extends ModDamageDealtAugment {
+public class DesperationAugment extends Augment implements ModDamageDealtAugment {
 	double manaTaken;
 	
 	public DesperationAugment() {
 		super();
 		this.name = "Desperation";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
 	public DesperationAugment(int level) {
 		super(level);
 		this.name = "Desperation";
-		this.etype = EventType.DAMAGE;
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
 	@Override
-	public double getFlatBonus(LivingEntity user) {
-		return 0;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
+	public double getDamageDealtMult(LivingEntity user) {
 		return 0.03 * (level / 5);
 	}
 
@@ -53,7 +49,7 @@ public class DesperationAugment extends ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(getMultiplierBonus(user)) + "% §7when dealing");
+		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
 		lore.add("§7damage while below 20% mana.");
 		lore.add("§cOnly works with mana.");
 		meta.setLore(lore);

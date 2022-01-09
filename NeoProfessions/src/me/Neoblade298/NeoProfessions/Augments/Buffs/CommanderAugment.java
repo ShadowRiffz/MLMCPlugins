@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Augments.Buffs;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.LivingEntity;
@@ -13,32 +14,22 @@ import com.sucy.skill.api.util.BuffType;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class CommanderAugment extends ModBuffAugment {
+public class CommanderAugment extends Augment implements ModBuffAugment {
 	
 	public CommanderAugment() {
 		super();
 		this.name = "Commander";
-		this.etype = EventType.BUFF;
+		this.etypes = Arrays.asList(new EventType[] {EventType.BUFF});
 	}
 
 	public CommanderAugment(int level) {
 		super(level);
 		this.name = "Commander";
-		this.etype = EventType.BUFF;
+		this.etypes = Arrays.asList(new EventType[] {EventType.BUFF});
 	}
 
 	@Override
-	public double getTimeMultiplier(LivingEntity user) {
-		return 0;
-	}
-
-	@Override
-	public double getFlatBonus(LivingEntity user) {
-		return 0;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
+	public double getBuffMult(LivingEntity user) {
 		return 0.02 * (level / 5);
 	}
 
@@ -57,7 +48,7 @@ public class CommanderAugment extends ModBuffAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases effectiveness of damage");
-		lore.add("§7buffs by §f" + formatPercentage(getMultiplierBonus(user)) + "%§7.");
+		lore.add("§7buffs by §f" + formatPercentage(getBuffMult(user)) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
