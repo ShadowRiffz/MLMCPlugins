@@ -17,9 +17,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.PlayerManaGainEvent;
+import com.sucy.skill.api.event.SkillHealEvent;
+import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Augments.Types.*;
@@ -162,13 +166,55 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							multiplier += aug.getMultiplierBonus(null);
-							flat += aug.getFlatBonus(null);
+							multiplier += aug.getMultiplierBonus(p);
+							flat += aug.getFlatBonus(p);
 						}
 					}
 				}
 			}
 			e.setDamage(e.getDamage() * multiplier + flat);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onManaGain(PlayerManaGainEvent e) {
+		Player p = e.getPlayerData().getPlayer();
+		PlayerData data = e.getPlayerData();
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.MANA_GAIN)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.MANA_GAIN)) {
+				if (augment instanceof ModManaGainAugment) {
+					ModManaGainAugment aug = (ModManaGainAugment) augment;
+					if (aug.canUse(data, e.getSource())) {
+						multiplier += aug.getMultiplierBonus(data.getPlayer());
+						flat += aug.getFlatBonus(data);
+					}
+				}
+			}
+		}
+		e.setAmount(e.getAmount() * multiplier + flat);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onHeal(SkillHealEvent e) {
+		if (e.getHealer() instanceof Player) {
+			Player p = (Player) e.getHealer();
+			PlayerData data = SkillAPI.getPlayerData(p);
+			double multiplier = 1;
+			double flat = 0;
+			if (containsAugments(p, EventType.HEAL)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.HEAL)) {
+					if (augment instanceof ModHealAugment) {
+						ModHealAugment aug = (ModHealAugment) augment;
+						if (aug.canUse(data)) {
+							multiplier += aug.getMultiplierBonus(data.getPlayer());
+							flat += aug.getFlatBonus(data);
+						}
+					}
+				}
+			}
+			e.setAmount(e.getAmount() * multiplier + flat);
 		}
 	}
 }

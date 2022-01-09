@@ -21,10 +21,6 @@ public abstract class ModDamageDealtAugment extends Augment{
 		// Empty unless overridden
 	}
 	
-	public boolean isPermanent() {
-		return false;
-	}
-	
 	public String formatMultiplierBonus(LivingEntity user, double bonus) {
 		return df.format(getMultiplierBonus(user) * 100);
 	}

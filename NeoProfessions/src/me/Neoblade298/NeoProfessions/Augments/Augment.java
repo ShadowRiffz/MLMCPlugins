@@ -63,7 +63,10 @@ public abstract class Augment {
 		nbti.setString("augment", name);
 		return nbti.getItem();
 	}
+	
+	public boolean isPermanent() {
+		return false;
+	}
 
 	public abstract Augment createNew(int level);
-	public abstract boolean isPermanent();
 }

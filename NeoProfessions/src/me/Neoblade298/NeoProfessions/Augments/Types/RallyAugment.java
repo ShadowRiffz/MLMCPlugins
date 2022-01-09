@@ -11,51 +11,50 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class SentinelAugment extends ModDamageDealtAugment {
-	double maxHealthMod;
+public class RallyAugment extends ModDamageDealtAugment {
 	
-	public SentinelAugment() {
+	public RallyAugment() {
 		super();
-		this.name = "Sentinel";
-		this.etype = EventType.DAMAGE;
-		this.maxHealthMod = (this.level / 5) * 0.001;
+		this.name = "Rally";
+		this.etype = EventType.HEAL;
 	}
 
-	public SentinelAugment(int level) {
+	public RallyAugment(int level) {
 		super(level);
-		this.name = "Sentinel";
-		this.etype = EventType.DAMAGE;
+		this.name = "Rally";
+		this.etype = EventType.HEAL;
 	}
 
 	@Override
 	public double getFlatBonus(LivingEntity user) {
-		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
-	}
-
-	@Override
-	public double getMultiplierBonus(LivingEntity user) {
 		return 0;
 	}
 
 	@Override
+	public double getMultiplierBonus(LivingEntity user) {
+		return 0.01 * (level / 5);
+	}
+
+	@Override
 	public Augment createNew(int level) {
-		return new SentinelAugment(level);
+		return new RallyAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.95;
+		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		return percentage > 0.7;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + getFlatBonus(user) + "% §7when dealing");
-		lore.add("§7damage to an enemy above 95% health.");
+		lore.add("§7Increases healing by §f" + formatMultiplierBonus(user, getMultiplierBonus(user)) + "% §7while");
+		lore.add("§7above 70% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
+
 }
