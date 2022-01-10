@@ -24,6 +24,7 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
+import com.sucy.skill.api.event.PlayerRegenEvent;
 import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
@@ -36,6 +37,8 @@ import me.Neoblade298.NeoProfessions.Augments.DamageTaken.*;
 import me.Neoblade298.NeoProfessions.Augments.Flags.*;
 import me.Neoblade298.NeoProfessions.Augments.Healing.*;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
+import me.Neoblade298.NeoProfessions.Augments.Regen.*;
+import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
 
 public class AugmentManager implements Listener {
 	// event types
@@ -90,6 +93,13 @@ public class AugmentManager implements Listener {
 		// Mana Gain
 		augmentMap.put("Defiance", new DefianceAugment());
 		augmentMap.put("Final Light", new FinalLightAugment());
+		
+		// Regen
+		augmentMap.put("Last Breath", new LastBreathAugment());
+		
+		// Taunt
+		augmentMap.put("Imposing", new ImposingAugment());
+		augmentMap.put("Steadfast", new SteadfastAugment());
 	}
 	
 	public static boolean isAugment(ItemStack item) {
@@ -230,7 +240,7 @@ public class AugmentManager implements Listener {
 						aug.applyEffects(data, e.getAmount());
 						
 						multiplier += aug.getManaGainMult(data.getPlayer());
-						flat += aug.getManaGainFlat(data);
+						flat += aug.getManaGainFlat(data.getPlayer());
 					}
 				}
 			}
@@ -352,5 +362,27 @@ public class AugmentManager implements Listener {
 		
 			e.setTicks((int) (e.getTicks() * multiplier + flat));
 		}
+	}
+
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onHealthRegen(PlayerRegenEvent e) {
+		Player p = e.getPlayer();
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.REGEN)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.REGEN)) {
+				if (augment instanceof ModRegenAugment) {
+					ModRegenAugment aug = (ModRegenAugment) augment;
+					if (aug.canUse(p)) {
+						aug.applyEffects(p, e.getAmount());
+						
+						multiplier += aug.getRegenMult(p);
+						flat += aug.getRegenFlat(p);
+					}
+				}
+			}
+		}
+		e.setAmount(e.getAmount() * multiplier + flat);
 	}
 }

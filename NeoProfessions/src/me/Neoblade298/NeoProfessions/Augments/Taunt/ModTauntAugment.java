@@ -2,9 +2,6 @@ package me.Neoblade298.NeoProfessions.Augments.Taunt;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.api.enums.ManaSource;
-import com.sucy.skill.api.player.PlayerData;
-
 public interface ModTauntAugment {
 	
 	public default void applyEffects(Player user, double amount) {

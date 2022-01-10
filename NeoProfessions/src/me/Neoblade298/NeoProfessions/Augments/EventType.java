@@ -10,5 +10,6 @@ public enum EventType {
 	BUFF,
 	TAUNT,
 	POTION,
+	REGEN,
 	MANA_GAIN;
 }
