@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions.Augments.DamageTaken;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

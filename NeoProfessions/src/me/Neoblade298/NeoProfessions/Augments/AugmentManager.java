@@ -18,8 +18,10 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillBuffEvent;
@@ -28,6 +30,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Augments.Buffs.ModBuffAugment;
+import me.Neoblade298.NeoProfessions.Augments.Crits.ModCritCheckAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.BurstAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.CalmingAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.DesperationAugment;
@@ -39,6 +42,7 @@ import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OpportunistAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OverloadAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.SentinelAugment;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.UnderdogAugment;
+import me.Neoblade298.NeoProfessions.Augments.Flags.ModFlagAugment;
 import me.Neoblade298.NeoProfessions.Augments.Healing.ModHealAugment;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 
@@ -180,6 +184,8 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
+							aug.applyEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
+							
 							multiplier += aug.getDamageDealtMult(p);
 							flat += aug.getDamageDealtFlat(p);
 						}
@@ -201,6 +207,8 @@ public class AugmentManager implements Listener {
 				if (augment instanceof ModManaGainAugment) {
 					ModManaGainAugment aug = (ModManaGainAugment) augment;
 					if (aug.canUse(data, e.getSource())) {
+						aug.applyEffects(data, e.getAmount());
+						
 						multiplier += aug.getManaGainMult(data.getPlayer());
 						flat += aug.getManaGainFlat(data);
 					}
@@ -221,7 +229,9 @@ public class AugmentManager implements Listener {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.HEAL)) {
 					if (augment instanceof ModHealAugment) {
 						ModHealAugment aug = (ModHealAugment) augment;
-						if (aug.canUse(data)) {
+						if (aug.canUse(data, e.getTarget())) {
+							aug.applyEffects(data, e.getTarget(), e.getAmount());
+							
 							multiplier += aug.getHealMult(data.getPlayer());
 							flat += aug.getHealFlat(data);
 						}
@@ -244,6 +254,8 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModBuffAugment) {
 						ModBuffAugment aug = (ModBuffAugment) augment;
 						if (aug.canUse(p, e.getTarget(), e)) {
+							aug.applyEffects(p, e.getTarget());
+							
 							multiplier += aug.getBuffMult(p);
 							flat += aug.getBuffFlat(p);
 							tickMult += aug.getBuffTimeMult(p);
@@ -253,6 +265,72 @@ public class AugmentManager implements Listener {
 			}
 			e.setAmount(e.getAmount() * multiplier + flat);
 			e.setTicks((int) (e.getTicks() * tickMult));
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onCritCheck(PlayerCriticalCheckEvent e) {
+		PlayerData data = e.getPlayerData();
+		Player p = data.getPlayer();
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.CRIT_CHECK)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_CHECK)) {
+				if (augment instanceof ModCritCheckAugment) {
+					ModCritCheckAugment aug = (ModCritCheckAugment) augment;
+					if (aug.canUse(data, e)) {
+						aug.applyEffects(data, e.getChance());
+						
+						multiplier += aug.getCritChanceMult(p);
+						flat += aug.getCritChanceFlat(p);
+					}
+				}
+			}
+		}
+		e.setChance(e.getChance() * multiplier + flat);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onFlagApply(FlagApplyEvent e) {
+		if (e.getCaster() instanceof Player) {
+			Player p = (Player) e.getCaster();
+			double multiplier = 1;
+			double flat = 0;
+			if (containsAugments(p, EventType.FLAG_GIVE)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_GIVE)) {
+					if (augment instanceof ModFlagAugment) {
+						ModFlagAugment aug = (ModFlagAugment) augment;
+						if (aug.canUse(e)) {
+							aug.applyEffects(e);
+							
+							multiplier += aug.getFlagTimeMult(p);
+							flat += aug.getFlagTimeFlat(p);
+						}
+					}
+				}
+			}
+		
+			e.setTicks((int) (e.getTicks() * multiplier + flat));
+		}
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			double multiplier = 1;
+			double flat = 0;
+			if (containsAugments(p, EventType.FLAG_RECEIVE)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_RECEIVE)) {
+					if (augment instanceof ModFlagAugment) {
+						ModFlagAugment aug = (ModFlagAugment) augment;
+						if (aug.canUse(e)) {
+							aug.applyEffects(e);
+							
+							multiplier += aug.getFlagTimeMult(p);
+							flat += aug.getFlagTimeFlat(p);
+						}
+					}
+				}
+			}
+		
+			e.setTicks((int) (e.getTicks() * multiplier + flat));
 		}
 	}
 }

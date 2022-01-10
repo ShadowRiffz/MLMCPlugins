@@ -1,56 +1,56 @@
-package me.Neoblade298.NeoProfessions.Augments.Healing;
+package me.Neoblade298.NeoProfessions.Augments.Crits;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class RallyAugment extends Augment implements ModHealAugment {
+public class CorneredAugment extends Augment implements ModCritCheckAugment {
 	
-	public RallyAugment() {
+	public CorneredAugment() {
 		super();
-		this.name = "Rally";
-		this.etypes = Arrays.asList(new EventType[] {EventType.HEAL});
+		this.name = "Cornered";
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
 	}
 
-	public RallyAugment(int level) {
+	public CorneredAugment(int level) {
 		super(level);
-		this.name = "Rally";
-		this.etypes = Arrays.asList(new EventType[] {EventType.HEAL});
+		this.name = "Cornered";
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
 	}
 
 	@Override
-	public double getHealMult(Player user) {
+	public double getCritChanceMult(Player user) {
 		return 0.01 * (level / 5);
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new RallyAugment(level);
+		return new CorneredAugment(level);
 	}
 
 	@Override
-	public boolean canUse(PlayerData user, LivingEntity target) {
+	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
 		Player p = user.getPlayer();
 		double percentage = p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.7;
+		return percentage < 0.3;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases healing by §f" + formatPercentage(getHealMult(user)) + "% §7while");
-		lore.add("§7above 70% health.");
+		lore.add("§7Increases critical hit chance by §f" + formatPercentage(getCritChanceMult(user)) + "%");
+		lore.add("§7when below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

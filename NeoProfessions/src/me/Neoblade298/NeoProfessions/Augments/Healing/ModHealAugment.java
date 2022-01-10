@@ -1,12 +1,13 @@
 package me.Neoblade298.NeoProfessions.Augments.Healing;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.api.player.PlayerData;
 
 public interface ModHealAugment {
 	
-	public default void applyEffects(PlayerData user, double healing) {
+	public default void applyEffects(PlayerData user, LivingEntity target, double healing) {
 		
 	}
 	
@@ -17,5 +18,6 @@ public interface ModHealAugment {
 	public default double getHealMult(Player user) {
 		return 0;
 	}
-	public abstract boolean canUse(PlayerData user);
+	
+	public abstract boolean canUse(PlayerData user, LivingEntity target);
 }
