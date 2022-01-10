@@ -1,24 +1,23 @@
 package me.neoblade298.neouno.Objects;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Lobby {
-	private ArrayList<UUID> players;
-	private ArrayList<UUID> invited;
-	private UUID host;
+	private ArrayList<String> players;
+	private ArrayList<String> invited;
+	private String host;
 	private String name;
 	private int pointsToWin;
 	
-	public Lobby(UUID uuid, String name) {
-		host = uuid;
-		players = new ArrayList<UUID>();
-		players.add(uuid);
+	public Lobby(String pname, String name) {
+		host = pname;
+		players = new ArrayList<String>();
+		players.add(pname);
 		this.name = name;
-		this.invited = new ArrayList<UUID>();
+		this.invited = new ArrayList<String>();
 		this.pointsToWin = -1;
 	}
 	
@@ -32,18 +31,18 @@ public class Lobby {
 	}
 	
 	public void broadcast(String msg) {
-		for (UUID uuid : players) {
-			Player p = Bukkit.getPlayer(uuid);
+		for (String name : players) {
+			Player p = Bukkit.getPlayer(name);
 			String message = "&4[&c&lMLMC&4] &7" + msg;
 			p.sendMessage(message.replaceAll("&", "§"));
 		}
 	}
 
-	public ArrayList<UUID> getInvited() {
+	public ArrayList<String> getInvited() {
 		return invited;
 	}
 
-	public void setInvited(ArrayList<UUID> invited) {
+	public void setInvited(ArrayList<String> invited) {
 		this.invited = invited;
 	}
 
@@ -55,19 +54,19 @@ public class Lobby {
 		this.name = name;
 	}
 
-	public ArrayList<UUID> getPlayers() {
+	public ArrayList<String> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<UUID> players) {
+	public void setPlayers(ArrayList<String> players) {
 		this.players = players;
 	}
 
-	public UUID getHost() {
+	public String getHost() {
 		return host;
 	}
 
-	public void setHost(UUID host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
 

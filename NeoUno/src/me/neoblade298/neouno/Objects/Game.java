@@ -3,11 +3,9 @@ package me.neoblade298.neouno.Objects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neouno.Uno;
@@ -23,7 +21,7 @@ public class Game {
 	public ArrayList<GamePlayer> gameplayers;
 	public ArrayList<Card> drawDeck;
 	public Card topCard;
-	public HashMap<UUID, GamePlayer> players;
+	public HashMap<String, GamePlayer> players;
 	private HashMap<GamePlayer, Integer> points;
 	public Uno main;
 	public GamePlayer curr;
@@ -33,7 +31,7 @@ public class Game {
 	public String requiredAction;
 	public boolean isBusy;
 	
-	public Game(Uno main, String name, ArrayList<UUID> players, int pointsToWin) {
+	public Game(Uno main, String name, ArrayList<String> players, int pointsToWin) {
 		this.name = name;
 		this.main = main;
 		this.pointsToWin = pointsToWin;
@@ -42,18 +40,18 @@ public class Game {
 		this.spectators = new ArrayList<GamePlayer>();
 		this.gameplayers = new ArrayList<GamePlayer>();
 		this.drawDeck = new ArrayList<Card>();
-		this.players = new HashMap<UUID, GamePlayer>();
+		this.players = new HashMap<String, GamePlayer>();
 		this.points = new HashMap<GamePlayer, Integer>();
 		this.turns = new ArrayList<GamePlayer>();
 		this.requiredAction = null;
 		this.drawNum = 0;
 		this.isBusy = false;
 		
-		for (UUID uuid : players) {
-			GamePlayer gp = new GamePlayer(this, uuid);
+		for (String player : players) {
+			GamePlayer gp = new GamePlayer(this, player);
 			this.turns.add(gp);
 			this.gameplayers.add(gp);
-			this.players.put(uuid, gp);
+			this.players.put(player, gp);
 			this.points.put(gp, 0);
 		}
 
@@ -97,6 +95,13 @@ public class Game {
 			Card card = drawDeck.remove(0);
 			int number = topCard.getNumber();
 			ChatColor color = topCard.getColor();
+			
+			// Don't allow if next player is not online
+			if (Bukkit.getPlayer(turns.get(0).getPlayer()) == null) {
+				broadcast("&cThe next player, &e" + turns.get(0).getPlayer() + "&c, is offline. Kick them to continue, or wait for them to log back on!");
+				return;
+			}
+			
 			if (number != card.getNumber() && !color.equals(ChatColor.WHITE) &&
 					!color.equals(card.getColor()) && !card.getColor().equals(ChatColor.WHITE)) {
 				gp.getCards().add(card);

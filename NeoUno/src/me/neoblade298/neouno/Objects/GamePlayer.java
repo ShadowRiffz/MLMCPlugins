@@ -1,7 +1,6 @@
 package me.neoblade298.neouno.Objects;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,13 +16,13 @@ public class GamePlayer {
 	private Game game;
 	private ArrayList<Card> cards;
 	private int points;
-	private UUID player;
+	private String player;
 	private boolean calledUno;
 
-	public GamePlayer(Game game, UUID uuid) {
+	public GamePlayer(Game game, String name) {
 		this.game = game;
 		this.cards = new ArrayList<Card>();
-		this.player = uuid;
+		this.player = name;
 		this.points = 0;
 		this.calledUno = false;
 	}
@@ -31,7 +30,9 @@ public class GamePlayer {
 	public void message(String msg) {
 		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "§");
 		Player p = Bukkit.getPlayer(player);
-		p.sendMessage(message);
+		if (p != null) {
+			p.sendMessage(message);
+		}
 	}
 	
 	public void showHandOld() {
@@ -77,7 +78,9 @@ public class GamePlayer {
 		builder.append(new TextComponent("|| (Draw Card)")).color(net.md_5.bungee.api.ChatColor.WHITE)
 		.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to draw card!").create()))
 		.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/uno draw"));
-		Bukkit.getPlayer(player).spigot().sendMessage(builder.create());
+		if (Bukkit.getPlayer(player) != null) {
+			Bukkit.getPlayer(player).spigot().sendMessage(builder.create());
+		}
 	}
 
 	public boolean equals(GamePlayer gp) {
@@ -100,16 +103,20 @@ public class GamePlayer {
 		this.points = points;
 	}
 
-	public UUID getPlayer() {
+	public String getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(UUID uuid) {
-		this.player = uuid;
+	public void setPlayer(String player) {
+		this.player = player;
 	}
 	
 	public String toString() {
-		return Bukkit.getPlayer(player).getName();
+		Player p = Bukkit.getPlayer(player);
+		if (p != null) {
+			return Bukkit.getPlayer(player).getName();
+		}
+		return null;
 	}
 
 	public boolean calledUno() {

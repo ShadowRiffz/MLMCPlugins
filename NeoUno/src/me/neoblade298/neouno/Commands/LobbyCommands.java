@@ -1,7 +1,6 @@
 package me.neoblade298.neouno.Commands;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,13 +19,13 @@ public class LobbyCommands {
 
 	public void createLobby(String name, Player sender) {
 
-		UUID uuid = sender.getUniqueId();
+		String pname = sender.getName();
 		// Check if the name exists already, or player is already in a game
-		if (main.inlobby.containsKey(uuid)) {
+		if (main.inlobby.containsKey(pname)) {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a lobby!");
 			return;
 		}
-		else if (main.ingame.containsKey(uuid)) {
+		else if (main.ingame.containsKey(pname)) {
 			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a game!");
 			return;
 		}
@@ -35,8 +34,8 @@ public class LobbyCommands {
 			return;
 		}
 
-		Lobby lobby = new Lobby(uuid, name);
-		main.inlobby.put(uuid, lobby);
+		Lobby lobby = new Lobby(pname, name);
+		main.inlobby.put(sender.getName(), lobby);
 		main.lobbies.put(name, lobby);
 		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby §e" + lobby.getName() + "§7!");
 	}
@@ -47,16 +46,16 @@ public class LobbyCommands {
 			return;
 		}
 
-		UUID uuid = sender.getUniqueId();
+		String pname = sender.getName();
 		Lobby lobby = main.lobbies.get(name);
-		ArrayList<UUID> invited = lobby.getInvited();
-		if (invited.contains(uuid)) {
+		ArrayList<String> invited = lobby.getInvited();
+		if (invited.contains(pname)) {
 			if (lobby.getPlayers().size() <= 7) {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby §e" + lobby.getName() + "§7!");
 				lobby.broadcast("&e" + sender.getName() + " &7has joined the lobby!");
-				lobby.getPlayers().add(uuid);
-				lobby.getInvited().remove(uuid);
-				main.inlobby.put(uuid, lobby);
+				lobby.getPlayers().add(pname);
+				lobby.getInvited().remove(pname);
+				main.inlobby.put(pname, lobby);
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §cThat lobby is full!");
@@ -68,33 +67,34 @@ public class LobbyCommands {
 	}
 
 	public void leaveLobby(Player sender) {
-		UUID suuid = sender.getUniqueId();
-		Lobby lobby = main.inlobby.get(suuid);
-		if (lobby.getHost().equals(suuid)) {
+		String pname = sender.getName();
+		Lobby lobby = main.inlobby.get(pname);
+		if (lobby.getHost().equals(pname)) {
 			lobby.broadcast("&7Lobby disbanded by host!");
-			for (UUID uuid : lobby.getPlayers()) {
-				main.inlobby.remove(uuid);
+			for (String name : lobby.getPlayers()) {
+				main.inlobby.remove(name);
 			}
 			main.lobbies.remove(lobby.getName());
 		}
 		else {
-			lobby.getPlayers().remove(sender);
-			main.inlobby.remove(sender);
+			lobby.getPlayers().remove(pname);
+			main.inlobby.remove(pname);
 			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully left lobby!");
 			lobby.broadcast("&e" + sender.getName() + " &7has left the lobby!");
 		}
 	}
 
 	public void kickPlayer(Player sender, String name) {
-		Lobby lobby = main.inlobby.get(sender);
-		Player toKick = Bukkit.getPlayer(name);
-		if (toKick == null) {
-			return;
-		}
-		if (lobby.getHost().equals(sender)) {
-			lobby.getPlayers().remove(Bukkit.getPlayer(name));
-			Bukkit.getPlayer(name).sendMessage("§7You were kicked from the lobby!");
-			lobby.broadcast("&e" + Bukkit.getPlayer(name).getName() + "&7 has been kicked by the host!");
+		Lobby lobby = main.inlobby.get(sender.getName());
+		if (lobby.getHost().equals(sender.getName())) {
+			lobby.getPlayers().remove(name);
+			if (Bukkit.getPlayer(name) != null) {
+				Bukkit.getPlayer(name).sendMessage("§7You were kicked from the lobby!");
+				lobby.broadcast("&e" + Bukkit.getPlayer(name).getName() + "&7 has been kicked by the host!");
+			}
+			else {
+				lobby.broadcast("&e" + name + "&7 has been kicked by the host!");
+			}
 		}
 		else {
 			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can kick from lobby!");
@@ -102,14 +102,14 @@ public class LobbyCommands {
 	}
 
 	public void invitePlayer(Player sender, String name) {
-		Lobby lobby = main.inlobby.get(sender);
+		String sname = sender.getName();
+		Lobby lobby = main.inlobby.get(sname);
 		Player invited = Bukkit.getPlayer(name);
-		UUID uuid = invited.getUniqueId();
 		if (invited == null) {
 			return;
 		}
-		if (lobby.getHost().equals(sender)) {
-			lobby.getInvited().add(uuid);
+		if (lobby.getHost().equals(sname)) {
+			lobby.getInvited().add(invited.getName());
 			lobby.broadcast("&7Successfully invited &e" + invited.getName() + "&7!");
 			invited.sendMessage("§4[§c§lMLMC§4] §7You were invited to uno lobby §e" + lobby.getName() + "§7! Join with §c/uno join " + lobby.getName() + "§7.");
 		}
@@ -119,7 +119,8 @@ public class LobbyCommands {
 	}
 
 	public void setPointsToWin(Player sender, String amt) {
-		Lobby lobby = main.inlobby.get(sender);
+		String sname = sender.getName();
+		Lobby lobby = main.inlobby.get(sname);
 		int amount = 0;
 		try {
 			amount = Integer.parseInt(amt);
@@ -133,7 +134,7 @@ public class LobbyCommands {
 			return;
 		}
 
-		if (lobby.getHost().equals(sender)) {
+		if (lobby.getHost().equals(sname)) {
 			lobby.setPointsToWin(amount);
 			lobby.broadcast("&7Successfully set points to win to &e" + amt + "!");
 		}
@@ -143,15 +144,16 @@ public class LobbyCommands {
 	}
 
 	public void startGame(Player sender) {
-		Lobby lobby = main.inlobby.get(sender);
+		String sname = sender.getName();
+		Lobby lobby = main.inlobby.get(sname);
 		if (lobby.getPlayers().size() >= 2) {
-			if (lobby.getHost().equals(sender)) {
+			if (lobby.getHost().equals(sname)) {
 				try {
 					Game game = new Game(main, lobby.getName(), lobby.getPlayers(), lobby.getPointsToWin());
 					main.games.put(lobby.getName(), game);
-					for (UUID uuid : lobby.getPlayers()) {
-						main.inlobby.remove(uuid);
-						main.ingame.put(uuid, game);
+					for (String name : lobby.getPlayers()) {
+						main.inlobby.remove(name);
+						main.ingame.put(name, game);
 					}
 					main.lobbies.remove(lobby.getName());
 				} catch (Exception e) {
@@ -168,12 +170,12 @@ public class LobbyCommands {
 	}
 	
 	public void spectateGame(Player sender, String name) {
-		if (!main.ingame.containsKey(sender)) {
+		String sname = sender.getName();
+		if (!main.ingame.containsKey(sname)) {
 			if (main.games.containsKey(name)) {
-				UUID uuid = sender.getUniqueId();
 				Game game = main.games.get(name);
-				GamePlayer gp = new GamePlayer(game, uuid);
-				main.ingame.put(uuid, game);
+				GamePlayer gp = new GamePlayer(game, sname);
+				main.ingame.put(sname, game);
 				game.spectators.add(gp);
 				gp.message("&7You're now spectating! Leave any time with &c/uno quit&7.");
 				game.broadcast("&e" + gp + " &7is now spectating!");

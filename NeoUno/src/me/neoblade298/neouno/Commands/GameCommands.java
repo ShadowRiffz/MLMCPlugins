@@ -1,8 +1,7 @@
 package me.neoblade298.neouno.Commands;
 
-import java.util.UUID;
-
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -18,10 +17,10 @@ public class GameCommands {
 	}
 	
 	public void showHand(Player sender) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -36,10 +35,10 @@ public class GameCommands {
 	}
 	
 	public void quitGame(Player sender) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -54,10 +53,10 @@ public class GameCommands {
 	}
 	
 	public void playCard(Player sender, String name) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -101,10 +100,10 @@ public class GameCommands {
 	}
 	
 	public void changeColor(Player sender, String color) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -115,6 +114,10 @@ public class GameCommands {
 			}
 			if (!game.main.stringToColor.containsKey(color)) {
 				gp.message("&cThat isn't a valid color");
+				return;
+			}
+			if (Bukkit.getPlayer(game.turns.get(0).getPlayer()) == null) {
+				game.broadcast("&cThe next player, &e" + game.turns.get(0).getPlayer() + "&c, is offline. Kick them to continue, or wait for them to log back on!");
 				return;
 			}
 
@@ -133,10 +136,10 @@ public class GameCommands {
 	}
 	
 	public void callUno(Player sender) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			if (!isNotBusy(game, gp)) {
 				return;
@@ -165,14 +168,14 @@ public class GameCommands {
 	}
 	
 	public void challengeUno(Player sender, Player toChallenge) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
-			UUID cuuid = toChallenge.getUniqueId();
-			if (main.ingame.containsKey(cuuid)) {
-				GamePlayer challenged = game.players.get(cuuid);
+			String cname = toChallenge.getName();
+			if (main.ingame.containsKey(cname)) {
+				GamePlayer challenged = game.players.get(cname);
 
 				if (!isNotBusy(game, gp)) {
 					return;
@@ -201,10 +204,10 @@ public class GameCommands {
 	}
 	
 	public void drawCard(Player sender) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 
 			if (!isPlayerTurn(game, gp) || !isNotBusy(game, gp)) {
 				return;
@@ -218,10 +221,10 @@ public class GameCommands {
 	}
 	
 	public void displayPlayers(Player sender) {
-		UUID uuid = sender.getUniqueId();
-		if (main.ingame.containsKey(uuid)) {
-			Game game = main.ingame.get(uuid);
-			GamePlayer gp = game.players.get(uuid);
+		String sname = sender.getName();
+		if (main.ingame.containsKey(sname)) {
+			Game game = main.ingame.get(sname);
+			GamePlayer gp = game.players.get(sname);
 			
 			gp.message("&7Current turn: &f" + game.curr + "&7 - &e" + game.curr.getCards().size() + " &7cards");
 			int count = 2;

@@ -2,6 +2,7 @@ package me.neoblade298.neouno.Cards;
 
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import me.neoblade298.neouno.Objects.Game;
@@ -54,6 +55,10 @@ public class ReverseCard implements Card{
 
 	@Override
 	public void onPlay() {
+		if (Bukkit.getPlayer(game.turns.get(game.turns.size() - 1).getPlayer()) == null) {
+			game.broadcast("&cThe next player, &e" + game.turns.get(0).getPlayer() + "&c, is offline. Kick them to continue, or wait for them to log back on!");
+			return;
+		}
 		Collections.reverse(game.turns);
 		game.turns.add(game.curr);
 		game.curr = game.turns.remove(0);

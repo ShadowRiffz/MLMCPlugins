@@ -30,8 +30,9 @@ public class Commands implements CommandExecutor{
 			return true;
 		}
 		Player p = (Player) sender;
+		String name = p.getName();
 		
-		if (!main.inlobby.containsKey(sender) && !main.ingame.containsKey(sender)) {
+		if (!main.inlobby.containsKey(name) && !main.ingame.containsKey(name)) {
 			if (args.length == 0) {
 				p.sendMessage("§4[§c§lUno§4]");
 				p.sendMessage("§c/uno create [name] §7- Create a lobby");
@@ -57,8 +58,8 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		else if (main.inlobby.containsKey(sender)) {
-			Lobby lobby = main.inlobby.get(sender);
+		else if (main.inlobby.containsKey(name)) {
+			Lobby lobby = main.inlobby.get(name);
 			if (args.length == 0) {
 				p.sendMessage("§4[§c§lUno§4]");
 				p.sendMessage("§7Lobby name: §e" + lobby.getName());
@@ -92,7 +93,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		else if (main.ingame.containsKey(sender)) {
+		else if (main.ingame.containsKey(name)) {
 			if (args.length == 0) {
 				p.sendMessage("§4[§c§lUno §7(1/2)§4]");
 				p.sendMessage("§7[] = Required, {} = Optional");
@@ -150,11 +151,8 @@ public class Commands implements CommandExecutor{
 		
 		if (p.hasPermission("neouno.admin")) {
 			if (args.length == 2 && args[0].equalsIgnoreCase("forcequit")) {
-				Player toKick = Bukkit.getPlayer(args[1]);
-				if (toKick != null) {
-					ac.kickPlayer(p, toKick);
-					return true;
-				}
+				ac.kickPlayer(p, args[1]);
+				return true;
 			}
 			else if (args.length == 2 && args[0].equalsIgnoreCase("endgame")) {
 				ac.endGame(p, args[1]);

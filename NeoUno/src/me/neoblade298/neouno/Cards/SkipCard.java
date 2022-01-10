@@ -1,5 +1,6 @@
 package me.neoblade298.neouno.Cards;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import me.neoblade298.neouno.Objects.Game;
@@ -53,6 +54,10 @@ public class SkipCard implements Card{
 
 	@Override
 	public void onPlay() {
+		if (Bukkit.getPlayer(game.turns.get(1).getPlayer()) == null) {
+			game.broadcast("&cThe next player, &e" + game.turns.get(0).getPlayer() + "&c, is offline. Kick them to continue, or wait for them to log back on!");
+			return;
+		}
 		game.turns.add(game.curr);
 		GamePlayer gp = game.turns.remove(0);
 		game.broadcast("&f" + gp + "'s &7turn was skipped!");

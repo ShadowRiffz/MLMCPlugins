@@ -23,7 +23,7 @@ public class AdminCommands {
 		}
 	}
 	
-	public void kickPlayer(Player sender, Player toKick) {
+	public void kickPlayer(Player sender, String toKick) {
 		if (main.ingame.containsKey(toKick)) {
 			Game game = main.ingame.get(toKick);
 			GamePlayer gp = game.players.get(toKick);
