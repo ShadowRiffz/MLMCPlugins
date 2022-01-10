@@ -29,21 +29,12 @@ import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Augments.Buffs.ModBuffAugment;
-import me.Neoblade298.NeoProfessions.Augments.Crits.ModCritCheckAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.BurstAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.CalmingAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.DesperationAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.FinisherAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.HeartyAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.InitiatorAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.ModDamageDealtAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OpportunistAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.OverloadAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.SentinelAugment;
-import me.Neoblade298.NeoProfessions.Augments.DamageDealt.UnderdogAugment;
-import me.Neoblade298.NeoProfessions.Augments.Flags.ModFlagAugment;
-import me.Neoblade298.NeoProfessions.Augments.Healing.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Augments.Buffs.*;
+import me.Neoblade298.NeoProfessions.Augments.Crits.*;
+import me.Neoblade298.NeoProfessions.Augments.DamageDealt.*;
+import me.Neoblade298.NeoProfessions.Augments.DamageTaken.*;
+import me.Neoblade298.NeoProfessions.Augments.Flags.*;
+import me.Neoblade298.NeoProfessions.Augments.Healing.*;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 
 public class AugmentManager implements Listener {
@@ -59,17 +50,46 @@ public class AugmentManager implements Listener {
 	}
 	
 	public AugmentManager() {
-		// Load augments
+		// Buffs
+		augmentMap.put("Brace", new BraceAugment());
+		augmentMap.put("Commander", new CommanderAugment());
+		augmentMap.put("Guardian", new GuardianAugment());
+		augmentMap.put("Inspire", new InspireAugment());
+		
+		// Crits
+		augmentMap.put("Cornered", new CorneredAugment());
+		augmentMap.put("Precision", new PrecisionAugment());
+		augmentMap.put("Spellweaving", new SpellweavingAugment());
+		augmentMap.put("Vampiric", new VampiricAugment());
+		
+		// Damage Dealt
 		augmentMap.put("Burst", new BurstAugment());
 		augmentMap.put("Calming", new CalmingAugment());
 		augmentMap.put("Desperation", new DesperationAugment());
+		augmentMap.put("Finisher", new FinisherAugment());
 		augmentMap.put("Hearty", new HeartyAugment());
+		augmentMap.put("Initiator", new InitiatorAugment());
+		augmentMap.put("Intimidating", new IntimidatingAugment());
 		augmentMap.put("Opportunist", new OpportunistAugment());
 		augmentMap.put("Overload", new OverloadAugment());
 		augmentMap.put("Sentinel", new SentinelAugment());
 		augmentMap.put("Underdog", new UnderdogAugment());
-		augmentMap.put("Finisher", new FinisherAugment());
-		augmentMap.put("Initiator", new InitiatorAugment());
+		
+		// Damage Taken
+		augmentMap.put("Protection", new ProtectionAugment());
+		
+		// Flags
+		augmentMap.put("Holy", new HolyAugment());
+		augmentMap.put("Tenacity", new TenacityAugment());
+		
+		// Healing
+		augmentMap.put("Rally", new RallyAugment());
+		augmentMap.put("Rejuvenating", new RejuvenatingAugment());
+		augmentMap.put("Selfish", new SelfishAugment());
+		
+		// Mana Gain
+		augmentMap.put("Defiance", new DefianceAugment());
+		augmentMap.put("Final Light", new FinalLightAugment());
 	}
 	
 	public static boolean isAugment(ItemStack item) {

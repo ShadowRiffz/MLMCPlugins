@@ -11,7 +11,7 @@ public interface ModManaGainAugment {
 		// Empty unless overridden
 	}
 	
-	public default double getManaGainFlat(PlayerData user) {
+	public default double getManaGainFlat(Player user) {
 		return 0;
 	}
 	

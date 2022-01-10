@@ -8,5 +8,7 @@ public enum EventType {
 	FLAG_RECEIVE,
 	HEAL,
 	BUFF,
+	TAUNT,
+	POTION,
 	MANA_GAIN;
 }
