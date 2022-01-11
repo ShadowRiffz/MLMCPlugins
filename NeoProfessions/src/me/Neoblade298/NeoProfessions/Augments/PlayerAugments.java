@@ -21,6 +21,12 @@ public class PlayerAugments {
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
 		this.invChanged = true;
 		this.prevSlot = -1;
+
+		PlayerInventory inv = p.getInventory();
+		checkAugments(inv.getChestplate());
+		checkAugments(inv.getLeggings());
+		checkAugments(inv.getItemInMainHand());
+		checkAugments(inv.getItemInOffHand());
 	}
 	
 	public void inventoryChanged() {
@@ -42,6 +48,7 @@ public class PlayerAugments {
 						}
 						else {
 							ArrayList<Augment> list = new ArrayList<Augment>();
+							list.add(aug);
 							augments.put(etype, list);
 						}
 					}
@@ -51,6 +58,10 @@ public class PlayerAugments {
 	}
 	
 	public List<Augment> getAugments(EventType etype) {
+		return augments.get(etype);
+	}
+	
+	public boolean containsAugments(EventType etype) {
 		PlayerInventory inv = p.getInventory();
 		
 		// 2 cases for recalculation:
@@ -63,11 +74,12 @@ public class PlayerAugments {
 			checkAugments(inv.getItemInMainHand());
 			checkAugments(inv.getItemInOffHand());
 			prevSlot = inv.getHeldItemSlot();
+			invChanged = false;
 		}
-		return augments.get(etype);
+		return augments.containsKey(etype);
 	}
 	
-	public boolean containsAugments(EventType etype) {
-		return augments.containsKey(etype);
+	public String toString() {
+		return augments.toString();
 	}
 }
