@@ -108,6 +108,7 @@ public class AugmentManager implements Listener {
 	}
 	
 	public boolean containsAugments(Player p, EventType etype) {
+		System.out.println("3: " + playerAugments.get(p));
 		return playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
 	}
 
@@ -206,6 +207,7 @@ public class AugmentManager implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player && e.getEntity() instanceof LivingEntity) {
+			System.out.println("1: " + e.getDamage());
 			Player p = (Player) e.getDamager();
 			double multiplier = 1;
 			double flat = 0;
@@ -223,6 +225,7 @@ public class AugmentManager implements Listener {
 				}
 			}
 			e.setDamage(e.getDamage() * multiplier + flat);
+			System.out.println("2: " + e.getDamage() + " " + multiplier + " " + flat);
 		}
 	}
 	

@@ -93,7 +93,7 @@ public class DurabilityListener implements Listener {
 			return;
 		}
 		
-		FlagManager.addFlag(p, ARMORCD, CDTIME);
+		FlagManager.addFlag(p, p, ARMORCD, CDTIME);
 		reduceDurability(p, p.getInventory().getHelmet(), 1);
 		reduceDurability(p, p.getInventory().getChestplate(), 2);
 		reduceDurability(p, p.getInventory().getLeggings(), 3);
@@ -113,8 +113,8 @@ public class DurabilityListener implements Listener {
 		if (p.getWorld().getName().equalsIgnoreCase("ClassPvP")) {
 			return;
 		}
-		
-		FlagManager.addFlag(p, WEAPONCD, CDTIME);
+
+		FlagManager.addFlag(p, p, WEAPONCD, CDTIME);
 		if (gen.nextDouble() > 0.5) {
 			if (isQuestItem(p.getInventory().getItemInMainHand())) {
 				reduceDurability(p, p.getInventory().getItemInMainHand(), 0);
