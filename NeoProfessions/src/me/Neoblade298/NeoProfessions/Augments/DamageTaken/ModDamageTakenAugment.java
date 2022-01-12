@@ -4,13 +4,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public interface ModDamageTakenAugment {
-	public default void applyEffects(Player user, LivingEntity target, double damage) {
+	public default void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
 		// Empty unless overridden
 	}
 	
 	public default double getDamageTakenFlat(LivingEntity user) {
 		return 0;
 	}
+	
 	public default double getDamageTakenMult(LivingEntity user) {
 		return 0;
 	}

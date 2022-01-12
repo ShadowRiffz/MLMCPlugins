@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public interface ModDamageDealtAugment {
 	
-	public default void applyEffects(Player user, LivingEntity target, double damage) {
+	public default void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
 		// Empty unless overridden
 	}
 	

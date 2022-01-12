@@ -33,7 +33,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 	}
 	
 	@Override
-	public void applyEffects(Player user, LivingEntity target, double damage) {
+	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
 		SkillAPI.getPlayerData(user).useMana(this.manaTaken, ManaCost.SPECIAL);
 	}
 

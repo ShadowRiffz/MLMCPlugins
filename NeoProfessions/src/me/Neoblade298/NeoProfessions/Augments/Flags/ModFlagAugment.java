@@ -6,7 +6,7 @@ import com.sucy.skill.api.event.FlagApplyEvent;
 
 public interface ModFlagAugment {
 	
-	public default void applyEffects(FlagApplyEvent e) {
+	public default void applyFlagEffects(FlagApplyEvent e) {
 		// Empty unless overridden
 	}
 	

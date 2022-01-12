@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public interface ModTauntAugment {
 	
-	public default void applyEffects(Player user, double amount) {
+	public default void applyTauntEffects(Player user, double amount) {
 		// Empty unless overridden
 	}
 	

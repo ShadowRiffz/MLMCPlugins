@@ -3,11 +3,12 @@ package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.sucy.skill.api.util.FlagManager;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
@@ -38,8 +39,7 @@ public class OpportunistAugment extends Augment implements ModDamageDealtAugment
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.1;
+		return FlagManager.hasFlag(target, "stun") || FlagManager.hasFlag(target, "root");
 	}
 
 	public ItemStack getItem(Player user) {
@@ -47,7 +47,7 @@ public class OpportunistAugment extends Augment implements ModDamageDealtAugment
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage while below 30% health.");
+		lore.add("§7damage to a stunned/rooted enemy.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

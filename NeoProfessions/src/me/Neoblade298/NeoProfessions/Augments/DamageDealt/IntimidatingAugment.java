@@ -30,8 +30,8 @@ public class IntimidatingAugment extends Augment implements ModDamageDealtAugmen
 	}
 
 	@Override
-	public void applyEffects(Player user, LivingEntity target, double damage) {
-		MythicMobs.inst().getAPIHelper().addThreat(user, target, damage * threatMult);
+	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
+		MythicMobs.inst().getAPIHelper().addThreat(target, user, damage * threatMult);
 	}
 
 	@Override

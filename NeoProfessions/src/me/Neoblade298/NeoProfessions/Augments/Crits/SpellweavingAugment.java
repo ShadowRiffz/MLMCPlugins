@@ -32,7 +32,7 @@ public class SpellweavingAugment extends Augment implements ModCritCheckAugment 
 	}
 	
 	@Override
-	public void applyEffects(PlayerData user, double chance) {
+	public void applyCritEffects(PlayerData user, double chance) {
 		user.giveMana(this.manaGain, ManaSource.SPECIAL);
 	}
 

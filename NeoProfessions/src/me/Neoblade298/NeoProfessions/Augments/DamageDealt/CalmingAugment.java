@@ -30,8 +30,8 @@ public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 	}
 	
 	@Override
-	public void applyEffects(Player user, LivingEntity target, double damage) {
-		MythicMobs.inst().getAPIHelper().reduceThreat(user, target, damage * this.threatReduction);
+	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
+		MythicMobs.inst().getAPIHelper().reduceThreat(target, user, damage * this.threatReduction);
 	}
 
 	@Override

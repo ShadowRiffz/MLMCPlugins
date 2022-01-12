@@ -3,43 +3,47 @@ package me.Neoblade298.NeoProfessions.Augments.Crits;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.player.PlayerData;
-
+import com.sucy.skill.api.player.PlayerSkill;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class VampiricAugment extends Augment implements ModCritCheckAugment {
-	private double healthGain;
-	
-	public VampiricAugment() {
+public class FerociousAugment extends Augment implements ModCritCheckAugment {
+	private double cdr;
+	public FerociousAugment() {
 		super();
-		this.name = "Vampiric";
+		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
-		this.healthGain = 1.5 * (level / 5);
+		this.cdr = 0.1 * (level / 5);
 	}
 
-	public VampiricAugment(int level) {
+	public FerociousAugment(int level) {
 		super(level);
-		this.name = "Vampiric";
+		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
-		this.healthGain = 1.5 * (level / 5);
+		this.cdr = 0.1 * (level / 5);
 	}
 	
 	@Override
 	public void applyCritEffects(PlayerData user, double chance) {
-		Player p = user.getPlayer();
-		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + this.healthGain));
+        for (PlayerSkill data : user.getSkills()) {
+            data.subtractCooldown(this.cdr);
+        }
+	}
+
+	@Override
+	public double getCritChanceMult(Player user) {
+		return -0.4 + (0.001 * (level / 5));
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new VampiricAugment(level);
+		return new FerociousAugment(level);
 	}
 
 	@Override
@@ -51,7 +55,9 @@ public class VampiricAugment extends Augment implements ModCritCheckAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Upon critical hit, gain §f" + this.healthGain + " §7health.");
+		lore.add("§7Decreases critical hit chance by §f" + formatPercentage(getCritChanceMult(user)) + "%,");
+		lore.add("§7but lower active skill cooldowns by");
+		lore.add("§f" + this.cdr + " §7on critical hit.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

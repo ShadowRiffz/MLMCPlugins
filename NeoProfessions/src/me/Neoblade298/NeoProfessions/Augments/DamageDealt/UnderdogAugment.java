@@ -38,7 +38,7 @@ public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		return percentage < 0.1;
 	}
 

@@ -7,7 +7,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 public interface ModManaGainAugment {
 	
-	public default void applyEffects(PlayerData user, double mana) {
+	public default void applyManaGainEffects(PlayerData user, double mana) {
 		// Empty unless overridden
 	}
 	

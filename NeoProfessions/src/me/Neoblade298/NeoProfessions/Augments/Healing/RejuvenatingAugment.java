@@ -36,10 +36,17 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 	}
 
 	@Override
+	public void applyHealEffects(PlayerData user, LivingEntity target, double healing) {
+		SkillAPI.getPlayerData((Player) target).giveMana(this.manaGain);
+	}
+
+	@Override
 	public boolean canUse(PlayerData user, LivingEntity target) {
 		if (target instanceof Player) {
 			Player p = (Player) target;
 			PlayerData data = SkillAPI.getPlayerData(p);
+			System.out.println(data.getClass("class").getData().getManaName());
+			System.out.println(data.getClass("class").getData().getManaName().endsWith("MP"));
 			return data.getClass("class").getData().getManaName().endsWith("MP");
 		}
 		return false;

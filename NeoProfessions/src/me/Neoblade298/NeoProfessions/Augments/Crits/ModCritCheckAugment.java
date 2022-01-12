@@ -7,7 +7,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 public interface ModCritCheckAugment {
 	
-	public default void applyEffects(PlayerData user, double chance) {
+	public default void applyCritEffects(PlayerData user, double chance) {
 		// Empty unless overridden
 	}
 	

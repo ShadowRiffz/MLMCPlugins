@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public interface ModRegenAugment {
 	
-	public default void applyEffects(Player user, double healing) {
+	public default void applyRegenEffects(Player user, double healing) {
 		
 	}
 	

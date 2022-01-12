@@ -7,7 +7,7 @@ import com.sucy.skill.api.event.SkillBuffEvent;
 
 public interface ModBuffAugment {
 	
-	public default void applyEffects(Player user, LivingEntity target) {
+	public default void applyBuffEffects(Player user, LivingEntity target) {
 		
 	}
 	

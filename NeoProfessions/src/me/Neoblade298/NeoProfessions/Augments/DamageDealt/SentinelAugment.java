@@ -26,6 +26,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 		super(level);
 		this.name = "Sentinel";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
+		this.maxHealthMod = (this.level / 5) * 0.001;
 	}
 
 	@Override
@@ -48,8 +49,9 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + getDamageDealtFlat(user) + "% §7when dealing");
-		lore.add("§7damage to an enemy above 95% health.");
+		System.out.println(getDamageDealtFlat(user) + " " + this.maxHealthMod + " " + this.level);
+		lore.add("§7Increases damage by §f" + getDamageDealtFlat(user) + ", §7which");
+		lore.add("§7is §f" + formatPercentage(this.maxHealthMod) + "% §7of your max health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

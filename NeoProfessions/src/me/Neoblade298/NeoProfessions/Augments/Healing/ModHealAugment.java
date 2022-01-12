@@ -7,7 +7,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 public interface ModHealAugment {
 	
-	public default void applyEffects(PlayerData user, LivingEntity target, double healing) {
+	public default void applyHealEffects(PlayerData user, LivingEntity target, double healing) {
 		
 	}
 	

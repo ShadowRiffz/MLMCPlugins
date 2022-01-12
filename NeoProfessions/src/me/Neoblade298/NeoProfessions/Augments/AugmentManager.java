@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -16,12 +17,14 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
+import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.PlayerRegenEvent;
@@ -60,7 +63,9 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Inspire", new InspireAugment());
 		
 		// Crits
+		augmentMap.put("Brawler", new BrawlerAugment());
 		augmentMap.put("Cornered", new CorneredAugment());
+		augmentMap.put("Ferocious", new FerociousAugment());
 		augmentMap.put("Precision", new PrecisionAugment());
 		augmentMap.put("Spellweaving", new SpellweavingAugment());
 		augmentMap.put("Vampiric", new VampiricAugment());
@@ -108,7 +113,7 @@ public class AugmentManager implements Listener {
 	}
 	
 	public boolean containsAugments(Player p, EventType etype) {
-		return playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
+		return enabledWorlds.contains(p.getWorld().getName()) && playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -214,7 +219,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							aug.applyEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
+							aug.applyDamageDealtEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
 							
 							multiplier += aug.getDamageDealtMult(p);
 							flat += aug.getDamageDealtFlat(p);
@@ -223,7 +228,31 @@ public class AugmentManager implements Listener {
 				}
 				System.out.println("Damage: " + e.getDamage() + " " + multiplier + " " + flat);
 			}
-			e.setDamage(e.getDamage() * multiplier + flat);
+			double damage = e.getDamage() * multiplier + flat;
+			if (damage < 0) damage = 0;
+			e.setDamage(damage);
+		}
+		else if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			double multiplier = 1;
+			double flat = 0;
+			if (containsAugments(p, EventType.DAMAGE_TAKEN)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
+					if (augment instanceof ModDamageTakenAugment) {
+						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
+						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
+							aug.applyDamageTakenEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
+							
+							multiplier -= aug.getDamageTakenMult(p);
+							flat -= aug.getDamageTakenFlat(p);
+						}
+					}
+				}
+				System.out.println("Damage Taken: " + e.getDamage() + " " + multiplier + " " + flat);
+			}
+			double damage = e.getDamage() * multiplier + flat;
+			if (damage < 0) damage = 0;
+			e.setDamage(damage);
 		}
 	}
 	
@@ -238,7 +267,7 @@ public class AugmentManager implements Listener {
 				if (augment instanceof ModManaGainAugment) {
 					ModManaGainAugment aug = (ModManaGainAugment) augment;
 					if (aug.canUse(data, e.getSource())) {
-						aug.applyEffects(data, e.getAmount());
+						aug.applyManaGainEffects(data, e.getAmount());
 						
 						multiplier += aug.getManaGainMult(data.getPlayer());
 						flat += aug.getManaGainFlat(data.getPlayer());
@@ -262,7 +291,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModHealAugment) {
 						ModHealAugment aug = (ModHealAugment) augment;
 						if (aug.canUse(data, e.getTarget())) {
-							aug.applyEffects(data, e.getTarget(), e.getAmount());
+							aug.applyHealEffects(data, e.getTarget(), e.getAmount());
 							
 							multiplier += aug.getHealMult(data.getPlayer());
 							flat += aug.getHealFlat(data);
@@ -287,7 +316,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModBuffAugment) {
 						ModBuffAugment aug = (ModBuffAugment) augment;
 						if (aug.canUse(p, e.getTarget(), e)) {
-							aug.applyEffects(p, e.getTarget());
+							aug.applyBuffEffects(p, e.getTarget());
 							
 							multiplier += aug.getBuffMult(p);
 							flat += aug.getBuffFlat(p);
@@ -313,7 +342,7 @@ public class AugmentManager implements Listener {
 				if (augment instanceof ModCritCheckAugment) {
 					ModCritCheckAugment aug = (ModCritCheckAugment) augment;
 					if (aug.canUse(data, e)) {
-						aug.applyEffects(data, e.getChance());
+						aug.applyCritEffects(data, e.getChance());
 						
 						multiplier += aug.getCritChanceMult(p);
 						flat += aug.getCritChanceFlat(p);
@@ -336,7 +365,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModFlagAugment) {
 						ModFlagAugment aug = (ModFlagAugment) augment;
 						if (aug.canUse(e)) {
-							aug.applyEffects(e);
+							aug.applyFlagEffects(e);
 							
 							multiplier += aug.getFlagTimeMult(p);
 							flat += aug.getFlagTimeFlat(p);
@@ -357,7 +386,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModFlagAugment) {
 						ModFlagAugment aug = (ModFlagAugment) augment;
 						if (aug.canUse(e)) {
-							aug.applyEffects(e);
+							aug.applyFlagEffects(e);
 							
 							multiplier += aug.getFlagTimeMult(p);
 							flat += aug.getFlagTimeFlat(p);
@@ -370,7 +399,6 @@ public class AugmentManager implements Listener {
 			e.setTicks((int) (e.getTicks() * multiplier + flat));
 		}
 	}
-
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onHealthRegen(PlayerRegenEvent e) {
@@ -382,7 +410,7 @@ public class AugmentManager implements Listener {
 				if (augment instanceof ModRegenAugment) {
 					ModRegenAugment aug = (ModRegenAugment) augment;
 					if (aug.canUse(p)) {
-						aug.applyEffects(p, e.getAmount());
+						aug.applyRegenEffects(p, e.getAmount());
 						
 						multiplier += aug.getRegenMult(p);
 						flat += aug.getRegenFlat(p);
@@ -392,5 +420,27 @@ public class AugmentManager implements Listener {
 			System.out.println("Regen: " + e.getAmount() + " " + multiplier + " " + flat);
 		}
 		e.setAmount(e.getAmount() * multiplier + flat);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onCritDamage(PlayerCriticalDamageEvent e) {
+		Player p = (Player) e.getCaster();
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.CRIT_DAMAGE)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_DAMAGE)) {
+				if (augment instanceof ModCritDamageAugment) {
+					ModCritDamageAugment aug = (ModCritDamageAugment) augment;
+					if (aug.canUse(p, e)) {
+						aug.applyCritDamageEffects(p, e.getDamage());
+						
+						multiplier += aug.getCritDamageMult(p);
+						flat += aug.getCritDamageFlat(p);
+					}
+				}
+			}
+			System.out.println("Crit damage: " + e.getDamage() + " " + multiplier + " " + flat);
+		}
+		e.setDamage(e.getDamage() * multiplier + flat);
 	}
 }
