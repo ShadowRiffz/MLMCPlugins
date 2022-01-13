@@ -8,12 +8,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
+import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class FerociousAugment extends Augment implements ModCritCheckAugment {
+public class FerociousAugment extends Augment implements ModCritCheckAugment, ModCritSuccessAugment {
 	private double cdr;
 	public FerociousAugment() {
 		super();
@@ -30,7 +31,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment {
 	}
 	
 	@Override
-	public void applyCritEffects(PlayerData user, double chance) {
+	public void applyCritSuccessEffects(PlayerData user, double chance) {
         for (PlayerSkill data : user.getSkills()) {
             data.subtractCooldown(this.cdr);
         }
@@ -51,6 +52,11 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment {
 		return true;
 	}
 
+	@Override
+	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
+		return true;
+	}
+
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
@@ -62,5 +68,4 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment {
 		item.setItemMeta(meta);
 		return item;
 	}
-
 }

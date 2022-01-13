@@ -8,31 +8,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.enums.ManaSource;
-import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
+import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class SpellweavingAugment extends Augment implements ModCritCheckAugment {
+public class SpellweavingAugment extends Augment implements ModCritSuccessAugment {
 	private double manaGain;
 	
 	public SpellweavingAugment() {
 		super();
 		this.name = "Spellweaving";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
 		this.manaGain = 1.5 * (level / 5);
 	}
 
 	public SpellweavingAugment(int level) {
 		super(level);
 		this.name = "Spellweaving";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
 		this.manaGain = 1.5 * (level / 5);
 	}
 	
 	@Override
-	public void applyCritEffects(PlayerData user, double chance) {
+	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		user.giveMana(this.manaGain, ManaSource.SPECIAL);
 	}
 
@@ -42,7 +42,7 @@ public class SpellweavingAugment extends Augment implements ModCritCheckAugment 
 	}
 
 	@Override
-	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
+	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
 		return user.getClass("class").getData().getManaName().endsWith("MP");
 	}
 

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
+import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 
@@ -16,7 +16,7 @@ import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.DamageTaken.ModDamageTakenAugment;
 
-public class BrawlerAugment extends Augment implements ModCritCheckAugment, ModDamageTakenAugment {
+public class BrawlerAugment extends Augment implements ModCritSuccessAugment, ModDamageTakenAugment {
 	
 	public BrawlerAugment() {
 		super();
@@ -31,7 +31,7 @@ public class BrawlerAugment extends Augment implements ModCritCheckAugment, ModD
 	}
 	
 	@Override
-	public void applyCritEffects(PlayerData user, double chance) {
+	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_ferocious", 60);
 	}
 
@@ -41,7 +41,7 @@ public class BrawlerAugment extends Augment implements ModCritCheckAugment, ModD
 	}
 
 	@Override
-	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
+	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
 		// crit
 		return true;
 	}

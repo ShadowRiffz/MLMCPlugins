@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
+import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class VampiricAugment extends Augment implements ModCritCheckAugment {
+public class VampiricAugment extends Augment implements ModCritSuccessAugment {
 	private double healthGain;
 	
 	public VampiricAugment() {
@@ -32,7 +32,7 @@ public class VampiricAugment extends Augment implements ModCritCheckAugment {
 	}
 	
 	@Override
-	public void applyCritEffects(PlayerData user, double chance) {
+	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		Player p = user.getPlayer();
 		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + this.healthGain));
 	}
@@ -43,7 +43,7 @@ public class VampiricAugment extends Augment implements ModCritCheckAugment {
 	}
 
 	@Override
-	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
+	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
 		return true;
 	}
 

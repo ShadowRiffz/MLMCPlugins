@@ -44,7 +44,7 @@ public class TenacityAugment extends Augment implements ModFlagAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Reduces curse time by §f" + formatPercentage(getFlagTimeMult(user)) + "%§7.");
+		lore.add("§7Reduces stun/root time by §f" + formatPercentage(getFlagTimeMult(user)) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

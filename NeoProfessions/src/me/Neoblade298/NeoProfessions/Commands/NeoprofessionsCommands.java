@@ -304,6 +304,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
 				sender.sendMessage("§7- §4/prof sell [playername]");
+				sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
 				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
 				sender.sendMessage("§7- §4/prof <playername> get ingr [22-24]");
@@ -321,6 +322,15 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				if (args[0].equalsIgnoreCase("sell")) {
 					new SellInventory(main, Bukkit.getPlayer(args[1]));
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("checkaugments")) {
+					if (args.length == 1) {
+						System.out.println(AugmentManager.playerAugments.get((Player) sender));
+					}
+					else {
+						System.out.println(AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
+					}
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("debug")) {

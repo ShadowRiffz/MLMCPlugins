@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -17,17 +16,17 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
+import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.PlayerRegenEvent;
+import com.sucy.skill.api.event.PlayerTauntEvent;
 import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
@@ -442,5 +441,44 @@ public class AugmentManager implements Listener {
 			System.out.println("Crit damage: " + e.getDamage() + " " + multiplier + " " + flat);
 		}
 		e.setDamage(e.getDamage() * multiplier + flat);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onCritSuccess(PlayerCriticalSuccessEvent e) {
+		PlayerData data = e.getPlayerData();
+		Player p = data.getPlayer();
+		if (containsAugments(p, EventType.CRIT_SUCCESS)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_SUCCESS)) {
+				if (augment instanceof ModCritSuccessAugment) {
+					ModCritSuccessAugment aug = (ModCritSuccessAugment) augment;
+					if (aug.canUse(data, e)) {
+						aug.applyCritSuccessEffects(data, e.getChance());
+					}
+				}
+			}
+			System.out.println("Crit success");
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onTaunt(PlayerTauntEvent e) {
+		Player p = (Player) e.getCaster();
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.TAUNT)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.TAUNT)) {
+				if (augment instanceof ModTauntAugment) {
+					ModTauntAugment aug = (ModTauntAugment) augment;
+					if (aug.canUse(p)) {
+						aug.applyTauntEffects(p, e.getAmount());
+						
+						multiplier += aug.getTauntGainMult(p);
+						flat += aug.getTauntGainFlat(p);
+					}
+				}
+			}
+			System.out.println("Taunt: " + e.getAmount() + " " + multiplier + " " + flat);
+		}
+		e.setAmount(e.getAmount() * multiplier + flat);
 	}
 }
