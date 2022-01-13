@@ -27,7 +27,7 @@ public class FlagMechanic extends SkillMechanic implements ITargetedEntitySkill 
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof LivingEntity) {
-			FlagManager.addFlag((LivingEntity) target.getBukkitEntity(), this.flag, this.duration);
+			FlagManager.addFlag((LivingEntity) data.getCaster().getEntity().getBukkitEntity(),(LivingEntity) target.getBukkitEntity(), this.flag, this.duration);
 			return true;
 		}
 		return false;
