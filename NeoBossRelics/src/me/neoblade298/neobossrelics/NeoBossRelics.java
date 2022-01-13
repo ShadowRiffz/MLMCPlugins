@@ -26,6 +26,11 @@ import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
+import me.Neoblade298.NeoProfessions.Augments.EventType;
+
 public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, Set> sets;
 	public HashMap<UUID, PlayerSet> playersets;
@@ -205,13 +210,11 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	// Checks if the given item has the provided relic in it
 	private boolean hasRelic(Player p, ItemStack item, Set set) {
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
-		
-		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-		int count = 1;
-		for (int i = lore.size() - 2; i >= 0 && count++ <= 3; i--) {
-			String line = ChatColor.stripColor(lore.get(i));
-			if (line.startsWith("Relic")) {
-				if (line.endsWith(set.getName())) {
+		if (item != null && !item.getType().isAir()) {
+			NBTItem nbti = new NBTItem(item);
+			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
+				String augmentName = nbti.getString("slot" + i + "Augment");
+				if (augmentName.equals(set.getName())) {
 					return true;
 				}
 			}
@@ -221,22 +224,16 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	
 	// Checks if the given item has a relic in it, gives the player that set if true
 	private boolean hasRelic(Player p, ItemStack item) {
-		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
-		
-		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-		int count = 1;
-		for (int i = lore.size() - 2; i >= 0 && count++ <= 3; i--) {
-			String line = ChatColor.stripColor(lore.get(i));
-			if (line.startsWith("Relic")) {
-				String[] words = line.split(" ");
-				String setName = words[2];
-				for (int j = 3; j < words.length; j++) {
-					setName += " " + words[j];
-				}
-				if (sets.containsKey(setName)) {
-					PlayerSet pSet = new PlayerSet(this, sets.get(setName), 0, p);
-					playersets.put(p.getUniqueId(), pSet);
-					return true;
+		if (item != null && !item.getType().isAir()) {
+			NBTItem nbti = new NBTItem(item);
+			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
+				String augmentName = nbti.getString("slot" + i + "Augment");
+				if (augmentName.startsWith("Relic")) {
+					if (sets.containsKey(augmentName)) {
+						PlayerSet pSet = new PlayerSet(this, sets.get(augmentName), 0, p);
+						playersets.put(p.getUniqueId(), pSet);
+						return true;
+					}
 				}
 			}
 		}
