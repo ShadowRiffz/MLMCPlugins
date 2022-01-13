@@ -225,7 +225,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Damage: " + e.getDamage() + " " + multiplier + " " + flat);
 			}
 			double damage = e.getDamage() * multiplier + flat;
 			if (damage < 0) damage = 0;
@@ -247,7 +246,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Damage Taken: " + e.getDamage() + " " + multiplier + " " + flat);
 			}
 			double damage = e.getDamage() * multiplier + flat;
 			if (damage < 0) damage = 0;
@@ -273,7 +271,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Mana: " + e.getAmount() + " " + multiplier + " " + flat);
 		}
 		e.setAmount(e.getAmount() * multiplier + flat);
 	}
@@ -297,7 +294,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Heal: " + e.getAmount() + " " + multiplier + " " + flat);
 			}
 			e.setAmount(e.getAmount() * multiplier + flat);
 		}
@@ -323,7 +319,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Buff: " + e.getAmount() + " " + e.getTicks() + " " + multiplier + " " + flat + " " + tickMult);
 			}
 			e.setAmount(e.getAmount() * multiplier + flat);
 			e.setTicks((int) (e.getTicks() * tickMult));
@@ -348,7 +343,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Critchance: " + e.getChance() + " " + multiplier + " " + flat);
 		}
 		e.setChance(e.getChance() * multiplier + flat);
 	}
@@ -371,7 +365,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Flag give: " + e.getTicks() + " " + multiplier + " " + flat);
 			}
 
 			e.setTicks((int) (e.getTicks() * multiplier + flat));
@@ -392,7 +385,6 @@ public class AugmentManager implements Listener {
 						}
 					}
 				}
-				System.out.println("Flag receive: " + e.getTicks() + " " + multiplier + " " + flat);
 			}
 
 			e.setTicks((int) (e.getTicks() * multiplier + flat));
@@ -416,7 +408,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Regen: " + e.getAmount() + " " + multiplier + " " + flat);
 		}
 		e.setAmount(e.getAmount() * multiplier + flat);
 	}
@@ -438,7 +429,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Crit damage: " + e.getDamage() + " " + multiplier + " " + flat);
 		}
 		e.setDamage(e.getDamage() * multiplier + flat);
 	}
@@ -456,7 +446,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Crit success");
 		}
 	}
 	
@@ -477,7 +466,6 @@ public class AugmentManager implements Listener {
 					}
 				}
 			}
-			System.out.println("Taunt: " + e.getAmount() + " " + multiplier + " " + flat);
 		}
 		e.setAmount(e.getAmount() * multiplier + flat);
 	}
