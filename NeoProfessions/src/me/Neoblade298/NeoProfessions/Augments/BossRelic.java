@@ -26,7 +26,13 @@ public class BossRelic extends Augment{
 	public ItemStack getItem() {
 		ItemStack item = MythicMobs.inst().getItemManager().getItemStack(this.name);
 		NBTItem nbti = new NBTItem(item);
-		this.display = nbti.getString("display");
+		
+		String[] relicStrings = item.getItemMeta().getLore().get(0).split(" ");
+		this.display = "§b" + relicStrings[2];
+		for (int i = 3; i < relicStrings.length; i++) {
+			this.display += " " + relicStrings[i];
+		}
+		
 		nbti.setInteger("level", level);
 		nbti.setString("augment", name);
 		return nbti.getItem();
