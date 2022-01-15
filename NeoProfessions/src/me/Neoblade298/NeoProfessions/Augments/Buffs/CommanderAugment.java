@@ -44,7 +44,7 @@ public class CommanderAugment extends Augment implements ModBuffAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem(user);
+		ItemStack item = super.getItem();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases effectiveness of damage");

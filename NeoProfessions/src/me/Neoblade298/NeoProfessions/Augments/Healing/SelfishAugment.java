@@ -43,7 +43,7 @@ public class SelfishAugment extends Augment implements ModHealAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem(user);
+		ItemStack item = super.getItem();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases self-healing by §f" + formatPercentage(getHealMult(user)) + "%§7.");

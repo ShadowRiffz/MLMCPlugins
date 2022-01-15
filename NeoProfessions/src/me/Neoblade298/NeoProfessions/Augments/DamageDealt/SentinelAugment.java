@@ -46,7 +46,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem(user);
+		ItemStack item = super.getItem();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		System.out.println(getDamageDealtFlat(user) + " " + this.maxHealthMod + " " + this.level);

@@ -488,7 +488,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
 					}
 					else if (args[1].equalsIgnoreCase("augment")) {
-						p.getInventory().addItem(AugmentManager.augmentMap.get(args[2].replaceAll("_", " ")).createNew(Integer.parseInt(args[3])).getItem(p));
+						p.getInventory().addItem(AugmentManager.augmentMap.get(args[2].replaceAll("_", " ")).createNew(Integer.parseInt(args[3])).getItem());
 					}
 					else if (args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
@@ -627,7 +627,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
 						}
 						else if (args[2].equalsIgnoreCase("augment")) {
-							p.getInventory().addItem(AugmentManager.augmentMap.get(args[3].replaceAll("_", " ")).createNew(Integer.parseInt(args[4])).getItem(p));
+							p.getInventory().addItem(AugmentManager.augmentMap.get(args[3].replaceAll("_", " ")).createNew(Integer.parseInt(args[4])).getItem());
 						}
 						else if (args[2].equalsIgnoreCase("repair")) {
 							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));

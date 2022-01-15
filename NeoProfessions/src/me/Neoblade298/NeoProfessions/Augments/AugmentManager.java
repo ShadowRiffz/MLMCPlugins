@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,6 +42,8 @@ import me.Neoblade298.NeoProfessions.Augments.Healing.*;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 import me.Neoblade298.NeoProfessions.Augments.Regen.*;
 import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
+import me.neoblade298.neobossrelics.NeoBossRelics;
+import me.neoblade298.neobossrelics.Set;
 
 public class AugmentManager implements Listener {
 	// event types
@@ -104,6 +107,12 @@ public class AugmentManager implements Listener {
 		// Taunt
 		augmentMap.put("Imposing", new ImposingAugment());
 		augmentMap.put("Steadfast", new SteadfastAugment());
+		
+		// Boss Relics
+		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
+		for (String set : relics.sets.keySet()) {
+			augmentMap.put(set, new BossRelic(set));
+		}
 	}
 	
 	public static boolean isAugment(ItemStack item) {

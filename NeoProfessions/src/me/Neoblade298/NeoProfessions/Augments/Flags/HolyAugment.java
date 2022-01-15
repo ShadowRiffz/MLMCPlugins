@@ -41,7 +41,7 @@ public class HolyAugment extends Augment implements ModFlagAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem(user);
+		ItemStack item = super.getItem();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Reduces curse time by §f" + formatPercentage(getFlagTimeMult(user)) + "%§7.");
