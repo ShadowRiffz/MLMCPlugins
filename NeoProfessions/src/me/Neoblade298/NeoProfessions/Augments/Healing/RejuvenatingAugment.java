@@ -45,8 +45,6 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 		if (target instanceof Player) {
 			Player p = (Player) target;
 			PlayerData data = SkillAPI.getPlayerData(p);
-			System.out.println(data.getClass("class").getData().getManaName());
-			System.out.println(data.getClass("class").getData().getManaName().endsWith("MP"));
 			return data.getClass("class").getData().getManaName().endsWith("MP");
 		}
 		return false;

@@ -43,13 +43,15 @@ import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 import me.Neoblade298.NeoProfessions.Augments.Regen.*;
 import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
 import me.neoblade298.neobossrelics.NeoBossRelics;
-import me.neoblade298.neobossrelics.Set;
 
 public class AugmentManager implements Listener {
 	// event types
 	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
+	
+	private final static String WEAPONCD = "WeaponDurability";
+	private final static String ARMORCD = "ArmorDurability";
 	
 	static {
 		enabledWorlds.add("Argyll");
@@ -358,45 +360,47 @@ public class AugmentManager implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onFlagApply(FlagApplyEvent e) {
-		if (e.getCaster() instanceof Player) {
-			Player p = (Player) e.getCaster();
-			double multiplier = 1;
-			double flat = 0;
-			if (containsAugments(p, EventType.FLAG_GIVE)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_GIVE)) {
-					if (augment instanceof ModFlagAugment) {
-						ModFlagAugment aug = (ModFlagAugment) augment;
-						if (aug.canUse(e)) {
-							aug.applyFlagEffects(e);
-							
-							multiplier += aug.getFlagTimeMult(p);
-							flat += aug.getFlagTimeFlat(p);
+		if (!e.getFlag().equals(WEAPONCD) && !e.getFlag().equals(ARMORCD)) {
+			if (e.getCaster() instanceof Player) {
+				Player p = (Player) e.getCaster();
+				double multiplier = 1;
+				double flat = 0;
+				if (containsAugments(p, EventType.FLAG_GIVE)) {
+					for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_GIVE)) {
+						if (augment instanceof ModFlagAugment) {
+							ModFlagAugment aug = (ModFlagAugment) augment;
+							if (aug.canUse(e)) {
+								aug.applyFlagEffects(e);
+								
+								multiplier += aug.getFlagTimeMult(p);
+								flat += aug.getFlagTimeFlat(p);
+							}
 						}
 					}
 				}
+	
+				e.setTicks((int) (e.getTicks() * multiplier + flat));
 			}
-
-			e.setTicks((int) (e.getTicks() * multiplier + flat));
-		}
-		if (e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			double multiplier = 1;
-			double flat = 0;
-			if (containsAugments(p, EventType.FLAG_RECEIVE)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_RECEIVE)) {
-					if (augment instanceof ModFlagAugment) {
-						ModFlagAugment aug = (ModFlagAugment) augment;
-						if (aug.canUse(e)) {
-							aug.applyFlagEffects(e);
-							
-							multiplier += aug.getFlagTimeMult(p);
-							flat += aug.getFlagTimeFlat(p);
+			if (e.getEntity() instanceof Player) {
+				Player p = (Player) e.getEntity();
+				double multiplier = 1;
+				double flat = 0;
+				if (containsAugments(p, EventType.FLAG_RECEIVE)) {
+					for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.FLAG_RECEIVE)) {
+						if (augment instanceof ModFlagAugment) {
+							ModFlagAugment aug = (ModFlagAugment) augment;
+							if (aug.canUse(e)) {
+								aug.applyFlagEffects(e);
+								
+								multiplier += aug.getFlagTimeMult(p);
+								flat += aug.getFlagTimeFlat(p);
+							}
 						}
 					}
 				}
+	
+				e.setTicks((int) (e.getTicks() * multiplier + flat));
 			}
-
-			e.setTicks((int) (e.getTicks() * multiplier + flat));
 		}
 	}
 	

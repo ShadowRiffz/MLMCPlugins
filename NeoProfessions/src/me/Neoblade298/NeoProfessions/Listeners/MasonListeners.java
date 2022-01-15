@@ -132,18 +132,22 @@ public class MasonListeners implements Listener {
 		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
 			return;
 		}
-		else if (!AugmentManager.isAugment(augment)) {
+		if (!AugmentManager.isAugment(augment)) {
 			return;
 		}
-		else if (nbti.getInteger("version") <= 0) {
+		if (nbti.getInteger("version") <= 0) {
 			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
 			return;
 		}
-		else if (nbti.getInteger("slotsCreated") <= 0) {
+		if (nbti.getInteger("slotsCreated") <= 0) {
 			Util.sendMessage(p, "&cNo slots available on this item!");
 			return;
 		}
-		else if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
+		if (!nbtaug.getString("level").isBlank() && nbtaug.getInteger("level") == 0) {
+			nbtaug.setInteger("level", Integer.parseInt(nbtaug.getString("level")));
+			nbtaug.applyNBT(augment);
+		}
+		if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return;
 		}
