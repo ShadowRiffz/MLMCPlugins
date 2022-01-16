@@ -43,7 +43,7 @@ public class OpportunistAugment extends Augment implements ModDamageDealtAugment
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");

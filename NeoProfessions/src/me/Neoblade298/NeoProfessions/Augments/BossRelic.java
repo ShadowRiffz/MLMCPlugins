@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -34,7 +35,7 @@ public class BossRelic extends Augment{
 	}
 	
 	@Override
-	public ItemStack getItem() {
+	public ItemStack getItem(Player user) {
 		ItemStack item = MythicMobs.inst().getItemManager().getItemStack(this.name);
 		NBTItem nbti = new NBTItem(item);
 		

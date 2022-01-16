@@ -44,7 +44,8 @@ public class BraceAugment extends Augment implements ModBuffAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		System.out.println("Got item");
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases duration of defense");

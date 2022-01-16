@@ -45,8 +45,8 @@ import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 
 public class AugmentManager implements Listener {
-	// event types
 	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
+	public static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	

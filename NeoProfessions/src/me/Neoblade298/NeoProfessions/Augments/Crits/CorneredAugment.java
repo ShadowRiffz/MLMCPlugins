@@ -46,7 +46,7 @@ public class CorneredAugment extends Augment implements ModCritCheckAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases critical hit chance by §f" + formatPercentage(getCritChanceMult(user)) + "%");

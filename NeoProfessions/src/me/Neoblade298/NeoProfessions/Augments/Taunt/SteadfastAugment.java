@@ -40,7 +40,7 @@ public class SteadfastAugment extends Augment implements ModTauntAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases taunts by §f" + formatPercentage(getTauntGainMult(user)) + "%§7.");

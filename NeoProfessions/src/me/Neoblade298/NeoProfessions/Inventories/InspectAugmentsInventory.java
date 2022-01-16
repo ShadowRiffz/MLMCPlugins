@@ -44,7 +44,8 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 				contents[i] = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, "§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(oldAug.getItem().getType(), oldAug.getLine(), oldAug.getItem().getItemMeta().getLore(), oldAug);
+				ItemStack oldAugItem = oldAug.getItem(p);
+				contents[i] = createGuiItem(oldAugItem.getType(), oldAug.getLine(), oldAugItem.getItemMeta().getLore(), oldAug);
 			}
 			j++;
 		}

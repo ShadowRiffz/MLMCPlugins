@@ -50,7 +50,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aAdd to Slot " + j, "§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Swap Slot " + j, oldAug.getLine(), oldAug.getItem().getItemMeta().getLore(), oldAug);
+				contents[i] = createGuiItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Swap Slot " + j, oldAug.getLine(), oldAug.getItem(p).getItemMeta().getLore(), oldAug);
 			}
 			j++;
 		}
@@ -105,7 +105,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 			String clicked = clickedItem.getItemMeta().getDisplayName();
 			int selected = Integer.parseInt(clicked.substring(clicked.length() - 1));
 			NBTItem nbtaug = new NBTItem(this.augment);
-			Augment aug = AugmentManager.augmentMap.get(nbtaug.getString("augment")).createNew(nbtaug.getInteger("level"));
+			Augment aug = AugmentManager.augmentMap.get(nbtaug.getString("augment")).get(nbtaug.getInteger("level"));
 			
 			String result = editor.setAugment(p, aug, selected);
 			if (result == null) {

@@ -41,7 +41,7 @@ public class ProtectionAugment extends Augment implements ModDamageTakenAugment 
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Decreases damage taken by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7.");

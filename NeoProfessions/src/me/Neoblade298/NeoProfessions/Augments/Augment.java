@@ -2,9 +2,11 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -56,7 +58,7 @@ public abstract class Augment {
 		return df.format(bonus * 100);
 	}
 	
-	public ItemStack getItem() {
+	public ItemStack getItem(Player user) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §c" + name + " Augment");
@@ -73,6 +75,26 @@ public abstract class Augment {
 	public boolean isPermanent() {
 		return false;
 	}
-
+	
 	public abstract Augment createNew(int level);
+
+	public Augment get(int level) {
+		HashMap<Integer, Augment> levelCache;
+		if (AugmentManager.augmentCache.containsKey(this.name)) {
+			levelCache = AugmentManager.augmentCache.get(this.name);
+		}
+		else {
+			levelCache = new HashMap<Integer, Augment>();
+			AugmentManager.augmentCache.put(this.name, levelCache);
+		}
+		
+		if (levelCache.containsKey(level)) {
+			return levelCache.get(level);
+		}
+		else {
+			Augment aug = createNew(level);
+			levelCache.put(level, aug);
+			return aug;
+		}
+	}
 }

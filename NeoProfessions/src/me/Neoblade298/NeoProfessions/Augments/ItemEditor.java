@@ -49,7 +49,7 @@ public class ItemEditor {
 		String augmentName = nbti.getString("slot" + i + "Augment");
 		if (AugmentManager.augmentMap.containsKey(augmentName)) {
 			int level = nbti.getInteger("slot" + i + "Level");
-			return AugmentManager.augmentMap.get(augmentName).createNew(level);
+			return AugmentManager.augmentMap.get(augmentName).get(level);
 		}
 		return null;
 	}
@@ -211,8 +211,8 @@ public class ItemEditor {
 					int level = masonUtils.parseUnslot(p, i).getEnchantmentLevel(Enchantment.DURABILITY);
 					// Choose a random augment
 					String[] choices = (String[]) AugmentManager.augmentMap.keySet().toArray();
-					Augment aug = AugmentManager.augmentMap.get(choices[gen.nextInt(choices.length)]).createNew(level);
-					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem());
+					Augment aug = AugmentManager.augmentMap.get(choices[gen.nextInt(choices.length)]).get(level);
+					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
 					for (Integer num : failed.keySet()) {
 						p.getWorld().dropItem(p.getLocation(), failed.get(num));
 					}

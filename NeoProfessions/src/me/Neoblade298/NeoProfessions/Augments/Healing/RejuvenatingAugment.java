@@ -51,7 +51,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 	}
 
 	public ItemStack getItem(Player user) {
-		ItemStack item = super.getItem();
+		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Healing also grants §f" + this.manaGain + " §7mana.");
