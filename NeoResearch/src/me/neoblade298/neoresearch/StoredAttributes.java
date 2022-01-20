@@ -24,12 +24,13 @@ public class StoredAttributes {
 
 	public void applyAttributes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
-		active.clear();
+		removeAttributes(p);
 		for (String attr : stored.keySet()) {
 			if (attr.equals("unused")) {
 				continue;
 			}
 			// Must be deep copy
+			data.addBonusAttributes(attr, -active.getOrDefault(attr, 0));
 			active.put(attr, Integer.valueOf(stored.get(attr)));
 			data.addBonusAttributes(attr, stored.get(attr));
 		}
