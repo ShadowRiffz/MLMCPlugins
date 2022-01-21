@@ -197,11 +197,11 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				}
 			}
 			pc.setPoints(pc.getPoints() - (currSP - expectedSP));
-			e.getPlayer().sendMessage("§cNote: Your /skills points have been adjusted. You may want to double check them.");
+			e.getPlayer().sendMessage("§cNote: /skills points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currSP < expectedSP) {
 			data.givePoints(expectedSP - currSP, ExpSource.MOB);
-			e.getPlayer().sendMessage("§cNote: Your /skills points have been adjusted. You may want to double check them.");
+			e.getPlayer().sendMessage("§cNote: /skills points have been adjusted higher. You may want to double check them.");
 		}
 		
 		if (currAP > expectedAP) {
@@ -212,11 +212,11 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				data.resetAttribs();
 				data.setAttribPoints(expectedAP);
 			}
-			e.getPlayer().sendMessage("§cNote: Your /attr points have been adjusted. You may want to double check them.");
+			e.getPlayer().sendMessage("§cNote: /attr points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currAP < expectedAP){
 			data.setAttribPoints(data.getAttributePoints() + (expectedAP - currAP));
-			e.getPlayer().sendMessage("§cNote: Your /attr points have been adjusted. You may want to double check them.");
+			e.getPlayer().sendMessage("§cNote: /attr points have been adjusted higher. You may want to double check them.");
 		}
 	}
 
