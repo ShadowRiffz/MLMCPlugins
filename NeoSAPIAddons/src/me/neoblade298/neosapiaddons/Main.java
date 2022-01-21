@@ -1,10 +1,13 @@
 package me.neoblade298.neosapiaddons;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,7 +23,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.common.collect.ImmutableList;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.SkillPlugin;
+import com.sucy.skill.api.enums.ExpSource;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
+import com.sucy.skill.api.player.PlayerClass;
+import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.trigger.Trigger;
@@ -39,14 +47,45 @@ import me.neoblade298.neosapiaddons.mechanics.ValueSkillLevelMechanic;
 @SuppressWarnings("deprecation")
 public class Main extends JavaPlugin implements Listener, SkillPlugin {
 	private HungerController hc;
+	private HashMap<Integer, PointSet> skillPoints;
+	private HashMap<Integer, PointSet> attrPoints;
+	
+	
 	public void onEnable() {
 		super.onEnable();
 		hc = new HungerController(this);
 		Bukkit.getServer().getLogger().info("NeoSAPIAddons Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(hc, this);
+		loadConfig();
 
 		getCommand("nsapi").setExecutor(new Commands(this));
+	}
+	
+	public void loadConfig() {
+		File file = new File(getDataFolder(), "config.yml");
+		skillPoints = new HashMap<Integer, PointSet>();
+		attrPoints = new HashMap<Integer, PointSet>();
+
+		// Save config if doesn't exist
+		if (!file.exists()) {
+			saveResource("config.yml", false);
+		}
+		ConfigurationSection cfg = YamlConfiguration.loadConfiguration(file);
+
+		// Skill points
+		ConfigurationSection skillCfg = cfg.getConfigurationSection("skill-points");
+		for (String spset : skillCfg.getKeys(false)) {
+			ConfigurationSection spCfg = skillCfg.getConfigurationSection(spset);
+			skillPoints.put(spCfg.getInt("max-lvl"), new PointSet(spCfg.getInt("base-points"), spCfg.getInt("points-per-lvl"), spCfg.getInt("base-lvl")));
+		}
+
+		// Attribute points
+		ConfigurationSection attrCfg = cfg.getConfigurationSection("attribute-points");
+		for (String apset : attrCfg.getKeys(false)) {
+			ConfigurationSection apCfg = attrCfg.getConfigurationSection(apset);
+			attrPoints.put(apCfg.getInt("max-lvl"), new PointSet(apCfg.getInt("base-points"), apCfg.getInt("points-per-lvl"), apCfg.getInt("base-lvl")));
+		}
 	}
 
 	public void onDisable() {
@@ -112,6 +151,72 @@ public class Main extends JavaPlugin implements Listener, SkillPlugin {
 				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cGolden apples are restricted in the quest world.");
 				return;
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerLoad(PlayerLoadCompleteEvent e) {
+		PlayerData data = SkillAPI.getPlayerData(e.getPlayer());
+		int max = data.getClass("class").getData().getMaxLevel();
+		
+		PointSet setSP = this.skillPoints.get(max);
+		PointSet setAP = this.attrPoints.get(max);
+		
+		int expectedSP = setSP.getBasePoints() + setSP.getPointsPerLvl() * (data.getClass("class").getLevel() - setSP.getBaseLvl());
+		int expectedAP = setAP.getBasePoints() + setAP.getPointsPerLvl() * (data.getClass("class").getLevel() - setAP.getBaseLvl());
+		
+		int currSP = data.getInvestedSkillPoints() + data.getClass("class").getPoints();
+		int currAP = data.getAttributePoints();
+		HashMap<String, Integer> invested = data.getInvestedAttributes();
+		for (String attr : invested.keySet()) {
+			currAP += invested.get(attr);
+		}
+		
+		if (currSP > expectedSP) {
+			PlayerClass pc = data.getClass("class");
+			int diff = currSP - expectedSP - pc.getPoints();
+
+			// If we need to unvest skill points, do it, otherwise just take from unvested points
+			if (diff > 0) {
+				for (Skill skill : pc.getData().getSkills()) {
+					System.out.println("Skill: " + skill.getName());
+					if (diff <= 0) {
+						break;
+					}
+					
+					while (diff > 0) {
+						int cost = skill.getCost(data.getSkillLevel(skill.getName()) - 1);
+						boolean success = data.downgradeSkill(skill);
+						if (success) {
+							diff -= cost;
+						}
+						else {
+							break;
+						}
+					}
+				}
+			}
+			pc.setPoints(pc.getPoints() - (currSP - expectedSP));
+			e.getPlayer().sendMessage("§cNote: Your /skills points have been adjusted. You may want to double check them.");
+		}
+		else if (currSP < expectedSP) {
+			data.givePoints(expectedSP - currSP, ExpSource.MOB);
+			e.getPlayer().sendMessage("§cNote: Your /skills points have been adjusted. You may want to double check them.");
+		}
+		
+		if (currAP > expectedAP) {
+			if (data.getAttributePoints() > currAP - expectedAP) {
+				data.setAttribPoints(data.getAttributePoints() - (currAP - expectedAP));
+			}
+			else {
+				data.resetAttribs();
+				data.setAttribPoints(expectedAP);
+			}
+			e.getPlayer().sendMessage("§cNote: Your /attr points have been adjusted. You may want to double check them.");
+		}
+		else if (currAP < expectedAP){
+			data.setAttribPoints(data.getAttributePoints() + (expectedAP - currAP));
+			e.getPlayer().sendMessage("§cNote: Your /attr points have been adjusted. You may want to double check them.");
 		}
 	}
 
