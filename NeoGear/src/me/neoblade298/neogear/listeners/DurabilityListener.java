@@ -225,8 +225,7 @@ public class DurabilityListener implements Listener {
 		}
 		
 		if ((!im.isUnbreakable()) && (item.getType().getMaxDurability() > 0)) {
-			double dN = item.getType().getMaxDurability() - 1;
-			((Damageable) im).setDamage((int) dN);
+			((Damageable) im).setDamage(0);
 		}
 		item.setItemMeta(im);
 		
