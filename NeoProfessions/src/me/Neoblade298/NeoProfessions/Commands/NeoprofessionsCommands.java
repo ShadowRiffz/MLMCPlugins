@@ -41,6 +41,7 @@ import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class NeoprofessionsCommands implements CommandExecutor {
 
@@ -96,6 +97,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemEditor editor = new ItemEditor(p.getInventory().getItemInMainHand());
 			String result = editor.convertItem(p);
+			DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
 			if (result == null) {
 				Util.sendMessage(p, "&7Successfully converted item!");
 			}

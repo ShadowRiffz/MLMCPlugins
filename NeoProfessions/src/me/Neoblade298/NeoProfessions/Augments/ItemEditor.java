@@ -33,11 +33,11 @@ public class ItemEditor {
 		typeConverter.put("Infused Boots", "ruboots");
 		
 		maxSlotConverter.put("common", 0);
-		maxSlotConverter.put("uncommon", 1);
-		maxSlotConverter.put("rare", 2);
-		maxSlotConverter.put("epic", 3);
-		maxSlotConverter.put("legendary", 4);
-		maxSlotConverter.put("artifact", 5);
+		maxSlotConverter.put("uncommon", 0);
+		maxSlotConverter.put("rare", 1);
+		maxSlotConverter.put("epic", 2);
+		maxSlotConverter.put("legendary", 3);
+		maxSlotConverter.put("artifact", 4);
 	}
 	
 	public ItemEditor(ItemStack item) {
@@ -124,7 +124,7 @@ public class ItemEditor {
 		}
 		
 		for (Enchantment ench : item.getEnchantments().keySet()) {
-			if (!ench.equals(Enchantment.QUICK_CHARGE)) {
+			if (!ench.equals(Enchantment.QUICK_CHARGE) && !ench.equals(Enchantment.ARROW_INFINITE)) {
 				item.removeEnchantment(ench);
 			}
 		}
@@ -198,23 +198,35 @@ public class ItemEditor {
 			
 			else {
 				if (line.contains("Slot")) {
-					lore.set(i, "§8[Empty Slot]");
-					slots++;
-					nbtData.put("slot" + slots + "Line", i);
+					if (slots < slotsMax) {
+						lore.set(i, "§8[Empty Slot]");
+						slots++;
+						nbtData.put("slot" + slots + "Line", i);
+					}
+					else {
+						iter.remove();
+						i--;
+					}
 				}
 				else if (line.contains("Durability")) {
 					break;
 				}
 				else {
-					lore.set(i, "§8[Empty Slot]");
-					// Turn the string into an old augment
-					int level = masonUtils.parseUnslot(p, i).getEnchantmentLevel(Enchantment.DURABILITY);
-					// Choose a random augment
-					String[] choices = (String[]) AugmentManager.augmentMap.keySet().toArray();
-					Augment aug = AugmentManager.augmentMap.get(choices[gen.nextInt(choices.length)]).get(level);
-					HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
-					for (Integer num : failed.keySet()) {
-						p.getWorld().dropItem(p.getLocation(), failed.get(num));
+					if (slots < slotsMax) {
+						lore.set(i, "§8[Empty Slot]");
+						// Turn the string into an old augment
+						int level = masonUtils.parseUnslot(p, i).getEnchantmentLevel(Enchantment.DURABILITY);
+						// Choose a random augment
+						String[] choices = (String[]) AugmentManager.augmentMap.keySet().toArray();
+						Augment aug = AugmentManager.augmentMap.get(choices[gen.nextInt(choices.length)]).get(level);
+						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
+						for (Integer num : failed.keySet()) {
+							p.getWorld().dropItem(p.getLocation(), failed.get(num));
+						}
+					}
+					else {
+						iter.remove();
+						i--;
 					}
 				}
 			}
