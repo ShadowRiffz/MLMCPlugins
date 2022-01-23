@@ -275,9 +275,11 @@ public class GearConfig {
                 AttributeSet aset = attributes.get(key);
                 AttributeSet rset = rarities.get(rarity).attributes.get(key);
                 
-                int min = aset.getMinAmount(level) + rset.getMinAmount(level);
+                int min = aset.getMinAmount(level);
+                int max = min + aset.getRange();
                 if (rset != null) {
-                    int max = min + aset.getRange() + rset.getRange();
+                	min += rset.getMinAmount(level);
+                    max = min + aset.getRange() + rset.getRange();
                 }
                 
                 // Attribute has updated value
@@ -295,8 +297,13 @@ public class GearConfig {
                 AttributeSet aset = attributes.get(key);
                 AttributeSet rset = rarities.get(rarity).attributes.get(key);
 
-                int min = aset.getMinAmount(level) + rset.getMinAmount(level);
-                int max = min + aset.getRange() + rset.getRange();
+                int min = aset.getMinAmount(level);
+                int max = min + aset.getRange();
+                if (rset != null) {
+                	min += rset.getMinAmount(level);
+                    max = min + aset.getRange() + rset.getRange();
+                }
+                
                 // New attribute was added to gear
                 if (max > 0) {
                 	hasChanged = true;
