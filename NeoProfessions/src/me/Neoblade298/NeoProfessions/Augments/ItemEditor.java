@@ -119,16 +119,9 @@ public class ItemEditor {
 			return "item is not weapon or armor!";
 		}
 		
-		for (Enchantment ench : item.getEnchantments().keySet()) {
-			if (!ench.equals(Enchantment.QUICK_CHARGE) && !ench.equals(Enchantment.ARROW_INFINITE)) {
-				item.removeEnchantment(ench);
-			}
-		}
-		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		MasonUtils masonUtils = new MasonUtils();
-		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
 		
 		boolean hasBonus = false;
@@ -170,11 +163,6 @@ public class ItemEditor {
 					
 					rarity = ChatColor.stripColor(args[1].toLowerCase());
 					slotsMax = maxSlotConverter.get(rarity);
-					if (rarity.contains("artifact") || rarity.contains("legendary")) {
-						if (isEnchanted) {
-							meta.addEnchant(Enchantment.LUCK, 1, true);
-						}
-					}
 					iter.remove();
 					iter.add("§7Rarity: " + args[1]);
 				}
@@ -251,6 +239,20 @@ public class ItemEditor {
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		
+		for (Enchantment ench : item.getEnchantments().keySet()) {
+			if (!ench.equals(Enchantment.QUICK_CHARGE) && !ench.equals(Enchantment.ARROW_INFINITE)) {
+				item.removeEnchantment(ench);
+			}
+		}
+		if (rarity.contains("artifact") || rarity.contains("legendary")) {
+			if (isEnchanted) {
+				meta.addEnchant(Enchantment.LUCK, 1, true);
+			}
+		}
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		
+		
 		nbti = new NBTItem(item);
 		nbti.setInteger("version", 1);
 		nbti.setString("gear", name);
