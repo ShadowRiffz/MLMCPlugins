@@ -114,7 +114,9 @@ public class GearConfig {
 		}
 		for (Enchant enchant : requiredEnchants) {
 			int lv = enchant.min + Gear.gen.nextInt(enchant.max - enchant.min + 1);
-			meta.addEnchant(enchant.enchantment, lv, true);
+			if (lv > 0) {
+				meta.addEnchant(enchant.enchantment, lv, true);
+			}
 		}
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
@@ -127,8 +129,10 @@ public class GearConfig {
 				for (int i = 0; i < optEnchantNum; i++) {
 					Enchant enchant = optEnchants.get(Gear.gen.nextInt(optEnchants.size()));
 					int lv = enchant.min + Gear.gen.nextInt(enchant.max - enchant.min + 1);
-					meta.addEnchant(enchant.enchantment, lv, true);
-					optEnchants.remove(enchant);
+					if (lv > 0) {
+						meta.addEnchant(enchant.enchantment, lv, true);
+						optEnchants.remove(enchant);
+					}
 				}
 			}
 		}
