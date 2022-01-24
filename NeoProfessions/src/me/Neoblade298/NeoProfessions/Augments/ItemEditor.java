@@ -115,10 +115,6 @@ public class ItemEditor {
 			return "item already converted!";
 		}
 		
-		ItemMeta meta = item.getItemMeta();
-		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		MasonUtils masonUtils = new MasonUtils();
-		
 		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
 			return "item is not weapon or armor!";
 		}
@@ -128,6 +124,12 @@ public class ItemEditor {
 				item.removeEnchantment(ench);
 			}
 		}
+		
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		MasonUtils masonUtils = new MasonUtils();
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		
 		
 		boolean hasBonus = false;
 		boolean hasLevel = false;
@@ -169,7 +171,6 @@ public class ItemEditor {
 					rarity = ChatColor.stripColor(args[1].toLowerCase());
 					slotsMax = maxSlotConverter.get(rarity);
 					if (rarity.contains("artifact") || rarity.contains("legendary")) {
-						meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 						if (isEnchanted) {
 							meta.addEnchant(Enchantment.LUCK, 1, true);
 						}
@@ -181,6 +182,10 @@ public class ItemEditor {
 					iter.remove();
 					iter.add("§8§m-----");
 				}
+				else if (line.contains("Vitality") || line.contains("Perception")) {
+					iter.remove();
+					i--;
+				}
 				
 				else if (line.contains("Level")) {
 					itemLevel = Integer.parseInt(line.split(" ")[2]);
@@ -189,10 +194,15 @@ public class ItemEditor {
 					iter.add("§7Max Slots: " + slotsMax);
 					hasLevel = true;
 				}
-				else if (line.contains("Bonus Attributes") || line.contains("Spirit")) {
+				else if (line.contains("Bonus Attributes")) {
 					iter.remove();
 					iter.add("§8§m-----");
 					hasBonus = true;
+				}
+				else if (line.contains("Durability")) {
+					iter.previous();
+					iter.add("§8§m-----");
+					break;
 				}
 			}
 			
