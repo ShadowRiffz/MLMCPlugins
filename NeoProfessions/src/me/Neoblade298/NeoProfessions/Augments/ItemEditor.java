@@ -179,7 +179,7 @@ public class ItemEditor {
 					iter.remove();
 					iter.add("§8§m-----");
 				}
-				else if (line.contains("Vitality") || line.contains("Perception")) {
+				else if (line.contains("Vitality") || line.contains("Perception") || line.contains("Regen")) {
 					iter.remove();
 					i--;
 				}
