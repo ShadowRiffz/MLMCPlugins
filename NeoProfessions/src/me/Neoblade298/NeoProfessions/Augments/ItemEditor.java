@@ -126,7 +126,6 @@ public class ItemEditor {
 		
 		boolean hasBonus = false;
 		boolean hasLevel = false;
-		boolean isEnchanted = false;
 		Random gen = new Random();
 		int itemLevel = -1;
 		int slots = 0;
@@ -135,6 +134,13 @@ public class ItemEditor {
 		String displayname = "Sword";
 		String name = "sword";
 		HashMap<String, Integer> nbtData = new HashMap<String, Integer>();
+		
+
+		for (Enchantment ench : meta.getEnchants().keySet()) {
+			if (!ench.equals(Enchantment.QUICK_CHARGE) && !ench.equals(Enchantment.ARROW_INFINITE)) {
+				meta.removeEnchant(ench);
+			}
+		}
 		
 		lore.add(0, ""); // Placeholder for Title
 		lore.add(1, ""); // Placeholder for Type
@@ -163,6 +169,9 @@ public class ItemEditor {
 					
 					rarity = ChatColor.stripColor(args[1].toLowerCase());
 					slotsMax = maxSlotConverter.get(rarity);
+					if (rarity.contains("artifact") || rarity.contains("legendary")) {
+						meta.addEnchant(Enchantment.LUCK, 1, true);
+					}
 					iter.remove();
 					iter.add("§7Rarity: " + args[1]);
 				}
@@ -238,19 +247,8 @@ public class ItemEditor {
 		lore.set(1, "§7Type: " + displayname);
 		
 		meta.setLore(lore);
-		item.setItemMeta(meta);
-		
-		for (Enchantment ench : item.getEnchantments().keySet()) {
-			if (!ench.equals(Enchantment.QUICK_CHARGE) && !ench.equals(Enchantment.ARROW_INFINITE)) {
-				item.removeEnchantment(ench);
-			}
-		}
-		if (rarity.contains("artifact") || rarity.contains("legendary")) {
-			if (isEnchanted) {
-				meta.addEnchant(Enchantment.LUCK, 1, true);
-			}
-		}
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		item.setItemMeta(meta);
 		
 		
 		nbti = new NBTItem(item);
