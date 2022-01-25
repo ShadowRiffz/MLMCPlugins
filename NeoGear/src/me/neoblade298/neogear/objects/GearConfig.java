@@ -268,6 +268,7 @@ public class GearConfig {
 			}
 			String attr = format.substring(0, formatIndex - 1);
 			
+			// Check an existing lore attribute to see if it's correct
 			if (line.contains(attr)) {
 				int index = line.indexOf('+');
 				if (index == -1) {
@@ -292,11 +293,19 @@ public class GearConfig {
                 	loreIter.remove();
                 	// If max = 0, attribute was deleted entirely
                 	if (max > 0) {
-                    	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+        				if (attr.equals("hlr") || attr.equals("rrg")) {
+        					double amount = min + Gear.gen.nextInt(max - min + 1);
+        					amount /= 10;
+        					line = aset.format(amount);
+        				}
+        				else {
+                        	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+        				}
                 	}
                 }
             	line = loreIter.next();
 			}
+			// If the attribute is missing, add it (in correct order)
 			else {
                 AttributeSet aset = attributes.get(key);
                 AttributeSet rset = rarities.get(rarity).attributes.get(key);
@@ -312,7 +321,14 @@ public class GearConfig {
                 if (max > 0) {
                 	hasChanged = true;
                 	loreIter.previous();
-                	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+    				if (key.equals("hlr") || key.equals("rrg")) {
+    					double amount = min + Gear.gen.nextInt(max - min + 1);
+    					amount /= 10;
+    					loreIter.add(aset.format(amount));
+    				}
+    				else {
+                    	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));
+    				}
                 	loreIter.next();
                 }
 			}
