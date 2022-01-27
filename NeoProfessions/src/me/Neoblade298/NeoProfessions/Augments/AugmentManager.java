@@ -47,6 +47,7 @@ import me.neoblade298.neobossrelics.NeoBossRelics;
 public class AugmentManager implements Listener {
 	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	public static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>();
+	public static ArrayList<Augment> conversionAugments = new ArrayList<Augment>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
@@ -65,6 +66,10 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Commander", new CommanderAugment());
 		augmentMap.put("Guardian", new GuardianAugment());
 		augmentMap.put("Inspire", new InspireAugment());
+		conversionAugments.add(new BraceAugment());
+		conversionAugments.add(new CommanderAugment());
+		conversionAugments.add(new GuardianAugment());
+		conversionAugments.add(new InspireAugment());
 		
 		// Crits
 		augmentMap.put("Brawler", new BrawlerAugment());
@@ -73,6 +78,12 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Precision", new PrecisionAugment());
 		augmentMap.put("Spellweaving", new SpellweavingAugment());
 		augmentMap.put("Vampiric", new VampiricAugment());
+		conversionAugments.add(new BrawlerAugment());
+		conversionAugments.add(new CorneredAugment());
+		conversionAugments.add(new FerociousAugment());
+		conversionAugments.add(new PrecisionAugment());
+		conversionAugments.add(new SpellweavingAugment());
+		conversionAugments.add(new VampiricAugment());
 		
 		// Damage Dealt
 		augmentMap.put("Burst", new BurstAugment());
@@ -86,29 +97,51 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Overload", new OverloadAugment());
 		augmentMap.put("Sentinel", new SentinelAugment());
 		augmentMap.put("Underdog", new UnderdogAugment());
+		conversionAugments.add(new BurstAugment());
+		conversionAugments.add(new CalmingAugment());
+		conversionAugments.add(new DesperationAugment());
+		conversionAugments.add(new FinisherAugment());
+		conversionAugments.add(new HeartyAugment());
+		conversionAugments.add(new InitiatorAugment());
+		conversionAugments.add(new IntimidatingAugment());
+		conversionAugments.add(new OpportunistAugment());
+		conversionAugments.add(new OverloadAugment());
+		conversionAugments.add(new SentinelAugment());
+		conversionAugments.add(new UnderdogAugment());
 		
 		// Damage Taken
 		augmentMap.put("Protection", new ProtectionAugment());
+		conversionAugments.add(new ProtectionAugment());
 		
 		// Flags
 		augmentMap.put("Holy", new HolyAugment());
 		augmentMap.put("Tenacity", new TenacityAugment());
+		conversionAugments.add(new HolyAugment());
+		conversionAugments.add(new TenacityAugment());
 		
 		// Healing
 		augmentMap.put("Rally", new RallyAugment());
 		augmentMap.put("Rejuvenating", new RejuvenatingAugment());
 		augmentMap.put("Selfish", new SelfishAugment());
+		conversionAugments.add(new RallyAugment());
+		conversionAugments.add(new RejuvenatingAugment());
+		conversionAugments.add(new SelfishAugment());
 		
 		// Mana Gain
 		augmentMap.put("Defiance", new DefianceAugment());
 		augmentMap.put("Final Light", new FinalLightAugment());
+		conversionAugments.add(new DefianceAugment());
+		conversionAugments.add(new FinalLightAugment());
 		
 		// Regen
 		augmentMap.put("Last Breath", new LastBreathAugment());
+		conversionAugments.add(new LastBreathAugment());
 		
 		// Taunt
 		augmentMap.put("Imposing", new ImposingAugment());
 		augmentMap.put("Steadfast", new SteadfastAugment());
+		conversionAugments.add(new ImposingAugment());
+		conversionAugments.add(new SteadfastAugment());
 		
 		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");

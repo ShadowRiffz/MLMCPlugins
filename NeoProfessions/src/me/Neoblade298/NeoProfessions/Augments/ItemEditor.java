@@ -210,14 +210,13 @@ public class ItemEditor {
 			else {
 				slotNum++;
 				if (line.contains("Slot")) {
+					iter.remove();
 					if (slots < slotsMax) {
-						iter.remove();
 						iter.add("§8[Empty Slot]");
 						slots++;
 						nbtData.put("slot" + slots + "Line", i);
 					}
 					else {
-						iter.remove();
 						i--;
 					}
 				}
@@ -225,33 +224,32 @@ public class ItemEditor {
 					break;
 				}
 				else {
+					iter.remove();
 					if (slots < slotsMax) {
-						iter.remove();
 						iter.add("§8[Empty Slot]");
 						slots++;
 						nbtData.put("slot" + slots + "Line", i);
-						// Turn the string into an old augment
-						ItemStack oldAug = masonUtils.parseUnslot(p, slotNum);
-						
-						// Return it if it's a relic, otherwise choose a random augment
-						if (oldAug.getType().equals(Material.QUARTZ)) {
-							HashMap<Integer, ItemStack> failed = p.getInventory().addItem(oldAug);
-							for (Integer num : failed.keySet()) {
-								p.getWorld().dropItem(p.getLocation(), failed.get(num));
-							}
-						}
-						else {
-							Object[] choices = AugmentManager.augmentMap.keySet().toArray();
-							Augment aug = AugmentManager.augmentMap.get((String) choices[gen.nextInt(choices.length)]).get(oldAug.getEnchantmentLevel(Enchantment.DURABILITY));
-							HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
-							for (Integer num : failed.keySet()) {
-								p.getWorld().dropItem(p.getLocation(), failed.get(num));
-							}
+					}
+					else {
+						i--;
+					}
+					// Turn the string into an old augment
+					ItemStack oldAug = masonUtils.parseUnslot(p, slotNum);
+					
+					// Return it if it's a relic, otherwise choose a random augment
+					if (oldAug.getType().equals(Material.QUARTZ)) {
+						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(oldAug);
+						for (Integer num : failed.keySet()) {
+							p.getWorld().dropItem(p.getLocation(), failed.get(num));
 						}
 					}
 					else {
-						iter.remove();
-						i--;
+						int size = AugmentManager.conversionAugments.size();
+						Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(oldAug.getEnchantmentLevel(Enchantment.DURABILITY));
+						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
+						for (Integer num : failed.keySet()) {
+							p.getWorld().dropItem(p.getLocation(), failed.get(num));
+						}
 					}
 				}
 			}
