@@ -25,6 +25,7 @@ import net.md_5.bungee.api.ChatColor;
 public class GearConfig {
 	private Gear main;
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
+	public static final String DURAPREFIX = "§7Durability ";
 	public String name, display, title;
 	public Material material;
 	public ArrayList<String> prefixes, displayNames;
@@ -335,7 +336,20 @@ public class GearConfig {
 		}
 		
 		// Update durability as necessary
-		DurabilityListener.get
+		while (loreIter.hasNext()) {
+			line = loreIter.next();
+			if (line.contains("Durability")) {
+				String args[] = line.substring(line.indexOf("y") + 2).split(" / ");
+				double dura = Double.parseDouble(args[0]);
+				double duraMax = Double.parseDouble(args[1]);
+				double percentage = dura / duraMax;
+				
+				double newDuraMax = duraBase + rarities.get(rarity).duraBonus;
+				double newDura = newDuraMax * percentage;
+				loreIter.remove();
+				loreIter.add(DURAPREFIX + (int) newDura + " / " + (int) newDuraMax);
+			}
+		}
 		
 		
 		meta.setLore(lore);
