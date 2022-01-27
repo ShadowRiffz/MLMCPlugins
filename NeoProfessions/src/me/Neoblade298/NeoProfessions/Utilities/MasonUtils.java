@@ -57,8 +57,6 @@ public class MasonUtils {
 
 	public ItemStack parseUnslot(Player p, int slot) {
 		ItemStack item = p.getInventory().getItemInMainHand();
-		ItemMeta meta = item.getItemMeta();
-		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		String line = getSlotLine(item, slot);
 		String[] words = line.split(" ");
 		int level = util.getItemLevel(item);
@@ -74,9 +72,6 @@ public class MasonUtils {
 		boolean isArmor = Util.isArmor(item);
 		int potency = -1;
 		int durabilityLoss = -1;
-		lore.set(getSlotNum(item, slot), "§8(Lv " + level + " Slot)");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
 
 		if (line.contains("Durability")) {
 			slotType = 0;

@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -146,9 +147,11 @@ public class ItemEditor {
 		lore.add(1, ""); // Placeholder for Type
 		ListIterator<String> iter = lore.listIterator();
 		int i = -1;
+		int slotNum = 0;
 		while (iter.hasNext()) {
 			i++;
 			String line = iter.next();
+			System.out.println("Lines " + i + ": " + line);
 			
 			if (!hasBonus) {
 				if (line.contains("Tier: ")) {
@@ -203,10 +206,13 @@ public class ItemEditor {
 				}
 			}
 			
+			// Bonus lines
 			else {
+				slotNum++;
 				if (line.contains("Slot")) {
 					if (slots < slotsMax) {
-						lore.set(i, "§8[Empty Slot]");
+						iter.remove();
+						iter.add("§8[Empty Slot]");
 						slots++;
 						nbtData.put("slot" + slots + "Line", i);
 					}
@@ -220,15 +226,27 @@ public class ItemEditor {
 				}
 				else {
 					if (slots < slotsMax) {
-						lore.set(i, "§8[Empty Slot]");
+						iter.remove();
+						iter.add("§8[Empty Slot]");
+						slots++;
+						nbtData.put("slot" + slots + "Line", i);
 						// Turn the string into an old augment
-						int level = masonUtils.parseUnslot(p, i).getEnchantmentLevel(Enchantment.DURABILITY);
-						// Choose a random augment
-						String[] choices = (String[]) AugmentManager.augmentMap.keySet().toArray();
-						Augment aug = AugmentManager.augmentMap.get(choices[gen.nextInt(choices.length)]).get(level);
-						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
-						for (Integer num : failed.keySet()) {
-							p.getWorld().dropItem(p.getLocation(), failed.get(num));
+						ItemStack oldAug = masonUtils.parseUnslot(p, slotNum);
+						
+						// Return it if it's a relic, otherwise choose a random augment
+						if (oldAug.getType().equals(Material.QUARTZ)) {
+							HashMap<Integer, ItemStack> failed = p.getInventory().addItem(oldAug);
+							for (Integer num : failed.keySet()) {
+								p.getWorld().dropItem(p.getLocation(), failed.get(num));
+							}
+						}
+						else {
+							Object[] choices = AugmentManager.augmentMap.keySet().toArray();
+							Augment aug = AugmentManager.augmentMap.get((String) choices[gen.nextInt(choices.length)]).get(oldAug.getEnchantmentLevel(Enchantment.DURABILITY));
+							HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
+							for (Integer num : failed.keySet()) {
+								p.getWorld().dropItem(p.getLocation(), failed.get(num));
+							}
 						}
 					}
 					else {
