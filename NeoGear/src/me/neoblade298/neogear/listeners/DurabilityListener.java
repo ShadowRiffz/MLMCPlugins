@@ -203,7 +203,7 @@ public class DurabilityListener implements Listener {
 		
 		// Update item
 		NBTItem nbti = new NBTItem(item);
-		Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(p, item);
+		Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateStats(p, item);
 		return null;
 	}
 	
@@ -233,7 +233,7 @@ public class DurabilityListener implements Listener {
 		
 		// Update item
 		if (nbti.hasKey("gear")) {
-			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateAttributes(p, item);
+			Gear.settings.get(nbti.getString("gear")).get(nbti.getInteger("level")).updateStats(p, item);
 		}
 		
 		return true;

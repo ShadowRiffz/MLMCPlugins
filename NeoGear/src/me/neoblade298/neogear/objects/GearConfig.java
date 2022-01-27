@@ -241,7 +241,7 @@ public class GearConfig {
 		return nbti.getItem();
 	}
 	
-	public void updateAttributes(Player p, ItemStack item) {
+	public void updateStats(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("version")) {
 			return;
@@ -333,6 +333,11 @@ public class GearConfig {
                 }
 			}
 		}
+		
+		// Update durability as necessary
+		DurabilityListener.get
+		
+		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		if (hasChanged) {
