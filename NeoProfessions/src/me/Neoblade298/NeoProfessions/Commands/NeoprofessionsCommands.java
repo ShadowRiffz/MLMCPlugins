@@ -26,6 +26,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
@@ -46,6 +47,7 @@ import me.neoblade298.neogear.listeners.DurabilityListener;
 public class NeoprofessionsCommands implements CommandExecutor {
 
 	private static final int LEVEL_INTERVAL = 5;
+	private static final Random gen = new Random();
 	Professions main;
 	BlacksmithMethods blacksmithMethods;
 	StonecutterMethods stonecutterMethods;
@@ -98,6 +100,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			ItemStack main = p.getInventory().getItemInMainHand();
 			if (main.getType().equals(Material.PRISMARINE_CRYSTALS)) {
 				if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
+					if (new NBTItem(main).hasKey("potency")) {
+						Util.sendMessage(p, "&7This repair kit is already converted!");
+						return true;
+					}
 					ArrayList<String> lore = (ArrayList<String>) main.getItemMeta().getLore();
 					if (lore.get(0).contains("Right click to use")) {
 						String lvLine = lore.get(2);
@@ -508,7 +514,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
 					}
 					else if (args[1].equalsIgnoreCase("augment")) {
-						p.getInventory().addItem(AugmentManager.augmentMap.get(args[2].replaceAll("_", " ")).get(Integer.parseInt(args[3])).getItem(p));
+						if (args[2].equalsIgnoreCase("random")) {
+							int size = AugmentManager.conversionAugments.size();
+							Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(Integer.parseInt(args[3]));
+							p.getInventory().addItem(aug.getItem(p));
+						}
+						else {
+							p.getInventory().addItem(AugmentManager.augmentMap.get(args[2].replaceAll("_", " ")).get(Integer.parseInt(args[3])).getItem(p));
+						}
 					}
 					else if (args[1].equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
@@ -647,7 +660,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
 						}
 						else if (args[2].equalsIgnoreCase("augment")) {
-							p.getInventory().addItem(AugmentManager.augmentMap.get(args[3].replaceAll("_", " ")).get(Integer.parseInt(args[4])).getItem(p));
+							if (args[3].equalsIgnoreCase("random")) {
+								int size = AugmentManager.conversionAugments.size();
+								Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(Integer.parseInt(args[4]));
+								p.getInventory().addItem(aug.getItem(p));
+							}
+							else {
+								p.getInventory().addItem(AugmentManager.augmentMap.get(args[3].replaceAll("_", " ")).get(Integer.parseInt(args[4])).getItem(p));
+							}
 						}
 						else if (args[2].equalsIgnoreCase("repair")) {
 							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));
