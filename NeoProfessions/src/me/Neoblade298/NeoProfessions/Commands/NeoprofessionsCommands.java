@@ -95,14 +95,32 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
-			ItemEditor editor = new ItemEditor(p.getInventory().getItemInMainHand());
-			String result = editor.convertItem(p);
-			DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
-			if (result == null) {
-				Util.sendMessage(p, "&7Successfully converted item!");
+			ItemStack main = p.getInventory().getItemInMainHand();
+			if (main.getType().equals(Material.PRISMARINE_CRYSTALS)) {
+				if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
+					ArrayList<String> lore = (ArrayList<String>) main.getItemMeta().getLore();
+					if (lore.get(0).contains("Right click to use")) {
+						String lvLine = lore.get(2);
+						int lv = Integer.parseInt(lvLine.substring(lvLine.indexOf("Lv ") + 3));
+						int amt = main.getAmount();
+						p.getInventory().removeItem(main);
+						ItemStack converted = bItems.getRepairItem(lv);
+						converted.setAmount(amt);
+						p.getInventory().addItem(converted);
+						Util.sendMessage(p, "&7Successfully converted item!");
+					}
+				}
 			}
 			else {
-				Util.sendMessage(p, "&cItem conversion failed, " + result);
+				ItemEditor editor = new ItemEditor(main);
+				String result = editor.convertItem(p);
+				DurabilityListener.fullRepairItem(p, main);
+				if (result == null) {
+					Util.sendMessage(p, "&7Successfully converted item!");
+				}
+				else {
+					Util.sendMessage(p, "&cItem conversion failed, " + result);
+				}
 			}
 			return true;
 		}

@@ -71,7 +71,7 @@ public class BlacksmithItems {
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
 
-		lore.add("§6Right click to use§0");
+		lore.add("§6Drag onto item to use§0");
 		lore.add("§cOnly works on quest items");
 		lore.add("§7Compatibility: Up to §4Lv " + level);
 		lore.add("§7Effect: Restores durability of an item");
