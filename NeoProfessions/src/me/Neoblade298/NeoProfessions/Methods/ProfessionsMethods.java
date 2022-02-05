@@ -126,14 +126,6 @@ public class ProfessionsMethods {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		
-		if (Util.isArmor(item)) {
-			util.setMaxDurability(item, util.getMaxDurability(item) + 100);
-		}
-		else {
-			util.setMaxDurability(item, util.getMaxDurability(item) + 200);
-		}
-		util.setCurrentDurability(item, util.getMaxDurability(item));
-		
 		// Change nbt rarity
 		nbti = new NBTItem(item);
 		nbti.setString("rarity", "artifact");

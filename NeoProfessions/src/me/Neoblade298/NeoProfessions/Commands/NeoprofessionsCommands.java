@@ -17,8 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.Damageable;
-
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 
@@ -30,17 +28,12 @@ import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
-import me.Neoblade298.NeoProfessions.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
-import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
-import me.Neoblade298.NeoProfessions.Items.MasonItems;
-import me.Neoblade298.NeoProfessions.Items.StonecutterItems;
-import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
-import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
-import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
-import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
-import me.Neoblade298.NeoProfessions.Utilities.BlacksmithUtils;
+import me.Neoblade298.NeoProfessions.Legacy.Items.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.CommonItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.DrinksRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.MasonItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
@@ -49,10 +42,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	private static final int LEVEL_INTERVAL = 5;
 	private static final Random gen = new Random();
 	Professions main;
-	BlacksmithMethods blacksmithMethods;
-	StonecutterMethods stonecutterMethods;
-	CulinarianMethods culinarianMethods;
-	MasonMethods masonMethods;
 	Util util;
 	CommonItems common;
 	BlacksmithItems bItems;
@@ -62,13 +51,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	DrinksRecipeItems drink;
 	CurrencyManager cm;
 
-	public NeoprofessionsCommands(Professions main, BlacksmithMethods b, StonecutterMethods s, CulinarianMethods c,
-			MasonMethods m) {
+	public NeoprofessionsCommands(Professions main) {
 		this.main = main;
-		this.blacksmithMethods = b;
-		this.stonecutterMethods = s;
-		this.culinarianMethods = c;
-		this.masonMethods = m;
 		util = new Util();
 		common = new CommonItems();
 		bItems = new BlacksmithItems();
@@ -328,17 +312,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/prof level/points [playername] <amount>");
 				sender.sendMessage("§7- §4/prof sell [playername]");
 				sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
+				sender.sendMessage("§7- §4/prof give <p> {essence/ore/repair} [level]");
 				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
-				sender.sendMessage("§7- §4/prof <playername> get ingr [22-24]");
-				sender.sendMessage("§7- §4/prof <playername> get augment [name] [level]");
-				sender.sendMessage("§7- §4/prof <playername> get durability [weapon/armor] [level]");
-				sender.sendMessage("§7- §4/prof <playername> get ore [attribute or 1-7] [level] <amount>");
-				sender.sendMessage("§7- §4/prof <playername> get {gem/overload} [weapon/armor] [attribute] [level]");
-				sender.sendMessage("§7- §4/prof <playername> get [basic/advanced] [charm]");
 				sender.sendMessage("§7- §4/prof <playername> get augment [name] [level]");
 				sender.sendMessage("§7- §4/prof <playername> add [essence/oretype] [level] [amount]");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
@@ -419,34 +397,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						main.professionsMethods.artifactItem((Player) sender);
 					}
 				}
-				else if (args[0].equalsIgnoreCase("sober")) {
-					if (args.length == 2) {
-						main.culinarianListeners.drunkness.put(Bukkit.getPlayer(args[1]), 0);
-						Util.sendMessage(Bukkit.getPlayer(args[1]), "&7Successfully sobered!");
-						return true;
-					}
-				}
-				else if (args[0].equalsIgnoreCase("repair")) {
-					if (args.length == 2) {
-						Player target = Bukkit.getPlayer(args[1]);
-						ItemStack item = target.getInventory().getItemInMainHand();
-						Util util = new Util();
-						BlacksmithUtils bUtils = new BlacksmithUtils();
-						if (bUtils.canRepair(item)) {
-							ItemMeta im = item.getItemMeta();
-							((Damageable) im).setDamage(0);
-							item.setItemMeta(im);
-							if (bUtils.isGear(item)) {
-								util.setCurrentDurability(item, util.getMaxDurability(item));
-							}
-							Util.sendMessage(Bukkit.getPlayer(args[1]), "&7Item repaired successfully!");
-						}
-						else {
-							Util.sendMessage(Bukkit.getPlayer(args[1]), "&cItem no longer supported by server!");
-						}
-						return true;
-					}
-				}
 				// /prof level playername
 				else if (args[0].equalsIgnoreCase("level")) {
 					if (args.length == 2) {
@@ -486,28 +436,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						}
 						return true;
 					}
-				}
-				else if (args[0].equalsIgnoreCase("reset")) {
-					PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
-					if (pClass != null) {
-						if (pClass.getData().getName().equalsIgnoreCase("Blacksmith")) {
-							blacksmithMethods.resetPlayer(Bukkit.getPlayer(args[1]));
-							return true;
-						}
-						else if (pClass.getData().getName().equalsIgnoreCase("Stonecutter")) {
-							stonecutterMethods.resetPlayer(Bukkit.getPlayer(args[1]));
-							return true;
-						}
-						else if (pClass.getData().getName().equalsIgnoreCase("Culinarian")) {
-							culinarianMethods.resetPlayer(Bukkit.getPlayer(args[1]));
-							return true;
-						}
-						else if (pClass.getData().getName().equalsIgnoreCase("Mason")) {
-							masonMethods.resetPlayer(Bukkit.getPlayer(args[1]));
-							return true;
-						}
-					}
-					return true;
 				}
 				else if (args[0].equalsIgnoreCase("get")) {
 					if (args[1].equalsIgnoreCase("essence")) {

@@ -19,24 +19,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
-import me.Neoblade298.NeoProfessions.Commands.BlacksmithCommands;
-import me.Neoblade298.NeoProfessions.Commands.CulinarianCommands;
-import me.Neoblade298.NeoProfessions.Commands.MasonCommands;
 import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
-import me.Neoblade298.NeoProfessions.Commands.StonecutterCommands;
 import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
-import me.Neoblade298.NeoProfessions.Listeners.BlacksmithListeners;
-import me.Neoblade298.NeoProfessions.Listeners.CulinarianListeners;
 import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
-import me.Neoblade298.NeoProfessions.Listeners.SkillapiListeners;
-import me.Neoblade298.NeoProfessions.Methods.BlacksmithMethods;
-import me.Neoblade298.NeoProfessions.Methods.CulinarianMethods;
-import me.Neoblade298.NeoProfessions.Methods.MasonMethods;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
-import me.Neoblade298.NeoProfessions.Methods.StonecutterMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.neoblade298.neogear.Gear;
@@ -58,14 +47,9 @@ public class Professions extends JavaPlugin implements Listener {
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
 	static Properties properties = new Properties();
 
-	public BlacksmithMethods blacksmithMethods;
-	public MasonMethods masonMethods;
-	public StonecutterMethods stonecutterMethods;
-	public CulinarianMethods culinarianMethods;
 	public ProfessionsMethods professionsMethods;
 
 	public CulinarianRecipes culinarianRecipes;
-	public CulinarianListeners culinarianListeners;
 
 	public MasonListeners masonListeners;
 	public MasonUtils masonUtils;
@@ -102,9 +86,6 @@ public class Professions extends JavaPlugin implements Listener {
 		isInstance = cfg.getBoolean("is-instance");
 
 		// Set up required listeners
-		getServer().getPluginManager().registerEvents(new BlacksmithListeners(this), this);
-		getServer().getPluginManager().registerEvents(new CulinarianListeners(this), this);
-		getServer().getPluginManager().registerEvents(new SkillapiListeners(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		getServer().getPluginManager().registerEvents(new AugmentManager(), this);
 		if (!isInstance) {
@@ -122,20 +103,11 @@ public class Professions extends JavaPlugin implements Listener {
 			masonUtils = new MasonUtils();
 	
 			// Connect method classes to main
-			blacksmithMethods = new BlacksmithMethods(this);
-			masonMethods = new MasonMethods(this);
-			stonecutterMethods = new StonecutterMethods(this);
-			culinarianMethods = new CulinarianMethods(this);
 			professionsMethods = new ProfessionsMethods(this);
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));
-			this.getCommand("blacksmith").setExecutor(new BlacksmithCommands(this));
-			this.getCommand("mason").setExecutor(new MasonCommands(this));
-			this.getCommand("scutter").setExecutor(new StonecutterCommands(this));
-			this.getCommand("culinarian").setExecutor(new CulinarianCommands(this));
-			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this, blacksmithMethods,
-					stonecutterMethods, culinarianMethods, masonMethods));
+			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
 			
 			
 			// Setup Event Listeners

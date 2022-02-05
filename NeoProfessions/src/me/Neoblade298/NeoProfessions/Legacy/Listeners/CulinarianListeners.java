@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Listeners;
+package me.Neoblade298.NeoProfessions.Legacy.Listeners;
 
 import java.util.HashMap;
 import java.util.Random;
