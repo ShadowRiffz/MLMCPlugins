@@ -24,7 +24,7 @@ import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
 import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
-import me.Neoblade298.NeoProfessions.Listeners.MasonListeners;
+import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
@@ -48,10 +48,7 @@ public class Professions extends JavaPlugin implements Listener {
 	static Properties properties = new Properties();
 
 	public ProfessionsMethods professionsMethods;
-
 	public CulinarianRecipes culinarianRecipes;
-
-	public MasonListeners masonListeners;
 	public MasonUtils masonUtils;
 
 	public GeneralListeners generalListeners;
@@ -88,13 +85,11 @@ public class Professions extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		getServer().getPluginManager().registerEvents(new AugmentManager(), this);
+		getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
 		}
-
-		// Must be after currencymanager is created but before masonMethods
-		masonListeners = new MasonListeners(this);
 			
 		if (!isInstance) {
 			// NeoGear
@@ -129,7 +124,6 @@ public class Professions extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		getServer().getPluginManager().registerEvents(masonListeners, this);
 
 
 		// Setup charm timer

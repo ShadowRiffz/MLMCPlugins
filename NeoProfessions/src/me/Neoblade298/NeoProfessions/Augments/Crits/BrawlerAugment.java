@@ -20,13 +20,13 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 	
 	public BrawlerAugment() {
 		super();
-		this.name = "Ferocious";
+		this.name = "Brawler";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.DAMAGE_TAKEN});
 	}
 
 	public BrawlerAugment(int level) {
 		super(level);
-		this.name = "Ferocious";
+		this.name = "Brawler";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.DAMAGE_TAKEN});
 	}
 	

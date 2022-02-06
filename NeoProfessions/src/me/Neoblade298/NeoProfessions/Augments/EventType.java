@@ -13,5 +13,7 @@ public enum EventType {
 	TAUNT,
 	POTION,
 	REGEN,
+	SKILLAPI_EXP,
+	DROP_CHANCE,
 	MANA_GAIN;
 }

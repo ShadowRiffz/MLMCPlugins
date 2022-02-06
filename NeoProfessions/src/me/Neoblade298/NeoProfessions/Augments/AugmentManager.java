@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -24,6 +24,7 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
 import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
+import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.PlayerRegenEvent;
@@ -34,6 +35,8 @@ import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Augments.Buffs.*;
+import me.Neoblade298.NeoProfessions.Augments.Charms.ExperienceAugment;
+import me.Neoblade298.NeoProfessions.Augments.Charms.ModExpAugment;
 import me.Neoblade298.NeoProfessions.Augments.Crits.*;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.*;
 import me.Neoblade298.NeoProfessions.Augments.DamageTaken.*;
@@ -142,6 +145,9 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Steadfast", new SteadfastAugment());
 		conversionAugments.add(new ImposingAugment());
 		conversionAugments.add(new SteadfastAugment());
+		
+		// Skillapi Exp
+		augmentMap.put("Experience", new ExperienceAugment());
 		
 		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
@@ -514,5 +520,28 @@ public class AugmentManager implements Listener {
 			}
 		}
 		e.setAmount(e.getAmount() * multiplier + flat);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onExpGain(PlayerExperienceGainEvent e) {
+		Player p = e.getPlayerData().getPlayer();
+		
+		// Check charms
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.SKILLAPI_EXP)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.SKILLAPI_EXP)) {
+				if (augment instanceof ModExpAugment) {
+					ModExpAugment aug = (ModExpAugment) augment;
+					if (aug.canUse(p, e)) {
+						aug.applyExpEffects(p);
+						
+						multiplier += aug.getExpMult(p);
+						flat += aug.getExpFlat(p);
+					}
+				}
+			}
+		}
+		e.setExp(e.getExp() * multiplier + flat);
 	}
 }

@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoProfessions.Listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,8 +16,6 @@ import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class GeneralListeners implements Listener {
-	HashMap<Player, ItemStack> selectedRepair = new HashMap<Player, ItemStack>();
-
 	Professions main;
 	Util util;
 
