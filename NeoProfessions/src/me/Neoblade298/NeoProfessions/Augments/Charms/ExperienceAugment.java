@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.enums.ExpSource;
 import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
@@ -37,15 +38,15 @@ public class ExperienceAugment extends Augment implements ModExpAugment {
 
 	@Override
 	public boolean canUse(Player user, PlayerExperienceGainEvent e) {
-		return true;
+		return e.getSource().equals(ExpSource.MOB);
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases exp gained by");
-		lore.add("§f" + formatPercentage(getExpMult(user)) + "%§7.");
+		lore.add("§7Increases exp gained from");
+		lore.add("§7mobs and minibosses by §f" + formatPercentage(getExpMult(user)) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
