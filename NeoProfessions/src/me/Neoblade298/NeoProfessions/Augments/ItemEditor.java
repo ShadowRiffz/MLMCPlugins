@@ -235,18 +235,29 @@ public class ItemEditor {
 					}
 					// Turn the string into an old augment
 					ItemStack oldAug = masonUtils.parseUnslot(p, slotNum);
+					String oldAugName = oldAug.getItemMeta().getDisplayName();
+					int level = oldAug.getEnchantmentLevel(Enchantment.DURABILITY);
+					HashMap<Integer, ItemStack> failed = null;
 					
-					// Return it if it's a relic, otherwise choose a random augment
+					// Return it if it's a relic
 					if (oldAug.getType().equals(Material.QUARTZ)) {
-						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(oldAug);
-						for (Integer num : failed.keySet()) {
-							p.getWorld().dropItem(p.getLocation(), failed.get(num));
-						}
+						failed = p.getInventory().addItem(oldAug);
+					}
+					// Return it if it's a drop or exp charm
+					else if (oldAugName.contains("Exp")) {
+						failed = p.getInventory().addItem(AugmentManager.augmentMap.get("Experience").get(level).getItem(p));
+					}
+					else if (oldAugName.contains("Drop")) {
+						failed = p.getInventory().addItem(AugmentManager.augmentMap.get("Chest Chance").get(level).getItem(p));
 					}
 					else {
 						int size = AugmentManager.conversionAugments.size();
-						Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(oldAug.getEnchantmentLevel(Enchantment.DURABILITY));
-						HashMap<Integer, ItemStack> failed = p.getInventory().addItem(aug.getItem(p));
+						Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(level);
+						failed = p.getInventory().addItem(aug.getItem(p));
+					}
+					
+					// Drops augments on the ground if inventory full
+					if (failed != null) {
 						for (Integer num : failed.keySet()) {
 							p.getWorld().dropItem(p.getLocation(), failed.get(num));
 						}

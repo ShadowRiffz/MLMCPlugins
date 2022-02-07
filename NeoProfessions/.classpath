@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="src/item-nbt-api-plugin-2.8.0.jar"/>
 	<classpathentry kind="lib" path="src/NeoBossRelics.jar"/>
 	<classpathentry kind="lib" path="src/mcMMO.jar"/>
+	<classpathentry kind="lib" path="src/NeoMythicExtension.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

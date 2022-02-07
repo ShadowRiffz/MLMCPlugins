@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
@@ -8,6 +9,7 @@ import java.util.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -42,9 +44,9 @@ public class Professions extends JavaPlugin implements Listener {
 	private Chat chat;
 	private YamlConfiguration cfg;
 
-	static String sqlUser = "neoblade298";
-	static String sqlPass = "7H56480g09&Z01pz";
-	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
+	static String sqlUser;
+	static String sqlPass;
+	static String connection;
 	static Properties properties = new Properties();
 
 	public ProfessionsMethods professionsMethods;
@@ -80,7 +82,23 @@ public class Professions extends JavaPlugin implements Listener {
 			saveResource("config.yml", false);
 		}
 		this.cfg = YamlConfiguration.loadConfiguration(file);
-		isInstance = cfg.getBoolean("is-instance");
+
+		// SQL
+		ConfigurationSection sql = cfg.getConfigurationSection("sql");
+		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
+				sql.getString("db") + sql.getString("flags");
+		sqlUser = sql.getString("username");
+		sqlPass = sql.getString("password");
+		
+		// droptables
+		ConfigurationSection tablesCfg = cfg.getConfigurationSection("droptables");
+		for (String table : tablesCfg.getKeys(false)) {
+			AugmentManager.droptables.put(table, (ArrayList<String>) tablesCfg.getStringList(table));
+		}
+
+		if (new File(getDataFolder(), "instance").exists()) {
+			isInstance = true;
+		}
 
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);

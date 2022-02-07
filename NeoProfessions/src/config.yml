@@ -1,1 +1,42 @@
-is-instance: false
+sql:
+  host: 127.0.0.1
+  port: '3306'
+  db: MLMC
+  username: username
+  password: password
+  flags: ?verifyServerCertificate=false&useSSL=false&useUnicode=true&characterEncoding=utf-8
+  
+droptables:
+  default:
+  - "Brace"
+  - "Commander"
+  - "Guardian"
+  - "Inspire"
+  - "Brawler"
+  - "Cornered"
+  - "Ferocious"
+  - "Precision"
+  - "Spellweaving"
+  - "Vampiric"
+  - "Burst"
+  - "Calming"
+  - "Desperation"
+  - "Finisher"
+  - "Hearty"
+  - "Initiator"
+  - "Intimidating"
+  - "Opportunist"
+  - "Overload"
+  - "Sentinel"
+  - "Underdog"
+  - "Protection"
+  - "Holy"
+  - "Tenacity"
+  - "Rally"
+  - "Rejuvenating"
+  - "Selfish"
+  - "Defiance"
+  - "Final Light"
+  - "Last Breath"
+  - "Imposing"
+  - "Steadfast"

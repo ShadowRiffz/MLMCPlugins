@@ -35,8 +35,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Augments.Buffs.*;
-import me.Neoblade298.NeoProfessions.Augments.Charms.ExperienceAugment;
-import me.Neoblade298.NeoProfessions.Augments.Charms.ModExpAugment;
+import me.Neoblade298.NeoProfessions.Augments.Charms.*;
 import me.Neoblade298.NeoProfessions.Augments.Crits.*;
 import me.Neoblade298.NeoProfessions.Augments.DamageDealt.*;
 import me.Neoblade298.NeoProfessions.Augments.DamageTaken.*;
@@ -46,11 +45,15 @@ import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 import me.Neoblade298.NeoProfessions.Augments.Regen.*;
 import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
 import me.neoblade298.neobossrelics.NeoBossRelics;
+import me.neoblade298.neomythicextension.events.ChestDropEvent;
+import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class AugmentManager implements Listener {
 	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
+	
+	// Caches 1 augment of each level whenever it's created, works via Augment.get
 	public static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>();
-	public static ArrayList<Augment> conversionAugments = new ArrayList<Augment>();
+	public static HashMap<String, ArrayList<String>> droptables = new HashMap<String, ArrayList<String>>();
 	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
@@ -69,10 +72,6 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Commander", new CommanderAugment());
 		augmentMap.put("Guardian", new GuardianAugment());
 		augmentMap.put("Inspire", new InspireAugment());
-		conversionAugments.add(new BraceAugment());
-		conversionAugments.add(new CommanderAugment());
-		conversionAugments.add(new GuardianAugment());
-		conversionAugments.add(new InspireAugment());
 		
 		// Crits
 		augmentMap.put("Brawler", new BrawlerAugment());
@@ -81,12 +80,6 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Precision", new PrecisionAugment());
 		augmentMap.put("Spellweaving", new SpellweavingAugment());
 		augmentMap.put("Vampiric", new VampiricAugment());
-		conversionAugments.add(new BrawlerAugment());
-		conversionAugments.add(new CorneredAugment());
-		conversionAugments.add(new FerociousAugment());
-		conversionAugments.add(new PrecisionAugment());
-		conversionAugments.add(new SpellweavingAugment());
-		conversionAugments.add(new VampiricAugment());
 		
 		// Damage Dealt
 		augmentMap.put("Burst", new BurstAugment());
@@ -100,54 +93,34 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Overload", new OverloadAugment());
 		augmentMap.put("Sentinel", new SentinelAugment());
 		augmentMap.put("Underdog", new UnderdogAugment());
-		conversionAugments.add(new BurstAugment());
-		conversionAugments.add(new CalmingAugment());
-		conversionAugments.add(new DesperationAugment());
-		conversionAugments.add(new FinisherAugment());
-		conversionAugments.add(new HeartyAugment());
-		conversionAugments.add(new InitiatorAugment());
-		conversionAugments.add(new IntimidatingAugment());
-		conversionAugments.add(new OpportunistAugment());
-		conversionAugments.add(new OverloadAugment());
-		conversionAugments.add(new SentinelAugment());
-		conversionAugments.add(new UnderdogAugment());
 		
 		// Damage Taken
 		augmentMap.put("Protection", new ProtectionAugment());
-		conversionAugments.add(new ProtectionAugment());
 		
 		// Flags
 		augmentMap.put("Holy", new HolyAugment());
 		augmentMap.put("Tenacity", new TenacityAugment());
-		conversionAugments.add(new HolyAugment());
-		conversionAugments.add(new TenacityAugment());
 		
 		// Healing
 		augmentMap.put("Rally", new RallyAugment());
 		augmentMap.put("Rejuvenating", new RejuvenatingAugment());
 		augmentMap.put("Selfish", new SelfishAugment());
-		conversionAugments.add(new RallyAugment());
-		conversionAugments.add(new RejuvenatingAugment());
-		conversionAugments.add(new SelfishAugment());
 		
 		// Mana Gain
 		augmentMap.put("Defiance", new DefianceAugment());
 		augmentMap.put("Final Light", new FinalLightAugment());
-		conversionAugments.add(new DefianceAugment());
-		conversionAugments.add(new FinalLightAugment());
 		
 		// Regen
 		augmentMap.put("Last Breath", new LastBreathAugment());
-		conversionAugments.add(new LastBreathAugment());
 		
 		// Taunt
 		augmentMap.put("Imposing", new ImposingAugment());
 		augmentMap.put("Steadfast", new SteadfastAugment());
-		conversionAugments.add(new ImposingAugment());
-		conversionAugments.add(new SteadfastAugment());
 		
 		// Skillapi Exp
 		augmentMap.put("Experience", new ExperienceAugment());
+		augmentMap.put("Chest Chance", new ChestChanceAugment());
+		augmentMap.put("Research", new ResearchAugment());
 		
 		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
@@ -543,5 +516,53 @@ public class AugmentManager implements Listener {
 			}
 		}
 		e.setExp(e.getExp() * multiplier + flat);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onChestDrop(ChestDropEvent e) {
+		Player p = e.getPlayer();
+		
+		// Check charms
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.CHEST_DROP)) {
+			e.setDropType(1);
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CHEST_DROP)) {
+				if (augment instanceof ModChestDropAugment) {
+					ModChestDropAugment aug = (ModChestDropAugment) augment;
+					if (aug.canUse(p, e)) {
+						aug.applyExpEffects(p);
+						
+						multiplier += aug.getChestChanceMult(p);
+						flat += aug.getChestChanceFlat(p);
+					}
+				}
+			}
+		}
+		e.setChance(e.getChance() * multiplier + flat);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onResearchPointGain(MythicResearchPointsChanceEvent e) {
+		Player p = e.getPlayer();
+		
+		// Check charms
+		double multiplier = 1;
+		double flat = 0;
+		if (containsAugments(p, EventType.RESEARCH_POINTS)) {
+			e.setDropType(1);
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.RESEARCH_POINTS)) {
+				if (augment instanceof ModResearchPointsAugment) {
+					ModResearchPointsAugment aug = (ModResearchPointsAugment) augment;
+					if (aug.canUse(p, e)) {
+						aug.applyExpEffects(p);
+						
+						multiplier += aug.getRPChanceMult(p);
+						flat += aug.getRPChanceFlat(p);
+					}
+				}
+			}
+		}
+		e.setChance(e.getChance() * multiplier + flat);
 	}
 }
