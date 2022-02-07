@@ -323,8 +323,6 @@ public class Commands implements CommandExecutor {
 
 		if (args.length == 0) {
 			sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
-			sender.sendMessage("§c/boss cd [name] §7- Shows cooldown of a specific boss");
-			sender.sendMessage("§c/boss cd all §7- Shows cooldown of all bosses");
 			sender.sendMessage("§c/boss instances [boss] §7- Shows instances for boss");
 			sender.sendMessage("§c/boss instances §7- Shows all players in instances");
 			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
