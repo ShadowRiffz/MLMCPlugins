@@ -2,8 +2,6 @@ package me.Neoblade298.NeoProfessions.Augments.Charms;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.api.event.PlayerExperienceGainEvent;
-
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public interface ModChestDropAugment {

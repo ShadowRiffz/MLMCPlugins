@@ -251,8 +251,8 @@ public class ItemEditor {
 						failed = p.getInventory().addItem(AugmentManager.augmentMap.get("Chest Chance").get(level).getItem(p));
 					}
 					else {
-						int size = AugmentManager.conversionAugments.size();
-						Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(level);
+						ArrayList<String> table = AugmentManager.droptables.get("default");
+						Augment aug = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(level);
 						failed = p.getInventory().addItem(aug.getItem(p));
 					}
 					

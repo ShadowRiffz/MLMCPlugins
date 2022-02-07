@@ -3,8 +3,8 @@ author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Professions
 version: 1.0
 api-version: 1.16
-depend: [MythicMobs, SkillAPI, NeoGear, Vault, mcMMO]
-softdepend: [NeoBossRelics, NeoMythicExtension]
+depend: [MythicMobs, SkillAPI, NeoGear, Vault]
+softdepend: [NeoBossRelics, NeoMythicExtension, mcMMO]
 commands:
   value:
     description: Value command

@@ -15,11 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerClass;
-
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
@@ -39,7 +35,6 @@ import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class NeoprofessionsCommands implements CommandExecutor {
 
-	private static final int LEVEL_INTERVAL = 5;
 	private static final Random gen = new Random();
 	Professions main;
 	Util util;
@@ -186,126 +181,111 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		// /prof solidify [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("solidify")) {
-			if (!p.getGameMode().equals(GameMode.CREATIVE)) {
-				if (cm.containsKey(args[1])) {
-					if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
-						int level = Integer.parseInt(args[2]);
-						int amount = Integer.parseInt(args[3]);
-						if (level % 5 == 0 && level > 0 && level <= 60) {
-							if (cm.hasEnough(p, args[1], level, amount)) {
-								HashMap<Integer, ItemStack> result = null;
-								if (args[1].equalsIgnoreCase("essence")) {
-									result = p.getInventory().addItem(util.setAmount(common.getEssence(level, false), amount));
-								}
-								else {
-									result = p.getInventory().addItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
-								}
-								if (!result.isEmpty()) {
-									int notAdded = 0;
-									for (Entry<Integer, ItemStack> item : result.entrySet()) {
-										notAdded += item.getValue().getAmount();
-									}
-									cm.subtract(p, args[1], level, amount - notAdded);
-									Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
-									return true;
-								}
-								else {
-									cm.subtract(p, args[1], level, amount);
-									Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
-									return true;
-								}
-							}
-							else {
-								Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
-								return true;
-							}
-						}
-						else {
-							Util.sendMessage(p, "&cInvalid level!");
-							return true;
-						}
-					}
-					else {
-						Util.sendMessage(p, "&cLevel and amount should be a number!");
-						return true;
-					}
-				}
-				else {
-					Util.sendMessage(p, "&cInvalid essence or ore type!");
-					return true;
-				}
+			if (p.getGameMode().equals(GameMode.CREATIVE)) {
+				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				return true;
+			}
+			if (!cm.containsKey(args[1])) {
+				Util.sendMessage(p, "&cInvalid essence or ore type!");
+				return true;
+			}
+			if (!StringUtils.isNumeric(args[2]) || !StringUtils.isNumeric(args[3])) {
+				Util.sendMessage(p, "&cLevel and amount should be a number!");
+				return true;
+			}
+			
+			int level = Integer.parseInt(args[2]);
+			int amount = Integer.parseInt(args[3]);
+			if (level % 5 != 0 || level <= 0 || level > 60) {
+				Util.sendMessage(p, "&cInvalid level!");
+				return true;
+			}
+			if (!cm.hasEnough(p, args[1], level, amount)) {
+				Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
+				return true;
+			}
+			
+			HashMap<Integer, ItemStack> result = null;
+			if (args[1].equalsIgnoreCase("essence")) {
+				result = p.getInventory().addItem(util.setAmount(common.getEssence(level, false), amount));
 			}
 			else {
-				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				result = p.getInventory().addItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
+			}
+			if (!result.isEmpty()) {
+				int notAdded = 0;
+				for (Entry<Integer, ItemStack> item : result.entrySet()) {
+					notAdded += item.getValue().getAmount();
+				}
+				cm.subtract(p, args[1], level, amount - notAdded);
+				Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
+				return true;
+			}
+			else {
+				cm.subtract(p, args[1], level, amount);
+				Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
 				return true;
 			}
 		}
 		// /prof liquidate [type] [level] [amount]
 		else if (args.length == 4 && args[0].equalsIgnoreCase("liquidate")) {
-			if (!p.getGameMode().equals(GameMode.CREATIVE)) {
-				if (cm.containsKey(args[1])) {
-					if (StringUtils.isNumeric(args[2]) && StringUtils.isNumeric(args[3])) {
-						int level = Integer.parseInt(args[2]);
-						int amount = Integer.parseInt(args[3]);
-						if (level % 5 == 0 && level > 0 && level <= 60) {
-							if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
-								HashMap<Integer, ItemStack> result = p.getInventory()
-										.removeItem(util.setAmount(common.getEssence(level, false), amount));
-								if (!result.isEmpty()) {
-									int notAdded = 0;
-									for (Entry<Integer, ItemStack> item : result.entrySet()) {
-										notAdded += item.getValue().getAmount();
-									}
-									cm.add(p, args[1], level, amount - notAdded);
-									Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-									return true;
-								}
-								else {
-									cm.add(p, args[1], level, amount);
-									Util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
-									return true;
-								}
-							}
-							else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
-								HashMap<Integer, ItemStack> result = p.getInventory()
-										.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
-								if (!result.isEmpty()) {
-									int notAdded = 0;
-									for (Entry<Integer, ItemStack> item : result.entrySet()) {
-										notAdded += item.getValue().getAmount();
-									}
-									cm.add(p, args[1], level, amount - notAdded);
-									Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-									return true;
-								}
-								else {
-									cm.add(p, args[1], level, amount);
-									Util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
-									return true;
-								}
-							}
-							else {
-								Util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
-								return true;
-							}
-						}
-						else {
-							Util.sendMessage(p, "&cInvalid level!");
-							return true;
-						}
+			if (p.getGameMode().equals(GameMode.CREATIVE)) {
+				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				return true;
+			}
+			if (!cm.containsKey(args[1])) {
+				Util.sendMessage(p, "&cInvalid essence or ore type!");
+				return true;
+			}
+			if (!StringUtils.isNumeric(args[2]) || !StringUtils.isNumeric(args[3])) {
+				Util.sendMessage(p, "&cLevel and amount should be a number!");
+				return true;
+			}
+			
+			int level = Integer.parseInt(args[2]);
+			int amount = Integer.parseInt(args[3]);
+			if (level % 5 != 0 || level <= 0 || level > 60) {
+				Util.sendMessage(p, "&cInvalid level!");
+				return true;
+			}
+			if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
+				HashMap<Integer, ItemStack> result = p.getInventory()
+						.removeItem(util.setAmount(common.getEssence(level, false), amount));
+				if (!result.isEmpty()) {
+					int notAdded = 0;
+					for (Entry<Integer, ItemStack> item : result.entrySet()) {
+						notAdded += item.getValue().getAmount();
 					}
-					else {
-						Util.sendMessage(p, "&cLevel and amount should be a number!");
-						return true;
-					}
+					cm.add(p, args[1], level, amount - notAdded);
+					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+					return true;
 				}
 				else {
-					Util.sendMessage(p, "&cInvalid essence or ore type!");
+					cm.add(p, args[1], level, amount);
+					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
+					return true;
+				}
+			}
+			else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
+				HashMap<Integer, ItemStack> result = p.getInventory()
+						.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
+				if (!result.isEmpty()) {
+					int notAdded = 0;
+					for (Entry<Integer, ItemStack> item : result.entrySet()) {
+						notAdded += item.getValue().getAmount();
+					}
+					cm.add(p, args[1], level, amount - notAdded);
+					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
+					return true;
+				}
+				else {
+					cm.add(p, args[1], level, amount);
+					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
 					return true;
 				}
 			}
 			else {
-				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
+				Util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
 				return true;
 			}
 		}
@@ -315,10 +295,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof sell [playername]");
 				sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
-				sender.sendMessage("§7- §4/prof give <p> {essence/ore/repair} [level]");
-				sender.sendMessage("§7- §4/prof <playername> get {essence/repair} [level]");
-				sender.sendMessage("§7- §4/prof <playername> get augment [name] [level]");
-				sender.sendMessage("§7- §4/prof <playername> add [essence/oretype] [level] [amount]");
+				sender.sendMessage("§7- §4/prof give <p> {essence/ore/repair/augment} <aug> [level] <amount>");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
 				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
 				return true;
@@ -342,16 +319,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					p.sendMessage("Debug set to " + main.debug);
 					return true;
 				}
-				// /prof quickfix
-				else if (args[0].equalsIgnoreCase("quickfix")) {
-					ItemStack item = p.getInventory().getItemInMainHand();
-					ItemMeta meta = item.getItemMeta();
-					ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-					lore.set(0, lore.get(0) + "§0");
-					meta.setLore(lore);
-					item.setItemMeta(meta);
-					return true;
-				}
 				// /prof givepaint [player] R G B
 				else if (args[0].equalsIgnoreCase("givepaint")) {
 					ItemStack item = new ItemStack(Material.POTION);
@@ -368,25 +335,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					Bukkit.getPlayer(args[1]).getInventory().addItem(item);
 					return true;
 				}
-				// /prof add [essence/oretype] [level] [amount]
-				else if (args[0].equalsIgnoreCase("add")) {
-					if (args[1].equalsIgnoreCase("randomore")) {
-						Random gen = new Random();
-						String type = CurrencyManager.types[gen.nextInt(7) + 1];
-						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
-						int amount = Integer.parseInt(args[3]);
-						this.main.cManager.add(p, type, level, amount);
-						Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
-						return true;
-					}
-					else {
-						int level = util.roundToLevel(Integer.parseInt(args[2]), LEVEL_INTERVAL);
-						int amount = Integer.parseInt(args[3]);
-						this.main.cManager.add(p, args[1], level, amount);
-						Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " essence to + " + p.getName() + "!");
-						return true;
-					}
-				}
 				// /prof artifact <playername>
 				else if (args[0].equalsIgnoreCase("artifact")) {
 					if (args.length == 2) {
@@ -397,293 +345,58 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						main.professionsMethods.artifactItem((Player) sender);
 					}
 				}
-				// /prof level playername
-				else if (args[0].equalsIgnoreCase("level")) {
-					if (args.length == 2) {
-						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
-						if (pClass != null) {
-							if (pClass.getLevel() < 60) {
-								pClass.setLevel(pClass.getLevel() + 1);
-								pClass.setPoints(pClass.getPoints() + 2);
-								Util.sendMessage(Bukkit.getPlayer(args[1]),
-										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
-							}
-						}
+				// /prof give [essence/oretype/repair/augment] <aug> [level] [amount]
+				else if (args[0].equalsIgnoreCase("give")) {
+					int offset = 0;
+					String aug = null;
+					int amt = 1;
+					if (Bukkit.getPlayer(args[1]) != null) {
+						p = Bukkit.getPlayer(args[1]);
+						offset++;
+					}
+					String type = args[1 + offset];
+					// Is an augment
+					if (!StringUtils.isNumeric(args[2 + offset])) {
+						aug = args[2 + offset];
+						offset++;
+					}
+					int lv = Integer.parseInt(args[2 + offset]);
+					if (args.length > 3 + offset) {
+						amt = Integer.parseInt(args[3 + offset]);
+					}
+					
+					if (type.equalsIgnoreCase("randomore")) {
+						String otype = CurrencyManager.types[gen.nextInt(7) + 1];
+						this.main.cManager.add(p, otype, lv, amt);
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " " + type + " ore to + " + p.getName() + "!");
 						return true;
 					}
-					else if (args.length == 3) {
-						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
-						int levels = Integer.parseInt(args[2]);
-						if (pClass != null) {
-							if (pClass.getLevel() + levels <= 60) {
-								pClass.setLevel(pClass.getLevel() + levels);
-								pClass.setPoints(pClass.getPoints() + (2 * levels));
-								Util.sendMessage(Bukkit.getPlayer(args[1]),
-										"&7Your profession level is now &e" + pClass.getLevel() + "&7!");
-							}
-						}
+					else if (type.equalsIgnoreCase("essence")) {
+						this.main.cManager.add(p, args[1], lv, amt);
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to + " + p.getName() + "!");
 						return true;
 					}
-				}
-				else if (args[0].equalsIgnoreCase("points")) {
-					if (args.length == 3) {
-						PlayerClass pClass = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("profession");
-						int points = Integer.parseInt(args[2]);
-						if (pClass != null) {
-							pClass.setPoints(pClass.getPoints() + points);
-							Util.sendMessage(Bukkit.getPlayer(args[1]),
-									"&7You gained &e" + pClass.getLevel() + "profession points&7!");
+					else if (type.equalsIgnoreCase("augment")) {
+						Augment augment = null;
+						if (AugmentManager.droptables.containsKey(aug)) {
+							ArrayList<String> table = AugmentManager.droptables.get(aug);
+							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
 						}
-						return true;
-					}
-				}
-				else if (args[0].equalsIgnoreCase("get")) {
-					if (args[1].equalsIgnoreCase("essence")) {
-						p.getInventory().addItem(common.getEssence(Integer.parseInt(args[2]), true));
-					}
-					else if (args[1].equalsIgnoreCase("augment")) {
-						if (args[2].equalsIgnoreCase("random")) {
-							int size = AugmentManager.conversionAugments.size();
-							Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(Integer.parseInt(args[3]));
-							p.getInventory().addItem(aug.getItem(p));
+						else if (AugmentManager.augmentMap.containsKey(aug)) {
+							augment = AugmentManager.augmentMap.get(aug).get(lv);
 						}
 						else {
-							p.getInventory().addItem(AugmentManager.augmentMap.get(args[2].replaceAll("_", " ")).get(Integer.parseInt(args[3])).getItem(p));
+							ArrayList<String> table = AugmentManager.droptables.get("default");
+							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
 						}
+						ItemStack item = augment.getItem(p);
+						item.setAmount(amt);
+						p.getInventory().addItem(item);
+						Util.sendMessage(sender, "&7Successfully gave " + augment.getLevel() + " §7to + " + p.getName() + "!");
 					}
-					else if (args[1].equalsIgnoreCase("repair")) {
+					else if (type.equalsIgnoreCase("repair")) {
 						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
-					}
-					else if (args[1].equalsIgnoreCase("durability")) {
-						p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[3]), args[2]));
-					}
-					else if (args[1].equalsIgnoreCase("ore")) {
-						int amount = 1;
-						if (args.length == 5) {
-							amount = Integer.parseInt(args[4]);
-						}
-						if (StringUtils.isNumeric(args[2])) {
-							String oreName = null;
-							switch (args[2]) {
-							case "1":
-								oreName = "ruby";
-								break;
-							case "2":
-								oreName = "amethyst";
-								break;
-							case "3":
-								oreName = "sapphire";
-								break;
-							case "4":
-								oreName = "emerald";
-								break;
-							case "5":
-								oreName = "topaz";
-								break;
-							case "6":
-								oreName = "garnet";
-								break;
-							case "7":
-								oreName = "adamantium";
-								break;
-							default:
-								oreName = "adamantium";
-								break;
-							}
-							cm.add(p, oreName, Integer.parseInt(args[3]), amount);
-						}
-						else {
-							cm.add(p, args[2].toLowerCase(), Integer.parseInt(args[3]), amount);
-						}
-					}
-					else if (args[1].equalsIgnoreCase("gem")) {
-						if (args[2].equalsIgnoreCase("weapon")) {
-							p.getInventory().addItem(sItems.getWeaponGem(args[3], Integer.parseInt(args[4]), false));
-						}
-						else if (args[2].equalsIgnoreCase("armor")) {
-							p.getInventory().addItem(sItems.getArmorGem(args[3], Integer.parseInt(args[4]), false));
-						}
-					}
-					else if (args[1].equalsIgnoreCase("ingr")) {
-						if (args[2].equals("22")) {
-							p.getInventory().addItem(ingr.getVodka());
-						}
-						else if (args[2].equals("23")) {
-							p.getInventory().addItem(ingr.getRum());
-						}
-						else if (args[2].equals("24")) {
-							p.getInventory().addItem(ingr.getTequila());
-						}
-					}
-					else if (args[1].equalsIgnoreCase("overload")) {
-						if (args[2].equalsIgnoreCase("weapon")) {
-							p.getInventory().addItem(sItems.getWeaponGem(args[3], Integer.parseInt(args[4]), true));
-						}
-						else if (args[2].equalsIgnoreCase("armor")) {
-							p.getInventory().addItem(sItems.getArmorGem(args[3], Integer.parseInt(args[4]), true));
-						}
-					}
-					else if (args[1].equalsIgnoreCase("basic")) {
-						if (args[2].equalsIgnoreCase("exp")) {
-							p.getInventory().addItem(mItems.getExpCharm(false));
-						}
-						else if (args[2].equalsIgnoreCase("drop")) {
-							p.getInventory().addItem(mItems.getDropCharm(false));
-						}
-						else if (args[2].equalsIgnoreCase("looting")) {
-							p.getInventory().addItem(mItems.getLootingCharm(false));
-						}
-						else if (args[2].equalsIgnoreCase("traveler")) {
-							p.getInventory().addItem(mItems.getTravelerCharm());
-						}
-						else if (args[2].equalsIgnoreCase("recovery")) {
-							p.getInventory().addItem(mItems.getRecoveryCharm());
-						}
-					}
-					else if (args[1].equalsIgnoreCase("advanced")) {
-						if (args[2].equalsIgnoreCase("exp")) {
-							p.getInventory().addItem(mItems.getExpCharm(true));
-						}
-						else if (args[2].equalsIgnoreCase("drop")) {
-							p.getInventory().addItem(mItems.getDropCharm(true));
-						}
-						else if (args[2].equalsIgnoreCase("looting")) {
-							p.getInventory().addItem(mItems.getLootingCharm(true));
-						}
-						else if (args[2].equalsIgnoreCase("hunger")) {
-							p.getInventory().addItem(mItems.getHungerCharm());
-						}
-						else if (args[2].equalsIgnoreCase("secondchance")) {
-							p.getInventory().addItem(mItems.getSecondChanceCharm());
-						}
-						else if (args[2].equalsIgnoreCase("quickeat")) {
-							p.getInventory().addItem(mItems.getQuickEatCharm());
-						}
-					}
-					return true;
-				}
-				else {
-					p = Bukkit.getPlayer(args[0]);
-					// /prof player add [essence/oretype] [level] [amount]
-					if (args[1].equalsIgnoreCase("add")) {
-						if (args[2].equalsIgnoreCase("randomore")) {
-							Random gen = new Random();
-							String type = CurrencyManager.types[gen.nextInt(7) + 1];
-							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
-							int amount = Integer.parseInt(args[4]);
-							this.main.cManager.add(p, type, level, amount);
-							Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + type + " ore to + " + p.getName() + "!");
-							return true;
-						}
-						else {
-							int level = util.roundToLevel(Integer.parseInt(args[3]), LEVEL_INTERVAL);
-							int amount = Integer.parseInt(args[4]);
-							this.main.cManager.add(p, args[2], level, amount);
-							Util.sendMessage(sender, "&7Successfully gave " + amount + " Lv " + level + " " + "essence to + " + p.getName() + "!");
-							return true;
-						}
-					}
-					if (args[1].equalsIgnoreCase("get")) {
-						if (args[2].equalsIgnoreCase("essence")) {
-							p.getInventory().addItem(common.getEssence(Integer.parseInt(args[3]), true));
-						}
-						else if (args[2].equalsIgnoreCase("augment")) {
-							if (args[3].equalsIgnoreCase("random")) {
-								int size = AugmentManager.conversionAugments.size();
-								Augment aug = AugmentManager.conversionAugments.get(gen.nextInt(size)).get(Integer.parseInt(args[4]));
-								p.getInventory().addItem(aug.getItem(p));
-							}
-							else {
-								p.getInventory().addItem(AugmentManager.augmentMap.get(args[3].replaceAll("_", " ")).get(Integer.parseInt(args[4])).getItem(p));
-							}
-						}
-						else if (args[2].equalsIgnoreCase("repair")) {
-							p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[3])));
-						}
-						else if (args[2].equalsIgnoreCase("durability")) {
-							p.getInventory().addItem(bItems.getDurabilityItem(Integer.parseInt(args[4]), args[3]));
-						}
-						else if (args[2].equalsIgnoreCase("ore")) {
-							int amount = 1;
-							if (args.length == 6) {
-								amount = Integer.parseInt(args[5]);
-							}
-							if (StringUtils.isNumeric(args[3])) {
-								ItemStack ore = sItems.getOre(Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-								ore.setAmount(amount);
-								p.getInventory().addItem(ore);
-							}
-							else {
-								ItemStack ore = sItems.getOre(args[3], Integer.parseInt(args[4]));
-								ore.setAmount(amount);
-								p.getInventory().addItem(ore);
-							}
-						}
-						else if (args[2].equalsIgnoreCase("ingr")) {
-							if (args[3].equals("22")) {
-								p.getInventory().addItem(ingr.getVodka());
-							}
-							else if (args[3].equals("23")) {
-								p.getInventory().addItem(ingr.getRum());
-							}
-							else if (args[3].equals("24")) {
-								p.getInventory().addItem(ingr.getTequila());
-							}
-						}
-						else if (args[2].equalsIgnoreCase("gem")) {
-							if (args[3].equalsIgnoreCase("weapon")) {
-								p.getInventory()
-										.addItem(sItems.getWeaponGem(args[4], Integer.parseInt(args[5]), false));
-							}
-							else if (args[3].equalsIgnoreCase("armor")) {
-								p.getInventory().addItem(sItems.getArmorGem(args[4], Integer.parseInt(args[5]), false));
-							}
-						}
-						else if (args[2].equalsIgnoreCase("overload")) {
-							if (args[3].equalsIgnoreCase("weapon")) {
-								p.getInventory().addItem(sItems.getWeaponGem(args[4], Integer.parseInt(args[5]), true));
-							}
-							else if (args[3].equalsIgnoreCase("armor")) {
-								p.getInventory().addItem(sItems.getArmorGem(args[4], Integer.parseInt(args[5]), true));
-							}
-						}
-						else if (args[2].equalsIgnoreCase("basic")) {
-							if (args[3].equalsIgnoreCase("exp")) {
-								p.getInventory().addItem(mItems.getExpCharm(false));
-							}
-							else if (args[3].equalsIgnoreCase("drop")) {
-								p.getInventory().addItem(mItems.getDropCharm(false));
-							}
-							else if (args[3].equalsIgnoreCase("looting")) {
-								p.getInventory().addItem(mItems.getLootingCharm(false));
-							}
-							else if (args[3].equalsIgnoreCase("traveler")) {
-								p.getInventory().addItem(mItems.getTravelerCharm());
-							}
-							else if (args[3].equalsIgnoreCase("recovery")) {
-								p.getInventory().addItem(mItems.getRecoveryCharm());
-							}
-						}
-						else if (args[2].equalsIgnoreCase("advanced")) {
-							if (args[3].equalsIgnoreCase("exp")) {
-								p.getInventory().addItem(mItems.getExpCharm(true));
-							}
-							else if (args[3].equalsIgnoreCase("drop")) {
-								p.getInventory().addItem(mItems.getDropCharm(true));
-							}
-							else if (args[3].equalsIgnoreCase("looting")) {
-								p.getInventory().addItem(mItems.getLootingCharm(true));
-							}
-							else if (args[3].equalsIgnoreCase("hunger")) {
-								p.getInventory().addItem(mItems.getHungerCharm());
-							}
-							else if (args[3].equalsIgnoreCase("secondchance")) {
-								p.getInventory().addItem(mItems.getSecondChanceCharm());
-							}
-							else if (args[3].equalsIgnoreCase("quickeat")) {
-								p.getInventory().addItem(mItems.getQuickEatCharm());
-							}
-						}
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " repairs to + " + p.getName() + "!");
 					}
 					return true;
 				}

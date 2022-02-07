@@ -1,12 +1,14 @@
 package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class Util {
+	public final static Random gen = new Random();
 	public static void sendMessage(CommandSender p, String m) {
 		String message = "&4[&c&lMLMC&4] " + m;
 		p.sendMessage(message.replaceAll("&", "§"));

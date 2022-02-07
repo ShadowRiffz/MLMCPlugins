@@ -7,14 +7,10 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -103,7 +99,9 @@ public class Professions extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		getServer().getPluginManager().registerEvents(new AugmentManager(), this);
-		getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
+		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
+			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
+		}
 		if (!isInstance) {
 			// Currency
 			cManager = new CurrencyManager(this);
@@ -142,46 +140,6 @@ public class Professions extends JavaPlugin implements Listener {
 				}
 			}
 		}
-
-
-		// Setup charm timer
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			public void run() {
-				for (World w : Bukkit.getWorlds()) {
-					if (w.getName().equalsIgnoreCase("Argyll") || w.getName().equalsIgnoreCase("ClassPVP")) {
-						for (Player p : w.getPlayers()) {
-							// First check what charms the player has
-							ItemStack item = p.getInventory().getItemInMainHand();
-							// Then make sure it's not a literal hunger charm
-							if (item.getType() != Material.PRISMARINE_CRYSTALS) {
-								String charmLine = null;
-								if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-									for (String line : item.getItemMeta().getLore()) {
-										if (line.contains("Hunger Charm")) {
-											charmLine = line;
-											break;
-										}
-									}
-								}
-								if (charmLine != null) {
-									if (p.getFoodLevel() != 19) {
-										FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, 19);
-										Bukkit.getPluginManager().callEvent(event);
-										
-										// Override event cancellation if we're decreasing hunger so that
-										// it's not cancelled by NeoSAPIAddons
-										if (event.isCancelled() && p.getFoodLevel() <= 19) {
-											return;
-										}
-										p.setFoodLevel(19);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}, 0, 20L);
 		
 		// SQL
 		properties.setProperty("useSSL", "false");
