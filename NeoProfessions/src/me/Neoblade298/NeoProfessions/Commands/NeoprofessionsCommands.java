@@ -368,12 +368,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (type.equalsIgnoreCase("randomore")) {
 						String otype = CurrencyManager.types[gen.nextInt(7) + 1];
 						this.main.cManager.add(p, otype, lv, amt);
-						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " " + type + " ore to + " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " " + type + " ore to " + p.getName() + "!");
 						return true;
 					}
 					else if (type.equalsIgnoreCase("essence")) {
 						this.main.cManager.add(p, args[1], lv, amt);
-						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to + " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to " + p.getName() + "!");
 						return true;
 					}
 					else if (type.equalsIgnoreCase("augment")) {
@@ -392,11 +392,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ItemStack item = augment.getItem(p);
 						item.setAmount(amt);
 						p.getInventory().addItem(item);
-						Util.sendMessage(sender, "&7Successfully gave " + augment.getLevel() + " §7to + " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + augment.getLine() + " §7to " + p.getName() + "!");
 					}
 					else if (type.equalsIgnoreCase("repair")) {
-						p.getInventory().addItem(bItems.getRepairItem(Integer.parseInt(args[2])));
-						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " repairs to + " + p.getName() + "!");
+						ItemStack item = bItems.getRepairItem(lv);
+						item.setAmount(amt);
+						p.getInventory().addItem(item);
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " repairs to " + p.getName() + "!");
 					}
 					return true;
 				}
