@@ -3,11 +3,13 @@ package me.Neoblade298.NeoProfessions.Methods;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
@@ -19,10 +21,9 @@ import net.milkbowl.vault.economy.Economy;
 
 public class ProfessionsMethods {
 
-	Professions main;
-	Economy econ;
-	Util util;
-	CurrencyManager cm;
+	static Professions main;
+	static Economy econ;
+	static CurrencyManager cm;
 
 	// Constants
 
@@ -30,13 +31,59 @@ public class ProfessionsMethods {
 	static final int ARTIFACT_PRICE = 1000000;
 
 	public ProfessionsMethods(Professions main) {
-		this.main = main;
-		this.econ = main.getEconomy();
-		util = new Util();
+		ProfessionsMethods.main = main;
+		econ = main.getEconomy();
 		cm = main.cManager;
 	}
 	
-	public void artifactItem(Player p) {
+	public static void createSlot(Player p) {
+		ItemStack item = p.getInventory().getItemInMainHand();
+		NBTItem nbti = new NBTItem(item);
+		
+		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+			Util.sendMessage(p, "&cThis item cannot be slotted!!");
+			return;
+		}
+		if (!nbti.hasKey("gear")) {
+			Util.sendMessage(p, "&cItem is outdated! Use /prof convert to update it! Make sure it's a valid quest gear!");
+			return;
+		}
+		
+		int slotsCreated = nbti.getInteger("slotsCreated");
+		int slotsMax = nbti.getInteger("slotsMax");
+		
+		if (slotsCreated >= slotsMax) {
+			Util.sendMessage(p, "&cThis item cannot hold any more slots!");
+			return;
+		}
+		int newSlot = slotsCreated + 1;
+		int newLine = nbti.getInteger("slot" + slotsCreated + "Line") + 1;
+		nbti.setInteger("slotsCreated", newSlot);
+		nbti.setInteger("slot" + newSlot + "Line", newLine);
+		nbti.applyNBT(item);
+		
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		lore.add(newLine, "§8[Empty Slot]");
+		item.setItemMeta(meta);
+	}
+	
+	public static void givePaint(Player p, String red, String blue, String green) {
+		ItemStack item = new ItemStack(Material.POTION);
+		PotionMeta meta = (PotionMeta) item.getItemMeta();
+		meta.setDisplayName("§nDye");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§c§lRed: §f" + red);
+		lore.add("§a§lGreen: §f" + blue);
+		lore.add("§9§lBlue: §f" + green);
+		meta.setLore(lore);
+		Color color = Color.fromRGB(Integer.parseInt(red), Integer.parseInt(blue), Integer.parseInt(green));
+		meta.setColor(color);
+		item.setItemMeta(meta);
+		p.getInventory().addItem(item);
+	}
+	
+	public static void artifactItem(Player p) {
 		PlayerInventory inv = p.getInventory();
 		ItemStack item = inv.getItemInMainHand();
 		

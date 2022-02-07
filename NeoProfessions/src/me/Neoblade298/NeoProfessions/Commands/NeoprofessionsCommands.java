@@ -30,6 +30,7 @@ import me.Neoblade298.NeoProfessions.Legacy.Items.DrinksRecipeItems;
 import me.Neoblade298.NeoProfessions.Legacy.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Legacy.Items.MasonItems;
 import me.Neoblade298.NeoProfessions.Legacy.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
@@ -294,6 +295,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof sell [playername]");
 				sender.sendMessage("§7- §4/prof checkaugments [playername]");
+				sender.sendMessage("§7- §4/prof createslot [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
 				sender.sendMessage("§7- §4/prof give <p> {essence/ore/repair/augment} <aug> [level] <amount>");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
@@ -302,7 +304,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			else {
 				if (args[0].equalsIgnoreCase("sell")) {
-					new SellInventory(main, Bukkit.getPlayer(args[1]));
+					if (args.length == 1) {
+						new SellInventory(main, Bukkit.getPlayer(args[1]));
+					}
+					else {
+						new SellInventory(main, p);
+					}
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("createslot")) {
+					if (args.length == 1) {
+						ProfessionsMethods.createSlot(p);
+					}
+					else {
+						ProfessionsMethods.createSlot(Bukkit.getPlayer(args[1]));
+					}
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("checkaugments")) {
@@ -321,28 +337,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				// /prof givepaint [player] R G B
 				else if (args[0].equalsIgnoreCase("givepaint")) {
-					ItemStack item = new ItemStack(Material.POTION);
-					PotionMeta meta = (PotionMeta) item.getItemMeta();
-					meta.setDisplayName("§nDye");
-					ArrayList<String> lore = new ArrayList<String>();
-					lore.add("§c§lRed: §f" + args[2]);
-					lore.add("§a§lGreen: §f" + args[3]);
-					lore.add("§9§lBlue: §f" + args[4]);
-					meta.setLore(lore);
-					Color color = Color.fromRGB(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-					meta.setColor(color);
-					item.setItemMeta(meta);
-					Bukkit.getPlayer(args[1]).getInventory().addItem(item);
+					ProfessionsMethods.givePaint(Bukkit.getPlayer(args[1]), args[2], args[3], args[4]);
 					return true;
 				}
 				// /prof artifact <playername>
 				else if (args[0].equalsIgnoreCase("artifact")) {
 					if (args.length == 2) {
-						main.professionsMethods.artifactItem(Bukkit.getPlayer(args[1]));
+						ProfessionsMethods.artifactItem(Bukkit.getPlayer(args[1]));
 						return true;
 					}
 					else {
-						main.professionsMethods.artifactItem((Player) sender);
+						ProfessionsMethods.artifactItem(p);
 					}
 				}
 				// /prof give [essence/oretype/repair/augment] <aug> [level] [amount]
