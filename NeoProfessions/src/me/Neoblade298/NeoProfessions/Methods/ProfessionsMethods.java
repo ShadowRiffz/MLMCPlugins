@@ -15,7 +15,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import me.neoblade298.neogear.Gear;
+import me.neoblade298.neogear.listeners.DurabilityListener;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
@@ -26,9 +26,6 @@ public class ProfessionsMethods {
 	static CurrencyManager cm;
 
 	// Constants
-
-	// Prices
-	static final int ARTIFACT_PRICE = 1000000;
 
 	public ProfessionsMethods(Professions main) {
 		ProfessionsMethods.main = main;
@@ -41,7 +38,7 @@ public class ProfessionsMethods {
 		NBTItem nbti = new NBTItem(item);
 		
 		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
-			Util.sendMessage(p, "&cThis item cannot be slotted!!");
+			Util.sendMessage(p, "&cThis item cannot be slotted!");
 			return;
 		}
 		if (!nbti.hasKey("gear")) {
@@ -65,6 +62,7 @@ public class ProfessionsMethods {
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		lore.add(newLine, "§8[Empty Slot]");
+		meta.setLore(lore);
 		item.setItemMeta(meta);
 	}
 	
@@ -88,33 +86,28 @@ public class ProfessionsMethods {
 		ItemStack item = inv.getItemInMainHand();
 		
 		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
-			Util.sendMessage(p, "&cItem is outdated! Repair your item first to update it!");
+			Util.sendMessage(p, "&cThis is not a quest gear!");
 			return;
 		}
-		if (!econ.has(p, ARTIFACT_PRICE)) {
-			Util.sendMessage(p, "&cYou don't have enough money!!");
-			return;
-		}
-		ItemMeta meta = item.getItemMeta();
-		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		
 		// Get the item type and level
 		NBTItem nbti = new NBTItem(item);
-		int level = nbti.getInteger("level");
-		String type = nbti.getString("gear");
-		
-		// Generate a random artifact of the same type
-		ItemStack artifact = Gear.settings.get(type).get(level).generateItem("artifact", level);
-		
-		// Before changing anything, check if the versions match, check if the item is legendary
-		if (new NBTItem(artifact).getInteger("version") != nbti.getInteger("version")) {
-			Util.sendMessage(p, "&cItem is outdated! Repair your item first to update it!");
+		if (!nbti.hasKey("gear")) {
+			Util.sendMessage(p, "&cItem is outdated! Use /prof convert to update it! Make sure it's a valid quest gear!");
 			return;
 		}
+		
 		if (!nbti.getString("rarity").equals("legendary")) {
 			Util.sendMessage(p, "&cItem is not legendary! Only legendary items can be artifacted!");
 			return;
 		}
+		
+		nbti = new NBTItem(item);
+		nbti.setString("rarity", "artifact");
+		int slotsMax = nbti.getInteger("slotsMax") + 1;
+		nbti.setInteger("slotsMax", slotsMax);
+		nbti.applyNBT(item);
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
 		// Display name color change only if it had the default legendary color
 		if (meta.getDisplayName().startsWith("§4")) {
@@ -122,7 +115,10 @@ public class ProfessionsMethods {
 		}
 		
 		// Replace item tier
-		lore.set(2, "§7Rarity: §bArtifact " + type);
+		lore.set(2, "§7Rarity: §bArtifact");
+		lore.set(4, "§7Max Slots: " + slotsMax);
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 		
 		// Change item type to netherite
 		String mat = item.getType().name();
@@ -148,37 +144,9 @@ public class ProfessionsMethods {
 			item.setType(Material.NETHERITE_HOE);
 		}
 		
-		
-		// Find start and end of base attributes
-		int start = -1, end = -1;
-		for (int i = 0; i < lore.size(); i++) {
-			String line = lore.get(i);
-			
-			if (line.contains("-")) {
-				if (start == -1) {
-					start = i + 1;
-				}
-				else {
-					end = i + 1;
-				}
-			}
-		}
-		
-		// Replace attributes
-		ArrayList<String> artifactLore = (ArrayList<String>) artifact.getItemMeta().getLore();
-		for (int i = start; i <= end; i++) {
-			lore.set(i, artifactLore.get(i));
-		}
-		
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		
 		// Change nbt rarity
-		nbti = new NBTItem(item);
-		nbti.setString("rarity", "artifact");
-		nbti.applyNBT(item);
+		DurabilityListener.fullRepairItem(p, item);
 		
 		Bukkit.broadcastMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has converted their item into an §bArtifact§7!");
-		econ.withdrawPlayer(p, ARTIFACT_PRICE);
 	}
 }
