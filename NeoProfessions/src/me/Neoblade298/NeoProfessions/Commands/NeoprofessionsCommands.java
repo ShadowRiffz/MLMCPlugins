@@ -21,6 +21,7 @@ import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
+import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Legacy.Items.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Legacy.Items.CommonItems;
@@ -292,6 +293,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof sell [playername]");
+				sender.sendMessage("§7- §4/prof repair [playername]");
 				sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof createslot [playername]");
 				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
@@ -307,6 +309,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					else {
 						new SellInventory(main, p);
+					}
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("repair")) {
+					if (args.length == 1) {
+						DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
+					}
+					else {
+						p = Bukkit.getPlayer(args[1]);
+						ItemStack item = p.getInventory().getItemInMainHand();
+						NBTItem nbti = new NBTItem(item);
+						if (!nbti.hasKey("gear") || !nbti.hasKey("level")) {
+							Util.sendMessage(p, "§cThis item cannot be repaired! It may be outdated.");
+						}
+						new RepairInventory(main, p);
 					}
 					return true;
 				}
