@@ -236,8 +236,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 						gearLvli.put(i, gearConf);
 					}
-					settings.put(name, gearLvli);
 				}
+				settings.put(name, gearLvli);
 			}
 		}
 	}
