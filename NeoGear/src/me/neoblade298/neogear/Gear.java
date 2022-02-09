@@ -220,22 +220,25 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				int slotsMax = gearCfg.getInt("slots-max");
 				int startingSlotsBase = gearCfg.getInt("starting-slots-base");
 				int startingSlotsRange = gearCfg.getInt("starting-slots-range");
+				
+				// Lore
+				ArrayList<String> lore = (ArrayList<String>) gearCfg.getStringList("lore");
 
 				ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
-				if (overrideSec != null) {
-					HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
-					for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
-						GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
-								duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
-								slotsMax, startingSlotsBase, startingSlotsRange, price, version);
+				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
+				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
+					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
+							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
+							slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
 
+					if (overrideSec != null) {
 						// Level override
 						ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
 						if (lvlOverride != null) {
 							overrideLevel(i, gearConf, lvlOverride);
 						}
-						gearLvli.put(i, gearConf);
 					}
+					gearLvli.put(i, gearConf);
 				}
 				settings.put(name, gearLvli);
 			}

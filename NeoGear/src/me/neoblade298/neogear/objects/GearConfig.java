@@ -29,6 +29,7 @@ public class GearConfig {
 	public String name, display, title;
 	public Material material;
 	public ArrayList<String> prefixes, displayNames;
+	public ArrayList<String> lore;
 	public int duraBase;
 	public ArrayList<String> requiredAugments;
 	public ArrayList<Enchant> requiredEnchants, optionalEnchants;
@@ -43,7 +44,7 @@ public class GearConfig {
 	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
 			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
-			int startingSlotsBase, int startingSlotsRange, double price, int version) {
+			int startingSlotsBase, int startingSlotsRange, double price, int version, ArrayList<String> lore) {
 		
 		// Add color codes to all strings necessary
 		for (String prefix : prefixes) {
@@ -78,6 +79,7 @@ public class GearConfig {
 		this.startingSlotsBase = startingSlotsBase;
 		this.startingSlotsRange = startingSlotsRange;
 		this.version = version;
+		this.lore = lore;
 	}
 	
 	public ItemStack generateItem(String rarity, int level) {
@@ -173,6 +175,9 @@ public class GearConfig {
 		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
 		lore.add("§7Level: " + level);
 		lore.add("§7Max Slots: " + maxSlots);
+		for (String loreLine : this.lore) {
+			lore.add(loreLine.replaceAll("&", "§"));
+		}
 		lore.add("§8§m-----");
 		// Lore part 2
 		for (String key : Gear.attributeOrder.keySet()) {
