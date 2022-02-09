@@ -94,19 +94,27 @@ public class GearConfig {
 			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(new UUID(1L, 2L), "Shield", 5, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
 		}
 		
-		// Decide Prefix
+		// Decide Prefix if exists
 		String prefix;
 		ArrayList<String> rarityPrefixes = rarities.get(rarity).prefixes;
 		if (rarityPrefixes != null && rarityPrefixes.size() != 0) {
 			prefix = rarityPrefixes.get(Gear.gen.nextInt(rarityPrefixes.size()));
 		}
-		else {
+		else if (prefixes.size() > 0) {
 			prefix = prefixes.get(Gear.gen.nextInt(prefixes.size()));
 		}
+		else {
+			prefix = "";
+		}
 		
-		// Rest of display
+		// Rest of display, use color code only if nonexistent
 		String display = displayNames.get(Gear.gen.nextInt(displayNames.size()));
-		meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
+		if (display.contains("&")) {
+			meta.setDisplayName((prefix + " " + display).replaceAll("&", "§"));
+		}
+		else {
+			meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
+		}
 		
 		
 		// Add required enchantments

@@ -158,77 +158,86 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 		// Load in all gear files
 		Gear.settings = new HashMap<String, HashMap<Integer, GearConfig>>();
-		for (File file : gearFolder.listFiles()) {
-			YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
-			String name = gearCfg.getString("name");
-			String display = gearCfg.getString("display");
-			String title = gearCfg.getString("title");
-			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
-			double price = gearCfg.getDouble("price");
-			int version = gearCfg.getInt("version");
-
-			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
-			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
-			ArrayList<String> displayNames = (ArrayList<String>) nameSec.getStringList("name");
-
-			ConfigurationSection duraSec = gearCfg.getConfigurationSection("durability");
-			int duraMinBase = duraSec.getInt("base");
-
-			// Parse enchantments
-			ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
-			ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
-			ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
-			int enchMin = enchSec.getInt("optional-min");
-			int enchMax = enchSec.getInt("optional-max");
-
-			HashMap<String, AttributeSet> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
-			
-			// Augments
-			ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
-			ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
-			
-			
-			ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
-			HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
-			// Load in rarities
-			for (String rarity : this.rarities.keySet()) {
-				ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
-				if (specificRareSec != null) {
-					rarities.put(rarity,
-							new RarityBonuses(parseAttributes(specificRareSec),
-									specificRareSec.getInt("added-durability"),
-									(ArrayList<String>) specificRareSec.getStringList("prefix"),
-									specificRareSec.getString("material"),
-									specificRareSec.getInt("slots-max"),
-									specificRareSec.getInt("starting-slots-base"),
-									specificRareSec.getInt("starting-slots-range")));
-				}
-				else {
-					rarities.put(rarity, new RarityBonuses());
-				}
+		loadGearDirectory(gearFolder);
+	}
+	
+	private void loadGearDirectory(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadGearDirectory(file);
 			}
-			
-			// Slots
-			int slotsMax = gearCfg.getInt("slots-max");
-			int startingSlotsBase = gearCfg.getInt("starting-slots-base");
-			int startingSlotsRange = gearCfg.getInt("starting-slots-range");
+			else {
+				YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
+				String name = gearCfg.getString("name");
+				String display = gearCfg.getString("display");
+				String title = gearCfg.getString("title");
+				Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
+				double price = gearCfg.getDouble("price");
+				int version = gearCfg.getInt("version");
 
-			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
-			if (overrideSec != null) {
-				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
-				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
-							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
-							slotsMax, startingSlotsBase, startingSlotsRange, price, version);
+				ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
+				ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
+				ArrayList<String> displayNames = (ArrayList<String>) nameSec.getStringList("name");
 
-					// Level override
-					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
-					if (lvlOverride != null) {
-						overrideLevel(i, gearConf, lvlOverride);
+				ConfigurationSection duraSec = gearCfg.getConfigurationSection("durability");
+				int duraMinBase = duraSec.getInt("base");
+
+				// Parse enchantments
+				ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
+				ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
+				ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
+				int enchMin = enchSec.getInt("optional-min");
+				int enchMax = enchSec.getInt("optional-max");
+
+				HashMap<String, AttributeSet> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
+				
+				// Augments
+				ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
+				ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
+				
+				
+				ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
+				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
+				// Load in rarities
+				for (String rarity : this.rarities.keySet()) {
+					ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
+					if (specificRareSec != null) {
+						rarities.put(rarity,
+								new RarityBonuses(parseAttributes(specificRareSec),
+										specificRareSec.getInt("added-durability"),
+										(ArrayList<String>) specificRareSec.getStringList("prefix"),
+										specificRareSec.getString("material"),
+										specificRareSec.getInt("slots-max"),
+										specificRareSec.getInt("starting-slots-base"),
+										specificRareSec.getInt("starting-slots-range")));
 					}
-					gearLvli.put(i, gearConf);
+					else {
+						rarities.put(rarity, new RarityBonuses());
+					}
 				}
-				settings.put(name, gearLvli);
+				
+				// Slots
+				int slotsMax = gearCfg.getInt("slots-max");
+				int startingSlotsBase = gearCfg.getInt("starting-slots-base");
+				int startingSlotsRange = gearCfg.getInt("starting-slots-range");
+
+				ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
+				if (overrideSec != null) {
+					HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
+					for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
+						GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
+								duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
+								slotsMax, startingSlotsBase, startingSlotsRange, price, version);
+
+						// Level override
+						ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
+						if (lvlOverride != null) {
+							overrideLevel(i, gearConf, lvlOverride);
+						}
+						gearLvli.put(i, gearConf);
+					}
+					settings.put(name, gearLvli);
+				}
 			}
 		}
 	}
