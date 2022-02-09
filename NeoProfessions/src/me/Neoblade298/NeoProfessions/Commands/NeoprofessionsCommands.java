@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
@@ -89,6 +90,32 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int amt = main.getAmount();
 						p.getInventory().removeItem(main);
 						ItemStack converted = bItems.getRepairItem(lv);
+						converted.setAmount(amt);
+						p.getInventory().addItem(converted);
+						Util.sendMessage(p, "&7Successfully converted item!");
+					}
+				}
+			}
+			else if (main.getType().equals(Material.ENDER_PEARL)) {
+				if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
+					if (new NBTItem(main).hasKey("augment")) {
+						Util.sendMessage(p, "&7This item is already converted!");
+						return true;
+					}
+					ArrayList<String> lore = (ArrayList<String>) main.getItemMeta().getLore();
+					String type = null;
+					if (lore.get(0).contains("Exp charm")) {
+						type = "Experience";
+					}
+					else if (lore.get(9).contains("Drop")) {
+						type = "Chest Chance";
+					}
+					
+					if (type != null) {
+						int lv = main.getEnchantmentLevel(Enchantment.DURABILITY);
+						int amt = main.getAmount();
+						p.getInventory().removeItem(main);
+						ItemStack converted = AugmentManager.augmentMap.get(type).get(lv).getItem(p);
 						converted.setAmount(amt);
 						p.getInventory().addItem(converted);
 						Util.sendMessage(p, "&7Successfully converted item!");
@@ -394,7 +421,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					String type = args[1 + offset];
 					// Is an augment
 					if (!StringUtils.isNumeric(args[2 + offset])) {
-						aug = args[2 + offset];
+						aug = args[2 + offset].replaceAll("_", " ");
 						offset++;
 					}
 					int lv = Integer.parseInt(args[2 + offset]);
