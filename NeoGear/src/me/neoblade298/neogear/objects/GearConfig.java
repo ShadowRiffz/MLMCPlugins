@@ -98,10 +98,10 @@ public class GearConfig {
 		String prefix;
 		ArrayList<String> rarityPrefixes = rarities.get(rarity).prefixes;
 		if (rarityPrefixes != null && rarityPrefixes.size() != 0) {
-			prefix = rarityPrefixes.get(Gear.gen.nextInt(rarityPrefixes.size()));
+			prefix = rarityPrefixes.get(Gear.gen.nextInt(rarityPrefixes.size())) + " ";
 		}
 		else if (prefixes.size() > 0) {
-			prefix = prefixes.get(Gear.gen.nextInt(prefixes.size()));
+			prefix = prefixes.get(Gear.gen.nextInt(prefixes.size())) + " ";
 		}
 		else {
 			prefix = "";
@@ -110,10 +110,10 @@ public class GearConfig {
 		// Rest of display, use color code only if nonexistent
 		String display = displayNames.get(Gear.gen.nextInt(displayNames.size()));
 		if (display.contains("&")) {
-			meta.setDisplayName((prefix + " " + display).replaceAll("&", "§"));
+			meta.setDisplayName((prefix + display).replaceAll("&", "§"));
 		}
 		else {
-			meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + " " + display);
+			meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + display);
 		}
 		
 		
