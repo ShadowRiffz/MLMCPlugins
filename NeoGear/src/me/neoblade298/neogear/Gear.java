@@ -34,6 +34,7 @@ import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
@@ -560,6 +561,9 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public boolean isQuestGear(ItemStack item) {
+		if (new NBTItem(item).hasKey("gear")) {
+			return true;
+		}
 		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Tier") && !item.getType().equals(Material.PLAYER_HEAD);
 	}
