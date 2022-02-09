@@ -1,11 +1,11 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoConsumables.NeoConsumables;
 import net.md_5.bungee.api.ChatColor;
@@ -15,13 +15,15 @@ public abstract class Consumable {
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
 	String name, displayname;
 	ArrayList<String> lore;
+	HashMap<String, String> nbt;
 
-	public Consumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
+	public Consumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		this.main = main;
 		this.displayname = name.replaceAll("&", "§").replaceAll("@", "&");
 		this.name = ChatColor.stripColor(this.displayname);
 		this.sounds = sounds;
 		this.lore = lore;
+		this.nbt = nbt;
 	}
 	
 	public NeoConsumables getMain() {
@@ -63,8 +65,12 @@ public abstract class Consumable {
 	public void setLore(ArrayList<String> lore) {
 		this.lore = lore;
 	}
+	
+	public HashMap<String, String> getNbt() {
+		return nbt;
+	}
 
-	public abstract boolean isSimilar(ItemMeta meta);
+	public abstract boolean isSimilar(ItemStack item);
 	public abstract boolean canUse(Player p, ItemStack item);
 	public abstract void use(Player p, ItemStack item);
 }

@@ -109,28 +109,36 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				lore.add(loreLine.replaceAll("&", "§"));
 			}
 			
+			HashMap<String, String> nbtMap = new HashMap<String, String>();
+			ConfigurationSection nbts = sec.getConfigurationSection("nbt");
+			if (nbts != null) {
+				for (String nbt : nbts.getKeys(false)) {
+					nbtMap.put(nbt, nbts.getString(nbt));
+				}
+			}
+			
 			String type = sec.getString("type", "FOOD");
 			if (type.equals("FOOD")) {
-				FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore);
+				FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore, nbtMap);
 				consumables.put(food.getName(), food);
 			}
 			else if (type.equals("CHEST")) {
-				ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore);
+				ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore, nbtMap);
 				consumables.put(chest.getName(), chest);
 			}
 			else if (type.equals("TOKEN")) {
-				TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore);
+				TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore, nbtMap);
 				consumables.put(token.getName(), token);
 			}
 			else if (type.equals("RECIPE")) {
-				RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore);
+				RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore, nbtMap);
 				consumables.put(recipe.getName(), recipe);
 			}
 		}
 	}
 	
-	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		FoodConsumable cons = new FoodConsumable(this, name, sounds, lore);
+	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+		FoodConsumable cons = new FoodConsumable(this, name, sounds, lore, nbts);
 		
 		// Potion effects
 		ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
@@ -172,14 +180,14 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		return cons;
 	}
 
-	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		ChestConsumable cons = new ChestConsumable(this, name, sounds, lore);
+	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+		ChestConsumable cons = new ChestConsumable(this, name, sounds, lore, nbts);
 		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
 		return cons;
 	}
 
-	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		TokenConsumable cons = new TokenConsumable(this, name, sounds, lore);
+	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+		TokenConsumable cons = new TokenConsumable(this, name, sounds, lore, nbts);
 		ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 		ConfigurationSection scConfig = config.getConfigurationSection("settings");
 		if (scConfig != null) {
@@ -206,8 +214,8 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		return cons;
 	}
 
-	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		RecipeConsumable cons = new RecipeConsumable(this, name, sounds, lore);
+	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+		RecipeConsumable cons = new RecipeConsumable(this, name, sounds, lore, nbts);
 		cons.setPermission(config.getString("permission"));
 		return cons;
 	}
@@ -228,53 +236,19 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if ((!item.hasItemMeta()) || (!item.getItemMeta().hasDisplayName())) {
 			return;
 		}
-		
+
 		ItemMeta meta = item.getItemMeta();
 		String name = ChatColor.stripColor(meta.getDisplayName());
-		boolean quickEat = false;
-		if (meta.hasLore()) {
-			for (String line : meta.getLore()) {
-				if (line.contains("Quick Eat") && !item.getType().equals(Material.PRISMARINE_CRYSTALS)) {
-					quickEat = true;
-				}
-			}
-		}
 
 		// Find the food in the inv
 		Consumable consumable = null;
-		if (quickEat) {
-			ItemStack[] contents = p.getInventory().getContents();
-			for (int i = 0; i < 36; i++) {
-				ItemStack invItem = contents[i];
-				if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasLore()) {
-					ItemMeta invMeta = invItem.getItemMeta();
-					String invName = ChatColor.stripColor(invMeta.getDisplayName());
-					if (!consumables.containsKey(invName)) {
-						continue;
-					}
-					consumable = consumables.get(invName);
-					if (!(consumable instanceof FoodConsumable)) {
-						continue;
-					}
-					if (!consumable.isSimilar(invMeta)) {
-						continue;
-					}
-					if (!consumable.canUse(p, item)) {
-						continue;
-					}
-					break;
-				}
+		if (consumables.containsKey(name)) {
+			consumable = consumables.get(name);
+			if (!consumable.isSimilar(item)) {
+				return;
 			}
-		}
-		else {
-			if (consumables.containsKey(name)) {
-				consumable = consumables.get(name);
-				if (!consumable.isSimilar(meta)) {
-					return;
-				}
-				if (!consumable.canUse(p, item)) {
-					return;
-				}
+			if (!consumable.canUse(p, item)) {
+				return;
 			}
 		}
 		
@@ -322,7 +296,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		if (!cons.isSimilar(meta)) {
+		if (!cons.isSimilar(item)) {
 			return;
 		}
 		if (!cons.canUse(p, item)) {

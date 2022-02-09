@@ -1,21 +1,25 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import me.Neoblade298.NeoConsumables.NeoConsumables;
 
 public class RecipeConsumable extends Consumable {
 	String permission;
 
-	public RecipeConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		super(main, name, sounds, lore);
+	public RecipeConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+		super(main, name, sounds, lore, nbt);
 	}
 
-	public boolean isSimilar(ItemMeta meta) {
+	public boolean isSimilar(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
 		if (!getLore().isEmpty()) {
 			if (!meta.hasLore()) {
 				return false;
