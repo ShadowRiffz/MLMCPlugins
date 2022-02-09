@@ -35,10 +35,10 @@ public class Professions extends JavaPlugin implements Listener {
 	public boolean debug = false;
 	public boolean isInstance = false;
 
-	private Economy econ;
-	private Permission perms;
-	private Chat chat;
-	private YamlConfiguration cfg;
+	public static Economy econ;
+	public static Permission perms;
+	public static Chat chat;
+	public static YamlConfiguration cfg;
 
 	static String sqlUser;
 	static String sqlPass;
@@ -51,7 +51,7 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public GeneralListeners generalListeners;
 	
-	public CurrencyManager cManager;
+	public static CurrencyManager cm;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -77,7 +77,7 @@ public class Professions extends JavaPlugin implements Listener {
 		if (!file.exists()) {
 			saveResource("config.yml", false);
 		}
-		this.cfg = YamlConfiguration.loadConfiguration(file);
+		cfg = YamlConfiguration.loadConfiguration(file);
 
 		// SQL
 		ConfigurationSection sql = cfg.getConfigurationSection("sql");
@@ -104,7 +104,7 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 		if (!isInstance) {
 			// Currency
-			cManager = new CurrencyManager(this);
+			cm = new CurrencyManager(this);
 		}
 			
 		if (!isInstance) {
@@ -151,7 +151,7 @@ public class Professions extends JavaPlugin implements Listener {
 	public void onDisable() {
 		super.onDisable();
 		try {
-			cManager.cleanup();
+			cm.cleanup();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -193,5 +193,9 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public Chat getChat() {
 		return chat;
+	}
+	
+	public static CurrencyManager getCurrencyManager() {
+		return cm;
 	}
 }

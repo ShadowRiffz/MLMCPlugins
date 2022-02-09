@@ -12,38 +12,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import net.md_5.bungee.api.ChatColor;
-import net.milkbowl.vault.economy.Economy;
 
 public class ProfessionsMethods {
 
 	static Professions main;
-	static Economy econ;
-	static CurrencyManager cm;
 
 	// Constants
 
 	public ProfessionsMethods(Professions main) {
 		ProfessionsMethods.main = main;
-		econ = main.getEconomy();
-		cm = main.cManager;
 	}
 	
-	public static void createSlot(Player p) {
-		ItemStack item = p.getInventory().getItemInMainHand();
+	public static boolean createSlot(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		
 		if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
 			Util.sendMessage(p, "&cThis item cannot be slotted!");
-			return;
+			return false;
 		}
 		if (!nbti.hasKey("gear")) {
 			Util.sendMessage(p, "&cItem is outdated! Use /prof convert to update it! Make sure it's a valid quest gear!");
-			return;
+			return false;
 		}
 		
 		int slotsCreated = nbti.getInteger("slotsCreated");
@@ -51,7 +44,7 @@ public class ProfessionsMethods {
 		
 		if (slotsCreated >= slotsMax) {
 			Util.sendMessage(p, "&cThis item cannot hold any more slots!");
-			return;
+			return false;
 		}
 		int newSlot = slotsCreated + 1;
 		int newLine = nbti.getInteger("slot" + slotsCreated + "Line") + 1;
@@ -64,6 +57,7 @@ public class ProfessionsMethods {
 		lore.add(newLine, "§8[Empty Slot]");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
+		return true;
 	}
 	
 	public static void givePaint(Player p, String red, String blue, String green) {

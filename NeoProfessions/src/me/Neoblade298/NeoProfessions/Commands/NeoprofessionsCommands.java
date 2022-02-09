@@ -20,6 +20,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
+import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
@@ -44,7 +45,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	MasonItems mItems;
 	IngredientRecipeItems ingr;
 	DrinksRecipeItems drink;
-	CurrencyManager cm;
 
 	public NeoprofessionsCommands(Professions main) {
 		this.main = main;
@@ -54,7 +54,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		sItems = new StonecutterItems();
 		mItems = new MasonItems();
 		ingr = new IngredientRecipeItems();
-		cm = main.cManager;
 	}
 
 	@Override
@@ -125,7 +124,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cPlayer must be online!");
 				return true;
 			}
-			if (!main.cManager.validType(args[2])) {
+			if (!Professions.cm.validType(args[2])) {
 				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
@@ -135,13 +134,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			int amount = Integer.parseInt(args[4]);
-			if (amount <= 0 || amount >= 99999 || !main.cManager.hasEnough(p, args[2], level, amount)) {
+			if (amount <= 0 || amount >= 99999 || !Professions.cm.hasEnough(p, args[2], level, amount)) {
 				Util.sendMessage(p, "&cInvalid amount!");
 				return true;
 			}
 			Player recipient = Bukkit.getPlayer(args[1]);
-			main.cManager.add(recipient, args[2], level, amount);
-			main.cManager.subtract(p, args[2], level, amount);
+			Professions.cm.add(recipient, args[2], level, amount);
+			Professions.cm.subtract(p, args[2], level, amount);
 			Util.sendMessage(p,
 					"&7You paid &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
 			Util.sendMessage(recipient,
@@ -153,7 +152,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cPlayer must be online!");
 				return true;
 			}
-			if (!main.cManager.validType(args[2])) {
+			if (!Professions.cm.validType(args[2])) {
 				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
@@ -162,11 +161,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			Util.sendMessage(p, "&7Balance: &e" + main.cManager.get(Bukkit.getPlayer(args[1]), args[2], level));
+			Util.sendMessage(p, "&7Balance: &e" + Professions.cm.get(Bukkit.getPlayer(args[1]), args[2], level));
 			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
-			if (!main.cManager.validType(args[1])) {
+			if (!Professions.cm.validType(args[1])) {
 				Util.sendMessage(p, "&cInvalid type!");
 				return true;
 			}
@@ -175,7 +174,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			Util.sendMessage(p, "&7Balance: &e" + main.cManager.get(p, args[1], level));
+			Util.sendMessage(p, "&7Balance: &e" + Professions.cm.get(p, args[1], level));
 			return true;
 		}
 
@@ -185,7 +184,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
 				return true;
 			}
-			if (!cm.containsKey(args[1])) {
+			if (!Professions.cm.containsKey(args[1])) {
 				Util.sendMessage(p, "&cInvalid essence or ore type!");
 				return true;
 			}
@@ -200,7 +199,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			if (!cm.hasEnough(p, args[1], level, amount)) {
+			if (!Professions.cm.hasEnough(p, args[1], level, amount)) {
 				Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
 				return true;
 			}
@@ -217,12 +216,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				for (Entry<Integer, ItemStack> item : result.entrySet()) {
 					notAdded += item.getValue().getAmount();
 				}
-				cm.subtract(p, args[1], level, amount - notAdded);
+				Professions.cm.subtract(p, args[1], level, amount - notAdded);
 				Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
 				return true;
 			}
 			else {
-				cm.subtract(p, args[1], level, amount);
+				Professions.cm.subtract(p, args[1], level, amount);
 				Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
 				return true;
 			}
@@ -233,7 +232,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
 				return true;
 			}
-			if (!cm.containsKey(args[1])) {
+			if (!Professions.cm.containsKey(args[1])) {
 				Util.sendMessage(p, "&cInvalid essence or ore type!");
 				return true;
 			}
@@ -256,12 +255,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					for (Entry<Integer, ItemStack> item : result.entrySet()) {
 						notAdded += item.getValue().getAmount();
 					}
-					cm.add(p, args[1], level, amount - notAdded);
+					Professions.cm.add(p, args[1], level, amount - notAdded);
 					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
 					return true;
 				}
 				else {
-					cm.add(p, args[1], level, amount);
+					Professions.cm.add(p, args[1], level, amount);
 					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
 					return true;
 				}
@@ -274,12 +273,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					for (Entry<Integer, ItemStack> item : result.entrySet()) {
 						notAdded += item.getValue().getAmount();
 					}
-					cm.add(p, args[1], level, amount - notAdded);
+					Professions.cm.add(p, args[1], level, amount - notAdded);
 					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
 					return true;
 				}
 				else {
-					cm.add(p, args[1], level, amount);
+					Professions.cm.add(p, args[1], level, amount);
 					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
 					return true;
 				}
@@ -313,26 +312,44 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("repair")) {
+					
 					if (args.length == 1) {
 						DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
 					}
 					else {
 						p = Bukkit.getPlayer(args[1]);
 						ItemStack item = p.getInventory().getItemInMainHand();
+						if (item == null || item.getType().isAir()) {
+							Util.sendMessage(p, "§cYou're not holding anything in your hand!");
+							return true;
+						}
 						NBTItem nbti = new NBTItem(item);
 						if (!nbti.hasKey("gear") || !nbti.hasKey("level")) {
 							Util.sendMessage(p, "§cThis item cannot be repaired! It may be outdated.");
+							return true;
 						}
 						new RepairInventory(main, p);
 					}
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("createslot")) {
+					
 					if (args.length == 1) {
-						ProfessionsMethods.createSlot(p);
+						ProfessionsMethods.createSlot(p, p.getInventory().getItemInMainHand());
 					}
 					else {
-						ProfessionsMethods.createSlot(Bukkit.getPlayer(args[1]));
+						p = Bukkit.getPlayer(args[1]);
+						ItemStack item = p.getInventory().getItemInMainHand();
+						if (item == null || item.getType().isAir()) {
+							Util.sendMessage(p, "§cYou're not holding anything in your hand!");
+							return true;
+						}
+						NBTItem nbti = new NBTItem(item);
+						if (!nbti.hasKey("gear") || !nbti.hasKey("level")) {
+							Util.sendMessage(p, "§cThis item cannot be repaired! It may be outdated.");
+							return true;
+						}
+						new CreateSlotInventory(main, p);
 					}
 					return true;
 				}
@@ -387,12 +404,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					
 					if (type.equalsIgnoreCase("randomore")) {
 						String otype = CurrencyManager.types[gen.nextInt(7) + 1];
-						this.main.cManager.add(p, otype, lv, amt);
+						Professions.cm.add(p, otype, lv, amt);
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " " + type + " ore to " + p.getName() + "!");
 						return true;
 					}
 					else if (type.equalsIgnoreCase("essence")) {
-						this.main.cManager.add(p, args[1], lv, amt);
+						Professions.cm.add(p, args[1], lv, amt);
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to " + p.getName() + "!");
 						return true;
 					}

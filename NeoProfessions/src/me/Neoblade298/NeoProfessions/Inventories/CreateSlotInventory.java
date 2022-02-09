@@ -15,48 +15,57 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.neoblade298.neogear.listeners.DurabilityListener;
+import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
+import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 
-public class RepairInventory implements ProfessionInventory {
+public class CreateSlotInventory implements ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
-	private static final int REPAIR_ICON = 8;
+	private final int goldCost;
+	private final int essenceCost;
+	private final int level;
+	private static final int CREATESLOT_ICON = 8;
 	private static final int MENU_MODEL = 5000;
-	private static final HashMap<Integer, Integer> goldCost = new HashMap<Integer, Integer>();
-	private static final int essenceCost = 3;
+	private static final HashMap<Integer, ScaleSet> goldPrices = new HashMap<Integer, ScaleSet>();
+	private static final HashMap<Integer, Integer> essencePrices = new HashMap<Integer, Integer>();
 	
 	static {
-		goldCost.put(0, 150);
-		goldCost.put(5, 200);
-		goldCost.put(10, 300);
-		goldCost.put(15, 400);
-		goldCost.put(20, 600);
-		goldCost.put(25, 800);
-		goldCost.put(30, 1100);
-		goldCost.put(35, 1500);
-		goldCost.put(40, 1800);
-		goldCost.put(45, 2300);
-		goldCost.put(50, 2800);
-		goldCost.put(55, 3400);
-		goldCost.put(60, 4000);
+		goldPrices.put(1, new ScaleSet(500, 500));
+		goldPrices.put(2, new ScaleSet(750, 750));
+		goldPrices.put(3, new ScaleSet(1000, 1000));
+		goldPrices.put(4, new ScaleSet(1500, 1500));
+		goldPrices.put(5, new ScaleSet(2500, 2500));
+		goldPrices.put(6, new ScaleSet(4000, 4000));
+		
+		essencePrices.put(1, 12);
+		essencePrices.put(2, 24);
+		essencePrices.put(3, 36);
+		essencePrices.put(4, 48);
+		essencePrices.put(5, 60);
+		essencePrices.put(6, 80);
 	}
 
-	public RepairInventory(Professions main, Player p) {
+	public CreateSlotInventory(Professions main, Player p) {
 		this.p = p;
 		this.item = p.getInventory().getItemInMainHand();
 		p.getInventory().removeItem(item);
-		int level = new NBTItem(item).getInteger("level");
-		inv = Bukkit.createInventory(p, 9, "§cRepair this item?");
+		level = new NBTItem(item).getInteger("level");
+		int nextSlot = new NBTItem(item).getInteger("slotsCreated") + 1;
+		inv = Bukkit.createInventory(p, 9, "§cAdd slot " + nextSlot + "?");
+		
+		ScaleSet costSet = goldPrices.get(nextSlot);
+		goldCost = costSet.getBase() + (costSet.getScale() * (level - 1));
+		essenceCost = essencePrices.get(nextSlot);
+		
 		ItemStack[] contents = inv.getContents();
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
-		for (int i = 2; i < REPAIR_ICON; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo",
-					"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+		for (int i = 2; i < CREATESLOT_ICON; i++) {
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo");
 		}
-		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
-				"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
+				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
 		main.viewingInventory.put(p, this);
 
@@ -78,8 +87,14 @@ public class RepairInventory implements ProfessionInventory {
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
 			p.closeInventory();
 		}
-		else if (e.getRawSlot() == REPAIR_ICON) {
-			DurabilityListener.fullRepairItem(p, item);
+		else if (e.getRawSlot() == CREATESLOT_ICON) {
+			if (!ProfessionsMethods.createSlot(p, item)) {
+				e.setCancelled(true);
+				p.closeInventory();
+				return;
+			}
+			Professions.econ.withdrawPlayer(p, goldCost);
+			Professions.cm.add(p, "essence", level, -essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}

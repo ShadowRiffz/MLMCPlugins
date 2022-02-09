@@ -99,6 +99,10 @@ public class CurrencyManager {
 	}
 	
 	public void add(Player p, String type, int level, int amount) {
+		if (amount < 0) {
+			subtract(p, type, level, -amount);
+			return;
+		}
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return;
 		}

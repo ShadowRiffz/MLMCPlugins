@@ -27,7 +27,7 @@ public class GeneralListeners implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		try {
-			main.cManager.initPlayer(e.getPlayer());
+			Professions.cm.initPlayer(e.getPlayer());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -36,7 +36,7 @@ public class GeneralListeners implements Listener {
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		try {
-			main.cManager.savePlayer(e.getPlayer());
+			Professions.cm.savePlayer(e.getPlayer());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class GeneralListeners implements Listener {
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
 		try {
-			main.cManager.savePlayer(e.getPlayer());
+			Professions.cm.savePlayer(e.getPlayer());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
