@@ -54,7 +54,7 @@ public class ResearchAttributesInventory implements ResearchInventory {
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[8] = createGuiItem(Material.BOOK, "§7[Info]",
-				null, 0, "§7You have §f" + attr.getAttribute("unused") + "§7points remaining.", "§7These attributes stack with §c/attr§7.");
+				null, 0, "§7You have §f" + attr.getAttribute("unused") + " §7points remaining.", "§7These attributes stack with §c/attr§7.");
 		inv.setContents(contents);
 
 		p.openInventory(inv);
