@@ -200,7 +200,10 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
 				// Load in rarities
 				for (String rarity : this.rarities.keySet()) {
-					ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
+					ConfigurationSection specificRareSec = null;
+					if (rareSec != null) {
+						specificRareSec = rareSec.getConfigurationSection(rarity);
+					}
 					if (specificRareSec != null) {
 						rarities.put(rarity,
 								new RarityBonuses(parseAttributes(specificRareSec),
