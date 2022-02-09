@@ -409,7 +409,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						return true;
 					}
 					else if (type.equalsIgnoreCase("essence")) {
-						Professions.cm.add(p, args[1], lv, amt);
+						Professions.cm.add(p, type, lv, amt);
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to " + p.getName() + "!");
 						return true;
 					}
