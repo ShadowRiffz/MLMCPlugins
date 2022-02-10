@@ -151,7 +151,6 @@ public class ItemEditor {
 		while (iter.hasNext()) {
 			i++;
 			String line = iter.next();
-			System.out.println("Lines " + i + ": " + line);
 			
 			if (!hasBonus) {
 				if (line.contains("Tier: ")) {
