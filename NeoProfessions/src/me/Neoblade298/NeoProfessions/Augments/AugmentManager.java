@@ -141,13 +141,10 @@ public class AugmentManager implements Listener {
 		return enabledWorlds.contains(p.getWorld().getName()) && playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onThrow(PlayerInteractEvent e) {
-		System.out.println(e.getAction());
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-		System.out.println("Interact");
 		ItemStack item = e.getItem();
-		System.out.println(item);
 		if (item.getType().equals(Material.ENDER_PEARL) && new NBTItem(item).hasKey("augment")) {
 			e.setCancelled(true);
 		}
@@ -155,7 +152,6 @@ public class AugmentManager implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClose(InventoryCloseEvent e) {
-		System.out.println("Close");
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
