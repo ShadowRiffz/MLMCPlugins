@@ -16,6 +16,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
@@ -120,6 +121,27 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						p.getInventory().addItem(converted);
 						Util.sendMessage(p, "&7Successfully converted item!");
 					}
+				}
+			}
+			else if (main.getType().equals(Material.QUARTZ)) {
+				if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
+					if (new NBTItem(main).hasKey("augment")) {
+						Util.sendMessage(p, "&7This item is already converted!");
+						return true;
+					}
+					ArrayList<String> lore = (ArrayList<String>) main.getItemMeta().getLore();
+					String[] relicStrings = lore.get(0).split(" ");
+					String relic = "Relic" + relicStrings[4];
+					for (int i = 4; i < relicStrings.length; i++) {
+						relic += relicStrings[i];
+					}
+
+					int amt = main.getAmount();
+					p.getInventory().removeItem(main);
+					ItemStack converted = MythicMobs.inst().getItemManager().getItemStack(relic);
+					converted.setAmount(amt);
+					p.getInventory().addItem(converted);
+					Util.sendMessage(p, "&7Successfully converted item!");
 				}
 			}
 			else {
