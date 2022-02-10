@@ -4,6 +4,7 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.skills.Skill;
 
+import me.neoblade298.neosapiaddons.methods.ProfessClass;
 import me.neoblade298.neosapiaddons.methods.ResetClass;
 
 import org.apache.commons.lang.StringUtils;
@@ -25,6 +26,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
 				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
 				sender.sendMessage("§c/nsapi refresh [player] - update equips");
+				sender.sendMessage("§c/nsapi profess [player] [class] - safely profess player to next tier");
 				sender.sendMessage("§c/nsapi reset [player] - reset player to previous tier");
 				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
 				return true;
@@ -38,6 +40,10 @@ public class Commands implements CommandExecutor {
 			}
 			else if (args[0].equalsIgnoreCase("reset")) {
 				ResetClass.resetPlayer(Bukkit.getPlayer(args[1]), sender);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("profess")) {
+				ProfessClass.professPlayer(Bukkit.getPlayer(args[1]), sender, args[2]);
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("skillup")) {
