@@ -24,8 +24,8 @@ public class HungerController implements Listener {
 	// How many seconds it takes for food to decrease by 1
 	final int FOOD_SCALE = 10;
 	
-	private Main main;
-	public HungerController(Main main) {
+	private SAPIAddons main;
+	public HungerController(SAPIAddons main) {
 		this.main = main;
 		sprintingPlayers = new HashSet<Player>();
 		hunger = new HashMap<Player, Integer>();

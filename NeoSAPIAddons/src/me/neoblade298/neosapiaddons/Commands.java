@@ -4,6 +4,8 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.skills.Skill;
 
+import me.neoblade298.neosapiaddons.methods.ResetClass;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,8 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
-	Main main;
-	public Commands(Main main) {
+	SAPIAddons main;
+	public Commands(SAPIAddons main) {
 		this.main = main;
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
@@ -23,6 +25,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
 				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
 				sender.sendMessage("§c/nsapi refresh [player] - update equips");
+				sender.sendMessage("§c/nsapi reset [player] - reset player to previous tier");
 				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
 				return true;
 			}
@@ -33,7 +36,9 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4[§c§lMLMC§4] §c" + args[1] + " §7has §e" + data.getExp() + " §7exp remaining.");
 				return true;
 			}
-
+			else if (args[0].equalsIgnoreCase("reset")) {
+				ResetClass.resetPlayer(Bukkit.getPlayer(args[1]), sender);
+			}
 			else if (args[0].equalsIgnoreCase("skillup")) {
 				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
 				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
