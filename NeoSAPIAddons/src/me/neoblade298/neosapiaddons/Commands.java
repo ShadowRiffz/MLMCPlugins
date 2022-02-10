@@ -38,6 +38,7 @@ public class Commands implements CommandExecutor {
 			}
 			else if (args[0].equalsIgnoreCase("reset")) {
 				ResetClass.resetPlayer(Bukkit.getPlayer(args[1]), sender);
+				return true;
 			}
 			else if (args[0].equalsIgnoreCase("skillup")) {
 				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));

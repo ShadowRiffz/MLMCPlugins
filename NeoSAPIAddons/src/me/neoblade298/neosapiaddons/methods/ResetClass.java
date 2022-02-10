@@ -67,8 +67,8 @@ public class ResetClass {
 		// Max level after resetting is always 30
 		PointSet setSP = SAPIAddons.skillPoints.get(30);
 		PointSet setAP = SAPIAddons.attrPoints.get(30);
-		int expectedSP = setSP.getBasePoints() + setSP.getPointsPerLvl() * (pclass.getLevel() - setSP.getBaseLvl());
-		int expectedAP = setAP.getBasePoints() + setAP.getPointsPerLvl() * (pclass.getLevel() - setAP.getBaseLvl());
+		int expectedSP = setSP.getBasePoints() + setSP.getPointsPerLvl() * (30 - setSP.getBaseLvl());
+		int expectedAP = setAP.getBasePoints() + setAP.getPointsPerLvl() * (30 - setAP.getBaseLvl());
 		
 		pclass.setLevel(30);
 		pclass.setPoints(expectedSP);
