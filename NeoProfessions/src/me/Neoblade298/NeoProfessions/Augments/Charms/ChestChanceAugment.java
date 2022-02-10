@@ -32,7 +32,7 @@ public class ChestChanceAugment extends Augment implements ModChestDropAugment {
 	
 	@Override
 	public double getChestChanceMult(Player user) {
-		return 0.02 * (level / 5);
+		return 0.01 * (level / 5);
 	}
 
 	@Override
