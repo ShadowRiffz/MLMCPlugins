@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -441,20 +442,17 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
 		if (item == null) return;
-		if (item.getEnchantmentLevel(Enchantment.QUICK_CHARGE) > 4) {
-			item.addUnsafeEnchantment(Enchantment.QUICK_CHARGE, 4);
-		}
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (isQuestGear(item)) {
-				e.setCancelled(true);
+				e.setUseItemInHand(Result.DENY);
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 			}
 		}
 		else {
 			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if (isArmor(item)) {
-					e.setCancelled(true);
+					e.setUseItemInHand(Result.DENY);
 					p.sendMessage("§c[§4§lMLMC§4] §cEquipping armor via right click is disabled in quest worlds!");
 				}
 			}
