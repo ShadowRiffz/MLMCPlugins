@@ -3,14 +3,17 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -137,9 +140,22 @@ public class AugmentManager implements Listener {
 	public boolean containsAugments(Player p, EventType etype) {
 		return enabledWorlds.contains(p.getWorld().getName()) && playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
 	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onThrow(PlayerInteractEvent e) {
+		System.out.println(e.getAction());
+		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+		System.out.println("Interact");
+		ItemStack item = e.getItem();
+		System.out.println(item);
+		if (item.getType().equals(Material.ENDER_PEARL) && new NBTItem(item).hasKey("augment")) {
+			e.setCancelled(true);
+		}
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClose(InventoryCloseEvent e) {
+		System.out.println("Close");
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
 		if (!enabledWorlds.contains(p.getWorld().getName())) return;
@@ -518,7 +534,6 @@ public class AugmentManager implements Listener {
 		e.setExp(e.getExp() * multiplier + flat);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onChestDrop(ChestDropEvent e) {
 		Player p = e.getPlayer();
 		
@@ -542,7 +557,7 @@ public class AugmentManager implements Listener {
 		e.setChance(e.getChance() * multiplier + flat);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onResearchPointGain(MythicResearchPointsChanceEvent e) {
 		Player p = e.getPlayer();
 		

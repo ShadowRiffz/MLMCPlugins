@@ -151,7 +151,9 @@ public class Professions extends JavaPlugin implements Listener {
 	public void onDisable() {
 		super.onDisable();
 		try {
-			cm.cleanup();
+			if (cm != null) {
+				cm.cleanup();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
