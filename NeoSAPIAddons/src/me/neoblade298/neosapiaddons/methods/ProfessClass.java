@@ -35,7 +35,6 @@ public class ProfessClass {
 
 		int currentLv = 1;
 		int maxLv = pclass.getData().getMaxLevel();
-		System.out.println(pclass.getData().getName() + " " + maxLv);
 		PointSet setSP = SAPIAddons.skillPoints.get(maxLv);
 		PointSet setAP = SAPIAddons.attrPoints.get(maxLv);
 		int expectedSP = setSP.getBasePoints() + setSP.getPointsPerLvl() * (currentLv - setSP.getBaseLvl());
