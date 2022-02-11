@@ -160,7 +160,7 @@ public class ItemEditor {
 					if (displayname.contains(" ")) {
 						name = typeConverter.get(displayname);
 						if (name.startsWith("ru")) {
-							displayname.replaceFirst("Infused", "Ruinous");
+							displayname = displayname.replaceFirst("Infused", "Ruinous");
 						}
 					}
 					else {
