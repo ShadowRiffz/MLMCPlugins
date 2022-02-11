@@ -132,7 +132,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					ArrayList<String> lore = (ArrayList<String>) main.getItemMeta().getLore();
 					String[] relicStrings = lore.get(0).split(" ");
 					String relic = "Relic" + relicStrings[4];
-					for (int i = 4; i < relicStrings.length; i++) {
+					for (int i = 5; i < relicStrings.length; i++) {
 						relic += relicStrings[i];
 					}
 
