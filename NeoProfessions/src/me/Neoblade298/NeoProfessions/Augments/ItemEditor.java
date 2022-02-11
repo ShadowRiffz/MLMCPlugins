@@ -218,7 +218,7 @@ public class ItemEditor {
 						slots++;
 					}
 				}
-				else if (line.contains("Durability")) {
+				else if (line.contains("Durability") && !line.contains("Max")) {
 					break;
 				}
 				else {

@@ -352,10 +352,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				if (args[0].equalsIgnoreCase("sell")) {
 					if (args.length == 1) {
-						new SellInventory(main, Bukkit.getPlayer(args[1]));
+						new SellInventory(main, p);
 					}
 					else {
-						new SellInventory(main, p);
+						new SellInventory(main, Bukkit.getPlayer(args[1]));
 					}
 					return true;
 				}
