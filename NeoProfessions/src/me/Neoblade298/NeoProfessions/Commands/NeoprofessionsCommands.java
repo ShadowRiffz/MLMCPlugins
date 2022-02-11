@@ -147,7 +147,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			else {
 				ItemEditor editor = new ItemEditor(main);
 				String result = editor.convertItem(p);
-				DurabilityListener.fullRepairItem(p, main);
 				if (result == null) {
 					Util.sendMessage(p, "&7Successfully converted item!");
 				}

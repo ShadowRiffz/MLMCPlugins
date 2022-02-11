@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class ItemEditor {
 	private static HashMap<String, String> typeConverter = new HashMap<String, String>();
@@ -134,7 +135,6 @@ public class ItemEditor {
 		String rarity = "common";
 		String displayname = "Sword";
 		String name = "sword";
-		HashMap<String, Integer> nbtData = new HashMap<String, Integer>();
 		
 
 		for (Enchantment ench : meta.getEnchants().keySet()) {
@@ -146,10 +146,8 @@ public class ItemEditor {
 		lore.add(0, ""); // Placeholder for Title
 		lore.add(1, ""); // Placeholder for Type
 		ListIterator<String> iter = lore.listIterator();
-		int i = -1;
 		int slotNum = 0;
 		while (iter.hasNext()) {
-			i++;
 			String line = iter.next();
 			
 			if (!hasBonus) {
@@ -183,7 +181,6 @@ public class ItemEditor {
 				}
 				else if (line.contains("Vitality") || line.contains("Perception") || line.contains("Regen")) {
 					iter.remove();
-					i--;
 				}
 				
 				else if (line.contains("Level")) {
@@ -213,10 +210,6 @@ public class ItemEditor {
 					if (slots < slotsMax) {
 						iter.add("§8[Empty Slot]");
 						slots++;
-						nbtData.put("slot" + slots + "Line", i);
-					}
-					else {
-						i--;
 					}
 				}
 				else if (line.contains("Durability")) {
@@ -227,10 +220,6 @@ public class ItemEditor {
 					if (slots < slotsMax) {
 						iter.add("§8[Empty Slot]");
 						slots++;
-						nbtData.put("slot" + slots + "Line", i);
-					}
-					else {
-						i--;
 					}
 					// Turn the string into an old augment
 					ItemStack oldAug = masonUtils.parseUnslot(p, slotNum);
@@ -282,12 +271,31 @@ public class ItemEditor {
 		nbti.setString("gear", name);
 		nbti.setString("rarity", rarity);
 		nbti.setInteger("level", itemLevel);
-		for (String key : nbtData.keySet()) {
-			nbti.setInteger(key, nbtData.get(key));
-		}
 		nbti.setInteger("slotsCreated", slots);
 		nbti.setInteger("slotsMax", slotsMax);
 		nbti.applyNBT(item);
+
+		DurabilityListener.fullRepairItem(p, item);
+		
+		setSlotNbt(item);
 		return null;
+	}
+	
+	private static void setSlotNbt(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		HashMap<String, Integer> slotMap = new HashMap<String, Integer>();
+		int numSlot = 1;
+		for (int i = 0; i < lore.size(); i++) {
+			String line = lore.get(i);
+			if (line.contains("Empty")) {
+				slotMap.put("slot" + numSlot++ + "Line", i);
+			}
+		}
+		NBTItem nbti = new NBTItem(item);
+		for (String key : slotMap.keySet()) {
+			nbti.setInteger(key, slotMap.get(key));
+		}
+		nbti.applyNBT(item);
 	}
 }
