@@ -467,7 +467,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				Player p = (Player) e.getDamager();
 				ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
 				for (ItemStack item : weapons) {
-					if (isQuestGear(item)) {
+					if (item != null && !item.getType().isAir() && isQuestGear(item)) {
 						e.setCancelled(true);
 						p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 						break;
