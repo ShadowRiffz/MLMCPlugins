@@ -17,7 +17,6 @@ public abstract class Augment {
 	protected int level;
 	protected List<EventType> etypes;
 	protected static DecimalFormat df = new DecimalFormat("##.#");
-	protected static DecimalFormat df = new DecimalFormat("##.#");
 	
 	public Augment() {
 		this.level = 5;
