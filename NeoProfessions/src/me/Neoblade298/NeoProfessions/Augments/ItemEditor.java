@@ -88,30 +88,6 @@ public class ItemEditor {
 		return null;
 	}
 	
-	public String addSlot(Player p) {
-		if (nbti.getInteger("version") == 0) {
-			return "item not converted!";
-		}
-		int oldTotal = nbti.getInteger("slotsCreated");
-		int newTotal = oldTotal + 1;
-		if (newTotal > nbti.getInteger("slotsMax")) {
-			return "max slots reached!";
-		}
-		
-		ItemMeta meta = item.getItemMeta();
-		
-		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		int slotNum = nbti.getInteger("slot" + newTotal + "Line") == 0 ? nbti.getInteger("slot" + newTotal + "Line") : lore.size() - 2;
-		lore.add(slotNum, "§7[Empty Slot]");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		nbti = new NBTItem(item);
-		nbti.setInteger("slotsCreated", newTotal);
-		nbti.setInteger("slot" + newTotal + "Line", nbti.getInteger("slot" + oldTotal + "Line") + 1);
-		nbti.applyNBT(item);
-		return null;
-	}
-	
 	public String convertItem(Player p) {
 		if (nbti.getInteger("version") != 0) {
 			return "item already converted!";
@@ -128,6 +104,8 @@ public class ItemEditor {
 		
 		boolean hasBonus = false;
 		boolean hasLevel = false;
+		boolean wasMythic = false;
+		boolean onAttributes = false;
 		Random gen = new Random();
 		int itemLevel = -1;
 		int slots = 0;
@@ -157,6 +135,8 @@ public class ItemEditor {
 					for (int j = 3; j < args.length; j++) {
 						displayname += " " + args[j];
 					}
+					
+					// If the display type is an armor piece
 					if (displayname.contains(" ")) {
 						name = typeConverter.get(displayname);
 						if (name.startsWith("ru")) {
@@ -168,6 +148,10 @@ public class ItemEditor {
 					}
 					
 					rarity = ChatColor.stripColor(args[1].toLowerCase());
+					if (rarity.equalsIgnoreCase("mythic")) {
+						wasMythic = true;
+						rarity = "artifact";
+					}
 					if (name.contains("helmet") || name.contains("boots")) {
 						slotsMax = 0;
 					}
@@ -184,6 +168,7 @@ public class ItemEditor {
 				else if (line.contains("Base Attr")) {
 					iter.remove();
 					iter.add("§8§m-----");
+					onAttributes = true;
 				}
 				else if (line.contains("Vitality") || line.contains("Perception") || line.contains("Regen")) {
 					iter.remove();
@@ -199,12 +184,17 @@ public class ItemEditor {
 				else if (line.contains("Bonus Attributes")) {
 					iter.remove();
 					iter.add("§8§m-----");
+					onAttributes = false;
 					hasBonus = true;
 				}
 				else if (line.contains("Durability")) {
 					iter.previous();
 					iter.add("§8§m-----");
 					break;
+				}
+				
+				else if (onAttributes && wasMythic) {
+					iter.remove();
 				}
 			}
 			

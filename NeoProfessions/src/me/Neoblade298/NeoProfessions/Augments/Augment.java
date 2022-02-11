@@ -17,6 +17,7 @@ public abstract class Augment {
 	protected int level;
 	protected List<EventType> etypes;
 	protected static DecimalFormat df = new DecimalFormat("##.#");
+	protected static DecimalFormat df = new DecimalFormat("##.#");
 	
 	public Augment() {
 		this.level = 5;
@@ -56,6 +57,10 @@ public abstract class Augment {
 	
 	public String formatPercentage(double bonus) {
 		return df.format(bonus * 100);
+	}
+	
+	public String formatDouble(double num) {
+		return df.format(num);
 	}
 	
 	public ItemStack getItem(Player user) {
