@@ -67,7 +67,7 @@ public class DurabilityListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onDurabilityLoss(PlayerItemDamageEvent e) {
 		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore()) {
-			if (!isQuestItem(e.getItem())) return;
+			if (!isQuestItem(e.getItem()) && !isOldQuestItem(e.getItem())) return;
 			
 			String world = e.getPlayer().getWorld().getName();
 			if (world.equalsIgnoreCase("Argyll") || world.equalsIgnoreCase("Dev")) {
@@ -83,6 +83,13 @@ public class DurabilityListener implements Listener {
 		if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
 			NBTItem nbti = new NBTItem(item);
 			return nbti.hasKey("gear");
+		}
+		return false;
+	}
+	
+	private static boolean isOldQuestItem(ItemStack item) {
+		if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			return item.getItemMeta().getLore().get(0).contains("Tier");
 		}
 		return false;
 	}
