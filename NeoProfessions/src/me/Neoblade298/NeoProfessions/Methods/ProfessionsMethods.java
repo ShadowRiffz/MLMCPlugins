@@ -51,7 +51,7 @@ public class ProfessionsMethods {
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		if (slotsCreated == 0 && lore.get(lore.size() - 1).contains("Durability")) {
-			int newLine = lore.size() - 2;
+			int newLine = lore.size() - 1;
 			nbti.setInteger("slotsCreated", newSlot);
 			nbti.setInteger("slot" + newSlot + "Line", newLine);
 			nbti.applyNBT(item);
