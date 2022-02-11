@@ -46,17 +46,30 @@ public class ProfessionsMethods {
 			Util.sendMessage(p, "&cThis item cannot hold any more slots!");
 			return false;
 		}
+
 		int newSlot = slotsCreated + 1;
-		int newLine = nbti.getInteger("slot" + slotsCreated + "Line") + 1;
-		nbti.setInteger("slotsCreated", newSlot);
-		nbti.setInteger("slot" + newSlot + "Line", newLine);
-		nbti.applyNBT(item);
-		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		lore.add(newLine, "§8[Empty Slot]");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
+		if (slotsCreated == 0 && lore.get(lore.size() - 1).contains("Durability")) {
+			int newLine = lore.size() - 2;
+			nbti.setInteger("slotsCreated", newSlot);
+			nbti.setInteger("slot" + newSlot + "Line", newLine);
+			nbti.applyNBT(item);
+			
+			lore.add(newLine, "§8[Empty Slot]");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+		}
+		else {
+			int newLine = nbti.getInteger("slot" + slotsCreated + "Line") + 1;
+			nbti.setInteger("slotsCreated", newSlot);
+			nbti.setInteger("slot" + newSlot + "Line", newLine);
+			nbti.applyNBT(item);
+			
+			lore.add(newLine, "§8[Empty Slot]");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+		}
 		return true;
 	}
 	

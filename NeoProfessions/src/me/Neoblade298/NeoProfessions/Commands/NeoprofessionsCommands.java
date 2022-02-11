@@ -381,7 +381,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("createslot")) {
-					
 					if (args.length == 1) {
 						ProfessionsMethods.createSlot(p, p.getInventory().getItemInMainHand());
 					}
