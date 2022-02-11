@@ -168,7 +168,13 @@ public class ItemEditor {
 					}
 					
 					rarity = ChatColor.stripColor(args[1].toLowerCase());
-					slotsMax = maxSlotConverter.get(rarity);
+					if (name.contains("helmet") || name.contains("boots")) {
+						slotsMax = 0;
+					}
+					else {
+						slotsMax = maxSlotConverter.get(rarity);
+					}
+					
 					if (rarity.contains("artifact") || rarity.contains("legendary")) {
 						meta.addEnchant(Enchantment.LUCK, 1, true);
 					}
