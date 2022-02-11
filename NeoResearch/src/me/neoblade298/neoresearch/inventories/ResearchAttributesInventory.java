@@ -34,23 +34,23 @@ public class ResearchAttributesInventory implements ResearchInventory {
 
 		ItemStack[] contents = inv.getContents();
 		contents[0] = createGuiItem(Material.RED_DYE, "§7[§4Strength§7 (§f" + attr.getAttribute("strength") + "§7)]",
-				"strength", 100003, "§7Increases §4Red§7 values in", "§c/skills §7by 1%.",
+				"strength", 100003, "§7Increases §4Red§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[1] = createGuiItem(Material.YELLOW_DYE, "§7[§eDexterity§7 (§f" + attr.getAttribute("dexterity") + "§7)]",
-				"dexterity", 100004, "§7Increases §eYellow§7 values in", "§c/skills §7by 1%.",
+				"dexterity", 100004, "§7Increases §eYellow§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[2] = createGuiItem(Material.LIGHT_BLUE_DYE, "§7[§9Intelligence§7 (§f" + attr.getAttribute("intelligence") + "§7)]",
-				"intelligence", 100005, "§7Increases §9Blue§7 values in", "§c/skills §7by 1%.",
+				"intelligence", 100005, "§7Increases §9Blue§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[3] = createGuiItem(Material.LIME_DYE, "§7[§aSpirit§7 (§f" + attr.getAttribute("spirit") + "§7)]",
-				"spirit", 100006, "§7Increases §aGreen§7 values in", "§c/skills §7by 1%.",
+				"spirit", 100006, "§7Increases §aGreen§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[4] = createGuiItem(Material.ORANGE_DYE, "§7[§6Endurance§7 (§f" + attr.getAttribute("endurance") + "§7)]",
-				"endurance", 100008, "§7Increases §6Orange§7 values in", "§c/skills §7by 1%.",
+				"endurance", 100008, "§7Increases §6Orange§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
 		contents[8] = createGuiItem(Material.BOOK, "§7[Info]",
