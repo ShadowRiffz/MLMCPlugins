@@ -146,7 +146,7 @@ public class AugmentManager implements Listener {
 	public void onThrow(PlayerInteractEvent e) {
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 		ItemStack item = e.getItem();
-		if (item.getType().equals(Material.ENDER_PEARL) && new NBTItem(item).hasKey("augment")) {
+		if (item != null && item.getType().equals(Material.ENDER_PEARL) && new NBTItem(item).hasKey("augment")) {
 			e.setUseItemInHand(Result.DENY);
 		}
 	}
