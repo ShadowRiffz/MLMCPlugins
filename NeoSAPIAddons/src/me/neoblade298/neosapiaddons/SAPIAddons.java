@@ -155,6 +155,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 	@EventHandler
 	public void onPlayerLoad(PlayerLoadCompleteEvent e) {
 		PlayerData data = SkillAPI.getPlayerData(e.getPlayer());
+		if (data == null || data.getClass("class") == null) return;
 		int max = data.getClass("class").getData().getMaxLevel();
 		
 		PointSet setSP = skillPoints.get(max);
