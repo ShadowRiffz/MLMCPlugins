@@ -51,6 +51,9 @@ public class ProfessClass {
 		data.getClass("class").setLevel(30);
 		data.profess(SkillAPI.getClass(afterClass));
 		PlayerClass pclass = data.getClass("class");
+		
+		// Skill up the essence
+		data.upgradeSkill(SkillAPI.getSkill(afterClass + "'s Essence"), true);
 
 		int currentLv = 30;
 		int maxLv = pclass.getData().getMaxLevel();
