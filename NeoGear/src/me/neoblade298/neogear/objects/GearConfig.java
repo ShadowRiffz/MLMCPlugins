@@ -238,7 +238,7 @@ public class GearConfig {
 		
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
-		double price = level * main.rarities.get(rarity).priceModifier;
+		double price = this.price * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
 		nbti.setString("gear", name);
 		nbti.setInteger("version", version);
