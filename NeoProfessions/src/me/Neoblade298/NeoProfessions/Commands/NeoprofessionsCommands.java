@@ -137,11 +137,16 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 
 					int amt = main.getAmount();
-					p.getInventory().removeItem(main);
 					ItemStack converted = MythicMobs.inst().getItemManager().getItemStack(relic);
-					converted.setAmount(amt);
-					p.getInventory().addItem(converted);
-					Util.sendMessage(p, "&7Successfully converted item!");
+					if (converted != null) {
+						p.getInventory().removeItem(main);
+						converted.setAmount(amt);
+						p.getInventory().addItem(converted);
+						Util.sendMessage(p, "&7Successfully converted item!");
+					}
+					else {
+						Util.sendMessage(p, "&cFailed to convert item!");
+					}
 				}
 			}
 			else {
