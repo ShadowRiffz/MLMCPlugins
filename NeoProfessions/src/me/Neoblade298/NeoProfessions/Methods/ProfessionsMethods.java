@@ -133,13 +133,13 @@ public class ProfessionsMethods {
 			item.setType(Material.NETHERITE_HELMET);
 		}
 		else if (mat.endsWith("CHESTPLATE")) {
-			item.setType(Material.NETHERITE_HELMET);
+			item.setType(Material.NETHERITE_CHESTPLATE);
 		}
 		else if (mat.endsWith("LEGGINGS")) {
-			item.setType(Material.NETHERITE_HELMET);
+			item.setType(Material.NETHERITE_LEGGINGS);
 		}
 		else if (mat.endsWith("BOOTS")) {
-			item.setType(Material.NETHERITE_HELMET);
+			item.setType(Material.NETHERITE_BOOTS);
 		}
 		else if (mat.endsWith("SWORD")) {
 			item.setType(Material.NETHERITE_SWORD);
