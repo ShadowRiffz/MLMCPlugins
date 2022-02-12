@@ -13,9 +13,7 @@ public class Attributes {
 		this.dexterity = 0;
 		this.intelligence = 0;
 		this.spirit = 0;
-		this.perception = 0;
 		this.endurance = 0;
-		this.vitality = 0;
 	}
 	
 	public Attributes clone() {
@@ -30,9 +28,7 @@ public class Attributes {
 		data.addBonusAttributes("Dexterity", dexterity);
 		data.addBonusAttributes("Intelligence", intelligence);
 		data.addBonusAttributes("Spirit", spirit);
-		data.addBonusAttributes("Perception", perception);
 		data.addBonusAttributes("Endurance", endurance);
-		data.addBonusAttributes("Vitality", vitality);
 	}
 
 	public void removeAttributes(Player p) {
@@ -41,9 +37,7 @@ public class Attributes {
 		data.addBonusAttributes("Dexterity", -dexterity);
 		data.addBonusAttributes("Intelligence", -intelligence);
 		data.addBonusAttributes("Spirit", -spirit);
-		data.addBonusAttributes("Perception", -perception);
 		data.addBonusAttributes("Endurance", -endurance);
-		data.addBonusAttributes("Vitality", -vitality);
 	}
 
 	public int getStrength() {
@@ -80,8 +74,6 @@ public class Attributes {
 			case "dex": dexterity = num; break;
 			case "int": intelligence = num; break;
 			case "spr": spirit = num; break;
-			case "prc": perception = num; break;
-			case "vit": vitality = num; break;
 			case "end": endurance = num; break;
 		}
 	}
@@ -92,8 +84,6 @@ public class Attributes {
 			case "dex": dexterity += num; break;
 			case "int": intelligence += num; break;
 			case "spr": spirit += num; break;
-			case "prc": perception += num; break;
-			case "vit": vitality += num; break;
 			case "end": endurance += num; break;
 		}
 	}
@@ -103,8 +93,6 @@ public class Attributes {
 		dexterity += added.getDexterity();
 		intelligence += added.getIntelligence();
 		spirit += added.getSpirit();
-		perception += added.getPerception();
-		vitality += added.getVitality();
 		endurance += added.getEndurance();
 	}
 	
@@ -113,8 +101,6 @@ public class Attributes {
 		dexterity = 0;
 		intelligence = 0;
 		spirit = 0;
-		perception = 0;
-		vitality = 0;
 		endurance = 0;
 	}
 	
@@ -123,19 +109,16 @@ public class Attributes {
 		dexterity *= multiplier;
 		intelligence *= multiplier;
 		spirit *= multiplier;
-		perception *= multiplier;
-		vitality *= multiplier;
 		endurance *= multiplier;
 	}
 
 	public String toString() {
-		return strength + " " + dexterity + " " + intelligence + " " + spirit + " " + perception + " " + endurance + " "
-				+ vitality;
+		return strength + " " + dexterity + " " + intelligence + " " + spirit + " " + endurance;
 	}
 	
 	public boolean isEmpty() {
 		return strength == 0 && dexterity == 0 && intelligence == 0 && spirit == 0 &&
-				perception == 0 && vitality == 0 && endurance == 0;
+				endurance == 0;
 	}
 
 }
