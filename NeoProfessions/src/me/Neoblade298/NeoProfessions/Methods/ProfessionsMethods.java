@@ -48,14 +48,15 @@ public class ProfessionsMethods {
 		}
 
 		int newSlot = slotsCreated + 1;
-		ItemMeta meta = item.getItemMeta();
-		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		if (slotsCreated == 0 && lore.get(lore.size() - 1).contains("Durability")) {
 			int newLine = lore.size() - 1;
 			nbti.setInteger("slotsCreated", newSlot);
 			nbti.setInteger("slot" + newSlot + "Line", newLine);
 			nbti.applyNBT(item);
 			
+			// Refresh meta for after nbt
+			ItemMeta meta = item.getItemMeta();
 			lore.add(newLine, "§8[Empty Slot]");
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -65,8 +66,9 @@ public class ProfessionsMethods {
 			nbti.setInteger("slotsCreated", newSlot);
 			nbti.setInteger("slot" + newSlot + "Line", newLine);
 			nbti.applyNBT(item);
-			
+
 			lore.add(newLine, "§8[Empty Slot]");
+			ItemMeta meta = item.getItemMeta();
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
