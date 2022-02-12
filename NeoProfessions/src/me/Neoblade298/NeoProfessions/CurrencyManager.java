@@ -99,13 +99,17 @@ public class CurrencyManager {
 	}
 	
 	public void add(Player p, String type, int level, int amount) {
+		if (level > 60 || level < 5) {
+			return;
+		}
+
+		// Standardize the level
+		level -= (level % 5);
 		if (amount < 0) {
 			subtract(p, type, level, -amount);
 			return;
 		}
-		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-			return;
-		}
+		
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) + amount;
 		typeCurrency.put(level, newAmount);
@@ -113,9 +117,6 @@ public class CurrencyManager {
 	}
 	
 	public void subtract(Player p, String type, int level, int amount) {
-		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-			return;
-		}
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) - amount;
 		typeCurrency.put(level, newAmount);
