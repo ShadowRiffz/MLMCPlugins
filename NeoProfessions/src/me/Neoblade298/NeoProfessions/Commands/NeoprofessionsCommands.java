@@ -388,6 +388,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("createslot")) {
 					if (args.length == 1) {
 						ProfessionsMethods.createSlot(p, p.getInventory().getItemInMainHand());
+						p.updateInventory();
 					}
 					else {
 						p = Bukkit.getPlayer(args[1]);
@@ -450,6 +451,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						offset++;
 					}
 					int lv = Integer.parseInt(args[2 + offset]);
+					lv -= lv % 5; // Round to nearest 5
 					if (args.length > 3 + offset) {
 						amt = Integer.parseInt(args[3 + offset]);
 					}
