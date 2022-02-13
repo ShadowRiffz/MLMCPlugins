@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
+import com.sucy.skill.api.player.PlayerData;
 
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
@@ -119,10 +120,13 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 				// Find class and level
 				String pClass = "";
 				int level = 0;
-				PlayerClass pc = SkillAPI.getPlayerData(p).getClass("class");
-				if (pc != null) {
-					pClass = pc.getData().getName();
-					level = pc.getLevel();
+				PlayerData pd = SkillAPI.getPlayerData(p);
+				if (pd != null) {
+					PlayerClass pc = pd.getClass("class");
+					if (pc != null) {
+						pClass = pc.getData().getName();
+						level = pc.getLevel();
+					}
 				}
 				long joined = p.getFirstPlayed();
 				long now = System.currentTimeMillis();

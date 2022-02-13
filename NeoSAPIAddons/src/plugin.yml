@@ -5,7 +5,7 @@
  author: Neoblade298
  depend: [SkillAPI]
  softdepend: [MythicMobs]
- main: me.neoblade298.neosapiaddons.Main
+ main: me.neoblade298.neosapiaddons.SAPIAddons
  commands: 
   nsapi:
     description: Base command for usage

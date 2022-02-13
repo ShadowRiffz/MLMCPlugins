@@ -3,6 +3,7 @@ package me.neoblade298.neogear;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,8 +35,9 @@ import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neogear.listeners.DurabilityListener;
-import me.neoblade298.neogear.objects.Attributes;
+import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
 import me.neoblade298.neogear.objects.ItemSet;
@@ -43,22 +46,35 @@ import me.neoblade298.neogear.objects.RarityBonuses;
 import net.milkbowl.vault.economy.Economy;
 
 public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
-	public HashMap<String, HashMap<Integer, GearConfig>> settings;
+	public static HashMap<String, HashMap<Integer, GearConfig>> settings;
+	public static LinkedHashMap<String, String> attributeOrder = new LinkedHashMap<String, String>();
 	private YamlConfiguration cfg;
-	public int lvlMax;
-	public int lvlInterval;
+	public static int lvlMax;
+	public static int lvlInterval;
 	public HashMap<String, Rarity> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
 	public HashMap<String, ItemSet> itemSets;
 	public HashMap<String, String> typeConverter;
-	public Random gen;
+	public static Random gen = new Random();
 	private static Economy econ = null;
+	
+	static {
+		attributeOrder.put("str", "Strength +$amt$");
+		attributeOrder.put("dex", "Dexterity +$amt$");
+		attributeOrder.put("int", "Intelligence +$amt$");
+		attributeOrder.put("spr", "Spirit +$amt$");
+		attributeOrder.put("end", "Endurance +$amt$");
+		attributeOrder.put("mhp", "Max HP +$amt$");
+		attributeOrder.put("mmp", "Max MP +$amt$");
+		attributeOrder.put("hrg", "Health Regen +$amt$");
+		attributeOrder.put("rrg", "Resource Regen +$amt$%");
+		attributeOrder.put("hlr", "Healing Received +$amt$%");
+	}
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoGear Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("gear").setExecutor(new Commands(this));
-		gen = new Random();
 
 		if (!setupEconomy()) {
 			getServer().getPluginManager().disablePlugin(this);
@@ -107,8 +123,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		this.cfg = YamlConfiguration.loadConfiguration(cfg);
 
 		// Load config
-		this.lvlInterval = this.cfg.getInt("lvl-interval");
-		this.lvlMax = this.cfg.getInt("lvl-max");
+		Gear.lvlInterval = this.cfg.getInt("lvl-interval");
+		Gear.lvlMax = this.cfg.getInt("lvl-max");
 
 		// Rarities and color codes
 		this.rarities = new HashMap<String, Rarity>();
@@ -116,7 +132,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
 			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"),
-					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"));
+					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"),
+					specificRarity.getBoolean("is-enchanted"));
 			this.rarities.put(rarity, rarityObj);
 		}
 
@@ -142,57 +159,89 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 
 		// Load in all gear files
-		this.settings = new HashMap<String, HashMap<Integer, GearConfig>>();
-		for (File file : gearFolder.listFiles()) {
-			YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
-			String name = gearCfg.getString("name");
-			String display = gearCfg.getString("display");
-			Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
-			double price = gearCfg.getDouble("price");
-
-			ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
-			ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
-			ArrayList<String> displayNames = (ArrayList<String>) nameSec.getStringList("name");
-
-			ConfigurationSection duraSec = gearCfg.getConfigurationSection("durability");
-			int duraMinBase = duraSec.getInt("base");
-
-			// Parse enchantments
-			ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
-			ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
-			ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
-			int enchMin = enchSec.getInt("optional-min");
-			int enchMax = enchSec.getInt("optional-max");
-
-			Attributes attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
-
-			ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
-			HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
-			// Load in rarities
-			for (String rarity : this.rarities.keySet()) {
-				ConfigurationSection specificRareSec = rareSec.getConfigurationSection(rarity);
-				if (specificRareSec != null) {
-					rarities.put(rarity,
-							new RarityBonuses(parseAttributes(specificRareSec),
-									specificRareSec.getInt("added-durability"),
-									(ArrayList<String>) specificRareSec.getStringList("prefix")));
-				}
-				else {
-					rarities.put(rarity, new RarityBonuses());
-				}
+		Gear.settings = new HashMap<String, HashMap<Integer, GearConfig>>();
+		loadGearDirectory(gearFolder);
+	}
+	
+	private void loadGearDirectory(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadGearDirectory(file);
 			}
+			else {
+				YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
+				String name = gearCfg.getString("name");
+				String display = gearCfg.getString("display");
+				String title = gearCfg.getString("title");
+				Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
+				double price = gearCfg.getDouble("price");
+				int version = gearCfg.getInt("version");
 
-			ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
-			if (overrideSec != null) {
+				ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
+				ArrayList<String> prefixes = (ArrayList<String>) nameSec.getStringList("prefix");
+				ArrayList<String> displayNames = (ArrayList<String>) nameSec.getStringList("name");
+
+				ConfigurationSection duraSec = gearCfg.getConfigurationSection("durability");
+				int duraMinBase = duraSec.getInt("base");
+
+				// Parse enchantments
+				ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
+				ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
+				ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
+				int enchMin = enchSec.getInt("optional-min");
+				int enchMax = enchSec.getInt("optional-max");
+
+				HashMap<String, AttributeSet> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
+				
+				// Augments
+				ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
+				ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
+				
+				
+				ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
+				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
+				// Load in rarities
+				for (String rarity : this.rarities.keySet()) {
+					ConfigurationSection specificRareSec = null;
+					if (rareSec != null) {
+						specificRareSec = rareSec.getConfigurationSection(rarity);
+					}
+					if (specificRareSec != null) {
+						rarities.put(rarity,
+								new RarityBonuses(parseAttributes(specificRareSec),
+										specificRareSec.getInt("added-durability"),
+										(ArrayList<String>) specificRareSec.getStringList("prefix"),
+										specificRareSec.getString("material"),
+										specificRareSec.getInt("slots-max"),
+										specificRareSec.getInt("starting-slots-base"),
+										specificRareSec.getInt("starting-slots-range")));
+					}
+					else {
+						rarities.put(rarity, new RarityBonuses());
+					}
+				}
+				
+				// Slots
+				int slotsMax = gearCfg.getInt("slots-max");
+				int startingSlotsBase = gearCfg.getInt("starting-slots-base");
+				int startingSlotsRange = gearCfg.getInt("starting-slots-range");
+				
+				// Lore
+				ArrayList<String> lore = (ArrayList<String>) gearCfg.getStringList("lore");
+
+				ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
-				for (int i = 0; i <= this.lvlMax; i += this.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, display, material, prefixes, displayNames,
-							duraMinBase, reqEnchList, optEnchList, enchMin, enchMax, attributes, rarities, price);
+				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
+					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
+							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
+							slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
 
-					// Level override
-					ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
-					if (lvlOverride != null) {
-						overrideLevel(i, gearConf, lvlOverride);
+					if (overrideSec != null) {
+						// Level override
+						ConfigurationSection lvlOverride = overrideSec.getConfigurationSection(i + "");
+						if (lvlOverride != null) {
+							overrideLevel(i, gearConf, lvlOverride);
+						}
 					}
 					gearLvli.put(i, gearConf);
 				}
@@ -212,89 +261,34 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		return enchantments;
 	}
 
-	private Attributes parseAttributes(ConfigurationSection sec) {
-		int strBase = sec.getInt("str-base");
-		int strLvl = sec.getInt("str-per-lvl");
-		int strRange = sec.getInt("str-range");
-		int strRounded = sec.getInt("str-rounded", 1);
-		int dexBase = sec.getInt("dex-base");
-		int dexLvl = sec.getInt("dex-per-lvl");
-		int dexRange = sec.getInt("dex-range");
-		int dexRounded = sec.getInt("dex-rounded", 1);
-		int intBase = sec.getInt("int-base");
-		int intLvl = sec.getInt("int-per-lvl");
-		int intRange = sec.getInt("int-range");
-		int intRounded = sec.getInt("int-rounded", 1);
-		int sprBase = sec.getInt("spr-base");
-		int sprLvl = sec.getInt("spr-per-lvl");
-		int sprRange = sec.getInt("spr-range");
-		int sprRounded = sec.getInt("spr-rounded", 1);
-		int prcBase = sec.getInt("prc-base");
-		int prcLvl = sec.getInt("prc-per-lvl");
-		int prcRange = sec.getInt("prc-range");
-		int prcRounded = sec.getInt("prc-rounded", 1);
-		int endBase = sec.getInt("end-base");
-		int endLvl = sec.getInt("end-per-lvl");
-		int endRange = sec.getInt("end-range");
-		int endRounded = sec.getInt("end-rounded", 1);
-		int vitBase = sec.getInt("vit-base");
-		int vitLvl = sec.getInt("vit-per-lvl");
-		int vitRange = sec.getInt("vit-range");
-		int vitRounded = sec.getInt("vit-rounded", 1);
-		int rgnBase = sec.getInt("rgn-base");
-		int rgnLvl = sec.getInt("rgn-per-lvl");
-		int rgnRange = sec.getInt("rgn-range");
-		int rgnRounded = sec.getInt("rgn-rounded", 1);
+	private HashMap<String, AttributeSet> parseAttributes(ConfigurationSection sec) {
+		HashMap<String, AttributeSet> attrs = new HashMap<String, AttributeSet>(attributeOrder.size());
+		for (String key : Gear.attributeOrder.keySet()) {
+			int base = sec.getInt(key + "-base", 0);
+			int scale = sec.getInt(key + "-per-lvl", 0);
+			int range = sec.getInt(key + "-range", 0);
+			int rounded = sec.getInt(key + "-rounded", 0);
+			attrs.put(key, new AttributeSet(key, Gear.attributeOrder.get(key), base, scale, range, rounded));
+		}
 
-		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase,
-				intLvl, intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange,
-				prcRounded, endBase, endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase,
-				rgnLvl, rgnRange, rgnRounded);
+		return attrs;
 	}
 
-	private Attributes overrideAttributes(Attributes current, ConfigurationSection sec) {
-		int strBase = sec.getInt("str-base", -1) != -1 ? sec.getInt("str-base", -1) : current.strBase;
-		int strLvl = sec.getInt("str-per-lvl", -1) != -1 ? sec.getInt("str-per-lvl", -1) : current.strPerLvl;
-		int strRange = sec.getInt("str-range", -1) != -1 ? sec.getInt("str-range", -1) : current.strRange;
-		int strRounded = sec.getInt("str-rounded", -1) != -1 ? sec.getInt("str-rounded", -1) : current.strRounded;
-		int dexBase = sec.getInt("dex-base", -1) != -1 ? sec.getInt("dex-base", -1) : current.dexBase;
-		int dexLvl = sec.getInt("dex-per-lvl", -1) != -1 ? sec.getInt("dex-per-lvl", -1) : current.dexPerLvl;
-		int dexRange = sec.getInt("dex-range", -1) != -1 ? sec.getInt("dex-range", -1) : current.dexRange;
-		int dexRounded = sec.getInt("dex-rounded", -1) != -1 ? sec.getInt("dex-rounded", -1) : current.dexRounded;
-		int intBase = sec.getInt("int-base", -1) != -1 ? sec.getInt("int-base", -1) : current.intBase;
-		int intLvl = sec.getInt("int-per-lvl", -1) != -1 ? sec.getInt("int-per-lvl", -1) : current.intPerLvl;
-		int intRange = sec.getInt("int-range", -1) != -1 ? sec.getInt("int-range", -1) : current.intRange;
-		int intRounded = sec.getInt("int-rounded", -1) != -1 ? sec.getInt("int-rounded", -1) : current.intRounded;
-		int sprBase = sec.getInt("spr-base", -1) != -1 ? sec.getInt("spr-base", -1) : current.sprBase;
-		int sprLvl = sec.getInt("spr-per-lvl", -1) != -1 ? sec.getInt("spr-per-lvl", -1) : current.sprPerLvl;
-		int sprRange = sec.getInt("spr-range", -1) != -1 ? sec.getInt("spr-range", -1) : current.sprRange;
-		int sprRounded = sec.getInt("spr-rounded", -1) != -1 ? sec.getInt("spr-rounded", -1) : current.sprRounded;
-		int prcBase = sec.getInt("prc-base", -1) != -1 ? sec.getInt("prc-base", -1) : current.prcBase;
-		int prcLvl = sec.getInt("prc-per-lvl", -1) != -1 ? sec.getInt("prc-per-lvl", -1) : current.prcPerLvl;
-		int prcRange = sec.getInt("prc-range", -1) != -1 ? sec.getInt("prc-range", -1) : current.prcRange;
-		int prcRounded = sec.getInt("prc-rounded", -1) != -1 ? sec.getInt("prc-rounded", -1) : current.prcRounded;
-		int endBase = sec.getInt("end-base", -1) != -1 ? sec.getInt("end-base", -1) : current.endBase;
-		int endLvl = sec.getInt("end-per-lvl", -1) != -1 ? sec.getInt("end-per-lvl", -1) : current.endPerLvl;
-		int endRange = sec.getInt("end-range", -1) != -1 ? sec.getInt("end-range", -1) : current.endRange;
-		int endRounded = sec.getInt("end-rounded", -1) != -1 ? sec.getInt("end-rounded", -1) : current.endRounded;
-		int vitBase = sec.getInt("vit-base", -1) != -1 ? sec.getInt("vit-base", -1) : current.vitBase;
-		int vitLvl = sec.getInt("vit-per-lvl", -1) != -1 ? sec.getInt("vit-per-lvl", -1) : current.vitPerLvl;
-		int vitRange = sec.getInt("vit-range", -1) != -1 ? sec.getInt("vit-range", -1) : current.vitRange;
-		int vitRounded = sec.getInt("vit-rounded", -1) != -1 ? sec.getInt("vit-rounded", -1) : current.vitRounded;
-		int rgnBase = sec.getInt("rgn-base", -1) != -1 ? sec.getInt("rgn-base", -1) : current.rgnBase;
-		int rgnLvl = sec.getInt("rgn-per-lvl", -1) != -1 ? sec.getInt("rgn-per-lvl", -1) : current.rgnPerLvl;
-		int rgnRange = sec.getInt("rgn-range", -1) != -1 ? sec.getInt("rgn-range", -1) : current.rgnRange;
-		int rgnRounded = sec.getInt("rgn-rounded", -1) != -1 ? sec.getInt("rgn-rounded", -1) : current.rgnRounded;
-
-		return new Attributes(strBase, strLvl, strRange, strRounded, dexBase, dexLvl, dexRange, dexRounded, intBase,
-				intLvl, intRange, intRounded, sprBase, sprLvl, sprRange, sprRounded, prcBase, prcLvl, prcRange,
-				prcRounded, endBase, endLvl, endRange, endRounded, vitBase, vitLvl, vitRange, vitRounded, rgnBase,
-				rgnLvl, rgnRange, rgnRounded);
+	private HashMap<String, AttributeSet> overrideAttributes(HashMap<String, AttributeSet> current, ConfigurationSection sec) {
+		HashMap<String, AttributeSet> attrs = new HashMap<String, AttributeSet>(attributeOrder.size());
+		for (String key : Gear.attributeOrder.keySet()) {
+			int base = sec.getInt(key + "-base", current.get(key).getBase());
+			int scale = sec.getInt(key + "-per-lvl", current.get(key).getScale());
+			int range = sec.getInt(key + "-range", current.get(key).getRange());
+			int rounded = sec.getInt(key + "-rounded", current.get(key).getRounded());
+			attrs.put(key, new AttributeSet(key, Gear.attributeOrder.get(key), base, scale, range, rounded));
+		}
+		return attrs;
 	}
 
 	private RarityBonuses overrideRarities(RarityBonuses current, ConfigurationSection sec) {
-		Attributes currAttr = current.attributes;
-		Attributes newAttr = overrideAttributes(currAttr, sec);
+		HashMap<String, AttributeSet> currAttr = current.attributes;
+		HashMap<String, AttributeSet> newAttr = overrideAttributes(currAttr, sec);
 		int addedDura = sec.getInt("added-durability", -1) != -1 ? sec.getInt("added-durability", -1)
 				: current.duraBonus;
 		ArrayList<String> currPrefixes = current.prefixes;
@@ -303,8 +297,24 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		if (newPrefixes != null) {
 			changedPrefixes = currPrefixes.equals(newPrefixes) ? currPrefixes : newPrefixes;
 		}
-
-		return new RarityBonuses(newAttr, addedDura, changedPrefixes);
+		String currMaterial = current.material.toString();
+		if (sec.getString("material") != null) {
+			currMaterial = sec.getString("material");
+		}
+		int changedSlotsMax = current.slotsMax;
+		if (sec.getInt("slots-max", -1) != -1) {
+			changedSlotsMax = sec.getInt("slots-max");
+		}
+		int changedStartingSlotsBase = current.startingSlotsBase;
+		if (sec.getInt("starting-slots-base", -1) != -1) {
+			changedSlotsMax = sec.getInt("starting-slots-base");
+		}
+		int changedStartingSlotsRange = current.startingSlotsRange;
+		if (sec.getInt("starting-slots-range", -1) != -1) {
+			changedSlotsMax = sec.getInt("starting-slots-range");
+		}
+		return new RarityBonuses(newAttr, addedDura, changedPrefixes, currMaterial,
+				changedSlotsMax, changedStartingSlotsBase, changedStartingSlotsRange);
 	}
 
 	private void overrideLevel(int level, GearConfig conf, ConfigurationSection sec) {
@@ -357,6 +367,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (enchMax != -1) {
 				conf.enchantmentMax = enchMax;
 			}
+		}
+		
+		// override augments
+		ConfigurationSection augSec = sec.getConfigurationSection("augments");
+		if (augSec != null) {
+			conf.requiredAugments = (ArrayList<String>) augSec.getStringList("required");
 		}
 
 		ConfigurationSection attrSec = sec.getConfigurationSection("attributes");
@@ -425,20 +441,17 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
 		if (item == null) return;
-		if (item.getEnchantmentLevel(Enchantment.QUICK_CHARGE) > 4) {
-			item.addUnsafeEnchantment(Enchantment.QUICK_CHARGE, 4);
-		}
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (isQuestGear(item)) {
-				e.setCancelled(true);
+				e.setUseItemInHand(Result.DENY);
 				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 			}
 		}
 		else {
 			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if (isArmor(item)) {
-					e.setCancelled(true);
+					e.setUseItemInHand(Result.DENY);
 					p.sendMessage("§c[§4§lMLMC§4] §cEquipping armor via right click is disabled in quest worlds!");
 				}
 			}
@@ -453,7 +466,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				Player p = (Player) e.getDamager();
 				ItemStack[] weapons = { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand() };
 				for (ItemStack item : weapons) {
-					if (isQuestGear(item)) {
+					if (item != null && !item.getType().isAir() && isQuestGear(item)) {
 						e.setCancelled(true);
 						p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
 						break;
@@ -545,34 +558,21 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public boolean isQuestGear(ItemStack item) {
+		if (new NBTItem(item).hasKey("gear")) {
+			return true;
+		}
 		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Tier") && !item.getType().equals(Material.PLAYER_HEAD);
 	}
 	
 	public boolean isArmor(ItemStack item) {
 		if (item == null) return false;
-		Material mat = item.getType();
+		String mat = item.getType().name();
 		return
-				mat.equals(Material.LEATHER_HELMET) ||
-				mat.equals(Material.GOLDEN_HELMET) ||
-				mat.equals(Material.IRON_HELMET) ||
-				mat.equals(Material.DIAMOND_HELMET) ||
-				mat.equals(Material.NETHERITE_HELMET) ||
-				mat.equals(Material.LEATHER_CHESTPLATE) ||
-				mat.equals(Material.GOLDEN_CHESTPLATE) ||
-				mat.equals(Material.IRON_CHESTPLATE) ||
-				mat.equals(Material.DIAMOND_CHESTPLATE) ||
-				mat.equals(Material.NETHERITE_CHESTPLATE) ||
-				mat.equals(Material.LEATHER_LEGGINGS) ||
-				mat.equals(Material.GOLDEN_LEGGINGS) ||
-				mat.equals(Material.IRON_LEGGINGS) ||
-				mat.equals(Material.DIAMOND_LEGGINGS) ||
-				mat.equals(Material.NETHERITE_LEGGINGS) ||
-				mat.equals(Material.LEATHER_BOOTS) ||
-				mat.equals(Material.GOLDEN_BOOTS) ||
-				mat.equals(Material.IRON_BOOTS) ||
-				mat.equals(Material.DIAMOND_BOOTS) ||
-				mat.equals(Material.NETHERITE_BOOTS);
+				mat.contains("HELMET") ||
+				mat.contains("CHESTPLATE") ||
+				mat.contains("LEGGINGS") ||
+				mat.contains("BOOTS");
 	}
 
 	@EventHandler
@@ -622,5 +622,9 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public Economy getEcon() {
 		return econ;
+	}
+	
+	public HashMap<String, HashMap<Integer, GearConfig>> getSettings() {
+		return settings;
 	}
 }

@@ -55,10 +55,10 @@ public class NeoProfessionsPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		
 		if (args.length != 2) return "Invalid placeholder";
-		if (!plugin.cManager.containsKey(args[0])) return "Invalid placeholder";
+		if (!Professions.getCurrencyManager().containsKey(args[0])) return "Invalid placeholder";
 		if (!StringUtils.isNumeric(args[1])) return "Invalid placeholder";
 		int lvl = Integer.parseInt(args[1]);
 		if (!(lvl % 5 == 0 && lvl >= 5 && lvl <= 60)) return "Invalid placeholder";
-		return "" + plugin.cManager.get(p, args[0], lvl);
+		return "" + Professions.getCurrencyManager().get(p, args[0], lvl);
 	}
 }

@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -37,8 +38,8 @@ public class FoodConsumable extends Consumable {
 	long cooldown = 0;
 	boolean ignoreGcd = false;
 	
-	public FoodConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		super(main, name, sounds, lore);
+	public FoodConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+		super(main, name, sounds, lore, nbt);
 	}
 
 	public int getHunger() {
@@ -49,7 +50,8 @@ public class FoodConsumable extends Consumable {
 		return this.saturation;
 	}
 
-	public boolean isSimilar(ItemMeta meta) {
+	public boolean isSimilar(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
 		if (!getLore().isEmpty()) {
 			if (!meta.hasLore()) {
 				return false;

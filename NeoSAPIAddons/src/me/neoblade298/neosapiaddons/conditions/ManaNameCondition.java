@@ -30,10 +30,10 @@ public class ManaNameCondition extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		String mananame = settings.getString("mananame");
 		if (!(caster instanceof Player)) return false;
-		return SkillAPI.getPlayerData((Player) caster).getClass("class").getData().getManaName().endsWith(mananame) && executeChildren(caster, lvl, targets);
+		return SkillAPI.getPlayerData((Player) caster).getClass("class").getData().getManaName().endsWith(mananame) && executeChildren(caster, lvl, targets, critChance);
 	}
 
 	@Override

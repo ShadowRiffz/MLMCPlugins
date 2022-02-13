@@ -28,7 +28,6 @@ public class Handler implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = (Player) sender;
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
-		short durability = itemInHand.getDurability();
 		if (cmd.getName().equalsIgnoreCase("disreload")) {
 			if (player.hasPermission("disenchant.reload")) {
 				player.sendMessage("§3[Disenchant]§f Reloaded Config File!");

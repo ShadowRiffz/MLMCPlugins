@@ -20,7 +20,7 @@ public class SetEffect {
 	public void applyEffects(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
 		if (this.flag != null) {
-			FlagManager.addFlag(p, this.flag, -1);
+			FlagManager.addFlag(p, p, this.flag, -1);
 		}
 		for (Entry<String, Integer> entry : attributes.entrySet()) {
 			data.addBonusAttributes(entry.getKey(), entry.getValue());

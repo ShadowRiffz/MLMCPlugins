@@ -1,22 +1,25 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.NeoConsumables;
 
 public class TokenConsumable extends Consumable {
 	ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 	
-	public TokenConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore) {
-		super(main, name, sounds, lore);
+	public TokenConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+		super(main, name, sounds, lore, nbt);
 	}
 
-	public boolean isSimilar(ItemMeta meta) {
+	public boolean isSimilar(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
 		if (!getLore().isEmpty()) {
 			if (!meta.hasLore()) {
 				return false;

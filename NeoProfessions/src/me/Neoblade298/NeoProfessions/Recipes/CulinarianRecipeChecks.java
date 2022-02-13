@@ -6,8 +6,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
-import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.DrinksRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.IngredientRecipeItems;
 
 public class CulinarianRecipeChecks {
 

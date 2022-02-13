@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import me.neoblade298.neoresearch.inventories.ResearchAttributesInventory;
 
 
 public class Commands implements CommandExecutor{
@@ -410,6 +411,11 @@ public class Commands implements CommandExecutor{
 			// Get rid of perms
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + p.getName() + " collections.");
 			p.sendMessage("§c[§4§lMLMC§4] §7Conversion complete!");
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
+			Player p = (Player) sender;
+			new ResearchAttributesInventory(p, main.playerAttrs.get(p.getUniqueId()));
 			return true;
 		}
 		return false;

@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,8 +24,8 @@ public class HungerController implements Listener {
 	// How many seconds it takes for food to decrease by 1
 	final int FOOD_SCALE = 10;
 	
-	private Main main;
-	public HungerController(Main main) {
+	private SAPIAddons main;
+	public HungerController(SAPIAddons main) {
 		this.main = main;
 		sprintingPlayers = new HashSet<Player>();
 		hunger = new HashMap<Player, Integer>();
@@ -115,5 +116,16 @@ public class HungerController implements Listener {
 		else {
 			sprintingPlayers.remove(p);
 		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+		if (main.isQuestWorld(p.getWorld())) {
+			if (p.isSprinting() && p.getGameMode().equals(GameMode.SURVIVAL)) {
+				sprintingPlayers.remove(p);
+			}
+		}
+		hunger.put(p, 20 * FOOD_SCALE);
 	}
 }

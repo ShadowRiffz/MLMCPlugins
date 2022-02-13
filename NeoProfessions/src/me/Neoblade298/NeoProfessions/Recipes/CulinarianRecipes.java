@@ -8,8 +8,8 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Items.DrinksRecipeItems;
-import me.Neoblade298.NeoProfessions.Items.IngredientRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.DrinksRecipeItems;
+import me.Neoblade298.NeoProfessions.Legacy.Items.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CulinarianRecipes {

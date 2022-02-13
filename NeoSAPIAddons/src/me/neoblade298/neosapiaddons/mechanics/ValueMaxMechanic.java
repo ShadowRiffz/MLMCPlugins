@@ -43,7 +43,7 @@ public class ValueMaxMechanic extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		String[] attrs = settings.getString("attributes").split(":");
 		double multiplier = settings.getDouble("multiplier");
 		Player p = (Player) caster;

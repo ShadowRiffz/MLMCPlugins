@@ -36,11 +36,11 @@ public class AttackChargeCondition extends CustomEffectComponent {
 	}
 
 	@Override
-	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets) {
+	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		double min = settings.getDouble("min");
 		double max = settings.getDouble("max");
 		float charge = MythicMobs.inst().getVolatileCodeHandler().getItemRecharge((Player) caster);
-		return min <= charge && charge <= max && executeChildren(caster, lvl, targets);
+		return min <= charge && charge <= max && executeChildren(caster, lvl, targets, critChance);
 	}
 
 	@Override

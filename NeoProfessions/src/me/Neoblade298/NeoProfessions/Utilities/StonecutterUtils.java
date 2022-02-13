@@ -4,19 +4,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class StonecutterUtils {
 
-	public boolean isWeaponAttribute(String attr) {
-		return (attr.equalsIgnoreCase("Strength") || attr.equalsIgnoreCase("Dexterity")
-				|| attr.equalsIgnoreCase("Intelligence") || attr.equalsIgnoreCase("Spirit")
-				|| attr.equalsIgnoreCase("Perception"));
-	}
-
-	public boolean isArmorAttribute(String attr) {
-		return (attr.equalsIgnoreCase("Strength") || attr.equalsIgnoreCase("Dexterity")
-				|| attr.equalsIgnoreCase("Intelligence") || attr.equalsIgnoreCase("Spirit")
-				|| attr.equalsIgnoreCase("Perception") || attr.equalsIgnoreCase("Endurance")
-				|| attr.equalsIgnoreCase("Vitality"));
-	}
-
 	public boolean isEssence(ItemStack item) {
 		return (item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Essence"));

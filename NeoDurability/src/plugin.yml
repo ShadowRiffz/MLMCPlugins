@@ -1,6 +1,0 @@
- name: NeoDurability
- version: 1.0
- api-version: 1.14
- description: Controls custom durability
- author: Neoblade298
- main: me.Neoblade298.NeoDurability.Main

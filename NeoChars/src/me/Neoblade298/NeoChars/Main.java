@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoChars;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -53,10 +54,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		String attr = "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e"
 				+ pData.getAttribute("Dexterity") + " &cDEX&7 | &e" + pData.getAttribute("Intelligence")
-				+ " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Perception")
-				+ " &cPRC&7 | &e" + pData.getAttribute("Endurance") + " &cEND&7 | &e" + pData.getAttribute("Vitality");
+				+ " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Endurance") +
+				" &cEND&7";
 		if (viewed instanceof Player) {
-			attr += " &cVIT&7 | &e" + (int) ((Player) viewed).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() + " &cHP";
+			attr += " | &e" + (int) ((Player) viewed).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() + " &cHP";
 		}
 		sendMessage(recipient, attr);
 				
@@ -89,6 +90,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	private void sendMessage(CommandSender s, String m) {
-		s.sendMessage(m.replaceAll("&", "§"));
+		s.sendMessage(ChatColor.translateAlternateColorCodes('&', m));
 	}
 }

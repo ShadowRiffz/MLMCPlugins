@@ -52,16 +52,16 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 	
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
-		if (p == null) return "Loading...";
+		if (p == null) return "N/A";
 		DecimalFormat df = new DecimalFormat("0");
 		DecimalFormat df1k = new DecimalFormat("0.00k");
 		DecimalFormat df10k = new DecimalFormat("00.0k");
 		
 		String args[] = identifier.split("_");
-		if (!SkillAPI.isLoaded(p)) return "Loading...";
+		if (!SkillAPI.isLoaded(p)) return "N/A";
 		
 		if (args[0].equalsIgnoreCase("health")) {
-			String placeholder = "Loading...";
+			String placeholder = "N/A";
 			double health = p.getHealth();
 			placeholder = "";
 			// Check if cursed
@@ -84,7 +84,7 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 			return placeholder;
 		}
 		else if (args[0].equalsIgnoreCase("maxhealth")) {
-			String placeholder = "Loading...";
+			String placeholder = "N/A";
 			double health = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			if (health >= 10000) {
 				placeholder = df10k.format(health / 1000);
@@ -102,7 +102,7 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 			if (pClass != null) {
 				return pClass.getData().getManaName();
 			}
-			return "Loading...";
+			return "N/A";
 		}
 		else if (args[0].equalsIgnoreCase("resource")) {
 			return df.format(SkillAPI.getPlayerData(p).getMana());

@@ -1,0 +1,33 @@
+skill-points:
+  tier-one:
+    base-lvl: 1
+    max-lvl: 10
+    base-points: 0
+    points-per-lvl: 2
+  tier-two:
+    base-lvl: 10
+    max-lvl: 30
+    base-points: 0
+    points-per-lvl: 3
+  tier-three:
+    base-lvl: 30
+    max-lvl: 60
+    base-points: 0
+    points-per-lvl: 3
+    
+attribute-points:
+  tier-one:
+    base-lvl: 1
+    max-lvl: 10
+    base-points: 0
+    points-per-lvl: 1
+  tier-two:
+    base-lvl: 10
+    max-lvl: 30
+    base-points: 10
+    points-per-lvl: 3
+  tier-three:
+    base-lvl: 30
+    max-lvl: 60
+    base-points: 100
+    points-per-lvl: 5
