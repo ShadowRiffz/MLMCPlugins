@@ -244,7 +244,7 @@ public class AugmentManager implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onDamage(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player && e.getEntity() instanceof LivingEntity) {
+		if (e.getDamager() instanceof Player && e.getEntity() instanceof LivingEntity && e.getDamager() != e.getEntity()) {
 			Player p = (Player) e.getDamager();
 			double multiplier = 1;
 			double flat = 0;
@@ -265,7 +265,7 @@ public class AugmentManager implements Listener {
 			if (damage < 0) damage = 0;
 			e.setDamage(damage);
 		}
-		else if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player) {
+		else if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player && e.getDamager() != e.getEntity()) {
 			Player p = (Player) e.getEntity();
 			double multiplier = 1;
 			double flat = 0;
