@@ -15,12 +15,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class RepairInventory implements ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
+	private int level;
 	private static final int REPAIR_ICON = 8;
 	private static final int MENU_MODEL = 5000;
 	private static final HashMap<Integer, Integer> goldCost = new HashMap<Integer, Integer>();
@@ -46,8 +48,9 @@ public class RepairInventory implements ProfessionInventory {
 		this.p = p;
 		this.item = p.getInventory().getItemInMainHand();
 		p.getInventory().removeItem(item);
-		int level = new NBTItem(item).getInteger("level");
+		level = new NBTItem(item).getInteger("level");
 		inv = Bukkit.createInventory(p, 9, "§cRepair this item?");
+		
 		ItemStack[] contents = inv.getContents();
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
@@ -79,7 +82,22 @@ public class RepairInventory implements ProfessionInventory {
 			p.closeInventory();
 		}
 		else if (e.getRawSlot() == REPAIR_ICON) {
+			if (!Professions.econ.has(p, goldCost.get(level))) {
+				Util.sendMessage(p, "&cYou don't have enough money!");
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+				p.closeInventory();
+				return;
+			}
+			else if (!Professions.cm.hasEnough(p, "essence", level, essenceCost)) {
+				Util.sendMessage(p, "&cYou don't have enough essence!");
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+				p.closeInventory();
+				return;
+			}
+			
 			DurabilityListener.fullRepairItem(p, item);
+			Professions.econ.withdrawPlayer(p, goldCost.get(level));
+			Professions.cm.add(p, "essence", level, essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}

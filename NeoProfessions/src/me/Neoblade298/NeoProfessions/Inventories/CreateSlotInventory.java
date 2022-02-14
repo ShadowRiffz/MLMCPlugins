@@ -17,6 +17,8 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class CreateSlotInventory implements ProfessionInventory {
 	private final Inventory inv;
@@ -88,6 +90,19 @@ public class CreateSlotInventory implements ProfessionInventory {
 			p.closeInventory();
 		}
 		else if (e.getRawSlot() == CREATESLOT_ICON) {
+			if (!Professions.econ.has(p, goldCost)) {
+				Util.sendMessage(p, "&cYou don't have enough money!");
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+				p.closeInventory();
+				return;
+			}
+			else if (!Professions.cm.hasEnough(p, "essence", level, essenceCost)) {
+				Util.sendMessage(p, "&cYou don't have enough essence!");
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+				p.closeInventory();
+				return;
+			}
+			
 			if (!ProfessionsMethods.createSlot(p, item)) {
 				e.setCancelled(true);
 				p.closeInventory();
