@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.util.FlagManager;
+
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
@@ -30,6 +32,11 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	}
 
 	@Override
+	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
+		FlagManager.addFlag(user, user, "aug_sentinel", 20);
+	}
+
+	@Override
 	public double getDamageDealtFlat(LivingEntity user) {
 		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
 	}
@@ -42,7 +49,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.95;
+		return percentage > 0.95 && FlagManager.hasFlag(user, "aug_sentinel");
 	}
 
 	public ItemStack getItem(Player user) {
@@ -51,6 +58,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + getDamageDealtFlat(user) + ", §7which");
 		lore.add("§7is §f" + formatPercentage(this.maxHealthMod) + "% §7of your max health.");
+		lore.add("§f2 §7second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
