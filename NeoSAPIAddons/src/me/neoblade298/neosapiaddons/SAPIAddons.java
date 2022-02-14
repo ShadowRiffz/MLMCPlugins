@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.SkillPlugin;
 import com.sucy.skill.api.enums.ExpSource;
+import com.sucy.skill.api.event.PlayerAccountChangeEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerClass;
@@ -152,9 +153,8 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 		}
 	}
 	
-	@EventHandler
-	public void onPlayerLoad(PlayerLoadCompleteEvent e) {
-		PlayerData data = SkillAPI.getPlayerData(e.getPlayer());
+	public static void correctStats(PlayerData data) {
+		Player p = data.getPlayer();
 		if (data == null || data.getClass("class") == null) return;
 		int max = data.getClass("class").getData().getMaxLevel();
 		
@@ -195,11 +195,11 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				}
 			}
 			pc.setPoints(pc.getPoints() - (currSP - expectedSP));
-			e.getPlayer().sendMessage("§cNote: /skills points have been adjusted lower. You may want to double check them.");
+			p.sendMessage("§cNote: /skills points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currSP < expectedSP) {
 			data.givePoints(expectedSP - currSP, ExpSource.MOB);
-			e.getPlayer().sendMessage("§cNote: /skills points have been adjusted higher. You may want to double check them.");
+			p.sendMessage("§cNote: /skills points have been adjusted higher. You may want to double check them.");
 		}
 		
 		if (currAP > expectedAP) {
@@ -210,12 +210,22 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				data.resetAttribs();
 				data.setAttribPoints(expectedAP);
 			}
-			e.getPlayer().sendMessage("§cNote: /attr points have been adjusted lower. You may want to double check them.");
+			p.sendMessage("§cNote: /attr points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currAP < expectedAP){
 			data.setAttribPoints(data.getAttributePoints() + (expectedAP - currAP));
-			e.getPlayer().sendMessage("§cNote: /attr points have been adjusted higher. You may want to double check them.");
+			p.sendMessage("§cNote: /attr points have been adjusted higher. You may want to double check them.");
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerLoad(PlayerLoadCompleteEvent e) {
+		correctStats(SkillAPI.getPlayerData(e.getPlayer()));
+	}
+	
+	@EventHandler
+	public void onPlayerSwitchAccount(PlayerAccountChangeEvent e) {
+		correctStats(e.getNewAccount());
 	}
 
 	@Override

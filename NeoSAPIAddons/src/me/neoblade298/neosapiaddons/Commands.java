@@ -22,6 +22,7 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args.length == 0) {
+				sender.sendMessage("§8neosapiaddons.use");
 				sender.sendMessage("§c/nsapi takexp [player] [exp] - remove class exp");
 				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
 				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
@@ -29,6 +30,7 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§c/nsapi profess [player] [class] - safely profess player to next tier");
 				sender.sendMessage("§c/nsapi reset [player] - reset player to previous tier");
 				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
+				sender.sendMessage("§c/nsapi update [player] - Fixes AP and SP");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("takexp") && (StringUtils.isNumeric(args[2]))) {
@@ -74,6 +76,10 @@ public class Commands implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("attr")) {
 	            Player p = (Player) sender;
                 sender.sendMessage("§4[§c§lMLMC§4] §7Attribute has: " + SkillAPI.getPlayerData(p).getAttribute(args[1]) + ".");
+                return true;
+			}
+			else if (args[0].equalsIgnoreCase("update")) {
+	            SAPIAddons.correctStats(SkillAPI.getPlayerData((Player) sender));
                 return true;
 			}
 
