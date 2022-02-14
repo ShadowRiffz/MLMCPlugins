@@ -99,12 +99,13 @@ public class CurrencyManager {
 	}
 	
 	public void add(Player p, String type, int level, int amount) {
+		// Standardize the level
+		level -= (level % 5);
+		
 		if (level > 60 || level < 5) {
 			return;
 		}
-
-		// Standardize the level
-		level -= (level % 5);
+		
 		if (amount < 0) {
 			subtract(p, type, level, -amount);
 			return;
