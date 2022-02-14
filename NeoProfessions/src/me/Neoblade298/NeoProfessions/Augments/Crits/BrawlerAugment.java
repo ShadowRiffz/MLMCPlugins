@@ -62,7 +62,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Upon critical hit, decrease damage taken");
-		lore.add("§7by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7.");
+		lore.add("§7by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7 for §f3s§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
