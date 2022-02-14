@@ -512,7 +512,7 @@ public class Main extends JavaPlugin implements Listener {
 								returnToMain(fighter);
 							}
 						}
-						inBoss.remove(boss);
+						fighters.remove();
 					}
 				};
 				sendAllBack.runTaskLater(main, 20L);
