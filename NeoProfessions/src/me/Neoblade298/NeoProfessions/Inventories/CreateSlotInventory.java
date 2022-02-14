@@ -18,7 +18,6 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class CreateSlotInventory implements ProfessionInventory {
 	private final Inventory inv;
