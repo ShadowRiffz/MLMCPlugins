@@ -58,7 +58,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, String> typeConverter;
 	public static Random gen = new Random();
 	private static Economy econ = null;
-	
+
 	static {
 		attributeOrder.put("str", "Strength +$amt$");
 		attributeOrder.put("dex", "Dexterity +$amt$");
@@ -163,7 +163,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Gear.settings = new HashMap<String, HashMap<Integer, GearConfig>>();
 		loadGearDirectory(gearFolder);
 	}
-	
+
 	private void loadGearDirectory(File dir) {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
@@ -187,18 +187,20 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 				// Parse enchantments
 				ConfigurationSection enchSec = gearCfg.getConfigurationSection("enchantments");
-				ArrayList<Enchant> reqEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("required"));
-				ArrayList<Enchant> optEnchList = parseEnchantments((ArrayList<String>) enchSec.getStringList("optional"));
+				ArrayList<Enchant> reqEnchList = parseEnchantments(
+						(ArrayList<String>) enchSec.getStringList("required"));
+				ArrayList<Enchant> optEnchList = parseEnchantments(
+						(ArrayList<String>) enchSec.getStringList("optional"));
 				int enchMin = enchSec.getInt("optional-min");
 				int enchMax = enchSec.getInt("optional-max");
 
-				HashMap<String, AttributeSet> attributes = parseAttributes(gearCfg.getConfigurationSection("attributes"));
-				
+				HashMap<String, AttributeSet> attributes = parseAttributes(
+						gearCfg.getConfigurationSection("attributes"));
+
 				// Augments
 				ConfigurationSection augSec = gearCfg.getConfigurationSection("augments");
 				ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
-				
-				
+
 				ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
 				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
 				// Load in rarities
@@ -212,8 +214,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 								new RarityBonuses(parseAttributes(specificRareSec),
 										specificRareSec.getInt("added-durability"),
 										(ArrayList<String>) specificRareSec.getStringList("prefix"),
-										specificRareSec.getString("material"),
-										specificRareSec.getInt("slots-max"),
+										specificRareSec.getString("material"), specificRareSec.getInt("slots-max"),
 										specificRareSec.getInt("starting-slots-base"),
 										specificRareSec.getInt("starting-slots-range")));
 					}
@@ -221,12 +222,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 						rarities.put(rarity, new RarityBonuses());
 					}
 				}
-				
+
 				// Slots
 				int slotsMax = gearCfg.getInt("slots-max");
 				int startingSlotsBase = gearCfg.getInt("starting-slots-base");
 				int startingSlotsRange = gearCfg.getInt("starting-slots-range");
-				
+
 				// Lore
 				ArrayList<String> lore = (ArrayList<String>) gearCfg.getStringList("lore");
 
@@ -234,8 +235,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
 					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
-							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes, rarities,
-							slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
+							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes,
+							rarities, slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
 
 					if (overrideSec != null) {
 						// Level override
@@ -275,7 +276,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		return attrs;
 	}
 
-	private HashMap<String, AttributeSet> overrideAttributes(HashMap<String, AttributeSet> current, ConfigurationSection sec) {
+	private HashMap<String, AttributeSet> overrideAttributes(HashMap<String, AttributeSet> current,
+			ConfigurationSection sec) {
 		HashMap<String, AttributeSet> attrs = new HashMap<String, AttributeSet>(attributeOrder.size());
 		for (String key : Gear.attributeOrder.keySet()) {
 			int base = sec.getInt(key + "-base", current.get(key).getBase());
@@ -314,8 +316,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		if (sec.getInt("starting-slots-range", -1) != -1) {
 			changedSlotsMax = sec.getInt("starting-slots-range");
 		}
-		return new RarityBonuses(newAttr, addedDura, changedPrefixes, currMaterial,
-				changedSlotsMax, changedStartingSlotsBase, changedStartingSlotsRange);
+		return new RarityBonuses(newAttr, addedDura, changedPrefixes, currMaterial, changedSlotsMax,
+				changedStartingSlotsBase, changedStartingSlotsRange);
 	}
 
 	private void overrideLevel(int level, GearConfig conf, ConfigurationSection sec) {
@@ -369,7 +371,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				conf.enchantmentMax = enchMax;
 			}
 		}
-		
+
 		// override augments
 		ConfigurationSection augSec = sec.getConfigurationSection("augments");
 		if (augSec != null) {
@@ -443,7 +445,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
-		if (item == null) return;
+		if (item == null)
+			return;
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (isQuestGear(item)) {
@@ -567,15 +570,13 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Tier") && !item.getType().equals(Material.PLAYER_HEAD);
 	}
-	
+
 	public boolean isArmor(ItemStack item) {
-		if (item == null) return false;
+		if (item == null)
+			return false;
 		String mat = item.getType().name();
-		return
-				mat.contains("HELMET") ||
-				mat.contains("CHESTPLATE") ||
-				mat.contains("LEGGINGS") ||
-				mat.contains("BOOTS");
+		return mat.contains("HELMET") || mat.contains("CHESTPLATE") || mat.contains("LEGGINGS")
+				|| mat.contains("BOOTS");
 	}
 
 	@EventHandler
@@ -607,7 +608,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onTridentThrow(ProjectileLaunchEvent e) {
 		Projectile proj = e.getEntity();
@@ -626,7 +627,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public Economy getEcon() {
 		return econ;
 	}
-	
+
 	public HashMap<String, HashMap<Integer, GearConfig>> getSettings() {
 		return settings;
 	}
