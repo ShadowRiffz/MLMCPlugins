@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -408,10 +409,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
-						System.out.println(AugmentManager.playerAugments.get((Player) sender));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get((Player) sender));
 					}
 					else {
-						System.out.println(AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
 					}
 					return true;
 				}
