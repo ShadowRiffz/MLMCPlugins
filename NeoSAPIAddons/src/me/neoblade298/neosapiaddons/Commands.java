@@ -79,7 +79,12 @@ public class Commands implements CommandExecutor {
                 return true;
 			}
 			else if (args[0].equalsIgnoreCase("update")) {
-	            SAPIAddons.correctStats(SkillAPI.getPlayerData((Player) sender));
+				if (args.length == 0) {
+		            SAPIAddons.correctStats(SkillAPI.getPlayerData((Player) sender));
+				}
+				else {
+		            SAPIAddons.correctStats(SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])));
+				}
                 return true;
 			}
 
