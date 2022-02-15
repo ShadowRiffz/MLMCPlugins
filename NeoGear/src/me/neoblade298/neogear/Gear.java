@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
@@ -422,6 +423,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 						if (inv.firstEmpty() != -1) {
 							inv.addItem(armor[i]);
 							armor[i] = null;
+							p.sendMessage(
+									"§c[§4§lMLMC§4] §cYour quest gear was removed, as it cannot be used in this world!");
 						}
 						else {
 							e.setCancelled(true);
@@ -436,7 +439,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
