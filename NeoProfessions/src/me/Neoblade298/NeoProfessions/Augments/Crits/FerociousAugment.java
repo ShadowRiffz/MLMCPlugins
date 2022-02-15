@@ -19,14 +19,14 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 	public FerociousAugment() {
 		super();
 		this.name = "Ferocious";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
 		this.cdr = 0.1 * (level / 5);
 	}
 
 	public FerociousAugment(int level) {
 		super(level);
 		this.name = "Ferocious";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
 		this.cdr = 0.1 * (level / 5);
 	}
 	
@@ -39,7 +39,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 
 	@Override
 	public double getCritChanceMult(Player user) {
-		return -0.4 + (0.001 * (level / 5));
+		return -0.2 + (0.001 * (level / 5));
 	}
 
 	@Override

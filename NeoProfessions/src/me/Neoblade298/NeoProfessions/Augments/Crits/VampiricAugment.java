@@ -20,14 +20,14 @@ public class VampiricAugment extends Augment implements ModCritSuccessAugment {
 	public VampiricAugment() {
 		super();
 		this.name = "Vampiric";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
 		this.healthGain = 1.5 * (level / 5);
 	}
 
 	public VampiricAugment(int level) {
 		super(level);
 		this.name = "Vampiric";
-		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK});
+		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
 		this.healthGain = 1.5 * (level / 5);
 	}
 	
