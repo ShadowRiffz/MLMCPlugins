@@ -20,8 +20,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.event.PlayerSkillCastSuccessEvent;
-import com.sucy.skill.api.event.SkillBuffEvent;
-import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.util.FlagManager;
 
 import de.tr7zw.nbtapi.NBTItem;
