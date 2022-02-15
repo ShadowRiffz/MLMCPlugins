@@ -18,6 +18,8 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.sucy.skill.api.event.PlayerSkillCastSuccessEvent;
 import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.util.FlagManager;
@@ -41,6 +43,9 @@ public class DurabilityListener implements Listener {
 	public void onDamageMelee(EntityDamageByEntityEvent e) {
 		Entity cause = e.getDamager();
 		Entity target = e.getEntity();
+		if (e.getDamage() <= 4) {
+			return;
+		}
 
 		// Lowers durability of damager
 		if (cause instanceof Player) {
@@ -61,17 +66,8 @@ public class DurabilityListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onSkillHeal(SkillHealEvent e) {
-		if (e.getHealer() instanceof Player) {
-			reduceWeaponDurability((Player) e.getHealer());
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onSkillBuff(SkillBuffEvent e) {
-		if (e.getCaster() instanceof Player) {
-			reduceWeaponDurability((Player) e.getCaster());
-		}
+	public void onSkillCast(PlayerSkillCastSuccessEvent e) {
+		reduceWeaponDurability(e.getPlayer());
 	}
 
 	@EventHandler(ignoreCancelled = true)
