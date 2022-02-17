@@ -75,6 +75,11 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
 			}
 		}
+		else if (args[0].equalsIgnoreCase("display")) {
+			String boss = args[1];
+			String display = plugin.getBossName(boss, p);
+			return display;
+		}
 		// %bosses_partyhealth_1-5%
 		else if (args[0].equalsIgnoreCase("partyhealth")) {
 			ArrayList<String> partyMembers = plugin.getHealthBars(p);
