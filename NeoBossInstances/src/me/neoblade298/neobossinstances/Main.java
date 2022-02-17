@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
@@ -783,6 +784,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void returnToMain(Player p) {
 		if (spectatingBoss.containsKey(p.getUniqueId())) {
 			p.teleport(instanceSpawn);
+			for (PotionEffect pe : p.getActivePotionEffects()) {
+				p.removePotionEffect(pe.getType());
+			}
 			handleLeaveSpectator(p);
 		}
 		
