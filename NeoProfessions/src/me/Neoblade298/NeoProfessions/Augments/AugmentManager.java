@@ -20,10 +20,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.nossr50.mcmmo.kyori.adventure.platform.facet.FacetPointers.Type;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
 import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
 import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
@@ -82,6 +84,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Ferocious", new FerociousAugment());
 		augmentMap.put("Precision", new PrecisionAugment());
 		augmentMap.put("Spellweaving", new SpellweavingAugment());
+		augmentMap.put("Sundering", new SunderingAugment());
 		augmentMap.put("Vampiric", new VampiricAugment());
 		
 		// Damage Dealt
@@ -120,7 +123,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Imposing", new ImposingAugment());
 		augmentMap.put("Steadfast", new SteadfastAugment());
 		
-		// Skillapi Exp
+		// Charms
 		augmentMap.put("Experience", new ExperienceAugment());
 		augmentMap.put("Chest Chance", new ChestChanceAugment());
 		augmentMap.put("Research", new ResearchAugment());
@@ -241,19 +244,18 @@ public class AugmentManager implements Listener {
 			playerAugments.get(p).inventoryChanged();
 		}
 	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onDamage(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player && e.getEntity() instanceof LivingEntity && e.getDamager() != e.getEntity()) {
-			Player p = (Player) e.getDamager();
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onDealDamage(PlayerCalculateDamageEvent e) {
+		if (e.getCaster() != e.getTarget() && !e.getClassification().equalsIgnoreCase("nobuff")) {
+			Player p = (Player) e.getCaster();
 			double multiplier = 1;
 			double flat = 0;
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
 					if (augment instanceof ModDamageDealtAugment) {
 						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
-						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							aug.applyDamageDealtEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
+						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
+							aug.applyDamageDealtEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 							
 							multiplier += aug.getDamageDealtMult(p);
 							flat += aug.getDamageDealtFlat(p);
@@ -265,7 +267,11 @@ public class AugmentManager implements Listener {
 			if (damage < 0) damage = 0;
 			e.setDamage(damage);
 		}
-		else if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player && e.getDamager() != e.getEntity()) {
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onTakeDamage(EntityDamageByEntityEvent e) {
+		if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player && e.getDamager() != e.getEntity()) {
 			Player p = (Player) e.getEntity();
 			double multiplier = 1;
 			double flat = 0;
