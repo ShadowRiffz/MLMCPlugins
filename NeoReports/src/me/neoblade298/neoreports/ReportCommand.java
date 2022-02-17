@@ -22,7 +22,6 @@ public class ReportCommand implements CommandExecutor {
 				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
 				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use ONLY for catastrophic bugs (MUST be fixed in 1-2 days)");
 				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
-				sender.sendMessage("§c/reports remove [bug ID] §7- Removes a report made by you (you should do this after your bug is marked as resolved!)");
 				if (sender.hasPermission("neoreports.admin")) {
 					sender.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
 					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
