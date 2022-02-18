@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -132,7 +133,9 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 			String world = e.getEntity().getWorld().getName();
 			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 				Player p = (Player) e.getEntity();
-				p.getInventory().addItem(new ItemStack(Material.ARROW));
+				if (e.getBow().containsEnchantment(Enchantment.ARROW_INFINITE)) {
+					p.getInventory().addItem(new ItemStack(Material.ARROW));
+				}
 				Arrow arrow = (Arrow) e.getProjectile();
 				arrow.setPickupStatus(PickupStatus.DISALLOWED);
 				return;
