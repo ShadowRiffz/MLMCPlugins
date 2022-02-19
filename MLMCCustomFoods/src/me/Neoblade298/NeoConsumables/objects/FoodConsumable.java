@@ -19,7 +19,7 @@ import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
-import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.runnables.AttributeRunnable;
 import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
@@ -38,7 +38,7 @@ public class FoodConsumable extends Consumable {
 	long cooldown = 0;
 	boolean ignoreGcd = false;
 	
-	public FoodConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+	public FoodConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		super(main, name, sounds, lore, nbt);
 	}
 

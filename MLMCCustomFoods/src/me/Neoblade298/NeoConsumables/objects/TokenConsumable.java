@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.Consumables;
 
 public class TokenConsumable extends Consumable {
 	ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 	
-	public TokenConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+	public TokenConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		super(main, name, sounds, lore, nbt);
 	}
 

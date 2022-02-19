@@ -3,6 +3,14 @@ package me.Neoblade298.NeoConsumables;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
+import me.Neoblade298.NeoConsumables.bosschests.Chest;
+import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
+import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
+import me.Neoblade298.NeoConsumables.bosschests.EssenceReward;
+import me.Neoblade298.NeoConsumables.bosschests.GearReward;
+import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
+import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
+import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
 import me.Neoblade298.NeoConsumables.objects.Attributes;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
@@ -18,6 +26,7 @@ import net.md_5.bungee.api.ChatColor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,9 +51,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class NeoConsumables extends JavaPlugin implements Listener {
-	HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
-	// These runnables take away attributes from players when they're done being used
+public class Consumables extends JavaPlugin implements Listener {
+	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
+	public static HashMap<String, Chest> bosschests = new HashMap<String, Chest>();
+	// These runnables take away attributes from players when they're done being
+	// used
 	public HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
 	public HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
 	public HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
@@ -54,14 +65,14 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 
 	public void onEnable() {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
-		
+
 		// Settings
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		settings = nsettings.createSettings("Consumables", this, false);
 		settings.addSetting("InventoryUse", false);
 		hiddenSettings = nsettings.createSettings("Tokens", this, true);
 		hiddenSettings.addSetting("Boss", false);
-		
+
 		// Setup databases
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			UUID uuid = p.getUniqueId();
@@ -69,34 +80,113 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
 		}
 
-		loadConsumables();
-	    getCommand("cons").setExecutor(new Commands(this));
+		// Load consumables and boss chests
+		reload();
+
+		getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 	
-	public void loadConsumables() {
+	public void reload() {
 		consumables.clear();
-		
-		loadDirectory(new File(getDataFolder(), "consumables"));
+		loadConsumableDirectory(new File(getDataFolder(), "consumables"));
+
+		bosschests.clear();
+		loadChestDirectory(new File(getDataFolder(), "chests"));
 	}
-	
-	private void loadDirectory(File file) {
-		for (File subfile : file.listFiles()) {
-			if (subfile.isDirectory()) {
-				loadDirectory(subfile);
+
+	private void loadChestDirectory(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadChestDirectory(file);
 			}
 			else {
-				loadFile(subfile);
+				loadChest(file);
 			}
 		}
 	}
+
+	private void loadChest(File file) {
+		FileConfiguration chestConfig = YamlConfiguration.loadConfiguration(file);
+		
+		// Chests
+		for (String chest : chestConfig.getKeys(false)) {
+			ConfigurationSection chestSec = chestConfig.getConfigurationSection(chest);
+			String internal = chestSec.getString("internal");
+			int level = chestSec.getInt("level");
+			String display = chestSec.getString("display", internal);
+
+			// Chest stages
+			LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
+			ConfigurationSection stagesSec = chestSec.getConfigurationSection("stages");
+			for (String stage : stagesSec.getKeys(false)) {
+				ConfigurationSection stageSec = stagesSec.getConfigurationSection(stage);
+				double chance = stageSec.getDouble("chance");
+				Sound sound = Sound.ENTITY_ARROW_HIT_PLAYER;
+				float pitch = 1.0F;
+				String effect = stageSec.getString("effect");
+				
+				// Sound
+				String soundLine = stageSec.getString("sound");
+				int index = soundLine.indexOf(":");
+				if (index != -1) {
+					sound = Sound.valueOf(soundLine.substring(0, index));
+					pitch = Float.parseFloat(soundLine.substring(index + 1));
+				}
+				else {
+					sound = Sound.valueOf(soundLine);
+				}
 	
-	private void loadFile(File file) {
+				// Rewards
+				ArrayList<ChestReward> rewards = new ArrayList<ChestReward>();
+				int totalWeight = 0;
+				for (String reward : stageSec.getStringList("rewards")) {
+					String args[] = reward.replaceAll(" ", "/").replaceAll("_", " ").toLowerCase().split("/");
+					ChestReward cr = null;
+					switch (args[0]) {
+					case "essence":
+						cr = EssenceReward.parse(args, level);
+						break;
+					case "gear":
+						cr = GearReward.parse(args, level);
+						break;
+					case "relic":
+						cr = RelicReward.parse(args, internal, display);
+						break;
+					case "recipe":
+						cr = RecipeReward.parse(args);
+						break;
+					case "rbook":
+						cr = ResearchBookReward.parse(args, internal, display);
+						break;
+					}
+					totalWeight += cr.getWeight();
+					rewards.add(cr);
+				}
+				
+				stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
+			}
+			bosschests.put(internal, new Chest(this, internal, level, stages, display));
+		}
+	}
+
+	private void loadConsumableDirectory(File file) {
+		for (File subfile : file.listFiles()) {
+			if (subfile.isDirectory()) {
+				loadConsumableDirectory(subfile);
+			}
+			else {
+				loadConsumable(subfile);
+			}
+		}
+	}
+
+	private void loadConsumable(File file) {
 		FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
 		for (String key : itemConfig.getKeys(false)) {
 			ConfigurationSection sec = itemConfig.getConfigurationSection(key);
 			String name = sec.getString("name");
-			
+
 			ArrayList<Sound> sounds = new ArrayList<Sound>();
 			for (String sname : sec.getStringList("sound-effects")) {
 				Sound sound = Sound.valueOf(sname.toUpperCase());
@@ -108,7 +198,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			for (String loreLine : sec.getStringList("lore")) {
 				lore.add(loreLine.replaceAll("&", "§"));
 			}
-			
+
 			HashMap<String, String> nbtMap = new HashMap<String, String>();
 			ConfigurationSection nbts = sec.getConfigurationSection("nbt");
 			if (nbts != null) {
@@ -116,7 +206,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 					nbtMap.put(nbt, nbts.getString(nbt));
 				}
 			}
-			
+
 			String type = sec.getString("type", "FOOD");
 			if (type.equals("FOOD")) {
 				FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore, nbtMap);
@@ -136,10 +226,11 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
-	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+
+	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
+			ArrayList<String> lore, HashMap<String, String> nbts) {
 		FoodConsumable cons = new FoodConsumable(this, name, sounds, lore, nbts);
-		
+
 		// Potion effects
 		ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
 		for (String potion : config.getStringList("effects")) {
@@ -151,7 +242,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			potions.add(effect);
 		}
 		cons.setPotions(potions);
-		
+
 		// Attributes
 		Attributes attribs = new Attributes();
 		for (String attribute : config.getStringList("attributes")) {
@@ -164,7 +255,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			cons.setAttributes(attribs);
 			cons.setAttributeTime(config.getInt("attributetime"));
 		}
-		
+
 		cons.setSaturation(config.getDouble("saturation"));
 		cons.setHunger(config.getInt("hunger"));
 		cons.setHealth(config.getInt("health.amount"));
@@ -180,13 +271,14 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		return cons;
 	}
 
-	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
+			ArrayList<String> lore, HashMap<String, String> nbts) {
 		ChestConsumable cons = new ChestConsumable(this, name, sounds, lore, nbts);
-		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
 		return cons;
 	}
 
-	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
+			ArrayList<String> lore, HashMap<String, String> nbts) {
 		TokenConsumable cons = new TokenConsumable(this, name, sounds, lore, nbts);
 		ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 		ConfigurationSection scConfig = config.getConfigurationSection("settings");
@@ -207,19 +299,21 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				else if (type.equalsIgnoreCase("integer")) {
 					value = sckConfig.getInt("value");
 				}
-				settingsChangers.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
+				settingsChangers
+						.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
 			}
 			cons.setSettingsChangers(settingsChangers);
 		}
 		return cons;
 	}
 
-	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbts) {
+	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
+			ArrayList<String> lore, HashMap<String, String> nbts) {
 		RecipeConsumable cons = new RecipeConsumable(this, name, sounds, lore, nbts);
 		cons.setPermission(config.getString("permission"));
 		return cons;
 	}
-
+	
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
@@ -251,16 +345,16 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 				return;
 			}
 		}
-		
+
 		if (consumable == null) {
 			return;
 		}
-		
+
 		// Use consumable
 		consumable.use(p, item);
 		e.setCancelled(true);
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (!e.isRightClick()) {
@@ -279,12 +373,12 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		ItemMeta meta = item.getItemMeta();
 		String name = ChatColor.stripColor(meta.getDisplayName());
-		
+
 		if (!consumables.containsKey(name)) {
 			return;
 		}
 		Consumable cons = consumables.get(name);
-		
+
 		// If food is a consumable, continue only if setting is set
 		if (cons instanceof FoodConsumable) {
 			if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
@@ -295,18 +389,18 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		else if (!(cons instanceof RecipeConsumable)) {
 			return;
 		}
-		
+
 		if (!cons.isSimilar(item)) {
 			return;
 		}
 		if (!cons.canUse(p, item)) {
 			return;
 		}
-		
+
 		e.setCancelled(true);
 		cons.use(p, item);
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
@@ -317,7 +411,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		if (!attributes.containsKey(uuid)) {
 			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
 		}
-		
+
 		if (isInstance) {
 			// Remove cooldowns for food if joining a boss instance
 			foodCooldowns.get(uuid).clear();
@@ -334,7 +428,7 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	private void resetAttributes(Player p) {
 		HashMap<Consumable, AttributeTask> tasks = attributes.get(p.getUniqueId());
 		for (Consumable c : tasks.keySet()) {
@@ -342,17 +436,17 @@ public class NeoConsumables extends JavaPlugin implements Listener {
 		}
 		tasks.clear();
 	}
-	
+
 	@EventHandler
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		resetAttributes(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		resetAttributes(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent e) {
 		resetAttributes(e.getPlayer());

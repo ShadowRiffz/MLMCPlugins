@@ -7,17 +7,17 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.Consumables;
 import net.md_5.bungee.api.ChatColor;
 
 public abstract class Consumable {
-	NeoConsumables main;
+	Consumables main;
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
 	String name, displayname;
 	ArrayList<String> lore;
 	HashMap<String, String> nbt;
 
-	public Consumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+	public Consumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		this.main = main;
 		this.displayname = name.replaceAll("&", "§").replaceAll("@", "&");
 		this.name = ChatColor.stripColor(this.displayname);
@@ -26,11 +26,11 @@ public abstract class Consumable {
 		this.nbt = nbt;
 	}
 	
-	public NeoConsumables getMain() {
+	public Consumables getMain() {
 		return main;
 	}
 
-	public void setMain(NeoConsumables main) {
+	public void setMain(Consumables main) {
 		this.main = main;
 	}
 

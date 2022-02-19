@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor{
 	
-	NeoConsumables main;
+	Consumables main;
 	
-	public Commands(NeoConsumables main) {
+	public Commands(Consumables main) {
 		this.main = main;
 	}
 	
@@ -33,7 +33,7 @@ public class Commands implements CommandExecutor{
 			}
 			else if (args[0].equalsIgnoreCase("reload")) {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded consumables");
-				main.loadConsumables();
+				main.reload();
 				return true;
 			}
 			return true;

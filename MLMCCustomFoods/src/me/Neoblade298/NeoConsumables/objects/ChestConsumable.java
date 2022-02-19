@@ -3,18 +3,16 @@ package me.Neoblade298.NeoConsumables.objects;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.Consumables;
 
 public class ChestConsumable extends Consumable {
-	ArrayList<String> commands = new ArrayList<String>();
 	
-	public ChestConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+	public ChestConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		super(main, name, sounds, lore, nbt);
 	}
 
@@ -34,28 +32,12 @@ public class ChestConsumable extends Consumable {
 	}
 	
 	public void use(Player p, ItemStack item) {
-		p.sendMessage(displayname + " §7was opened.");
-		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7!");
-		executeCommands(p);
+		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7 to find...");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
-		
 		item.setAmount(item.getAmount() - 1);
+		Consumables.bosschests.get(getNbt().get("chest")).useChest(p);
 		return;
-	}
-
-	public void executeCommands(Player player) {
-		for (String cmd : this.commands) {
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%p", player.getName()));
-		}
-	}
-
-	public ArrayList<String> getCommands() {
-		return commands;
-	}
-
-	public void setCommands(ArrayList<String> commands) {
-		this.commands = commands;
 	}
 }

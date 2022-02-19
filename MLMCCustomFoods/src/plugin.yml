@@ -4,7 +4,7 @@
  description: Written originally by bananapuncher714, edited by Neoblade298
  depend: [NeoSettings, SkillAPI]
  author: Neoblade298, bananapuncher714
- main: me.Neoblade298.NeoConsumables.NeoConsumables
+ main: me.Neoblade298.NeoConsumables.Consumables
  commands:
    cons:
      description: Does its job

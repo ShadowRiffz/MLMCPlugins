@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Neoblade298.NeoConsumables.NeoConsumables;
+import me.Neoblade298.NeoConsumables.Consumables;
 
 public class RecipeConsumable extends Consumable {
 	String permission;
 
-	public RecipeConsumable(NeoConsumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
+	public RecipeConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
 		super(main, name, sounds, lore, nbt);
 	}
 
