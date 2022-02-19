@@ -3,6 +3,7 @@ package me.Neoblade298.NeoConsumables;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
+import me.Neoblade298.NeoConsumables.bosschests.AugmentReward;
 import me.Neoblade298.NeoConsumables.bosschests.Chest;
 import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
 import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
@@ -158,6 +159,9 @@ public class Consumables extends JavaPlugin implements Listener {
 						break;
 					case "rbook":
 						cr = ResearchBookReward.parse(args, internal, display);
+						break;
+					case "augment":
+						cr = AugmentReward.parse(args, level);
 						break;
 					}
 					totalWeight += cr.getWeight();
