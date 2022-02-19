@@ -402,8 +402,7 @@ public class Commands implements CommandExecutor {
 			for (int i = 3; i < args.length; i++) {
 				display += " " + args[i];
 			}
-			display.replaceAll("&", "§");
-			display.replaceAll("@", "&");
+			display = display.replaceAll("&", "§").replaceAll("@", "&");
 
 			// Calculate timer
 	        String timer = "n/a";
