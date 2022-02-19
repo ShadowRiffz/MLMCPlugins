@@ -28,7 +28,7 @@ public class RecipeReward extends ChestReward {
 	public void giveReward(Player p) {
 		int num = gen.nextInt(maxes.get(tier));
 		String recipe = "reci_" + tier;
-		if (!tier.equalsIgnoreCase("Ingr")) {
+		if (!tier.equalsIgnoreCase("Ingr") && !tier.equalsIgnoreCase("drink")) {
 			recipe += "r";
 		}
 		recipe += num;
