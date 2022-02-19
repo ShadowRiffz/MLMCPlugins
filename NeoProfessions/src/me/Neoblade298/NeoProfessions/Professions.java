@@ -87,10 +87,7 @@ public class Professions extends JavaPlugin implements Listener {
 		sqlPass = sql.getString("password");
 		
 		// droptables
-		ConfigurationSection tablesCfg = cfg.getConfigurationSection("droptables");
-		for (String table : tablesCfg.getKeys(false)) {
-			AugmentManager.droptables.put(table, (ArrayList<String>) tablesCfg.getStringList(table));
-		}
+		loadDroptables(new File(getDataFolder(), "droptables"));
 
 		if (new File(getDataFolder(), "instance").exists()) {
 			isInstance = true;
@@ -146,6 +143,20 @@ public class Professions extends JavaPlugin implements Listener {
 		properties.setProperty("user", sqlUser);
 		properties.setProperty("password", sqlPass);
 		properties.setProperty("useSSL", "false");
+	}
+	
+	private void loadDroptables(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadDroptables(dir);
+			}
+			else {
+				YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+				for (String table : yml.getKeys(false)) {
+					AugmentManager.droptables.put(table, (ArrayList<String>) yml.getStringList(table));
+				}
+			}
+		}
 	}
 
 	public void onDisable() {
