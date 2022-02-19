@@ -21,7 +21,7 @@ public class GearReward extends ChestReward {
 	public GearReward(int level, String rarity) {
 		this.level = level;
 		this.type = "auto";
-		this.rarity = rarity;
+		this.rarity = rarity.toLowerCase();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class GearReward extends ChestReward {
 	}
 
 	public void setRarity(String rarity) {
-		this.rarity = rarity;
+		this.rarity = rarity.toLowerCase();
 	}
 	
 	public static GearReward parse(String args[], int level) {

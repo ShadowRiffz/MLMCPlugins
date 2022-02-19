@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -142,7 +144,7 @@ public class Consumables extends JavaPlugin implements Listener {
 				ArrayList<ChestReward> rewards = new ArrayList<ChestReward>();
 				int totalWeight = 0;
 				for (String reward : stageSec.getStringList("rewards")) {
-					String args[] = reward.replaceAll(" ", "/").replaceAll("_", " ").toLowerCase().split("/");
+					String args[] = reward.replaceAll(" ", "/").replaceAll("_", " ").split("/");
 					ChestReward cr = null;
 					switch (args[0]) {
 					case "essence":
@@ -164,6 +166,10 @@ public class Consumables extends JavaPlugin implements Listener {
 						cr = AugmentReward.parse(args, level);
 						break;
 					}
+					if (cr == null) {
+						Bukkit.getLogger().log(Level.WARNING, "[NeoConsumables] Could not load reward: " + reward);
+					}
+					
 					totalWeight += cr.getWeight();
 					rewards.add(cr);
 				}
