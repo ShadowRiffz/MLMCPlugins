@@ -20,7 +20,7 @@ public class ResearchBookReward extends ChestReward {
 	@Override
 	public void giveReward(Player p) {
 		int points = 5;
-		if (this.type.equalsIgnoreCase("normal")) {
+		if (!this.type.equalsIgnoreCase("normal")) {
 			points = 25;
 		}
 		
