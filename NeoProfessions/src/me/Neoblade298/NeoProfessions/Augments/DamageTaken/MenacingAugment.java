@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +13,6 @@ import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.ModManaGainAugment;
@@ -75,7 +73,7 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
-		FlagManager.hasFlag(user, "aug_menacing");
+		return FlagManager.hasFlag(user.getPlayer(), "aug_menacing");
 	}
 
 }
