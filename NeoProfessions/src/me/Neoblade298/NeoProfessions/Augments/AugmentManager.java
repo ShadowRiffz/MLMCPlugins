@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -128,6 +127,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Research", new ResearchAugment());
 		
 		// Boss Relics
+		
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
 			augmentMap.put(set, new BossRelic(set));
@@ -277,11 +277,11 @@ public class AugmentManager implements Listener {
 							aug.applyDamageDealtEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 							
 							double mult = aug.getDamageDealtMult(p);
-							if (mult > 1) {
+							if (mult > 0) {
 								posmult += mult;
 							}
-							else {
-								negmult *= mult;
+							else if (mult < 0) {
+								negmult *= (1 - mult);
 							}
 							flat += aug.getDamageDealtFlat(p);
 						}
@@ -290,23 +290,21 @@ public class AugmentManager implements Listener {
 			}
 		}
 		else if (containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE")) {
-			double multiplier = e.getPosmult();
-			double flat = e.getFlat();
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
-					if (augment instanceof ModDamageDealtAugment) {
-						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
+					if (augment instanceof ModDamageTakenAugment) {
+						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
-							aug.applyDamageDealtEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
+							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 
-							double mult = aug.getDamageDealtMult(p);
-							if (mult > 1) {
+							double mult = aug.getDamageTakenMult(p);
+							if (mult > 0) {
 								posmult += mult;
 							}
-							else {
-								negmult *= mult;
+							else if (mult < 0) {
+								negmult *= (1 - mult);
 							}
-							flat += aug.getDamageDealtFlat(p);
+							flat += aug.getDamageTakenFlat(p);
 						}
 					}
 				}
@@ -315,31 +313,6 @@ public class AugmentManager implements Listener {
 		e.setPosmult(posmult);
 		e.setNegmult(negmult);
 		e.setFlat(flat);
-	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onTakeDamage(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof LivingEntity && e.getEntity() instanceof Player && e.getDamager() != e.getEntity()) {
-			Player p = (Player) e.getEntity();
-			double multiplier = 1;
-			double flat = 0;
-			if (containsAugments(p, EventType.DAMAGE_TAKEN)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
-					if (augment instanceof ModDamageTakenAugment) {
-						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
-						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
-							aug.applyDamageTakenEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
-							
-							multiplier *= aug.getDamageTakenMult(p);
-							flat -= aug.getDamageTakenFlat(p);
-						}
-					}
-				}
-			}
-			double damage = e.getDamage() * multiplier + flat;
-			if (damage < 0) damage = 0;
-			e.setDamage(damage);
-		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
