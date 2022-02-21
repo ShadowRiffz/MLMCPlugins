@@ -243,9 +243,25 @@ public class AugmentManager implements Listener {
 			playerAugments.get(p).inventoryChanged();
 		}
 	}
+	
+	private boolean containsType(String[] types, String... terms) {
+		for (String type : types) {
+			for (String term : terms) {
+				if (type.equalsIgnoreCase(term)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onDealDamage(PlayerCalculateDamageEvent e) {
-		if (e.getCaster() != e.getTarget() && !e.getClassification().equalsIgnoreCase("nobuff")) {
+		if (e.getCaster() == e.getTarget()) {
+			return;
+		}
+		
+		if (e.getCaster() instanceof Player && containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
 			Player p = (Player) e.getCaster();
 			double multiplier = 1;
 			double flat = 0;
@@ -266,6 +282,9 @@ public class AugmentManager implements Listener {
 			if (damage < 0) damage = 0;
 			e.setDamage(damage);
 		}
+		else if (e.getTarget() instanceof Player && containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE") {
+			
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -281,7 +300,7 @@ public class AugmentManager implements Listener {
 						if (aug.canUse(p, (LivingEntity) e.getEntity())) {
 							aug.applyDamageTakenEffects(p, (LivingEntity) e.getEntity(), e.getDamage());
 							
-							multiplier -= aug.getDamageTakenMult(p);
+							multiplier *= aug.getDamageTakenMult(p);
 							flat -= aug.getDamageTakenFlat(p);
 						}
 					}
