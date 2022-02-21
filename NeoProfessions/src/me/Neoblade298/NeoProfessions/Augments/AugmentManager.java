@@ -257,14 +257,18 @@ public class AugmentManager implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onDealDamage(PlayerCalculateDamageEvent e) {
-		if (e.getCaster() == e.getTarget()) {
+		if (e.getCaster() == e.getTarget() || !(e.getCaster() instanceof Player)) {
+			return;
+		}
+		if (containsType(e.getTypes(), "nobuff")) {
 			return;
 		}
 		
-		if (e.getCaster() instanceof Player && containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
-			Player p = (Player) e.getCaster();
-			double multiplier = 1;
-			double flat = 0;
+		Player p = (Player) e.getCaster();
+		double posmult = e.getPosmult();
+		double negmult = e.getNegmult();
+		double flat = e.getFlat();
+		if (containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
 					if (augment instanceof ModDamageDealtAugment) {
@@ -272,19 +276,45 @@ public class AugmentManager implements Listener {
 						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
 							aug.applyDamageDealtEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 							
-							multiplier += aug.getDamageDealtMult(p);
+							double mult = aug.getDamageDealtMult(p);
+							if (mult > 1) {
+								posmult += mult;
+							}
+							else {
+								negmult *= mult;
+							}
 							flat += aug.getDamageDealtFlat(p);
 						}
 					}
 				}
 			}
-			double damage = e.getDamage() * multiplier + flat;
-			if (damage < 0) damage = 0;
-			e.setDamage(damage);
 		}
-		else if (e.getTarget() instanceof Player && containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE") {
-			
+		else if (containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE")) {
+			double multiplier = e.getPosmult();
+			double flat = e.getFlat();
+			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
+					if (augment instanceof ModDamageDealtAugment) {
+						ModDamageDealtAugment aug = (ModDamageDealtAugment) augment;
+						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
+							aug.applyDamageDealtEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
+
+							double mult = aug.getDamageDealtMult(p);
+							if (mult > 1) {
+								posmult += mult;
+							}
+							else {
+								negmult *= mult;
+							}
+							flat += aug.getDamageDealtFlat(p);
+						}
+					}
+				}
+			}
 		}
+		e.setPosmult(posmult);
+		e.setNegmult(negmult);
+		e.setFlat(flat);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
