@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neoresearch.Research;
 
@@ -55,7 +56,11 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 		
 		if (args.length != 1) return "Invalid placeholder";
 		String mob = args[0];
-		String name = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
+		MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(mob);
+		if (mm == null) {
+			return "Invalid placeholder";
+		}
+		String name = mm.getDisplayName().get();
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 		HashMap<String, Integer> mobKills = nr.getPlayerStats(p).getMobKills();
 		if (mobKills.containsKey(mob)) {
