@@ -3,28 +3,27 @@ package me.Neoblade298.NeoProfessions.Augments.DamageDealt;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class BurstAugment extends Augment implements ModDamageDealtAugment {
+public class BruiserAugment extends Augment implements ModDamageDealtAugment {
 	
-	public BurstAugment() {
+	public BruiserAugment() {
 		super();
-		this.name = "Burst";
+		this.name = "Bruiser";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
-	public BurstAugment(int level) {
+	public BruiserAugment(int level) {
 		super(level);
-		this.name = "Burst";
+		this.name = "Bruiser";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 
@@ -35,13 +34,17 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public Augment createNew(int level) {
-		return new BurstAugment(level);
+		return new BruiserAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) > 0.8 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		AttributeInstance ai = target.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		if (ai != null) {
+			double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+			return percentage > 0.3 && 0.8 > percentage;
+		}
+		return false;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -49,8 +52,7 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage above 80% mana.");
-		lore.add("§cOnly works with mana.");
+		lore.add("§7damage to an enemy at 30-80% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

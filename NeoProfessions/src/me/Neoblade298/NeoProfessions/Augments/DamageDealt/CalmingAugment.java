@@ -19,14 +19,14 @@ public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 		super();
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatReduction = (this.level / 5) * 0.01;
+		this.threatReduction = (this.level / 5) * 0.02;
 	}
 
 	public CalmingAugment(int level) {
 		super(level);
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatReduction = (this.level / 5) * 0.01;
+		this.threatReduction = (this.level / 5) * 0.02;
 	}
 	
 	@Override

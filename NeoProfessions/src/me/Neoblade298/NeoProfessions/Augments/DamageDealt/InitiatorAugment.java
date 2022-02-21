@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,8 +39,12 @@ public class InitiatorAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.95;
+		AttributeInstance ai = target.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		if (ai != null) {
+			double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+			return percentage > 0.95;
+		}
+		return false;
 	}
 
 	public ItemStack getItem(Player user) {

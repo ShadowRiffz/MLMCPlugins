@@ -27,7 +27,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 
 	@Override
 	public double getRegenMult(Player user) {
-		return 0.01 * (level / 5);
+		return 0.02 * (level / 5);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 	public boolean canUse(Player user) {
 		Player p = user.getPlayer();
 		double percentage = p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.3;
+		return percentage < 0.5;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -47,7 +47,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases health regen by §f" + formatPercentage(getRegenMult(user)) + "%");
-		lore.add("§7while below 30% health.");
+		lore.add("§7while below 50% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

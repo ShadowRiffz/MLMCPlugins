@@ -29,7 +29,7 @@ public class DefianceAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.02 * (level / 5);
+		return 0.04 * (level / 5);
 	}
 
 	@Override

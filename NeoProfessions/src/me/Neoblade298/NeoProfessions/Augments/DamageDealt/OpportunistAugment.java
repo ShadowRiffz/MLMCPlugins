@@ -7,6 +7,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import com.sucy.skill.api.util.FlagManager;
 
@@ -39,7 +40,7 @@ public class OpportunistAugment extends Augment implements ModDamageDealtAugment
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		return FlagManager.hasFlag(target, "stun") || FlagManager.hasFlag(target, "root");
+		return FlagManager.hasFlag(target, "stun") || FlagManager.hasFlag(target, "root") || target.hasPotionEffect(PotionEffectType.SLOW);
 	}
 
 	public ItemStack getItem(Player user) {
@@ -47,7 +48,7 @@ public class OpportunistAugment extends Augment implements ModDamageDealtAugment
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage to a stunned/rooted enemy.");
+		lore.add("§7damage to a stunned/rooted/slowed enemy.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

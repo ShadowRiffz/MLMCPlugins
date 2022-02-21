@@ -86,6 +86,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Vampiric", new VampiricAugment());
 		
 		// Damage Dealt
+		augmentMap.put("Bruiser", new BruiserAugment());
 		augmentMap.put("Burst", new BurstAugment());
 		augmentMap.put("Calming", new CalmingAugment());
 		augmentMap.put("Desperation", new DesperationAugment());
@@ -96,10 +97,14 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Opportunist", new OpportunistAugment());
 		augmentMap.put("Overload", new OverloadAugment());
 		augmentMap.put("Sentinel", new SentinelAugment());
+		augmentMap.put("Sniper", new SniperAugment());
 		augmentMap.put("Underdog", new UnderdogAugment());
 		
 		// Damage Taken
+		augmentMap.put("Daredevil", new DaredevilAugment());
+		augmentMap.put("Menacing", new MenacingAugment());
 		augmentMap.put("Protection", new ProtectionAugment());
+		augmentMap.put("Thorns", new ThornsAugment());
 		
 		// Flags
 		augmentMap.put("Holy", new HolyAugment());
@@ -113,6 +118,7 @@ public class AugmentManager implements Listener {
 		// Mana Gain
 		augmentMap.put("Defiance", new DefianceAugment());
 		augmentMap.put("Final Light", new FinalLightAugment());
+		augmentMap.put("Perceptive", new PerceptiveAugment());
 		
 		// Regen
 		augmentMap.put("Last Breath", new LastBreathAugment());

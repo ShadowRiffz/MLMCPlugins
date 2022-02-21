@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions.Augments.ManaGain;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,42 +13,42 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class FinalLightAugment extends Augment implements ModManaGainAugment {
+public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 	
-	public FinalLightAugment() {
+	public PerceptiveAugment() {
 		super();
-		this.name = "Final Light";
+		this.name = "Perceptive";
 		this.etypes = Arrays.asList(new EventType[] {EventType.MANA_GAIN});
 	}
 
-	public FinalLightAugment(int level) {
+	public PerceptiveAugment(int level) {
 		super(level);
-		this.name = "Final Light";
+		this.name = "Perceptive";
 		this.etypes = Arrays.asList(new EventType[] {EventType.MANA_GAIN});
 	}
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.08 * (level / 5);
+		return 0.02 * (level / 5);
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new FinalLightAugment(level);
+		return new PerceptiveAugment(level);
 	}
 
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
-		double percentage = (user.getPlayer().getHealth() / user.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		return percentage < 0.3;
+		return (user.getMana() / user.getMaxMana()) > 0.5;
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases mana regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7Increases resource regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
+		lore.add("§7above 50% resource.");
+		lore.add("§cDoesn't work with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

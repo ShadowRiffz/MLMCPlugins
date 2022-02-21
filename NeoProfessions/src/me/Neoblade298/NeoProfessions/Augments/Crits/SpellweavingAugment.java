@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
@@ -34,6 +35,7 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		user.giveMana(this.manaGain, ManaSource.SPECIAL);
+		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_spellweaving", 40);
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 
 	@Override
 	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
-		return user.getClass("class").getData().getManaName().endsWith("MP");
+		return user.getClass("class").getData().getManaName().endsWith("MP") && FlagManager.hasFlag(user.getPlayer(), "aug_spellweaving");
 	}
 
 	public ItemStack getItem(Player user) {
@@ -52,6 +54,7 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 		List<String> lore = meta.getLore();
 		lore.add("§7Upon critical hit, gain §f" + this.manaGain + " §7mana.");
 		lore.add("§7Only works with mana.");
+		lore.add("§7Has a 2 second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

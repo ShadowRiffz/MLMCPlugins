@@ -1,45 +1,43 @@
-package me.Neoblade298.NeoProfessions.Augments.ManaGain;
+package me.Neoblade298.NeoProfessions.Augments.DamageTaken;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.api.enums.ManaSource;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 
-public class FinalLightAugment extends Augment implements ModManaGainAugment {
+public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 	
-	public FinalLightAugment() {
+	public DaredevilAugment() {
 		super();
-		this.name = "Final Light";
-		this.etypes = Arrays.asList(new EventType[] {EventType.MANA_GAIN});
+		this.name = "Daredevil";
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
-	public FinalLightAugment(int level) {
+	public DaredevilAugment(int level) {
 		super(level);
-		this.name = "Final Light";
-		this.etypes = Arrays.asList(new EventType[] {EventType.MANA_GAIN});
+		this.name = "Daredevil";
+		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
 	@Override
-	public double getManaGainMult(Player user) {
-		return 0.08 * (level / 5);
+	public double getDamageTakenMult(LivingEntity user) {
+		return 0.01 * (level / 5);
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new FinalLightAugment(level);
+		return new DaredevilAugment(level);
 	}
 
 	@Override
-	public boolean canUse(PlayerData user, ManaSource src) {
+	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = (user.getPlayer().getHealth() / user.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		return percentage < 0.3;
 	}
@@ -48,10 +46,11 @@ public class FinalLightAugment extends Augment implements ModManaGainAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases mana regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7Decreases damage taken by §f" + formatPercentage(getDamageTakenMult(user)) + "%");
+		lore.add("§7when below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
+
 }

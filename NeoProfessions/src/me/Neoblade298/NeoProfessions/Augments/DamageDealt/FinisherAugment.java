@@ -39,7 +39,7 @@ public class FinisherAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.1;
+		return percentage < 0.3;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -47,7 +47,7 @@ public class FinisherAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage to an enemy below 10% health.");
+		lore.add("§7damage to an enemy below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
