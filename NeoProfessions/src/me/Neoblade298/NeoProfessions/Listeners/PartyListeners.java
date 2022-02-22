@@ -37,7 +37,7 @@ public class PartyListeners implements Listener {
 			}
 		}
 		if (drop == null) return;
-		
+		e.getDrops().getLootTableIntangible().remove(SkillAPIDrop.class);
 		
 		// Get party
 		HashSet<Player> getsExp = new HashSet<Player>();
