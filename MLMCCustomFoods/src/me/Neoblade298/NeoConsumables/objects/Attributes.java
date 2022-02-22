@@ -6,7 +6,7 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
 
 public class Attributes {
-	private int strength, dexterity, intelligence, spirit, perception, endurance, vitality;
+	private int strength, dexterity, intelligence, spirit, endurance;
 
 	public Attributes() {
 		this.strength = 0;
@@ -56,16 +56,8 @@ public class Attributes {
 		return spirit;
 	}
 
-	public int getPerception() {
-		return perception;
-	}
-
 	public int getEndurance() {
 		return endurance;
-	}
-
-	public int getVitality() {
-		return vitality;
 	}
 	
 	public void setAttribute(String attr, int num) {

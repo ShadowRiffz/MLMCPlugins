@@ -10,7 +10,7 @@ public class RelicReward extends ChestReward {
 	
 	public RelicReward(String mob, String display) {
 		this.mob = mob;
-		this.display = mob;
+		this.display = display;
 	}
 
 	@Override
