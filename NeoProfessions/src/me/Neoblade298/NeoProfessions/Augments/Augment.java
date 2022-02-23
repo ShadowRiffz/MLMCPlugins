@@ -73,7 +73,7 @@ public abstract class Augment {
 		NBTItem nbti = new NBTItem(item);
 		nbti.setInteger("level", level);
 		nbti.setString("augment", name);
-		nbti.setDouble("value", (double) (250 * level));
+		nbti.setDouble("value", (double) (250 * (level / 5)));
 		return nbti.getItem();
 	}
 	
