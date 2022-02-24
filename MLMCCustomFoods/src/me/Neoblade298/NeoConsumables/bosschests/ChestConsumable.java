@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoConsumables.bosschests;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -7,19 +9,25 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
+import me.Neoblade298.NeoConsumables.objects.Consumable;
 
-public class Chest {
+public class ChestConsumable extends Consumable {
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
 	private Consumables main;
+	private String internal;
 	
-	public Chest(Consumables main, String nbt, int level, LinkedList<ChestStage> stages, String display) {
+	public ChestConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt, LinkedList<ChestStage> stages, String internal) {
+		super(main, name, sounds, lore, nbt);
 		this.main = main;
 		this.stages = stages;
+		this.internal = internal;
 	}
 	
 	public void useChest(Player p) {
@@ -39,7 +47,7 @@ public class Chest {
 					reward.giveReward(p);
 					reward.sendMessage(p);
 					if (stage.getEffect() != null) {
-						Chest.runAnimation(p, stage.getEffect());
+						ChestConsumable.runAnimation(p, stage.getEffect());
 					}
 				}
 			};
@@ -121,5 +129,31 @@ public class Chest {
 		loc.setY(loc.getY() + 1);
         Vector dir = loc.getDirection().setY(0).normalize().multiply(4);
 		p.getWorld().spawnParticle(part, loc.add(dir), amount, 0.4, 0.4, 0.4, 0.2);
+	}
+
+	@Override
+	public boolean isSimilar(ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		return this.internal.equals(nbti.getString("chest"));
+	}
+
+	@Override
+	public boolean canUse(Player p, ItemStack item) {
+		if (main.isInstance) {
+			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "§"));
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void use(Player p, ItemStack item) {
+		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7 to find...");
+		for (Sound sound : getSounds()) {
+			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
+		}
+		item.setAmount(item.getAmount() - 1);
+		useChest(p);
+		return;
 	}
 }

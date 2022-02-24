@@ -13,7 +13,8 @@ import net.md_5.bungee.api.ChatColor;
 public abstract class Consumable {
 	Consumables main;
 	ArrayList<Sound> sounds = new ArrayList<Sound>();
-	String name, displayname;
+	String name;
+	protected String displayname;
 	ArrayList<String> lore;
 	HashMap<String, String> nbt;
 

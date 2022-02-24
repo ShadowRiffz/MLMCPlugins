@@ -4,7 +4,7 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
 import me.Neoblade298.NeoConsumables.bosschests.AugmentReward;
-import me.Neoblade298.NeoConsumables.bosschests.Chest;
+import me.Neoblade298.NeoConsumables.bosschests.ChestConsumable;
 import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
 import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 import me.Neoblade298.NeoConsumables.bosschests.EssenceReward;
@@ -13,7 +13,6 @@ import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
 import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
 import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
 import me.Neoblade298.NeoConsumables.objects.Attributes;
-import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.RecipeConsumable;
@@ -56,7 +55,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Consumables extends JavaPlugin implements Listener {
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
-	public static HashMap<String, Chest> bosschests = new HashMap<String, Chest>();
+	public static HashMap<String, ChestConsumable> bosschests = new HashMap<String, ChestConsumable>();
 	// These runnables take away attributes from players when they're done being
 	// used
 	public HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
@@ -93,91 +92,6 @@ public class Consumables extends JavaPlugin implements Listener {
 	public void reload() {
 		consumables.clear();
 		loadConsumableDirectory(new File(getDataFolder(), "consumables"));
-
-		bosschests.clear();
-		loadChestDirectory(new File(getDataFolder(), "chests"));
-	}
-
-	private void loadChestDirectory(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadChestDirectory(file);
-			}
-			else {
-				loadChest(file);
-			}
-		}
-	}
-
-	private void loadChest(File file) {
-		FileConfiguration chestConfig = YamlConfiguration.loadConfiguration(file);
-		
-		// Chests
-		for (String chest : chestConfig.getKeys(false)) {
-			ConfigurationSection chestSec = chestConfig.getConfigurationSection(chest);
-			String internal = chestSec.getString("internal");
-			int level = chestSec.getInt("level");
-			String display = chestSec.getString("display", internal);
-
-			// Chest stages
-			LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
-			ConfigurationSection stagesSec = chestSec.getConfigurationSection("stages");
-			for (String stage : stagesSec.getKeys(false)) {
-				ConfigurationSection stageSec = stagesSec.getConfigurationSection(stage);
-				double chance = stageSec.getDouble("chance");
-				Sound sound = Sound.ENTITY_ARROW_HIT_PLAYER;
-				float pitch = 1.0F;
-				String effect = stageSec.getString("effect");
-				
-				// Sound
-				String soundLine = stageSec.getString("sound");
-				int index = soundLine.indexOf(":");
-				if (index != -1) {
-					sound = Sound.valueOf(soundLine.substring(0, index));
-					pitch = Float.parseFloat(soundLine.substring(index + 1));
-				}
-				else {
-					sound = Sound.valueOf(soundLine);
-				}
-	
-				// Rewards
-				ArrayList<ChestReward> rewards = new ArrayList<ChestReward>();
-				int totalWeight = 0;
-				for (String reward : stageSec.getStringList("rewards")) {
-					String args[] = reward.replaceAll(" ", "/").replaceAll("_", " ").split("/");
-					ChestReward cr = null;
-					switch (args[0]) {
-					case "essence":
-						cr = EssenceReward.parse(args, level);
-						break;
-					case "gear":
-						cr = GearReward.parse(args, level);
-						break;
-					case "relic":
-						cr = RelicReward.parse(args, internal, display);
-						break;
-					case "recipe":
-						cr = RecipeReward.parse(args);
-						break;
-					case "rbook":
-						cr = ResearchBookReward.parse(args, internal, display);
-						break;
-					case "augment":
-						cr = AugmentReward.parse(args, level);
-						break;
-					}
-					if (cr == null) {
-						Bukkit.getLogger().log(Level.WARNING, "[NeoConsumables] Could not load reward: " + reward);
-					}
-					
-					totalWeight += cr.getWeight();
-					rewards.add(cr);
-				}
-				
-				stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
-			}
-			bosschests.put(internal, new Chest(this, internal, level, stages, display));
-		}
 	}
 
 	private void loadConsumableDirectory(File file) {
@@ -194,45 +108,51 @@ public class Consumables extends JavaPlugin implements Listener {
 	private void loadConsumable(File file) {
 		FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(file);
 		for (String key : itemConfig.getKeys(false)) {
-			ConfigurationSection sec = itemConfig.getConfigurationSection(key);
-			String name = sec.getString("name");
-
-			ArrayList<Sound> sounds = new ArrayList<Sound>();
-			for (String sname : sec.getStringList("sound-effects")) {
-				Sound sound = Sound.valueOf(sname.toUpperCase());
-				if (sound != null) {
-					sounds.add(sound);
+			try {
+				ConfigurationSection sec = itemConfig.getConfigurationSection(key);
+				String name = sec.getString("name");
+	
+				ArrayList<Sound> sounds = new ArrayList<Sound>();
+				for (String sname : sec.getStringList("sound-effects")) {
+					Sound sound = Sound.valueOf(sname.toUpperCase());
+					if (sound != null) {
+						sounds.add(sound);
+					}
+				}
+				ArrayList<String> lore = new ArrayList<String>();
+				for (String loreLine : sec.getStringList("lore")) {
+					lore.add(loreLine.replaceAll("&", "§"));
+				}
+	
+				HashMap<String, String> nbtMap = new HashMap<String, String>();
+				ConfigurationSection nbts = sec.getConfigurationSection("nbt");
+				if (nbts != null) {
+					for (String nbt : nbts.getKeys(false)) {
+						nbtMap.put(nbt, nbts.getString(nbt));
+					}
+				}
+	
+				String type = sec.getString("type", "FOOD");
+				if (type.equals("FOOD")) {
+					FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore, nbtMap);
+					consumables.put(food.getName(), food);
+				}
+				else if (type.equals("CHEST")) {
+					ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore, nbtMap);
+					consumables.put(chest.getName(), chest);
+				}
+				else if (type.equals("TOKEN")) {
+					TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore, nbtMap);
+					consumables.put(token.getName(), token);
+				}
+				else if (type.equals("RECIPE")) {
+					RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore, nbtMap);
+					consumables.put(recipe.getName(), recipe);
 				}
 			}
-			ArrayList<String> lore = new ArrayList<String>();
-			for (String loreLine : sec.getStringList("lore")) {
-				lore.add(loreLine.replaceAll("&", "§"));
-			}
-
-			HashMap<String, String> nbtMap = new HashMap<String, String>();
-			ConfigurationSection nbts = sec.getConfigurationSection("nbt");
-			if (nbts != null) {
-				for (String nbt : nbts.getKeys(false)) {
-					nbtMap.put(nbt, nbts.getString(nbt));
-				}
-			}
-
-			String type = sec.getString("type", "FOOD");
-			if (type.equals("FOOD")) {
-				FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore, nbtMap);
-				consumables.put(food.getName(), food);
-			}
-			else if (type.equals("CHEST")) {
-				ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore, nbtMap);
-				consumables.put(chest.getName(), chest);
-			}
-			else if (type.equals("TOKEN")) {
-				TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore, nbtMap);
-				consumables.put(token.getName(), token);
-			}
-			else if (type.equals("RECIPE")) {
-				RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore, nbtMap);
-				consumables.put(recipe.getName(), recipe);
+			catch (Exception e) {
+				Bukkit.getLogger().log(Level.WARNING, "Couldn't load recipe " + key);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -283,8 +203,68 @@ public class Consumables extends JavaPlugin implements Listener {
 
 	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
 			ArrayList<String> lore, HashMap<String, String> nbts) {
-		ChestConsumable cons = new ChestConsumable(this, name, sounds, lore, nbts);
-		return cons;
+		String internal = config.getString("internal");
+		int level = config.getInt("level");
+		String display = config.getString("display", internal);
+
+		// Chest stages
+		LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
+		ConfigurationSection stagesSec = config.getConfigurationSection("stages");
+		for (String stage : stagesSec.getKeys(false)) {
+			ConfigurationSection stageSec = stagesSec.getConfigurationSection(stage);
+			double chance = stageSec.getDouble("chance");
+			Sound sound = Sound.ENTITY_ARROW_HIT_PLAYER;
+			float pitch = 1.0F;
+			String effect = stageSec.getString("effect");
+			
+			// Sound
+			String soundLine = stageSec.getString("sound");
+			int index = soundLine.indexOf(":");
+			if (index != -1) {
+				sound = Sound.valueOf(soundLine.substring(0, index));
+				pitch = Float.parseFloat(soundLine.substring(index + 1));
+			}
+			else {
+				sound = Sound.valueOf(soundLine);
+			}
+
+			// Rewards
+			ArrayList<ChestReward> rewards = new ArrayList<ChestReward>();
+			int totalWeight = 0;
+			for (String reward : stageSec.getStringList("rewards")) {
+				String args[] = reward.replaceAll(" ", "/").replaceAll("_", " ").split("/");
+				ChestReward cr = null;
+				switch (args[0]) {
+				case "essence":
+					cr = EssenceReward.parse(args, level);
+					break;
+				case "gear":
+					cr = GearReward.parse(args, level);
+					break;
+				case "relic":
+					cr = RelicReward.parse(args, internal, display);
+					break;
+				case "recipe":
+					cr = RecipeReward.parse(args);
+					break;
+				case "rbook":
+					cr = ResearchBookReward.parse(args, internal, display);
+					break;
+				case "augment":
+					cr = AugmentReward.parse(args, level);
+					break;
+				}
+				if (cr == null) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoConsumables] Could not load reward: " + reward);
+				}
+				
+				totalWeight += cr.getWeight();
+				rewards.add(cr);
+			}
+			
+			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
+		}
+		return new ChestConsumable(this, name, sounds, lore, nbts, stages, internal);
 	}
 
 	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
