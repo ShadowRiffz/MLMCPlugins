@@ -624,7 +624,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			StoredAttributes pAttr = playerAttrs.get(uuid).get(acc);
 			if (pAttr == null) {
 				// Use same attrs as first account
-				pAttr = new StoredAttributes(playerAttrs.get(uuid).get(1).getStoredAttrs());
+				pAttr = new StoredAttributes(playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
 				playerAttrs.get(uuid).put(acc, pAttr);
 			}
 			pAttr.applyAttributes(p);
@@ -638,7 +638,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			StoredAttributes pAttr = playerAttrs.get(uuid).get(acc);
 			if (pAttr == null) {
 				// Use same attrs as first account
-				pAttr = new StoredAttributes(playerAttrs.get(uuid).get(1).getStoredAttrs());
+				pAttr = new StoredAttributes(playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
 				playerAttrs.get(uuid).put(acc, pAttr);
 			}
 			pAttr.applyAttributes(p);
@@ -652,7 +652,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			StoredAttributes pAttr = playerAttrs.get(uuid).get(acc);
 			if (pAttr == null) {
 				// Use same attrs as first account
-				pAttr = new StoredAttributes(playerAttrs.get(uuid).get(1).getStoredAttrs());
+				pAttr = new StoredAttributes(playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
 				playerAttrs.get(uuid).put(acc, pAttr);
 			}
 			pAttr.removeAttributes(p);
