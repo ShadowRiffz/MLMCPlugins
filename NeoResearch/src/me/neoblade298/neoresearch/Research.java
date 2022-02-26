@@ -641,7 +641,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				pAttr = new StoredAttributes(playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
 				playerAttrs.get(uuid).put(acc, pAttr);
 			}
-			pAttr.applyAttributes(p);
+			pAttr.resetAttributes();
 		}
 	}
 	
