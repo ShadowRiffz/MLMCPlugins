@@ -423,7 +423,7 @@ public class Commands implements CommandExecutor{
 			StoredAttributes pAttr = main.playerAttrs.get(uuid).get(acc);
 			if (pAttr == null) {
 				// Use same attrs as first account
-				pAttr = new StoredAttributes(playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
+				pAttr = new StoredAttributes(main.playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
 				main.playerAttrs.get(uuid).put(acc, pAttr);
 			}
 			new ResearchAttributesInventory(p, pAttr);
