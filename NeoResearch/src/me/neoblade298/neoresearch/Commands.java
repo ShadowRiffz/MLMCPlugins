@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.SkillAPI;
+
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.neoblade298.neoresearch.inventories.ResearchAttributesInventory;
@@ -56,7 +58,8 @@ public class Commands implements CommandExecutor{
 			
 			// /nr debug [player]
 			else if (args[0].equalsIgnoreCase("debug")) {
-				sender.sendMessage(main.getPlayerAttributes(Bukkit.getPlayer(args[1])).toString());
+				Player p = Bukkit.getPlayer(args[1]);
+				sender.sendMessage(main.getPlayerAttributes(p, SkillAPI.getPlayerAccountData(p).getActiveId()).toString());
 				return true;
 			}
 
@@ -415,7 +418,15 @@ public class Commands implements CommandExecutor{
 		}
 		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
 			Player p = (Player) sender;
-			new ResearchAttributesInventory(p, main.playerAttrs.get(p.getUniqueId()));
+			UUID uuid = p.getUniqueId();
+			int acc = SkillAPI.getPlayerAccountData(p).getActiveId();
+			StoredAttributes pAttr = main.playerAttrs.get(uuid).get(acc);
+			if (pAttr == null) {
+				// Use same attrs as first account
+				pAttr = new StoredAttributes(main.playerAttrs.get(uuid).get(1).getStoredAttrs());
+				main.playerAttrs.get(uuid).put(acc, pAttr);
+			}
+			new ResearchAttributesInventory(p, pAttr);
 			return true;
 		}
 		return false;

@@ -81,7 +81,7 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		if (e.getInventory() != inv)
 			return;
 		
-		if (e.getCurrentItem().getType().isAir()) 
+		if (e.getCurrentItem() != null && e.getCurrentItem().getType().isAir()) 
 			return;
 
 		e.setCancelled(true);

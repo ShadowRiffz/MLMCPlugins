@@ -16,10 +16,17 @@ public class StoredAttributes {
 		this.active = new HashMap<String, Integer>();
 	}
 
-
 	public StoredAttributes(HashMap<String, Integer> attrs) {
 		this.stored = attrs;
 		this.active = new HashMap<String, Integer>();
+	}
+	
+	public int countAttributes() {
+		int count = 0;
+		for (String key : stored.keySet()) {
+			count += stored.get(key);
+		}
+		return count;
 	}
 
 	public void applyAttributes(Player p) {
@@ -72,16 +79,26 @@ public class StoredAttributes {
 	}
 	
 	public void investAttribute(String attr, int num) {
-		if (stored.get("unused") >= num) {
-			stored.put("unused", stored.get("unused") - num);
+		int unused = stored.get("unused");
+		if (unused >= num) {
+			stored.put("unused", unused - num);
 			stored.put(attr, stored.getOrDefault(attr, 0) + num);
+		}
+		else if (unused >= 1) {
+			stored.put("unused", 0);
+			stored.put(attr, stored.getOrDefault(attr, 0) + unused);
 		}
 	}
 	
 	public void unvestAttribute(String attr, int num) {
-		if (stored.get(attr) >= num) {
+		int attrNum = stored.get(attr);
+		if (attrNum >= num) {
 			stored.put("unused", stored.getOrDefault("unused", 0) + num);
-			stored.put(attr, stored.get(attr) - num);
+			stored.put(attr, attrNum - num);
+		}
+		else if (attrNum >= 1) {
+			stored.put("unused", stored.getOrDefault("unused", 0) + attrNum);
+			stored.put(attr, 0);
 		}
 	}
 
