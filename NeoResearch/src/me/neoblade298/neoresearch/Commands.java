@@ -372,6 +372,7 @@ public class Commands implements CommandExecutor{
 				p.sendMessage("§c[§4§lMLMC§4] §cYou have already converted once!");
 				return true;
 			}
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set research.converted");
 
 			p.sendMessage("§c[§4§lMLMC§4] §7Converting your collections...");
 			int max = 950;
