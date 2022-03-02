@@ -364,6 +364,14 @@ public class GearConfig {
 			}
 		}
 		
+		// Update enchantments if needed
+		for (Enchant enchant : requiredEnchants) {
+			int curr = meta.getEnchantLevel(enchant.enchantment);
+			if (curr >= enchant.min && curr <= enchant.max) {
+				int lv = enchant.min + Gear.gen.nextInt(enchant.max - enchant.min + 1);
+				meta.addEnchant(enchant.enchantment, lv, true);
+			}
+		}
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
