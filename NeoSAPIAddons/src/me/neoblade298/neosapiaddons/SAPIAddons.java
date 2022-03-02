@@ -126,24 +126,6 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 	}
 	
 	@EventHandler
-	public void onShootBow(EntityShootBowEvent e) {
-		if (e.getBow().getType().equals(Material.CROSSBOW) &&
-				e.getEntity() instanceof Player &&
-				e.getProjectile() instanceof Arrow) {
-			String world = e.getEntity().getWorld().getName();
-			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
-				Player p = (Player) e.getEntity();
-				if (e.getBow().containsEnchantment(Enchantment.ARROW_INFINITE)) {
-					p.getInventory().addItem(new ItemStack(Material.ARROW));
-				}
-				Arrow arrow = (Arrow) e.getProjectile();
-				arrow.setPickupStatus(PickupStatus.DISALLOWED);
-				return;
-			}
-		}
-	}
-	
-	@EventHandler
 	public void onEat(PlayerItemConsumeEvent e) {
 		if (e.getPlayer().getWorld().getName().equalsIgnoreCase("ClassPVP") ||
 				e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll")) {
