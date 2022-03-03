@@ -64,6 +64,9 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		String boss = args[0];
 		String id = args[1];
+		if (plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss) == null) {
+			return "Invalid";
+		}
 		int level = (int) plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
