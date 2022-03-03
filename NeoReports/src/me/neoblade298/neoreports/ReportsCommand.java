@@ -47,28 +47,67 @@ public class ReportsCommand implements CommandExecutor {
 				sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 				return true;
 			}
-			else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-				try{  
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
-					Statement stmt = con.createStatement();
-					ResultSet rs;
-					rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' ORDER BY id DESC;");
-					Stack<Report> reports = new Stack<Report>();
-					while(rs.next()) {
-						Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
-								rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
-						reports.push(temp);
+			else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("list")) {
+				if (args.length == 1) {
+					try {  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' ORDER BY id DESC;");
+						int count = 1;
+						Stack<Report> reports = new Stack<Report>();
+						while(rs.next()) {
+							Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+									rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+							reports.push(temp);
+							count++;
+							if (count > NUM_REPORTS_PER_PAGE) {
+								break;
+							}
+						}
+						while (!reports.isEmpty()) {
+							reports.pop().list(sender);
+						}
+						sender.sendMessage("§7=====");
+						con.close();
 					}
-					while (!reports.isEmpty()) {
-						reports.pop().list(sender);
+					catch(Exception e) {
+						System.out.println(e);
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
-					sender.sendMessage("§7=====");
-					con.close();
 				}
-				catch(Exception e) {
-					System.out.println(e);
-					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+				else {
+					int page = Integer.parseInt(args[2]);
+					try {  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE user = '" + author + "' ORDER BY id DESC;");
+						int count = 1;
+						Stack<Report> reports = new Stack<Report>();
+						while(rs.next()) {
+							if (NUM_REPORTS_PER_PAGE * (page - 1) < count) {
+								Report temp = new Report(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
+										rs.getString(7), rs.getInt(8) == 1, rs.getInt(9) == 1);
+								reports.push(temp);
+							}
+							count++;
+							if (count > NUM_REPORTS_PER_PAGE) {
+								break;
+							}
+						}
+						while (!reports.isEmpty()) {
+							reports.pop().list(sender);
+						}
+						sender.sendMessage("§7=====");
+						con.close();
+					}
+					catch(Exception e) {
+						System.out.println(e);
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+					}
 				}
 				return true;
 			}
