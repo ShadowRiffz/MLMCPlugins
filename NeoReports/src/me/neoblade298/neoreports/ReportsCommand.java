@@ -47,7 +47,7 @@ public class ReportsCommand implements CommandExecutor {
 				sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 				return true;
 			}
-			else if ((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("list")) {
+			else if ((args.length == 1 || (args.length == 2 && !args[1].equalsIgnoreCase("bug"))) && args[0].equalsIgnoreCase("list")) {
 				if (args.length == 1) {
 					try {  
 						Class.forName("com.mysql.jdbc.Driver");
@@ -77,7 +77,7 @@ public class ReportsCommand implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
-				else if (args.length == 2 && !args[1].equalsIgnoreCase("bug")) {
+				else if (args.length == 2) {
 					int page = Integer.parseInt(args[1]);
 					try {  
 						Class.forName("com.mysql.jdbc.Driver");
