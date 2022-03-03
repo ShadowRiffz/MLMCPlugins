@@ -77,8 +77,8 @@ public class ReportsCommand implements CommandExecutor {
 						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
-				else {
-					int page = Integer.parseInt(args[2]);
+				else if (args.length == 2 && !args[1].equalsIgnoreCase("bug")) {
+					int page = Integer.parseInt(args[1]);
 					try {  
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
