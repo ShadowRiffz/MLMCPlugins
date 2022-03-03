@@ -296,8 +296,8 @@ public class AugmentManager implements Listener {
 			}
 		}
 		else if (containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE")) {
-			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
-				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
+			if (containsAugments(p, EventType.DAMAGE_TAKEN)) {
+				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
 					if (augment instanceof ModDamageTakenAugment) {
 						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
