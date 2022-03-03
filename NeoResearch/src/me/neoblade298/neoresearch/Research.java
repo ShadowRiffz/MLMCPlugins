@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -237,9 +238,14 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						
 						rs = stmt.executeQuery("SELECT * FROM research_completed WHERE uuid = '" + uuid + "';");
 						while (rs.next()) {
-							ResearchItem rItem = researchItems.get(rs.getString(2));
-							expectedAttrs += rItem.getAttrs();
-							completedResearchItems.put(rItem.getId(), rItem);
+							try {
+								ResearchItem rItem = researchItems.get(rs.getString(2));
+								expectedAttrs += rItem.getAttrs();
+								completedResearchItems.put(rItem.getId(), rItem);
+							}
+							catch (Exception e) {
+								Bukkit.getLogger().log(Level.WARNING, "Could not load research item: " + rs.getString(2));
+							}
 						}
 
 						rs = stmt.executeQuery("SELECT * FROM research_attributes WHERE uuid = '" + uuid + "';");
