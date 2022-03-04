@@ -63,6 +63,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashSet<String> minibosses;
 	public Random rand;
 	public boolean isInstance;
+	public static boolean debug = false;
 	
 	public HashMap<UUID, Long> lastSave;
 
@@ -423,17 +424,27 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		// Check if new discovery
 		PlayerStats stats = playerStats.get(p.getUniqueId());
 		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
+		if (Research.debug) {
+			Bukkit.getLogger().log(Level.INFO, "Checking item completion for: " + p.getName() + ", " + mob);
+		}
 		
 		// Check for research goals that need it
 		HashMap<String, ResearchItem> completedItems = stats.getCompletedResearchItems();
 		if (mobMap.containsKey(mob)) {
 			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
 				if (!completedItems.containsKey(researchItem.getId())) { // If the player hasn't completed it
+					if (Research.debug) {
+						Bukkit.getLogger().log(Level.INFO, "- Research item: " + researchItem.getName());
+					}
 					// Check if research goal is completed for specific mob
 					HashMap<String, Integer> goals = researchItem.getGoals();
 					if (goals.get(mob) <= totalPoints) {
 						for (String rMob : goals.keySet()) { // Check every objective
 							if (!researchPoints.containsKey(rMob) || researchPoints.get(rMob) < goals.get(rMob)) {
+								if (Research.debug) {
+									Bukkit.getLogger().log(Level.INFO, "- Failed to complete: " + rMob + ", requires: " + goals.get(rMob) + ", has: " +
+											researchPoints.getOrDefault(rMob, 0));
+								}
 								return; // Haven't completed every item
 							}
 						}

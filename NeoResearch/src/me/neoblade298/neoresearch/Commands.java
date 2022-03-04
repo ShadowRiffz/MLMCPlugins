@@ -46,6 +46,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr update/resetattrs [player]");
 				sender.sendMessage("§c/nr convert [max]");
+				sender.sendMessage("§c/nr debug");
 				return true;
 			}
 
@@ -56,10 +57,15 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			
-			// /nr debug [player]
+			// /nr debug
 			else if (args[0].equalsIgnoreCase("debug")) {
-				Player p = Bukkit.getPlayer(args[1]);
-				sender.sendMessage(main.getPlayerAttributes(p, SkillAPI.getPlayerAccountData(p).getActiveId()).toString());
+				Research.debug = !Research.debug;
+				if (Research.debug) {
+					sender.sendMessage("§7Debug enabled");
+				}
+				else {
+					sender.sendMessage("§7Debug disabled");
+				}
 				return true;
 			}
 
