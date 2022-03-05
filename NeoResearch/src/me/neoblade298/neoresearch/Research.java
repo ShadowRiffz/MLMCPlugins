@@ -432,12 +432,13 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		HashMap<String, ResearchItem> completedItems = stats.getCompletedResearchItems();
 		if (mobMap.containsKey(mob)) {
 			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
+				if (Research.debug) {
+					Bukkit.getLogger().log(Level.INFO, "- Research item: " + researchItem.getName() + ", completed: " + completedItems.containsKey(researchItem.getId()));
+				}
 				if (!completedItems.containsKey(researchItem.getId())) { // If the player hasn't completed it
-					if (Research.debug) {
-						Bukkit.getLogger().log(Level.INFO, "- Research item: " + researchItem.getName());
-					}
 					// Check if research goal is completed for specific mob
 					HashMap<String, Integer> goals = researchItem.getGoals();
+					boolean completed = true;
 					if (goals.get(mob) <= totalPoints) {
 						for (String rMob : goals.keySet()) { // Check every objective
 							if (!researchPoints.containsKey(rMob) || researchPoints.get(rMob) < goals.get(rMob)) {
@@ -445,17 +446,20 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 									Bukkit.getLogger().log(Level.INFO, "- Failed to complete: " + rMob + ", requires: " + goals.get(rMob) + ", has: " +
 											researchPoints.getOrDefault(rMob, 0));
 								}
-								return; // Haven't completed every item
+								completed = false;
+								break; // Haven't completed every item
 							}
 						}
 	
 						// Completed a research item
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName()));
-						completedItems.put(researchItem.getId(), researchItem);
-						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
-						stats.addExp(p, researchItem.getExp());
-						updateBonuses(p);
+						if (completed) {
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+									broadcast.replaceAll("%player%", p.getName()).replaceAll("%item%", researchItem.getName()));
+							completedItems.put(researchItem.getId(), researchItem);
+							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
+							stats.addExp(p, researchItem.getExp());
+							updateBonuses(p);
+						}
 					}
 				}
 			}
