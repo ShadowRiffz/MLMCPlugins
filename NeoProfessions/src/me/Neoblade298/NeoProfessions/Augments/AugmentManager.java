@@ -38,6 +38,7 @@ import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Buffs.*;
 import me.Neoblade298.NeoProfessions.Augments.Charms.*;
 import me.Neoblade298.NeoProfessions.Augments.Crits.*;
@@ -55,6 +56,7 @@ import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class AugmentManager implements Listener {
+	Professions main;
 	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
@@ -72,7 +74,9 @@ public class AugmentManager implements Listener {
 		enabledWorlds.add("ClassPVP");
 	}
 	
-	public AugmentManager() {
+	public AugmentManager(Professions main) {
+		this.main = main;
+		
 		// Buffs
 		augmentMap.put("Brace", new BraceAugment());
 		augmentMap.put("Commander", new CommanderAugment());

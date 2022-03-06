@@ -95,7 +95,7 @@ public class Professions extends JavaPlugin implements Listener {
 
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
-		getServer().getPluginManager().registerEvents(new AugmentManager(), this);
+		getServer().getPluginManager().registerEvents(new AugmentManager(this), this);
 		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
 			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		}
