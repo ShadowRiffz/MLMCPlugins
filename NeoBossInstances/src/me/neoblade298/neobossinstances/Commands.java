@@ -221,8 +221,16 @@ public class Commands implements CommandExecutor {
 			// /boss disable
 			else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !main.isInstance) {
 				main.disableFights = !main.disableFights;
-				if (main.disableFights) sender.sendMessage("§4[§c§lBosses§4] §7Boss fights disabled!");
-				else sender.sendMessage("§4[§c§lBosses§4] §7Boss fights enabled!");
+				String msg;
+				if (main.disableFights) {
+					msg = "§4[§c§lMLMC§4] §7Boss fights have been temporarily disabled for maintenance!";
+				}
+				else {
+					msg = "§4[§c§lMLMC§4] §7Boss fights have been re-enabled!";
+				}
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					p.sendMessage(msg);
+				}
 				return true;
 			}
 			// /boss reload
