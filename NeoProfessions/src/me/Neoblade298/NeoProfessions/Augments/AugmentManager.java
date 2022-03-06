@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -47,6 +48,8 @@ import me.Neoblade298.NeoProfessions.Augments.Healing.*;
 import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 import me.Neoblade298.NeoProfessions.Augments.Regen.*;
 import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
+import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
@@ -147,6 +150,62 @@ public class AugmentManager implements Listener {
 	
 	public boolean containsAugments(Player p, EventType etype) {
 		return enabledWorlds.contains(p.getWorld().getName()) && playerAugments.containsKey(p) && playerAugments.get(p).containsAugments(etype);
+	}
+	
+	@EventHandler
+	public void onAugmentSlot(InventoryClickEvent e) {
+		if (!e.isLeftClick()) {
+			return;
+		}
+		if (e.getCursor() == null) {
+			return;
+		}
+		if (e.getCurrentItem() == null) {
+			return;
+		}
+		
+		Player p = (Player) e.getWhoClicked();
+		ItemStack augment = e.getCursor();
+		ItemStack item = e.getCurrentItem();
+
+		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		if (augment == null || augment.getType().isAir() || !augment.hasItemMeta() || !augment.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		
+		NBTItem nbti = new NBTItem(item);
+		NBTItem nbtaug = new NBTItem(augment);
+		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
+			return;
+		}
+		if (!AugmentManager.isAugment(augment)) {
+			return;
+		}
+		if (nbti.getInteger("version") <= 0) {
+			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			return;
+		}
+		if (nbti.getInteger("slotsCreated") <= 0) {
+			Util.sendMessage(p, "&cNo slots available on this item!");
+			return;
+		}
+		if (!nbtaug.getString("level").isBlank() && nbtaug.getInteger("level") == 0) {
+			nbtaug.setInteger("level", Integer.parseInt(nbtaug.getString("level")));
+			nbtaug.applyNBT(augment);
+		}
+		if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
+			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
+			return;
+		}
+		else {
+			ItemStack clone = augment.clone();
+			clone.setAmount(1);
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+			new ConfirmAugmentInventory(main, p, item, clone);
+		}
 	}
 	
 	@EventHandler(ignoreCancelled = false)
