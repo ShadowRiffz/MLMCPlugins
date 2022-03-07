@@ -24,6 +24,7 @@ import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.neoblade298.neogear.Gear;
@@ -39,11 +40,13 @@ public class Professions extends JavaPlugin implements Listener {
 	public static Permission perms;
 	public static Chat chat;
 	public static YamlConfiguration cfg;
+	
+	public static String lvlupMsg;
 
-	static String sqlUser;
-	static String sqlPass;
-	static String connection;
-	static Properties properties = new Properties();
+	public static String sqlUser;
+	public static String sqlPass;
+	public static String connection;
+	public static Properties properties = new Properties();
 
 	public ProfessionsMethods professionsMethods;
 	public CulinarianRecipes culinarianRecipes;
@@ -52,6 +55,7 @@ public class Professions extends JavaPlugin implements Listener {
 	public GeneralListeners generalListeners;
 	
 	public static CurrencyManager cm;
+	public static ProfessionManager pm;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -85,10 +89,8 @@ public class Professions extends JavaPlugin implements Listener {
 				sql.getString("db") + sql.getString("flags");
 		sqlUser = sql.getString("username");
 		sqlPass = sql.getString("password");
-		
-		// droptables
-		loadDroptables(new File(getDataFolder(), "droptables"));
 
+		loadConfig();
 		if (new File(getDataFolder(), "instance").exists()) {
 			isInstance = true;
 		}
@@ -99,12 +101,12 @@ public class Professions extends JavaPlugin implements Listener {
 		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
 			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		}
+			
 		if (!isInstance) {
 			// Currency
 			cm = new CurrencyManager(this);
-		}
+			pm = new ProfessionManager(this);
 			
-		if (!isInstance) {
 			// NeoGear
 			neogear = (Gear) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
 	
@@ -145,6 +147,14 @@ public class Professions extends JavaPlugin implements Listener {
 		properties.setProperty("useSSL", "false");
 	}
 	
+	private void loadConfig() {
+		// general
+		lvlupMsg = cfg.getString("levelup");
+		
+		// droptables
+		loadDroptables(new File(getDataFolder(), "droptables"));
+	}
+	
 	private void loadDroptables(File dir) {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
@@ -164,6 +174,9 @@ public class Professions extends JavaPlugin implements Listener {
 		try {
 			if (cm != null) {
 				cm.cleanup();
+			}
+			if (pm != null) {
+				ProfessionManager.saveAll();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
