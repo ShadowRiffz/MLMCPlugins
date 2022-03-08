@@ -680,7 +680,7 @@ public class Main extends JavaPlugin implements Listener {
 				else if (am.getLevel() > 6) {
 					e.setDamage(e.getDamage() * (1 + (0.3 * (am.getLevel() - 1))));
 				}
-				else {
+				else if (am.getLevel() >= -99){
 					e.setDamage(e.getDamage() * (1 + (0.01 * (am.getLevel()))));
 				}
 			}
