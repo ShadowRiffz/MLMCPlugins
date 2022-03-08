@@ -20,6 +20,7 @@ import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.api.util.StatusFlag;
 
 import me.Neoblade298.NeoConsumables.Consumables;
+import me.Neoblade298.NeoConsumables.SkullCreator;
 import me.Neoblade298.NeoConsumables.runnables.AttributeRunnable;
 import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
@@ -48,27 +49,6 @@ public class FoodConsumable extends Consumable {
 
 	public double getSaturation() {
 		return this.saturation;
-	}
-
-	public boolean isSimilar(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		if (!getLore().isEmpty()) {
-			if (!meta.hasLore()) {
-				return false;
-			}
-
-			ArrayList<String> flore = getLore();
-			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
-
-			for (int i = 0; i < flore.size(); i++) {
-				String fLine = getLore().get(i);
-				String mLine = mlore.get(i);
-				if (!mLine.contains(fLine)) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
@@ -227,6 +207,10 @@ public class FoodConsumable extends Consumable {
 		for (String cmd : this.commands) {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%p", player.getName()));
 		}
+	}
+	
+	public ItemStack getItem() {
+		ItemStack item = SkullCreator.itemFromBase64(base64);
 	}
 
 	public void setHealth(int health) {

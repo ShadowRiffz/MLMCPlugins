@@ -18,27 +18,6 @@ public class TokenConsumable extends Consumable {
 		super(main, name, sounds, lore, nbt);
 	}
 
-	public boolean isSimilar(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		if (!getLore().isEmpty()) {
-			if (!meta.hasLore()) {
-				return false;
-			}
-
-			ArrayList<String> flore = getLore();
-			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
-
-			for (int i = 0; i < flore.size(); i++) {
-				String fLine = getLore().get(i);
-				String mLine = mlore.get(i);
-				if (!mLine.contains(fLine)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
 	public boolean canUse(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		if (!p.getName().equals(nbti.getString("player"))) {
