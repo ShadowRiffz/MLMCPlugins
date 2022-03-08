@@ -674,7 +674,7 @@ public class Main extends JavaPlugin implements Listener {
 			// Anything above 50k is probably some sort of instakill, don't multiply it
 			if (e.getDamage() < 50000) {
 				ActiveMob am = api.getMythicMobInstance(e.getDamager());
-				if (am.getLevel() <= 6 && am.getLevel() > 0) {
+				if (am.getLevel() <= 6 && am.getLevel() >= 1) {
 					e.setDamage(e.getDamage() * (1 + (0.1 * (am.getLevel() - 1))));
 				}
 				else if (am.getLevel() > 6) {
