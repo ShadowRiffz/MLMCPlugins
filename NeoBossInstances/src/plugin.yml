@@ -3,7 +3,8 @@ author: Neoblade298
 main: me.neoblade298.neobossinstances.Main
 api-version: 1.16
 version: 1.0
-depend: [SkillAPI, LuckPerms, NeoSettings]
+loadbefore: [SkillAPI]
+depend: [LuckPerms, NeoSettings]
 softdepend: [Multiverse-Core, MythicMobs]
 commands:
   boss:
