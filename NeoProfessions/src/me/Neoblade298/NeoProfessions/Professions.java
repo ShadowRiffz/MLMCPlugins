@@ -26,6 +26,7 @@ import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
+import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.neoblade298.neogear.Gear;
 import net.milkbowl.vault.chat.Chat;
@@ -56,6 +57,7 @@ public class Professions extends JavaPlugin implements Listener {
 	
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
+	public static StorageManager sm;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -106,6 +108,7 @@ public class Professions extends JavaPlugin implements Listener {
 			// Currency
 			cm = new CurrencyManager(this);
 			pm = new ProfessionManager(this);
+			sm = new StorageManager(this);
 			
 			// NeoGear
 			neogear = (Gear) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");

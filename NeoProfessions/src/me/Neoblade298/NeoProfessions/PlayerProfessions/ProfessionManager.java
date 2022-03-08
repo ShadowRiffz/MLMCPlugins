@@ -26,7 +26,7 @@ public class ProfessionManager {
 	
 	static HashMap<UUID, HashMap<String, Profession>> accounts = new HashMap<UUID, HashMap<String, Profession>>();
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
-	static ArrayList<String> profNames;
+	static ArrayList<String> profNames = new ArrayList<String>();
 	
 	static {
 		profNames.add("stonecutter");

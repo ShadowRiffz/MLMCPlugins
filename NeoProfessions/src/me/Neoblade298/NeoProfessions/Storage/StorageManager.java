@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -24,8 +23,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
-import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 
 public class StorageManager {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
@@ -38,7 +35,7 @@ public class StorageManager {
 		StorageManager.main = main;
 		
 		// Load in items
-		loadItems(main.getDataFolder());
+		loadItems(new File(main.getDataFolder(), "items"));
 	}
 	
 	private void loadItems(File dir) {
