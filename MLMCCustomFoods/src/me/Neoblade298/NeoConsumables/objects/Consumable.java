@@ -17,7 +17,7 @@ public abstract class Consumable {
 	ArrayList<Sound> sounds;
 	HashMap<String, String> nbt;
 
-	public Consumable(Consumables main, String key, ArrayList<Sound> sounds) {
+	public Consumable(Consumables main, String key) {
 		this.main = main;
 		this.key = key;
 		this.sounds = new ArrayList<Sound>();
