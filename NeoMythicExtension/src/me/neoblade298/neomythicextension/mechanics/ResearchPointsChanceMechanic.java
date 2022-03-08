@@ -38,6 +38,9 @@ public class ResearchPointsChanceMechanic extends SkillMechanic implements ITarg
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
+			if (data.getCaster().getLevel() <= 0) {
+				return true;
+			}
 			double rand = this.rand.nextDouble();
 			double chance = this.basechance;
 			String mob = this.alias;
