@@ -70,31 +70,46 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		int level = (int) plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
+			if (level < 1) {
+				return "" + 0;
+			}
 			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
 			return "" + scale;
 		}
 		else if (id.equalsIgnoreCase("chest")) {
+			if (level < 1) {
+				return "" + 0;
+			}
 			double scale = Math.min(50, 25 + (0.25 * (level - 1)));
 			return "" + scale;
 		}
 		else if (id.equalsIgnoreCase("damage")) {
 
-			if (level <= 6) {
+			if (level <= 6 && level >= 1) {
 				double scale = 1 + (0.1 * (level - 1));
 				return "" + scale;
 			}
-			else {
+			else if (level > 6) {
 				double scale = 1 + (0.3 * (level - 1));
+				return "" + scale;
+			}
+			else if (level < 1) {
+				double scale = 1 + (0.01 * (level));
 				return "" + scale;
 			}
 		}
 		else if (id.equalsIgnoreCase("health")) {
     		double oldHealth = this.health.get(boss);
     		double newHealth = oldHealth;
-			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
-			if (level > 6) {
-				newHealth += (level - 6) * 0.2 * oldHealth;
-			}
+    		if (level >= 1) {
+    			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
+    			if (level > 6) {
+    				newHealth += (level - 6) * 0.2 * oldHealth;
+    			}
+    		}
+    		else {
+    			newHealth *= 1 + (level  * 0.01);
+    		}
 			return "" + newHealth;
 		}
 		return "Invalid placeholder";
