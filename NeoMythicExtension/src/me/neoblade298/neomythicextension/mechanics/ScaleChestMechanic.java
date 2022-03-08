@@ -44,6 +44,10 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
+			if (data.getCaster().getLevel() < 1) {
+				return true;
+			}
+			
 			double rand = this.rand.nextDouble();
 			double chance = this.basechance;
 

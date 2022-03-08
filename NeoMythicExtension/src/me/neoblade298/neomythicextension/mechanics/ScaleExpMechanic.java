@@ -26,6 +26,10 @@ public class ScaleExpMechanic extends SkillMechanic implements ITargetedEntitySk
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
+			if (data.getCaster().getLevel() < 1) {
+				return true;
+			}
+			
 			Player p = (Player) target.getBukkitEntity();
 			double scale = Math.min(2, 1 + (0.05 * (data.getCaster().getLevel() - 1)));
 			double exp = Math.round(this.amount * scale);
