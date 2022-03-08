@@ -39,7 +39,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    		AbstractEntity ent = am.getEntity();
 	    		
 	    		// Set level
-	    		if (level < numPlayers) {
+	    		if (level < numPlayers && level >= 1) {
 	    			if (ent.isValid()) {
 		    			am.setLevel(numPlayers);
 		    			level = numPlayers;
