@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.PlayerProfessions;
 
 import java.util.HashMap;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 
 public class Profession {
-	OfflinePlayer p;
 	String name;
 	int exp, level;
 	static HashMap<Integer, Integer> nextLv;
@@ -21,19 +19,10 @@ public class Profession {
 		}
 	}
 	
-	public Profession(OfflinePlayer p, String name) {
-		this.p = p;
+	public Profession(String name) {
 		this.name = name;
 		this.exp = 0;
 		this.level = 1;
-	}
-
-	public OfflinePlayer getPlayer() {
-		return p;
-	}
-
-	public void setPlayer(OfflinePlayer p) {
-		this.p = p;
 	}
 
 	public String getName() {

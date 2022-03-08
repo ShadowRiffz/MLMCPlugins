@@ -1,17 +1,21 @@
-package me.Neoblade298.NeoProfessions.PlayerProfessions;
+package me.Neoblade298.NeoProfessions.Storage;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.List;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -20,43 +24,51 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 
-public class ProfessionManager {
-	static Professions main;
-	
-	static HashMap<UUID, HashMap<String, Profession>> accounts = new HashMap<UUID, HashMap<String, Profession>>();
+public class StorageManager {
+	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
+	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
-	static ArrayList<String> profNames;
+	static Professions main;
+
 	
-	static {
-		profNames.add("stonecutter");
-		profNames.add("logger");
-		profNames.add("harvester");
-		profNames.add("crafter");
+	public StorageManager(Professions main) {
+		StorageManager.main = main;
+		
+		// Load in items
+		loadItems(main.getDataFolder());
 	}
 	
-	public ProfessionManager(Professions main) {
-		ProfessionManager.main = main;
-	}
-	
-	public int getLevel(Player p, String prof) {
-		if (accounts.containsKey(p.getUniqueId())) {
-			return accounts.get(p.getUniqueId()).get(prof).getLevel();
+	private void loadItems(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadItems(file);
+			}
+			else {
+				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+				for (String id : yaml.getKeys(false)) {
+					ConfigurationSection itemCfg = yaml.getConfigurationSection(id);
+					StoredItem item = new StoredItem(itemCfg.getString("name"));
+					ArrayList<String> lore = (ArrayList<String>) itemCfg.getStringList("lore");
+					if (itemCfg.getStringList("lore") != null) {
+						item.setLore(lore);
+					}
+					items.put(Integer.parseInt(id), item);
+				}
+			}
 		}
-		return -1;
 	}
 	
 	public static void loadPlayer(OfflinePlayer p) {
 		// Check if player exists already
-		if (accounts.containsKey(p.getUniqueId())) {
+		if (storages.containsKey(p.getUniqueId())) {
 			return;
 		}
 
-		HashMap<String, Profession> profs = new HashMap<String, Profession>();
-		for (String prof : profNames) {
-			profs.put(prof, new Profession(prof));
-		}
-		accounts.put(p.getUniqueId(), profs);
+		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>();
+		storages.put(p.getUniqueId(), items);
 		
 		// Check if player exists on SQL
 		try {
@@ -64,27 +76,13 @@ public class ProfessionManager {
 			Connection con = DriverManager.getConnection(Professions.connection, Professions.properties);
 			Statement stmt = con.createStatement();
 			ResultSet rs;
-			rs = stmt.executeQuery("SELECT * FROM professions_accounts WHERE UUID = '" + p.getUniqueId() + "';");
-			boolean sqlExists = false;
+			rs = stmt.executeQuery("SELECT * FROM professions_items WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				sqlExists = true;
-				String prof = rs.getString(2);
-				profs.get(prof).setLevel(rs.getInt(3));
-				profs.get(prof).setExp(rs.getInt(4));
+				items.put(rs.getInt(2), rs.getInt(3));
 			}
-
-			if (!sqlExists) {
-				// User does not exist on sql
-				for (String prof : profNames) {
-					stmt.addBatch("INSERT INTO professions_accounts "
-							+ "VALUES ('" + p.getUniqueId() + "', '" + prof + "', 1, 0);");
-				}
-				stmt.executeBatch();
-			}
-			con.close();
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init professions for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init storage for user " + p.getName());
 			e.printStackTrace();
 		}
 	}
@@ -98,11 +96,12 @@ public class ProfessionManager {
 		lastSave.put(uuid, System.currentTimeMillis());
 		
 		try {
-			for (Entry<String, Profession> entry : accounts.get(uuid).entrySet()) {
-				Profession prof = entry.getValue();
+			for (Entry<Integer, Integer> entry : storages.get(uuid).entrySet()) {
+				if (entry.getValue() == 0) {
+					continue;
+				}
 				stmt.addBatch("REPLACE INTO professions_accounts "
-						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
-						prof.getExp()  +");");
+						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + entry.getValue() + ");");
 			}
 			
 			// Set to true if you're saving several accounts at once
@@ -111,7 +110,7 @@ public class ProfessionManager {
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save professions for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
 			e.printStackTrace();
 		}
 	}
@@ -136,7 +135,7 @@ public class ProfessionManager {
 
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
-				if (accounts.containsKey(uuid)) {
+				if (storages.containsKey(uuid)) {
 					try {
 						Class.forName("com.mysql.jdbc.Driver");
 						Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
