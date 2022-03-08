@@ -140,7 +140,11 @@ public class Commands implements CommandExecutor {
 				}
 				
 				// Actually send them
-				int level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
+				int level = (int) main.settings.getValue(p.getUniqueId(), boss);
+				if (level >= 1) {
+					level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
+				}
+				
 				for (Player target : targets) {
 					SkillAPI.saveSingle(target);
 					UUID uuid = target.getUniqueId();
