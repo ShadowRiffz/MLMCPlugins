@@ -13,7 +13,7 @@ import me.neoblade298.neosettings.NeoSettings;
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 	private NeoSettings plugin;
 	private HashMap<String, Integer> health;
-	private static DecimalFormat df = new DecimalFormat("##.#");
+	private static DecimalFormat df = new DecimalFormat("##.##");
 
 	public BossMultipliersPlaceholders(HashMap<String, Integer> health) {
 		this.health = health;
