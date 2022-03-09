@@ -158,7 +158,6 @@ public class DurationEffects {
 	
 	// Use when saving
 	public boolean isRelevant() {
-		Player p = Bukkit.getPlayer(uuid);
 		long elapsedMilliseconds = System.currentTimeMillis() - startTime;
 		return (cons.getTotalDuration() * 1000) > elapsedMilliseconds;
 	}

@@ -247,8 +247,19 @@ public class FoodConsumable extends Consumable {
 		return nbti.getItem();
 	}
 	
+	private String correctColors(String line) {
+		return line.replaceAll("\\\\&", "@").replaceAll("&", "§").replaceAll("@", "&");
+	}
+	
 	public void setDisplay(String display) {
-		this.display = display;
+		this.display = correctColors(display);
+	}
+	
+	public void setLore(List<String> list) {
+		lore.clear();
+		for (String line : list) {
+			lore.add(correctColors(line));
+		}
 	}
 	
 	public void setMaterial(String mat) {

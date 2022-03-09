@@ -31,7 +31,6 @@ import me.neoblade298.neosettings.objects.Settings;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -62,7 +60,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 public class Consumables extends JavaPlugin implements Listener {
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
@@ -134,7 +131,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			try {
 				ConfigurationSection sec = itemConfig.getConfigurationSection(key);
 				
-				String type = sec.getString("type", "FOOD");
+				String type = sec.getString("type", "INSTANT_FOOD");
 				Consumable cons = null;
 				if (type.equals("INSTANT_FOOD")) {
 					cons = loadFoodConsumable(sec, key, false);
@@ -181,6 +178,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			cons.setMaterial(mat);
 		}
 		cons.setDisplay(config.getString("display"));
+		cons.setLore(config.getStringList("lore"));
 
 		// Potion effects
 		ArrayList<PotionEffect> potions = cons.getPotions();
@@ -347,10 +345,6 @@ public class Consumables extends JavaPlugin implements Listener {
 			return;
 		}
 		ItemStack item = p.getInventory().getItemInMainHand();
-		if ((!item.hasItemMeta()) || (!item.getItemMeta().hasDisplayName())) {
-			return;
-		}
-
 		String key = new NBTItem(item).getString("consumable");
 
 		// Find the food in the inv

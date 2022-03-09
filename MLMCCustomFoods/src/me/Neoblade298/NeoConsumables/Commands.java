@@ -34,6 +34,7 @@ public class Commands implements CommandExecutor{
 					p = Bukkit.getPlayer(args[1]);
 					offset++;
 				}
+				
 				if (args[1 + offset].equalsIgnoreCase("boss")) {
 					p.getInventory().addItem(Items.getBossChestToken(p, System.currentTimeMillis()));
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
@@ -41,8 +42,13 @@ public class Commands implements CommandExecutor{
 				}
 				else {
 					FoodConsumable cons = (FoodConsumable) Consumables.consumables.get(args[1 + offset]);
+					
+					if (args.length > 2 + offset) {
+						amt = Integer.parseInt(args[2 + offset]);
+					}
+					
 					if (cons != null) {
-						p.getInventory().addItem(cons.getItem(Integer.parseInt(args[2 + offset])));
+						p.getInventory().addItem(cons.getItem(amt));
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + " to §e" + p.getName());
 						return true;
 					}

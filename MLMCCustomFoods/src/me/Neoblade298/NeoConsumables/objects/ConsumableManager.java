@@ -10,15 +10,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.Neoblade298.NeoConsumables.Consumables;
 
 public class ConsumableManager {
-	public static HashMap<UUID, PlayerCooldowns> cds;
-	public static HashMap<UUID, DurationEffects> effects;
+	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
+	public static HashMap<UUID, DurationEffects> effects = new HashMap<UUID, DurationEffects>();
 
 	public static void save(UUID uuid, Connection con, Statement stmt, boolean savingMultiple) {
 		DurationEffects eff = ConsumableManager.effects.get(uuid);
