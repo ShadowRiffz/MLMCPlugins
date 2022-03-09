@@ -94,7 +94,7 @@ public class ReportsCommand implements CommandExecutor {
 								reports.push(temp);
 							}
 							count++;
-							if (count > NUM_REPORTS_PER_PAGE) {
+							if (count > NUM_REPORTS_PER_PAGE * page) {
 								break;
 							}
 						}
