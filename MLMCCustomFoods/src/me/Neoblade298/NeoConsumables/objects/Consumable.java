@@ -22,6 +22,10 @@ public abstract class Consumable {
 	public Consumables getMain() {
 		return main;
 	}
+	
+	public String getKey() {
+		return key;
+	}
 
 	public ArrayList<Sound> getSounds() {
 		return sounds;

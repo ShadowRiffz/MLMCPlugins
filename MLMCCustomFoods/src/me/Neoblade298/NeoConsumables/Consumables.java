@@ -1,7 +1,10 @@
 package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.PlayerSaveEvent;
 import com.sucy.skill.api.util.BuffType;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -27,10 +30,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,6 +47,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -58,6 +65,11 @@ public class Consumables extends JavaPlugin implements Listener {
 	public Settings settings;
 	public Settings hiddenSettings;
 
+	public static String sqlUser;
+	public static String sqlPass;
+	public static String connection;
+	public static Properties properties = new Properties();
+
 	public void onEnable() {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 
@@ -67,6 +79,18 @@ public class Consumables extends JavaPlugin implements Listener {
 		settings.addSetting("InventoryUse", false);
 		hiddenSettings = nsettings.createSettings("Tokens", this, true);
 		hiddenSettings.addSetting("Boss", false);
+
+		// SQL
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
+		ConfigurationSection sql = cfg.getConfigurationSection("sql");
+		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
+				sql.getString("db") + sql.getString("flags");
+		sqlUser = sql.getString("username");
+		sqlPass = sql.getString("password");
+		properties.setProperty("useSSL", "false");
+		properties.setProperty("user", sqlUser);
+		properties.setProperty("password", sqlPass);
+		properties.setProperty("useSSL", "false");
 
 		// Load consumables and boss chests
 		reload();
@@ -165,7 +189,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			attribs.setAttribute(attr, amp);
 		}
 		if (!attribs.isEmpty()) {
-			cons.setAttributeTime(config.getInt("attributetime"));
+			cons.setAttributeTime(config.getInt("attribute-time"));
 		}
 		
 		ArrayList<FlagAction> flags = cons.getFlags();
@@ -194,11 +218,11 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setSaturation(config.getDouble("saturation"));
 		cons.setHunger(config.getInt("hunger"));
 		cons.setHealth(config.getInt("health.amount"));
-		cons.setHealthDelay(config.getInt("health.delay"));
-		cons.setHealthTime(config.getInt("health.repetitions"));
+		cons.setHealthPeriod(config.getInt("health.period"));
+		cons.setHealthReps(config.getInt("health.repetitions"));
 		cons.setMana(config.getInt("mana.amount"));
-		cons.setManaDelay(config.getInt("mana.delay"));
-		cons.setManaTime(config.getInt("mana.repetitions"));
+		cons.setManaPeriod(config.getInt("mana.period"));
+		cons.setManaReps(config.getInt("mana.repetitions"));
 		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
 		cons.setWorlds(config.getStringList("worlds"));
 		cons.setCooldown(config.getLong("cooldown"));
@@ -380,19 +404,44 @@ public class Consumables extends JavaPlugin implements Listener {
 			e.setCancelled(true);
 		}
 	}
-
+	
+	private void handleLeave(UUID uuid) {
+		
+	}
+	
+	@EventHandler
+	public void onLoadSQL(PlayerLoadCompleteEvent e) {
+		updateBonuses(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onSaveSQL(PlayerSaveEvent e) {
+		handleLeave(e.getUUID());
+	}
+	
+	@EventHandler
+	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
+		updateBonuses(e.getPlayer());
+	}
+	
 	@EventHandler
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
-		// Todo
+		resetBonuses(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
 	}
 
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent e) {
-		// Todo
-	}
-
-	@EventHandler
-	public void onPlayerKick(PlayerKickEvent e) {
-		// Todo
+	public void onJoin(AsyncPlayerPreLoginEvent e) {
+		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
+		loadPlayer(p);
 	}
 }

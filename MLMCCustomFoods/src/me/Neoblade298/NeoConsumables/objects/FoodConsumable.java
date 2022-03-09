@@ -13,6 +13,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitTask;
+
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.player.PlayerData;
@@ -26,6 +28,7 @@ import com.sucy.skill.listener.MechanicListener;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.SkullCreator;
+import me.Neoblade298.NeoConsumables.runnables.AttrRemoveRunnable;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
@@ -44,8 +47,8 @@ public class FoodConsumable extends Consumable {
 	int hunger;
 	double speed;
 	int speedTime;
-	int health, healthTime, healthDelay;
-	int mana, manaTime, manaDelay;
+	int health, healthReps, healthPeriod;
+	int mana, manaReps, manaPeriod;
 	long cooldown;
 	String display, base64;
 	boolean isDuration;
@@ -107,7 +110,8 @@ public class FoodConsumable extends Consumable {
 	public void use(final Player p, ItemStack item) {
 		// First get rid of any existing effects
 		UUID uuid = p.getUniqueId();
-		if (effects.containsKey(uuid) && effects.get(uuid).getEndTime() > System.currentTimeMillis()) {
+		ArrayList<BukkitTask> tasks = new ArrayList<BukkitTask>();
+		if (effects.containsKey(uuid)) {
 			effects.get(uuid).endEffects();
 		}
 		
@@ -154,14 +158,14 @@ public class FoodConsumable extends Consumable {
 
 		// SkillAPI Attributes
 		if (!attributes.isEmpty()) {
-			// If food already consumed before, remove the attributes, cancel the remove task, then add new
 			attributes.applyAttributes(p);
+			tasks.add(new AttrRemoveRunnable(p, attributes).runTaskLater(main, attributeTime * 20));
 		}
 		
 		// Flags
 		for (FlagAction flag : flags) {
 			if (flag.isAdd()) {
-				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration());
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration() * 20);
 			}
 			else {
 				FlagManager.removeFlag(p, flag.getFlag());
@@ -171,9 +175,9 @@ public class FoodConsumable extends Consumable {
 		// Buffs
 		for (BuffAction buff : buffs) {
 	        BuffType buffType = buff.getType();
-	        double seconds = buff.getDuration();
+	        int seconds = buff.getDuration();
 	        String category = buff.getCategory();
-	        int buffticks = (int) (seconds * 20);
+	        int buffticks = seconds * 20;
             SkillBuffEvent event = new SkillBuffEvent(p, p, buff.getValue(), buffticks, buffType, buff.isPercent());
             Bukkit.getPluginManager().callEvent(event);
             
@@ -189,29 +193,30 @@ public class FoodConsumable extends Consumable {
 		// Speed
 		if (speedTime > 0) {
             AttributeListener.refreshSpeed(p);
-            FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime);
+            FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime * 20);
             p.setWalkSpeed((float) (speed * p.getWalkSpeed()));
 		}
 
 		// Health and mana regen
 		PlayerData data = SkillAPI.getPlayerData(p);
 
-		if (healthTime == 0 && !p.isDead()) {
+		if (healthReps == 0 && !p.isDead()) {
 				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + health));
 		}
-		else if (healthTime > 0 && !p.isDead()) {
-			new HealthRunnable(p, health, healthTime).runTaskTimer(main, 0, healthDelay);
+		else if (healthReps > 0 && !p.isDead()) {
+			tasks.add(new HealthRunnable(p, health, healthReps).runTaskTimer(main, 0, healthPeriod * 20));
 		}
 		
 		if (data.getMainClass().getData().getManaName().contains("MP")) {
-			if (manaTime == 0 && !p.isDead()) {
+			if (manaReps == 0 && !p.isDead()) {
 				data.setMana(Math.min(data.getMaxMana(), data.getMana() + mana));
 			}
-			else if (manaTime > 0 && !p.isDead()) {
-				new ManaRunnable(p, mana, healthTime).runTaskTimer(main, 0, manaDelay);
+			else if (manaReps > 0 && !p.isDead()) {
+				tasks.add(new ManaRunnable(p, mana, manaReps).runTaskTimer(main, 0, manaPeriod * 20));
 			}
 		}
 		
+		effects.put(uuid, new DurationEffects(main, this, System.currentTimeMillis(), p, tasks));
 		item.setAmount(item.getAmount() - 1);
 	}
 
@@ -260,20 +265,20 @@ public class FoodConsumable extends Consumable {
 		this.mana = mana;
 	}
 
-	public void setHealthTime(int healthTime) {
-		this.healthTime = healthTime;
+	public void setHealthReps(int healthReps) {
+		this.healthReps = healthReps;
 	}
 
-	public void setManaTime(int manaTime) {
-		this.manaTime = manaTime;
+	public void setManaReps(int manaReps) {
+		this.manaReps = manaReps;
 	}
 
-	public void setHealthDelay(int healthDelay) {
-		this.healthDelay = healthDelay;
+	public void setHealthPeriod(int healthPeriod) {
+		this.healthPeriod = healthPeriod;
 	}
 
-	public void setManaDelay(int manaDelay) {
-		this.manaDelay = manaDelay;
+	public void setManaPeriod(int manaPeriod) {
+		this.manaPeriod = manaPeriod;
 	}
 	
 	public void setWorlds(List<String> worlds) {
@@ -325,8 +330,7 @@ public class FoodConsumable extends Consumable {
 	}
 	
 	public void setCooldown(long cooldown) {
-		// Seconds to milliseconds
-		this.cooldown = cooldown * 1000;
+		this.cooldown = cooldown;
 	}
 	
 	public void setIsDuration(boolean isDuration) {
@@ -338,7 +342,35 @@ public class FoodConsumable extends Consumable {
 	}
 	
 	public void setSpeedTime(int time) {
-		// Seconds to ticks
-		this.speedTime = time * 20;
+		this.speedTime = time;
 	}
+	
+	public int getSpeedTime() {
+		return this.speedTime;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public int getHealthReps() {
+		return healthReps;
+	}
+
+	public int getHealthPeriod() {
+		return healthPeriod;
+	}
+
+	public int getMana() {
+		return mana;
+	}
+
+	public int getManaReps() {
+		return manaReps;
+	}
+
+	public int getManaPeriod() {
+		return manaPeriod;
+	}
+	
 }
