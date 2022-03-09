@@ -1,12 +1,11 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.SkillAPI;
@@ -28,14 +27,14 @@ public class DurationEffects {
 	private long startTime;
 	private FoodConsumable cons;
 	private ArrayList<BukkitTask> tasks;
-	private Player p;
+	private UUID uuid;
 	
-	public DurationEffects(Consumables main, FoodConsumable cons, long startTime, Player p, ArrayList<BukkitTask> tasks) {
+	public DurationEffects(Consumables main, FoodConsumable cons, long startTime, UUID uuid, ArrayList<BukkitTask> tasks) {
 		this.main = main;
 		this.cons = cons;
 		this.startTime = startTime;
 		this.tasks = tasks;
-		this.p = p;
+		this.uuid = uuid;
 	}
 	
 	public FoodConsumable getCons() {
@@ -46,10 +45,20 @@ public class DurationEffects {
 		return tasks;
 	}
 	
+	public long getStartTime() {
+		return this.startTime;
+	}
+	
 	public void startEffects() {
+		if (!isRelevant()) {
+			ConsumableManager.effects.remove(uuid);
+			return;
+		}
+		
 		int secondsElapsed = (int) ((System.currentTimeMillis() - startTime));
 		int ticksElapsed = secondsElapsed * 20;
 		boolean isActive = false; 
+		Player p = Bukkit.getPlayer(uuid);
 		
 		// Attributes
 		if (cons.getAttributeTime() - secondsElapsed > 0) {
@@ -119,12 +128,19 @@ public class DurationEffects {
 		
 		// If no effects are happening anymore, remove it
 		if (!isActive) {
-			FoodConsumable.effects.remove(p.getUniqueId());
+			ConsumableManager.effects.remove(uuid);
 		}
 	}
 	
 	public void endEffects() {
-		int secondsElapsed = (int) ((System.currentTimeMillis() - startTime));
+		if (!isRelevant()) {
+			ConsumableManager.effects.remove(uuid);
+			return;
+		}
+		
+		// Don't remove attributes, every time this is called, attributes are
+		// removed by default
+		Player p = Bukkit.getPlayer(uuid);
 		
 		for (BukkitTask task : tasks) {
 			if (task.isCancelled()) {
@@ -138,9 +154,12 @@ public class DurationEffects {
 				p.removePotionEffect(effect.getType());
 			}
 		}
-		
-		if (cons.getAttributeTime() - secondsElapsed > 0) {
-			cons.getAttributes().removeAttributes(p);
-		}
+	}
+	
+	// Use when saving
+	public boolean isRelevant() {
+		Player p = Bukkit.getPlayer(uuid);
+		long elapsedMilliseconds = System.currentTimeMillis() - startTime;
+		return (cons.getTotalDuration() * 1000) > elapsedMilliseconds;
 	}
 }

@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
+
 
 public class Commands implements CommandExecutor{
 	
@@ -23,12 +25,31 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/cons give boss [player]");
 				sender.sendMessage("§c/cons reload");
 			}
-			else if (args[0].equalsIgnoreCase("give")) {
-				if (args[1].equalsIgnoreCase("boss")) {
-					Player p = Bukkit.getPlayer(args[2]);
+			// /cons give [player] boss/[key] [amount]
+			else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
+				Player p = (Player) sender;
+				int offset = 0;
+				int amt = 1;
+				if (Bukkit.getPlayer(args[1]) != null) {
+					p = Bukkit.getPlayer(args[1]);
+					offset++;
+				}
+				if (args[1 + offset].equalsIgnoreCase("boss")) {
 					p.getInventory().addItem(Items.getBossChestToken(p, System.currentTimeMillis()));
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
 					return true;
+				}
+				else {
+					FoodConsumable cons = (FoodConsumable) Consumables.consumables.get(args[1 + offset]);
+					if (cons != null) {
+						p.getInventory().addItem(cons.getItem(Integer.parseInt(args[2 + offset])));
+						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + " to §e" + p.getName());
+						return true;
+					}
+					else {
+						sender.sendMessage("§4[§c§lMLMC§4] §cInvalid key!");
+						return true;
+					}
 				}
 			}
 			else if (args[0].equalsIgnoreCase("reload")) {

@@ -19,6 +19,8 @@ import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
 import me.Neoblade298.NeoConsumables.objects.BuffAction;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
+import me.Neoblade298.NeoConsumables.objects.ConsumableManager;
+import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
@@ -27,6 +29,10 @@ import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,6 +62,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Consumables extends JavaPlugin implements Listener {
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
@@ -97,6 +104,12 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
+	}
+	
+	public void onDisable() {
+		ConsumableManager.saveAll();
+		org.bukkit.Bukkit.getServer().getLogger().info("NeoConsumables Disabled");
+		super.onDisable();
 	}
 	
 	public void reload() {
@@ -175,7 +188,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			String[] split = potion.split(",");
 			PotionEffectType type = PotionEffectType.getByName(split[0]);
 			int amp = Integer.parseInt(split[1]);
-			int duration = Integer.parseInt(split[2]);
+			int duration = Integer.parseInt(split[2]) * 20;
 			PotionEffect effect = new PotionEffect(type, duration, amp);
 			potions.add(effect);
 		}
@@ -192,7 +205,6 @@ public class Consumables extends JavaPlugin implements Listener {
 			cons.setAttributeTime(config.getInt("attribute-time"));
 		}
 		
-		ArrayList<FlagAction> flags = cons.getFlags();
 		for (String flagLine : config.getStringList("flags")) {
 			String[] flagArgs = flagLine.split(",");
 			String flag = flagArgs[0];
@@ -201,16 +213,15 @@ public class Consumables extends JavaPlugin implements Listener {
 				add = false;
 				flag = flag.substring(1);
 			}
-			flags.add(new FlagAction(flag, Integer.parseInt(flagArgs[1]), add));
+			cons.addFlag(new FlagAction(flag, Integer.parseInt(flagArgs[1]), add));
 		}
 		
-		ArrayList<BuffAction> buffs = cons.getBuffs();
 		for (String buffLine : config.getStringList("buffs")) {
 			String[] buffArgs = buffLine.split(",");
 			double value = Double.parseDouble(buffArgs[2]);
 			int duration = Integer.parseInt(buffArgs[1]);
 			boolean isPercent = Boolean.parseBoolean(buffArgs[3]);
-			buffs.add(new BuffAction(BuffType.valueOf(buffArgs[0]), value, duration, isPercent));
+			cons.addBuff(new BuffAction(BuffType.valueOf(buffArgs[0]), value, duration, isPercent));
 		}
 
 		cons.setSpeed(config.getDouble("speed"));
@@ -406,12 +417,36 @@ public class Consumables extends JavaPlugin implements Listener {
 	}
 	
 	private void handleLeave(UUID uuid) {
-		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(connection, properties);
+			Statement stmt = con.createStatement();
+			ConsumableManager.save(uuid, con, stmt, false);
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
+			e.printStackTrace();
+		}
+	}
+	
+	private void endEffects(UUID uuid) {
+		DurationEffects effs = ConsumableManager.effects.get(uuid);
+		if (effs != null) {
+			effs.endEffects();
+			ConsumableManager.effects.remove(uuid);
+		}
+	}
+	
+	public void startEffects(UUID uuid) {
+		DurationEffects effs = ConsumableManager.effects.get(uuid);
+		if (effs != null) {
+			effs.startEffects();
+		}
 	}
 	
 	@EventHandler
 	public void onLoadSQL(PlayerLoadCompleteEvent e) {
-		updateBonuses(e.getPlayer());
+		startEffects(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -421,12 +456,12 @@ public class Consumables extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
-		updateBonuses(e.getPlayer());
+		startEffects(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
-		resetBonuses(e.getPlayer());
+		endEffects(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -441,7 +476,6 @@ public class Consumables extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
+		ConsumableManager.loadPlayer(this, e.getUniqueId());
 	}
 }

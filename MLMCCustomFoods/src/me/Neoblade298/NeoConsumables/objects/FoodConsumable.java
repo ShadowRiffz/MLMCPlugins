@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -33,8 +32,6 @@ import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
 public class FoodConsumable extends Consumable {
-	static HashMap<UUID, PlayerCooldowns> cds;
-	static HashMap<UUID, DurationEffects> effects;
 	
 	Material mat;
 	ArrayList<PotionEffect> potions;
@@ -52,6 +49,7 @@ public class FoodConsumable extends Consumable {
 	long cooldown;
 	String display, base64;
 	boolean isDuration;
+	int totalDuration;
 	
 	public FoodConsumable(Consumables main, String key) {
 		super(main, key);
@@ -68,6 +66,8 @@ public class FoodConsumable extends Consumable {
 		
 		cooldown = 15000; // Default 15 seconds
 		isDuration = false; // Default instant
+		
+		totalDuration = 0;
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
@@ -80,13 +80,13 @@ public class FoodConsumable extends Consumable {
 
 		// Check cds
 		UUID uuid = p.getUniqueId();
-		if (!cds.containsKey(uuid)) {
-			cds.put(uuid, new PlayerCooldowns());
+		if (!ConsumableManager.cds.containsKey(uuid)) {
+			ConsumableManager.cds.put(uuid, new PlayerCooldowns());
 			return true;
 		}
 		
 		if (!isDuration) {
-			long remaining = cds.get(uuid).getInstantCooldown() - System.currentTimeMillis();
+			long remaining = ConsumableManager.cds.get(uuid).getInstantCooldown() - System.currentTimeMillis();
 			if (remaining <= 0) {
 				return true;
 			}
@@ -96,7 +96,7 @@ public class FoodConsumable extends Consumable {
 			return false;
 		}
 		else {
-			long remaining = cds.get(uuid).getDurationCooldown() - System.currentTimeMillis();
+			long remaining = ConsumableManager.cds.get(uuid).getDurationCooldown() - System.currentTimeMillis();
 			if (remaining <= 0) {
 				return true;
 			}
@@ -111,8 +111,8 @@ public class FoodConsumable extends Consumable {
 		// First get rid of any existing effects
 		UUID uuid = p.getUniqueId();
 		ArrayList<BukkitTask> tasks = new ArrayList<BukkitTask>();
-		if (effects.containsKey(uuid)) {
-			effects.get(uuid).endEffects();
+		if (ConsumableManager.effects.containsKey(uuid)) {
+			ConsumableManager.effects.get(uuid).endEffects();
 		}
 		
 		// Sounds, commands
@@ -137,7 +137,7 @@ public class FoodConsumable extends Consumable {
 		long nextEat = System.currentTimeMillis() + this.cooldown;
 		long ticks = this.cooldown / 50; // Milliseconds to ticks
 		if (!isDuration) {
-			cds.get(uuid).setInstantCooldown(nextEat);
+			ConsumableManager.cds.get(uuid).setInstantCooldown(nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
 					if (p != null) {
@@ -148,7 +148,7 @@ public class FoodConsumable extends Consumable {
 			}, ticks);
 		}
 		else {
-			cds.get(uuid).setDurationCooldown(nextEat);
+			ConsumableManager.cds.get(uuid).setDurationCooldown(nextEat);
 		}
 
 		// Potion effects
@@ -216,7 +216,9 @@ public class FoodConsumable extends Consumable {
 			}
 		}
 		
-		effects.put(uuid, new DurationEffects(main, this, System.currentTimeMillis(), p, tasks));
+		if (isDuration) {
+			ConsumableManager.effects.put(uuid, new DurationEffects(main, this, System.currentTimeMillis(), uuid, tasks));
+		}
 		item.setAmount(item.getAmount() - 1);
 	}
 
@@ -267,18 +269,30 @@ public class FoodConsumable extends Consumable {
 
 	public void setHealthReps(int healthReps) {
 		this.healthReps = healthReps;
+		if (this.healthReps * this.healthPeriod > totalDuration) {
+			totalDuration = this.healthReps * this.healthPeriod;
+		}
 	}
 
 	public void setManaReps(int manaReps) {
 		this.manaReps = manaReps;
+		if (this.manaReps * this.manaPeriod > totalDuration) {
+			totalDuration = this.manaReps * this.manaPeriod;
+		}
 	}
 
 	public void setHealthPeriod(int healthPeriod) {
 		this.healthPeriod = healthPeriod;
+		if (this.healthReps * this.healthPeriod > totalDuration) {
+			totalDuration = this.healthReps * this.healthPeriod;
+		}
 	}
 
 	public void setManaPeriod(int manaPeriod) {
 		this.manaPeriod = manaPeriod;
+		if (this.manaReps * this.manaPeriod > totalDuration) {
+			totalDuration = this.manaReps * this.manaPeriod;
+		}
 	}
 	
 	public void setWorlds(List<String> worlds) {
@@ -287,6 +301,13 @@ public class FoodConsumable extends Consumable {
 	
 	public void setCommands(List<String> commands) {
 		this.commands = (ArrayList<String>) commands;
+	}
+	
+	public void addEffect(PotionEffect eff) {
+		this.potions.add(eff);
+		if (eff.getDuration() / 20 > totalDuration) { 
+			totalDuration = eff.getDuration() / 20;
+		}
 	}
 
 	public ArrayList<PotionEffect> getEffect() {
@@ -307,14 +328,31 @@ public class FoodConsumable extends Consumable {
 
 	public void setAttributeTime(int attributeTime) {
 		this.attributeTime = attributeTime;
+		if (this.attributeTime > totalDuration) {
+			totalDuration = this.attributeTime;
+		}
 	}
 
 	public ArrayList<String> getCommands() {
 		return commands;
 	}
 	
+	public void addFlag(FlagAction flag) {
+		this.flags.add(flag);
+		if (flag.getDuration() > totalDuration) {
+			totalDuration = flag.getDuration();
+		}
+	}
+	
 	public ArrayList<FlagAction> getFlags() {
 		return flags;
+	}
+	
+	public void addBuff(BuffAction buff) {
+		this.buffs.add(buff);
+		if (buff.getDuration() > totalDuration) {
+			totalDuration = buff.getDuration();
+		}
 	}
 	
 	public ArrayList<BuffAction> getBuffs() {
@@ -343,6 +381,9 @@ public class FoodConsumable extends Consumable {
 	
 	public void setSpeedTime(int time) {
 		this.speedTime = time;
+		if (this.speedTime > totalDuration) {
+			this.totalDuration = this.speedTime;
+		}
 	}
 	
 	public int getSpeedTime() {
@@ -373,4 +414,15 @@ public class FoodConsumable extends Consumable {
 		return manaPeriod;
 	}
 	
+	public int getTotalDuration() {
+		return totalDuration;
+	}
+	
+	public boolean isDuration() {
+		return isDuration;
+	}
+	
+	public String getDisplay() {
+		return display;
+	}
 }
