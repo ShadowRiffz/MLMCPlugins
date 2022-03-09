@@ -3,8 +3,8 @@ package me.Neoblade298.NeoConsumables;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.bosschests.AugmentReward;
-import me.Neoblade298.NeoConsumables.bosschests.ChestConsumable;
 import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
 import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 import me.Neoblade298.NeoConsumables.bosschests.EssenceReward;
@@ -12,22 +12,18 @@ import me.Neoblade298.NeoConsumables.bosschests.GearReward;
 import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
 import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
 import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
-import me.Neoblade298.NeoConsumables.objects.Attributes;
+import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
-import me.Neoblade298.NeoConsumables.objects.RecipeConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
+import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
 import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
-import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
-import net.md_5.bungee.api.ChatColor;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -44,11 +40,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -56,11 +50,7 @@ import org.bukkit.potion.PotionEffectType;
 public class Consumables extends JavaPlugin implements Listener {
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	public static HashMap<String, ChestConsumable> bosschests = new HashMap<String, ChestConsumable>();
-	// These runnables take away attributes from players when they're done being
-	// used
-	public HashMap<UUID, HashMap<Consumable, AttributeTask>> attributes = new HashMap<UUID, HashMap<Consumable, AttributeTask>>();
-	public HashMap<UUID, Long> globalCooldowns = new HashMap<UUID, Long>();
-	public HashMap<UUID, HashMap<Consumable, Long>> foodCooldowns = new HashMap<UUID, HashMap<Consumable, Long>>();
+	
 	public boolean isInstance = false;
 	public Settings settings;
 	public Settings hiddenSettings;
@@ -74,13 +64,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		settings.addSetting("InventoryUse", false);
 		hiddenSettings = nsettings.createSettings("Tokens", this, true);
 		hiddenSettings.addSetting("Boss", false);
-
-		// Setup databases
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			UUID uuid = p.getUniqueId();
-			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
-			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
-		}
 
 		// Load consumables and boss chests
 		reload();
@@ -110,44 +93,32 @@ public class Consumables extends JavaPlugin implements Listener {
 		for (String key : itemConfig.getKeys(false)) {
 			try {
 				ConfigurationSection sec = itemConfig.getConfigurationSection(key);
-				String name = sec.getString("name");
+				
+				String type = sec.getString("type", "FOOD");
+				Consumable cons = null;
+				if (type.equals("INSTANT_FOOD")) {
+					cons = loadFoodConsumable(sec, key, false);
+					consumables.put(key, cons);
+				}
+				else if (type.equals("DURATION_FOOD")) {
+					cons = loadFoodConsumable(sec, key, true);
+					consumables.put(key, cons);
+				}
+				else if (type.equals("CHEST")) {
+					cons = loadChestConsumable(sec, key);
+					consumables.put(key, cons);
+				}
+				else if (type.equals("TOKEN")) {
+					cons = loadTokenConsumable(sec, key);
+					consumables.put(key, cons);
+				}
 	
-				ArrayList<Sound> sounds = new ArrayList<Sound>();
+				ArrayList<Sound> sounds = cons.getSounds();
 				for (String sname : sec.getStringList("sound-effects")) {
 					Sound sound = Sound.valueOf(sname.toUpperCase());
 					if (sound != null) {
 						sounds.add(sound);
 					}
-				}
-				ArrayList<String> lore = new ArrayList<String>();
-				for (String loreLine : sec.getStringList("lore")) {
-					lore.add(loreLine.replaceAll("&", "§"));
-				}
-	
-				HashMap<String, String> nbtMap = new HashMap<String, String>();
-				ConfigurationSection nbts = sec.getConfigurationSection("nbt");
-				if (nbts != null) {
-					for (String nbt : nbts.getKeys(false)) {
-						nbtMap.put(nbt, nbts.getString(nbt));
-					}
-				}
-	
-				String type = sec.getString("type", "FOOD");
-				if (type.equals("FOOD")) {
-					FoodConsumable food = loadFoodConsumable(sec, name, sounds, lore, nbtMap);
-					consumables.put(food.getName(), food);
-				}
-				else if (type.equals("CHEST")) {
-					ChestConsumable chest = loadChestConsumable(sec, name, sounds, lore, nbtMap);
-					consumables.put(chest.getName(), chest);
-				}
-				else if (type.equals("TOKEN")) {
-					TokenConsumable token = loadTokenConsumable(sec, name, sounds, lore, nbtMap);
-					consumables.put(token.getName(), token);
-				}
-				else if (type.equals("RECIPE")) {
-					RecipeConsumable recipe = loadRecipeConsumable(sec, name, sounds, lore, nbtMap);
-					consumables.put(recipe.getName(), recipe);
 				}
 			}
 			catch (Exception e) {
@@ -157,12 +128,22 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 	}
 
-	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
-			ArrayList<String> lore, HashMap<String, String> nbts) {
-		FoodConsumable cons = new FoodConsumable(this, name, sounds, lore, nbts);
+	private FoodConsumable loadFoodConsumable(ConfigurationSection config, String key, boolean isDuration) {
+		FoodConsumable cons = new FoodConsumable(this, key);
+		cons.setIsDuration(isDuration);
+		
+		// Itemstack stuff
+		String mat = config.getString("material");
+		if (mat.length() > 30) {
+			cons.setBase64(mat);
+		}
+		else {
+			cons.setMaterial(mat);
+		}
+		cons.setDisplay(config.getString("display"));
 
 		// Potion effects
-		ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
+		ArrayList<PotionEffect> potions = cons.getPotions();
 		for (String potion : config.getStringList("effects")) {
 			String[] split = potion.split(",");
 			PotionEffectType type = PotionEffectType.getByName(split[0]);
@@ -171,18 +152,16 @@ public class Consumables extends JavaPlugin implements Listener {
 			PotionEffect effect = new PotionEffect(type, duration, amp);
 			potions.add(effect);
 		}
-		cons.setPotions(potions);
 
 		// Attributes
-		Attributes attribs = new Attributes();
+		StoredAttributes attribs = cons.getAttributes();
 		for (String attribute : config.getStringList("attributes")) {
 			String[] split = attribute.split(",");
 			String attr = split[0];
 			int amp = Integer.parseInt(split[1]);
-			attribs.addAttribute(attr, amp);
+			attribs.setAttribute(attr, amp);
 		}
 		if (!attribs.isEmpty()) {
-			cons.setAttributes(attribs);
 			cons.setAttributeTime(config.getInt("attributetime"));
 		}
 
@@ -194,15 +173,12 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setMana(config.getInt("mana.amount"));
 		cons.setManaDelay(config.getInt("mana.delay"));
 		cons.setManaTime(config.getInt("mana.repetitions"));
-		cons.setCooldown(config.getLong("cooldown"));
 		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
 		cons.setWorlds(config.getStringList("worlds"));
-		cons.setIgnoreGcd(config.getBoolean("ignore-gcd"));
 		return cons;
 	}
 
-	private ChestConsumable loadChestConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
-			ArrayList<String> lore, HashMap<String, String> nbts) {
+	private ChestConsumable loadChestConsumable(ConfigurationSection config, String key) {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
 		String display = config.getString("display", internal);
@@ -264,12 +240,11 @@ public class Consumables extends JavaPlugin implements Listener {
 			
 			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
 		}
-		return new ChestConsumable(this, name, sounds, lore, nbts, stages, internal);
+		return new ChestConsumable(this, key, stages);
 	}
 
-	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
-			ArrayList<String> lore, HashMap<String, String> nbts) {
-		TokenConsumable cons = new TokenConsumable(this, name, sounds, lore, nbts);
+	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String key) {
+		TokenConsumable cons = new TokenConsumable(this, key);
 		ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 		ConfigurationSection scConfig = config.getConfigurationSection("settings");
 		if (scConfig != null) {
@@ -296,13 +271,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 		return cons;
 	}
-
-	private RecipeConsumable loadRecipeConsumable(ConfigurationSection config, String name, ArrayList<Sound> sounds,
-			ArrayList<String> lore, HashMap<String, String> nbts) {
-		RecipeConsumable cons = new RecipeConsumable(this, name, sounds, lore, nbts);
-		cons.setPermission(config.getString("permission"));
-		return cons;
-	}
 	
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
@@ -321,22 +289,17 @@ public class Consumables extends JavaPlugin implements Listener {
 			return;
 		}
 
-		ItemMeta meta = item.getItemMeta();
-		String name = ChatColor.stripColor(meta.getDisplayName());
+		String key = new NBTItem(item).getString("consumable");
 
 		// Find the food in the inv
 		Consumable consumable = null;
-		if (consumables.containsKey(name)) {
-			consumable = consumables.get(name);
-			if (!consumable.isSimilar(item)) {
-				return;
-			}
+		if (consumables.containsKey(key)) {
+			consumable = consumables.get(key);
 			if (!consumable.canUse(p, item)) {
 				return;
 			}
 		}
-
-		if (consumable == null) {
+		else {
 			return;
 		}
 
@@ -361,28 +324,20 @@ public class Consumables extends JavaPlugin implements Listener {
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
 			return;
 		}
-		ItemMeta meta = item.getItemMeta();
-		String name = ChatColor.stripColor(meta.getDisplayName());
+		String key = new NBTItem(item).getString("consumable");
 
-		if (!consumables.containsKey(name)) {
+		if (!consumables.containsKey(key)) {
 			return;
 		}
-		Consumable cons = consumables.get(name);
+		Consumable cons = consumables.get(key);
 
-		// If food is a consumable, continue only if setting is set
+		// If consumable is a food, continue only if setting is set
 		if (cons instanceof FoodConsumable) {
 			if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
 				return;
 			}
 		}
-		// Recipes always work on right click in inventory
-		else if (!(cons instanceof RecipeConsumable)) {
-			return;
-		}
 
-		if (!cons.isSimilar(item)) {
-			return;
-		}
 		if (!cons.canUse(p, item)) {
 			return;
 		}
@@ -392,53 +347,25 @@ public class Consumables extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerJoinEvent(PlayerLoginEvent e) {
-		Player p = e.getPlayer();
-		UUID uuid = p.getUniqueId();
-		if (!foodCooldowns.containsKey(uuid)) {
-			foodCooldowns.put(uuid, new HashMap<Consumable, Long>());
-		}
-		if (!attributes.containsKey(uuid)) {
-			attributes.put(uuid, new HashMap<Consumable, AttributeTask>());
-		}
-
-		if (isInstance) {
-			// Remove cooldowns for food if joining a boss instance
-			foodCooldowns.get(uuid).clear();
-			attributes.get(uuid).clear();
-			globalCooldowns.remove(uuid);
-		}
-	}
-
-	@EventHandler
 	public void onPlayerPlace(BlockPlaceEvent e) {
 		ItemStack item = e.getItemInHand();
-		if (item.getType().equals(Material.CHEST) && item.hasItemMeta() && item.getItemMeta().hasLore()
-				&& item.getItemMeta().getLore().get(0).contains("Potential Rewards")) {
+		if (item.getType().equals(Material.CHEST) && new NBTItem(item).hasKey("consumable")) {
 			e.setCancelled(true);
 		}
 	}
 
-	private void resetAttributes(Player p) {
-		HashMap<Consumable, AttributeTask> tasks = attributes.get(p.getUniqueId());
-		for (Consumable c : tasks.keySet()) {
-			tasks.get(c).getTask().cancel();
-		}
-		tasks.clear();
-	}
-
 	@EventHandler
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
-		resetAttributes(e.getPlayer());
+		// Todo
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		resetAttributes(e.getPlayer());
+		// Todo
 	}
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent e) {
-		resetAttributes(e.getPlayer());
+		// Todo
 	}
 }

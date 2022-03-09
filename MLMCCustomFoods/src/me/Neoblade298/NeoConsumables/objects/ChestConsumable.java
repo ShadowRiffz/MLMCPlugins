@@ -1,7 +1,5 @@
-package me.Neoblade298.NeoConsumables.bosschests;
+package me.Neoblade298.NeoConsumables.objects;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -13,21 +11,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
-import me.Neoblade298.NeoConsumables.objects.Consumable;
+import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
+import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 
 public class ChestConsumable extends Consumable {
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
-	private Consumables main;
-	private String internal;
 	
-	public ChestConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt, LinkedList<ChestStage> stages, String internal) {
-		super(main, name, sounds, lore, nbt);
+	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages) {
+		super(main, key);
 		this.main = main;
 		this.stages = stages;
-		this.internal = internal;
 	}
 	
 	public void useChest(Player p) {
@@ -42,7 +37,6 @@ public class ChestConsumable extends Consumable {
 			BukkitRunnable runStage = new BukkitRunnable() {
 				public void run() {
 					p.playSound(p.getLocation(), stage.getSound(), 1.0F, stage.getPitch());
-					// TODO: Add effect
 					ChestReward reward = stage.chooseReward();
 					reward.giveReward(p);
 					reward.sendMessage(p);
@@ -132,12 +126,6 @@ public class ChestConsumable extends Consumable {
 	}
 
 	@Override
-	public boolean isSimilar(ItemStack item) {
-		NBTItem nbti = new NBTItem(item);
-		return this.internal.equals(nbti.getString("chest"));
-	}
-
-	@Override
 	public boolean canUse(Player p, ItemStack item) {
 		if (main.isInstance) {
 			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "§"));
@@ -148,7 +136,7 @@ public class ChestConsumable extends Consumable {
 
 	@Override
 	public void use(Player p, ItemStack item) {
-		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + displayname + "§7 to find...");
+		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + item.getItemMeta().getDisplayName() + "§7 to find...");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}

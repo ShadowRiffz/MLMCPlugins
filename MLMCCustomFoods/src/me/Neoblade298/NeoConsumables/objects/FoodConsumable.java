@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -27,89 +28,91 @@ import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
 public class FoodConsumable extends Consumable {
-	ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
-	Attributes attributes = null;
+	static HashMap<UUID, PlayerCooldowns> cds;
+	static HashMap<UUID, DurationEffects> effects;
+	
+	Material mat;
+	ArrayList<PotionEffect> potions;
+	StoredAttributes attributes;
 	int attributeTime;
-	ArrayList<String> commands = new ArrayList<String>();
-	ArrayList<String> worlds = new ArrayList<String>();
+	ArrayList<String> commands, worlds, lore;
 	double saturation;
 	int hunger;
 	int health, healthTime, healthDelay;
 	int mana, manaTime, manaDelay;
-	long cooldown = 0;
-	boolean ignoreGcd = false;
+	long cooldown;
+	String display, base64;
+	boolean isDuration;
 	
-	public FoodConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
-		super(main, name, sounds, lore, nbt);
-	}
-
-	public int getHunger() {
-		return this.hunger;
-	}
-
-	public double getSaturation() {
-		return this.saturation;
+	public FoodConsumable(Consumables main, String key) {
+		super(main, key);
+		
+		potions = new ArrayList<PotionEffect>();
+		attributes = new StoredAttributes();
+		commands = new ArrayList<String>();
+		worlds = new ArrayList<String>();
+		lore = new ArrayList<String>();
+		display = null;
+		base64 = null;
+		
+		cooldown = 15000; // Default 15 seconds
+		isDuration = false; // Default instant
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
-		// Check gcd
-		UUID uuid = p.getUniqueId();
-		if (!isOffGcd(p) && !ignoreGcd) {
-			long remainingCooldown = main.globalCooldowns.get(p.getUniqueId()) - System.currentTimeMillis();
-			remainingCooldown /= 1000L;
-			String message = "§4[§c§lMLMC§4] &cConsumables cooldown: §e" + remainingCooldown + "s§7.";
-			message = message.replaceAll("&", "§");
-			p.sendMessage(message);
-			return false;
-		}
-
-		// Check per-consumable cooldown
-		if (main.foodCooldowns.containsKey(uuid) && main.foodCooldowns.get(uuid).containsKey(this)) {
-			long nextEat = main.foodCooldowns.get(uuid).get(this);
-			if (System.currentTimeMillis() < nextEat) {
-				long remainingCooldown = nextEat - System.currentTimeMillis();
-				remainingCooldown /= 1000L;
-				String message = "§4[§c§lMLMC§4] " + this.displayname + " §ccooldown: §e" + remainingCooldown + "s§7.";
-				message = message.replaceAll("&", "§");
-				p.sendMessage(message);
-				return false;
-			}
-		}
-		
 		// Check world compatible
-		if (!getWorlds().contains(p.getWorld().getName())) {
+		if (!worlds.contains(p.getWorld().getName())) {
 			String message = "§4[§c§lMLMC§4] §cYou cannot use this consumable in this world";
 			p.sendMessage(message);
 			return false;
 		}
-		return true;
-	}
-	
-	private boolean isOffGcd(Player p) {
-		if (main.globalCooldowns.containsKey(p.getUniqueId())) {
-			return System.currentTimeMillis() > main.globalCooldowns.get(p.getUniqueId());
+
+		// Check gcd
+		UUID uuid = p.getUniqueId();
+		if (!cds.containsKey(uuid)) {
+			cds.put(uuid, new PlayerCooldowns());
+			return true;
 		}
-		return true;
+		
+		if (!isDuration) {
+			long remaining = cds.get(uuid).getInstantCooldown() - System.currentTimeMillis();
+			if (remaining <= 0) {
+				return true;
+			}
+			remaining /= 1000L;
+			String message = "§4[§c§lMLMC§4] &cInstant consumables cooldown: §e" + remaining + "s§7.";
+			p.sendMessage(message);
+			return false;
+		}
+		else {
+			long remaining = cds.get(uuid).getDurationCooldown() - System.currentTimeMillis();
+			if (remaining <= 0) {
+				return true;
+			}
+			remaining /= 1000L;
+			String message = "§4[§c§lMLMC§4] &cDuration consumables cooldown: §e" + remaining + "s§7.";
+			p.sendMessage(message);
+			return false;
+		}
 	}
 
 	public void use(final Player p, ItemStack item) {
 		// Sounds, commands
-		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + displayname + "§7!");
+		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 		executeCommands(p);
 		
-		
 		// Food event only happens if hunger is changing
 		UUID uuid = p.getUniqueId();
-		int foodLevel = Math.min(20, p.getFoodLevel() + getHunger());
-		if (getHunger() > 0) {
+		int foodLevel = Math.min(20, p.getFoodLevel() + hunger);
+		if (hunger > 0) {
 			FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
 			Bukkit.getPluginManager().callEvent(event);
 			if (!event.isCancelled()) {
 				p.setFoodLevel(foodLevel);
-				p.setSaturation((float) Math.min(p.getFoodLevel(), this.getSaturation() + p.getSaturation()));
+				p.setSaturation((float) Math.min(p.getFoodLevel(), this.saturation + p.getSaturation()));
 			}
 		}
 		
@@ -209,8 +212,28 @@ public class FoodConsumable extends Consumable {
 		}
 	}
 	
-	public ItemStack getItem() {
-		ItemStack item = SkullCreator.itemFromBase64(base64);
+	public ItemStack getItem(int amount) {
+		ItemStack item;
+		if (base64 != null) {
+			item = SkullCreator.itemFromBase64(base64);
+		}
+		else {
+			item = new ItemStack(mat);
+		}
+		item.setAmount(amount);
+		return item;
+	}
+	
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+	
+	public void setMaterial(String mat) {
+		this.mat = Material.getMaterial(mat.toUpperCase());
+	}
+	
+	public void setBase64(String base64) {
+		this.base64 = base64;
 	}
 
 	public void setHealth(int health) {
@@ -219,10 +242,6 @@ public class FoodConsumable extends Consumable {
 
 	public void setMana(int mana) {
 		this.mana = mana;
-	}
-
-	public void setCooldown(long cooldown) {
-		this.cooldown = cooldown;
 	}
 
 	public void setHealthTime(int healthTime) {
@@ -240,61 +259,25 @@ public class FoodConsumable extends Consumable {
 	public void setManaDelay(int manaDelay) {
 		this.manaDelay = manaDelay;
 	}
-
+	
 	public void setWorlds(List<String> worlds) {
-		this.worlds = new ArrayList<String>(worlds);
+		this.worlds = (ArrayList<String>) worlds;
 	}
-
-	public int getHealth() {
-		return this.health;
-	}
-
-	public int getMana() {
-		return this.mana;
-	}
-
-	public int getHealthTime() {
-		return this.healthTime;
-	}
-
-	public int getManaTime() {
-		return this.manaTime;
-	}
-
-	public int getHealthDelay() {
-		return this.healthDelay;
-	}
-
-	public int getManaDelay() {
-		return this.manaDelay;
-	}
-
-	public List<String> getWorlds() {
-		return this.worlds;
-	}
-
-	public void addEffect(PotionEffect effect) {
-		this.potions.add(effect);
+	
+	public void setCommands(List<String> commands) {
+		this.commands = (ArrayList<String>) commands;
 	}
 
 	public ArrayList<PotionEffect> getEffect() {
 		return this.potions;
 	}
 
-	public Attributes getAttributes() {
+	public StoredAttributes getAttributes() {
 		return this.attributes;
-	}
-	
-	public void setAttributes(Attributes attributes) {
-		this.attributes = attributes;
 	}
 
 	public ArrayList<PotionEffect> getPotions() {
 		return potions;
-	}
-
-	public void setPotions(ArrayList<PotionEffect> effects) {
-		this.potions = effects;
 	}
 
 	public int getAttributeTime() {
@@ -309,35 +292,19 @@ public class FoodConsumable extends Consumable {
 		return commands;
 	}
 
-	public void setCommands(ArrayList<String> commands) {
-		this.commands = commands;
-	}
-
-	public boolean isIgnoreGcd() {
-		return ignoreGcd;
-	}
-
-	public void setIgnoreGcd(boolean ignoreGcd) {
-		this.ignoreGcd = ignoreGcd;
-	}
-
-	public long getCooldown() {
-		return cooldown;
-	}
-
-	public void setWorlds(ArrayList<String> worlds) {
-		this.worlds = worlds;
-	}
-
-	public void setLore(ArrayList<String> lore) {
-		this.lore = lore;
-	}
-
 	public void setSaturation(double saturation) {
 		this.saturation = saturation;
 	}
 
 	public void setHunger(int hunger) {
 		this.hunger = hunger;
+	}
+	
+	public void setCooldown(long cooldown) {
+		this.cooldown = cooldown;
+	}
+	
+	public void setIsDuration(boolean isDuration) {
+		this.isDuration = isDuration;
 	}
 }
