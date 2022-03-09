@@ -30,7 +30,7 @@ public class DurationEffects {
 		return activeRunnables;
 	}
 	
-	public void endRunnables() {
+	public void endEffects() {
 		for (BukkitRunnable runnable : activeRunnables) {
 			runnable.cancel();
 		}

@@ -13,17 +13,19 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.Buff;
+import com.sucy.skill.api.util.BuffManager;
+import com.sucy.skill.api.util.BuffType;
 import com.sucy.skill.api.util.FlagManager;
-import com.sucy.skill.api.util.StatusFlag;
+import com.sucy.skill.listener.AttributeListener;
+import com.sucy.skill.listener.MechanicListener;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.SkullCreator;
-import me.Neoblade298.NeoConsumables.runnables.AttributeRunnable;
-import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
@@ -33,11 +35,15 @@ public class FoodConsumable extends Consumable {
 	
 	Material mat;
 	ArrayList<PotionEffect> potions;
+	ArrayList<FlagAction> flags;
+	ArrayList<BuffAction> buffs;
 	StoredAttributes attributes;
 	int attributeTime;
 	ArrayList<String> commands, worlds, lore;
 	double saturation;
 	int hunger;
+	double speed;
+	int speedTime;
 	int health, healthTime, healthDelay;
 	int mana, manaTime, manaDelay;
 	long cooldown;
@@ -52,6 +58,8 @@ public class FoodConsumable extends Consumable {
 		commands = new ArrayList<String>();
 		worlds = new ArrayList<String>();
 		lore = new ArrayList<String>();
+		flags = new ArrayList<FlagAction>();
+		buffs = new ArrayList<BuffAction>();
 		display = null;
 		base64 = null;
 		
@@ -67,7 +75,7 @@ public class FoodConsumable extends Consumable {
 			return false;
 		}
 
-		// Check gcd
+		// Check cds
 		UUID uuid = p.getUniqueId();
 		if (!cds.containsKey(uuid)) {
 			cds.put(uuid, new PlayerCooldowns());
@@ -97,6 +105,12 @@ public class FoodConsumable extends Consumable {
 	}
 
 	public void use(final Player p, ItemStack item) {
+		// First get rid of any existing effects
+		UUID uuid = p.getUniqueId();
+		if (effects.containsKey(uuid) && effects.get(uuid).getEndTime() > System.currentTimeMillis()) {
+			effects.get(uuid).endEffects();
+		}
+		
 		// Sounds, commands
 		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");
 		for (Sound sound : getSounds()) {
@@ -105,7 +119,6 @@ public class FoodConsumable extends Consumable {
 		executeCommands(p);
 		
 		// Food event only happens if hunger is changing
-		UUID uuid = p.getUniqueId();
 		int foodLevel = Math.min(20, p.getFoodLevel() + hunger);
 		if (hunger > 0) {
 			FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
@@ -115,53 +128,23 @@ public class FoodConsumable extends Consumable {
 				p.setSaturation((float) Math.min(p.getFoodLevel(), this.saturation + p.getSaturation()));
 			}
 		}
-		
-		// Calculate multipliers and remove flags
-		double garnish = 1, preserve = 1, spice = 1;
-		for (String line : item.getItemMeta().getLore()) {
-			if (line.contains("Garnished")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				garnish = Double.parseDouble(toParse);
-			}
-			if (line.contains("Preserved")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				preserve = Double.parseDouble(toParse);
-			}
-			if (line.contains("Spiced")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				spice = Double.parseDouble(toParse);
-			}
-			if (line.contains("Remedies")) {
-				if (line.contains("Remedies stun")) {
-					FlagManager.removeFlag(p, StatusFlag.STUN);
-				}
-				else if (line.contains("Remedies curse")) {
-					FlagManager.removeFlag(p, "curse");
-				}
-				else if (line.contains("Remedies root")) {
-					FlagManager.removeFlag(p, StatusFlag.ROOT);
-				}
-				else if (line.contains("Remedies silence")) {
-					FlagManager.removeFlag(p, StatusFlag.SILENCE);
-				}
-			}
-		}
 
-		// Set cooldowns
-		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 50L * preserve);
-		long ticks = (long) (this.cooldown * preserve);
-		if (!ignoreGcd) {
-			main.globalCooldowns.put(uuid, System.currentTimeMillis() + 20000L);
-		}
-		if (this.cooldown > 0) {
-			main.foodCooldowns.get(uuid).put(this, nextEat);
+		// Set cooldown
+		long nextEat = System.currentTimeMillis() + this.cooldown;
+		long ticks = this.cooldown / 50; // Milliseconds to ticks
+		if (!isDuration) {
+			cds.get(uuid).setInstantCooldown(nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
-					String message = "§4[§c§lMLMC§4] " + displayname + "&7 can be eaten again.";
-					message = message.replaceAll("&", "§");
-					p.sendMessage(message);
+					if (p != null) {
+						String message = "§4[§c§lMLMC§4] Instant consumables can be eaten again.";
+						p.sendMessage(message);
+					}
 				}
 			}, ticks);
+		}
+		else {
+			cds.get(uuid).setDurationCooldown(nextEat);
 		}
 
 		// Potion effects
@@ -170,36 +153,62 @@ public class FoodConsumable extends Consumable {
 		}
 
 		// SkillAPI Attributes
-		if (attributes != null) {
+		if (!attributes.isEmpty()) {
 			// If food already consumed before, remove the attributes, cancel the remove task, then add new
-			if (main.attributes.get(uuid).containsKey(this)) {
-				AttributeTask at = main.attributes.get(uuid).get(this);
-				at.getAttr().removeAttributes(p);
-				at.getTask().cancel();
+			attributes.applyAttributes(p);
+		}
+		
+		// Flags
+		for (FlagAction flag : flags) {
+			if (flag.isAdd()) {
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration());
 			}
-			Attributes newAttr = attributes.clone();
-			newAttr.multiply(garnish);
-			newAttr.applyAttributes(p);
-			BukkitTask newTask = new AttributeRunnable(main, p, newAttr, this).runTaskLater(main, this.attributeTime);
-			main.attributes.get(uuid).put(this, new AttributeTask(newTask, newAttr));
+			else {
+				FlagManager.removeFlag(p, flag.getFlag());
+			}
+		}
+		
+		// Buffs
+		for (BuffAction buff : buffs) {
+	        BuffType buffType = buff.getType();
+	        double seconds = buff.getDuration();
+	        String category = buff.getCategory();
+	        int buffticks = (int) (seconds * 20);
+            SkillBuffEvent event = new SkillBuffEvent(p, p, buff.getValue(), buffticks, buffType, buff.isPercent());
+            Bukkit.getPluginManager().callEvent(event);
+            
+            if (!event.isCancelled()) {
+                BuffManager.getBuffData(p).addBuff(
+                        buffType,
+                        category,
+                        new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
+                        event.getTicks());
+            }
+		}
+		
+		// Speed
+		if (speedTime > 0) {
+            AttributeListener.refreshSpeed(p);
+            FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime);
+            p.setWalkSpeed((float) (speed * p.getWalkSpeed()));
 		}
 
 		// Health and mana regen
 		PlayerData data = SkillAPI.getPlayerData(p);
 
-		if (getHealthTime() == 0 && !p.isDead()) {
-				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + (health * spice)));
+		if (healthTime == 0 && !p.isDead()) {
+				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + health));
 		}
-		else if (getHealthTime() > 0 && !p.isDead()) {
-			new HealthRunnable(p, health * spice, getHealthTime()).runTaskTimer(main, 0, getHealthDelay());
+		else if (healthTime > 0 && !p.isDead()) {
+			new HealthRunnable(p, health, healthTime).runTaskTimer(main, 0, healthDelay);
 		}
 		
 		if (data.getMainClass().getData().getManaName().contains("MP")) {
-			if (getManaTime() == 0 && !p.isDead()) {
-				data.setMana(Math.min(data.getMaxMana(), data.getMana() + (mana * spice)));
+			if (manaTime == 0 && !p.isDead()) {
+				data.setMana(Math.min(data.getMaxMana(), data.getMana() + mana));
 			}
-			else if (getManaTime() > 0 && !p.isDead()) {
-				new ManaRunnable(p, mana * spice, getHealthTime()).runTaskTimer(main, 0, getManaDelay());
+			else if (manaTime > 0 && !p.isDead()) {
+				new ManaRunnable(p, mana, healthTime).runTaskTimer(main, 0, manaDelay);
 			}
 		}
 		
@@ -221,7 +230,14 @@ public class FoodConsumable extends Consumable {
 			item = new ItemStack(mat);
 		}
 		item.setAmount(amount);
-		return item;
+		
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		meta.setDisplayName(display);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("consumable", key);
+		return nbti.getItem();
 	}
 	
 	public void setDisplay(String display) {
@@ -291,6 +307,14 @@ public class FoodConsumable extends Consumable {
 	public ArrayList<String> getCommands() {
 		return commands;
 	}
+	
+	public ArrayList<FlagAction> getFlags() {
+		return flags;
+	}
+	
+	public ArrayList<BuffAction> getBuffs() {
+		return buffs;
+	}
 
 	public void setSaturation(double saturation) {
 		this.saturation = saturation;
@@ -301,10 +325,20 @@ public class FoodConsumable extends Consumable {
 	}
 	
 	public void setCooldown(long cooldown) {
-		this.cooldown = cooldown;
+		// Seconds to milliseconds
+		this.cooldown = cooldown * 1000;
 	}
 	
 	public void setIsDuration(boolean isDuration) {
 		this.isDuration = isDuration;
+	}
+	
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
+	public void setSpeedTime(int time) {
+		// Seconds to ticks
+		this.speedTime = time * 20;
 	}
 }

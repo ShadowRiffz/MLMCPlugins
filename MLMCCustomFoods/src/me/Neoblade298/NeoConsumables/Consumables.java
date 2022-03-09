@@ -2,6 +2,7 @@ package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.util.BuffType;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.bosschests.AugmentReward;
@@ -12,8 +13,10 @@ import me.Neoblade298.NeoConsumables.bosschests.GearReward;
 import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
 import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
 import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
+import me.Neoblade298.NeoConsumables.objects.BuffAction;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
+import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
@@ -164,7 +167,30 @@ public class Consumables extends JavaPlugin implements Listener {
 		if (!attribs.isEmpty()) {
 			cons.setAttributeTime(config.getInt("attributetime"));
 		}
+		
+		ArrayList<FlagAction> flags = cons.getFlags();
+		for (String flagLine : config.getStringList("flags")) {
+			String[] flagArgs = flagLine.split(",");
+			String flag = flagArgs[0];
+			boolean add = true;
+			if (flag.startsWith("-")) {
+				add = false;
+				flag = flag.substring(1);
+			}
+			flags.add(new FlagAction(flag, Integer.parseInt(flagArgs[1]), add));
+		}
+		
+		ArrayList<BuffAction> buffs = cons.getBuffs();
+		for (String buffLine : config.getStringList("buffs")) {
+			String[] buffArgs = buffLine.split(",");
+			double value = Double.parseDouble(buffArgs[2]);
+			int duration = Integer.parseInt(buffArgs[1]);
+			boolean isPercent = Boolean.parseBoolean(buffArgs[3]);
+			buffs.add(new BuffAction(BuffType.valueOf(buffArgs[0]), value, duration, isPercent));
+		}
 
+		cons.setSpeed(config.getDouble("speed"));
+		cons.setSpeedTime(config.getInt("speed-time"));
 		cons.setSaturation(config.getDouble("saturation"));
 		cons.setHunger(config.getInt("hunger"));
 		cons.setHealth(config.getInt("health.amount"));
@@ -175,6 +201,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setManaTime(config.getInt("mana.repetitions"));
 		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
 		cons.setWorlds(config.getStringList("worlds"));
+		cons.setCooldown(config.getLong("cooldown"));
 		return cons;
 	}
 
