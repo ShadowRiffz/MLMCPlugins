@@ -358,7 +358,7 @@ public class AugmentManager implements Listener {
 				}
 			}
 		}
-		else if (containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE")) {
+		else if (containsType(e.getTypes(), "DEFENSE", "SKILL_DEFENSE")) {
 			if (containsAugments(p, EventType.DAMAGE_TAKEN)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
 					if (augment instanceof ModDamageTakenAugment) {
@@ -367,13 +367,14 @@ public class AugmentManager implements Listener {
 							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 
 							double mult = aug.getDamageTakenMult(p);
-							if (mult > 0) {
+							// These are reversed intentionally for defense increase
+							if (mult < 0) {
 								posmult += mult;
 							}
-							else if (mult < 0) {
+							else if (mult > 0) {
 								negmult *= (1 - mult);
 							}
-							flat += aug.getDamageTakenFlat(p);
+							flat -= aug.getDamageTakenFlat(p);
 						}
 					}
 				}

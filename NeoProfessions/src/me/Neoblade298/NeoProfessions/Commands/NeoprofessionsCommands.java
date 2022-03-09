@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions.Commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -409,10 +408,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get((Player) sender));
+						sender.sendMessage("" + AugmentManager.playerAugments.get((Player) sender));
 					}
 					else {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
+						sender.sendMessage("" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
 					}
 					return true;
 				}
@@ -436,8 +435,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ProfessionsMethods.artifactItem(p);
 					}
 				}
-				// /prof give [essence/oretype/repair/augment] <aug> [level] [amount]
-				else if (args[0].equalsIgnoreCase("give")) {
+				// /prof give/get [essence/oretype/repair/augment] <aug> [level] [amount]
+				else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 					int offset = 0;
 					String aug = null;
 					int amt = 1;

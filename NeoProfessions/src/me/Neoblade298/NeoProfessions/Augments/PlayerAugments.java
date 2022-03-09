@@ -80,6 +80,14 @@ public class PlayerAugments {
 	}
 	
 	public String toString() {
-		return augments.toString();
+		String toReturn = "";
+		for (EventType key : augments.keySet()) {
+			toReturn += key + ": ";
+			for (Augment aug : augments.get(key)) {
+				toReturn += aug.getLine() + ",";
+			}
+			toReturn.substring(0, toReturn.length() - 1);
+		}
+		return toReturn;
 	}
 }
