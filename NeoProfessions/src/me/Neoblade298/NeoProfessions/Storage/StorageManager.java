@@ -17,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -24,18 +25,49 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
 
-public class StorageManager {
+public class StorageManager implements Listener {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	static Professions main;
-
 	
 	public StorageManager(Professions main) {
 		StorageManager.main = main;
 		
 		// Load in items
 		loadItems(new File(main.getDataFolder(), "items"));
+	}
+	
+	public static boolean givePlayer(Player p, int id, int amount) {
+		if (amount > 0) {
+			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+			storage.put(id, storage.getOrDefault(id, 0) + amount);
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean takePlayer(Player p, int id, int amount) {
+		if (amount > 0) {
+			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+			int total = storage.getOrDefault(id, 0) - amount;
+			if (total <= 0) {
+				storage.remove(id);
+			}
+			else {
+				storage.put(id, storage.get(id) - amount);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean playerHas(Player p, int id, int amount) {
+		if (amount > 0) {
+			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+			return storage.getOrDefault(id, 0) >= amount;
+		}
+		return false;
 	}
 	
 	private void loadItems(File dir) {
@@ -147,6 +179,10 @@ public class StorageManager {
 			}
 		};
 		save.runTaskAsynchronously(main);
+	}
+	
+	public static HashMap<Integer, StoredItem> getItemDefinitions() {
+		return items;
 	}
 	
 	@EventHandler

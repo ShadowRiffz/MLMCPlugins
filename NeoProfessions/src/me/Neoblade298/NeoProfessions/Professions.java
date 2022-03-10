@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,6 +36,7 @@ import net.milkbowl.vault.permission.Permission;
 
 public class Professions extends JavaPlugin implements Listener {
 	public boolean debug = false;
+	public static Random gen = new Random();
 	public boolean isInstance = false;
 
 	public static Economy econ;
@@ -61,7 +63,7 @@ public class Professions extends JavaPlugin implements Listener {
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
-	public HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
+	public static HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -100,6 +102,7 @@ public class Professions extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
 		getServer().getPluginManager().registerEvents(new AugmentManager(this), this);
+		getServer().getPluginManager().registerEvents(new StorageManager(this), this);
 		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
 			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		}
