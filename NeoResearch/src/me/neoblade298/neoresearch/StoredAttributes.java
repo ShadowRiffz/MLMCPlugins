@@ -1,5 +1,6 @@
 package me.neoblade298.neoresearch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
@@ -10,6 +11,16 @@ import com.sucy.skill.api.player.PlayerData;
 public class StoredAttributes {
 	private HashMap<String, Integer> stored;
 	private HashMap<String, Integer> active;
+	public static ArrayList<String> attrs = new ArrayList<String>();
+	
+	static {
+		attrs.add("strength");
+		attrs.add("dexterity");
+		attrs.add("intelligence");
+		attrs.add("spirit");
+		attrs.add("endurance");
+		attrs.add("unused");
+	}
 	
 	public StoredAttributes() {
 		this.stored = new HashMap<String, Integer>();
