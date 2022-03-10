@@ -95,7 +95,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 	@EventHandler
 	public void onHeal(SkillHealEvent e) {
 		LivingEntity target = e.getTarget();
-		if (FlagManager.hasFlag(target, "curse")) {
+		if (FlagManager.hasFlag(target, "curse") && !e.ignoresCurse()) {
 			e.setCancelled(true);
 			target.damage(e.getAmount());
 		}
