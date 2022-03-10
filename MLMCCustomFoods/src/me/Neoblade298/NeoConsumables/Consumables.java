@@ -345,6 +345,9 @@ public class Consumables extends JavaPlugin implements Listener {
 			return;
 		}
 		ItemStack item = p.getInventory().getItemInMainHand();
+		if (item != null && item.getType().equals(Material.AIR)) {
+			return;
+		}
 		String key = new NBTItem(item).getString("consumable");
 
 		// Find the food in the inv
