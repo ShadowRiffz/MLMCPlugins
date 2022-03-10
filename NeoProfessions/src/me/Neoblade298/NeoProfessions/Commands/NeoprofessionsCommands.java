@@ -415,10 +415,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				else if (args[0].equalsIgnoreCase("debug")) {
+				else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 					main.debug = !main.debug;
 					p.sendMessage("Debug set to " + main.debug);
 					return true;
+				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
+					sender.sendMessage(main.viewingInventory.toString());
 				}
 				// /prof givepaint [player] R G B
 				else if (args[0].equalsIgnoreCase("givepaint")) {
