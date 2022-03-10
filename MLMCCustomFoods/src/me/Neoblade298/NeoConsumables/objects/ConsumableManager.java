@@ -31,7 +31,7 @@ public class ConsumableManager {
 				stmt.addBatch("REPLACE INTO consumables_effects VALUES ('" + uuid + "','" + eff.getCons().getKey()
 				+ "'," + eff.getStartTime() + ");");
 				
-				// Set to truye if you're saving several accounts at once
+				// Set to true if you're saving several accounts at once
 				if (!savingMultiple) {
 					stmt.executeBatch();
 				}
@@ -70,8 +70,8 @@ public class ConsumableManager {
 				if (cons.isDuration()) {
 					DurationEffects effs = new DurationEffects(main, cons, rs.getLong(3), uuid, new ArrayList<BukkitTask>());
 					if (effs.isRelevant()) {
+						// Don't start the effects until the player is actually loaded
 						ConsumableManager.effects.put(uuid, effs);
-						effs.startEffects();
 					}
 				}
 			}

@@ -64,6 +64,7 @@ import org.bukkit.potion.PotionEffectType;
 public class Consumables extends JavaPlugin implements Listener {
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	public static HashMap<String, ChestConsumable> bosschests = new HashMap<String, ChestConsumable>();
+	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
 	public boolean isInstance = false;
 	public Settings settings;
@@ -73,6 +74,12 @@ public class Consumables extends JavaPlugin implements Listener {
 	public static String sqlPass;
 	public static String connection;
 	public static Properties properties = new Properties();
+	
+	static {
+		defaultWorlds.add("Argyll");
+		defaultWorlds.add("ClassPVP");
+		defaultWorlds.add("Dev");
+	}
 
 	public void onEnable() {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
@@ -227,14 +234,19 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setSaturation(config.getDouble("saturation"));
 		cons.setHunger(config.getInt("hunger"));
 		cons.setHealth(config.getInt("health.amount"));
-		cons.setHealthPeriod(config.getInt("health.period"));
+		cons.setHealthPeriod(config.getInt("health.period", 1));
 		cons.setHealthReps(config.getInt("health.repetitions"));
 		cons.setMana(config.getInt("mana.amount"));
-		cons.setManaPeriod(config.getInt("mana.period"));
+		cons.setManaPeriod(config.getInt("mana.period", 1));
 		cons.setManaReps(config.getInt("mana.repetitions"));
 		cons.setCommands((ArrayList<String>) config.getStringList("commands"));
-		cons.setWorlds(config.getStringList("worlds"));
-		cons.setCooldown(config.getLong("cooldown"));
+		if (!config.getStringList("worlds").isEmpty()) {
+			cons.setWorlds(config.getStringList("worlds"));
+		}
+		else {
+			cons.setWorlds(defaultWorlds);
+		}
+		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
 		return cons;
 	}
 
@@ -429,7 +441,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private void endEffects(UUID uuid) {
 		DurationEffects effs = ConsumableManager.effects.get(uuid);
 		if (effs != null) {
-			effs.endEffects();
+			effs.endEffects(false);
 			ConsumableManager.effects.remove(uuid);
 		}
 	}

@@ -50,19 +50,19 @@ public class DurationEffects {
 	}
 	
 	public void startEffects() {
+		System.out.println("Started effects");
 		if (!isRelevant()) {
+			System.out.println("No longer relevant");
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
 		
-		int secondsElapsed = (int) ((System.currentTimeMillis() - startTime));
-		int ticksElapsed = secondsElapsed * 20;
-		boolean isActive = false; 
+		int secondsElapsed = (int) (System.currentTimeMillis() - startTime) / 1000;
+		System.out.println("Seconds elapsed: " + secondsElapsed);
 		Player p = Bukkit.getPlayer(uuid);
 		
 		// Attributes
 		if (cons.getAttributeTime() - secondsElapsed > 0) {
-			isActive = true;
 			cons.getAttributes().applyAttributes(p);
 		}
 		
@@ -71,7 +71,6 @@ public class DurationEffects {
 			if (flag.isAdd()) {
 				int remaining = flag.getDuration() - secondsElapsed;
 				if (remaining > 0) {
-					isActive = true;
 					FlagManager.addFlag(p, p, flag.getFlag(), remaining * 20);
 				}
 			}
@@ -88,62 +87,91 @@ public class DurationEffects {
 	            Bukkit.getPluginManager().callEvent(event);
 	            
 	            if (!event.isCancelled()) {
-	    			isActive = true;
-	                BuffManager.getBuffData(p).addBuff(
-	                        buffType,
-	                        category,
-	                        new Buff(cons.getKey() + "-" + p, event.getAmount(), buff.isPercent()),
-	                        event.getTicks());
+	            	if (category == null) {
+	                    BuffManager.getBuffData(p).addBuff(
+	                            buffType,
+	                            new Buff(cons.getKey() + "-" + p, event.getAmount(), buff.isPercent()),
+	                            event.getTicks());
+	            	}
+	            	else {
+	                    BuffManager.getBuffData(p).addBuff(
+	                            buffType,
+	                            category,
+	                            new Buff(cons.getKey() + "-" + p, event.getAmount(), buff.isPercent()),
+	                            event.getTicks());
+	            	}
 	            }
 	        }
 		}
 		
 		// Speed
 		int speedTime = cons.getSpeedTime();
-		if (speedTime - ticksElapsed > 0) {
-			isActive = true;
+		if (speedTime - secondsElapsed > 0) {
             AttributeListener.refreshSpeed(p);
             FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime * 20);
-            p.setWalkSpeed((float) (speedTime * p.getWalkSpeed()));
+            System.out.println("Here: " + p.getWalkSpeed());
+            p.setWalkSpeed((float) (cons.getSpeed() * p.getWalkSpeed()));
 		}
 
 		// Health and mana regen
 		PlayerData data = SkillAPI.getPlayerData(p);
-		int healthReps = cons.getHealthReps();
-		int manaReps = cons.getManaReps();
-		int remainingHealthReps = healthReps - (secondsElapsed / cons.getHealthPeriod());
-		int remainingManaReps = manaReps - (secondsElapsed / cons.getManaPeriod());
-		
-		if (remainingHealthReps > 0 && !p.isDead()) {
-			isActive = true;
-			tasks.add(new HealthRunnable(p, cons.getHealth(), remainingHealthReps).runTaskTimer(main, 0, cons.getHealthPeriod() * 20));
-		}
-		
-		if (remainingManaReps > 0 && !p.isDead()) {
-			if (data.getMainClass().getData().getManaName().contains("MP")) {
-				isActive = true;
-				tasks.add(new ManaRunnable(p, cons.getMana(), remainingManaReps).runTaskTimer(main, 0, cons.getManaPeriod() * 20));
+			int healthReps = cons.getHealthReps();
+			int manaReps = cons.getManaReps();
+			int remainingHealthReps = healthReps - (secondsElapsed / cons.getHealthPeriod());
+			int remainingManaReps = manaReps - (secondsElapsed / cons.getManaPeriod());
+			
+			if (remainingHealthReps > 0) {
+				tasks.add(new HealthRunnable(p, cons.getHealth(), remainingHealthReps).runTaskTimer(main, 0, cons.getHealthPeriod() * 20));
 			}
-		}
-		
-		// If no effects are happening anymore, remove it
-		if (!isActive) {
-			ConsumableManager.effects.remove(uuid);
-		}
+			
+			if (remainingManaReps > 0) {
+				if (data.getMainClass().getData().getManaName().contains("MP")) {
+					tasks.add(new ManaRunnable(p, cons.getMana(), remainingManaReps).runTaskTimer(main, 0, cons.getManaPeriod() * 20));
+				}
+			}
 	}
 	
-	public void endEffects() {
+	public void endEffects(boolean isNewEffect) {
 		if (!isRelevant()) {
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
 		
-		// Don't remove attributes, every time this is called, attributes are
-		// removed by default
+		
 		Player p = Bukkit.getPlayer(uuid);
 		
+		// only do this if a new effect is replacing this one
+		if (isNewEffect) {
+			cons.getAttributes().removeAttributes(p);
+			
+			for (FlagAction flag : cons.getFlags()) {
+				FlagManager.removeFlag(p, flag.getFlag());
+			}
+			
+			for (BuffAction buff : cons.getBuffs()) {
+				double amount = buff.isPercent() ? 1 : 0;
+            	if (buff.getCategory() == null) {
+                    BuffManager.getBuffData(p).addBuff(
+                            buff.getType(),
+                            new Buff(cons.getKey() + "-" + p, amount, buff.isPercent()),
+                            1);
+            	}
+            	else {
+                    BuffManager.getBuffData(p).addBuff(
+                            buff.getType(),
+                            buff.getCategory(),
+                            new Buff(cons.getKey() + "-" + p, amount, buff.isPercent()),
+                            1);
+            	}
+			}
+			
+			if (cons.getSpeedTime() > 0) {
+				FlagManager.removeFlag(p, "sapiSpeedKey");
+			}
+		}
+		
 		for (BukkitTask task : tasks) {
-			if (task.isCancelled()) {
+			if (!task.isCancelled()) {
 				task.cancel();
 			}
 		}

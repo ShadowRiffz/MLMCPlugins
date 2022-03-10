@@ -7,7 +7,7 @@ public class FlagAction {
 	
 	public FlagAction(String flag, int duration, boolean add) {
 		this.flag = flag;
-		this.duration = duration * 20;
+		this.duration = duration;
 		this.add = add;
 	}
 

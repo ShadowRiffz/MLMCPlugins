@@ -46,7 +46,7 @@ public class FoodConsumable extends Consumable {
 	int speedTime;
 	int health, healthReps, healthPeriod;
 	int mana, manaReps, manaPeriod;
-	long cooldown;
+	int cooldown;
 	String display, base64;
 	boolean isDuration;
 	int totalDuration;
@@ -91,8 +91,7 @@ public class FoodConsumable extends Consumable {
 				return true;
 			}
 			remaining /= 1000L;
-			String message = "§4[§c§lMLMC§4] &cInstant consumables cooldown: §e" + remaining + "s§7.";
-			p.sendMessage(message);
+			p.sendMessage("§4[§c§lMLMC§4] §cInstant consumables cooldown: §e" + remaining + "s§7.");
 			return false;
 		}
 		else {
@@ -101,8 +100,7 @@ public class FoodConsumable extends Consumable {
 				return true;
 			}
 			remaining /= 1000L;
-			String message = "§4[§c§lMLMC§4] &cDuration consumables cooldown: §e" + remaining + "s§7.";
-			p.sendMessage(message);
+			p.sendMessage("§4[§c§lMLMC§4] §cDuration consumables cooldown: §e" + remaining + "s§7.");
 			return false;
 		}
 	}
@@ -112,7 +110,7 @@ public class FoodConsumable extends Consumable {
 		UUID uuid = p.getUniqueId();
 		ArrayList<BukkitTask> tasks = new ArrayList<BukkitTask>();
 		if (ConsumableManager.effects.containsKey(uuid)) {
-			ConsumableManager.effects.get(uuid).endEffects();
+			ConsumableManager.effects.get(uuid).endEffects(true);
 		}
 		
 		// Sounds, commands
@@ -134,8 +132,7 @@ public class FoodConsumable extends Consumable {
 		}
 
 		// Set cooldown
-		long nextEat = System.currentTimeMillis() + this.cooldown;
-		long ticks = this.cooldown / 50; // Milliseconds to ticks
+		long nextEat = System.currentTimeMillis() + (this.cooldown * 1000);
 		if (!isDuration) {
 			ConsumableManager.cds.get(uuid).setInstantCooldown(nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
@@ -145,7 +142,7 @@ public class FoodConsumable extends Consumable {
 						p.sendMessage(message);
 					}
 				}
-			}, ticks);
+			}, this.cooldown * 20);
 		}
 		else {
 			ConsumableManager.cds.get(uuid).setDurationCooldown(nextEat);
@@ -182,11 +179,19 @@ public class FoodConsumable extends Consumable {
             Bukkit.getPluginManager().callEvent(event);
             
             if (!event.isCancelled()) {
-                BuffManager.getBuffData(p).addBuff(
-                        buffType,
-                        category,
-                        new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
-                        event.getTicks());
+            	if (category == null) {
+                    BuffManager.getBuffData(p).addBuff(
+                            buffType,
+                            new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
+                            event.getTicks());
+            	}
+            	else {
+                    BuffManager.getBuffData(p).addBuff(
+                            buffType,
+                            category,
+                            new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
+                            event.getTicks());
+            	}
             }
 		}
 		
@@ -199,11 +204,11 @@ public class FoodConsumable extends Consumable {
 
 		// Health and mana regen
 		PlayerData data = SkillAPI.getPlayerData(p);
-
 		if (healthReps == 0 && !p.isDead()) {
 				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + health));
 		}
 		else if (healthReps > 0 && !p.isDead()) {
+			System.out.println("Started " + healthPeriod);
 			tasks.add(new HealthRunnable(p, health, healthReps).runTaskTimer(main, 0, healthPeriod * 20));
 		}
 		
@@ -293,14 +298,14 @@ public class FoodConsumable extends Consumable {
 	}
 
 	public void setHealthPeriod(int healthPeriod) {
-		this.healthPeriod = healthPeriod;
+		this.healthPeriod = healthPeriod > 0 ? healthPeriod : 1;
 		if (this.healthReps * this.healthPeriod > totalDuration) {
 			totalDuration = this.healthReps * this.healthPeriod;
 		}
 	}
 
 	public void setManaPeriod(int manaPeriod) {
-		this.manaPeriod = manaPeriod;
+		this.manaPeriod = manaPeriod > 0 ? manaPeriod : 1;
 		if (this.manaReps * this.manaPeriod > totalDuration) {
 			totalDuration = this.manaReps * this.manaPeriod;
 		}
@@ -378,7 +383,7 @@ public class FoodConsumable extends Consumable {
 		this.hunger = hunger;
 	}
 	
-	public void setCooldown(long cooldown) {
+	public void setCooldown(int cooldown) {
 		this.cooldown = cooldown;
 	}
 	
@@ -435,5 +440,9 @@ public class FoodConsumable extends Consumable {
 	
 	public String getDisplay() {
 		return display;
+	}
+	
+	public double getSpeed() {
+		return speed;
 	}
 }

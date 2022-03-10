@@ -30,7 +30,6 @@ public class StoredAttributes {
 		for (String attr : attrs.keySet()) {
 			data.addBonusAttributes(attr, -attrs.get(attr));
 		}
-		attrs.clear();
 	}
 
 	public HashMap<String, Integer> getAttrs() {

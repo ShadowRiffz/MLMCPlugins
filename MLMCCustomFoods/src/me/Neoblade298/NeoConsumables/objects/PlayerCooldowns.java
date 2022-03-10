@@ -24,5 +24,7 @@ public class PlayerCooldowns {
 		this.durationCooldown = durationCooldown;
 	}
 	
-	
+	public String toString() {
+		return instantCooldown + " " + durationCooldown + " " + System.currentTimeMillis();
+	}
 }

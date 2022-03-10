@@ -15,6 +15,7 @@ public class AttrRemoveRunnable extends BukkitRunnable {
 	
 	@Override
 	public void run() {
+		System.out.println("Attributes removed");
 		attrs.removeAttributes(p);
 	}
 }
