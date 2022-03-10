@@ -16,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
@@ -32,7 +31,7 @@ public class ConsumableManager implements Listener {
 	private static Consumables main;
 	
 	public ConsumableManager(Consumables main) {
-		this.main = main;
+		ConsumableManager.main = main;
 	}
 
 	public static void save(UUID uuid, Connection con, Statement stmt, boolean savingMultiple) {

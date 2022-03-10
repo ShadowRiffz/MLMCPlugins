@@ -50,6 +50,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Consumables extends JavaPlugin implements Listener {
+	public static HashMap<String, FoodConsumable> food = new HashMap<String, FoodConsumable>();
 	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	public static HashMap<String, ChestConsumable> bosschests = new HashMap<String, ChestConsumable>();
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
@@ -96,7 +97,7 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
-		Bukkit.getPluginManager().registerEvents(this, new ConsumableManager(this));
+		Bukkit.getPluginManager().registerEvents(new ConsumableManager(this), this);
 	}
 	
 	public void onDisable() {
@@ -236,6 +237,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			cons.setWorlds(defaultWorlds);
 		}
 		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
+		food.put(key, cons);
 		return cons;
 	}
 
