@@ -3,6 +3,8 @@ package me.neoblade298.neosapiaddons;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -46,6 +48,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 	private HungerController hc;
 	public static HashMap<Integer, PointSet> skillPoints = new HashMap<Integer, PointSet>();
 	public static HashMap<Integer, PointSet> attrPoints = new HashMap<Integer, PointSet>();
+	public static boolean debug = false;
 	
 	
 	public void onEnable() {
@@ -143,12 +146,24 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 		
 		int expectedSP = setSP.getBasePoints() + setSP.getPointsPerLvl() * (data.getClass("class").getLevel() - setSP.getBaseLvl());
 		int expectedAP = setAP.getBasePoints() + setAP.getPointsPerLvl() * (data.getClass("class").getLevel() - setAP.getBaseLvl());
+		if (debug) {
+			Bukkit.getLogger().log(Level.INFO, "SAPIAddons update " + data.getPlayerName() +
+					" expected SP: " + expectedSP + ", expected AP: " + expectedAP);
+		}
 		
 		int currSP = data.getInvestedSkillPoints() + data.getClass("class").getPoints();
+		if (debug) {
+			Bukkit.getLogger().log(Level.INFO, "SAPIAddons update " + data.getPlayerName() +
+					" current SP: " + data.getInvestedSkillPoints() + " + " + data.getClass("class").getPoints() + " = " + currSP);
+		}
 		int currAP = data.getAttributePoints();
 		HashMap<String, Integer> invested = data.getInvestedAttributes();
 		for (String attr : invested.keySet()) {
 			currAP += invested.get(attr);
+			if (debug) {
+				Bukkit.getLogger().log(Level.INFO, "SAPIAddons update " + data.getPlayerName() +
+						" current AP + " + attr + ", " + invested.get(attr) + ": " + currAP);
+			}
 		}
 		
 		if (currSP > expectedSP) {
