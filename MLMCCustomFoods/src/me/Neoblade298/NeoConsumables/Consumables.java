@@ -1,10 +1,6 @@
 package me.Neoblade298.NeoConsumables;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
-import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
-import com.sucy.skill.api.event.PlayerSaveEvent;
 import com.sucy.skill.api.util.BuffType;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -20,7 +16,6 @@ import me.Neoblade298.NeoConsumables.objects.BuffAction;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.ConsumableManager;
-import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
@@ -29,14 +24,10 @@ import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -51,10 +42,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -108,6 +96,7 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		getCommand("cons").setExecutor(new Commands(this));
 		Bukkit.getPluginManager().registerEvents(this, this);
+		Bukkit.getPluginManager().registerEvents(this, new ConsumableManager(this));
 	}
 	
 	public void onDisable() {
@@ -423,68 +412,5 @@ public class Consumables extends JavaPlugin implements Listener {
 		if (item.getType().equals(Material.CHEST) && new NBTItem(item).hasKey("consumable")) {
 			e.setCancelled(true);
 		}
-	}
-	
-	private void handleLeave(UUID uuid) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(connection, properties);
-			Statement stmt = con.createStatement();
-			ConsumableManager.save(uuid, con, stmt, false);
-		}
-		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
-			e.printStackTrace();
-		}
-	}
-	
-	private void endEffects(UUID uuid) {
-		DurationEffects effs = ConsumableManager.effects.get(uuid);
-		if (effs != null) {
-			effs.endEffects(false);
-			ConsumableManager.effects.remove(uuid);
-		}
-	}
-	
-	public void startEffects(UUID uuid) {
-		DurationEffects effs = ConsumableManager.effects.get(uuid);
-		if (effs != null) {
-			effs.startEffects();
-		}
-	}
-	
-	@EventHandler
-	public void onLoadSQL(PlayerLoadCompleteEvent e) {
-		startEffects(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onSaveSQL(PlayerSaveEvent e) {
-		handleLeave(e.getUUID());
-	}
-	
-	@EventHandler
-	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
-		startEffects(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
-		endEffects(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
-
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		ConsumableManager.loadPlayer(this, e.getUniqueId());
 	}
 }

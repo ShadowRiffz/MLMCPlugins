@@ -21,18 +21,15 @@ public class HealthRunnable extends BukkitRunnable {
 	@Override
 	public void run() {
 		if (p != null && !p.isDead()) {
-			System.out.println("Happened " + this.reps);
 			this.reps -= 1;
-            SkillHealEvent event = new SkillHealEvent(p, p, this.healing);
+            SkillHealEvent event = new SkillHealEvent(p, p, this.healing, true);
             Bukkit.getPluginManager().callEvent(event);
-        	System.out.println(event.getAmount() + " " + event.isCancelled());
             if (!event.isCancelled()) {
-            	System.out.println(event.getAmount());
     			p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + event.getAmount()));
-    			if (this.reps <= 0) {
-    				this.cancel();
-    			}
             }
+			if (this.reps <= 0) {
+				this.cancel();
+			}
 		}
 		else {
 			this.cancel();

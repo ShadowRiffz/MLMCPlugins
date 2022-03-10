@@ -11,13 +11,29 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
+import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.Neoblade298.NeoConsumables.Consumables;
 
-public class ConsumableManager {
+public class ConsumableManager implements Listener {
 	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
 	public static HashMap<UUID, DurationEffects> effects = new HashMap<UUID, DurationEffects>();
+	private static Consumables main;
+	
+	public ConsumableManager(Consumables main) {
+		this.main = main;
+	}
 
 	public static void save(UUID uuid, Connection con, Statement stmt, boolean savingMultiple) {
 		DurationEffects eff = ConsumableManager.effects.get(uuid);
@@ -58,7 +74,7 @@ public class ConsumableManager {
 		}
 	}
 
-	public static void loadPlayer(Consumables main, UUID uuid) {
+	public static void loadPlayer(UUID uuid) {
 		ConsumableManager.effects.remove(uuid);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -79,5 +95,68 @@ public class ConsumableManager {
 			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to load effects for " + uuid);
 			e.printStackTrace();
 		}
+	}
+
+	
+	private void handleLeave(UUID uuid) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
+			Statement stmt = con.createStatement();
+			ConsumableManager.save(uuid, con, stmt, false);
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
+			e.printStackTrace();
+		}
+	}
+	
+	private void endEffects(UUID uuid) {
+		DurationEffects effs = ConsumableManager.effects.get(uuid);
+		if (effs != null) {
+			effs.endEffects(false);
+		}
+	}
+	
+	public void startEffects(UUID uuid) {
+		DurationEffects effs = ConsumableManager.effects.get(uuid);
+		if (effs != null) {
+			effs.startEffects();
+		}
+	}
+	
+	@EventHandler
+	public void onLoadSQL(PlayerLoadCompleteEvent e) {
+		startEffects(e.getPlayer().getUniqueId());
+	}
+
+	@EventHandler
+	public void onSaveSQL(PlayerSaveEvent e) {
+		handleLeave(e.getUUID());
+	}
+	
+	@EventHandler
+	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
+		startEffects(e.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
+		endEffects(e.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		handleLeave(e.getPlayer().getUniqueId());
+	}
+
+	@EventHandler
+	public void onJoin(AsyncPlayerPreLoginEvent e) {
+		loadPlayer(e.getUniqueId());
 	}
 }

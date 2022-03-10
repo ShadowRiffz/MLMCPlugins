@@ -112,6 +112,7 @@ public class FoodConsumable extends Consumable {
 		if (ConsumableManager.effects.containsKey(uuid)) {
 			ConsumableManager.effects.get(uuid).endEffects(true);
 		}
+		System.out.println("Total duration: " + getTotalDuration());
 		
 		// Sounds, commands
 		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");

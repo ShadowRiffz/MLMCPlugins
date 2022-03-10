@@ -50,16 +50,15 @@ public class DurationEffects {
 	}
 	
 	public void startEffects() {
-		System.out.println("Started effects");
 		if (!isRelevant()) {
-			System.out.println("No longer relevant");
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
+		System.out.println("Effects started");
 		
 		int secondsElapsed = (int) (System.currentTimeMillis() - startTime) / 1000;
-		System.out.println("Seconds elapsed: " + secondsElapsed);
 		Player p = Bukkit.getPlayer(uuid);
+		p.sendMessage("§4[§c§lMLMC§4] §7Active consumable: §e" + cons.getDisplay() + " §7for §e" + secondsElapsed + " §7more seconds.");
 		
 		// Attributes
 		if (cons.getAttributeTime() - secondsElapsed > 0) {
@@ -136,6 +135,7 @@ public class DurationEffects {
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
+		System.out.println("Effects ended");
 		
 		
 		Player p = Bukkit.getPlayer(uuid);
