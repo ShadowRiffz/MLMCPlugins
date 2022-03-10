@@ -79,7 +79,7 @@ public class StoredAttributes {
 	}
 	
 	public void investAttribute(String attr, int num) {
-		int unused = stored.get("unused");
+		int unused = stored.getOrDefault("unused", 0);
 		if (unused >= num) {
 			stored.put("unused", unused - num);
 			stored.put(attr, stored.getOrDefault(attr, 0) + num);
@@ -91,7 +91,7 @@ public class StoredAttributes {
 	}
 	
 	public void unvestAttribute(String attr, int num) {
-		int attrNum = stored.get(attr);
+		int attrNum = stored.getOrDefault("unused", 0);
 		if (attrNum >= num) {
 			stored.put("unused", stored.getOrDefault("unused", 0) + num);
 			stored.put(attr, attrNum - num);
