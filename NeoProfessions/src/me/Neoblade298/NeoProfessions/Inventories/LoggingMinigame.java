@@ -24,6 +24,7 @@ import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class LoggingMinigame extends ProfessionInventory {
+	private static float ERROR = 0.594604F;
 	private static int TICK_RATE = 8;
 	private static int TOTAL_TICKS = 20;
 	private static int END_TICKS = 6;
@@ -122,7 +123,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		
 		else if (stage == 1) {
 			if (item.getType().equals(Material.BEE_NEST)) {
-				p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				endGame();
 			}
 			else {
@@ -135,6 +136,7 @@ public class LoggingMinigame extends ProfessionInventory {
 				contents[e.getRawSlot()] = null;
 				inv.setContents(contents);
 				if (dropsPast == drops.size()) {
+					p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
 					endGame();
 				}
 			}
@@ -172,6 +174,7 @@ public class LoggingMinigame extends ProfessionInventory {
 				tick += TICK_RATE;
 				if (tick >= (TICK_RATE * TOTAL_TICKS) + (TICK_RATE * END_TICKS)) {
 					this.cancel();
+					p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 					endGame();
 				}
 			}

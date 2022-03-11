@@ -7,17 +7,18 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
+import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
 
 public class Minigame {
 	private String type;
-	private ArrayList<MinigameDrops> droptable;
+	private MinigameDroptable droptable;
 	private String display;
 	int numDrops;
 	int difficulty;
 	
 	public Minigame(String display, String type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty) {
 		this.type = type;
-		this.droptable = droptable;
+		this.droptable = new MinigameDroptable(droptable);
 		this.numDrops = numDrops;
 		this.display = display;
 		this.difficulty = difficulty;
@@ -25,12 +26,14 @@ public class Minigame {
 	
 	private ArrayList<MinigameDrop> generateDrops() {
 		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
+		
+		
 		for (int i = 0; i < numDrops; i++) {
-			int rand = Professions.gen.nextInt(numDrops);
-			MinigameDrops mdrops = droptable.get(0);
+			int rand = Professions.gen.nextInt(droptable.getTotalWeight());
+			MinigameDrops mdrops = droptable.getDropTable().get(0);
 			int index = 0;
 			do {
-				mdrops = droptable.get(index);
+				mdrops = droptable.getDropTable().get(index);
 				rand -= mdrops.getWeight();
 				index++;
 			}
@@ -44,6 +47,7 @@ public class Minigame {
 	
 	public void startMinigame(Player p) {
 		if (type.equalsIgnoreCase("stonecutting")) {
+			new StonecuttingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
 		}
 		else if (type.equalsIgnoreCase("harvesting")) {
 			new HarvestingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);

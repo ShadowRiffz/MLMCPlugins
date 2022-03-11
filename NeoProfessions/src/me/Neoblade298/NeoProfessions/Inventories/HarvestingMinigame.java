@@ -31,6 +31,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 	int difficulty;
 	HashMap<Integer, MinigameDrop> hiddenItems;
 	HashSet<Integer> guesses;
+	int successfulGuesses = 0;
 	
 	private int dropNum = 0;
 	
@@ -80,14 +81,6 @@ public class HarvestingMinigame extends ProfessionInventory {
 		return item;
 	}
 	
-	private ItemStack generateEmpty() {
-		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§cNothing under here :(");
-		item.setItemMeta(meta);
-		return item;
-	}
-	
 	private ItemStack generateDrop(MinigameDrop drop) {
 		ItemStack item = new ItemStack(drop.getItem().getRarity().getMaterial());
 		StoredItem sitem = drop.getItem();
@@ -123,24 +116,19 @@ public class HarvestingMinigame extends ProfessionInventory {
 					MinigameDrop drop = hiddenItems.get(slot);
 					contents[slot] = generateDrop(drop);
 					StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmt());
+					inv.setContents(contents);
+					successfulGuesses++;
+					if (successfulGuesses >= drops.size()) {
+						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+						endGame();
+						return;
+					}
 				}
-				else {
-					p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
-					contents[slot] = generateEmpty();
-				}
-				inv.setContents(contents);
 				
-				// If you're out of guesses, close the inventory
-				if (guesses.size() >= drops.size()) {
-					stage = 3;
+				// If you're out of guesses or guessed wrong, close the inventory
+				if (guesses.size() >= drops.size() || !hiddenItems.containsKey(slot)) {
+					p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 					endGame();
-					new BukkitRunnable() {
-						public void run() {
-							if (p.getOpenInventory().getTopInventory() == inv) {
-								p.closeInventory();
-							}
-						}
-					}.runTaskLater(main, 40);
 				}
 			}
 		}
@@ -196,11 +184,20 @@ public class HarvestingMinigame extends ProfessionInventory {
 	}
 	
 	private void endGame() {
+		stage = 3;
 		ItemStack[] contents = new ItemStack[54];
 		for (Integer place : hiddenItems.keySet()) {
 			contents[place] = generateDrop(hiddenItems.get(place));
 		}
 		inv.setContents(contents);
+		
+		new BukkitRunnable() {
+			public void run() {
+				if (p.getOpenInventory().getTopInventory() == inv) {
+					p.closeInventory();
+				}
+			}
+		}.runTaskLater(main, 40);
 	}
 
 	@Override
