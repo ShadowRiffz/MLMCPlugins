@@ -41,7 +41,9 @@ public class StorageManager implements Listener {
 	public static boolean givePlayer(Player p, int id, int amount) {
 		if (amount > 0) {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
-			storage.put(id, storage.getOrDefault(id, 0) + amount);
+			int total = storage.getOrDefault(id, 0) + amount;
+			storage.put(id, total);
+			p.sendMessage("§4[§c§lMLMC§4] §7You now have §e" + total + " " + items.get(id).getDisplay());
 			return true;
 		}
 		return false;
@@ -57,6 +59,7 @@ public class StorageManager implements Listener {
 			else {
 				storage.put(id, storage.get(id) - amount);
 			}
+			p.sendMessage("§4[§c§lMLMC§4] §7You now have §e" + total + " " + items.get(id).getDisplay());
 			return true;
 		}
 		return false;
@@ -79,12 +82,13 @@ public class StorageManager implements Listener {
 				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 				for (String id : yaml.getKeys(false)) {
 					ConfigurationSection itemCfg = yaml.getConfigurationSection(id);
-					StoredItem item = new StoredItem(itemCfg.getString("name"));
+					String name = itemCfg.getString("name");
+					int level = itemCfg.getInt("level", 0);
+					String rarity = itemCfg.getString("rarity", "common");
 					ArrayList<String> lore = (ArrayList<String>) itemCfg.getStringList("lore");
-					if (itemCfg.getStringList("lore") != null) {
-						item.setLore(lore);
-					}
-					items.put(Integer.parseInt(id), item);
+					int intid = Integer.parseInt(id);
+					StoredItem item = new StoredItem(intid, name, level, rarity, lore);
+					items.put(intid, item);
 				}
 			}
 		}

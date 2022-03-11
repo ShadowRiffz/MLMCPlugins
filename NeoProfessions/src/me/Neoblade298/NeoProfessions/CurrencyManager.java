@@ -71,6 +71,9 @@ public class CurrencyManager {
 		Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
 		Statement stmt = con.createStatement();
 		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
+		if (playerCurrencies == null) {
+			return;
+		}
 		for (String type : types) {
 			HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type.toLowerCase());
 			String sqlString = "" + typeCurrencies.get(5);

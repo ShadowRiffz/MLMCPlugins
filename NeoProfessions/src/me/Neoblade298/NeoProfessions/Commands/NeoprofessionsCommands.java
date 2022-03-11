@@ -32,6 +32,7 @@ import me.Neoblade298.NeoProfessions.Legacy.CommonItems;
 import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
 import me.Neoblade298.NeoProfessions.Legacy.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
@@ -341,6 +342,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof sell [playername]");
+				sender.sendMessage("§7- §4/prof start [minigame] [playername]");
 				sender.sendMessage("§7- §4/prof repair [playername]");
 				sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof createslot [playername]");
@@ -360,7 +362,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("repair")) {
+				else if (args[0].equalsIgnoreCase("repair")) {
 					
 					if (args.length == 1) {
 						DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
@@ -381,7 +383,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("createslot")) {
+				else if (args[0].equalsIgnoreCase("createslot")) {
 					if (args.length == 1) {
 						ProfessionsMethods.createSlot(p, p.getInventory().getItemInMainHand());
 						p.updateInventory();
@@ -402,13 +404,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("checkaugments")) {
+				else if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
 						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get((Player) sender));
 					}
 					else {
 						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
 					}
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("start")) {
+					MinigameManager.startMinigame(Bukkit.getPlayer(args[2]), args[1]);
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("debug")) {

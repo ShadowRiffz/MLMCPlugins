@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 
@@ -12,8 +11,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,8 +22,8 @@ import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
-import me.Neoblade298.NeoProfessions.Recipes.CulinarianRecipes;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.neoblade298.neogear.Gear;
@@ -52,7 +49,6 @@ public class Professions extends JavaPlugin implements Listener {
 	public static Properties properties = new Properties();
 
 	public ProfessionsMethods professionsMethods;
-	public CulinarianRecipes culinarianRecipes;
 	public MasonUtils masonUtils;
 
 	public GeneralListeners generalListeners;
@@ -60,6 +56,7 @@ public class Professions extends JavaPlugin implements Listener {
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
 	public static StorageManager sm;
+	public static MinigameManager mim;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -112,6 +109,7 @@ public class Professions extends JavaPlugin implements Listener {
 			cm = new CurrencyManager(this);
 			pm = new ProfessionManager(this);
 			sm = new StorageManager(this);
+			mim = new MinigameManager(this);
 			
 			// NeoGear
 			neogear = (Gear) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
@@ -128,22 +126,6 @@ public class Professions extends JavaPlugin implements Listener {
 			
 			// Setup Event Listeners
 			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
-	
-			// Setup recipes (make sure the recipes haven't been added before)
-			culinarianRecipes = new CulinarianRecipes(this);
-			Iterator<Recipe> iter = getServer().recipeIterator();
-			boolean canAdd = true;
-			while (iter.hasNext()) {
-				Recipe r = iter.next();
-				if (r instanceof ShapedRecipe && ((ShapedRecipe) r).getKey().getKey().equalsIgnoreCase("Vodka")) {
-					canAdd = false;
-				}
-			}
-			if (canAdd) {
-				for (Recipe recipe : culinarianRecipes.getRecipes()) {
-					Bukkit.addRecipe(recipe);
-				}
-			}
 		}
 		
 		// SQL
