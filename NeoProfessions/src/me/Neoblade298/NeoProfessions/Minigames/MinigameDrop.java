@@ -18,4 +18,8 @@ public class MinigameDrop {
 	public int getAmt() {
 		return amt;
 	}
+	
+	public String toString() {
+		return item.getDisplay();
+	}
 }

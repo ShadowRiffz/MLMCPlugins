@@ -36,6 +36,10 @@ public class StorageManager implements Listener {
 		
 		// Load in items
 		loadItems(new File(main.getDataFolder(), "items"));
+		
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			loadPlayer(p);
+		}
 	}
 	
 	public static boolean givePlayer(Player p, int id, int amount) {

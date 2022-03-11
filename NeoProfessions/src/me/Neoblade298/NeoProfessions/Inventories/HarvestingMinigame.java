@@ -60,8 +60,8 @@ public class HarvestingMinigame extends ProfessionInventory {
 		meta.setDisplayName("§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§l§nInstructions");
-		lore.add("§e" + this.totalDrops + " §7items will flash onscreen,");
-		lore.add("§7then be covered by grey glass. Remember");
+		lore.add("§e" + this.totalDrops + " §7items will flash onscreen, then");
+		lore.add("§7be covered by grey glass. Remember");
 		lore.add("§7where they were and click the glass");
 		lore.add("§7to retrieve the items!");
 		meta.setLore(lore);

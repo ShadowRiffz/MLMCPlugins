@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
-import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
 
 public class Minigame {
 	private String type;
@@ -45,13 +44,12 @@ public class Minigame {
 	
 	public void startMinigame(Player p) {
 		if (type.equalsIgnoreCase("stonecutting")) {
-			new StonecuttingMinigame();
 		}
 		else if (type.equalsIgnoreCase("harvesting")) {
 			new HarvestingMinigame(MinigameManager.main, p, generateDrops(), display, numDrops, difficulty);
 		}
 		else {
-			new LoggingMinigame();
+			new LoggingMinigame(MinigameManager.main, p, generateDrops(), display, numDrops, difficulty);
 		}
 	}
 }
