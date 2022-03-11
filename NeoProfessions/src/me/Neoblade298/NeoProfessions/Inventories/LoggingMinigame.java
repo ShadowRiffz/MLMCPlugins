@@ -121,7 +121,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		}
 		
 		else if (stage == 1) {
-			if (item.getType().equals(Material.BEEHIVE)) {
+			if (item.getType().equals(Material.BEE_NEST)) {
 				p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
 				endGame();
 			}
