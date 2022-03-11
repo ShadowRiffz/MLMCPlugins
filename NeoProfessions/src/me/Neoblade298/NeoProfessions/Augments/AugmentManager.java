@@ -36,6 +36,7 @@ import com.sucy.skill.api.event.PlayerTauntEvent;
 import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
@@ -50,6 +51,7 @@ import me.Neoblade298.NeoProfessions.Augments.ManaGain.*;
 import me.Neoblade298.NeoProfessions.Augments.Regen.*;
 import me.Neoblade298.NeoProfessions.Augments.Taunt.*;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
@@ -337,6 +339,7 @@ public class AugmentManager implements Listener {
 		double posmult = e.getPosmult();
 		double negmult = e.getNegmult();
 		double flat = e.getFlat();
+		FlagSettings flag = null;
 		if (containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
@@ -375,8 +378,13 @@ public class AugmentManager implements Listener {
 								negmult *= (1 - mult);
 							}
 							flat -= aug.getDamageTakenFlat(p);
+							flag = aug.setFlagAfter();
 						}
 					}
+				}
+				// basically just for thorns
+				if (flag != null) {
+					FlagManager.addFlag(p, e.getTarget(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}

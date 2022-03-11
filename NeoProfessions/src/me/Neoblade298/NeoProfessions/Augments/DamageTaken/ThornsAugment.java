@@ -13,9 +13,12 @@ import com.sucy.skill.api.util.FlagManager;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	private double maxHealthMod;
+	
+	private static FlagSettings flag = new FlagSettings("aug_thorns", 20);
 	
 	public ThornsAugment() {
 		super();
@@ -34,7 +37,11 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	@Override
 	public void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
 		target.damage(getDamageReturned(user));
-		FlagManager.addFlag(user, user, "aug_thorns", 20);
+	}
+	
+	@Override
+	public FlagSettings setFlagAfter() {
+		return flag;
 	}
 
 	@Override
