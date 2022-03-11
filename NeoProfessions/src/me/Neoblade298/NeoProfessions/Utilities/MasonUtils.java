@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import me.Neoblade298.NeoProfessions.Legacy.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.MasonItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
+import me.Neoblade298.NeoProfessions.Legacy.StonecutterItems;
 
 public class MasonUtils {
 

@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Legacy.Items;
+package me.Neoblade298.NeoProfessions.Legacy;
 
 
 import java.util.Random;
