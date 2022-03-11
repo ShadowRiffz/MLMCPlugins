@@ -25,32 +25,29 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class LoggingMinigame extends ProfessionInventory {
 	private static int TICK_RATE = 8;
-	private static int TOTAL_TICKS = 25;
+	private static int TOTAL_TICKS = 20;
 	private static int END_TICKS = 6;
 	Professions main;
 	Player p;
 	int stage = 0;
 	ArrayList<MinigameDrop> drops;
 	ArrayList<FallingItem> falling = new ArrayList<FallingItem>();
-	int totalDrops;
 	double baseSpawnChance = 0.2;
 	int difficulty;
 	HashMap<Integer, MinigameDrop> items, itemsAfter; // Need 2 because 1 gets its items removed
 	ArrayList<ItemStack> toSpawn = new ArrayList<ItemStack>();
-	int dropsAcquired = 0;
+	int dropsPast = 0;
 	
 	private int dropNum = 0;
 	
-	public LoggingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int totalDrops, int difficulty) {
+	public LoggingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int difficulty) {
 		this.main = main;
 		this.p = p;
-		this.totalDrops = totalDrops;
 		this.drops = drops;
 		this.difficulty = difficulty;
 		baseSpawnChance += difficulty * 0.1;
 		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
 		Professions.viewingInventory.put(p, this);
-		System.out.println(drops);
 		
 		ItemStack[] contents = inv.getContents();
 		for (int i = 11; i <= 15; i++) {
@@ -69,7 +66,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		meta.setDisplayName("§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§l§nInstructions");
-		lore.add("§e" + this.totalDrops + " §7items will drop from the");
+		lore.add("§e" + drops.size() + " §7items will drop from the");
 		lore.add("§7top. Click them to get them, but don't");
 		lore.add("§7click any of the beehives!");
 		meta.setLore(lore);
@@ -78,7 +75,7 @@ public class LoggingMinigame extends ProfessionInventory {
 	}
 	
 	private ItemStack generateBeehive() {
-		ItemStack item = new ItemStack(Material.BEEHIVE);
+		ItemStack item = new ItemStack(Material.BEE_NEST);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§cDon't click me!");
 		ArrayList<String> lore = new ArrayList<String>();
@@ -133,11 +130,11 @@ public class LoggingMinigame extends ProfessionInventory {
 				NBTItem nbti = new NBTItem(item);
 				MinigameDrop drop = itemsAfter.get(nbti.getInteger("tick"));
 				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmt());
-				dropsAcquired++;
+				dropsPast++;
 				ItemStack[] contents = inv.getContents();
 				contents[e.getRawSlot()] = null;
 				inv.setContents(contents);
-				if (dropsAcquired == drops.size()) {
+				if (dropsPast == drops.size()) {
 					endGame();
 				}
 			}
@@ -156,13 +153,10 @@ public class LoggingMinigame extends ProfessionInventory {
 		inv.setContents(contents);
 		items = new HashMap<Integer, MinigameDrop>();
 		itemsAfter = new HashMap<Integer, MinigameDrop>();
-		ThreadLocalRandom.current().ints(20, 20 + (TICK_RATE * TOTAL_TICKS)).distinct().limit(totalDrops).forEach(num -> {
-			int key = num - (num % TICK_RATE);
-			while (items.containsKey(key)) {
-				key += TICK_RATE;
-			}
-			items.put(num - (num % TICK_RATE), drops.get(dropNum));
-			itemsAfter.put(num - (num % TICK_RATE), drops.get(dropNum));
+		ThreadLocalRandom.current().ints(0, TOTAL_TICKS).distinct().limit(drops.size()).forEach(num -> {
+			int key = num * TICK_RATE;
+			items.put(key, drops.get(dropNum));
+			itemsAfter.put(key, drops.get(dropNum));
 			dropNum++;
 		});
 		
@@ -173,10 +167,10 @@ public class LoggingMinigame extends ProfessionInventory {
 					this.cancel();
 					return;
 				}
-				tick += TICK_RATE;
 				moveRowsDown();
 				spawnRow(tick);
-				if (tick >= 20 + (TICK_RATE * TOTAL_TICKS) + (TICK_RATE * END_TICKS)) {
+				tick += TICK_RATE;
+				if (tick >= (TICK_RATE * TOTAL_TICKS) + (TICK_RATE * END_TICKS)) {
 					this.cancel();
 					endGame();
 				}
@@ -192,11 +186,27 @@ public class LoggingMinigame extends ProfessionInventory {
 			contents[i] = generateGameOver();
 		}
 		inv.setContents(contents);
+		
+		new BukkitRunnable() {
+			public void run() {
+				if (p.getOpenInventory().getTopInventory() == inv) {
+					p.closeInventory();
+				}
+			}
+		}.runTaskLater(main, 40);
 	}
 
 	@Override
 	public void handleInventoryClose(InventoryCloseEvent e) {
-		
+		ProfessionInventory thisInv = this;
+		if (stage < 2) {
+			new BukkitRunnable() {
+				public void run() {
+					p.openInventory(inv);
+					Professions.viewingInventory.put(p, thisInv);
+				}
+			}.runTask(MinigameManager.main);
+		}
 	}
 	
 	private void moveRowsDown() {
@@ -205,11 +215,18 @@ public class LoggingMinigame extends ProfessionInventory {
 		while (iter.hasNext()) {
 			FallingItem fi = iter.next();
 			if (fi.pos >= 54 || contents[fi.pos] == null) {
+				if (fi.pos >= 54 && new NBTItem(fi.item).hasKey("tick")) {
+					dropsPast++;
+				}
 				iter.remove();
 			}
 			else {
 				fi.moveDown(contents);
 			}
+		}
+		if (dropsPast == drops.size()) {
+			endGame();
+			return;
 		}
 		inv.setContents(contents);
 	}

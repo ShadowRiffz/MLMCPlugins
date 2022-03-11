@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
@@ -27,17 +28,15 @@ public class HarvestingMinigame extends ProfessionInventory {
 	Player p;
 	int stage = 0;
 	ArrayList<MinigameDrop> drops;
-	int totalDrops;
 	int difficulty;
 	HashMap<Integer, MinigameDrop> hiddenItems;
 	HashSet<Integer> guesses;
 	
 	private int dropNum = 0;
 	
-	public HarvestingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int totalDrops, int difficulty) {
+	public HarvestingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int difficulty) {
 		this.main = main;
 		this.p = p;
-		this.totalDrops = totalDrops;
 		this.drops = drops;
 		this.difficulty = difficulty;
 		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
@@ -60,7 +59,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		meta.setDisplayName("§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§l§nInstructions");
-		lore.add("§e" + this.totalDrops + " §7items will flash onscreen, then");
+		lore.add("§e" + drops.size() + " §7items will flash onscreen, then");
 		lore.add("§7be covered by grey glass. Remember");
 		lore.add("§7where they were and click the glass");
 		lore.add("§7to retrieve the items!");
@@ -132,7 +131,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 				inv.setContents(contents);
 				
 				// If you're out of guesses, close the inventory
-				if (guesses.size() >= totalDrops) {
+				if (guesses.size() >= drops.size()) {
 					stage = 3;
 					endGame();
 					new BukkitRunnable() {
@@ -158,7 +157,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		stage = 1;
 		ItemStack[] contents = new ItemStack[54];
 		hiddenItems = new HashMap<Integer, MinigameDrop>();
-		ThreadLocalRandom.current().ints(0, 54).distinct().limit(totalDrops).forEach(num -> {
+		ThreadLocalRandom.current().ints(0, 54).distinct().limit(drops.size()).forEach(num -> {
 			contents[num] = generateDrop(drops.get(dropNum));
 			hiddenItems.put(num, drops.get(dropNum));
 			dropNum++;
@@ -206,6 +205,14 @@ public class HarvestingMinigame extends ProfessionInventory {
 
 	@Override
 	public void handleInventoryClose(InventoryCloseEvent e) {
-		
+		ProfessionInventory thisInv = this;
+		if (stage < 3) {
+			new BukkitRunnable() {
+				public void run() {
+					p.openInventory(inv);
+					Professions.viewingInventory.put(p, thisInv);
+				}
+			}.runTask(MinigameManager.main);
+		}
 	}
 }

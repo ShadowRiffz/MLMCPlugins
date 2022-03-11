@@ -46,10 +46,10 @@ public class Minigame {
 		if (type.equalsIgnoreCase("stonecutting")) {
 		}
 		else if (type.equalsIgnoreCase("harvesting")) {
-			new HarvestingMinigame(MinigameManager.main, p, generateDrops(), display, numDrops, difficulty);
+			new HarvestingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
 		}
 		else {
-			new LoggingMinigame(MinigameManager.main, p, generateDrops(), display, numDrops, difficulty);
+			new LoggingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
 		}
 	}
 }
