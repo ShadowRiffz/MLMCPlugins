@@ -232,7 +232,9 @@ public class LoggingMinigame extends ProfessionInventory {
 	}
 	
 	private void spawnRow(int tick) {
-		
+		if (stage == 2) {
+			return;
+		}
 		double spawnChance = this.baseSpawnChance;
 		spawnChance -= Professions.gen.nextDouble();
 		while (spawnChance >= 0 && toSpawn.size() < 9) {
@@ -268,8 +270,8 @@ public class LoggingMinigame extends ProfessionInventory {
 		
 		public void moveDown(ItemStack[] contents) {
 			contents[pos] = null;
-			if (pos + 9 < 54) {
-				pos = pos + 9;
+			pos = pos + 9;
+			if (pos < 54) {
 				contents[pos] = item;
 			}
 		}
