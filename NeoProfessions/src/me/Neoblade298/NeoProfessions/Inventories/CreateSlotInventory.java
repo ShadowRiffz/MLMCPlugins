@@ -19,7 +19,7 @@ import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class CreateSlotInventory implements ProfessionInventory {
+public class CreateSlotInventory extends ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
@@ -68,7 +68,7 @@ public class CreateSlotInventory implements ProfessionInventory {
 		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
 				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
-		main.viewingInventory.put(p, this);
+		Professions.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
 	}

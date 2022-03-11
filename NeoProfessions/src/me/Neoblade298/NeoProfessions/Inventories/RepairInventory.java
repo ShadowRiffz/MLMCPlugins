@@ -18,7 +18,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
-public class RepairInventory implements ProfessionInventory {
+public class RepairInventory extends ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
@@ -61,7 +61,7 @@ public class RepairInventory implements ProfessionInventory {
 		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
 				"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
-		main.viewingInventory.put(p, this);
+		Professions.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
 	}

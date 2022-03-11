@@ -29,8 +29,6 @@ import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Legacy.CommonItems;
-import me.Neoblade298.NeoProfessions.Legacy.DrinksRecipeItems;
-import me.Neoblade298.NeoProfessions.Legacy.IngredientRecipeItems;
 import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
 import me.Neoblade298.NeoProfessions.Legacy.StonecutterItems;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
@@ -46,8 +44,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 	BlacksmithItems bItems;
 	StonecutterItems sItems;
 	MasonItems mItems;
-	IngredientRecipeItems ingr;
-	DrinksRecipeItems drink;
 
 	public NeoprofessionsCommands(Professions main) {
 		this.main = main;
@@ -56,7 +52,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		bItems = new BlacksmithItems();
 		sItems = new StonecutterItems();
 		mItems = new MasonItems();
-		ingr = new IngredientRecipeItems();
 	}
 
 	@Override

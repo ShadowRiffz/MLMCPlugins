@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,8 +20,7 @@ import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class ConfirmAugmentInventory implements ProfessionInventory {
-	private final Inventory inv;
+public class ConfirmAugmentInventory extends ProfessionInventory {
 	ItemStack item;
 	ItemStack augment;
 	ItemEditor editor;
@@ -33,7 +31,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		this.editor = new ItemEditor(item);
 		
 		inv = Bukkit.createInventory(p, 9, "§cReplace which slot?");
-		main.viewingInventory.put(p, this);
+		Professions.viewingInventory.put(p, this);
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);

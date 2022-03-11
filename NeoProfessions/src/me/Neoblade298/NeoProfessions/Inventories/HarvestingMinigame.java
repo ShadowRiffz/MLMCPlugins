@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
 
-public class HarvestingMinigame implements ProfessionInventory {
+public class HarvestingMinigame extends ProfessionInventory {
 	public HarvestingMinigame(Player p, ArrayList<MinigameDrop> drops) {
 		
 	}

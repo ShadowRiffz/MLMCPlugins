@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 
-public class SellInventory implements ProfessionInventory {
+public class SellInventory extends ProfessionInventory {
 	private Professions main;
 	private final Inventory inv;
 	private final int SELL_ICON = 8;
@@ -32,7 +32,7 @@ public class SellInventory implements ProfessionInventory {
 		ItemStack[] contents = inv.getContents();
 		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell", "§7You can check the value of", "§7item with §c/value");
 		inv.setContents(contents);
-		main.viewingInventory.put(p, this);
+		Professions.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
 	}

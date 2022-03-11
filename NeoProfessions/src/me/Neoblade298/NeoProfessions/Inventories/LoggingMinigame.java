@@ -4,7 +4,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
-public class LoggingMinigame implements ProfessionInventory {
+public class LoggingMinigame extends ProfessionInventory {
 	public LoggingMinigame() {
 		
 	}
