@@ -68,9 +68,10 @@ public class StonecuttingMinigame extends ProfessionInventory {
 		meta.setDisplayName("§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§l§nInstructions");
-		lore.add("§e" + drops.size() + " §7items will appear over time in the");
-		lore.add("§74 quadrants. Click them when they");
-		lore.add("§7appear to retrieve them, but be fast!");
+		lore.add("§7The screen will flash 5 times.");
+		lore.add("§7During this, up to §e" + drops.size() + " §7drops");
+		lore.add("§7will show up. Click them! If you miss");
+		lore.add("§7and click a glass pane, it's game over.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -223,7 +224,6 @@ public class StonecuttingMinigame extends ProfessionInventory {
 		fillBorders(contents, generateEmpty(Material.GRAY_STAINED_GLASS_PANE));
 		fillAllQuadrants(contents, generateEmpty(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 		inv.setContents(contents);
-		System.out.println(hiddenItems);
 		
 		p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1.0F, 0.5F);
 		
@@ -257,14 +257,12 @@ public class StonecuttingMinigame extends ProfessionInventory {
 						inv.setContents(contents);
 						p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1.0F, 2.0F);
 					}
-					System.out.println("===");
 				}
 			}.runTaskLater(MinigameManager.main, totalDelay + num);
 			
 			totalDelay += num;
 			int calculatedFlashTime = (int) (numRewardsShown > 0 ?
 					flashTime * (0.5 + (0.5 * numRewardsShown)) : flashTime);
-			System.out.println(calculatedFlashTime + " " + flashTime + " " + numRewardsShown);
 			new BukkitRunnable() {
 				public void run() {
 					if (stage == 2) {
