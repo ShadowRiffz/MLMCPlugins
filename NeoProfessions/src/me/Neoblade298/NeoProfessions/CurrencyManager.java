@@ -13,7 +13,7 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CurrencyManager {
 	// UUID, essence/oretype, amount
-	private HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
+	private static HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
 	public static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	
 	public CurrencyManager(Professions main) {
@@ -98,7 +98,7 @@ public class CurrencyManager {
 		}
 	}
 	
-	public void add(Player p, String type, int level, int amount) {
+	public static void add(Player p, String type, int level, int amount) {
 		// Standardize the level
 		level -= (level % 5);
 		
@@ -117,21 +117,21 @@ public class CurrencyManager {
 		Util.sendMessage(p, "&7You gained &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
-	public void subtract(Player p, String type, int level, int amount) {
+	public static void subtract(Player p, String type, int level, int amount) {
 		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) - amount;
 		typeCurrency.put(level, newAmount);
 		Util.sendMessage(p, "&7You lost &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
-	public int get(Player p, String type, int level) {
+	public static int get(Player p, String type, int level) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return -1;
 		}
 		return currencies.get(p.getUniqueId()).get(type.toLowerCase()).get(level);
 	}
 	
-	public boolean hasEnough(Player p, String type, int level, int compare) {
+	public static boolean hasEnough(Player p, String type, int level, int compare) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return false;
 		}

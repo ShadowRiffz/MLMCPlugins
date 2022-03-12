@@ -56,6 +56,32 @@ public class ItemEditor {
 		return null;
 	}
 	
+	public String unslotAugment(Player p, int i) {
+		if (nbti.getInteger("version") == 0) {
+			return "item version is old!";
+		}
+		if (i < 1) {
+			return "<1 slot number!";
+		}
+		if (i > nbti.getInteger("slotsCreated")) {
+			return "slot does not yet exist!";
+		}
+		if (!nbti.hasKey("slot" + i + "Augment")) {
+			return "slot " + i + " is unused!";
+		}
+
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+		lore.set(nbti.getInteger("slot" + i + "Line"), "§8[Empty Slot]");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		nbti = new NBTItem(item);
+		nbti.removeKey("slot" + i + "Augment");
+		nbti.removeKey("slot" + i + "Level");
+		nbti.applyNBT(item);
+		return null;
+	}
+	
 	public String setAugment(Player p, Augment aug, int i) {
 		if (nbti.getInteger("version") == 0) {
 			return "item version is old!";
