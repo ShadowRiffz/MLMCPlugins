@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
+import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class MinigameManager {
 	public static Professions main;
@@ -60,7 +61,9 @@ public class MinigameManager {
 								break;
 							}
 						}
-						parsed.add(new MinigameDrops(StorageManager.getItemDefinitions().get(itemId), minAmt, maxAmt, weight));
+						StoredItem sitem = StorageManager.getItemDefinitions().get(itemId);
+						sitem.addSource(display, false);
+						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight));
 					}
 					games.put(key, new Minigame(display, type, parsed, numDrops, difficulty));
 				}

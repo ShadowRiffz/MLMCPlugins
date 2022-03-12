@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 
 public class StoredItem {
@@ -11,6 +12,7 @@ public class StoredItem {
 	private int level;
 	private Rarity rarity;
 	private ArrayList<String> lore;
+	private ArrayList<String> sources;
 
 	public StoredItem(int id, String name, int level, String rarity, ArrayList<String> lore) {
 		this.id = id;
@@ -40,6 +42,7 @@ public class StoredItem {
 				this.lore.add("§7§o" + line);
 			}
 		}
+		this.sources = new ArrayList<String>();
 	}
 	
 	public int getID() {
@@ -64,5 +67,16 @@ public class StoredItem {
 
 	public int getLevel() {
 		return this.level;
+	}
+	
+	public void addSource(String source, boolean isMob) {
+		if (isMob) {
+			source = MythicMobs.inst().getMobManager().getMythicMob(source).getDisplayName().get();
+		}
+		sources.add(source);
+	}
+	
+	public ArrayList<String> getSources() {
+		return souces;
 	}
 }
