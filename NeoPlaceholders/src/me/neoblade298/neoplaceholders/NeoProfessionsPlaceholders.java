@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -59,6 +60,6 @@ public class NeoProfessionsPlaceholders extends PlaceholderExpansion {
 		if (!StringUtils.isNumeric(args[1])) return "Invalid placeholder";
 		int lvl = Integer.parseInt(args[1]);
 		if (!(lvl % 5 == 0 && lvl >= 5 && lvl <= 60)) return "Invalid placeholder";
-		return "" + Professions.getCurrencyManager().get(p, args[0], lvl);
+		return "" + CurrencyManager.get(p, args[0], lvl);
 	}
 }

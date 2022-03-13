@@ -339,6 +339,7 @@ public class AugmentManager implements Listener {
 		double posmult = e.getPosmult();
 		double negmult = e.getNegmult();
 		double flat = e.getFlat();
+		double thorns = 0;
 		FlagSettings flag = null;
 		if (containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
@@ -379,10 +380,14 @@ public class AugmentManager implements Listener {
 							}
 							flat -= aug.getDamageTakenFlat(p);
 							flag = aug.setFlagAfter();
+							if (aug instanceof ThornsAugment) {
+								thorns += ((ThornsAugment) aug).getThorns(p);
+							}
 						}
 					}
 				}
 				// basically just for thorns
+				e.getTarget().damage(thorns);
 				if (flag != null) {
 					FlagManager.addFlag(p, e.getTarget(), flag.getFlag(), flag.getDuration());
 				}

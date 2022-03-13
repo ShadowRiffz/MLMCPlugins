@@ -53,6 +53,10 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	public boolean canUse(Player user, LivingEntity target) {
 		return !FlagManager.hasFlag(user, "aug_thorns");
 	}
+	
+	public double getThorns(Player user) {
+		return getDamageReturned(user);
+	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
