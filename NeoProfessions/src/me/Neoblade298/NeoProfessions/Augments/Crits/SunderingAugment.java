@@ -27,7 +27,7 @@ public class SunderingAugment extends Augment implements ModCritDamageAugment {
 
 	@Override
 	public double getCritDamageMult(Player user) {
-		return 0.02 * (level / 5);
+		return 0.01 * (level / 5);
 	}
 
 	@Override

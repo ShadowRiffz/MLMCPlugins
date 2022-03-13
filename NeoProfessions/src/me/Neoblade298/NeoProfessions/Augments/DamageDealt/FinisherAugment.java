@@ -28,7 +28,7 @@ public class FinisherAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.025 * (level / 5);
+		return 0.012 * (level / 5);
 	}
 
 	@Override
