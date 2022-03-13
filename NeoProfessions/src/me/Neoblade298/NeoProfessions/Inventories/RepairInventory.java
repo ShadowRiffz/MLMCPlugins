@@ -98,7 +98,7 @@ public class RepairInventory implements ProfessionInventory {
 			
 			DurabilityListener.fullRepairItem(p, item);
 			Professions.econ.withdrawPlayer(p, goldCost.get(level));
-			CurrencyManager.add(p, "essence", level, essenceCost);
+			CurrencyManager.subtract(p, "essence", level, essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}
