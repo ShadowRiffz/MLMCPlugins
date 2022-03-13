@@ -16,6 +16,8 @@ public class RecipeManager {
 	public static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
 	public static HashMap<String, Recipe> recipes;
 	public RecipeManager(Professions main) {
+		this.main = main;
+		
 		loadRecipes(new File(main.getDataFolder(), "recipes"));
 	}
 	
