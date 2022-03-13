@@ -12,7 +12,7 @@ public class Recipe {
 	String display;
 	ArrayList<RecipeRequirement> reqs;
 	ArrayList<StoredItemInstance> components;
-	ArrayList<RecipeResult> results;
+	RecipeResult result;
 	
 	
 	public Recipe(String key, String display, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components) {
@@ -42,13 +42,13 @@ public class Recipe {
 	}
 	
 	public boolean craftRecipe(Player p) {
+		// First make sure everything required is available
 		for (RecipeRequirement req : reqs) {
 			if (!req.passesReq(p)) {
 				p.sendMessage(req.failMessage(p));
 				return false;
 			}
 		}
-		
 		for (StoredItemInstance component : components) {
 			if (!StorageManager.playerHas(p, component.getItem().getID(), component.getAmount())) {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou lack the component: " + component.getItem().getDisplay());
@@ -56,13 +56,15 @@ public class Recipe {
 			}
 		}
 		
+		// Take all things required
+		for (RecipeRequirement req : reqs) {
+			req.useReq(p);
+		}
 		for (StoredItemInstance component : components) {
 			StorageManager.takePlayer(p, component.getItem().getID(), component.getAmount());
 		}
 		
-		for (RecipeResult result : results) {
-			result.giveResult(p);
-		}
+		result.giveResult(p);
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
 		return true;
 	}

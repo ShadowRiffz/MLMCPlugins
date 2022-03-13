@@ -184,13 +184,13 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				return true;
 			}
 			int amount = Integer.parseInt(args[4]);
-			if (amount <= 0 || amount >= 99999 || !Professions.cm.hasEnough(p, args[2], level, amount)) {
+			if (amount <= 0 || amount >= 99999 || !CurrencyManager.hasEnough(p, args[2], level, amount)) {
 				Util.sendMessage(p, "&cInvalid amount!");
 				return true;
 			}
 			Player recipient = Bukkit.getPlayer(args[1]);
 			Professions.cm.add(recipient, args[2], level, amount);
-			Professions.cm.subtract(p, args[2], level, amount);
+			CurrencyManager.subtract(p, args[2], level, amount);
 			Util.sendMessage(p,
 					"&7You paid &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
 			Util.sendMessage(recipient,
@@ -211,7 +211,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			Util.sendMessage(p, "&7Balance: &e" + Professions.cm.get(Bukkit.getPlayer(args[1]), args[2], level));
+			Util.sendMessage(p, "&7Balance: &e" + CurrencyManager.get(Bukkit.getPlayer(args[1]), args[2], level));
 			return true;
 		}
 		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
@@ -224,7 +224,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			Util.sendMessage(p, "&7Balance: &e" + Professions.cm.get(p, args[1], level));
+			Util.sendMessage(p, "&7Balance: &e" + CurrencyManager.get(p, args[1], level));
 			return true;
 		}
 
@@ -249,7 +249,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
 			}
-			if (!Professions.cm.hasEnough(p, args[1], level, amount)) {
+			if (!CurrencyManager.hasEnough(p, args[1], level, amount)) {
 				Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
 				return true;
 			}
@@ -266,12 +266,12 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				for (Entry<Integer, ItemStack> item : result.entrySet()) {
 					notAdded += item.getValue().getAmount();
 				}
-				Professions.cm.subtract(p, args[1], level, amount - notAdded);
+				CurrencyManager.subtract(p, args[1], level, amount - notAdded);
 				Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
 				return true;
 			}
 			else {
-				Professions.cm.subtract(p, args[1], level, amount);
+				CurrencyManager.subtract(p, args[1], level, amount);
 				Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
 				return true;
 			}
