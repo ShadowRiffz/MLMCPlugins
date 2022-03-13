@@ -54,7 +54,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public HashMap<String, ResearchItem> researchItems;
 	public HashMap<String, ArrayList<ResearchItem>> mobMap;
 	public HashMap<String, String> displayNameMap;
-	public HashMap<UUID, PlayerStats> playerStats;
+	public static HashMap<UUID, PlayerStats> playerStats;
 	public HashMap<Integer, Integer> toNextLvl;
 	public HashMap<UUID, HashMap<Integer, StoredAttributes>> playerAttrs;
 	public HashMap<String, HashMap<String, Integer>> converter;
@@ -681,7 +681,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public PlayerStats getPlayerStats(Player p) {
+	public static PlayerStats getPlayerStats(Player p) {
 		return playerStats.get(p.getUniqueId());
 	}
 	

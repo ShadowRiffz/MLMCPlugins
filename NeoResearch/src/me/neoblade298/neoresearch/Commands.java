@@ -148,7 +148,7 @@ public class Commands implements CommandExecutor{
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
-				int currentPoints = main.playerStats.get(uuid).getResearchPoints().get(args[2]);
+				int currentPoints = Research.playerStats.get(uuid).getResearchPoints().get(args[2]);
 				int min = -1;
 				for (ResearchItem rItem : main.mobMap.get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
@@ -160,7 +160,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				
-				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
+				Research.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -198,7 +198,7 @@ public class Commands implements CommandExecutor{
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
-				int currentPoints = main.playerStats.get(uuid).getResearchPoints().get(args[2]);
+				int currentPoints = Research.playerStats.get(uuid).getResearchPoints().get(args[2]);
 				int min = -1;
 				for (ResearchItem rItem : main.mobMap.get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
@@ -210,7 +210,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				
-				main.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
+				Research.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -285,7 +285,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("setlevel")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				main.playerStats.get(p.getUniqueId()).setLevel(amount);
+				Research.playerStats.get(p.getUniqueId()).setLevel(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set level for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
@@ -293,7 +293,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("setexp")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				main.playerStats.get(p.getUniqueId()).setExp(amount);
+				Research.playerStats.get(p.getUniqueId()).setExp(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
@@ -301,14 +301,14 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("addexp")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				main.playerStats.get(p.getUniqueId()).addExp(p, amount);
+				Research.playerStats.get(p.getUniqueId()).addExp(p, amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Added exp for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
 			// /nr inspect [player]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 2) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = main.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
 						" §7with §e" + stats.getExp() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
 				return true;
@@ -317,7 +317,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 3) {
 				Player p = Bukkit.getPlayer(args[1]);
 				String mob = args[2];
-				PlayerStats stats = main.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p);
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
 						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
 				return true;
@@ -325,7 +325,7 @@ public class Commands implements CommandExecutor{
 			// /nr inspectgoals [player]
 			else if (args[0].equalsIgnoreCase("inspectgoals")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = main.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p);
 				String msg = new String("§4[§c§lMLMC§4] §e" + p.getName() + " §7has: §e");
 				for (String id : stats.getCompletedResearchItems().keySet()) {
 					msg += id + " ";
@@ -336,7 +336,7 @@ public class Commands implements CommandExecutor{
 			// /nr takegoal [player] [goal]
 			else if (args[0].equalsIgnoreCase("takegoal")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = main.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p);
 				for (String id : stats.getCompletedResearchItems().keySet()) {
 					if (id.contains(args[2])) {
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully removed goal");
