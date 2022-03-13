@@ -153,6 +153,10 @@ public class ProfessionManager {
 		save.runTaskAsynchronously(main);
 	}
 	
+	public static HashMap<String, Profession> getAccount(UUID uuid) {
+		return accounts.get(uuid);
+	}
+	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		handleLeave(e.getPlayer());
