@@ -40,7 +40,6 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 		inv = Bukkit.createInventory(p, 9, "§cAugment Viewer");
 		main.viewingInventory.put(p, this);
 
-		System.out.println(new NBTItem(item).getString("slot1Augment"));
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
 		ItemStack[] contents = inv.getContents();
@@ -56,12 +55,11 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 				contents[i] = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, "§7Empty slot");
 			}
 			else {
-				contents[i] = createAugment(oldAug, slot);
+				contents[i] = createAugment(oldAug, j);
 			}
 			j++;
 		}
 		inv.setContents(contents);
-		System.out.println("Test " + new NBTItem(item).getString("slot1Augment"));
 
 		p.openInventory(inv);
 	}
