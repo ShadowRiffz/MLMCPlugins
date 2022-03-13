@@ -250,6 +250,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (p.isDead()) {
 				p.spigot().respawn();
 			}
+			for (PotionEffect pe : p.getActivePotionEffects()) {
+				p.removePotionEffect(pe.getType());
+			}
 			
 			// Connect
 			try {
