@@ -16,19 +16,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class StonecuttingMinigame extends ProfessionInventory {
 	private static float ERROR = 0.594604F;
 	Professions main;
 	Player p;
 	int stage = 0;
-	ArrayList<MinigameDrop> drops;
+	ArrayList<StoredItemInstance> drops;
 	int difficulty;
-	HashMap<Integer, MinigameDrop> hiddenItems;
+	HashMap<Integer, StoredItemInstance> hiddenItems;
 	
 	private static int NUM_FLASHES = 5;
 	private int flashTime = 20;
@@ -42,7 +42,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	private int totalDelay = 20;
 	private int numRewardsShown;
 	
-	public StonecuttingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int difficulty) {
+	public StonecuttingMinigame(Professions main, Player p, ArrayList<StoredItemInstance> drops, String name, int difficulty) {
 		this.main = main;
 		this.p = p;
 		this.drops = drops;
@@ -156,11 +156,11 @@ public class StonecuttingMinigame extends ProfessionInventory {
 		}
 	}
 	
-	private ItemStack generateDrop(MinigameDrop drop) {
+	private ItemStack generateDrop(StoredItemInstance drop) {
 		ItemStack item = new ItemStack(drop.getItem().getRarity().getMaterial());
 		StoredItem sitem = drop.getItem();
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmt());
+		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmount());
 		ArrayList<String> lore = sitem.getLore();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -194,8 +194,8 @@ public class StonecuttingMinigame extends ProfessionInventory {
 				fillQuadrant(quadrant, contents, generateSuccess());
 				inv.setContents(contents);
 				int key = flashNum * 4 + quadrant;
-				MinigameDrop drop = hiddenItems.get(key);
-				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmt());
+				StoredItemInstance drop = hiddenItems.get(key);
+				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 				numSuccesses++;
 				if (numSuccesses >= drops.size()) {
@@ -214,7 +214,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	private void startGame() {
 		stage = 1;
 		ItemStack[] contents = new ItemStack[45];
-		hiddenItems = new HashMap<Integer, MinigameDrop>();
+		hiddenItems = new HashMap<Integer, StoredItemInstance>();
 		// Generate which flash and which quadrant each drop appears
 		ThreadLocalRandom.current().ints(0, NUM_FLASHES * 4).distinct().limit(drops.size()).forEach(num -> {
 			// divide by NUM_FLASHES to get what flash it's on, mod by NUM_FLASHES for which quadrant

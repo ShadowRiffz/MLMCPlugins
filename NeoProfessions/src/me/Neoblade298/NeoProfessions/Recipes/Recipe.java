@@ -1,0 +1,69 @@
+package me.Neoblade298.NeoProfessions.Recipes;
+
+import java.util.ArrayList;
+
+import org.bukkit.entity.Player;
+
+import me.Neoblade298.NeoProfessions.Storage.StorageManager;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+
+public class Recipe {
+	String key;
+	String display;
+	ArrayList<RecipeRequirement> reqs;
+	ArrayList<StoredItemInstance> components;
+	ArrayList<RecipeResult> results;
+	
+	
+	public Recipe(String key, String display, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components) {
+		this.key = key;
+		this.display = display;
+		this.reqs = reqs;
+		this.components = components;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public ArrayList<RecipeRequirement> getReqs() {
+		return reqs;
+	}
+	public void setReqs(ArrayList<RecipeRequirement> reqs) {
+		this.reqs = reqs;
+	}
+	public ArrayList<StoredItemInstance> getComponents() {
+		return components;
+	}
+	public void setComponents(ArrayList<StoredItemInstance> components) {
+		this.components = components;
+	}
+	
+	public boolean craftRecipe(Player p) {
+		for (RecipeRequirement req : reqs) {
+			if (!req.passesReq(p)) {
+				p.sendMessage(req.failMessage(p));
+				return false;
+			}
+		}
+		
+		for (StoredItemInstance component : components) {
+			if (!StorageManager.playerHas(p, component.getItem().getID(), component.getAmount())) {
+				p.sendMessage("§4[§c§lMLMC§4] §cYou lack the component: " + component.getItem().getDisplay());
+				return false;
+			}
+		}
+		
+		for (StoredItemInstance component : components) {
+			StorageManager.takePlayer(p, component.getItem().getID(), component.getAmount());
+		}
+		
+		for (RecipeResult result : results) {
+			result.giveResult(p);
+		}
+		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
+		return true;
+	}
+}

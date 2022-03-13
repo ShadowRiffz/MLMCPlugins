@@ -8,6 +8,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class Minigame {
 	private String type;
@@ -24,8 +25,8 @@ public class Minigame {
 		this.difficulty = difficulty;
 	}
 	
-	private ArrayList<MinigameDrop> generateDrops() {
-		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
+	private ArrayList<StoredItemInstance> generateDrops() {
+		ArrayList<StoredItemInstance> drops = new ArrayList<StoredItemInstance>();
 		
 		
 		for (int i = 0; i < numDrops; i++) {
@@ -39,7 +40,7 @@ public class Minigame {
 			}
 			while (rand >= 0);
 			int min = mdrops.getMinAmt(), max = mdrops.getMaxAmt();
-			drops.add(new MinigameDrop(mdrops.getItem(),
+			drops.add(new StoredItemInstance(mdrops.getItem(),
 					Professions.gen.nextInt(max + 1 - min) + min));
 		}
 		return drops;

@@ -2,10 +2,16 @@ package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
+import me.Neoblade298.NeoProfessions.Objects.SkullCreator;
 
 public class StoredItem {
+	private String mat;
 	private String display;
 	private String name;
 	private int id;
@@ -14,7 +20,7 @@ public class StoredItem {
 	private ArrayList<String> lore;
 	private ArrayList<String> sources;
 
-	public StoredItem(int id, String name, int level, String rarity, ArrayList<String> lore) {
+	public StoredItem(int id, String name, int level, String rarity, String mat, ArrayList<String> lore) {
 		this.id = id;
 		switch (rarity) {
 		case "uncommon":
@@ -42,6 +48,7 @@ public class StoredItem {
 				this.lore.add("§7§o" + line);
 			}
 		}
+		this.mat = mat;
 		this.sources = new ArrayList<String>();
 	}
 	
@@ -71,12 +78,27 @@ public class StoredItem {
 	
 	public void addSource(String source, boolean isMob) {
 		if (isMob) {
-			source = MythicMobs.inst().getMobManager().getMythicMob(source).getDisplayName().get();
+			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
+			if (mm != null) {
+				source = mm.getDisplayName().get();
+			}
 		}
 		sources.add(source);
 	}
 	
 	public ArrayList<String> getSources() {
-		return souces;
+		return sources;
+	}
+	
+	public ItemStack getItem() {
+		ItemStack item;
+		if (mat.length() > 40) {
+			item = SkullCreator.itemFromBase64(mat);
+		}
+		else {
+			item = new ItemStack(Material.getMaterial(mat));
+		}
+		
+		return item;
 	}
 }

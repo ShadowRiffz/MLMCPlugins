@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -31,17 +31,17 @@ public class LoggingMinigame extends ProfessionInventory {
 	Professions main;
 	Player p;
 	int stage = 0;
-	ArrayList<MinigameDrop> drops;
+	ArrayList<StoredItemInstance> drops;
 	ArrayList<FallingItem> falling = new ArrayList<FallingItem>();
 	double baseSpawnChance = 0.2;
 	int difficulty;
-	HashMap<Integer, MinigameDrop> items, itemsAfter; // Need 2 because 1 gets its items removed
+	HashMap<Integer, StoredItemInstance> items, itemsAfter; // Need 2 because 1 gets its items removed
 	ArrayList<ItemStack> toSpawn = new ArrayList<ItemStack>();
 	int dropsPast = 0;
 	
 	private int dropNum = 0;
 	
-	public LoggingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int difficulty) {
+	public LoggingMinigame(Professions main, Player p, ArrayList<StoredItemInstance> drops, String name, int difficulty) {
 		this.main = main;
 		this.p = p;
 		this.drops = drops;
@@ -94,11 +94,11 @@ public class LoggingMinigame extends ProfessionInventory {
 		return item;
 	}
 	
-	private ItemStack generateDrop(MinigameDrop drop, int tick) {
+	private ItemStack generateDrop(StoredItemInstance drop, int tick) {
 		ItemStack item = new ItemStack(drop.getItem().getRarity().getMaterial());
 		StoredItem sitem = drop.getItem();
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmt());
+		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmount());
 		ArrayList<String> lore = sitem.getLore();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -129,8 +129,8 @@ public class LoggingMinigame extends ProfessionInventory {
 			else {
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 				NBTItem nbti = new NBTItem(item);
-				MinigameDrop drop = itemsAfter.get(nbti.getInteger("tick"));
-				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmt());
+				StoredItemInstance drop = itemsAfter.get(nbti.getInteger("tick"));
+				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
 				dropsPast++;
 				ItemStack[] contents = inv.getContents();
 				contents[e.getRawSlot()] = null;
@@ -153,8 +153,8 @@ public class LoggingMinigame extends ProfessionInventory {
 		p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1.0F, 1.0F);
 		ItemStack[] contents = new ItemStack[54];
 		inv.setContents(contents);
-		items = new HashMap<Integer, MinigameDrop>();
-		itemsAfter = new HashMap<Integer, MinigameDrop>();
+		items = new HashMap<Integer, StoredItemInstance>();
+		itemsAfter = new HashMap<Integer, StoredItemInstance>();
 		ThreadLocalRandom.current().ints(0, TOTAL_TICKS).distinct().limit(drops.size()).forEach(num -> {
 			int key = num * TICK_RATE;
 			items.put(key, drops.get(dropNum));

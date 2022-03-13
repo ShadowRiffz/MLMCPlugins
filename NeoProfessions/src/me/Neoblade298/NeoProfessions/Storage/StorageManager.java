@@ -87,11 +87,12 @@ public class StorageManager implements Listener {
 				for (String id : yaml.getKeys(false)) {
 					ConfigurationSection itemCfg = yaml.getConfigurationSection(id);
 					String name = itemCfg.getString("name");
+					String mat = itemCfg.getString("material");
 					int level = itemCfg.getInt("level", 0);
 					String rarity = itemCfg.getString("rarity", "common");
 					ArrayList<String> lore = (ArrayList<String>) itemCfg.getStringList("lore");
 					int intid = Integer.parseInt(id);
-					StoredItem item = new StoredItem(intid, name, level, rarity, lore);
+					StoredItem item = new StoredItem(intid, name, level, rarity, mat, lore);
 					items.put(intid, item);
 				}
 			}

@@ -1,12 +1,10 @@
-package me.Neoblade298.NeoProfessions.Minigames;
+package me.Neoblade298.NeoProfessions.Storage;
 
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
-
-public class MinigameDrop {
+public class StoredItemInstance {
 	StoredItem item;
 	int amt;
 	
-	public MinigameDrop(StoredItem item, int amt) {
+	public StoredItemInstance(StoredItem item, int amt) {
 		this.item = item;
 		this.amt = amt;
 	}
@@ -15,7 +13,7 @@ public class MinigameDrop {
 		return item;
 	}
 
-	public int getAmt() {
+	public int getAmount() {
 		return amt;
 	}
 	

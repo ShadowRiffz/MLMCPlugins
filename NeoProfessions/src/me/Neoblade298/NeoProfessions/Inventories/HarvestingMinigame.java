@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -27,15 +27,15 @@ public class HarvestingMinigame extends ProfessionInventory {
 	Professions main;
 	Player p;
 	int stage = 0;
-	ArrayList<MinigameDrop> drops;
+	ArrayList<StoredItemInstance> drops;
 	int difficulty;
-	HashMap<Integer, MinigameDrop> hiddenItems;
+	HashMap<Integer, StoredItemInstance> hiddenItems;
 	HashSet<Integer> guesses;
 	int successfulGuesses = 0;
 	
 	private int dropNum = 0;
 	
-	public HarvestingMinigame(Professions main, Player p, ArrayList<MinigameDrop> drops, String name, int difficulty) {
+	public HarvestingMinigame(Professions main, Player p, ArrayList<StoredItemInstance> drops, String name, int difficulty) {
 		this.main = main;
 		this.p = p;
 		this.drops = drops;
@@ -81,11 +81,11 @@ public class HarvestingMinigame extends ProfessionInventory {
 		return item;
 	}
 	
-	private ItemStack generateDrop(MinigameDrop drop) {
+	private ItemStack generateDrop(StoredItemInstance drop) {
 		ItemStack item = new ItemStack(drop.getItem().getRarity().getMaterial());
 		StoredItem sitem = drop.getItem();
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmt());
+		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmount());
 		ArrayList<String> lore = sitem.getLore();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -113,9 +113,9 @@ public class HarvestingMinigame extends ProfessionInventory {
 				ItemStack[] contents = inv.getContents();
 				if (hiddenItems.containsKey(slot)) {
 					p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-					MinigameDrop drop = hiddenItems.get(slot);
+					StoredItemInstance drop = hiddenItems.get(slot);
 					contents[slot] = generateDrop(drop);
-					StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmt());
+					StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
 					inv.setContents(contents);
 					successfulGuesses++;
 					if (successfulGuesses >= drops.size()) {
@@ -144,7 +144,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		int segment = timeToMemorize / 4;
 		stage = 1;
 		ItemStack[] contents = new ItemStack[54];
-		hiddenItems = new HashMap<Integer, MinigameDrop>();
+		hiddenItems = new HashMap<Integer, StoredItemInstance>();
 		ThreadLocalRandom.current().ints(0, 54).distinct().limit(drops.size()).forEach(num -> {
 			contents[num] = generateDrop(drops.get(dropNum));
 			hiddenItems.put(num, drops.get(dropNum));
