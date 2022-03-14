@@ -1,5 +1,12 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
+import java.util.HashMap;
+
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import me.neoblade298.neogear.Gear;
+
 public class GearResult implements RecipeResult {
 	String type;
 	String rarity;
@@ -21,6 +28,14 @@ public class GearResult implements RecipeResult {
 			else if (args[0].equalsIgnoreCase("level")) {
 				this.level = Integer.parseInt(args[1]);
 			}
+		}
+	}
+
+	@Override
+	public void giveResult(Player p) {
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Gear.settings.get(type).get(level).generateItem(rarity, level));
+		for (Integer i : failed.keySet()) {
+			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
 	}
 }
