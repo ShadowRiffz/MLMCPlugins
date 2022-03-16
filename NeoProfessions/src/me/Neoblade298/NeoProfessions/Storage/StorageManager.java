@@ -77,6 +77,11 @@ public class StorageManager implements Listener {
 		return false;
 	}
 	
+	public static int getAmount(Player p, int id) {
+		HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+		return storage.getOrDefault(id, 0);
+	}
+	
 	private void loadItems(File dir) {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {

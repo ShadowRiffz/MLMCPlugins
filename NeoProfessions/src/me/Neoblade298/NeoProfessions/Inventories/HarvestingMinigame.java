@@ -86,7 +86,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		StoredItem sitem = drop.getItem();
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(sitem.getDisplay() + " x" + drop.getAmount());
-		ArrayList<String> lore = sitem.getLore();
+		ArrayList<String> lore = sitem.getBaseLore();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
