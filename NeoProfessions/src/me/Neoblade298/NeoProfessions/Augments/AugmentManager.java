@@ -641,6 +641,9 @@ public class AugmentManager implements Listener {
 	}
 
 	public void onChestDrop(ChestDropEvent e) {
+		if (e.getDropType() == 2) {
+			return; // Boss chest token
+		}
 		Player p = e.getPlayer();
 		
 		// Check charms
