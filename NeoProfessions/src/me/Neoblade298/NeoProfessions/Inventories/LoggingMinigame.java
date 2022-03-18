@@ -130,7 +130,7 @@ public class LoggingMinigame extends ProfessionInventory {
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 				NBTItem nbti = new NBTItem(item);
 				StoredItemInstance drop = itemsAfter.get(nbti.getInteger("tick"));
-				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
+				StorageManager.givePlayer(p, drop.getItem().getId(), drop.getAmount());
 				dropsPast++;
 				ItemStack[] contents = inv.getContents();
 				contents[e.getRawSlot()] = null;

@@ -115,7 +115,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 					p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 					StoredItemInstance drop = hiddenItems.get(slot);
 					contents[slot] = generateDrop(drop);
-					StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
+					StorageManager.givePlayer(p, drop.getItem().getId(), drop.getAmount());
 					inv.setContents(contents);
 					successfulGuesses++;
 					if (successfulGuesses >= drops.size()) {

@@ -61,7 +61,7 @@ public class StoredItem {
 		this.sources = new ArrayList<String>();
 	}
 	
-	public int getID() {
+	public int getId() {
 		return this.id;
 	}
 
@@ -112,11 +112,10 @@ public class StoredItem {
 		return item;
 	}
 	
-	public ItemStack getStorageView(Player p) {
+	public ItemStack getStorageView(Player p, int amount) {
 		ItemStack item = getItem();
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(storageLore);
-		int amount = StorageManager.getAmount(p, id);
 		if (amount <= 0) {
 			return null;
 		}

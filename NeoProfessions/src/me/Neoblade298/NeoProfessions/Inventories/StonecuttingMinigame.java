@@ -195,7 +195,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 				inv.setContents(contents);
 				int key = flashNum * 4 + quadrant;
 				StoredItemInstance drop = hiddenItems.get(key);
-				StorageManager.givePlayer(p, drop.getItem().getID(), drop.getAmount());
+				StorageManager.givePlayer(p, drop.getItem().getId(), drop.getAmount());
 				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 				numSuccesses++;
 				if (numSuccesses >= drops.size()) {

@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Inventories;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -14,57 +15,87 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Storage.Sorter;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class StorageView extends ProfessionInventory {
 	private Inventory inv;
+	private InvSorter invsorter;
 	private Player p;
-	private ArrayList<StoredItem> items;
+	private ArrayList<StoredItemInstance> items;
 	private int page = 1;
-	private String sort;
-	private boolean reverse;
+	private Sorter[] sorters;
+	
+	public static final int INFO_BUTTON = 49;
+	public static final int NEXT_BUTTON = 53;
+	public static final int PREVIOUS_BUTTON = 45;
 	
 	public StorageView(Player p, int min, int max, Inventory inv) {
 		this.p = p;
 		this.inv = inv;
+		this.sorters = new Sorter[5];
+		this.invsorter = new InvSorter();
 		
+		// Setup sorters
+		sorters[1] = new Sorter(Sorter.LEVEL_SORT, 1, false);
+		sorters[2] = new Sorter(Sorter.RARITY_SORT, 2, true);
+		sorters[3] = new Sorter(Sorter.AMOUNT_SORT, 3, true);
+		sorters[4] = new Sorter(Sorter.NAME_SORT, 4, false);
 		
 		// Setup itemstacks to be used for sorting
-		int arrSize = 0;
-		int newMax = 0;
-		items = new ArrayList<StoredItem>();
+		items = new ArrayList<StoredItemInstance>();
 		for (int i = min; i <= max; i++) {
 			if (!StorageManager.getItemDefinitions().containsKey(i)) {
 				break;
 			}
-			if (StorageManager.getAmount(p, i) > 0) {
-				items.add(StorageManager.getItemDefinitions().get(i));
+			StoredItem item = StorageManager.getItemDefinitions().get(i);
+			int amount = StorageManager.getAmount(p, i);
+			if (amount > 0) {
+				items.add(new StoredItemInstance(item, amount));
 			}
-			newMax++;
 		}
 		
-		setupInventory();
+		sortItems();
+		inv.setContents(setupAll(inv.getContents()));
+	}
+	
+	private ItemStack[] setupAll(ItemStack[] contents) {
+		return setupUtilityButtons(setupInventory(contents));
 	}
 	
 	// Sort by rarity
 	// Sort alphabetically
 	// Sort by level
-	private void setupInventory() {
+	private ItemStack[] setupInventory(ItemStack[] contents) {
 		// Sort items on construction and on change sort type
-		
-		ItemStack[] contents = inv.getContents();
 		for (int i = (page - 1) * 45; i < 45 * page; i++) {
 			contents[i] = items.get(i).getStorageView(p);
-		}
+		}	
 		
-		contents[49] = createInfoItem();
+		return contents;
+	}
+	
+	private ItemStack[] setupUtilityButtons(ItemStack[] contents) {
+		contents[INFO_BUTTON] = createInfoItem();
 		if (page > 1) {
-			contents[48] = createPreviousButton();
+			contents[PREVIOUS_BUTTON] = createPreviousButton();
 		}
 		if (items.size() > page * 45) {
-			contents[50] = createNextButton();
+			contents[NEXT_BUTTON] = createNextButton();
 		}
+		
+		int sortNum = 0;
+		for (int i = 47; i <= 51; i++) {
+			if (i == INFO_BUTTON) {
+				continue;
+			}
+			contents[i] = sorters[sortNum].createSortButton();
+			sortNum++;
+		}
+		
+		return contents;
 	}
 	
 	private ItemStack createInfoItem() {
@@ -101,23 +132,6 @@ public class StorageView extends ProfessionInventory {
 		nbti.setString("type", "next");
 		return nbti.getItem();
 	}
-	
-	private ItemStack createSortButton() {
-		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Sorting");
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oLeft click: By name");
-		lore.add("§7§oRight click: By level, then rarity");
-		lore.add("§7§oShift left click: By rarity, then level");
-		lore.add("§7§oShift Right click: By amount, then level");
-		lore.add("§7§oSame click twice: Reverse order");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem nbti = new NBTItem(item);
-		nbti.setString("type", "sort");
-		return nbti.getItem();
-	}
 
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
@@ -137,52 +151,55 @@ public class StorageView extends ProfessionInventory {
 		
 	}
 	
-	private void sortItems() {
+	private void createVoucher(Player p, int amount, int slot) {
+		this.items.get(((page - 1) * 45) + slot).giveVoucher(p, amount);
+	}
+	
+	private void viewRecipes(StoredItemInstance inst) {
 		
+	}
+	
+	private void changeSortOrder(int priority) {
+		sorters[priority].flipOrder();
+		sortItems();
+		inv.setContents(setupAll(inv.getContents()));
+	}
+	
+	private void changeSortPriority(int oldPriority, int hotbar) {
+		if (hotbar > 3 || hotbar <= 0) {
+			return;
+		}
+		if (oldPriority == hotbar) {
+			return;
+		}
+		
+		Sorter temp = sorters[oldPriority];
+		sorters[hotbar].setPriority(oldPriority);
+		temp.setPriority(hotbar);
+		sorters[oldPriority] = sorters[hotbar];
+		sorters[hotbar] = temp;
+		sortItems();
+		inv.setContents(setupAll(inv.getContents()));
+	}
+	
+	private void sortItems() {
+		Collections.sort(items, invsorter);
 	}
 
 	 
 	// Helper class implementing Comparator interface
-	private class Sorter implements Comparator<StoredItem> {
-		HashMap<String, Integer> rarityPriorities = new HashMap<String, Integer>();
-		
-		public Sorter() {
-			rarityPriorities.put("common", 1);
-			rarityPriorities.put("uncommon", 2);
-			rarityPriorities.put("rare", 3);
-			rarityPriorities.put("epic", 4);
-			rarityPriorities.put("legendary", 5);
-		}
+	private class InvSorter implements Comparator<StoredItemInstance> {
 	 
 	    // Method
 	    // Sorting in ascending order of roll number
-	    public int compare(StoredItem a, StoredItem b)
+	    public int compare(StoredItemInstance a, StoredItemInstance b)
 	    {
-	    	int comp;
-	    	if (sort.equalsIgnoreCase("level")) {
-	    		comp = a.getLevel() - b.getLevel();
-	    		if (comp == 0) {
-	    			comp = rarityPriorities.get(a.getRarity()) - rarityPriorities.get(b.getRarity());
+	    	int comp = 0;
+	    	for (int i = 0; i <= 3; i++) {
+	    		comp = sorters[i].compare(a, b);
+	    		if (comp != 0) {
+	    			break;
 	    		}
-	    	}
-	    	else if (sort.equalsIgnoreCase("rarity")) {
-	    		comp = rarityPriorities.get(a.getRarity()) - rarityPriorities.get(b.getRarity());
-	    		if (comp == 0) {
-		    		comp = a.getLevel() - b.getLevel();
-	    		}
-	    	}
-	    	else if (sort.equalsIgnoreCase("amount")) {
-	    		comp = StorageManager.getAmount(p, a.getID()) - StorageManager.getAmount(p, b.getID());
-	    		if (comp == 0) {
-		    		comp = a.getLevel() - b.getLevel();
-	    		}
-	    	}
-	    	else {
-	    		comp = a.getDisplay().compareTo(b.getDisplay());
-	    	}
-	    	
-	    	if (reverse) {
-	    		comp *= -1;
 	    	}
 	    	return comp;
 	    }
