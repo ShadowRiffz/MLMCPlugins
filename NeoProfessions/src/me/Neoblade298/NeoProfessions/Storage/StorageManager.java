@@ -30,12 +30,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neosettings.objects.Settings;
 
 public class StorageManager implements Listener {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	static Professions main;
+
+	public static Settings settings;
 	
 	public StorageManager(Professions main) {
 		StorageManager.main = main;
@@ -46,6 +50,18 @@ public class StorageManager implements Listener {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			loadPlayer(p);
 		}
+		
+		// Load settings
+		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
+		settings = nsettings.createSettings("Professions-StorageSort", main, false);
+		settings.addSetting("level-priority", 1);
+		settings.addSetting("rarity-priority", 2);
+		settings.addSetting("amount-priority", 3);
+		settings.addSetting("name-priority", 4);
+		settings.addSetting("level-order", false);
+		settings.addSetting("rarity-order", true);
+		settings.addSetting("amount-order", true);
+		settings.addSetting("name-order", false);
 	}
 	
 	public static boolean givePlayer(Player p, int id, int amount) {

@@ -1,19 +1,22 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
+import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class StoredItemResult implements RecipeResult {
-	int id;
+	StoredItem item;
 	int amount;
 
 	public StoredItemResult(String key, String[] lineArgs) {
-		this.id = 0;
 		this.amount = 1;
 		
 		for (String arg : lineArgs) {
 			if (arg.startsWith("id")) {
-				this.id = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
+				int id = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
+				item = StorageManager.getItemDefinitions().get(id);
 			}
 			else if (arg.startsWith("amount")) {
 				this.amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
@@ -21,12 +24,17 @@ public class StoredItemResult implements RecipeResult {
 		}
 		
 		// Add to source
-		StorageManager.getItemDefinitions().get(id).addSource("§7Crafted by player", false);
-		StorageManager.getItemDefinitions().get(id).addRelevantRecipe(key);
+		item.addSource("§7Crafted by player", false);
+		item.addRelevantRecipe(key);
 	}
 
 	@Override
 	public void giveResult(Player p) {
-		StorageManager.givePlayer(p, id, amount);
+		StorageManager.givePlayer(p, item.getId(), amount);
+	}
+	
+	@Override
+	public ItemStack getResultItem() {
+		return item.getItem();
 	}
 }

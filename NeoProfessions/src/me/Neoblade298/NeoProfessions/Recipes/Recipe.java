@@ -75,4 +75,8 @@ public class Recipe {
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
 		return true;
 	}
+	
+	public RecipeResult getResult() {
+		return result;
+	}
 }

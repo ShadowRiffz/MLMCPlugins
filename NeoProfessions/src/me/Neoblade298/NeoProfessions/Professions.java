@@ -18,7 +18,6 @@ import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
-import me.Neoblade298.NeoProfessions.Listeners.GeneralListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
@@ -26,7 +25,6 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
-import me.neoblade298.neogear.Gear;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -50,8 +48,6 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public ProfessionsMethods professionsMethods;
 	public MasonUtils masonUtils;
-
-	public GeneralListeners generalListeners;
 	
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
@@ -75,8 +71,6 @@ public class Professions extends JavaPlugin implements Listener {
 		this.setupPermissions();
 		this.setupChat();
 		
-		neogear = (Gear) Bukkit.getPluginManager().getPlugin("NeoGear");
-		
 		// Configuration// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
 		if (!file.exists()) {
@@ -97,22 +91,22 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 
 		// Set up required listeners
-		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
-		getServer().getPluginManager().registerEvents(new AugmentManager(this), this);
-		getServer().getPluginManager().registerEvents(new StorageManager(this), this);
+		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this); // Repairs
+		getServer().getPluginManager().registerEvents(new AugmentManager(this), this); // Working augments
 		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
 			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		}
 			
 		if (!isInstance) {
-			// Currency
+			// Managers and listeners
 			cm = new CurrencyManager(this);
 			pm = new ProfessionManager(this);
 			sm = new StorageManager(this);
 			mim = new MinigameManager(this);
-			
-			// NeoGear
-			neogear = (Gear) Bukkit.getServer().getPluginManager().getPlugin("NeoGear");
+			getServer().getPluginManager().registerEvents(cm, this);
+			getServer().getPluginManager().registerEvents(pm, this);
+			getServer().getPluginManager().registerEvents(sm, this);
+			getServer().getPluginManager().registerEvents(new StorageManager(this), this);
 	
 			masonUtils = new MasonUtils();
 	
@@ -122,10 +116,6 @@ public class Professions extends JavaPlugin implements Listener {
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));
 			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
-			
-			
-			// Setup Event Listeners
-			getServer().getPluginManager().registerEvents(new GeneralListeners(this), this);
 		}
 		
 		// SQL

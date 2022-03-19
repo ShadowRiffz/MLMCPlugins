@@ -12,6 +12,7 @@ public class Sorter {
 	int priority;
 	int sortType;
 	boolean reverse;
+	String settingString;
 	
 	public static final int NAME_SORT = 0;
 	public static final int LEVEL_SORT = 1;
@@ -22,6 +23,17 @@ public class Sorter {
 		this.priority = startPriority;
 		this.sortType = sortType;
 		this.reverse = reverse;
+
+		switch (sortType) {
+		case NAME_SORT: settingString = "name";
+		break;
+		case LEVEL_SORT: settingString = "level";
+		break;
+		case RARITY_SORT: settingString = "rarity";
+		break;
+		default: settingString = "amount";
+		break;
+		}
 	}
 	
 	public int compare(StoredItemInstance a, StoredItemInstance b) {
@@ -72,7 +84,12 @@ public class Sorter {
 		this.priority = priority;
 	}
 	
-	public void flipOrder() {
+	public boolean flipOrder() {
 		reverse = !reverse;
+		return reverse;
+	}
+	
+	public String getSettingString() {
+		return settingString;
 	}
 }

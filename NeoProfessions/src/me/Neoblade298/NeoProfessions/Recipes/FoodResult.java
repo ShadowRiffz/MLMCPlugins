@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.Neoblade298.NeoConsumables.Consumables;
-import me.neoblade298.neogear.Gear;
 
 public class FoodResult implements RecipeResult {
 	String key;
@@ -32,5 +31,10 @@ public class FoodResult implements RecipeResult {
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
+	}
+	
+	@Override
+	public ItemStack getResultItem() {
+		return Consumables.food.get(this.key).getItem(this.amount);
 	}
 }

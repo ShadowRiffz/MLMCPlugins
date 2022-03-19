@@ -27,6 +27,7 @@ import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
+import me.Neoblade298.NeoProfessions.Inventories.StorageView;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Legacy.CommonItems;
 import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
@@ -67,6 +68,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
+			sender.sendMessage("§7- §c/prof storage [min] [max]");
 			sender.sendMessage(
 					"§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
 			sender.sendMessage(
@@ -156,6 +158,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					Util.sendMessage(p, "&cItem conversion failed, " + result);
 				}
 			}
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("storage")) {
+			StorageView storage = new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Bukkit.createInventory(p, 54));
+			p.openInventory(storage.getInventory());
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {

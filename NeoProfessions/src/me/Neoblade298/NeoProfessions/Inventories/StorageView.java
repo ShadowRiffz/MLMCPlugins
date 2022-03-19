@@ -38,10 +38,18 @@ public class StorageView extends ProfessionInventory {
 		this.invsorter = new InvSorter();
 		
 		// Setup sorters
-		sorters[1] = new Sorter(Sorter.LEVEL_SORT, 1, false);
-		sorters[2] = new Sorter(Sorter.RARITY_SORT, 2, true);
-		sorters[3] = new Sorter(Sorter.AMOUNT_SORT, 3, true);
-		sorters[4] = new Sorter(Sorter.NAME_SORT, 4, false);
+		int namePriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "name-priority");
+		int levelPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "level-priority");
+		int rarityPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "rarity-priority");
+		int amountPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "amount-priority");
+		boolean nameOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "name-order");
+		boolean levelOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "level-order");
+		boolean rarityOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "rarity-order");
+		boolean amountOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "amount-order");
+		sorters[namePriority] = new Sorter(Sorter.LEVEL_SORT, namePriority, nameOrder);
+		sorters[levelPriority] = new Sorter(Sorter.RARITY_SORT, levelPriority, levelOrder);
+		sorters[rarityPriority] = new Sorter(Sorter.AMOUNT_SORT, rarityPriority, rarityOrder);
+		sorters[amountPriority] = new Sorter(Sorter.NAME_SORT, amountPriority, amountOrder);
 		
 		// Setup itemstacks to be used for sorting
 		items = new ArrayList<StoredItemInstance>();
@@ -70,6 +78,9 @@ public class StorageView extends ProfessionInventory {
 	private ItemStack[] setupInventory(ItemStack[] contents) {
 		// Sort items on construction and on change sort type
 		for (int i = (page - 1) * 45; i < 45 * page; i++) {
+			if (items.size() < i) {
+				break;
+			}
 			contents[i] = items.get(i).getStorageView(p);
 		}	
 		
@@ -216,7 +227,10 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private void changeSortOrder(int priority) {
-		sorters[priority].flipOrder();
+		Sorter sorter = sorters[priority];
+		boolean newOrder = sorter.flipOrder();
+		StorageManager.settings.changeSetting(sorter.getSettingString() + "-order", Boolean.toString(newOrder), p.getUniqueId());
+		
 		sortItems();
 		inv.setContents(setupAll(inv.getContents()));
 	}
@@ -229,11 +243,15 @@ public class StorageView extends ProfessionInventory {
 			return;
 		}
 		
-		Sorter temp = sorters[oldPriority];
-		sorters[hotbar].setPriority(oldPriority);
-		temp.setPriority(hotbar);
-		sorters[oldPriority] = sorters[hotbar];
-		sorters[hotbar] = temp;
+		Sorter toChange = sorters[oldPriority];
+		Sorter changingWith = sorters[hotbar];
+		StorageManager.settings.changeSetting(toChange.getSettingString() + "-priority", Integer.toString(hotbar), p.getUniqueId());
+		StorageManager.settings.changeSetting(changingWith.getSettingString() + "-priority", Integer.toString(oldPriority), p.getUniqueId());
+		
+		changingWith.setPriority(oldPriority);
+		toChange.setPriority(hotbar);
+		sorters[oldPriority] = changingWith;
+		sorters[hotbar] = toChange;
 		sortItems();
 		inv.setContents(setupAll(inv.getContents()));
 	}

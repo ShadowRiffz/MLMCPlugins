@@ -11,7 +11,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 public class Profession {
 	String name;
 	int exp, level;
-	static HashMap<Integer, Integer> nextLv;
+	static HashMap<Integer, Integer> nextLv= new HashMap<Integer, Integer>();
 	
 	static {
 		for (int lv = 1; lv <= 60; lv++) {

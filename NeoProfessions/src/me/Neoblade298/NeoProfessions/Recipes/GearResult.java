@@ -38,4 +38,9 @@ public class GearResult implements RecipeResult {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
 	}
+	
+	@Override
+	public ItemStack getResultItem() {
+		return Gear.settings.get(type).get(level).generateItem(rarity, level);
+	}
 }
