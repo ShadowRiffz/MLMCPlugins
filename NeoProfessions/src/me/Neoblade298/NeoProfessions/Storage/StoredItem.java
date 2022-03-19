@@ -1,7 +1,7 @@
 package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.TreeSet;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class StoredItem {
 	private ArrayList<String> baseLore;
 	private ArrayList<String> storageLore;
 	private ArrayList<String> sources;
-	private HashSet<String> relevantRecipes;
+	private TreeSet<String> relevantRecipes;
 
 	public StoredItem(int id, String name, int level, String rarity, String mat, ArrayList<String> lore) {
 		this.id = id;
@@ -67,7 +67,7 @@ public class StoredItem {
 		this.relevantRecipes.add(key);
 	}
 	
-	public HashSet<String> getRelevantRecipes() {
+	public TreeSet<String> getRelevantRecipes() {
 		return relevantRecipes;
 	}
 	

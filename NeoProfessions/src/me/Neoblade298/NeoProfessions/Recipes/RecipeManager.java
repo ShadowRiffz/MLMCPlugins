@@ -63,6 +63,7 @@ public class RecipeManager {
 							}
 						}
 						StoredItemInstance si = new StoredItemInstance(StorageManager.getItemDefinitions().get(id), amount);
+						si.getItem().addRelevantRecipe(key);
 						components.add(si);
 					}
 					
