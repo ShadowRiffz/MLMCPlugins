@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -163,5 +167,32 @@ public class CurrencyManager {
 			return true;
 		}
 		return false;
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		try {
+			initPlayer(e.getPlayer());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		try {
+			savePlayer(e.getPlayer());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		try {
+			savePlayer(e.getPlayer());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 }

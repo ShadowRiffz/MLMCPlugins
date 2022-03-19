@@ -12,17 +12,23 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 
 public class StorageManager implements Listener {
@@ -213,5 +219,30 @@ public class StorageManager implements Listener {
 	public void onJoin(AsyncPlayerPreLoginEvent e) {
 		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
 		loadPlayer(p);
+	}
+	
+	@EventHandler
+	public void onVoucherClaim(PlayerInteractEvent e) {
+		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+		
+		ItemStack item = e.getItem().clone();
+		if (item == null || item.getType().equals(Material.PAPER)) {
+			return;
+		}
+		
+		Player p = e.getPlayer();
+		item.setAmount(1);
+		NBTItem nbti = new NBTItem(item);
+		if (nbti.hasKey("id")) {
+			int id = nbti.getInteger("id");
+			int amount = nbti.getInteger("amount");
+			StoredItem si = items.get(id);
+			givePlayer(p, nbti.getInteger("id"), nbti.getInteger("amount"));
+			p.getInventory().removeItem(item);
+			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + amount + " " + si.getDisplay() + "§7!");
+		}
 	}
 }

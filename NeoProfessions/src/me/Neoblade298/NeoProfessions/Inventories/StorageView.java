@@ -3,10 +3,9 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -103,9 +102,11 @@ public class StorageView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oLeft click to view recipes");
-		lore.add("§7§oRight click to create voucher");
-		lore.add("§7§oShift right click to create 10x vouchers");
+		lore.add("§7§oFor all items:");
+		lore.add("§7§oLeft click to create 1x voucher");
+		lore.add("§7§oRight click to sell 1x");
+		lore.add("§7§oShift click for 10x");
+		lore.add("§7§oPress 1 to see recipes involving the item");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -135,28 +136,83 @@ public class StorageView extends ProfessionInventory {
 
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
-		// TODO Auto-generated method stub
+		e.setCancelled(true);
+		ItemStack item = e.getCurrentItem();
+		if (item == null || item.getType().isAir()) {
+			return;
+		}
+		NBTItem nbti = new NBTItem(item);
+		int slot = e.getRawSlot();
+		String type = nbti.getString("type");
 		
+		if (type.equals("next")) {
+			page++;
+			inv.setContents(setupAll(inv.getContents()));
+			return;
+		}
+		else if (type.equals("previous")) {
+			page--;
+			inv.setContents(setupAll(inv.getContents()));
+			return;
+		}
+		
+		if (e.getClick().equals(ClickType.LEFT)) {
+			if (slot < 45) {
+				createVoucher(p, 1, slot);
+			}
+			else if (type.equals("sort")) {
+				changeSortOrder(nbti.getInteger("priority"));
+			}
+		}
+		else if (e.getClick().equals(ClickType.SHIFT_LEFT)) {
+			if (slot < 45) {
+				createVoucher(p, 10, slot);
+			}
+		}
+		else if (e.getClick().equals(ClickType.RIGHT)) {
+			if (slot < 45) {
+				sellItem(p, 1, slot);
+			}
+		}
+		else if (e.getClick().equals(ClickType.SHIFT_RIGHT)) {
+			if (slot < 45) {
+				sellItem(p, 10, slot);
+			}
+		}
+		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+			if (slot < 45) {
+				if (e.getHotbarButton() == 1) {
+					viewRecipes(p, slot);
+				}
+			}
+			else if (type.equals("sort")) {
+				changeSortPriority(nbti.getInteger("priority"), e.getHotbarButton());
+			}
+		}
 	}
 
 	@Override
 	public void handleInventoryDrag(InventoryDragEvent e) {
-		// TODO Auto-generated method stub
-		
+		e.setCancelled(true);
 	}
-
-	@Override
-	public void handleInventoryClose(InventoryCloseEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	private void sellItem(Player p, int amount, int slot) {
+		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
+		if (si.sell(p, amount)) {
+			p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold " + si.getItem().getDisplay() + "§fx" + si.getAmount() + 
+					"§7for §a" + (si.getAmount() * si.getItem().getValue()) + "g§7!");
+		}
 	}
 	
 	private void createVoucher(Player p, int amount, int slot) {
-		this.items.get(((page - 1) * 45) + slot).giveVoucher(p, amount);
+		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
+		if (si.giveVoucher(p, amount)) {
+			p.sendMessage("§4[§c§lMLMC§4] §7Successfully created voucher for " + si.getItem().getDisplay() + "§fx" + si.getAmount() + "§7!");
+		}
 	}
 	
-	private void viewRecipes(StoredItemInstance inst) {
-		
+	private void viewRecipes(Player p, int slot) {
+		// StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
 	}
 	
 	private void changeSortOrder(int priority) {
@@ -204,5 +260,10 @@ public class StorageView extends ProfessionInventory {
 	    	return comp;
 	    }
 	}
-	
+
+
+	@Override
+	public void handleInventoryClose(InventoryCloseEvent e) {
+		
+	}
 }

@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,10 +19,12 @@ public class StoredItem {
 	private String name;
 	private int id;
 	private int level;
+	private double value;
 	private Rarity rarity;
 	private ArrayList<String> baseLore;
 	private ArrayList<String> storageLore;
 	private ArrayList<String> sources;
+	private HashSet<String> relevantRecipes;
 
 	public StoredItem(int id, String name, int level, String rarity, String mat, ArrayList<String> lore) {
 		this.id = id;
@@ -44,8 +47,10 @@ public class StoredItem {
 		}
 		this.baseLore = new ArrayList<String>();
 		this.name = name;
+		this.value = level * this.rarity.getPriceModifier();
 		this.display = "§6[Lv " + level + "] " + this.rarity.getCode() + name;
 		this.baseLore.add("§7Rarity: " + this.rarity.getDisplay());
+		this.baseLore.add("§7Value: §e" + String.format("%.2f", this.value));
 		if (lore != null) {
 			for (String line : lore) {
 				this.baseLore.add("§7§o" + line);
@@ -54,11 +59,20 @@ public class StoredItem {
 		this.mat = mat;
 		this.storageLore = new ArrayList<String>(baseLore);
 		this.storageLore.add("§7Sources:");
-		this.storageLore.add("§7§oLeft click to view recipes containing this");
-		this.storageLore.add("§7§oRight click to create a voucher for this");
-		this.storageLore.add("§7§oShift right click for 10x vouchers");
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
+	}
+	
+	public void addRelevantRecipe(String key) {
+		this.relevantRecipes.add(key);
+	}
+	
+	public HashSet<String> getRelevantRecipes() {
+		return relevantRecipes;
+	}
+	
+	public double getValue() {
+		return value;
 	}
 	
 	public int getId() {

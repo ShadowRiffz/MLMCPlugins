@@ -18,12 +18,13 @@ public class Recipe {
 	RecipeResult result;
 	
 	
-	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components) {
+	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components, RecipeResult result) {
 		this.key = key;
 		this.display = display;
 		this.exp = exp;
 		this.reqs = reqs;
 		this.components = components;
+		this.result = result;
 	}
 	
 	public String getKey() {

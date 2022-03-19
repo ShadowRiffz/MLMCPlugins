@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Professions;
 
 public class StoredItemInstance {
 	StoredItem item;
@@ -41,22 +42,42 @@ public class StoredItemInstance {
 		return item.getStorageView(p, amt);
 	}
 	
-	public void giveVoucher(Player p, int amount) {
+	public boolean sell(Player p, int amount) {
+		if (amount > this.amt) {
+			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to sell!");
+			return false;
+		}
+		else if (!StorageManager.playerHas(p, this.item.getId(), amount)) {
+			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to sell!");
+			Bukkit.getLogger().log(Level.WARNING,
+					"[NeoProfessions] StorageView item instance doesn't match actual storage for id " + this.item.getId() +
+					". Expected: " + amt + ", actual: " + StorageManager.getAmount(p, this.item.getId()));
+			return false;
+		}
+		
+		amt -= amount;
+		StorageManager.takePlayer(p, this.item.getId(), amount);
+		Professions.econ.depositPlayer(p, this.item.getValue() * amount);
+		return true;
+	}
+	
+	public boolean giveVoucher(Player p, int amount) {
 		if (amount > this.amt) {
 			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to create the voucher!");
-			return;
+			return false;
 		}
 		else if (!StorageManager.playerHas(p, this.item.getId(), amount)) {
 			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to create the voucher!");
 			Bukkit.getLogger().log(Level.WARNING,
 					"[NeoProfessions] StorageView item instance doesn't match actual storage for id " + this.item.getId() +
 					". Expected: " + amt + ", actual: " + StorageManager.getAmount(p, this.item.getId()));
-			return;
+			return false;
 		}
 		
 		amt -= amount;
 		StorageManager.takePlayer(p, this.item.getId(), amount);
 		p.getInventory().addItem(getVoucher(p, amount));
+		return true;
 	}
 	
 	private ItemStack getVoucher(Player p, int amount) {

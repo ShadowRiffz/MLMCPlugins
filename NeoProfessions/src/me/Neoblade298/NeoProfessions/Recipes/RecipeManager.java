@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -25,7 +24,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class RecipeManager {
@@ -64,7 +62,8 @@ public class RecipeManager {
 								amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
 							}
 						}
-						components.add(new StoredItemInstance(StorageManager.getItemDefinitions().get(id), amount));
+						StoredItemInstance si = new StoredItemInstance(StorageManager.getItemDefinitions().get(id), amount);
+						components.add(si);
 					}
 					
 					// Requirements
@@ -83,9 +82,22 @@ public class RecipeManager {
 						}
 					}
 					
+					// Results
+					String[] resultArgs = sec.getString("result").split(" ");
+					RecipeResult result = null;
+					if (resultArgs[0].startsWith("gear")) {
+						result = new GearResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("food")) {
+						result = new FoodResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("storeditem")) {
+						result = new StoredItemResult(key, resultArgs);
+					}
+					
 					String display = sec.getString("display");
 					int exp = sec.getInt("exp");
-					recipes.put(key, new Recipe(key, display, exp, reqs, components));
+					recipes.put(key, new Recipe(key, display, exp, reqs, components, result));
 				}
 			}
 		}
