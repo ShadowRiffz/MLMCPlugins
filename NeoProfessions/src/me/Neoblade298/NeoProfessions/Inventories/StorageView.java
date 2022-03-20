@@ -259,7 +259,9 @@ public class StorageView extends ProfessionInventory {
 	
 	private void viewRecipes(Player p, int slot) {
 		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
-		new RecipeView(p, si.getItem(), inv);
+		if (si.getItem().getRelevantRecipes().size() > 0) {
+			new RecipeView(p, si.getItem(), inv);
+		}
 	}
 	
 	private void changeSortOrder(int priority) {

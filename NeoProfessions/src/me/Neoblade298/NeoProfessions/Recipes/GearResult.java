@@ -1,9 +1,11 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.neoblade298.neogear.Gear;
 
@@ -40,7 +42,14 @@ public class GearResult implements RecipeResult {
 	}
 	
 	@Override
-	public ItemStack getResultItem() {
-		return Gear.settings.get(type).get(level).generateItem(rarity, level);
+	public ItemStack getResultItem(Player p) {
+		ItemStack item = Gear.settings.get(type).get(level).generateItem(rarity, level);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = meta.getLore();
+		lore.add("§7§m---");
+		lore.add("§9§oPress 1 §7§ofor requirements view");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
 	}
 }

@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -33,6 +34,7 @@ public class RecipeView extends ProfessionInventory {
 	public RecipeView(Player p, StoredItem base, Inventory inv) {
 		this.p = p;
 		this.inv = inv;
+		Professions.viewingInventory.put(p, this);
 		
 		// Setup itemstacks to be used for sorting
 		recipes = new ArrayList<Recipe>();
@@ -53,12 +55,17 @@ public class RecipeView extends ProfessionInventory {
 	// Sort by level
 	private ItemStack[] setupInventory(ItemStack[] contents) {
 		// Sort items on construction and on change sort type
+		int count = 0;
 		for (int i = (page - 1) * 45; i < 45 * page; i++) {
+			if (recipes.size() <= i) {
+				break;
+			}
+			
 			if (mode == RESULT_MODE) {
-				contents[i] = recipes.get(i).getResult().getResultItem();
+				contents[count++] = recipes.get(i).getResult().getResultItem(p);
 			}
 			else if (mode == REQUIREMENTS_MODE){
-				contents[i] = recipes.get(i).getReqsIcon(p);
+				contents[count++] = recipes.get(i).getReqsIcon(p);
 			}
 		}	
 		

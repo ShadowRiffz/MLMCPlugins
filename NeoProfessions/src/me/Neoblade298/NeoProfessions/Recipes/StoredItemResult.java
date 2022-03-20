@@ -27,7 +27,7 @@ public class StoredItemResult implements RecipeResult {
 		}
 		
 		// Add to source
-		item.addSource("§7Crafted by player", false);
+		item.addSource("§7Crafted", false);
 		item.addRelevantRecipe(key);
 	}
 
@@ -37,10 +37,11 @@ public class StoredItemResult implements RecipeResult {
 	}
 	
 	@Override
-	public ItemStack getResultItem() {
-		ItemStack item = this.item.getItem();
+	public ItemStack getResultItem(Player p) {
+		ItemStack item = this.item.getStorageView(p, amount);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
+		lore.add("§7§m---");
 		lore.add("§9§oPress 1 §7§ofor requirements view");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

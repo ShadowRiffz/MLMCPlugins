@@ -70,7 +70,7 @@ public class StorageManager implements Listener {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) + amount;
 			storage.put(id, total);
-			p.sendMessage("§4[§c§lMLMC§4] §7You now have §e" + total + " " + items.get(id).getDisplay());
+			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
 			return true;
 		}
 		return false;
@@ -86,7 +86,7 @@ public class StorageManager implements Listener {
 			else {
 				storage.put(id, storage.get(id) - amount);
 			}
-			p.sendMessage("§4[§c§lMLMC§4] §7You now have §e" + total + " " + items.get(id).getDisplay());
+			p.sendMessage("§c-" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
 			return true;
 		}
 		return false;

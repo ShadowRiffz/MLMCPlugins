@@ -75,26 +75,28 @@ public class Recipe {
 		}
 		
 		result.giveResult(p);
-		ProfessionManager.getAccount(p.getUniqueId()).get("crafting").addExp(p, exp);
+		ProfessionManager.getAccount(p.getUniqueId()).get("crafter").addExp(p, exp);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
 		return true;
 	}
 	
 	public ItemStack getReqsIcon(Player p) {
-		ItemStack item = new ItemStack(result.getResultItem().getType());
+		ItemStack item = new ItemStack(result.getResultItem(p).getType());
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(result.getResultItem().getItemMeta().getDisplayName());
+		meta.setDisplayName(result.getResultItem(p).getItemMeta().getDisplayName());
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Requirements:");
+		lore.add("§6Requirements§7:");
 		for (RecipeRequirement req : reqs) {
 			lore.add(req.getLoreString(p));
 		}
+		lore.add("§6Components§7:");
 		for (StoredItemInstance component : components) {
 			String line = StorageManager.playerHas(p, component.getItem().getId(), component.getAmount()) ? "§a" : "§c";
-			line += component.getAmount() + "x " + ChatColor.stripColor(component.getItem().getDisplay());
+			line += "- " + component.getAmount() + "x " + ChatColor.stripColor(component.getItem().getDisplay());
 			lore.add(line);
 		}
+		lore.add("§7§m---");
 		lore.add("§9§oPress 1 §7§ofor result view");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

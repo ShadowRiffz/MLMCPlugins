@@ -25,6 +25,8 @@ public class StoredItem {
 	private ArrayList<String> storageLore;
 	private ArrayList<String> sources;
 	private TreeSet<String> relevantRecipes;
+	
+	private static final int SOURCES_POS = 2;
 
 	public StoredItem(int id, String name, int level, String rarity, String mat, ArrayList<String> lore) {
 		this.id = id;
@@ -49,8 +51,9 @@ public class StoredItem {
 		this.name = name;
 		this.value = level * this.rarity.getPriceModifier();
 		this.display = "§6[Lv " + level + "] " + this.rarity.getCode() + name;
-		this.baseLore.add("§7Rarity: " + this.rarity.getDisplay());
-		this.baseLore.add("§7Value: §e" + String.format("%.2f", this.value));
+		this.baseLore.add("§6Rarity§7: " + this.rarity.getDisplay());
+		this.baseLore.add("§6Value§7: §e" + String.format("%.2f", this.value));
+		this.baseLore.add("§7§m---");
 		if (lore != null) {
 			for (String line : lore) {
 				this.baseLore.add("§7§o" + line);
@@ -59,7 +62,7 @@ public class StoredItem {
 		this.mat = mat;
 		this.relevantRecipes = new TreeSet<String>();
 		this.storageLore = new ArrayList<String>(baseLore);
-		this.storageLore.add("§7Sources:");
+		this.storageLore.add(SOURCES_POS, "§6Sources§7:");
 		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
@@ -109,7 +112,7 @@ public class StoredItem {
 				source = mm.getDisplayName().get();
 			}
 		}
-		this.storageLore.add("§7- " + source);
+		this.storageLore.add(SOURCES_POS + 1, "§7- " + source);
 		sources.add(source);
 	}
 	
