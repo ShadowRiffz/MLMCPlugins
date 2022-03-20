@@ -2,11 +2,11 @@ package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Objects.SkullCreator;
 
 public class Sorter {
 	int priority;
@@ -18,6 +18,11 @@ public class Sorter {
 	public static final int LEVEL_SORT = 1;
 	public static final int RARITY_SORT = 2;
 	public static final int AMOUNT_SORT = 3;
+	
+	public static final String ALPHABET_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTUxN2I0ODI5YjgzMTkyYmQ3MjcxMTI3N2E4ZWZjNDE5NjcxMWU0MTgwYzIyYjNlMmI4MTY2YmVhMWE5ZGUxOSJ9fX0=";
+	public static final String RARITY_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjExNmI2OGQ2MmEzNWMwY2UwYzhjNTU3YWM2MzRmNzY3NzA0OGM2ZmVkMjk2YTBkZDFlZDFhOWM0NzZiMjZlNiJ9fX0=";
+	public static final String LEVEL_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDliMzAzMDNmOTRlN2M3ODVhMzFlNTcyN2E5MzgxNTM1ZGFmNDc1MzQ0OWVhNDFkYjc0NmUxMjM0ZTlkZDJiNSJ9fX0=";
+	public static final String AMOUNT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjQxNTY0YmZlYzNiZDNhZjAzNTU4ODIzYzYwZTBlMTllODlhMGJjNzdjNjRmNWI3YjI1ZjVjNDM1YTViMWY5YyJ9fX0=";
 	
 	public Sorter(int sortType, int startPriority, boolean reverse) {
 		this.priority = startPriority;
@@ -39,13 +44,13 @@ public class Sorter {
 	public int compare(StoredItemInstance a, StoredItemInstance b) {
 		int comp = 0;
 		switch (sortType) {
-		case NAME_SORT: comp = a.getItem().getName().compareTo(b.getItem().getName());
+		case NAME_SORT: comp = b.getItem().getName().compareTo(a.getItem().getName());
 		break;
-		case LEVEL_SORT: comp = a.getItem().getLevel() - b.getItem().getLevel();
+		case LEVEL_SORT: comp = b.getItem().getLevel() - a.getItem().getLevel();
 		break;
-		case RARITY_SORT: comp = a.getItem().getRarity().getPriority() - b.getItem().getRarity().getPriority();
+		case RARITY_SORT: comp = b.getItem().getRarity().getPriority() - a.getItem().getRarity().getPriority();
 		break;
-		case AMOUNT_SORT: comp = a.getAmount() - b.getAmount();
+		case AMOUNT_SORT: comp = b.getAmount() - a.getAmount();
 		break;
 		}
 		if (reverse) {
@@ -55,7 +60,17 @@ public class Sorter {
 	}
 	
 	public ItemStack createSortButton() {
-		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+		ItemStack item;
+		switch (sortType) {
+		case NAME_SORT: item = SkullCreator.itemFromBase64(ALPHABET_HEAD);
+		break;
+		case LEVEL_SORT: item = SkullCreator.itemFromBase64(LEVEL_HEAD);
+		break;
+		case RARITY_SORT: item = SkullCreator.itemFromBase64(RARITY_HEAD);
+		break;
+		default: item = SkullCreator.itemFromBase64(AMOUNT_HEAD);
+		break;
+		}
 		ItemMeta meta = item.getItemMeta();
 		switch (sortType) {
 		case NAME_SORT: meta.setDisplayName("§9Sort by Name");

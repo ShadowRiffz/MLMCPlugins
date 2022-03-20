@@ -1,7 +1,10 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -35,6 +38,12 @@ public class StoredItemResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem() {
-		return item.getItem();
+		ItemStack item = this.item.getItem();
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = meta.getLore();
+		lore.add("§9§oPress 1 §7§ofor requirements view");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
 	}
 }

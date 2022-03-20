@@ -23,6 +23,7 @@ import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
+import me.Neoblade298.NeoProfessions.Recipes.RecipeManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import net.milkbowl.vault.chat.Chat;
@@ -53,6 +54,7 @@ public class Professions extends JavaPlugin implements Listener {
 	public static ProfessionManager pm;
 	public static StorageManager sm;
 	public static MinigameManager mim;
+	public static RecipeManager rm;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -102,11 +104,12 @@ public class Professions extends JavaPlugin implements Listener {
 			cm = new CurrencyManager(this);
 			pm = new ProfessionManager(this);
 			sm = new StorageManager(this);
+			rm = new RecipeManager(this);
 			mim = new MinigameManager(this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(pm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
-			getServer().getPluginManager().registerEvents(new StorageManager(this), this);
+			getServer().getPluginManager().registerEvents(rm, this);
 	
 			masonUtils = new MasonUtils();
 	

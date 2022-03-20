@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+import net.md_5.bungee.api.ChatColor;
 
 public class Recipe {
 	String key;
@@ -16,15 +19,17 @@ public class Recipe {
 	ArrayList<RecipeRequirement> reqs;
 	ArrayList<StoredItemInstance> components;
 	RecipeResult result;
+	boolean canMulticraft;
 	
 	
-	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components, RecipeResult result) {
+	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components, RecipeResult result, boolean canMulticraft) {
 		this.key = key;
 		this.display = display;
 		this.exp = exp;
 		this.reqs = reqs;
 		this.components = components;
 		this.result = result;
+		this.canMulticraft = canMulticraft;
 	}
 	
 	public String getKey() {
@@ -76,7 +81,31 @@ public class Recipe {
 		return true;
 	}
 	
+	public ItemStack getReqsIcon(Player p) {
+		ItemStack item = new ItemStack(result.getResultItem().getType());
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(result.getResultItem().getItemMeta().getDisplayName());
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7Requirements:");
+		for (RecipeRequirement req : reqs) {
+			lore.add(req.getLoreString(p));
+		}
+		for (StoredItemInstance component : components) {
+			String line = StorageManager.playerHas(p, component.getItem().getId(), component.getAmount()) ? "§a" : "§c";
+			line += component.getAmount() + "x " + ChatColor.stripColor(component.getItem().getDisplay());
+			lore.add(line);
+		}
+		lore.add("§9§oPress 1 §7§ofor result view");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	public RecipeResult getResult() {
 		return result;
+	}
+	
+	public boolean canMulticraft() {
+		return canMulticraft;
 	}
 }

@@ -83,7 +83,7 @@ public class StoredItemInstance {
 	private ItemStack getVoucher(Player p, int amount) {
 		ItemStack item = new ItemStack(Material.PAPER);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(this.toString());
+		meta.setDisplayName(this.item.getDisplay() + " §fx" + amount);
 		meta.setLore(voucherLore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);

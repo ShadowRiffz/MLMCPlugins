@@ -57,8 +57,10 @@ public class StoredItem {
 			}
 		}
 		this.mat = mat;
+		this.relevantRecipes = new TreeSet<String>();
 		this.storageLore = new ArrayList<String>(baseLore);
 		this.storageLore.add("§7Sources:");
+		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
 	}
@@ -100,13 +102,14 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
+		source = source.replaceAll("&", "§");
 		if (isMob) {
 			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
 			if (mm != null) {
 				source = mm.getDisplayName().get();
 			}
 		}
-		this.storageLore.add(storageLore.size() - 3, "§7- " + source);
+		this.storageLore.add("§7- " + source);
 		sources.add(source);
 	}
 	
@@ -135,6 +138,7 @@ public class StoredItem {
 		}
 		meta.setDisplayName(display + " §fx" + amount);
 		item.setItemMeta(meta);
+		item.setAmount(amount > 64 ? 64 : amount);
 		return item;
 	}
 }

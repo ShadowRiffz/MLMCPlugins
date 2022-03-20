@@ -17,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -26,11 +27,11 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
-public class RecipeManager {
+public class RecipeManager implements Listener {
 	Professions main;
 	public static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	public static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
-	public static HashMap<String, Recipe> recipes;
+	public static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
 	public RecipeManager(Professions main) {
 		this.main = main;
 		
@@ -98,7 +99,8 @@ public class RecipeManager {
 					
 					String display = sec.getString("display");
 					int exp = sec.getInt("exp");
-					recipes.put(key, new Recipe(key, display, exp, reqs, components, result));
+					boolean canMulticraft = sec.getBoolean("can-multicraft");
+					recipes.put(key, new Recipe(key, display, exp, reqs, components, result, canMulticraft));
 				}
 			}
 		}

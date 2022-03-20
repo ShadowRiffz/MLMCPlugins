@@ -34,4 +34,10 @@ public class EssenceRequirement implements RecipeRequirement {
 	public void useReq(Player p) {
 		CurrencyManager.subtract(p, "essence", level, amount);
 	}
+	
+	public String getLoreString(Player p) {
+		String msg = passesReq(p) ? "§a" : "§c";
+		msg += "- " + amount + "x Lv " + level + " Essence";
+		return msg;
+	}
 }

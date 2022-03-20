@@ -1,6 +1,8 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.HashMap;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
@@ -32,5 +34,11 @@ public class LevelRequirement implements RecipeRequirement {
 
 	public String failMessage(Player p) {
 		return "§4[§c§lMLMC§4] §cYou aren't a high enough level §e" + type + "!";
+	}
+	
+	public String getLoreString(Player p) {
+		String msg = passesReq(p) ? "§a" : "§c";
+		msg += "- Lv " + min + " " + StringUtils.capitalize(type);
+		return msg;
 	}
 }

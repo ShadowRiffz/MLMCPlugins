@@ -1,8 +1,8 @@
 package me.Neoblade298.NeoProfessions.Inventories;
 
 import java.util.ArrayList;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -14,6 +14,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
 
 public class RecipeView extends ProfessionInventory {
 	private Inventory inv;
@@ -39,6 +40,7 @@ public class RecipeView extends ProfessionInventory {
 			recipes.add(RecipeManager.recipes.get(key));
 		}
 		
+		inv.setContents(new ItemStack[54]);
 		inv.setContents(setupAll(inv.getContents()));
 	}
 	
@@ -56,7 +58,7 @@ public class RecipeView extends ProfessionInventory {
 				contents[i] = recipes.get(i).getResult().getResultItem();
 			}
 			else if (mode == REQUIREMENTS_MODE){
-				// get requirement icon
+				contents[i] = recipes.get(i).getReqsIcon(p);
 			}
 		}	
 		
@@ -76,14 +78,14 @@ public class RecipeView extends ProfessionInventory {
 	}
 	
 	private ItemStack createInfoItem() {
-		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.INFO_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§oFor all items:");
-		lore.add("§7§oLeft click to craft 1x");
-		lore.add("§7§oRight click to view recipe components");
-		lore.add("§7§oPress 1 to toggle between");
+		lore.add("§9§oLeft click §7§oto craft 1x");
+		lore.add("§9§oRight click §7§oto view recipe components");
+		lore.add("§9§oPress 1 §7§oto toggle between");
 		lore.add("§7§oResult and Requirement view");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -93,7 +95,7 @@ public class RecipeView extends ProfessionInventory {
 	}
 	
 	private ItemStack createPreviousButton() {
-		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Previous Page");
 		item.setItemMeta(meta);
@@ -103,7 +105,7 @@ public class RecipeView extends ProfessionInventory {
 	}
 	
 	private ItemStack createNextButton() {
-		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.NEXT_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Next Page");
 		item.setItemMeta(meta);
@@ -122,6 +124,60 @@ public class RecipeView extends ProfessionInventory {
 		NBTItem nbti = new NBTItem(item);
 		int slot = e.getRawSlot();
 		String type = nbti.getString("type");
+		
+		if (type.equals("next")) {
+			page++;
+			inv.setContents(setupAll(inv.getContents()));
+			return;
+		}
+		else if (type.equals("previous")) {
+			page--;
+			inv.setContents(setupAll(inv.getContents()));
+			return;
+		}
+		
+		if (e.getClick().equals(ClickType.LEFT)) {
+			if (slot < 45) {
+				craftItem(slot, 1);
+			}
+		}
+		else if (e.getClick().equals(ClickType.SHIFT_LEFT)) {
+			if (slot < 45) {
+				craftItem(slot, 10);
+			}
+		}
+		else if (e.getClick().equals(ClickType.RIGHT) || e.getClick().equals(ClickType.SHIFT_RIGHT)) {
+			if (slot < 45) {
+				viewComponents(p, slot);
+			}
+		}
+		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+			int hotbar = e.getHotbarButton() + 1;
+			if (hotbar == 1) {
+				toggleIcons();
+			}
+		}
+	}
+	
+	private void toggleIcons() {
+		if (mode == RESULT_MODE) {
+			mode = REQUIREMENTS_MODE;
+		}
+		else {
+			mode = RESULT_MODE;
+		}
+		inv.setContents(setupInventory(inv.getContents()));
+	}
+	
+	private void viewComponents(Player p, int slot) {
+		// Recipe recipe = this.items.get(((page - 1) * 45) + slot);
+	}
+	
+	private void craftItem(int slot, int amount) {
+		Recipe recipe = this.recipes.get(((page - 1) * 45) + slot);
+		if (recipe.canMulticraft() || amount == 1) {
+			recipe.craftRecipe(p);
+		}
 	}
 
 	@Override

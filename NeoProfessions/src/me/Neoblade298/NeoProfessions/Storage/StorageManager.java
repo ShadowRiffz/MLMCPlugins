@@ -25,6 +25,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -165,13 +166,13 @@ public class StorageManager implements Listener {
 				if (entry.getValue() == 0) {
 					continue;
 				}
-				stmt.addBatch("REPLACE INTO professions_accounts "
-						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + entry.getValue() + ");");
+				stmt.addBatch("REPLACE INTO professions_items "
+						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
 			}
 			
-			// Set to true if you're saving several accounts at once
+			// Set to true if you're saving several users at once
 			if (!savingMultiple) {
-					stmt.executeBatch();
+				stmt.executeBatch();
 			}
 		}
 		catch (Exception e) {
@@ -221,6 +222,10 @@ public class StorageManager implements Listener {
 		return items;
 	}
 	
+	public static HashMap<Integer, Integer> getStorage(Player p) {
+		return storages.get(p.getUniqueId());
+	}
+	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		handleLeave(e.getPlayer());
@@ -242,12 +247,15 @@ public class StorageManager implements Listener {
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
 		}
-		
-		ItemStack item = e.getItem().clone();
-		if (item == null || item.getType().equals(Material.PAPER)) {
+		if (!e.getHand().equals(EquipmentSlot.HAND)) {
 			return;
 		}
-		
+
+		ItemStack item = e.getItem().clone();
+		if (item == null || !item.getType().equals(Material.PAPER)) {
+			return;
+		}
+
 		Player p = e.getPlayer();
 		item.setAmount(1);
 		NBTItem nbti = new NBTItem(item);
