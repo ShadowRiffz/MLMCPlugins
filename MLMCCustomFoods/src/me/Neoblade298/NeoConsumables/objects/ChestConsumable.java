@@ -19,7 +19,7 @@ public class ChestConsumable extends Consumable {
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
 	
-	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages) {
+	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages, Sound sound) {
 		super(main, key);
 		this.main = main;
 		this.stages = stages;

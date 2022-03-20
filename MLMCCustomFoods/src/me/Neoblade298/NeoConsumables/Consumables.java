@@ -244,7 +244,6 @@ public class Consumables extends JavaPlugin implements Listener {
 	private ChestConsumable loadChestConsumable(ConfigurationSection config, String key) {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
-		String display = config.getString("display", internal);
 
 		// Chest stages
 		LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
@@ -257,8 +256,8 @@ public class Consumables extends JavaPlugin implements Listener {
 			String effect = stageSec.getString("effect");
 			
 			// Sound
-			String soundLine = stageSec.getString("sound");
-			int index = soundLine.indexOf(":");
+			soundLine = stageSec.getString("sound");
+			index = soundLine.indexOf(":");
 			if (index != -1) {
 				sound = Sound.valueOf(soundLine.substring(0, index));
 				pitch = Float.parseFloat(soundLine.substring(index + 1));
@@ -303,7 +302,19 @@ public class Consumables extends JavaPlugin implements Listener {
 			
 			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
 		}
-		return new ChestConsumable(this, key, stages);
+		String soundLine = stageSec.getString("sound");
+		Sound sound;
+		float pitch = 1.0F;
+		int index = soundLine.indexOf(":");
+		if (index != -1) {
+			sound = Sound.valueOf(soundLine.substring(0, index));
+			pitch = Float.parseFloat(soundLine.substring(index + 1));
+		}
+		else {
+			sound = Sound.valueOf(soundLine);
+		}
+		
+		return new ChestConsumable(this, key, stages, sound);
 	}
 
 	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String key) {
