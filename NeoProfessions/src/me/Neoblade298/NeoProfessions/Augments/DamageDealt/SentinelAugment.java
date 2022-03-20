@@ -49,7 +49,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.95 && FlagManager.hasFlag(user, "aug_sentinel");
+		return percentage > 0.95 && !FlagManager.hasFlag(user, "aug_sentinel");
 	}
 
 	public ItemStack getItem(Player user) {
