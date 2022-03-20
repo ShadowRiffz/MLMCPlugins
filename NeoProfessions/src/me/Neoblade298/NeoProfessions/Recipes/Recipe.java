@@ -84,10 +84,10 @@ public class Recipe {
 		return true;
 	}
 	
-	public ItemStack getReqsIcon(Player p) {
-		ItemStack item = new ItemStack(result.getResultItem(p).getType());
+	public ItemStack getReqsIcon(Player p, boolean canCraft) {
+		ItemStack item = new ItemStack(result.getResultItem(p, canCraft).getType());
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(result.getResultItem(p).getItemMeta().getDisplayName());
+		meta.setDisplayName(result.getResultItem(p, canCraft).getItemMeta().getDisplayName());
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§6Requirements§7:");
 		for (RecipeRequirement req : reqs) {
@@ -100,8 +100,6 @@ public class Recipe {
 			line += "- " + playerHas + " / " + component.getAmount() + " " + ChatColor.stripColor(component.getItem().getDisplay());
 			lore.add(line);
 		}
-		lore.add("§7§m---");
-		lore.add("§9§oPress 1 §7§ofor result view");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

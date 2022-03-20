@@ -3,12 +3,13 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,19 +29,32 @@ public class ComponentView extends ProfessionInventory {
 	private int page = 1;
 	private StoredItem base;
 	private Sorter[] sorters;
+	private int mode = 0;
+	private Recipe recipe;
 	
 	private int min, max;
-	
+	public static ArrayList<String> info = new ArrayList<String>();
+
+	private static final int INFO_MODE = 0;
+	private static final int DISPLAY_MODE = 1;
 	public static final int INFO_BUTTON = 49;
 	public static final int HOME_BUTTON = 46;
 	public static final int NEXT_BUTTON = 53;
 	public static final int PREVIOUS_BUTTON = 45;
 	
-	public ComponentView(Player p, Recipe recipe, StoredItem base, int min, int max, Inventory inv) {
+	static {
+		info.add("§9§oLeft click §7§oto see relevant recipes");
+		info.add("§9§oPress 1 §7§ofor info mode (Current)");
+		info.add("§9§oPress 2 §7§ofor display mode");
+	}
+	
+	public ComponentView(Player p, Recipe recipe, StoredItem base, int min, int max) {
 		this.p = p;
-		this.inv = inv;
+		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
+		p.openInventory(inv);
 		this.min = min;
 		this.max = max;
+		this.recipe = recipe;
 		this.base = base;
 		this.sorters = new Sorter[5];
 		invsorter = new InvSorter();
@@ -86,7 +100,16 @@ public class ComponentView extends ProfessionInventory {
 				break;
 			}
 			StoredItemInstance si = components.get(i);
-			contents[count++] = si.getCompareView(p, si.getAmount());
+			if (mode == INFO_MODE) {
+				ItemStack item = si.getCompareView(p, si.getAmount());
+				ItemMeta meta = item.getItemMeta();
+				meta.setLore(info);
+				item.setItemMeta(meta);
+				contents[count++] = item;
+			}
+			else if (mode == DISPLAY_MODE) {
+				contents[count++] = si.getCompareView(p, si.getAmount());
+			}
 		}	
 		
 		return contents;
@@ -115,12 +138,15 @@ public class ComponentView extends ProfessionInventory {
 	}
 	
 	private ItemStack createInfoItem() {
-		ItemStack item = SkullCreator.itemFromBase64(StorageView.INFO_HEAD);
+		ItemStack item = recipe.getResult().getResultItem(p, false);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7Recipe: " + recipe.getResult().getResultItem(p, recipe.canCraft(p)).getItemMeta().getDisplayName());
 		lore.add("§7§oFor all items:");
 		lore.add("§9§oLeft click §7§oto see relevant recipes");
+		lore.add("§9§oPress 1 §7§ofor info mode");
+		lore.add("§9§oPress 2 §7§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -197,7 +223,10 @@ public class ComponentView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (type.equals("sort")) {
+			if (slot < 45) {
+				changeMode(hotbar);
+			}
+			else if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
 			}
 		}
@@ -209,14 +238,19 @@ public class ComponentView extends ProfessionInventory {
 	}
 	
 	private void returnToRecipe() {
-		new RecipeView(p, base, inv, min, max);
+		new RecipeView(p, base, min, max);
 	}
 	
 	private void viewRecipes(Player p, int slot) {
 		StoredItemInstance si = this.components.get(((page - 1) * 45) + slot);
 		if (si.getItem().getRelevantRecipes().size() > 0) {
-			new RecipeView(p, si.getItem(), inv, min, max);
+			new RecipeView(p, si.getItem(), min, max);
 		}
+	}
+	
+	private void changeMode(int hotbar) {
+		mode = hotbar - 1;
+		inv.setContents(setupInventory(inv.getContents()));
 	}
 	
 	private void changeSortOrder(int priority) {

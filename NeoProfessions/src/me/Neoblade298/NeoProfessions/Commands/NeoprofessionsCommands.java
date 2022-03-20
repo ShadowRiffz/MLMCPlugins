@@ -161,8 +161,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("storage")) {
-			StorageView storage = new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Bukkit.createInventory(p, 54, "§9Professions Inventory"));
-			p.openInventory(storage.getInventory());
+			new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {

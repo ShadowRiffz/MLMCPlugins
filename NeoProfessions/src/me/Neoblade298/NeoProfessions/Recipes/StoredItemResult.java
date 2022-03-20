@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
-import java.util.List;
-
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,13 +36,10 @@ public class StoredItemResult implements RecipeResult {
 	}
 	
 	@Override
-	public ItemStack getResultItem(Player p) {
+	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = this.item.getStorageView(p, amount);
 		ItemMeta meta = item.getItemMeta();
-		List<String> lore = meta.getLore();
-		lore.add("§7§m---");
-		lore.add("§9§oPress 1 §7§ofor requirements view");
-		meta.setLore(lore);
+		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
 	}

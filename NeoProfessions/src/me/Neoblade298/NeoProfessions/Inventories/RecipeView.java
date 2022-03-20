@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,8 +32,10 @@ public class RecipeView extends ProfessionInventory {
 	
 	private int min, max;
 	
-	private static final int RESULT_MODE = 0;
+	private static final int INFO_MODE = 0;
+	private static final int RESULT_MODE = 2;
 	private static final int REQUIREMENTS_MODE = 1;
+	public static ArrayList<String> info = new ArrayList<String>();
 	
 	public static final String HOUSE_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzVhMzViNWNhMTUyNjg2ODVjNDY2MDUzNWU1ODgzZDIxYTVlYzU3YzU1ZDM5NzIzNDI2OWFjYjVkYzI5NTRmIn19fQ==";
 	
@@ -41,9 +44,19 @@ public class RecipeView extends ProfessionInventory {
 	public static final int PREVIOUS_BUTTON = 45;
 	public static final int HOME_BUTTON = 46;
 	
-	public RecipeView(Player p, StoredItem base, Inventory inv, int min, int max) {
+	static {
+		info.add("§9§oLeft click §7§oto craft 1x");
+		info.add("§9§oShift left click §7§ofor 10x");
+		info.add("§9§oRight click §7§oto view components");
+		info.add("§9§oPress 1 §7§ofor info mode (Current)");
+		info.add("§9§oPress 2 §7§ofor requirements mode");
+		info.add("§9§oPress 3 §7§ofor display mode");
+	}
+	
+	public RecipeView(Player p, StoredItem base, int min, int max) {
 		this.p = p;
-		this.inv = inv;
+		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + base.getDisplay());
+		p.openInventory(inv);
 		this.base = base;
 		rsorter = new RecipeSorter();
 		Professions.viewingInventory.put(p, this);
@@ -77,11 +90,19 @@ public class RecipeView extends ProfessionInventory {
 				break;
 			}
 			
-			if (mode == RESULT_MODE) {
-				contents[count++] = recipes.get(i).getResult().getResultItem(p);
+			Recipe recipe = recipes.get(i);
+			if (mode == INFO_MODE) {
+				ItemStack item = recipe.getResult().getResultItem(p, recipe.canCraft(p));
+				ItemMeta meta = item.getItemMeta();
+				meta.setLore(info);
+				item.setItemMeta(meta);
+				contents[count++] = item;
+			}
+			else if (mode == RESULT_MODE) {
+				contents[count++] = recipe.getResult().getResultItem(p, recipe.canCraft(p));
 			}
 			else if (mode == REQUIREMENTS_MODE){
-				contents[count++] = recipes.get(i).getReqsIcon(p);
+				contents[count++] = recipe.getReqsIcon(p, recipe.canCraft(p));
 			}
 		}	
 		
@@ -106,12 +127,13 @@ public class RecipeView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oFor all items:");
+		lore.add("§7Recipes with: " + base.getDisplay());
 		lore.add("§9§oLeft click §7§oto craft 1x");
 		lore.add("§9§oShift left click §7§ofor 10x");
 		lore.add("§9§oRight click §7§oto view components");
-		lore.add("§9§oPress 1 §7§oto toggle between");
-		lore.add("§7§oResult and Requirement view");
+		lore.add("§9§oPress 1 §7§ofor info mode");
+		lore.add("§9§oPress 2 §7§ofor requirements mode");
+		lore.add("§9§oPress 3 §7§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -174,7 +196,7 @@ public class RecipeView extends ProfessionInventory {
 			return;
 		}
 		else if (type.equals("home")) {
-			new StorageView(p, min, max, inv);
+			new StorageView(p, min, max);
 			return;
 		}
 		
@@ -195,25 +217,15 @@ public class RecipeView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (hotbar == 1) {
-				toggleIcons();
+			if (slot < 45) {
+				changeMode(hotbar);
 			}
 		}
 	}
 	
-	private void toggleIcons() {
-		if (mode == RESULT_MODE) {
-			mode = REQUIREMENTS_MODE;
-		}
-		else {
-			mode = RESULT_MODE;
-		}
-		inv.setContents(setupInventory(inv.getContents()));
-	}
-	
 	private void viewComponents(Player p, int slot) {
 		Recipe recipe = this.recipes.get(((page - 1) * 45) + slot);
-		new ComponentView(p, recipe, base, min, max, inv);
+		new ComponentView(p, recipe, base, min, max);
 	}
 	
 	private void craftItem(int slot, int amount) {
@@ -221,6 +233,11 @@ public class RecipeView extends ProfessionInventory {
 		if (recipe.canMulticraft() || amount == 1) {
 			recipe.craftRecipe(p);
 		}
+	}
+	
+	private void changeMode(int hotbar) {
+		mode = hotbar - 1;
+		inv.setContents(setupInventory(inv.getContents()));
 	}
 
 	@Override

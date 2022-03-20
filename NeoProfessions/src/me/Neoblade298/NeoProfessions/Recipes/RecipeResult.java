@@ -5,5 +5,5 @@ import org.bukkit.inventory.ItemStack;
 
 public interface RecipeResult {
 	public void giveResult(Player p);
-	public ItemStack getResultItem(Player p);
+	public ItemStack getResultItem(Player p, boolean canCraft);
 }

@@ -3,12 +3,13 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,18 +29,32 @@ public class StorageView extends ProfessionInventory {
 	private Sorter[] sorters;
 	
 	private int min, max;
+	private int mode = 0;
+	private static final int INFO_MODE = 0;
+	private static final int DISPLAY_MODE = 1;
 	
 	public static final int INFO_BUTTON = 49;
 	public static final int NEXT_BUTTON = 53;
 	public static final int PREVIOUS_BUTTON = 45;
+	public static ArrayList<String> info = new ArrayList<String>();
 	
 	public static final String INFO_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2RiYWYyMDNjZTlkNDliNzJjYWRlNDA1Yjg2MWFjZmU0YjY1M2RjOGM4YTQzZTgwYjY3MGZhOTdlNTYwZWZlYiJ9fX0=";
 	public static final String PREV_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODFjOTZhNWMzZDEzYzMxOTkxODNlMWJjN2YwODZmNTRjYTJhNjUyNzEyNjMwM2FjOGUyNWQ2M2UxNmI2NGNjZiJ9fX0=";
 	public static final String NEXT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzYWU4ZGU3ZWQwNzllMzhkMmM4MmRkNDJiNzRjZmNiZDk0YjM0ODAzNDhkYmI1ZWNkOTNkYThiODEwMTVlMyJ9fX0=";
 	
-	public StorageView(Player p, int min, int max, Inventory inv) {
+	static {
+		info.add("§9§oLeft click §7§oto create 1x voucher");
+		info.add("§9§oRight click §7§oto sell 1x");
+		info.add("§9§oShift click §7§ofor 10x");
+		info.add("§9§oPress 1 §7§ofor info mode (Current)");
+		info.add("§9§oPress 2 §7§ofor display mode");
+		info.add("§9§oPress 3 §7§oto see relevant recipes");
+	}
+	
+	public StorageView(Player p, int min, int max) {
 		this.p = p;
-		this.inv = inv;
+		this.inv = Bukkit.createInventory(p, 54, "§9Storage View");
+		p.openInventory(inv);
 		this.min = min;
 		this.max = max;
 		this.sorters = new Sorter[5];
@@ -117,7 +132,17 @@ public class StorageView extends ProfessionInventory {
 			if (items.size() <= i) {
 				break;
 			}
-			contents[count++] = items.get(i).getStorageView(p);
+			
+			if (mode == INFO_MODE) {
+				ItemStack item = items.get(i).getStorageView(p);
+				ItemMeta meta = item.getItemMeta();
+				meta.setLore(info);
+				item.setItemMeta(meta);
+				contents[count++] = item;
+			}
+			else if (mode == DISPLAY_MODE) {
+				contents[count++] = items.get(i).getStorageView(p);
+			}
 		}	
 		
 		return contents;
@@ -149,11 +174,12 @@ public class StorageView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oFor all items:");
 		lore.add("§9§oLeft click §7§oto create 1x voucher");
 		lore.add("§9§oRight click §7§oto sell 1x");
 		lore.add("§9§oShift click §7§ofor 10x");
-		lore.add("§9§oPress 1 §7§oto see relevant recipes");
+		lore.add("§9§oPress 1 §7§ofor info mode");
+		lore.add("§9§oPress 2 §7§ofor display mode");
+		lore.add("§9§oPress 3 §7§oto see relevant recipes");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -229,7 +255,10 @@ public class StorageView extends ProfessionInventory {
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
 			if (slot < 45) {
-				if (hotbar == 1) {
+				if (slot < 45 && (hotbar == 1 || hotbar == 2)) {
+					changeMode(hotbar);
+				}
+				else if (hotbar == 3) {
 					viewRecipes(p, slot);
 				}
 			}
@@ -264,8 +293,13 @@ public class StorageView extends ProfessionInventory {
 	private void viewRecipes(Player p, int slot) {
 		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
 		if (si.getItem().getRelevantRecipes().size() > 0) {
-			new RecipeView(p, si.getItem(), inv, min, max);
+			new RecipeView(p, si.getItem(), min, max);
 		}
+	}
+	
+	private void changeMode(int hotbar) {
+		mode = hotbar - 1;
+		inv.setContents(setupInventory(inv.getContents()));
 	}
 	
 	private void changeSortOrder(int priority) {
