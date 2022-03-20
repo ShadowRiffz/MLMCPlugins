@@ -59,10 +59,10 @@ public class StorageManager implements Listener {
 		settings.addSetting("rarity-priority", 2);
 		settings.addSetting("amount-priority", 3);
 		settings.addSetting("name-priority", 4);
-		settings.addSetting("level-order", false);
-		settings.addSetting("rarity-order", true);
-		settings.addSetting("amount-order", true);
-		settings.addSetting("name-order", false);
+		settings.addSetting("level-order", true);
+		settings.addSetting("rarity-order", false);
+		settings.addSetting("amount-order", false);
+		settings.addSetting("name-order", true);
 	}
 	
 	public static boolean givePlayer(Player p, int id, int amount) {

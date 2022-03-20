@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Storage;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -142,6 +143,18 @@ public class StoredItem {
 		meta.setDisplayName(display + " §fx" + amount);
 		item.setItemMeta(meta);
 		item.setAmount(amount > 64 ? 64 : amount);
+		return item;
+	}
+	
+	public ItemStack getCompareView(Player p, int compare) {
+		ItemStack item = getItem();
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(storageLore);
+		int playerHas = StorageManager.getAmount(p, id);
+		String display = playerHas >= compare ? "§a" : "§c";
+		display += ChatColor.stripColor(this.display) + " " + playerHas + " / " + compare;
+		meta.setDisplayName(display);
+		item.setItemMeta(meta);
 		return item;
 	}
 }

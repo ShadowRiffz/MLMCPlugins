@@ -15,33 +15,33 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.SkullCreator;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Storage.Sorter;
 import me.Neoblade298.NeoProfessions.Storage.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
-public class StorageView extends ProfessionInventory {
+public class ComponentView extends ProfessionInventory {
 	private static InvSorter invsorter;
 	private Player p;
-	private ArrayList<StoredItemInstance> items;
+	private ArrayList<StoredItemInstance> components;
 	private int page = 1;
+	private StoredItem base;
 	private Sorter[] sorters;
 	
 	private int min, max;
 	
 	public static final int INFO_BUTTON = 49;
+	public static final int HOME_BUTTON = 46;
 	public static final int NEXT_BUTTON = 53;
 	public static final int PREVIOUS_BUTTON = 45;
 	
-	public static final String INFO_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2RiYWYyMDNjZTlkNDliNzJjYWRlNDA1Yjg2MWFjZmU0YjY1M2RjOGM4YTQzZTgwYjY3MGZhOTdlNTYwZWZlYiJ9fX0=";
-	public static final String PREV_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODFjOTZhNWMzZDEzYzMxOTkxODNlMWJjN2YwODZmNTRjYTJhNjUyNzEyNjMwM2FjOGUyNWQ2M2UxNmI2NGNjZiJ9fX0=";
-	public static final String NEXT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzYWU4ZGU3ZWQwNzllMzhkMmM4MmRkNDJiNzRjZmNiZDk0YjM0ODAzNDhkYmI1ZWNkOTNkYThiODEwMTVlMyJ9fX0=";
-	
-	public StorageView(Player p, int min, int max, Inventory inv) {
+	public ComponentView(Player p, Recipe recipe, StoredItem base, int min, int max, Inventory inv) {
 		this.p = p;
 		this.inv = inv;
 		this.min = min;
 		this.max = max;
+		this.base = base;
 		this.sorters = new Sorter[5];
 		invsorter = new InvSorter();
 		Professions.viewingInventory.put(p, this);
@@ -61,50 +61,18 @@ public class StorageView extends ProfessionInventory {
 		sorters[amountPriority] = new Sorter(Sorter.AMOUNT_SORT, amountPriority, amountOrder);
 		
 		// Setup itemstacks to be used for sorting
-		items = new ArrayList<StoredItemInstance>();
-		if (min == -1) {
-			setupItems();
+		components = new ArrayList<StoredItemInstance>();
+		for (StoredItemInstance si : recipe.getComponents()) {
+			components.add(si);
 		}
-		else {
-			setupItems(min, max);
-		}
+		Collections.sort(components, invsorter);
 		
-		sortItems();
 		inv.setContents(new ItemStack[54]);
 		inv.setContents(setupAll(inv.getContents()));
 	}
 	
-	private void setupItems() {
-		for (int id : StorageManager.getStorage(p).keySet()) {
-			StoredItem item = StorageManager.getItemDefinitions().get(id);
-			int amount = StorageManager.getAmount(p, id);
-			if (amount > 0) {
-				items.add(new StoredItemInstance(item, amount));
-			}
-		}
-	}
-	
-	private void setupItems(int min, int max) {
-		for (int i = min; i <= max; i++) {
-			if (!StorageManager.getItemDefinitions().containsKey(i)) {
-				break;
-			}
-			StoredItem item = StorageManager.getItemDefinitions().get(i);
-			int amount = StorageManager.getAmount(p, i);
-			if (amount > 0) {
-				items.add(new StoredItemInstance(item, amount));
-			}
-		}
-	}
-	
 	private ItemStack[] setupAll(ItemStack[] contents) {
 		return setupUtilityButtons(setupInventory(contents));
-	}
-	
-	private ItemStack[] updateSlot(ItemStack[] contents, int slot) {
-		int top = (page - 1) * 45;
-		contents[slot] = items.get(top + slot).getStorageView(p);
-		return contents;
 	}
 	
 	// Sort by rarity
@@ -114,10 +82,11 @@ public class StorageView extends ProfessionInventory {
 		// Sort items on construction and on change sort type
 		int count = 0;
 		for (int i = (page - 1) * 45; i < 45 * page; i++) {
-			if (items.size() <= i) {
+			if (components.size() <= i) {
 				break;
 			}
-			contents[count++] = items.get(i).getStorageView(p);
+			StoredItemInstance si = components.get(i);
+			contents[count++] = si.getCompareView(p, si.getAmount());
 		}	
 		
 		return contents;
@@ -125,10 +94,11 @@ public class StorageView extends ProfessionInventory {
 	
 	private ItemStack[] setupUtilityButtons(ItemStack[] contents) {
 		contents[INFO_BUTTON] = createInfoItem();
+		contents[HOME_BUTTON] = createHomeItem();
 		if (page > 1) {
 			contents[PREVIOUS_BUTTON] = createPreviousButton();
 		}
-		if (items.size() > page * 45) {
+		if (components.size() > page * 45) {
 			contents[NEXT_BUTTON] = createNextButton();
 		}
 		
@@ -145,15 +115,12 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private ItemStack createInfoItem() {
-		ItemStack item = SkullCreator.itemFromBase64(INFO_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.INFO_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§oFor all items:");
-		lore.add("§9§oLeft click §7§oto create 1x voucher");
-		lore.add("§9§oRight click §7§oto sell 1x");
-		lore.add("§9§oShift click §7§ofor 10x");
-		lore.add("§9§oPress 1 §7§oto see relevant recipes");
+		lore.add("§9§oLeft click §7§oto see relevant recipes");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -161,8 +128,21 @@ public class StorageView extends ProfessionInventory {
 		return nbti.getItem();
 	}
 	
+	private ItemStack createHomeItem() {
+		ItemStack item = SkullCreator.itemFromBase64(RecipeView.HOUSE_HEAD);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Back");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7§oReturn to recipe view");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("type", "home");
+		return nbti.getItem();
+	}
+	
 	private ItemStack createPreviousButton() {
-		ItemStack item = SkullCreator.itemFromBase64(PREV_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Previous Page");
 		item.setItemMeta(meta);
@@ -172,7 +152,7 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private ItemStack createNextButton() {
-		ItemStack item = SkullCreator.itemFromBase64(NEXT_HEAD);
+		ItemStack item = SkullCreator.itemFromBase64(StorageView.NEXT_HEAD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Next Page");
 		item.setItemMeta(meta);
@@ -189,8 +169,8 @@ public class StorageView extends ProfessionInventory {
 			return;
 		}
 		NBTItem nbti = new NBTItem(item);
-		int slot = e.getRawSlot();
 		String type = nbti.getString("type");
+		int slot = e.getRawSlot();
 		
 		if (type.equals("next")) {
 			page++;
@@ -202,38 +182,22 @@ public class StorageView extends ProfessionInventory {
 			inv.setContents(setupAll(inv.getContents()));
 			return;
 		}
+		else if (type.equals("home")) {
+			returnToRecipe();
+			return;
+		}
 		
 		if (e.getClick().equals(ClickType.LEFT)) {
 			if (slot < 45) {
-				createVoucher(p, 1, slot);
+				viewRecipes(p, slot);
 			}
-			else if (type.equals("sort")) {
+			if (type.equals("sort")) {
 				changeSortOrder(nbti.getInteger("priority"));
-			}
-		}
-		else if (e.getClick().equals(ClickType.SHIFT_LEFT)) {
-			if (slot < 45) {
-				createVoucher(p, 10, slot);
-			}
-		}
-		else if (e.getClick().equals(ClickType.RIGHT)) {
-			if (slot < 45) {
-				sellItem(p, 1, slot);
-			}
-		}
-		else if (e.getClick().equals(ClickType.SHIFT_RIGHT)) {
-			if (slot < 45) {
-				sellItem(p, 10, slot);
 			}
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (slot < 45) {
-				if (hotbar == 1) {
-					viewRecipes(p, slot);
-				}
-			}
-			else if (type.equals("sort")) {
+			if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
 			}
 		}
@@ -244,25 +208,12 @@ public class StorageView extends ProfessionInventory {
 		e.setCancelled(true);
 	}
 	
-	private void sellItem(Player p, int amount, int slot) {
-		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
-		if (si.sell(p, amount)) {
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold " + si.getItem().getDisplay() + " §fx" + amount + 
-					" §7for §a" + (amount * si.getItem().getValue()) + "g§7!");
-		}
-		inv.setContents(updateSlot(inv.getContents(), slot));
-	}
-	
-	private void createVoucher(Player p, int amount, int slot) {
-		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
-		if (si.giveVoucher(p, amount)) {
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully created voucher for " + si.getItem().getDisplay() + " §fx" + amount + "§7!");
-		}
-		inv.setContents(updateSlot(inv.getContents(), slot));
+	private void returnToRecipe() {
+		new RecipeView(p, base, inv, min, max);
 	}
 	
 	private void viewRecipes(Player p, int slot) {
-		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
+		StoredItemInstance si = this.components.get(((page - 1) * 45) + slot);
 		if (si.getItem().getRelevantRecipes().size() > 0) {
 			new RecipeView(p, si.getItem(), inv, min, max);
 		}
@@ -273,7 +224,7 @@ public class StorageView extends ProfessionInventory {
 		boolean newOrder = sorter.flipOrder();
 		StorageManager.settings.changeSetting(sorter.getSettingString() + "-order", Boolean.toString(newOrder), p.getUniqueId());
 		
-		sortItems();
+		Collections.sort(components, invsorter);
 		inv.setContents(setupAll(inv.getContents()));
 	}
 	
@@ -294,12 +245,8 @@ public class StorageView extends ProfessionInventory {
 		toChange.setPriority(hotbar);
 		sorters[oldPriority] = changingWith;
 		sorters[hotbar] = toChange;
-		sortItems();
+		Collections.sort(components, invsorter);
 		inv.setContents(setupAll(inv.getContents()));
-	}
-	
-	private void sortItems() {
-		Collections.sort(items, invsorter);
 	}
 	 
 	private class InvSorter implements Comparator<StoredItemInstance> {

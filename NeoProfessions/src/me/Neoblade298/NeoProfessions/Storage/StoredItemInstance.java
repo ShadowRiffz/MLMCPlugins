@@ -42,6 +42,10 @@ public class StoredItemInstance {
 		return item.getStorageView(p, amt);
 	}
 	
+	public ItemStack getCompareView(Player p, int compare) {
+		return item.getCompareView(p, compare);
+	}
+	
 	public boolean sell(Player p, int amount) {
 		if (amount > this.amt) {
 			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to sell!");

@@ -20,6 +20,7 @@ public class Recipe {
 	ArrayList<StoredItemInstance> components;
 	RecipeResult result;
 	boolean canMulticraft;
+	private static float ERROR = 0.594604F;
 	
 	
 	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components, RecipeResult result, boolean canMulticraft) {
@@ -56,12 +57,14 @@ public class Recipe {
 		for (RecipeRequirement req : reqs) {
 			if (!req.passesReq(p)) {
 				p.sendMessage(req.failMessage(p));
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				return false;
 			}
 		}
 		for (StoredItemInstance component : components) {
 			if (!StorageManager.playerHas(p, component.getItem().getId(), component.getAmount())) {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou lack the component: " + component.getItem().getDisplay());
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				return false;
 			}
 		}
@@ -92,8 +95,9 @@ public class Recipe {
 		}
 		lore.add("§6Components§7:");
 		for (StoredItemInstance component : components) {
-			String line = StorageManager.playerHas(p, component.getItem().getId(), component.getAmount()) ? "§a" : "§c";
-			line += "- " + component.getAmount() + "x " + ChatColor.stripColor(component.getItem().getDisplay());
+			int playerHas = StorageManager.getAmount(p, component.getItem().getId());
+			String line = playerHas >= component.getAmount() ? "§a" : "§c";
+			line += "- " + playerHas + " / " + component.getAmount() + " " + ChatColor.stripColor(component.getItem().getDisplay());
 			lore.add(line);
 		}
 		lore.add("§7§m---");
@@ -101,6 +105,20 @@ public class Recipe {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	public boolean canCraft(Player p) {
+		for (RecipeRequirement req : reqs) {
+			if (!req.passesReq(p)) {
+				return false;
+			}
+		}
+		for (StoredItemInstance component : components) {
+			if (!StorageManager.playerHas(p, component.getItem().getId(), component.getAmount())) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public RecipeResult getResult() {
