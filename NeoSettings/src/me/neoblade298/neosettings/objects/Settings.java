@@ -114,7 +114,7 @@ public class Settings {
 					
 					try {
 						if (main.debug) {
-							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " for " + uuid + ".");
+							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
 						}
 						if (value instanceof String) {
 							stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
@@ -136,7 +136,7 @@ public class Settings {
 				else {
 					Object def = defaults.get(key);
 					if (main.debug) {
-						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " for " + uuid + ".");
+						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " to " + def + " for " + uuid + ".");
 					}
 					try {
 						if (def instanceof String || def instanceof Boolean) {
