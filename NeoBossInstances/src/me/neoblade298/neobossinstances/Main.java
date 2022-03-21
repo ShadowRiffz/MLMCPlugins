@@ -514,9 +514,9 @@ public class Main extends JavaPlugin implements Listener {
 							Player fighter = fighters.next();
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
+								fighters.remove();
 							}
 						}
-						fighters.remove();
 					}
 				};
 				sendAllBack.runTaskLater(main, 20L);
