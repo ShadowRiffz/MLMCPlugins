@@ -15,6 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
@@ -69,6 +71,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		if (args.length == 0) {
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
+			sender.sendMessage("§7- §c/prof update §7- Updates augment lore to match latest version");
 			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
 			sender.sendMessage(
 					"§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
@@ -170,6 +173,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 			}
 			Util.sendMessage(p, "&cCould not inspect this item!");
+			return true;
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
+			ItemStack item = p.getInventory().getItemInMainHand();
+			if (item != null && !item.getType().isAir() && item.hasItemMeta()) {
+				NBTItem nbti = new NBTItem(item);
+				if(nbti.hasKey("augment")) {
+					ItemMeta meta = item.getItemMeta();
+					Augment aug = AugmentManager.augmentMap.get(nbti.getString("augment")).get(nbti.getInteger("level"));
+					meta.setLore(aug.getItem(p).getItemMeta().getLore());
+					item.setItemMeta(meta);
+					return true;
+				}
+			}
+			Util.sendMessage(p, "&cCould not update this, are you sure it's an augment?");
 			return true;
 		}
 		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
