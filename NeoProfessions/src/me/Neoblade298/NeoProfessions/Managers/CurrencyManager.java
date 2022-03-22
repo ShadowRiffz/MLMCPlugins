@@ -114,6 +114,11 @@ public class CurrencyManager implements IOComponent, Listener {
 		Util.sendMessage(p, "&c-" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
 	}
 	
+	public static void set(Player p, int level, int amount) {
+		HashMap<Integer, Integer> essences = essence.get(p.getUniqueId());
+		essences.put(level, amount);
+	}
+	
 	public static int get(Player p, int level) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return -1;

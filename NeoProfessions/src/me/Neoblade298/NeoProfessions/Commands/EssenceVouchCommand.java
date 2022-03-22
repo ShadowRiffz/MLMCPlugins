@@ -23,7 +23,7 @@ public class EssenceVouchCommand implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if (args.length != 2) {
-			sender.sendMessage("§7- §c/evouch [level] [amount]");
+			sender.sendMessage("§c/evouch [level] [amount]");
 		}
 		else {
 			int level = Integer.parseInt(args[0]);

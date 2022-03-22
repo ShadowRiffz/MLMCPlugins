@@ -14,10 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.Neoblade298.NeoProfessions.Commands.EssencePayCommand;
-import me.Neoblade298.NeoProfessions.Commands.EssenceVouchCommand;
-import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
-import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
+import me.Neoblade298.NeoProfessions.Commands.*;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
 import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
@@ -99,8 +96,12 @@ public class Professions extends JavaPlugin implements Listener {
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));
+			this.getCommand("ebal").setExecutor(new EssenceBalanceCommand(this));
 			this.getCommand("epay").setExecutor(new EssencePayCommand(this));
 			this.getCommand("evouch").setExecutor(new EssenceVouchCommand(this));
+			this.getCommand("egive").setExecutor(new EssenceGiveCommand(this));
+			this.getCommand("etake").setExecutor(new EssenceTakeCommand(this));
+			this.getCommand("eset").setExecutor(new EssenceSetCommand(this));
 			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
 		}
 		

@@ -10,49 +10,46 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class EssencePayCommand implements CommandExecutor {
+public class EssenceSetCommand implements CommandExecutor {
 
 	Professions main;
 
-	public EssencePayCommand(Professions main) {
+	public EssenceSetCommand(Professions main) {
 		this.main = main;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-
-		Player p = (Player) sender;
+		
+		if (!sender.hasPermission("neoprofessions.admin")) {
+			return true;
+		}
 
 		if (args.length != 3) {
-			sender.sendMessage("§c/epay [player] [level] [amount]");
+			sender.sendMessage("§4/eset [player] [level] [amount]");
 		}
 		else {
 			Player recipient = Bukkit.getPlayer(args[0]);
 			if (recipient == null) {
-				Util.sendMessage(p, "&cPlayer must be online!");
+				Util.sendMessage(sender, "&cPlayer must be online!");
 				return true;
 			}
 			int level = Integer.parseInt(args[1]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(sender, "&cInvalid level!");
 				return true;
 			}
 			int amount = Integer.parseInt(args[2]);
 			if (amount <= 0 || amount >= 99999) {
-				Util.sendMessage(p, "&cInvalid amount!");
-				return true;
-			}
-			else if (!CurrencyManager.hasEnough(p, level, amount)) {
-				Util.sendMessage(p, "&cInsufficient essence!");
+				Util.sendMessage(sender, "&cInvalid amount!");
 				return true;
 			}
 			
-			Util.sendMessage(p,
-					"&7You paid &c" + recipient.getName() + " &e" + amount + " &6Lv " + level + " &7Essence");
+			Util.sendMessage(sender,
+					"&7You set &c" + recipient.getName() + " &7to &e" + amount + " &6Lv " + level + " &7Essence");
 			Util.sendMessage(recipient,
-					"&c" + p.getName() + "&7 has paid you &e" + amount + " &6Lv " + level + " &7Essence");
-			CurrencyManager.add(recipient, level, amount);
-			CurrencyManager.subtract(p, level, amount);
+					"&c" + sender.getName() + "&7 set your &6Lv " + level + " &7Essence to &e" + amount);
+			CurrencyManager.set(recipient, level, amount);
 			return true;
 		}
 		return true;

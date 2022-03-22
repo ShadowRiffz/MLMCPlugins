@@ -249,7 +249,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ProfessionsMethods.artifactItem(p);
 					}
 				}
-				// /prof give [essence/oretype/repair/augment] <aug> [level] [amount]
+				// /prof give [repair/augment] <aug> [level] [amount]
 				else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 					int offset = 0;
 					String aug = null;
@@ -269,12 +269,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args.length > 3 + offset) {
 						amt = Integer.parseInt(args[3 + offset]);
 					}
-					
-					if (type.equalsIgnoreCase("essence")) {
-						CurrencyManager.add(p, lv, amt);
-						Util.sendMessage(p, "Successfully gave essence");
-					}
-					else if (type.equalsIgnoreCase("augment")) {
+		
+					if (type.equalsIgnoreCase("augment")) {
 						Augment augment = null;
 						if (AugmentManager.droptables.containsKey(aug)) {
 							ArrayList<String> table = AugmentManager.droptables.get(aug);
