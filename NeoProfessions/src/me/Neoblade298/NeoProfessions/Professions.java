@@ -121,7 +121,7 @@ public class Professions extends JavaPlugin implements Listener {
 		sqlPass = sql.getString("password");
 		
 		// general
-		lvlupMsg = cfg.getString("levelup");
+		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
 		
 		// droptables
 		loadDroptables(new File(getDataFolder(), "droptables"));
