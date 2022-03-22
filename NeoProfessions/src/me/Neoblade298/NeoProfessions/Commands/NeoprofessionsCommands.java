@@ -24,7 +24,6 @@ import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Inventories.StorageView;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
-import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
