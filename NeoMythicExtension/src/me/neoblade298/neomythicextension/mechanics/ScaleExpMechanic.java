@@ -31,7 +31,7 @@ public class ScaleExpMechanic extends SkillMechanic implements ITargetedEntitySk
 			}
 			
 			Player p = (Player) target.getBukkitEntity();
-			double scale = Math.min(2, 1 + (0.05 * (data.getCaster().getLevel() - 1)));
+			double scale = Math.min(2, 1 + (0.1 * (data.getCaster().getLevel() - 1)));
 			double exp = Math.round(this.amount * scale);
 			SkillAPI.getPlayerData(p).giveExp(exp, ExpSource.MOB);
 			p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + exp + " §7exp!");
