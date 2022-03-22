@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
 import me.Neoblade298.NeoProfessions.Recipes.GearResult;
 import me.Neoblade298.NeoProfessions.Recipes.KnowledgeRequirement;
@@ -100,6 +101,9 @@ public class RecipeManager implements IOComponent {
 					}
 					else if (resultArgs[0].startsWith("storeditem")) {
 						result = new StoredItemResult(key, resultArgs);
+					}
+					else if (resultArgs[0].startsWith("augment")) {
+						result = new AugmentResult(resultArgs);
 					}
 					
 					String display = sec.getString("display");
