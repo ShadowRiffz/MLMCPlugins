@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Managers;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Map.Entry;
@@ -18,11 +19,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CurrencyManager implements IOComponent, Listener {
@@ -31,6 +32,11 @@ public class CurrencyManager implements IOComponent, Listener {
 	
 	private static HashMap<UUID, HashMap<Integer, Integer>> essence;
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
+	private static ArrayList<String> voucherLore = new ArrayList<String>();
+	
+	static {
+		voucherLore.add("§7§oRight click to claim!");
+	}
 	
 	public CurrencyManager(Professions main) {
 		this.main = main;
@@ -122,6 +128,31 @@ public class CurrencyManager implements IOComponent, Listener {
 		HashMap<Integer, Integer> pCurrency = essence.get(p.getUniqueId());
 		return pCurrency.getOrDefault(level, 0) >= compare;
 	}
+
+	public static boolean giveVoucher(Player p, int level, int amount) {
+		if (CurrencyManager.hasEnough(p, level, amount)) {
+			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to create the voucher!");
+			return false;
+		}
+		
+		StorageManager.takePlayer(p, level, amount);
+		p.getInventory().addItem(getVoucher(level, amount));
+		return true;
+	}
+	
+	private static ItemStack getVoucher(int level, int amount) {
+		ItemStack item = new ItemStack(Material.PAPER);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§6[Lv " + level + "] §7Essence §fx" + amount);
+		meta.setLore(voucherLore);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("type", "essence");
+		nbti.setInteger("level", level);
+		nbti.setInteger("amount", amount);
+		return nbti.getItem();
+	}
+	
 	
 	@EventHandler
 	public void onVoucherClaim(PlayerInteractEvent e) {

@@ -1,6 +1,5 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,11 +9,11 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class EssencePayCommand implements CommandExecutor {
+public class EssenceVouchCommand implements CommandExecutor {
 
 	Professions main;
 
-	public EssencePayCommand(Professions main) {
+	public EssenceVouchCommand(Professions main) {
 		this.main = main;
 	}
 
@@ -23,15 +22,11 @@ public class EssencePayCommand implements CommandExecutor {
 
 		Player p = (Player) sender;
 
-		if (args.length != 3) {
-			sender.sendMessage("§7- §c/epay [player] [level] [amount]");
+		if (args.length != 2) {
+			sender.sendMessage("§7- §c/evouch [level] [amount]");
 		}
 		else {
-			if (Bukkit.getPlayer(args[0]) == null) {
-				Util.sendMessage(p, "&cPlayer must be online!");
-				return true;
-			}
-			int level = Integer.parseInt(args[1]);
+			int level = Integer.parseInt(args[0]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 				Util.sendMessage(p, "&cInvalid level!");
 				return true;
@@ -46,13 +41,9 @@ public class EssencePayCommand implements CommandExecutor {
 				return true;
 			}
 			
-			Player recipient = Bukkit.getPlayer(args[1]);
 			Util.sendMessage(p,
-					"&7You paid &c" + recipient.getName() + " &e" + amount + " &6Lv " + level + " &7Essence");
-			Util.sendMessage(recipient,
-					"&c" + p.getName() + "&7 has paid you &e" + amount + " &6Lv " + level + " &7Essence");
-			CurrencyManager.add(recipient, level, amount);
-			CurrencyManager.subtract(p, level, amount);
+					"&7You created &e" + amount + " &6Lv " + level + " &7Essence vouchers");
+			CurrencyManager.giveVoucher(p, level, amount);
 			return true;
 		}
 		return true;
