@@ -12,6 +12,11 @@ public class LevelRequirement implements RecipeRequirement {
 	String type;
 	int min;
 	
+	public LevelRequirement(String type, int min) {
+		this.type = type;
+		this.min = min;
+	}
+	
 	public LevelRequirement(String[] lineArgs) {
 		this.min = 1;
 		this.type = "default";

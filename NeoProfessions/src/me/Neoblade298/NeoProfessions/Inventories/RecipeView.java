@@ -255,11 +255,14 @@ public class RecipeView extends ProfessionInventory {
 	    public int compare(Recipe a, Recipe b)
 	    {
 	    	int comp = 0;
-	    	int canA = a.canCraft(p) ? 1 : 0;
-	    	int canB = b.canCraft(p) ? 1 : 0;
-	    	comp = canB - canA;
+    		comp = b.getLevel() - a.getLevel();
 	    	if (comp == 0) {
-	    		comp = b.getKey().compareTo(a.getKey());
+		    	int canA = a.canCraft(p) ? 1 : 0;
+		    	int canB = b.canCraft(p) ? 1 : 0;
+		    	comp = canB - canA;
+	    		if (comp == 0) {
+		    		comp = b.getKey().compareTo(a.getKey());
+	    		}
 	    	}
 	    	return comp;
 	    }

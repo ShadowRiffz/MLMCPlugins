@@ -84,6 +84,11 @@ public class RecipeManager implements IOComponent {
 						}
 					}
 					
+					int level = sec.getInt("level");
+					if (level != 0) {
+						reqs.add(new LevelRequirement("crafter", level));
+					}
+					
 					// Results
 					String[] resultArgs = sec.getString("result").split(" ");
 					RecipeResult result = null;
@@ -100,7 +105,7 @@ public class RecipeManager implements IOComponent {
 					String display = sec.getString("display");
 					int exp = sec.getInt("exp");
 					boolean canMulticraft = sec.getBoolean("can-multicraft");
-					recipes.put(key, new Recipe(key, display, exp, reqs, components, result, canMulticraft));
+					recipes.put(key, new Recipe(key, display, exp, level, reqs, components, result, canMulticraft));
 				}
 			}
 		}

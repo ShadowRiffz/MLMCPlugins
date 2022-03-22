@@ -15,6 +15,7 @@ import net.md_5.bungee.api.ChatColor;
 public class Recipe {
 	String key;
 	String display;
+	int level;
 	int exp;
 	ArrayList<RecipeRequirement> reqs;
 	ArrayList<StoredItemInstance> components;
@@ -23,9 +24,11 @@ public class Recipe {
 	private static float ERROR = 0.594604F;
 	
 	
-	public Recipe(String key, String display, int exp, ArrayList<RecipeRequirement> reqs, ArrayList<StoredItemInstance> components, RecipeResult result, boolean canMulticraft) {
+	public Recipe(String key, String display, int exp, int level, ArrayList<RecipeRequirement> reqs,
+			ArrayList<StoredItemInstance> components, RecipeResult result, boolean canMulticraft) {
 		this.key = key;
 		this.display = display;
+		this.level = level;
 		this.exp = exp;
 		this.reqs = reqs;
 		this.components = components;
@@ -50,6 +53,10 @@ public class Recipe {
 	}
 	public void setComponents(ArrayList<StoredItemInstance> components) {
 		this.components = components;
+	}
+	
+	public int getLevel() {
+		return this.level;
 	}
 	
 	public boolean craftRecipe(Player p) {
