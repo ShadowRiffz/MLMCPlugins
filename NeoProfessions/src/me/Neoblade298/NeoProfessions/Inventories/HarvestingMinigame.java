@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
+import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class HarvestingMinigame extends ProfessionInventory {
 	private static float NOTE1 = 0.5F, NOTE2 = 0.629961F, NOTE3 = 0.749154F, NOTE4 = 1.0F, ERROR = 0.594604F;
@@ -32,6 +34,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 	HashMap<Integer, MinigameDrop> hiddenItems;
 	HashSet<Integer> guesses;
 	int successfulGuesses = 0;
+	ArrayList<MinigameDrop> rewards = new ArrayList<MinigameDrop>();
 	
 	private int dropNum = 0;
 	
@@ -108,8 +111,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 					p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 					MinigameDrop drop = hiddenItems.get(slot);
 					contents[slot] = generateDrop(drop);
-					StorageManager.givePlayer(p, drop.getItem().getItem().getId(), drop.getItem().getAmount());
-					ProfessionManager.getAccount(p.getUniqueId()).get("harvester").addExp(p, drop.getExp());
+					rewards.add(drop);
 					inv.setContents(contents);
 					successfulGuesses++;
 					if (successfulGuesses >= drops.size()) {
@@ -185,6 +187,8 @@ public class HarvestingMinigame extends ProfessionInventory {
 		}
 		inv.setContents(contents);
 		
+		giveRewards();
+		
 		new BukkitRunnable() {
 			public void run() {
 				if (p.getOpenInventory().getTopInventory() == inv) {
@@ -192,6 +196,24 @@ public class HarvestingMinigame extends ProfessionInventory {
 				}
 			}
 		}.runTaskLater(main, 40);
+	}
+	
+	private void giveRewards() {
+		// Give rewards
+		int totalExp = 0;
+		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>(); 
+		for (MinigameDrop drop : rewards) {
+			StoredItemInstance si = drop.getItem();
+			int id = si.getItem().getId();
+			int amount = si.getAmount();
+			items.put(id, items.getOrDefault(id, 0) + amount);
+			totalExp += drop.getExp();
+		}
+		
+		for (Entry<Integer, Integer> e : items.entrySet()) {
+			StorageManager.givePlayer(p, e.getKey(), e.getValue());
+		}
+		ProfessionManager.getAccount(p.getUniqueId()).get("logger").addExp(p, totalExp);
 	}
 
 	@Override
