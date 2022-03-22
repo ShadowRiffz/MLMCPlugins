@@ -13,20 +13,21 @@ import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CurrencyManager {
 	// UUID, essence/oretype, amount
-	private static HashMap<UUID, HashMap<Integer, Integer>> essence;
+	private static HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>> currencies;
+	public static String[] types = {"essence", "ruby", "amethyst", "sapphire", "emerald", "topaz", "garnet", "adamantium"};
 	
 	public CurrencyManager(Professions main) {
-		essence = new HashMap<UUID, HashMap<Integer, Integer>>();
+		currencies = new HashMap<UUID, HashMap<String, HashMap<Integer, Integer>>>();
 	}
 	
 	public void initPlayer(Player p) throws Exception {
 		// Check if player exists already
-		if (essence.containsKey(p.getUniqueId())) {
+		if (currencies.containsKey(p.getUniqueId())) {
 			return;
 		}
 		
-		HashMap<String, HashMap<Integer, Integer>> playeressence = new HashMap<String, HashMap<Integer, Integer>>();
-		essence.put(p.getUniqueId(), playeressence);
+		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = new HashMap<String, HashMap<Integer, Integer>>();
+		currencies.put(p.getUniqueId(), playerCurrencies);
 		
 		// Check if player exists on SQL
 		Class.forName("com.mysql.jdbc.Driver");
@@ -37,11 +38,11 @@ public class CurrencyManager {
 		if (rs.next()) {
 			for (int i = 2; i <= 9; i++) {
 				String type = types[i-2];
-				HashMap<Integer, Integer> typeessence = new HashMap<Integer, Integer>();
-				playeressence.put(type, typeessence);
+				HashMap<Integer, Integer> typeCurrencies = new HashMap<Integer, Integer>();
+				playerCurrencies.put(type, typeCurrencies);
 				String vals[] = rs.getString(i).split(":");
 				for (int j = 5; j <= 60; j += 5) {
-					typeessence.put(j, Integer.parseInt(vals[(j/5)-1]));
+					typeCurrencies.put(j, Integer.parseInt(vals[(j/5)-1]));
 				}
 			}
 		}
@@ -55,10 +56,10 @@ public class CurrencyManager {
 					+ "(`uuid`, `essence`, `ruby`, `amethyst`, `sapphire`, `emerald`, `topaz`, `garnet`, `adamantium`) "
 					+ "VALUES ('" + p.getUniqueId() + "', " + init + ");");
 			for (String type : types) {
-				HashMap<Integer, Integer> typeessence = new HashMap<Integer, Integer>();
-				playeressence.put(type, typeessence);
+				HashMap<Integer, Integer> typeCurrencies = new HashMap<Integer, Integer>();
+				playerCurrencies.put(type, typeCurrencies);
 				for (int i = 5; i <= 60; i += 5) {
-					typeessence.put(i, 0);
+					typeCurrencies.put(i, 0);
 				}
 			}
 		}
@@ -69,12 +70,12 @@ public class CurrencyManager {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
 		Statement stmt = con.createStatement();
-		HashMap<String, HashMap<Integer, Integer>> playeressence = essence.get(p.getUniqueId());
+		HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(p.getUniqueId());
 		for (String type : types) {
-			HashMap<Integer, Integer> typeessence = playeressence.get(type.toLowerCase());
-			String sqlString = "" + typeessence.get(5);
+			HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type.toLowerCase());
+			String sqlString = "" + typeCurrencies.get(5);
 			for (int i = 10; i <= 60; i += 5) {
-				sqlString += ":" + typeessence.get(i);
+				sqlString += ":" + typeCurrencies.get(i);
 			}
 			stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + p.getUniqueId() + "';");
 		}
@@ -84,13 +85,13 @@ public class CurrencyManager {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
 		Statement stmt = con.createStatement();
-		for (UUID uuid : essence.keySet()) {
-			HashMap<String, HashMap<Integer, Integer>> playeressence = essence.get(uuid);
+		for (UUID uuid : currencies.keySet()) {
+			HashMap<String, HashMap<Integer, Integer>> playerCurrencies = currencies.get(uuid);
 			for (String type : types) {
-				HashMap<Integer, Integer> typeessence = playeressence.get(type.toLowerCase());
-				String sqlString = "" + typeessence.get(5);
+				HashMap<Integer, Integer> typeCurrencies = playerCurrencies.get(type.toLowerCase());
+				String sqlString = "" + typeCurrencies.get(5);
 				for (int i = 10; i <= 60; i += 5) {
-					sqlString += ":" + typeessence.get(i);
+					sqlString += ":" + typeCurrencies.get(i);
 				}
 				stmt.executeUpdate("UPDATE neoprofessions_currency SET " + type + " = '" + sqlString + "' WHERE uuid = '" + uuid + "';");
 			}
@@ -110,36 +111,52 @@ public class CurrencyManager {
 			return;
 		}
 		
-		HashMap<Integer, Integer> typeCurrency = essence.get(p.getUniqueId()).get(type.toLowerCase());
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) + amount;
 		typeCurrency.put(level, newAmount);
 		Util.sendMessage(p, "&7You gained &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
-	public static void subtract(Player p, int level, int amount) {
-		HashMap<Integer, Integer> typeCurrency = essence.get(p.getUniqueId()).get(type.toLowerCase());
+	public static void subtract(Player p, String type, int level, int amount) {
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
 		int newAmount = typeCurrency.get(level) - amount;
 		typeCurrency.put(level, newAmount);
 		Util.sendMessage(p, "&7You lost &e" + amount + " &cLv " + level + " " + type + "&7. You now have &e" + newAmount + "&7.");
 	}
 	
-	public static int get(Player p, int level) {
+	public static int get(Player p, String type, int level) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return -1;
 		}
-		return essence.get(p.getUniqueId()).get(level);
+		return currencies.get(p.getUniqueId()).get(type.toLowerCase()).get(level);
 	}
 	
-	public static boolean hasEnough(Player p, int level, int compare) {
+	public static boolean hasEnough(Player p, String type, int level, int compare) {
 		if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 			return false;
 		}
-		HashMap<Integer, Integer> pCurrency = essence.get(p.getUniqueId());
-		return pCurrency.get(level) >= compare;
+		HashMap<Integer, Integer> typeCurrency = currencies.get(p.getUniqueId()).get(type.toLowerCase());
+		return typeCurrency.get(level) >= compare;
+	}
+	
+	public boolean validType(String type) {
+		for (String validType : types) {
+			if (validType.equalsIgnoreCase(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean containsKey(String key) {
+		for (String type : types) {
+			if (type.equalsIgnoreCase(key)) return true;
+		}
+		return false;
 	}
 	
 	public boolean containsPlayer(Player p) {
-		if (essence.containsKey(p.getUniqueId())) {
+		if (currencies.containsKey(p.getUniqueId())) {
 			return true;
 		}
 		return false;
