@@ -111,12 +111,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
 
-		if (event.getMechanicName().equalsIgnoreCase("instancetp")) {
-			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (event.getMechanicName().equalsIgnoreCase("nscore")) {
+		if (event.getMechanicName().equalsIgnoreCase("nscore")) {
 			ModScore mechanic = new ModScore(event.getConfig());
 			event.register(mechanic);
 		}
