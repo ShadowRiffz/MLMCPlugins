@@ -41,9 +41,10 @@ public class EssenceVouchCommand implements CommandExecutor {
 				return true;
 			}
 			
-			Util.sendMessage(p,
-					"&7You created &e" + amount + " &6Lv " + level + " &7Essence vouchers");
-			CurrencyManager.giveVoucher(p, level, amount);
+			if (CurrencyManager.giveVoucher(p, level, amount)) {
+				Util.sendMessage(p,
+						"&7You created &e" + amount + " &6Lv " + level + " &7Essence vouchers");
+			}
 			return true;
 		}
 		return true;

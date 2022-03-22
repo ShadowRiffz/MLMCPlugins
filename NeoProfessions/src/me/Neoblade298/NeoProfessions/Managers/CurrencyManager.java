@@ -55,7 +55,7 @@ public class CurrencyManager implements IOComponent, Listener {
 		
 		// Check if player exists on SQL
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_currency WHERE UUID = '" + p.getUniqueId() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_essence WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				essences.put(rs.getInt(2), rs.getInt(3));
 			}
@@ -135,12 +135,12 @@ public class CurrencyManager implements IOComponent, Listener {
 	}
 
 	public static boolean giveVoucher(Player p, int level, int amount) {
-		if (CurrencyManager.hasEnough(p, level, amount)) {
+		if (!CurrencyManager.hasEnough(p, level, amount)) {
 			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to create the voucher!");
 			return false;
 		}
 		
-		StorageManager.takePlayer(p, level, amount);
+		CurrencyManager.subtract(p, level, amount);
 		p.getInventory().addItem(getVoucher(level, amount));
 		return true;
 	}
