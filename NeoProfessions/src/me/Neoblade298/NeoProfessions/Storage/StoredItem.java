@@ -134,7 +134,20 @@ public class StoredItem {
 		return item;
 	}
 	
-	public ItemStack getStorageView(Player p, int amount) {
+	public ItemStack getBaseView(int amount) {
+		ItemStack item = getItem();
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(baseLore);
+		if (amount <= 0) {
+			return null;
+		}
+		meta.setDisplayName(display + " §fx" + amount);
+		item.setItemMeta(meta);
+		item.setAmount(amount > 64 ? 64 : amount);
+		return item;
+	}
+	
+	public ItemStack getStorageView(int amount) {
 		ItemStack item = getItem();
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(storageLore);

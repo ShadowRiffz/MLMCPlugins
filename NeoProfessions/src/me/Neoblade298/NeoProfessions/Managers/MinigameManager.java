@@ -46,6 +46,7 @@ public class MinigameManager {
 						int minAmt = 1;
 						int maxAmt = 1;
 						int weight = 1;
+						int exp = 1;
 						for (String lineArg : lineArgs) {
 							String[] args = lineArg.split(":");
 							switch (args[0]) {
@@ -60,11 +61,14 @@ public class MinigameManager {
 							case "weight":
 								weight = Integer.parseInt(args[1]);
 								break;
+							case "exp":
+								exp = Integer.parseInt(args[1]);
+								break;
 							}
 						}
 						StoredItem sitem = StorageManager.getItemDefinitions().get(itemId);
 						sitem.addSource(display, false);
-						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight));
+						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
 					games.put(key, new Minigame(display, type, parsed, numDrops, difficulty));
 				}

@@ -26,8 +26,8 @@ public class Minigame {
 		this.difficulty = difficulty;
 	}
 	
-	private ArrayList<StoredItemInstance> generateDrops() {
-		ArrayList<StoredItemInstance> drops = new ArrayList<StoredItemInstance>();
+	private ArrayList<MinigameDrop> generateDrops() {
+		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
 		
 		
 		for (int i = 0; i < numDrops; i++) {
@@ -41,8 +41,8 @@ public class Minigame {
 			}
 			while (rand >= 0);
 			int min = mdrops.getMinAmt(), max = mdrops.getMaxAmt();
-			drops.add(new StoredItemInstance(mdrops.getItem(),
-					Professions.gen.nextInt(max + 1 - min) + min));
+			drops.add(new MinigameDrop(new StoredItemInstance(mdrops.getItem(),
+					Professions.gen.nextInt(max + 1 - min) + min), mdrops.getExp()));
 		}
 		return drops;
 	}

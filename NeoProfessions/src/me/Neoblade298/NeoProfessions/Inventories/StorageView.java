@@ -118,7 +118,7 @@ public class StorageView extends ProfessionInventory {
 	
 	private ItemStack[] updateSlot(ItemStack[] contents, int slot) {
 		int top = (page - 1) * 45;
-		contents[slot] = items.get(top + slot).getStorageView(p);
+		contents[slot] = items.get(top + slot).getStorageView();
 		return contents;
 	}
 	
@@ -134,14 +134,14 @@ public class StorageView extends ProfessionInventory {
 			}
 			
 			if (mode == INFO_MODE) {
-				ItemStack item = items.get(i).getStorageView(p);
+				ItemStack item = items.get(i).getStorageView();
 				ItemMeta meta = item.getItemMeta();
 				meta.setLore(info);
 				item.setItemMeta(meta);
 				contents[count++] = item;
 			}
 			else if (mode == DISPLAY_MODE) {
-				contents[count++] = items.get(i).getStorageView(p);
+				contents[count++] = items.get(i).getStorageView();
 			}
 		}	
 		
