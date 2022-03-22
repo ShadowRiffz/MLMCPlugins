@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoConsumables.objects;
+package me.Neoblade298.NeoConsumables;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +23,9 @@ import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
-import me.Neoblade298.NeoConsumables.Consumables;
+import me.Neoblade298.NeoConsumables.objects.DurationEffects;
+import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
+import me.Neoblade298.NeoConsumables.objects.PlayerCooldowns;
 
 public class ConsumableManager implements Listener {
 	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
@@ -43,8 +45,13 @@ public class ConsumableManager implements Listener {
 			}
 			
 			try {
-				stmt.addBatch("REPLACE INTO consumables_effects VALUES ('" + uuid + "','" + eff.getCons().getKey()
-				+ "'," + eff.getStartTime() + ");");
+				if (eff.isRelevant()) {
+					stmt.addBatch("REPLACE INTO consumables_effects VALUES ('" + uuid + "','" + eff.getCons().getKey()
+							+ "'," + eff.getStartTime() + ");");
+				}
+				else {
+					stmt.addBatch("REMOVE FROM consumables_effects WHERE uuid = '" + uuid + "';");
+				}
 				
 				// Set to true if you're saving several accounts at once
 				if (!savingMultiple) {
@@ -121,6 +128,20 @@ public class ConsumableManager implements Listener {
 		DurationEffects effs = ConsumableManager.effects.get(uuid);
 		if (effs != null) {
 			effs.startEffects();
+		}
+	}
+	
+	public static void handleDisable() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
+			Statement stmt = con.createStatement();
+			long previousDay = System.currentTimeMillis() - 86400000L;
+			stmt.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
+			e.printStackTrace();
 		}
 	}
 	

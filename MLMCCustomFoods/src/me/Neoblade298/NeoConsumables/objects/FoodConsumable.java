@@ -2,7 +2,10 @@ package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,6 +28,7 @@ import com.sucy.skill.listener.AttributeListener;
 import com.sucy.skill.listener.MechanicListener;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoConsumables.ConsumableManager;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.SkullCreator;
 import me.Neoblade298.NeoConsumables.runnables.AttrRemoveRunnable;
@@ -39,7 +43,7 @@ public class FoodConsumable extends Consumable {
 	ArrayList<BuffAction> buffs;
 	StoredAttributes attributes;
 	int attributeTime;
-	ArrayList<String> commands, worlds, lore;
+	ArrayList<String> commands, worlds, desc, lore;
 	double saturation;
 	int hunger;
 	double speed;
@@ -58,6 +62,7 @@ public class FoodConsumable extends Consumable {
 		attributes = new StoredAttributes();
 		commands = new ArrayList<String>();
 		worlds = new ArrayList<String>();
+		desc = new ArrayList<String>();
 		lore = new ArrayList<String>();
 		flags = new ArrayList<FlagAction>();
 		buffs = new ArrayList<BuffAction>();
@@ -257,14 +262,67 @@ public class FoodConsumable extends Consumable {
 		return line.replaceAll("\\\\&", "@").replaceAll("&", "§").replaceAll("@", "&");
 	}
 	
+	public void generateLore() {
+		lore.clear();
+		String line = "";
+		
+		// Health & mana
+		if (this.healthReps > 1) {
+			line = "§aHP +" + health + "/" + (healthPeriod == 0 ? healthPeriod + "s" : "s");
+			line += " [" + healthReps + "x]";
+		}
+		else if (this.health > 0) {
+			line = "§aHP +" + health;
+		}
+		if (!line.isEmpty()) {
+			line += "§7, ";
+		}
+		if (this.manaReps > 1) {
+			line += "§9MP +" + mana + "/" + (manaPeriod == 0 ? manaPeriod + "s" : "s");
+			line += " [" + manaReps + "x]";
+		}
+		else if (this.mana > 0) {
+			line = "§aMP +" + mana;
+		}
+		if (!line.isEmpty()) {
+			lore.add(line);
+		}
+		// Hunger
+		lore.add("§6Hunger +" + hunger + ", Saturation +" + saturation);
+		
+		// Potions
+		if (!potions.isEmpty()) {
+			lore.add("§9Potions:");
+			for (PotionEffect pot : potions) {
+				lore.add("§7- §9" + pot.getType().toString() + " " + pot.getAmplifier() + " [" + (pot.getDuration() / 20) + "s]");
+			}
+		}
+		
+		// Attributes
+		if (!attributes.isEmpty()) {
+			lore.add("§cAttributes [" + attributeTime + "s]:");
+			for (Entry<String, Integer> ent : attributes.getAttrs().entrySet()) {
+				lore.add("§c" + StringUtils.capitalize(ent.getKey()) + " +" + ent.getValue());
+			}
+		}
+		
+		// Desc
+		if (!desc.isEmpty()) {
+			lore.add("§2Desc:");
+			for (String loreline : desc) {
+				lore.add(loreline.replaceAll("&", "§"));
+			}
+		}
+	}
+	
 	public void setDisplay(String display) {
 		this.display = correctColors(display);
 	}
 	
-	public void setLore(List<String> list) {
-		lore.clear();
-		for (String line : list) {
-			lore.add(correctColors(line));
+	public void setDescription(List<String> desc) {
+		desc.clear();
+		for (String line : desc) {
+			desc.add(correctColors(line));
 		}
 	}
 	
