@@ -31,9 +31,11 @@ public class MoneyObjective extends CustomObjective implements Listener {
 
     	for (Quest quest : qp.getQuester(e.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
     	    Map<String, Object> map = getDataForPlayer(p, this, quest);
-	    	if (bal >= Integer.parseInt((String) map.get("Amount"))) {
-				incrementObjective(e.getPlayer(), this, 1, quest);
-	    	}
+    	    if (map != null) {
+    	    	if (bal >= Integer.parseInt((String) map.get("Amount"))) {
+    				incrementObjective(e.getPlayer(), this, 1, quest);
+    	    	}
+    	    }
     	}
     }
 }
