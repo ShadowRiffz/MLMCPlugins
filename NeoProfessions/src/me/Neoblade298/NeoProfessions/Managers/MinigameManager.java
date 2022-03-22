@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Minigames;
+package me.Neoblade298.NeoProfessions.Managers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Storage.StorageManager;
+import me.Neoblade298.NeoProfessions.Minigames.Minigame;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class MinigameManager {

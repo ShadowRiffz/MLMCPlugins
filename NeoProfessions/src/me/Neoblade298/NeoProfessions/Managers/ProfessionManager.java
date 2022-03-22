@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.PlayerProfessions;
+package me.Neoblade298.NeoProfessions.Managers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,16 +13,13 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 
-public class ProfessionManager implements Listener {
+public class ProfessionManager implements IOComponent {
 	static Professions main;
 	
 	static HashMap<UUID, HashMap<String, Profession>> accounts = new HashMap<UUID, HashMap<String, Profession>>();
@@ -47,7 +44,8 @@ public class ProfessionManager implements Listener {
 		return -1;
 	}
 	
-	public static void loadPlayer(OfflinePlayer p) {
+	@Override
+	public void loadPlayer(OfflinePlayer p) {
 		// Check if player exists already
 		if (accounts.containsKey(p.getUniqueId())) {
 			return;
@@ -90,13 +88,18 @@ public class ProfessionManager implements Listener {
 		}
 	}
 
-	public static void savePlayer(Player p, Connection con, Statement stmt, boolean savingMultiple) {
+	@Override
+	public void savePlayer(Player p, Connection con, Statement stmt, boolean savingMultiple) {
 		UUID uuid = p.getUniqueId();
 		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
 			// If saved less than 10 seconds ago, don't save again
 			return;
 		}
 		lastSave.put(uuid, System.currentTimeMillis());
+		
+		if (!accounts.containsKey(p.getUniqueId())) {
+			return;
+		}
 		
 		try {
 			for (Entry<String, Profession> entry : accounts.get(uuid).entrySet()) {
@@ -117,7 +120,8 @@ public class ProfessionManager implements Listener {
 		}
 	}
 
-	public static void saveAll() {
+	@Override
+	public void saveAll() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
@@ -131,8 +135,8 @@ public class ProfessionManager implements Listener {
 			ex.printStackTrace();
 		}
 	}
-	
-	private void handleLeave(Player p) {
+
+	public void handleLeave(Player p) {
 		UUID uuid = p.getUniqueId();
 
 		BukkitRunnable save = new BukkitRunnable() {
@@ -156,21 +160,5 @@ public class ProfessionManager implements Listener {
 	
 	public static HashMap<String, Profession> getAccount(UUID uuid) {
 		return accounts.get(uuid);
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
-	}
-
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
 	}
 }

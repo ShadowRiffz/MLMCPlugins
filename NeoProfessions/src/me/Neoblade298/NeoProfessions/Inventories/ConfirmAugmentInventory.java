@@ -17,7 +17,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
-import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class ConfirmAugmentInventory extends ProfessionInventory {

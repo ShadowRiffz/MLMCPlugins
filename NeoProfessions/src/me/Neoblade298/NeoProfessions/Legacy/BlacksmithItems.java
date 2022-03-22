@@ -14,7 +14,7 @@ import de.tr7zw.nbtapi.NBTItem;
 public class BlacksmithItems {
 
 	// Durability
-	public ItemStack getDurabilityItem(int level, String itemtype) {
+	public static ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
@@ -40,7 +40,7 @@ public class BlacksmithItems {
 	}
 
 	// Durability
-	public ItemStack getDurabilityItem(int level, String itemtype, int potency) {
+	public static ItemStack getDurabilityItem(int level, String itemtype, int potency) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
@@ -64,7 +64,7 @@ public class BlacksmithItems {
 	}
 	
 	// Repair
-	public ItemStack getRepairItem(int level) {
+	public static ItemStack getRepairItem(int level) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§4[Lv " + level + "] §cRepair Kit");

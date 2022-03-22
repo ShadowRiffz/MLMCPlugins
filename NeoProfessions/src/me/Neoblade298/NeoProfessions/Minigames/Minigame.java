@@ -8,6 +8,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
+import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class Minigame {

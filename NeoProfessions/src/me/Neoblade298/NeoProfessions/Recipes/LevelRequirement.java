@@ -5,8 +5,8 @@ import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
-import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
 
 public class LevelRequirement implements RecipeRequirement {
 	String type;

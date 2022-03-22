@@ -133,9 +133,9 @@ public class MasonUtils {
 		case 0:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if (isArmor) {
-				return bItems.getDurabilityItem(slottedLevel, "armor", potency);
+				return BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
 			} else {
-				return bItems.getDurabilityItem(slottedLevel, "weapon", potency);
+				return BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
 			}
 			// Normal gem
 		case 1:

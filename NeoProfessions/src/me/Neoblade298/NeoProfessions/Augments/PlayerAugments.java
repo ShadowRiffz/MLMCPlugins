@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PlayerAugments {
 	private HashMap<EventType, ArrayList<Augment>> augments;

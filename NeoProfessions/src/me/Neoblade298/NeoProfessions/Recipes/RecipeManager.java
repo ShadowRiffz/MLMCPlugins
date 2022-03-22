@@ -24,10 +24,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Storage.StorageManager;
+import me.Neoblade298.NeoProfessions.Managers.StorageManager;
+import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
-public class RecipeManager implements Listener {
+public class RecipeManager implements IOComponent {
 	Professions main;
 	public static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	public static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
@@ -110,6 +111,10 @@ public class RecipeManager implements Listener {
 		if (knowledge.containsKey(p.getUniqueId())) {
 			return;
 		}
+		
+		if (!knowledge.containsKey(p.getUniqueId())) {
+			return;
+		}
 
 		HashSet<String> keys = new HashSet<String>();
 		knowledge.put(p.getUniqueId(), keys);
@@ -171,7 +176,7 @@ public class RecipeManager implements Listener {
 		}
 	}
 	
-	private void handleLeave(Player p) {
+	public void handleLeave(Player p) {
 		UUID uuid = p.getUniqueId();
 
 		BukkitRunnable save = new BukkitRunnable() {
@@ -195,21 +200,5 @@ public class RecipeManager implements Listener {
 	
 	public static HashSet<String> getKnowledge(Player p) {
 		return knowledge.get(p.getUniqueId());
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
-	}
-
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
 	}
 }

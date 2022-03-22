@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments;
+package me.Neoblade298.NeoProfessions.Managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +39,10 @@ import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Augments.BossRelic;
+import me.Neoblade298.NeoProfessions.Augments.EventType;
+import me.Neoblade298.NeoProfessions.Augments.PlayerAugments;
 import me.Neoblade298.NeoProfessions.Augments.Buffs.*;
 import me.Neoblade298.NeoProfessions.Augments.Charms.*;
 import me.Neoblade298.NeoProfessions.Augments.Crits.*;

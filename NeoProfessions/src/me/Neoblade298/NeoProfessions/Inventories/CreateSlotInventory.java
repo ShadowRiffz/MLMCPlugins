@@ -14,8 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -96,7 +96,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 				p.closeInventory();
 				return;
 			}
-			else if (!CurrencyManager.hasEnough(p, "essence", level, essenceCost)) {
+			else if (!CurrencyManager.hasEnough(p, level, essenceCost)) {
 				Util.sendMessage(p, "&cYou don't have enough essence!");
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
 				p.closeInventory();
@@ -109,7 +109,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 				return;
 			}
 			Professions.econ.withdrawPlayer(p, goldCost);
-			Professions.cm.add(p, "essence", level, -essenceCost);
+			CurrencyManager.add(p, level, -essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}

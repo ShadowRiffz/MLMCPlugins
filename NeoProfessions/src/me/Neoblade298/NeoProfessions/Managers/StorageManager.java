@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Storage;
+package me.Neoblade298.NeoProfessions.Managers;
 
 import java.io.File;
 import java.sql.Connection;
@@ -31,10 +31,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 
-public class StorageManager implements Listener {
+public class StorageManager implements IOComponent {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
@@ -132,6 +133,10 @@ public class StorageManager implements Listener {
 		if (storages.containsKey(p.getUniqueId())) {
 			return;
 		}
+		
+		if (!storages.containsKey(p.getUniqueId())) {
+			return;
+		}
 
 		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>();
 		storages.put(p.getUniqueId(), items);
@@ -196,7 +201,7 @@ public class StorageManager implements Listener {
 		}
 	}
 	
-	private void handleLeave(Player p) {
+	public void handleLeave(Player p) {
 		UUID uuid = p.getUniqueId();
 
 		BukkitRunnable save = new BukkitRunnable() {
@@ -224,22 +229,6 @@ public class StorageManager implements Listener {
 	
 	public static HashMap<Integer, Integer> getStorage(Player p) {
 		return storages.get(p.getUniqueId());
-	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
-	}
-
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
 	}
 	
 	@EventHandler
