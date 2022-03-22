@@ -33,9 +33,23 @@ public class ProfessionManager implements IOComponent {
 		ProfessionManager.main = main;
 	}
 	
-	public int getLevel(Player p, String prof) {
+	public static String getDisplay(Player p, String prof) {
+		if (accounts.containsKey(p.getUniqueId())) {
+			return accounts.get(p.getUniqueId()).get(prof).getDisplay();
+		}
+		return prof;
+	}
+	
+	public static int getLevel(Player p, String prof) {
 		if (accounts.containsKey(p.getUniqueId())) {
 			return accounts.get(p.getUniqueId()).get(prof).getLevel();
+		}
+		return -1;
+	}
+	
+	public static int getExp(Player p, String prof) {
+		if (accounts.containsKey(p.getUniqueId())) {
+			return accounts.get(p.getUniqueId()).get(prof).getExp();
 		}
 		return -1;
 	}

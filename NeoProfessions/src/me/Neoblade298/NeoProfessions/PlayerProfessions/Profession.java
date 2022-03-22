@@ -27,6 +27,10 @@ public class Profession {
 		this.exp = 0;
 		this.level = 1;
 	}
+	
+	public String getDisplay() {
+		return display;
+	}
 
 	public String getName() {
 		return name;
