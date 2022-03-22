@@ -42,8 +42,8 @@ public class InstanceTpMechanic extends SkillMechanic implements ITargetedEntity
     		Main pl = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
     		
     		// If player is in hashmap, check their cooldown.
-    		if (pl.cooldowns.get(this.boss).containsKey(p.getUniqueId().toString())) {
-	    		long lastUse = pl.cooldowns.get(this.boss).get(p.getUniqueId().toString());
+    		if (pl.cooldowns.get(this.boss).containsKey(p.getUniqueId())) {
+	    		long lastUse = pl.cooldowns.get(this.boss).get(p.getUniqueId());
 	    		long currTime = System.currentTimeMillis();
 	    		long cooldown = pl.bossInfo.get(this.boss).getCooldown() * 1000;
 	    		if (currTime > lastUse + cooldown) {
