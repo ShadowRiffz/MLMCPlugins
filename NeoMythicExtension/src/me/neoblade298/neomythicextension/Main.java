@@ -18,32 +18,10 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import me.neoblade298.neomythicextension.conditions.AboveBlockCondition;
-import me.neoblade298.neomythicextension.conditions.GlobalScoreCondition;
-import me.neoblade298.neomythicextension.conditions.PlayersInBossCondition;
-import me.neoblade298.neomythicextension.conditions.ScoreCondition;
-import me.neoblade298.neomythicextension.conditions.SkillAPIFlagCondition;
-import me.neoblade298.neomythicextension.conditions.StrongPlayerWithin;
-import me.neoblade298.neomythicextension.mechanics.FlagMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleChestMechanic;
-import me.neoblade298.neomythicextension.mechanics.InstanceTpMechanic;
-import me.neoblade298.neomythicextension.mechanics.ModManaMechanic;
-import me.neoblade298.neomythicextension.mechanics.ModGlobalScore;
-import me.neoblade298.neomythicextension.mechanics.ModScore;
-import me.neoblade298.neomythicextension.mechanics.ScaleGoldMechanic;
-import me.neoblade298.neomythicextension.mechanics.ReduceThreatMechanic;
-import me.neoblade298.neomythicextension.mechanics.RemoveFlagMechanic;
-import me.neoblade298.neomythicextension.mechanics.ResearchKillsMechanic;
-import me.neoblade298.neomythicextension.mechanics.ResearchPointsChanceMechanic;
-import me.neoblade298.neomythicextension.mechanics.ResearchPointsMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleExpMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleHealMechanic;
-import me.neoblade298.neomythicextension.mechanics.ScaleToLevelMechanic;
-import me.neoblade298.neomythicextension.mechanics.TauntMechanic;
-import me.neoblade298.neomythicextension.mechanics.WarnMechanic;
+import me.neoblade298.neomythicextension.conditions.*;
+import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
-import me.neoblade298.neomythicextension.targeters.OffsetTargeter;
-import me.neoblade298.neomythicextension.targeters.PlayersInBossTargeter;
+import me.neoblade298.neomythicextension.targeters.*;
 import me.neoblade298.neomythicextension.triggers.StatusTrigger;
 
 public class Main extends JavaPlugin implements Listener {
@@ -106,6 +84,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		else if (event.getConditionName().equalsIgnoreCase("strongplayerwithin")) {
 			StrongPlayerWithin condition = new StrongPlayerWithin(event.getConfig());
+			event.register(condition);
+		}
+
+		else if (event.getConditionName().equalsIgnoreCase("spectatingboss")) {
+			SpectatingBossCondition condition = new SpectatingBossCondition(event.getConfig());
 			event.register(condition);
 		}
 	}
