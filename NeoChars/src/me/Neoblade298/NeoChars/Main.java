@@ -1,5 +1,8 @@
 package me.Neoblade298.NeoChars;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -14,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
+
+import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -35,23 +41,29 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 
+		// Base class
 		int pLvl = SkillAPI.getPlayerData(viewed).getClass("class").getLevel();
 		String pClass = SkillAPI.getPlayerData(viewed).getClass("class").getData().getName();
-		int profLvl = 0;
-		String profClass = null;
-		if (SkillAPI.getPlayerData(viewed).getClass("profession") != null) {
-			profLvl = SkillAPI.getPlayerData(viewed).getClass("profession").getLevel();
-			profClass = SkillAPI.getPlayerData(viewed).getClass("profession").getData().getName();
-		}
 		int xp = (int) SkillAPI.getPlayerData(viewed).getClass("class").getExp();
 		int reqxp = SkillAPI.getPlayerData(viewed).getClass("class").getRequiredExp();
 		PlayerData pData = SkillAPI.getPlayerData(viewed);
-
 		sendMessage(recipient, "&7-- &e" + viewed.getName() + " &6[Lv " + pLvl + " " + pClass + "] &7(" + xp
 				+ " / " + reqxp + " XP) --");
-		if (SkillAPI.getPlayerData(viewed).getClass("profession") != null) {
-			sendMessage(recipient, "&7-- &e" + "&6[Lv " + profLvl + " " + profClass + "] &7--");
-		}
+		
+		// Professions
+		HashMap<String, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
+		Profession harv = account.get("harvester");
+		Profession stone = account.get("stonecutter");
+		Profession craft = account.get("crafter");
+		Profession log = account.get("logger");
+		String line = "&7-- &6[Lv " + harv.getLevel() + " " + harv.getDisplay() + "] ";
+		line += "&6[Lv " + log.getLevel() + " " + log.getDisplay() + "] &7--";
+		sendMessage(recipient, line);
+		line = "&7-- &6[Lv " + stone.getLevel() + " " + stone.getDisplay() + "] ";
+		line += "&6[Lv " + craft.getLevel() + " " + craft.getDisplay() + "] &7--";
+		sendMessage(recipient, line);
+		
+		// Attributes
 		String attr = "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e"
 				+ pData.getAttribute("Dexterity") + " &cDEX&7 | &e" + pData.getAttribute("Intelligence")
 				+ " &cINT&7 | &e" + pData.getAttribute("Spirit") + " &cSPR&7 | &e" + pData.getAttribute("Endurance") +
