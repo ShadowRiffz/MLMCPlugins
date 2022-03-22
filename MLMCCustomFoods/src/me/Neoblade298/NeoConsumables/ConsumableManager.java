@@ -140,7 +140,7 @@ public class ConsumableManager implements Listener {
 			stmt.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
+			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle disable");
 			e.printStackTrace();
 		}
 	}
