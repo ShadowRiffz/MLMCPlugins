@@ -1,8 +1,6 @@
-package me.Neoblade298.NeoProfessions.Recipes;
+package me.Neoblade298.NeoProfessions.Managers;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -16,16 +14,17 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
+import me.Neoblade298.NeoProfessions.Recipes.GearResult;
+import me.Neoblade298.NeoProfessions.Recipes.KnowledgeRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.LevelRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.Recipe;
+import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
+import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class RecipeManager implements IOComponent {
@@ -106,13 +105,11 @@ public class RecipeManager implements IOComponent {
 			}
 		}
 	}
-	public static void loadPlayer(OfflinePlayer p) {
+	
+	@Override
+	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		// Check if player exists already
 		if (knowledge.containsKey(p.getUniqueId())) {
-			return;
-		}
-		
-		if (!knowledge.containsKey(p.getUniqueId())) {
 			return;
 		}
 
@@ -121,11 +118,7 @@ public class RecipeManager implements IOComponent {
 		
 		// Check if player exists on SQL
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Professions.connection, Professions.properties);
-			Statement stmt = con.createStatement();
-			ResultSet rs;
-			rs = stmt.executeQuery("SELECT * FROM professions_knowledge WHERE UUID = '" + p.getUniqueId() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_knowledge WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				keys.add(rs.getString(2));
 			}
@@ -136,66 +129,19 @@ public class RecipeManager implements IOComponent {
 		}
 	}
 
-	public static void savePlayer(Player p, Connection con, Statement stmt, boolean savingMultiple) {
+	@Override
+	public void savePlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
-		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
-			// If saved less than 10 seconds ago, don't save again
-			return;
-		}
-		lastSave.put(uuid, System.currentTimeMillis());
-		
 		try {
 			for (String key : knowledge.get(uuid)) {
 				stmt.addBatch("REPLACE INTO professions_accounts "
 						+ "VALUES ('" + uuid + "', '" + key + "');");
-			}
-			
-			// Set to true if you're saving several accounts at once
-			if (!savingMultiple) {
-					stmt.executeBatch();
 			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
 			e.printStackTrace();
 		}
-	}
-
-	public static void saveAll() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
-			Statement stmt = con.createStatement();
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, con, stmt, true);
-			}
-			stmt.executeBatch();
-			con.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	public void handleLeave(Player p) {
-		UUID uuid = p.getUniqueId();
-
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				if (knowledge.containsKey(uuid)) {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
-						Statement stmt = con.createStatement();
-
-						// Save account
-						savePlayer(p, con, stmt, false);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		};
-		save.runTaskAsynchronously(main);
 	}
 	
 	public static HashSet<String> getKnowledge(Player p) {

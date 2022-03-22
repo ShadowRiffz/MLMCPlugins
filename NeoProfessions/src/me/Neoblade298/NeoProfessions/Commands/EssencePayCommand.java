@@ -1,6 +1,5 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
-import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

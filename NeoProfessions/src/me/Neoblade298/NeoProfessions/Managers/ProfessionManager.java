@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoProfessions.Managers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
@@ -45,7 +41,7 @@ public class ProfessionManager implements IOComponent {
 	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p) {
+	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		// Check if player exists already
 		if (accounts.containsKey(p.getUniqueId())) {
 			return;
@@ -59,28 +55,12 @@ public class ProfessionManager implements IOComponent {
 		
 		// Check if player exists on SQL
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Professions.connection, Professions.properties);
-			Statement stmt = con.createStatement();
-			ResultSet rs;
-			rs = stmt.executeQuery("SELECT * FROM professions_accounts WHERE UUID = '" + p.getUniqueId() + "';");
-			boolean sqlExists = false;
+			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_accounts WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				sqlExists = true;
 				String prof = rs.getString(2);
 				profs.get(prof).setLevel(rs.getInt(3));
 				profs.get(prof).setExp(rs.getInt(4));
 			}
-
-			if (!sqlExists) {
-				// User does not exist on sql
-				for (String prof : profNames) {
-					stmt.addBatch("INSERT INTO professions_accounts "
-							+ "VALUES ('" + p.getUniqueId() + "', '" + prof + "', 1, 0);");
-				}
-				stmt.executeBatch();
-			}
-			con.close();
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init professions for user " + p.getName());
@@ -89,14 +69,8 @@ public class ProfessionManager implements IOComponent {
 	}
 
 	@Override
-	public void savePlayer(Player p, Connection con, Statement stmt, boolean savingMultiple) {
+	public void savePlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
-		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
-			// If saved less than 10 seconds ago, don't save again
-			return;
-		}
-		lastSave.put(uuid, System.currentTimeMillis());
-		
 		if (!accounts.containsKey(p.getUniqueId())) {
 			return;
 		}
@@ -108,54 +82,11 @@ public class ProfessionManager implements IOComponent {
 						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
 						prof.getExp()  +");");
 			}
-			
-			// Set to true if you're saving several accounts at once
-			if (!savingMultiple) {
-					stmt.executeBatch();
-			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save professions for user " + p.getName());
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void saveAll() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
-			Statement stmt = con.createStatement();
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, con, stmt, true);
-			}
-			stmt.executeBatch();
-			con.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public void handleLeave(Player p) {
-		UUID uuid = p.getUniqueId();
-
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				if (accounts.containsKey(uuid)) {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
-						Statement stmt = con.createStatement();
-
-						// Save account
-						savePlayer(p, con, stmt, false);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		};
-		save.runTaskAsynchronously(main);
 	}
 	
 	public static HashMap<String, Profession> getAccount(UUID uuid) {

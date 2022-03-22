@@ -14,21 +14,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.Neoblade298.NeoProfessions.Commands.EssencePayCommand;
 import me.Neoblade298.NeoProfessions.Commands.NeoprofessionsCommands;
 import me.Neoblade298.NeoProfessions.Commands.ValueCommand;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
+import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
-import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
-import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
-import me.Neoblade298.NeoProfessions.Minigames.MinigameManager;
-import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionManager;
-import me.Neoblade298.NeoProfessions.Recipes.RecipeManager;
-import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
-import net.milkbowl.vault.chat.Chat;
+import me.Neoblade298.NeoProfessions.Managers.*;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 public class Professions extends JavaPlugin implements Listener {
 	public boolean debug = false;
@@ -36,8 +30,6 @@ public class Professions extends JavaPlugin implements Listener {
 	public boolean isInstance = false;
 
 	public static Economy econ;
-	public static Permission perms;
-	public static Chat chat;
 	public static YamlConfiguration cfg;
 	
 	public static String lvlupMsg;
@@ -46,15 +38,13 @@ public class Professions extends JavaPlugin implements Listener {
 	public static String sqlPass;
 	public static String connection;
 	public static Properties properties = new Properties();
-
-	public ProfessionsMethods professionsMethods;
-	public MasonUtils masonUtils;
 	
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
 	public static StorageManager sm;
 	public static MinigameManager mim;
 	public static RecipeManager rm;
+	public static IOListeners io;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -70,8 +60,6 @@ public class Professions extends JavaPlugin implements Listener {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		this.setupPermissions();
-		this.setupChat();
 		
 		// Configuration// Save config if doesn't exist
 		File file = new File(getDataFolder(), "config.yml");
@@ -79,13 +67,6 @@ public class Professions extends JavaPlugin implements Listener {
 			saveResource("config.yml", false);
 		}
 		cfg = YamlConfiguration.loadConfiguration(file);
-
-		// SQL
-		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
-				sql.getString("db") + sql.getString("flags");
-		sqlUser = sql.getString("username");
-		sqlPass = sql.getString("password");
 
 		loadConfig();
 		if (new File(getDataFolder(), "instance").exists()) {
@@ -106,18 +87,18 @@ public class Professions extends JavaPlugin implements Listener {
 			sm = new StorageManager(this);
 			rm = new RecipeManager(this);
 			mim = new MinigameManager(this);
+			io = new IOListeners(this);
+			getServer().getPluginManager().registerEvents(io, this);
 			getServer().getPluginManager().registerEvents(cm, this);
-			getServer().getPluginManager().registerEvents(pm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
-			getServer().getPluginManager().registerEvents(rm, this);
-	
-			masonUtils = new MasonUtils();
-	
-			// Connect method classes to main
-			professionsMethods = new ProfessionsMethods(this);
+			IOListeners.addComponent(cm);
+			IOListeners.addComponent(pm);
+			IOListeners.addComponent(sm);
+			IOListeners.addComponent(rm);
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));
+			this.getCommand("epay").setExecutor(new EssencePayCommand(this));
 			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
 		}
 		
@@ -129,6 +110,13 @@ public class Professions extends JavaPlugin implements Listener {
 	}
 	
 	private void loadConfig() {
+		// sql
+		ConfigurationSection sql = cfg.getConfigurationSection("sql");
+		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
+				sql.getString("db") + sql.getString("flags");
+		sqlUser = sql.getString("username");
+		sqlPass = sql.getString("password");
+		
 		// general
 		lvlupMsg = cfg.getString("levelup");
 		
@@ -152,16 +140,7 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		super.onDisable();
-		try {
-			if (cm != null) {
-				
-			}
-			if (pm != null) {
-				ProfessionManager.saveAll();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		io.handleDisable();
 		Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
 	}
 
@@ -178,28 +157,8 @@ public class Professions extends JavaPlugin implements Listener {
 		return econ != null;
 	}
 
-	private boolean setupChat() {
-		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-		chat = rsp.getProvider();
-		return chat != null;
-	}
-
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
-	}
-
 	public Economy getEconomy() {
 		return econ;
-	}
-
-	public Permission getPermissions() {
-		return perms;
-	}
-
-	public Chat getChat() {
-		return chat;
 	}
 	
 	public static CurrencyManager getCurrencyManager() {

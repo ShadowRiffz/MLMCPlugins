@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 
 public class IOListeners implements Listener {
+	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	static ArrayList<IOComponent> components = new ArrayList<IOComponent>();
 	Professions main;
 	
@@ -43,11 +45,17 @@ public class IOListeners implements Listener {
 
 	@EventHandler
 	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
+		handleLoad(Bukkit.getOfflinePlayer(e.getUniqueId()));
 	}
 	
 	private void handleLeave(Player p) {
+		UUID uuid = p.getUniqueId();
+		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
+			// If saved less than 10 seconds ago, don't save again
+			return;
+		}
+		lastSave.put(uuid, System.currentTimeMillis());
+		
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
 				try {
@@ -57,8 +65,9 @@ public class IOListeners implements Listener {
 
 					// Save account
 					for (IOComponent component : components) {
-						component.savePlayer(p, con, stmt, false);
+						component.savePlayer(p, stmt);
 					}
+					stmt.executeBatch();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -68,6 +77,40 @@ public class IOListeners implements Listener {
 	}
 	
 	private void handleLoad(OfflinePlayer p) {
-		l
+		BukkitRunnable load = new BukkitRunnable() {
+			public void run() {
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
+					Statement stmt = con.createStatement();
+
+					// Save account
+					for (IOComponent component : components) {
+						component.loadPlayer(p, stmt);
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		};
+		load.runTaskAsynchronously(main);
+	}
+	
+	public void handleDisable() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
+			Statement stmt = con.createStatement();
+
+			// Save account
+			for (IOComponent component : components) {
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					component.savePlayer(p, stmt);
+				}
+			}
+			stmt.executeBatch();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

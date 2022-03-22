@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
+
 public class KnowledgeRequirement implements RecipeRequirement {
 	String key;
 	
