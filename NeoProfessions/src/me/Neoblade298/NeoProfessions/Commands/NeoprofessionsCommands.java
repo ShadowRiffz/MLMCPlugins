@@ -225,7 +225,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("start")) {
-					MinigameManager.startMinigame(Bukkit.getPlayer(args[2]), args[1]);
+					MinigameManager.startMinigame(Bukkit.getPlayer(args[2]), Integer.parseInt(args[1]));
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("debug")) {

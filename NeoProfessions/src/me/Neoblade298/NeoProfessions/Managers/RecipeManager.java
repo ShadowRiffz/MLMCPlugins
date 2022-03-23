@@ -30,7 +30,6 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class RecipeManager implements IOComponent {
 	Professions main;
-	public static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	public static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
 	public static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
 	public RecipeManager(Professions main) {

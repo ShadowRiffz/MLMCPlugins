@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Minigames.Minigame;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class MinigameManager {
 	public static Professions main;
-	private static HashMap<String, Minigame> games = new HashMap<String, Minigame>();
+	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
 	
 	public MinigameManager(Professions main) {
 		MinigameManager.main = main;
@@ -70,13 +71,17 @@ public class MinigameManager {
 						sitem.addSource(display, false);
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
-					games.put(key, new Minigame(display, type, parsed, numDrops, difficulty));
+					games.put(Integer.parseInt(key), new Minigame(display, type, parsed, numDrops, difficulty));
 				}
 			}
 		}
 	}
 	
-	public static void startMinigame(Player p, String key) {
-		games.get(key).startMinigame(p);
+	public static void startMinigame(Player p, int key) {
+		games.get(key).startMinigame(p, null);
+	}
+	
+	public static void startMinigame(Player p, MinigameParameters params) {
+		games.get(params.getId()).startMinigame(p, params);
 	}
 }

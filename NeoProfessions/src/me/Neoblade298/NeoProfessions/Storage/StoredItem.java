@@ -32,23 +32,7 @@ public class StoredItem {
 
 	public StoredItem(int id, String name, int level, String rarity, String mat, ArrayList<String> lore) {
 		this.id = id;
-		switch (rarity) {
-		case "uncommon":
-			this.rarity = Rarity.UNCOMMON;
-			break;
-		case "rare":
-			this.rarity = Rarity.RARE;
-			break;
-		case "epic":
-			this.rarity = Rarity.EPIC;
-			break;
-		case "legendary":
-			this.rarity = Rarity.LEGENDARY;
-			break;
-		default:
-			this.rarity = Rarity.COMMON;
-			break;
-		}
+		this.rarity = Rarity.valueOf(rarity.toUpperCase());
 		this.baseLore = new ArrayList<String>();
 		this.name = name;
 		this.value = level * this.rarity.getPriceModifier();

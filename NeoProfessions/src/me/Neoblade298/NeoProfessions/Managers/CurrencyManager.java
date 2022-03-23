@@ -31,7 +31,6 @@ public class CurrencyManager implements IOComponent, Listener {
 	Professions main;
 	
 	private static HashMap<UUID, HashMap<Integer, Integer>> essence;
-	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static ArrayList<String> voucherLore = new ArrayList<String>();
 	
 	static {
