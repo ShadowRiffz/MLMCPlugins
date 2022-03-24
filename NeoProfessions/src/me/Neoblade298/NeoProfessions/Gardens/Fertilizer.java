@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoProfessions.Gardens;
 
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class Fertilizer {
 	int id;
@@ -12,8 +11,8 @@ public class Fertilizer {
 		this.params = params;
 		this.timeMultiplier = timeMultiplier;
 	}
-	public StoredItem getSi() {
-		return si;
+	public int getId() {
+		return id;
 	}
 	public MinigameParameters getParams() {
 		return params;

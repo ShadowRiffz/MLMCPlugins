@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.Managers;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -14,39 +13,32 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class ProfessionManager implements IOComponent {
 	static Professions main;
 	
-	static HashMap<UUID, HashMap<String, Profession>> accounts = new HashMap<UUID, HashMap<String, Profession>>();
-	static ArrayList<String> profNames = new ArrayList<String>();
-	
-	static {
-		profNames.add("stonecutter");
-		profNames.add("logger");
-		profNames.add("harvester");
-		profNames.add("crafter");
-	}
+	static HashMap<UUID, HashMap<ProfessionType, Profession>> accounts = new HashMap<UUID, HashMap<ProfessionType, Profession>>();
 	
 	public ProfessionManager(Professions main) {
 		ProfessionManager.main = main;
 	}
 	
-	public static String getDisplay(Player p, String prof) {
+	public static String getDisplay(Player p, ProfessionType prof) {
 		if (accounts.containsKey(p.getUniqueId())) {
-			return accounts.get(p.getUniqueId()).get(prof).getDisplay();
+			return accounts.get(p.getUniqueId()).get(prof).getType().getDisplay();
 		}
-		return prof;
+		return "";
 	}
 	
-	public static int getLevel(Player p, String prof) {
+	public static int getLevel(Player p, ProfessionType prof) {
 		if (accounts.containsKey(p.getUniqueId())) {
 			return accounts.get(p.getUniqueId()).get(prof).getLevel();
 		}
 		return -1;
 	}
 	
-	public static int getExp(Player p, String prof) {
+	public static int getExp(Player p, ProfessionType prof) {
 		if (accounts.containsKey(p.getUniqueId())) {
 			return accounts.get(p.getUniqueId()).get(prof).getExp();
 		}
@@ -60,8 +52,8 @@ public class ProfessionManager implements IOComponent {
 			return;
 		}
 
-		HashMap<String, Profession> profs = new HashMap<String, Profession>();
-		for (String prof : profNames) {
+		HashMap<ProfessionType, Profession> profs = new HashMap<ProfessionType, Profession>();
+		for (ProfessionType prof : ProfessionType.values()) {
 			profs.put(prof, new Profession(prof));
 		}
 		accounts.put(p.getUniqueId(), profs);
@@ -70,7 +62,7 @@ public class ProfessionManager implements IOComponent {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_accounts WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				String prof = rs.getString(2);
+				ProfessionType prof = ProfessionType.valueOf(rs.getString(2));
 				profs.get(prof).setLevel(rs.getInt(3));
 				profs.get(prof).setExp(rs.getInt(4));
 			}
@@ -89,7 +81,7 @@ public class ProfessionManager implements IOComponent {
 		}
 		
 		try {
-			for (Entry<String, Profession> entry : accounts.get(uuid).entrySet()) {
+			for (Entry<ProfessionType, Profession> entry : accounts.get(uuid).entrySet()) {
 				Profession prof = entry.getValue();
 				stmt.addBatch("REPLACE INTO professions_accounts "
 						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
@@ -102,7 +94,7 @@ public class ProfessionManager implements IOComponent {
 		}
 	}
 	
-	public static HashMap<String, Profession> getAccount(UUID uuid) {
+	public static HashMap<ProfessionType, Profession> getAccount(UUID uuid) {
 		return accounts.get(uuid);
 	}
 }

@@ -1,42 +1,24 @@
 package me.Neoblade298.NeoProfessions.Managers;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.UUID;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
-import me.Neoblade298.NeoProfessions.Minigames.Minigame;
-import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
+import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
-import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
-import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
-import me.Neoblade298.NeoProfessions.Recipes.GearResult;
-import me.Neoblade298.NeoProfessions.Recipes.KnowledgeRequirement;
-import me.Neoblade298.NeoProfessions.Recipes.LevelRequirement;
-import me.Neoblade298.NeoProfessions.Recipes.Recipe;
-import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
-import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
-import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
-import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
-import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class GardenManager implements IOComponent {
 	Professions main;
-	private static HashMap<UUID, HashSet<String>> gardens = new HashMap<UUID, HashSet<String>>();
+	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	public GardenManager(Professions main) {
 		this.main = main;
@@ -68,6 +50,7 @@ public class GardenManager implements IOComponent {
 	@Override
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		// Check if player exists already
+		/*
 		if (knowledge.containsKey(p.getUniqueId())) {
 			return;
 		}
@@ -86,10 +69,12 @@ public class GardenManager implements IOComponent {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init storage for user " + p.getName());
 			e.printStackTrace();
 		}
+		*/
 	}
 
 	@Override
 	public void savePlayer(Player p, Statement stmt) {
+		/*
 		UUID uuid = p.getUniqueId();
 		try {
 			for (String key : knowledge.get(uuid)) {
@@ -101,9 +86,10 @@ public class GardenManager implements IOComponent {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
 			e.printStackTrace();
 		}
+		*/
 	}
 	
-	public static HashSet<String> getGarden(Player p) {
+	public static HashMap<ProfessionType, Garden> getGardens(Player p) {
 		return gardens.get(p.getUniqueId());
 	}
 	

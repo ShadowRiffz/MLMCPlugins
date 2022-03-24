@@ -22,6 +22,7 @@ import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrop;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class HarvestingMinigame extends ProfessionInventory {
@@ -213,7 +214,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		for (Entry<Integer, Integer> e : items.entrySet()) {
 			StorageManager.givePlayer(p, e.getKey(), e.getValue());
 		}
-		ProfessionManager.getAccount(p.getUniqueId()).get("logger").addExp(p, totalExp);
+		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.HARVESTER).addExp(p, totalExp);
 	}
 
 	@Override

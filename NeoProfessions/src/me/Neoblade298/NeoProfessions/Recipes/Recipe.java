@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 import net.md_5.bungee.api.ChatColor;
 
@@ -85,7 +86,7 @@ public class Recipe {
 		}
 		
 		result.giveResult(p);
-		ProfessionManager.getAccount(p.getUniqueId()).get("crafter").addExp(p, exp);
+		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
 		return true;
