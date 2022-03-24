@@ -114,7 +114,7 @@ public class Settings {
 					
 					try {
 						if (main.debug) {
-							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " for " + uuid + ".");
+							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
 						}
 						if (value instanceof String) {
 							stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
@@ -136,7 +136,7 @@ public class Settings {
 				else {
 					Object def = defaults.get(key);
 					if (main.debug) {
-						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " for " + uuid + ".");
+						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " to " + def + " for " + uuid + ".");
 					}
 					try {
 						if (def instanceof String || def instanceof Boolean) {
@@ -264,18 +264,23 @@ public class Settings {
 
 		changedValues.get(uuid).add(key);
 		
+		Value curr = null;
 		if (values.get(uuid).containsKey(key)) {
-			Value curr = values.get(uuid).get(key);
+			curr = values.get(uuid).get(key);
 			curr.setValue(value);
 			if (expiration != 0) {
 				curr.setExpiration(expiration);
 			}
 		}
 		else {
-			values.get(uuid).put(key, new Value(value, expiration));
+			curr = new Value(value, expiration);
+			values.get(uuid).put(key, curr);
 		}
 		
-		
+		if (main.debug) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Changed setting of " + this.getKey() + "." + key + " for " + uuid + " to " +
+					curr.getValue() + ".");
+		}
 		return true;
 	}
 	
@@ -323,6 +328,10 @@ public class Settings {
 		if (expiration != 0) {
 			curr.setExpiration(expiration);
 		}
+		if (main.debug) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Added " + v + " to setting of " + this.getKey() + "." + key + " for " + uuid + ". Before: " +
+					original + ", after: " + curr.getValue() + ".");
+		}
 		return true;
 	}
 	
@@ -337,6 +346,7 @@ public class Settings {
 		}
 		changedValues.get(uuid).add(key);
 		values.get(uuid).remove(key);
+		Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Reset setting of " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}
 	

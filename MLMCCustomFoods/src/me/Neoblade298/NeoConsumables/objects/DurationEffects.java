@@ -18,6 +18,7 @@ import com.sucy.skill.api.util.FlagManager;
 import com.sucy.skill.listener.AttributeListener;
 import com.sucy.skill.listener.MechanicListener;
 
+import me.Neoblade298.NeoConsumables.ConsumableManager;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;

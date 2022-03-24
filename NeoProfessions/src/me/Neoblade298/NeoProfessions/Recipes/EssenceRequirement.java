@@ -2,7 +2,7 @@ package me.Neoblade298.NeoProfessions.Recipes;
 
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoProfessions.CurrencyManager;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 
 public class EssenceRequirement implements RecipeRequirement {
 	int amount;
@@ -24,7 +24,7 @@ public class EssenceRequirement implements RecipeRequirement {
 	}
 	
 	public boolean passesReq(Player p) {
-		return CurrencyManager.hasEnough(p, "essence", level, amount);
+		return CurrencyManager.hasEnough(p, level, amount);
 	}
 
 	public String failMessage(Player p) {
@@ -32,6 +32,12 @@ public class EssenceRequirement implements RecipeRequirement {
 	}
 	
 	public void useReq(Player p) {
-		CurrencyManager.subtract(p, "essence", level, amount);
+		CurrencyManager.subtract(p, level, amount);
+	}
+	
+	public String getLoreString(Player p) {
+		String msg = passesReq(p) ? "§a" : "§c";
+		msg += "- " + amount + "x Lv " + level + " Essence";
+		return msg;
 	}
 }

@@ -15,7 +15,6 @@ import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
 import me.Neoblade298.NeoConsumables.objects.BuffAction;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
-import me.Neoblade298.NeoConsumables.objects.ConsumableManager;
 import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
@@ -102,6 +101,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	
 	public void onDisable() {
 		ConsumableManager.saveAll();
+		ConsumableManager.handleDisable();
 		org.bukkit.Bukkit.getServer().getLogger().info("NeoConsumables Disabled");
 		super.onDisable();
 	}
@@ -175,7 +175,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			cons.setMaterial(mat);
 		}
 		cons.setDisplay(config.getString("display"));
-		cons.setLore(config.getStringList("lore"));
+		cons.setDescription(config.getStringList("desc"));
 
 		// Potion effects
 		ArrayList<PotionEffect> potions = cons.getPotions();
@@ -237,6 +237,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			cons.setWorlds(defaultWorlds);
 		}
 		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
+		cons.generateLore();
 		food.put(key, cons);
 		return cons;
 	}
@@ -245,6 +246,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
 		String display = config.getString("display", internal);
+		Sound initSound = Sound.valueOf(config.getString("sound"));
 
 		// Chest stages
 		LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
@@ -303,7 +305,8 @@ public class Consumables extends JavaPlugin implements Listener {
 			
 			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
 		}
-		return new ChestConsumable(this, key, stages);
+		
+		return new ChestConsumable(this, key, stages, initSound);
 	}
 
 	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String key) {

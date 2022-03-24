@@ -29,4 +29,10 @@ public class GoldRequirement implements RecipeRequirement {
 	public void useReq(Player p) {
 		Professions.econ.withdrawPlayer(p, this.amount);
 	}
+	
+	public String getLoreString(Player p) {
+		String msg = passesReq(p) ? "§a" : "§c";
+		msg += "- " + amount + "g";
+		return msg;
+	}
 }

@@ -18,12 +18,6 @@ public class InventoryListeners implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
-		System.out.println(e.getAction());
-		System.out.println(e.getRawSlot());
-		System.out.println(e.getHotbarButton()); // Works 0-8
-		System.out.println(e.getClick());
-		System.out.println(e.getResult());
-		System.out.println(e.getCurrentItem());
 		if (Professions.viewingInventory.containsKey(p)) {
 			Professions.viewingInventory.get(p).handleInventoryClick(e);
 		}

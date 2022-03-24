@@ -18,15 +18,18 @@ import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 public class ChestConsumable extends Consumable {
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
+	private Sound sound;
 	
-	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages) {
+	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages, Sound sound) {
 		super(main, key);
 		this.main = main;
 		this.stages = stages;
+		this.sound = sound;
 	}
 	
 	public void useChest(Player p) {
 		long delay = 0;
+		p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
 		for (ChestStage stage : stages) {
 			// Calculate if it will happen
 			if (stage.getChance() < gen.nextDouble()) {

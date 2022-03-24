@@ -2,6 +2,7 @@ package me.Neoblade298.NeoConsumables;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -14,6 +15,7 @@ import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 
 
 public class Commands implements CommandExecutor, TabCompleter {
+	ArrayList<String> foods = new ArrayList<String>(Consumables.food.keySet());
 	
 	Consumables main;
 	
@@ -75,7 +77,10 @@ public class Commands implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (args[0].equalsIgnoreCase("get") && args.length == 2) {
-			return new ArrayList<String>(Consumables.food.keySet());
+			return foods.stream().filter(food -> food.startsWith(args[1])).collect(Collectors.toList());
+		}
+		else if (args[0].equalsIgnoreCase("give") && args.length == 3) {
+			return foods.stream().filter(food -> food.startsWith(args[2])).collect(Collectors.toList());
 		}
 		return null;
 	}

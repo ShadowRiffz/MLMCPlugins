@@ -8,6 +8,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
+import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class Minigame {
@@ -16,6 +17,7 @@ public class Minigame {
 	private String display;
 	int numDrops;
 	int difficulty;
+	private static MinigameParameters defaultParams = new MinigameParameters();
 	
 	public Minigame(String display, String type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty) {
 		this.type = type;
@@ -25,36 +27,51 @@ public class Minigame {
 		this.difficulty = difficulty;
 	}
 	
-	private ArrayList<StoredItemInstance> generateDrops() {
-		ArrayList<StoredItemInstance> drops = new ArrayList<StoredItemInstance>();
+	private ArrayList<MinigameDrop> generateDrops(MinigameParameters params) {
+		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
 		
+		if (params == null) {
+			params = defaultParams;
+		}
 		
 		for (int i = 0; i < numDrops; i++) {
 			int rand = Professions.gen.nextInt(droptable.getTotalWeight());
 			MinigameDrops mdrops = droptable.getDropTable().get(0);
 			int index = 0;
+			int weight = mdrops.getWeight();
+			if (mdrops.getItem().getRarity().getPriority() >= params.getMinRarity().getPriority()) {
+				weight *= params.getRarityWeightMultiplier();
+			}
+			
 			do {
 				mdrops = droptable.getDropTable().get(index);
-				rand -= mdrops.getWeight();
+				rand -= weight;
 				index++;
 			}
 			while (rand >= 0);
 			int min = mdrops.getMinAmt(), max = mdrops.getMaxAmt();
-			drops.add(new StoredItemInstance(mdrops.getItem(),
-					Professions.gen.nextInt(max + 1 - min) + min));
+			min *= params.getAmountMultiplier();
+			max *= params.getAmountMultiplier();
+			
+			drops.add(new MinigameDrop(new StoredItemInstance(mdrops.getItem(),
+					Professions.gen.nextInt(max + 1 - min) + min), mdrops.getExp()));
 		}
 		return drops;
 	}
 	
 	public void startMinigame(Player p) {
+		startMinigame(p, null);
+	}
+	
+	public void startMinigame(Player p, MinigameParameters params) {
 		if (type.equalsIgnoreCase("stonecutting")) {
-			new StonecuttingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
+			new StonecuttingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
 		}
 		else if (type.equalsIgnoreCase("harvesting")) {
-			new HarvestingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
+			new HarvestingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
 		}
 		else {
-			new LoggingMinigame(MinigameManager.main, p, generateDrops(), display, difficulty);
+			new LoggingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
 		}
 	}
 }

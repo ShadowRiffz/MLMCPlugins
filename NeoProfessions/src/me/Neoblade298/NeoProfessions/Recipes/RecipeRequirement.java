@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 public interface RecipeRequirement {
 	public boolean passesReq(Player p);
 	public String failMessage(Player p);
+	public String getLoreString(Player p);
 	
 	public default void useReq(Player p) {
 		

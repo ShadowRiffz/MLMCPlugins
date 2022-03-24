@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
+
 public class KnowledgeRequirement implements RecipeRequirement {
 	String key;
 	
@@ -25,5 +27,11 @@ public class KnowledgeRequirement implements RecipeRequirement {
 
 	public String failMessage(Player p) {
 		return "§4[§c§lMLMC§4] §cYou lack the recipe!";
+	}
+	
+	public String getLoreString(Player p) {
+		String msg = passesReq(p) ? "§a" : "§c";
+		msg += "- Recipe knowledge";
+		return msg;
 	}
 }

@@ -1,11 +1,12 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.neoblade298.neogear.Gear;
+import net.md_5.bungee.api.ChatColor;
 
 public class GearResult implements RecipeResult {
 	String type;
@@ -37,5 +38,14 @@ public class GearResult implements RecipeResult {
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
+	}
+	
+	@Override
+	public ItemStack getResultItem(Player p, boolean canCraft) {
+		ItemStack item = Gear.settings.get(type).get(level).generateItem(rarity, level);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
+		item.setItemMeta(meta);
+		return item;
 	}
 }

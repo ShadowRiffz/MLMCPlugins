@@ -9,28 +9,24 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 
 public class Profession {
-	String name;
+	ProfessionType type;
 	int exp, level;
-	static HashMap<Integer, Integer> nextLv;
+	static HashMap<Integer, Integer> nextLv= new HashMap<Integer, Integer>();
 	
 	static {
 		for (int lv = 1; lv <= 60; lv++) {
-			nextLv.put(lv, (15 * lv^2) * (100 * lv));
+			nextLv.put(lv, (15 * lv^2) + (100 * lv));
 		}
 	}
 	
-	public Profession(String name) {
-		this.name = name;
+	public Profession(ProfessionType prof) {
+		this.type = prof;
 		this.exp = 0;
 		this.level = 1;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public ProfessionType getType() {
+		return type;
 	}
 
 	public int getExp() {
@@ -59,20 +55,23 @@ public class Profession {
 	
 	public void addExp(Player p, int exp) {
 		int prevLvl = this.level;
-		int remainingExp = exp + this.exp;
+		double newExp = exp + this.exp;
+		int percent = (int) (newExp / nextLv.get(this.level)) * 100;
+		percent = percent > 100 ? 100 : percent;
 		
 		// If next level exists, check that the player can reach it, else just add
+		p.sendMessage("§a+" + exp + " §7(§f" + percent + "%§7) §6" + type.getDisplay() + " §7exp");
 		boolean levelup = false;
-		while (nextLv.containsKey(this.level) && remainingExp >= nextLv.get(this.level)) {
-			remainingExp -= nextLv.get(this.level);
+		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level)) {
+			newExp -= nextLv.get(this.level);
 			this.level++;
 			levelup = true;
 		}
 		if (levelup) {
 			p.sendMessage(Professions.lvlupMsg.replaceAll("%level%", "" + this.level).replaceAll("%previous%", "" + prevLvl)
-					.replaceAll("%profname%", this.name));
+					.replaceAll("%profname%", type.getDisplay()));
 			p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 		}
-		this.exp = remainingExp;
+		this.exp = (int) newExp;
 	}
 }
