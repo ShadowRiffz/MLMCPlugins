@@ -1,6 +1,5 @@
 package me.Neoblade298.NeoChars;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -20,6 +19,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -51,16 +51,16 @@ public class Main extends JavaPlugin implements Listener {
 				+ " / " + reqxp + " XP) --");
 		
 		// Professions
-		HashMap<String, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
-		Profession harv = account.get("harvester");
-		Profession stone = account.get("stonecutter");
-		Profession craft = account.get("crafter");
-		Profession log = account.get("logger");
-		String line = "&7-- &6[Lv " + harv.getLevel() + " " + harv.getDisplay() + "] ";
-		line += "&6[Lv " + log.getLevel() + " " + log.getDisplay() + "] &7--";
+		HashMap<ProfessionType, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
+		Profession harv = account.get(ProfessionType.HARVESTER);
+		Profession stone = account.get(ProfessionType.STONECUTTER);
+		Profession craft = account.get(ProfessionType.CRAFTER);
+		Profession log = account.get(ProfessionType.LOGGER);
+		String line = "&7-- &6[Lv " + harv.getLevel() + " " + harv.getType().getDisplay() + "] ";
+		line += "&6[Lv " + log.getLevel() + " " + log.getType().getDisplay() + "] &7--";
 		sendMessage(recipient, line);
-		line = "&7-- &6[Lv " + stone.getLevel() + " " + stone.getDisplay() + "] ";
-		line += "&6[Lv " + craft.getLevel() + " " + craft.getDisplay() + "] &7--";
+		line = "&7-- &6[Lv " + stone.getLevel() + " " + stone.getType().getDisplay() + "] ";
+		line += "&6[Lv " + craft.getLevel() + " " + craft.getType().getDisplay() + "] &7--";
 		sendMessage(recipient, line);
 		
 		// Attributes
