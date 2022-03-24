@@ -39,6 +39,7 @@ public class Professions extends JavaPlugin implements Listener {
 	
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
+	public static GardenManager gm;
 	public static StorageManager sm;
 	public static MinigameManager mim;
 	public static RecipeManager rm;
@@ -86,6 +87,7 @@ public class Professions extends JavaPlugin implements Listener {
 			rm = new RecipeManager(this);
 			mim = new MinigameManager(this);
 			io = new IOListeners(this);
+			gm = new GardenManager(this);
 			getServer().getPluginManager().registerEvents(io, this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
@@ -93,6 +95,7 @@ public class Professions extends JavaPlugin implements Listener {
 			IOListeners.addComponent(pm);
 			IOListeners.addComponent(sm);
 			IOListeners.addComponent(rm);
+			IOListeners.addComponent(gm);
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));

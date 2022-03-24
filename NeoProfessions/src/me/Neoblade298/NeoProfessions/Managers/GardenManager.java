@@ -1,9 +1,13 @@
 package me.Neoblade298.NeoProfessions.Managers;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +15,7 @@ import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
+import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
@@ -50,43 +55,60 @@ public class GardenManager implements IOComponent {
 	@Override
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		// Check if player exists already
-		/*
-		if (knowledge.containsKey(p.getUniqueId())) {
+		if (gardens.containsKey(p.getUniqueId())) {
 			return;
 		}
 
-		HashSet<String> keys = new HashSet<String>();
-		knowledge.put(p.getUniqueId(), keys);
+		HashMap<ProfessionType, Garden> pgardens = new HashMap<ProfessionType, Garden>();
+		gardens.put(p.getUniqueId(), pgardens);
+		for (ProfessionType type : ProfessionType.values()) {
+			pgardens.put(type, new Garden());
+		}
 		
-		// Check if player exists on SQL
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_knowledge WHERE UUID = '" + p.getUniqueId() + "';");
+			// Set up gardens
+			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_gardens WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				keys.add(rs.getString(2));
+				pgardens.get(ProfessionType.valueOf(rs.getString(2))).setSize(rs.getInt(3));
+			}
+
+			// Set up garden slots
+			rs = stmt.executeQuery("SELECT * FROM professions_gardenslots WHERE UUID = '" + p.getUniqueId() + "';");
+			while (rs.next()) {
+				GardenSlot gslot = new GardenSlot(rs.getInt(4), GardenManager.getFertilizer(rs.getInt(6)), rs.getLong(5));
+				pgardens.get(ProfessionType.valueOf(rs.getString(2))).getSlots().put(rs.getInt(3), gslot);
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init storage for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init gardens for user " + p.getName());
 			e.printStackTrace();
 		}
-		*/
 	}
 
 	@Override
 	public void savePlayer(Player p, Statement stmt) {
-		/*
 		UUID uuid = p.getUniqueId();
+		HashMap<ProfessionType, Garden> pgardens = gardens.get(uuid);
 		try {
-			for (String key : knowledge.get(uuid)) {
-				stmt.addBatch("REPLACE INTO professions_accounts "
-						+ "VALUES ('" + uuid + "', '" + key + "');");
+			for (ProfessionType type : pgardens.keySet()) {
+				Garden garden = pgardens.get(type);
+				// Save garden size
+				stmt.addBatch("REPLACE INTO professions_gardens "
+						+ "VALUES ('" + uuid + "', '" + type + "', " + pgardens.get(type).getSize() + ");");
+				
+				// Save garden slots
+				for (Integer slot : garden.getSlots().keySet()) {
+					GardenSlot gslot = garden.getSlots().get(slot);
+					stmt.addBatch("REPLACE INTO professions_gardens "
+							+ "VALUES ('" + uuid + "', '" + type + "', " + slot + "," + gslot.getId() + "," +
+							gslot.getEndTime() + "," + gslot.getFertilizer().getId() +");");
+				}
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save gardens for user " + p.getName());
 			e.printStackTrace();
 		}
-		*/
 	}
 	
 	public static HashMap<ProfessionType, Garden> getGardens(Player p) {
