@@ -15,7 +15,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
+import me.Neoblade298.NeoProfessions.Minigames.Minigame;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
 import me.Neoblade298.NeoProfessions.Recipes.GearResult;
@@ -26,14 +31,38 @@ import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
 import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
+import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class GardenManager implements IOComponent {
 	Professions main;
-	public static HashMap<UUID, HashSet<String>> gardens = new HashMap<UUID, HashSet<String>>();
-	public static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
+	private static HashMap<UUID, HashSet<String>> gardens = new HashMap<UUID, HashSet<String>>();
+	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	public GardenManager(Professions main) {
 		this.main = main;
+
+		loadFertilizers(new File(main.getDataFolder(), "fertilizers"));
+	}
+	
+	private void loadFertilizers(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadFertilizers(file);
+			}
+			else {
+				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+				for (String key : yaml.getKeys(false)) {
+					ConfigurationSection cfg = yaml.getConfigurationSection(key);
+					int id = Integer.parseInt(key);
+					double timeMult = cfg.getDouble("time-multiplier");
+					double amountMult = cfg.getDouble("amount-multiplier");
+					Rarity minRarity = Rarity.valueOf(cfg.getString("min-rarity").toUpperCase());
+					double rarityWeightMult = cfg.getDouble("rarity-weight-multiplier");
+					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMult, minRarity);
+					fertilizers.put(id, new Fertilizer(id, params, timeMult));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -74,7 +103,11 @@ public class GardenManager implements IOComponent {
 		}
 	}
 	
-	public static HashSet<String> getKnowledge(Player p) {
-		return knowledge.get(p.getUniqueId());
+	public static HashSet<String> getGarden(Player p) {
+		return gardens.get(p.getUniqueId());
+	}
+	
+	public static Fertilizer getFertilizer(int id) {
+		return fertilizers.get(id);
 	}
 }
