@@ -6,13 +6,13 @@ import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import me.neoblade298.neobossinstances.Main;
 
-public class SpectatingBossCondition extends SkillCondition implements IEntityCondition {
+public class FightingBossCondition extends SkillCondition implements IEntityCondition {
     
-    public SpectatingBossCondition(MythicLineConfig mlc) {
+    public FightingBossCondition(MythicLineConfig mlc) {
         super(mlc.getLine());
     }
 
     public boolean check(AbstractEntity t) {
-    	return Main.getSpectators().contains(t.getUniqueId());
+    	return !Main.getSpectators().contains(t.getUniqueId());
     }
 }

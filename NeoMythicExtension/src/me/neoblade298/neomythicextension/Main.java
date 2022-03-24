@@ -87,8 +87,8 @@ public class Main extends JavaPlugin implements Listener {
 			event.register(condition);
 		}
 
-		else if (event.getConditionName().equalsIgnoreCase("spectatingboss")) {
-			SpectatingBossCondition condition = new SpectatingBossCondition(event.getConfig());
+		else if (event.getConditionName().equalsIgnoreCase("fightingboss")) {
+			FightingBossCondition condition = new FightingBossCondition(event.getConfig());
 			event.register(condition);
 		}
 	}
