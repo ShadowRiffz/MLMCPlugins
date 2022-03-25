@@ -67,7 +67,7 @@ public class MinigameManager {
 								break;
 							}
 						}
-						StoredItem sitem = StorageManager.getItemDefinitions().get(itemId);
+						StoredItem sitem = StorageManager.getItem(itemId);
 						sitem.addSource(display, false);
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}

@@ -18,7 +18,7 @@ public class StoredItemResult implements RecipeResult {
 		for (String arg : lineArgs) {
 			if (arg.startsWith("id")) {
 				int id = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
-				item = StorageManager.getItemDefinitions().get(id);
+				item = StorageManager.getItem(id);
 			}
 			else if (arg.startsWith("amount")) {
 				this.amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));

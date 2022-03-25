@@ -41,10 +41,10 @@ public class GardenManager implements IOComponent {
 				for (String key : yaml.getKeys(false)) {
 					ConfigurationSection cfg = yaml.getConfigurationSection(key);
 					int id = Integer.parseInt(key);
-					double timeMult = cfg.getDouble("time-multiplier");
-					double amountMult = cfg.getDouble("amount-multiplier");
-					Rarity minRarity = Rarity.valueOf(cfg.getString("min-rarity").toUpperCase());
-					double rarityWeightMult = cfg.getDouble("rarity-weight-multiplier");
+					double timeMult = cfg.getDouble("time-multiplier", 1);
+					double amountMult = cfg.getDouble("amount-multiplier", 1);
+					Rarity minRarity = Rarity.valueOf(cfg.getString("min-rarity", "COMMON").toUpperCase());
+					double rarityWeightMult = cfg.getDouble("rarity-weight-multiplier", 1);
 					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMult, minRarity);
 					fertilizers.put(id, new Fertilizer(id, params, timeMult));
 				}

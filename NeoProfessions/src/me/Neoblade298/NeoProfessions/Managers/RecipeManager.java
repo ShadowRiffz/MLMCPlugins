@@ -64,7 +64,7 @@ public class RecipeManager implements IOComponent {
 								amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
 							}
 						}
-						StoredItemInstance si = new StoredItemInstance(StorageManager.getItemDefinitions().get(id), amount);
+						StoredItemInstance si = new StoredItemInstance(StorageManager.getItem(id), amount);
 						si.getItem().addRelevantRecipe(key);
 						components.add(si);
 					}

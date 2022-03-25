@@ -162,8 +162,8 @@ public class StorageManager implements IOComponent, Listener {
 		}
 	}
 	
-	public static HashMap<Integer, StoredItem> getItemDefinitions() {
-		return items;
+	public static StoredItem getItem(int id) {
+		return items.get(id);
 	}
 	
 	public static HashMap<Integer, Integer> getStorage(Player p) {

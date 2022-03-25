@@ -91,7 +91,7 @@ public class StorageView extends ProfessionInventory {
 	
 	private void setupItems() {
 		for (int id : StorageManager.getStorage(p).keySet()) {
-			StoredItem item = StorageManager.getItemDefinitions().get(id);
+			StoredItem item = StorageManager.getItem(id);
 			int amount = StorageManager.getAmount(p, id);
 			if (amount > 0) {
 				items.add(new StoredItemInstance(item, amount));
@@ -101,10 +101,10 @@ public class StorageView extends ProfessionInventory {
 	
 	private void setupItems(int min, int max) {
 		for (int i = min; i <= max; i++) {
-			if (!StorageManager.getItemDefinitions().containsKey(i)) {
+			if (StorageManager.getItem(i) == null) {
 				break;
 			}
-			StoredItem item = StorageManager.getItemDefinitions().get(i);
+			StoredItem item = StorageManager.getItem(i);
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
 				items.add(new StoredItemInstance(item, amount));

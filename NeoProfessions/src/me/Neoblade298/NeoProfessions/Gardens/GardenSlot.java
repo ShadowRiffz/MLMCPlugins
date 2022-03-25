@@ -1,5 +1,16 @@
 package me.Neoblade298.NeoProfessions.Gardens;
 
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Managers.StorageManager;
+import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+
 public class GardenSlot {
 	int id;
 	Fertilizer fertilizer;
@@ -21,5 +32,36 @@ public class GardenSlot {
 
 	public long getEndTime() {
 		return endTime;
+	}
+	
+	public ItemStack getIcon() {
+		boolean isComplete = endTime <= System.currentTimeMillis();
+		StoredItem si = StorageManager.getItem(id);
+		ItemStack item = isComplete ? si.getItem() : new ItemStack(Material.PUMPKIN_SEEDS);
+		ItemMeta meta = item.getItemMeta();
+		String display = isComplete ? "§a" : "§c";
+		display += ChatColor.stripColor(si.getDisplay());
+		meta.setDisplayName(display);
+		ArrayList<String> lore = new ArrayList<String>();
+		if (isComplete) {
+			lore.add("§aCan be harvested!");
+		}
+		else {
+			int time = (int) ((endTime - System.currentTimeMillis()) / 1000); // Remaining time in seconds
+			int minutes = time / 60;
+			int seconds = time % 60;
+			lore.add("§cTime to harvest: " + String.format("§c%d:%02d", minutes, seconds));
+		}
+		
+		if (fertilizer != null) {
+			lore.add("§6Fertilized:");
+			for (String line : fertilizer.getEffects()) {
+				lore.add(line);
+			}
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		return nbti.getItem();
 	}
 }
