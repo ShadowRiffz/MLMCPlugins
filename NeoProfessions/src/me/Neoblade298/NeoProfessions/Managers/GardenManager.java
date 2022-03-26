@@ -62,6 +62,9 @@ public class GardenManager implements IOComponent {
 		HashMap<ProfessionType, Garden> pgardens = new HashMap<ProfessionType, Garden>();
 		gardens.put(p.getUniqueId(), pgardens);
 		for (ProfessionType type : ProfessionType.values()) {
+			if (type.equals(ProfessionType.CRAFTER)) {
+				continue;
+			}
 			pgardens.put(type, new Garden());
 		}
 		
@@ -99,9 +102,10 @@ public class GardenManager implements IOComponent {
 				// Save garden slots
 				for (Integer slot : garden.getSlots().keySet()) {
 					GardenSlot gslot = garden.getSlots().get(slot);
-					stmt.addBatch("REPLACE INTO professions_gardens "
-							+ "VALUES ('" + uuid + "', '" + type + "', " + slot + "," + gslot.getId() + "," +
-							gslot.getEndTime() + "," + gslot.getFertilizer().getId() +");");
+					int fid = gslot.getFertilizer() != null ? gslot.getFertilizer().getId() : -1;
+					stmt.addBatch("REPLACE INTO professions_gardenslots "
+							+ "VALUES ('" + uuid + "', '" + type + "'," + slot + "," + gslot.getId() + "," +
+							gslot.getEndTime() + "," + fid +");");
 				}
 			}
 		}

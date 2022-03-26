@@ -54,9 +54,8 @@ public class Profession {
 	}
 	
 	public void addExp(Player p, int exp) {
-		int prevLvl = this.level;
 		double newExp = exp + this.exp;
-		int percent = (int) (newExp / nextLv.get(this.level)) * 100;
+		int percent = (int) (newExp / (double) nextLv.get(this.level)) * 100;
 		percent = percent > 100 ? 100 : percent;
 		
 		// If next level exists, check that the player can reach it, else just add
@@ -68,7 +67,7 @@ public class Profession {
 			levelup = true;
 		}
 		if (levelup) {
-			p.sendMessage(Professions.lvlupMsg.replaceAll("%level%", "" + this.level).replaceAll("%previous%", "" + prevLvl)
+			p.sendMessage(Professions.lvlupMsg.replaceAll("%level%", "" + this.level).replaceAll("%type%", "" + this.type.getDisplay())
 					.replaceAll("%profname%", type.getDisplay()));
 			p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 		}

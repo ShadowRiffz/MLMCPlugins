@@ -17,7 +17,7 @@ public class Minigame {
 	private String display;
 	int numDrops;
 	int difficulty;
-	private static MinigameParameters defaultParams = new MinigameParameters();
+	public static MinigameParameters defaultParams = new MinigameParameters();
 	
 	public Minigame(String display, String type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty) {
 		this.type = type;

@@ -18,6 +18,8 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
+
+import me.Neoblade298.NeoProfessions.Inventories.GardenSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
@@ -50,6 +52,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
 			sender.sendMessage("§7- §c/prof storage [min] [max]");
+			sender.sendMessage("§7- §c/prof gardens");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemStack main = p.getInventory().getItemInMainHand();
@@ -138,6 +141,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 		else if (args[0].equalsIgnoreCase("storage")) {
 			new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("gardens")) {
+			new GardenSelectInventory(p);
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {

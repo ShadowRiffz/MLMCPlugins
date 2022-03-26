@@ -179,20 +179,21 @@ public class StorageManager implements IOComponent, Listener {
 			return;
 		}
 
-		ItemStack item = e.getItem().clone();
+		ItemStack item = e.getItem();
 		if (item == null || !item.getType().equals(Material.PAPER)) {
 			return;
 		}
+		ItemStack clone = e.getItem().clone();
 
 		Player p = e.getPlayer();
-		item.setAmount(1);
-		NBTItem nbti = new NBTItem(item);
+		clone.setAmount(1);
+		NBTItem nbti = new NBTItem(clone);
 		if (nbti.hasKey("id")) {
 			int id = nbti.getInteger("id");
 			int amount = nbti.getInteger("amount");
 			StoredItem si = items.get(id);
 			givePlayer(p, nbti.getInteger("id"), nbti.getInteger("amount"));
-			p.getInventory().removeItem(item);
+			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + amount + " " + si.getDisplay() + "§7!");
 		}

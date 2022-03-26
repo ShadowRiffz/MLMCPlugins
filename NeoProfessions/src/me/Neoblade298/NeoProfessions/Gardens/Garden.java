@@ -6,15 +6,21 @@ import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Minigames.Minigame;
 
 public class Garden {
 	int size;
 	HashMap<Integer, GardenSlot> slots;
 	private static final long DEFAULT_GROW_TIME = 1800000; // 30 minutes
+	private static final int BASE_SIZE = 3;
+	
+	public Garden() {
+		this.size = BASE_SIZE;
+		this.slots = new HashMap<Integer, GardenSlot>();
+	}
 	
 	public void setSize(int size) {
 		this.size = size;
-		this.slots = new HashMap<Integer, GardenSlot>();
 	}
 	
 	public int getSize() {
@@ -37,7 +43,7 @@ public class Garden {
 		GardenSlot gs = slots.get(slot);
 		if (gs != null && gs.getEndTime() <= System.currentTimeMillis()) {
 			slots.remove(slot);
-			MinigameManager.startMinigame(p, gs.getFertilizer().getParams());
+			MinigameManager.startMinigame(p, gs.getFertilizer() != null ? gs.getFertilizer().getParams() : Minigame.defaultParams);
 		}
 	}
 }

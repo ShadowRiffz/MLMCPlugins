@@ -49,7 +49,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	
 	private ItemStack[] setupItems(ItemStack[] contents) {
 		int count = 1;
-		for (int i = FERTILIZER_BASE; StorageManager.getItem(i) == null || i <= FERTILIZER_MAX; i++) {
+		for (int i = FERTILIZER_BASE; StorageManager.getItem(i) != null && i <= FERTILIZER_MAX; i++) {
 			StoredItem item = StorageManager.getItem(i);
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
@@ -122,7 +122,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 				return;
 			}
-			else if (!StorageManager.playerHas(p, fertilizerId, 1)) {
+			else if (!StorageManager.playerHas(p, fertilizerId, 1) && fertilizerId != -1) {
 				p.sendMessage("§cYou don't have enough of this fertilizer!");
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 				return;
@@ -133,9 +133,11 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 				return;
 			}
 			StorageManager.takePlayer(p, id, 1);
-			StorageManager.takePlayer(p, fertilizerId, 1);
+			if (fertilizerId != -1) {
+				StorageManager.takePlayer(p, fertilizerId, 1);
+			}
 			CurrencyManager.subtract(p, level, 2);
-			GardenManager.getGardens(p).get(type).plantSeed(slot, id, fertilizerId);
+			GardenManager.getGardens(p).get(type).plantSeed(this.slot, id, fertilizerId);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 			new GardenInventory(p, type);
 		}

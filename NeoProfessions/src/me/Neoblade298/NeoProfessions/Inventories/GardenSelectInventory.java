@@ -38,7 +38,7 @@ public class GardenSelectInventory extends ProfessionInventory {
 		}
 		else if (type.equals(ProfessionType.LOGGER)) {
 			item = new ItemStack(Material.OAK_LOG);
-			name = "§Logger Arbor";
+			name = "§9Logger Arbor";
 		}
 		else {
 			item = new ItemStack(Material.IRON_ORE);

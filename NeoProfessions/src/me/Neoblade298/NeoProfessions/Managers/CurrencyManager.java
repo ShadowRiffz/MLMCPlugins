@@ -103,14 +103,14 @@ public class CurrencyManager implements IOComponent, Listener {
 		HashMap<Integer, Integer> essences = essence.get(p.getUniqueId());
 		int newAmount = essences.getOrDefault(level, 0) + amount;
 		essences.put(level, newAmount);
-		Util.sendMessage(p, "&a+" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
+		Util.sendMessageNoPrefix(p, "&a+" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
 	}
 	
 	public static void subtract(Player p, int level, int amount) {
 		HashMap<Integer, Integer> essences = essence.get(p.getUniqueId());
 		int newAmount = essences.getOrDefault(level, 0) - amount;
 		essences.put(level, newAmount);
-		Util.sendMessage(p, "&c-" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
+		Util.sendMessageNoPrefix(p, "&c-" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
 	}
 	
 	public static void set(Player p, int level, int amount) {
@@ -167,18 +167,19 @@ public class CurrencyManager implements IOComponent, Listener {
 			return;
 		}
 
-		ItemStack item = e.getItem().clone();
+		ItemStack item = e.getItem();
 		if (item == null || !item.getType().equals(Material.PAPER)) {
 			return;
 		}
 
 		Player p = e.getPlayer();
-		item.setAmount(1);
-		NBTItem nbti = new NBTItem(item);
+		ItemStack clone = item.clone();
+		clone.setAmount(1);
+		NBTItem nbti = new NBTItem(clone);
 		if (nbti.getString("type").equals("essence")) {
 			int level = nbti.getInteger("level");
 			int amount = nbti.getInteger("amount");
-			p.getInventory().removeItem(item);
+			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + amount + " §6Lv " + level + "§7 Essence!");
 			CurrencyManager.add(p, level, amount);

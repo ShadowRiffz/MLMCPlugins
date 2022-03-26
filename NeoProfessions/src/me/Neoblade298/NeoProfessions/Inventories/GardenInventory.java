@@ -2,6 +2,7 @@ package me.Neoblade298.NeoProfessions.Inventories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,7 +13,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
@@ -27,7 +27,6 @@ public class GardenInventory extends ProfessionInventory {
 	private Garden garden;
 	private static final int HOME_SLOT = 49;
 	public static final int EMPTY = 0, IMMATURE = 1, MATURE = 2;
-	private BukkitTask update;
 	private Player p;
 	private ProfessionType type;
 
@@ -51,12 +50,17 @@ public class GardenInventory extends ProfessionInventory {
 
 		inv.setContents(setupInventory(inv.getContents()));
 		
-		update = new BukkitRunnable() {
+		new BukkitRunnable() {
 			public void run() {
+				if (p.getOpenInventory().getTopInventory() != inv) {
+					this.cancel();
+				}
+				
 				ItemStack[] contents = inv.getContents();
 				for (int i = 0; i < garden.getSize(); i++) {
 					contents[i] = updateIcon(i, contents[i]);
 				}
+				inv.setContents(contents);
 			}
 		}.runTaskTimer(GardenManager.main, 40L, 40L);
 
@@ -67,12 +71,14 @@ public class GardenInventory extends ProfessionInventory {
 		NBTItem nbti = new NBTItem(item);
 		if (nbti.getInteger("type") == IMMATURE) {
 			GardenSlot gslot = garden.getSlots().get(slot);
-			if (gslot.getEndTime() > System.currentTimeMillis()) {
+			if (gslot.getEndTime() <= System.currentTimeMillis()) {
 				nbti.setInteger("type", MATURE);
-				nbti.applyNBT(item);
+				return gslot.getIcon();
 			}
 			ItemMeta meta = item.getItemMeta();
-			meta.getLore().set(0, gslot.getTimerLine());
+			List<String> lore = meta.getLore();
+			lore.set(0, gslot.getTimerLine());
+			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
 		return item;
@@ -155,6 +161,5 @@ public class GardenInventory extends ProfessionInventory {
 	}
 	
 	public void handleInventoryClose(final InventoryCloseEvent e) {
-		update.cancel();
 	}
 }
