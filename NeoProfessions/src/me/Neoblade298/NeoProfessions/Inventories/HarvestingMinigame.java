@@ -26,7 +26,7 @@ import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class HarvestingMinigame extends ProfessionInventory {
-	private static float NOTE1 = 0.5F, NOTE2 = 0.629961F, NOTE3 = 0.749154F, NOTE4 = 1.0F, ERROR = 0.594604F;
+	public static float NOTE1 = 0.5F, NOTE2 = 0.629961F, NOTE3 = 0.749154F, NOTE4 = 1.0F, ERROR = 0.594604F;
 	Professions main;
 	Player p;
 	int stage = 0;

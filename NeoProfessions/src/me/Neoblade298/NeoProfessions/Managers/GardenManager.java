@@ -22,11 +22,11 @@ import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class GardenManager implements IOComponent {
-	Professions main;
+	public static Professions main;
 	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	public GardenManager(Professions main) {
-		this.main = main;
+		GardenManager.main = main;
 
 		loadFertilizers(new File(main.getDataFolder(), "fertilizers"));
 	}

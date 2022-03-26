@@ -11,7 +11,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
@@ -23,8 +26,14 @@ public class GardenInventory extends ProfessionInventory {
 	
 	private Garden garden;
 	private static final int HOME_SLOT = 49;
+	public static final int EMPTY = 0, IMMATURE = 1, MATURE = 2;
+	private BukkitTask update;
+	private Player p;
+	private ProfessionType type;
 
 	public GardenInventory(Player p, ProfessionType type) {
+		this.p = p;
+		this.type = type;
 		String display;
 		switch (type) {
 		case HARVESTER: display = "§9Your Garden";
@@ -41,9 +50,34 @@ public class GardenInventory extends ProfessionInventory {
 		Professions.viewingInventory.put(p, this);
 
 		inv.setContents(setupInventory(inv.getContents()));
+		
+		update = new BukkitRunnable() {
+			public void run() {
+				ItemStack[] contents = inv.getContents();
+				for (int i = 0; i < garden.getSize(); i++) {
+					contents[i] = updateIcon(i, contents[i]);
+				}
+			}
+		}.runTaskTimer(GardenManager.main, 40L, 40L);
 
 		p.openInventory(inv);
 	}
+	
+	private ItemStack updateIcon(int slot, ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		if (nbti.getInteger("type") == IMMATURE) {
+			GardenSlot gslot = garden.getSlots().get(slot);
+			if (gslot.getEndTime() > System.currentTimeMillis()) {
+				nbti.setInteger("type", MATURE);
+				nbti.applyNBT(item);
+			}
+			ItemMeta meta = item.getItemMeta();
+			meta.getLore().set(0, gslot.getTimerLine());
+			item.setItemMeta(meta);
+		}
+		return item;
+	}
+	
 	private ItemStack[] setupInventory(ItemStack[] contents) {
 		HashMap<Integer, GardenSlot> slots = garden.getSlots();
 		for (int i = 0; i < garden.getSize(); i++) {
@@ -65,9 +99,13 @@ public class GardenInventory extends ProfessionInventory {
 		meta.setDisplayName("§aEmpty Plot");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7Left click to plant something!");
+		lore.add("§7Planting costs §e2 §7Essence of");
+		lore.add("§7the same level as the seed!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem nbti = new NBTItem(item);
+		nbti.setInteger("type", EMPTY);
+		return nbti.getItem();
 	}
 	
 	private ItemStack createHomeButton() {
@@ -89,6 +127,24 @@ public class GardenInventory extends ProfessionInventory {
 		if (item == null || item.getType().isAir()) {
 			return;
 		}
+		
+		int slot = e.getRawSlot();
+		if (slot == HOME_SLOT) {
+			new GardenSelectInventory(p);
+			return;
+		}
+		
+		if (slot < 45) {
+			NBTItem nbti = new NBTItem(item);
+			if (nbti.getInteger("type") == EMPTY) {
+				new GardenChooseSeedView(p, type, -1, -1, slot);
+				return;
+			}
+			else if (nbti.getInteger("type") == MATURE) {
+				GardenManager.getGardens(p).get(type).harvestSeed(p, slot);
+				return;
+			}
+		}
 	}
 
 	// Cancel dragging in this inventory
@@ -99,6 +155,6 @@ public class GardenInventory extends ProfessionInventory {
 	}
 	
 	public void handleInventoryClose(final InventoryCloseEvent e) {
-		
+		update.cancel();
 	}
 }
