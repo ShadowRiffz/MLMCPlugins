@@ -56,7 +56,7 @@ public class Profession {
 	public void addExp(Player p, int exp) {
 		double newExp = exp + this.exp;
 		int percent = (int) ((newExp / (double) nextLv.get(this.level)) * 100);
-		percent = Math.max(100, percent);
+		percent = Math.min(100, percent);
 		
 		// If next level exists, check that the player can reach it, else just add
 		p.sendMessage("§a+" + exp + " §7(§f" + percent + "%§7) §6" + type.getDisplay() + " §7exp");

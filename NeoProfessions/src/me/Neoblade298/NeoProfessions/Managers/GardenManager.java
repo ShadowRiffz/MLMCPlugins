@@ -78,6 +78,9 @@ public class GardenManager implements IOComponent {
 			// Set up garden slots
 			rs = stmt.executeQuery("SELECT * FROM professions_gardenslots WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
+				if (rs.getInt(4) == 1) {
+					continue;
+				}
 				GardenSlot gslot = new GardenSlot(rs.getInt(4), GardenManager.getFertilizer(rs.getInt(6)), rs.getLong(5));
 				pgardens.get(ProfessionType.valueOf(rs.getString(2))).getSlots().put(rs.getInt(3), gslot);
 			}
@@ -100,12 +103,18 @@ public class GardenManager implements IOComponent {
 						+ "VALUES ('" + uuid + "', '" + type + "', " + pgardens.get(type).getSize() + ");");
 				
 				// Save garden slots
-				for (Integer slot : garden.getSlots().keySet()) {
+				for (int slot = 0; slot < garden.getSize(); slot++) {
 					GardenSlot gslot = garden.getSlots().get(slot);
-					int fid = gslot.getFertilizer() != null ? gslot.getFertilizer().getId() : -1;
-					stmt.addBatch("REPLACE INTO professions_gardenslots "
-							+ "VALUES ('" + uuid + "', '" + type + "'," + slot + "," + gslot.getId() + "," +
-							gslot.getEndTime() + "," + fid +");");
+					if (gslot != null) {
+						int fid = gslot.getFertilizer() != null ? gslot.getFertilizer().getId() : -1;
+						stmt.addBatch("REPLACE INTO professions_gardenslots "
+								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + "," + gslot.getId() + "," +
+								gslot.getEndTime() + "," + fid +");");
+					}
+					else {
+						stmt.addBatch("REPLACE INTO professions_gardenslots "
+								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + ",-1,-1,-1);");
+					}
 				}
 			}
 		}
@@ -121,5 +130,10 @@ public class GardenManager implements IOComponent {
 	
 	public static Fertilizer getFertilizer(int id) {
 		return fertilizers.get(id);
+	}
+	
+	@Override
+	public String getComponentName() {
+		return "GardenManager";
 	}
 }

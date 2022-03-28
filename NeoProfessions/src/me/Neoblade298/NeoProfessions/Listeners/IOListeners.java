@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -65,9 +66,15 @@ public class IOListeners implements Listener {
 
 					// Save account
 					for (IOComponent component : components) {
-						component.savePlayer(p, stmt);
+						try {
+							component.savePlayer(p, stmt);
+							stmt.executeBatch();
+						}
+						catch (Exception ex) {
+							Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to handle save for component " + component.getComponentName());
+							ex.printStackTrace();
+						}
 					}
-					stmt.executeBatch();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -86,7 +93,13 @@ public class IOListeners implements Listener {
 
 					// Save account
 					for (IOComponent component : components) {
-						component.loadPlayer(p, stmt);
+						try {
+							component.loadPlayer(p, stmt);
+						}
+						catch (Exception ex) {
+							Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to handle load for component " + component.getComponentName());
+							ex.printStackTrace();
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -105,10 +118,16 @@ public class IOListeners implements Listener {
 			// Save account
 			for (IOComponent component : components) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
-					component.savePlayer(p, stmt);
+					try {
+						component.savePlayer(p, stmt);
+						stmt.executeBatch();
+					}
+					catch (Exception ex) {
+						Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to handle disable for component " + component.getComponentName());
+						ex.printStackTrace();
+					}
 				}
 			}
-			stmt.executeBatch();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

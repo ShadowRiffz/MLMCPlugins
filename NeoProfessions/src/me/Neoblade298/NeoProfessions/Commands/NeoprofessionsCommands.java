@@ -28,6 +28,7 @@ import me.Neoblade298.NeoProfessions.Inventories.StorageView;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
@@ -256,7 +257,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ProfessionsMethods.artifactItem(p);
 					}
 				}
-				// /prof give [repair/augment] <aug> [level] [amount]
+				// /prof give [repair/augment/item] <aug/item> [level] [amount]
 				else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 					int offset = 0;
 					String aug = null;
@@ -266,12 +267,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						offset++;
 					}
 					String type = args[1 + offset];
-					// Is an augment
-					if (!StringUtils.isNumeric(args[2 + offset])) {
+					// Augment-specific parsing
+					if (args[1].equalsIgnoreCase("augment")) {
 						aug = args[2 + offset].replaceAll("_", " ");
 						offset++;
 					}
+
 					int lv = Integer.parseInt(args[2 + offset]);
+					int id = lv;
 					lv -= lv % 5; // Round to nearest 5
 					if (args.length > 3 + offset) {
 						amt = Integer.parseInt(args[3 + offset]);
@@ -301,6 +304,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						item.setAmount(amt);
 						p.getInventory().addItem(item);
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " repairs to " + p.getName() + "!");
+					}
+					else if (type.equalsIgnoreCase("item")) {
+						StorageManager.givePlayer(p, id, amt);
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " " + StorageManager.getItem(id).getDisplay() +
+								" to " + p.getName() + "!");
 					}
 					return true;
 				}

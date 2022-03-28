@@ -185,4 +185,9 @@ public class CurrencyManager implements IOComponent, Listener {
 			CurrencyManager.add(p, level, amount);
 		}
 	}
+	
+	@Override
+	public String getComponentName() {
+		return "CurrencyManager";
+	}
 }

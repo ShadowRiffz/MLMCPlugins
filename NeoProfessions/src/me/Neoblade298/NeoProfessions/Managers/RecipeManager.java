@@ -156,4 +156,9 @@ public class RecipeManager implements IOComponent {
 	public static HashSet<String> getKnowledge(Player p) {
 		return knowledge.get(p.getUniqueId());
 	}
+	
+	@Override
+	public String getComponentName() {
+		return "RecipeManager";
+	}
 }

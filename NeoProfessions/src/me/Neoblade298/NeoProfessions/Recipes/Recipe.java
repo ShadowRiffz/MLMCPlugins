@@ -93,7 +93,7 @@ public class Recipe {
 	}
 	
 	public ItemStack getReqsIcon(Player p, boolean canCraft) {
-		ItemStack item = new ItemStack(result.getResultItem(p, canCraft).getType());
+		ItemStack item = result.getResultItem(p, canCraft);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(result.getResultItem(p, canCraft).getItemMeta().getDisplayName());
 		ArrayList<String> lore = new ArrayList<String>();

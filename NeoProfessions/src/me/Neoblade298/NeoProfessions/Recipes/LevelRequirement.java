@@ -38,7 +38,7 @@ public class LevelRequirement implements RecipeRequirement {
 	}
 
 	public String failMessage(Player p) {
-		return "§4[§c§lMLMC§4] §cYou aren't a high enough level §e" + type + "!";
+		return "§4[§c§lMLMC§4] §cYou aren't a high enough level §e" + type.getDisplay() + "§c!";
 	}
 	
 	public String getLoreString(Player p) {

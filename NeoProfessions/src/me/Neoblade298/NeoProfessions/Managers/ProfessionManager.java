@@ -97,4 +97,9 @@ public class ProfessionManager implements IOComponent {
 	public static HashMap<ProfessionType, Profession> getAccount(UUID uuid) {
 		return accounts.get(uuid);
 	}
+	
+	@Override
+	public String getComponentName() {
+		return "ProfessionManager";
+	}
 }

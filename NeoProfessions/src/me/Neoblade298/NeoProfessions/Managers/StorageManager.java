@@ -198,4 +198,9 @@ public class StorageManager implements IOComponent, Listener {
 			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + amount + " " + si.getDisplay() + "§7!");
 		}
 	}
+	
+	@Override
+	public String getComponentName() {
+		return "StorageManager";
+	}
 }
