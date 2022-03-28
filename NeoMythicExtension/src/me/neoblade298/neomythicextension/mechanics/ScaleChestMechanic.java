@@ -52,7 +52,7 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 			double chance = this.basechance;
 
 			// Increases chance by boss level
-			chance += Math.min(0.25, 0 + (0.005 * (data.getCaster().getLevel() - 1)));;
+			chance += Math.min(0.5, 0.25 + (0.005 * (data.getCaster().getLevel() - 1)));
 			double moddedChance = chance;
 			
 			// Check if player is holding a drop charm

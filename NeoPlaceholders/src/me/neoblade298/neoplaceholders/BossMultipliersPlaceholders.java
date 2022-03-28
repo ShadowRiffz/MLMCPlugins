@@ -75,14 +75,14 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 			if (level < 1) {
 				return "" + 0;
 			}
-			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
+			double scale = Math.min(2, 1 + (0.02 * (level - 1)));
 			return df.format(scale);
 		}
 		else if (id.equalsIgnoreCase("chest")) {
 			if (level < 1) {
 				return "" + 0;
 			}
-			double scale = Math.min(50, 25 + (0.25 * (level - 1)));
+			double scale = Math.min(50, 25 + (0.5 * (level - 1)));
 			return df.format(scale);
 		}
 		else if (id.equalsIgnoreCase("damage")) {
