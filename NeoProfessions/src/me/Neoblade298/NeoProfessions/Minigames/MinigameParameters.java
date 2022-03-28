@@ -1,24 +1,24 @@
 package me.Neoblade298.NeoProfessions.Minigames;
 
+import java.util.HashMap;
+import java.util.Set;
+
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 
 public class MinigameParameters {
 	int id;
 	double amountMultiplier;
-	double rarityWeightMultiplier;
-	Rarity minRarity;
+	HashMap<Rarity, Double> rarityWeightMultipliers;
 	public MinigameParameters() {
 		this.id = 0;
 		this.amountMultiplier = 1;
-		this.rarityWeightMultiplier = 1;
-		this.minRarity = Rarity.COMMON;
+		this.rarityWeightMultipliers = new HashMap<Rarity, Double>();
 	}
 	
-	public MinigameParameters(int id, double amountMultiplier, double rarityWeightMultiplier, Rarity minRarity) {
+	public MinigameParameters(int id, double amountMultiplier, HashMap<Rarity, Double> rarityWeightMultipliers) {
 		this.id = id;
 		this.amountMultiplier = amountMultiplier;
-		this.rarityWeightMultiplier = rarityWeightMultiplier;
-		this.minRarity = minRarity;
+		this.rarityWeightMultipliers = rarityWeightMultipliers;
 	}
 	public int getId() {
 		return id;
@@ -26,10 +26,13 @@ public class MinigameParameters {
 	public double getAmountMultiplier() {
 		return amountMultiplier;
 	}
-	public double getRarityWeightMultiplier() {
-		return rarityWeightMultiplier;
+	public void addRarityWeightMultiplier(Rarity rarity, double mult) {
+		rarityWeightMultipliers.put(rarity, rarityWeightMultipliers.getOrDefault(rarity, 1D) * mult);
 	}
-	public Rarity getMinRarity() {
-		return minRarity;
+	public double getRarityWeightMultiplier(Rarity rarity) {
+		return rarityWeightMultipliers.getOrDefault(rarity, 1D);
+	}
+	public Set<Rarity> getModdedRarities() {
+		return rarityWeightMultipliers.keySet();
 	}
 }

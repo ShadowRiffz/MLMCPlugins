@@ -105,6 +105,7 @@ public class Professions extends JavaPlugin implements Listener {
 			this.getCommand("etake").setExecutor(new EssenceTakeCommand(this));
 			this.getCommand("eset").setExecutor(new EssenceSetCommand(this));
 			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
+			this.getCommand("profs").setExecutor(new ProfsCommand(this));
 		}
 		
 		// SQL

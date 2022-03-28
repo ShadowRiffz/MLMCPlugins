@@ -24,8 +24,8 @@ public class Fertilizer {
 		if (params.getAmountMultiplier() != 1) {
 			effects.add("§7- Harvest Amount §e" + df.format(params.getAmountMultiplier()) + "x");
 		}
-		if (!params.getMinRarity().equals(Rarity.COMMON)) {
-			effects.add("§7- Droprate of " + params.getMinRarity().getDisplay() + "+ §e" + df.format(params.getRarityWeightMultiplier()) + "x");
+		for (Rarity rarity : params.getModdedRarities()) {
+			effects.add("§7- Droprate of " + rarity.getDisplay() + " §e" + df.format(params.getRarityWeightMultiplier(rarity)) + "x");
 		}
 	}
 	public int getId() {

@@ -43,9 +43,13 @@ public class GardenManager implements IOComponent {
 					int id = Integer.parseInt(key);
 					double timeMult = cfg.getDouble("time-multiplier", 1);
 					double amountMult = cfg.getDouble("amount-multiplier", 1);
-					Rarity minRarity = Rarity.valueOf(cfg.getString("min-rarity", "COMMON").toUpperCase());
-					double rarityWeightMult = cfg.getDouble("rarity-weight-multiplier", 1);
-					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMult, minRarity);
+					
+					HashMap<Rarity, Double> rarityWeightMults = new HashMap<Rarity, Double>();
+					ConfigurationSection rwcfg = cfg.getConfigurationSection("rarity-weight-multipliers");
+					for (String rar : rwcfg.getKeys(false)) {
+						rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
+					}
+					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMults);
 					fertilizers.put(id, new Fertilizer(id, params, timeMult));
 				}
 			}

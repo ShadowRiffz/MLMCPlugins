@@ -9,6 +9,9 @@ commands:
   prof:
     description: Main command
     usage: /prof [args]
+  profs:
+    description: View exp command
+    usage: /profs [args]
   value:
     description: Value command
     usage: /value

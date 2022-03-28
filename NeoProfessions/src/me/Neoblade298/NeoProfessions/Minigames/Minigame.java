@@ -39,9 +39,7 @@ public class Minigame {
 			MinigameDrops mdrops = droptable.getDropTable().get(0);
 			int index = 0;
 			int weight = mdrops.getWeight();
-			if (mdrops.getItem().getRarity().getPriority() >= params.getMinRarity().getPriority()) {
-				weight *= params.getRarityWeightMultiplier();
-			}
+			weight *= params.getRarityWeightMultiplier(mdrops.getItem().getRarity());
 			
 			do {
 				mdrops = droptable.getDropTable().get(index);
