@@ -50,25 +50,16 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	private ItemStack[] setupItems(ItemStack[] contents) {
 		int count = 1;
 		for (int i = FERTILIZER_BASE; StorageManager.getItem(i) != null && i <= FERTILIZER_MAX; i++) {
-			StoredItem item = StorageManager.getItem(i);
+			StoredItem si = StorageManager.getItem(i);
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
-				NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView());
+				ItemStack item = new StoredItemInstance(si, amount).getStorageView();
+				ItemMeta meta = item.getItemMeta();
+				meta.setLore(GardenManager.getFertilizer(i).getEffects());
+				item.setItemMeta(meta);
+				NBTItem nbti = new NBTItem(item);
 				nbti.setInteger("id", i);
 				contents[count++] = nbti.getItem();
-			}
-		}
-		
-		// Add any extra seeds I may have added
-		if (min != -1) {
-			for (int i = min; i < max; i++) {
-				StoredItem item = StorageManager.getItem(i);
-				int amount = StorageManager.getAmount(p, i);
-				if (amount > 0) {
-					NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView());
-					nbti.setInteger("id", i);
-					contents[count++] = nbti.getItem();
-				}
 			}
 		}
 		return contents;

@@ -33,10 +33,12 @@ public class Garden {
 	
 	public void plantSeed(int slot, int plantId, int fertilizerId) {
 		Fertilizer fert = null;
+		long growTime = DEFAULT_GROW_TIME;
 		if (fertilizerId != -1) {
 			fert = GardenManager.getFertilizer(fertilizerId);
+			growTime *= fert.getTimeMultiplier();
 		}
-		this.slots.put(slot, new GardenSlot(plantId, fert, System.currentTimeMillis() + DEFAULT_GROW_TIME));
+		this.slots.put(slot, new GardenSlot(plantId, fert, System.currentTimeMillis() + growTime));
 	}
 	
 	public void harvestSeed(Player p, int slot) {
