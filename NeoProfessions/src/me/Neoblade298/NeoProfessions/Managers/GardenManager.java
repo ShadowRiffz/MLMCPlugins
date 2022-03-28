@@ -78,7 +78,7 @@ public class GardenManager implements IOComponent {
 			// Set up garden slots
 			rs = stmt.executeQuery("SELECT * FROM professions_gardenslots WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				if (rs.getInt(4) == 1) {
+				if (rs.getInt(4) == -1) { // Ignore empty slots
 					continue;
 				}
 				GardenSlot gslot = new GardenSlot(rs.getInt(4), GardenManager.getFertilizer(rs.getInt(6)), rs.getLong(5));
