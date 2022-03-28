@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Managers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +18,7 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 public class MinigameManager {
 	public static Professions main;
 	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
+	private static HashMap<UUID, HashMap<UUID, Long>> playerCooldowns = new HashMap<UUID, HashMap<UUID, Long>>();
 	
 	public MinigameManager(Professions main) {
 		MinigameManager.main = main;
@@ -83,5 +85,23 @@ public class MinigameManager {
 	
 	public static void startMinigame(Player p, MinigameParameters params) {
 		games.get(params.getId()).startMinigame(p, params);
+	}
+	
+	public static void startMinigame(Player p, int key, UUID mob, int cooldown) {
+		if (!playerCooldowns.containsKey(p.getUniqueId())) {
+			playerCooldowns.put(p.getUniqueId(), new HashMap<UUID, Long>());
+		}
+		
+		HashMap<UUID, Long> cooldowns = playerCooldowns.get(p);
+		long currCd = cooldowns.getOrDefault(mob, 0L);
+		if (currCd > System.currentTimeMillis()) {
+			int time = (int) ((currCd - System.currentTimeMillis()) / 1000); // Remaining time in seconds
+			int minutes = time / 60;
+			int seconds = time % 60;
+			p.sendMessage("§cYou cannot harvest this node for another " + String.format("§c%d:%02d", minutes, seconds));
+			return;
+		}
+		games.get(key).startMinigame(p, null);
+		cooldowns.put(mob, System.currentTimeMillis() + cooldown);
 	}
 }
