@@ -59,7 +59,6 @@ public class RecipeView extends ProfessionInventory {
 		p.openInventory(inv);
 		this.base = base;
 		rsorter = new RecipeSorter();
-		Professions.viewingInventory.put(p, this);
 		
 		this.min = min;
 		this.max = max;
@@ -73,6 +72,7 @@ public class RecipeView extends ProfessionInventory {
 		
 		inv.setContents(new ItemStack[54]);
 		inv.setContents(setupAll(inv.getContents()));
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private ItemStack[] setupAll(ItemStack[] contents) {

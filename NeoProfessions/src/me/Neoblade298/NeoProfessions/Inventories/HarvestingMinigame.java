@@ -45,7 +45,6 @@ public class HarvestingMinigame extends ProfessionInventory {
 		this.drops = drops;
 		this.difficulty = difficulty;
 		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
-		Professions.viewingInventory.put(p, this);
 		
 		ItemStack[] contents = inv.getContents();
 		for (int i = 11; i <= 15; i++) {
@@ -56,6 +55,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		inv.setContents(contents);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private ItemStack generateStartButton() {

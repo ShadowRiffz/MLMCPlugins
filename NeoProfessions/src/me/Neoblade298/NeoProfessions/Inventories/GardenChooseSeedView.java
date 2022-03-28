@@ -30,7 +30,6 @@ public class GardenChooseSeedView extends ProfessionInventory {
 		this.max = max;
 		this.slot = slot;
 		inv = Bukkit.createInventory(p, 54, "§9Choose a Seed");
-		Professions.viewingInventory.put(p, this);
 		this.p = p;
 
 		ItemStack[] contents = inv.getContents();
@@ -38,6 +37,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 		inv.setContents(setupItems(contents, min, max));
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private ItemStack[] setupItems(ItemStack[] contents, int min, int max) {

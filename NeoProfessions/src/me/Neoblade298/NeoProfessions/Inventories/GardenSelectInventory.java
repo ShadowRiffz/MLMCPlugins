@@ -18,7 +18,6 @@ public class GardenSelectInventory extends ProfessionInventory {
 
 	public GardenSelectInventory(Player p) {
 		inv = Bukkit.createInventory(p, 9, "§9Your Gardens");
-		Professions.viewingInventory.put(p, this);
 
 		ItemStack[] contents = inv.getContents();
 		contents[2] = createGarden(ProfessionType.HARVESTER);
@@ -27,6 +26,7 @@ public class GardenSelectInventory extends ProfessionInventory {
 		inv.setContents(contents);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGarden(ProfessionType type) {

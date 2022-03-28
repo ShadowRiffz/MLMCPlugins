@@ -59,7 +59,6 @@ public class StorageView extends ProfessionInventory {
 		this.max = max;
 		this.sorters = new Sorter[5];
 		invsorter = new InvSorter();
-		Professions.viewingInventory.put(p, this);
 		
 		// Setup sorters
 		int namePriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "name-priority");
@@ -87,6 +86,7 @@ public class StorageView extends ProfessionInventory {
 		sortItems();
 		inv.setContents(new ItemStack[54]);
 		inv.setContents(setupAll(inv.getContents()));
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private void setupItems() {

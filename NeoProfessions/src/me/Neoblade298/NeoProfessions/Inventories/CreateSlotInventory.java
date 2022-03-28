@@ -69,9 +69,9 @@ public class CreateSlotInventory extends ProfessionInventory {
 		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
 				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
-		Professions.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {

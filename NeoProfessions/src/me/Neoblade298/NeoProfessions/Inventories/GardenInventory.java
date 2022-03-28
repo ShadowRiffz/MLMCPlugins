@@ -46,7 +46,6 @@ public class GardenInventory extends ProfessionInventory {
 		garden = GardenManager.getGardens(p).get(type);
 		
 		inv = Bukkit.createInventory(p, 54, display);
-		Professions.viewingInventory.put(p, this);
 
 		inv.setContents(setupInventory(inv.getContents()));
 		
@@ -65,6 +64,7 @@ public class GardenInventory extends ProfessionInventory {
 		}.runTaskTimer(GardenManager.main, 40L, 40L);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private ItemStack updateIcon(int slot, ItemStack item) {

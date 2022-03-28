@@ -28,7 +28,6 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		this.editor = new ItemEditor(item);
 		
 		inv = Bukkit.createInventory(p, 9, "§cAugment Viewer");
-		Professions.viewingInventory.put(p, this);
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -52,6 +51,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		inv.setContents(contents);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {

@@ -35,7 +35,6 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		this.id = id;
 		this.slot = slot;
 		inv = Bukkit.createInventory(p, 54, "§9Choose a Fertilizer");
-		Professions.viewingInventory.put(p, this);
 		this.p = p;
 
 		ItemStack[] contents = inv.getContents();
@@ -45,6 +44,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		inv.setContents(setupItems(contents));
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	private ItemStack[] setupItems(ItemStack[] contents) {
