@@ -13,6 +13,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Minigames.Minigame;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class MinigameManager {
@@ -36,9 +37,10 @@ public class MinigameManager {
 				for (String key : yaml.getKeys(false)) {
 					ConfigurationSection itemCfg = yaml.getConfigurationSection(key);
 					String display = itemCfg.getString("display");
-					String type = itemCfg.getString("type");
+					ProfessionType type = ProfessionType.valueOf(itemCfg.getString("type").toUpperCase());
 					int numDrops = itemCfg.getInt("num-drops");
 					int difficulty = itemCfg.getInt("difficulty");
+					int level = itemCfg.getInt("level");
 					
 					// Parse drops
 					ArrayList<String> drops = (ArrayList<String>) itemCfg.getStringList("drops");
@@ -73,7 +75,7 @@ public class MinigameManager {
 						sitem.addSource(display, false);
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
-					games.put(Integer.parseInt(key), new Minigame(display, type, parsed, numDrops, difficulty));
+					games.put(Integer.parseInt(key), new Minigame(display, type, parsed, numDrops, difficulty, level));
 				}
 			}
 		}
@@ -92,7 +94,7 @@ public class MinigameManager {
 			playerCooldowns.put(p.getUniqueId(), new HashMap<UUID, Long>());
 		}
 		
-		HashMap<UUID, Long> cooldowns = playerCooldowns.get(p);
+		HashMap<UUID, Long> cooldowns = playerCooldowns.get(p.getUniqueId());
 		long currCd = cooldowns.getOrDefault(mob, 0L);
 		if (currCd > System.currentTimeMillis()) {
 			int time = (int) ((currCd - System.currentTimeMillis()) / 1000); // Remaining time in seconds
@@ -101,7 +103,9 @@ public class MinigameManager {
 			p.sendMessage("§cYou cannot harvest this node for another " + String.format("§c%d:%02d", minutes, seconds));
 			return;
 		}
-		games.get(key).startMinigame(p, null);
-		cooldowns.put(mob, System.currentTimeMillis() + cooldown);
+		
+		if (games.get(key).startMinigame(p, null)) {
+			cooldowns.put(mob, System.currentTimeMillis() + cooldown);
+		}
 	}
 }

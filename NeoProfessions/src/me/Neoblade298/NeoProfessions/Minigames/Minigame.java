@@ -9,22 +9,24 @@ import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class Minigame {
-	private String type;
+	private ProfessionType type;
 	private MinigameDroptable droptable;
 	private String display;
-	int numDrops;
-	int difficulty;
+	int numDrops, difficulty, level;
 	public static MinigameParameters defaultParams = new MinigameParameters();
 	
-	public Minigame(String display, String type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty) {
+	public Minigame(String display, ProfessionType type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty, int level) {
 		this.type = type;
 		this.droptable = new MinigameDroptable(droptable);
 		this.numDrops = numDrops;
 		this.display = display;
 		this.difficulty = difficulty;
+		this.level = level;
 	}
 	
 	private ArrayList<MinigameDrop> generateDrops(MinigameParameters params) {
@@ -57,19 +59,28 @@ public class Minigame {
 		return drops;
 	}
 	
-	public void startMinigame(Player p) {
-		startMinigame(p, null);
+	public boolean startMinigame(Player p) {
+		return startMinigame(p, null);
 	}
 	
-	public void startMinigame(Player p, MinigameParameters params) {
-		if (type.equalsIgnoreCase("stonecutting")) {
+	public boolean startMinigame(Player p, MinigameParameters params) {
+		if (ProfessionManager.getLevel(p, type) < level) {
+			p.sendMessage("§cYour §6" + type.getDisplay() + " §clevel is too low! It must be at least level §e" + level);
+			return false;
+		}
+		
+		if (type.equals(ProfessionType.STONECUTTER)) {
 			new StonecuttingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
+			return true;
 		}
-		else if (type.equalsIgnoreCase("harvesting")) {
+		else if (type.equals(ProfessionType.HARVESTER)) {
 			new HarvestingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
+			return true;
 		}
-		else {
+		else if (type.equals(ProfessionType.LOGGER)) {
 			new LoggingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);
+			return true;
 		}
+		return false;
 	}
 }

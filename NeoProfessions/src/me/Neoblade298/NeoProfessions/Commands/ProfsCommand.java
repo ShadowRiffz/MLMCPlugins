@@ -47,6 +47,6 @@ public class ProfsCommand implements CommandExecutor {
 	
 	private String getProfessionBlock(Profession prof) {
 		return "&6[Lv " + prof.getLevel() + " " + prof.getType().getDisplay() + " &7(" +
-				prof.getExp() + " / " + prof.getNextLv().get(prof.getLevel()) + " XP)&6]";
+				prof.getExp() + " / " + Profession.getNextLv().get(prof.getLevel()) + " XP)&6]";
 	}
 }
