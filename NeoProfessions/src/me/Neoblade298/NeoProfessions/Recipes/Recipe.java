@@ -88,7 +88,7 @@ public class Recipe {
 		result.giveResult(p);
 		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
-		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + display);
+		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay());
 		return true;
 	}
 	

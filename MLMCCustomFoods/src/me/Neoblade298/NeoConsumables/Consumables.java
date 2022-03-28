@@ -49,9 +49,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Consumables extends JavaPlugin implements Listener {
-	public static HashMap<String, FoodConsumable> food = new HashMap<String, FoodConsumable>();
-	public static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
-	public static HashMap<String, ChestConsumable> bosschests = new HashMap<String, ChestConsumable>();
+	private static HashMap<String, FoodConsumable> food = new HashMap<String, FoodConsumable>();
+	private static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
 	public boolean isInstance = false;
@@ -94,7 +93,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		// Load consumables and boss chests
 		reload();
 
-		getCommand("cons").setExecutor(new Commands(this));
+		getCommand("cons").setExecutor(new Commands(this, food.keySet()));
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getPluginManager().registerEvents(new ConsumableManager(this), this);
 	}
@@ -417,5 +416,13 @@ public class Consumables extends JavaPlugin implements Listener {
 		if (item.getType().equals(Material.CHEST) && new NBTItem(item).hasKey("consumable")) {
 			e.setCancelled(true);
 		}
+	}
+	
+	public static FoodConsumable getFood(String key) {
+		return food.get(key);
+	}
+	
+	public static Consumable getConsumable(String key) {
+		return consumables.get(key);
 	}
 }

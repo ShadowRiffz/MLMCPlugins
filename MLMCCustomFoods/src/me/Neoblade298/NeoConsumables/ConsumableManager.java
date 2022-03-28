@@ -88,7 +88,7 @@ public class ConsumableManager implements Listener {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM consumables_effects WHERE uuid = '" + uuid + "';");
 			if (rs.next()) {
-				FoodConsumable cons = (FoodConsumable) Consumables.consumables.get(rs.getString(2));
+				FoodConsumable cons = (FoodConsumable) Consumables.getConsumable(rs.getString(2));
 				if (cons.isDuration()) {
 					DurationEffects effs = new DurationEffects(main, cons, rs.getLong(3), uuid, new ArrayList<BukkitTask>());
 					if (effs.isRelevant()) {

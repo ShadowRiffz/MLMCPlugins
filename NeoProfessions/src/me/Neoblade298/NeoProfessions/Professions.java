@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
@@ -125,23 +124,6 @@ public class Professions extends JavaPlugin implements Listener {
 		
 		// general
 		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
-		
-		// droptables
-		loadDroptables(new File(getDataFolder(), "droptables"));
-	}
-	
-	private void loadDroptables(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadDroptables(dir);
-			}
-			else {
-				YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-				for (String table : yml.getKeys(false)) {
-					AugmentManager.droptables.put(table, (ArrayList<String>) yml.getStringList(table));
-				}
-			}
-		}
 	}
 
 	public void onDisable() {

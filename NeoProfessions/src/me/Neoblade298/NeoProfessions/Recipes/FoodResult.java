@@ -12,6 +12,7 @@ import me.Neoblade298.NeoConsumables.Consumables;
 public class FoodResult implements RecipeResult {
 	String key;
 	int amount;
+	String display;
 
 	public FoodResult(String[] lineArgs) {
 		this.key = "default";
@@ -25,11 +26,13 @@ public class FoodResult implements RecipeResult {
 				this.amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
 			}
 		}
+		
+		display = Consumables.getFood(this.key).getItem(this.amount).getItemMeta().getDisplayName();
 	}
 
 	@Override
 	public void giveResult(Player p) {
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Consumables.food.get(this.key).getItem(this.amount));
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Consumables.getFood(this.key).getItem(this.amount));
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
@@ -37,10 +40,15 @@ public class FoodResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = Consumables.food.get(this.key).getItem(this.amount);
+		ItemStack item = Consumables.getFood(this.key).getItem(this.amount);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	@Override
+	public String getDisplay() {
+		return display;
 	}
 }

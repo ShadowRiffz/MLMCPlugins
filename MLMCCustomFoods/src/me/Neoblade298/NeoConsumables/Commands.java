@@ -1,7 +1,7 @@
 package me.Neoblade298.NeoConsumables;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -15,12 +15,13 @@ import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 
 
 public class Commands implements CommandExecutor, TabCompleter {
-	ArrayList<String> foods = new ArrayList<String>(Consumables.food.keySet());
+	Set<String> foods;
 	
 	Consumables main;
 	
-	public Commands(Consumables main) {
+	public Commands(Consumables main, Set<String> foods) {
 		this.main = main;
+		this.foods = foods;
 	}
 	
 	@Override
@@ -28,6 +29,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 		if (sender.hasPermission("mycommand.staff")) {
 			if (args.length == 0) {
 				sender.sendMessage("§7Permission: mycommand.staff");
+				sender.sendMessage("§c/cons get [food] {amount}");
 				sender.sendMessage("§c/cons give boss [player]");
 				sender.sendMessage("§c/cons reload");
 			}
@@ -47,7 +49,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					return true;
 				}
 				else {
-					FoodConsumable cons = (FoodConsumable) Consumables.consumables.get(args[1 + offset]);
+					FoodConsumable cons = (FoodConsumable) Consumables.getConsumable(args[1 + offset]);
 					
 					if (args.length > 2 + offset) {
 						amt = Integer.parseInt(args[2 + offset]);

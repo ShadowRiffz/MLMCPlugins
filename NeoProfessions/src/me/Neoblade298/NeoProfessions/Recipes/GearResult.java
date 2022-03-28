@@ -12,6 +12,7 @@ public class GearResult implements RecipeResult {
 	String type;
 	String rarity;
 	int level;
+	String display;
 
 	public GearResult(String[] lineArgs) {
 		this.type = "sword";
@@ -30,6 +31,8 @@ public class GearResult implements RecipeResult {
 				this.level = Integer.parseInt(args[1]);
 			}
 		}
+		
+		display = Gear.settings.get(type).get(level).generateItem(rarity, level).getItemMeta().getDisplayName();
 	}
 
 	@Override
@@ -47,5 +50,10 @@ public class GearResult implements RecipeResult {
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	@Override
+	public String getDisplay() {
+		return display;
 	}
 }

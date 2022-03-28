@@ -11,6 +11,7 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 public class StoredItemResult implements RecipeResult {
 	StoredItem item;
 	int amount;
+	String display;
 
 	public StoredItemResult(String key, String[] lineArgs) {
 		this.amount = 1;
@@ -28,6 +29,7 @@ public class StoredItemResult implements RecipeResult {
 		// Add to source
 		item.addSource("§7Crafted", false);
 		item.addRelevantRecipe(key);
+		display = item.getDisplay();
 	}
 
 	@Override
@@ -42,5 +44,10 @@ public class StoredItemResult implements RecipeResult {
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	@Override
+	public String getDisplay() {
+		return display;
 	}
 }

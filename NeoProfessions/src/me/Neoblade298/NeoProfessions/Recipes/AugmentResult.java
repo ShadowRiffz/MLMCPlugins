@@ -11,6 +11,7 @@ import net.md_5.bungee.api.ChatColor;
 public class AugmentResult implements RecipeResult {
 	String type;
 	int level;
+	String display;
 
 	public AugmentResult(String[] lineArgs) {
 		this.type = "default";
@@ -25,11 +26,13 @@ public class AugmentResult implements RecipeResult {
 				this.level = Integer.parseInt(args[1]);
 			}
 		}
+		
+		display = AugmentManager.getFromCache(type, level).getLine();
 	}
 
 	@Override
 	public void giveResult(Player p) {
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(AugmentManager.augmentMap.get(type).get(level).getItem(p));
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(AugmentManager.getFromCache(type, level).getItem(p));
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
@@ -37,10 +40,15 @@ public class AugmentResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = AugmentManager.augmentMap.get(type).get(level).getItem(p);
+		ItemStack item = AugmentManager.getFromCache(type, level).getItem(p);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	@Override
+	public String getDisplay() {
+		return display;
 	}
 }

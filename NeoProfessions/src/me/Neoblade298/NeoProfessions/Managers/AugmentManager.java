@@ -1,9 +1,11 @@
 package me.Neoblade298.NeoProfessions.Managers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,13 +50,13 @@ import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class AugmentManager implements Listener {
 	Professions main;
-	public static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
+	private static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
-	public static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>();
-	public static HashMap<String, ArrayList<String>> droptables = new HashMap<String, ArrayList<String>>();
-	public static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
-	public static ArrayList<String> enabledWorlds = new ArrayList<String>();
+	private static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>(); // Don't use, caches by level
+	private static HashMap<String, ArrayList<String>> droptables = new HashMap<String, ArrayList<String>>();
+	private static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
+	private static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
 	private final static String WEAPONCD = "WeaponDurability";
 	private final static String ARMORCD = "ArmorDurability";
@@ -135,6 +137,23 @@ public class AugmentManager implements Listener {
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
 			augmentMap.put(set, new BossRelic(set));
+		}
+		
+		// Droptables
+		loadDroptables(new File(main.getDataFolder(), "droptables"));
+	}
+	
+	private void loadDroptables(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadDroptables(dir);
+			}
+			else {
+				YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+				for (String table : yml.getKeys(false)) {
+					AugmentManager.droptables.put(table, (ArrayList<String>) yml.getStringList(table));
+				}
+			}
 		}
 	}
 	
@@ -662,5 +681,48 @@ public class AugmentManager implements Listener {
 			}
 		}
 		e.setChance(e.getChance() * multiplier + flat);
+	}
+	
+	public static Augment getAugment(String key) {
+		return augmentMap.get(key);
+	}
+	
+	public static boolean hasAugment(String key) {
+		return augmentMap.containsKey(key);
+	}
+	
+	public static PlayerAugments getPlayerAugments(Player p) {
+		return playerAugments.get(p);
+	}
+	
+	public static HashMap<String, ArrayList<String>> getDropTables() {
+		return droptables;
+	}
+	
+	public static Augment getFromCache(Augment aug, int level) {
+		// See if there's a set of levels for the aug, create if not
+		HashMap<Integer, Augment> levelCache;
+		if (augmentCache.containsKey(aug.getName())) {
+			levelCache = augmentCache.get(aug.getName());
+		}
+		else {
+			levelCache = new HashMap<Integer, Augment>();
+			augmentCache.put(aug.getName(), levelCache);
+		}
+		
+		// See if level cache contains aug, create if not
+		if (levelCache.containsKey(level)) {
+			return levelCache.get(level);
+		}
+		else {
+			aug = aug.createNew(level);
+			levelCache.put(level, aug);
+			return aug;
+		}
+	}
+	
+	public static Augment getFromCache(String key, int level) {
+		// See if there's a set of levels for the aug, create if not
+		return getFromCache(augmentMap.get(key), level);
 	}
 }

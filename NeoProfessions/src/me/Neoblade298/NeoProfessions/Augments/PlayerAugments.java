@@ -39,8 +39,8 @@ public class PlayerAugments {
 			NBTItem nbti = new NBTItem(item);
 			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
-				if (AugmentManager.augmentMap.containsKey(augmentName)) {
-					Augment aug = AugmentManager.augmentMap.get(augmentName).get(nbti.getInteger("slot" + i + "Level"));
+				if (AugmentManager.hasAugment(augmentName)) {
+					Augment aug = AugmentManager.getFromCache(augmentName, nbti.getInteger("slot" + i + "Level"));
 					
 					// Add augment to hashmap
 					for (EventType etype : aug.getEventTypes()) {

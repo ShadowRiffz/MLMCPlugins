@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import org.apache.commons.lang3.StringUtils;
@@ -94,7 +95,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int lv = main.getEnchantmentLevel(Enchantment.DURABILITY);
 						int amt = main.getAmount();
 						p.getInventory().removeItem(main);
-						ItemStack converted = AugmentManager.augmentMap.get(type).get(lv).getItem(p);
+						ItemStack converted = AugmentManager.getFromCache(type, lv).getItem(p);
 						converted.setAmount(amt);
 						p.getInventory().addItem(converted);
 						Util.sendMessage(p, "&7Successfully converted item!");
@@ -224,10 +225,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get((Player) sender));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments((Player) sender));
 					}
 					else {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments(Bukkit.getPlayer(args[1])));
 					}
 					return true;
 				}
@@ -278,16 +279,17 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		
 					if (type.equalsIgnoreCase("augment")) {
 						Augment augment = null;
-						if (AugmentManager.droptables.containsKey(aug)) {
-							ArrayList<String> table = AugmentManager.droptables.get(aug);
-							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
+						HashMap<String, ArrayList<String>> tables = AugmentManager.getDropTables();
+						if (tables.containsKey(aug)) {
+							ArrayList<String> table = tables.get(aug);
+							augment = AugmentManager.getFromCache(table.get(gen.nextInt(table.size())), lv);
 						}
-						else if (AugmentManager.augmentMap.containsKey(aug)) {
-							augment = AugmentManager.augmentMap.get(aug).get(lv);
+						else if (AugmentManager.hasAugment(aug)) {
+							augment = AugmentManager.getFromCache(aug, lv);
 						}
 						else {
-							ArrayList<String> table = AugmentManager.droptables.get("default");
-							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
+							ArrayList<String> table = tables.get("default");
+							augment = AugmentManager.getFromCache(table.get(gen.nextInt(table.size())), lv);
 						}
 						ItemStack item = augment.getItem(p);
 						item.setAmount(amt);

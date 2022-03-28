@@ -107,7 +107,7 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 			String clicked = clickedItem.getItemMeta().getDisplayName();
 			int selected = Integer.parseInt(clicked.substring(clicked.length() - 1));
 			NBTItem nbtaug = new NBTItem(this.augment);
-			Augment aug = AugmentManager.augmentMap.get(nbtaug.getString("augment")).get(nbtaug.getInteger("level"));
+			Augment aug = AugmentManager.getFromCache(nbtaug.getString("augment"), nbtaug.getInteger("level"));
 			
 			String result = editor.setAugment(p, aug, selected);
 			if (result == null) {

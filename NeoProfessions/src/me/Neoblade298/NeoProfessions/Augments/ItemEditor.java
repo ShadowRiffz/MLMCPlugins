@@ -50,9 +50,9 @@ public class ItemEditor {
 	
 	public Augment getAugment(int i) {
 		String augmentName = nbti.getString("slot" + i + "Augment");
-		if (AugmentManager.augmentMap.containsKey(augmentName)) {
+		if (AugmentManager.hasAugment(augmentName)) {
 			int level = nbti.getInteger("slot" + i + "Level");
-			return AugmentManager.augmentMap.get(augmentName).get(level);
+			return AugmentManager.getFromCache(augmentName, level);
 		}
 		return null;
 	}
@@ -230,14 +230,14 @@ public class ItemEditor {
 					}
 					// Return it if it's a drop or exp charm
 					else if (oldAugName.contains("Exp")) {
-						failed = p.getInventory().addItem(AugmentManager.augmentMap.get("Experience").get(level).getItem(p));
+						failed = p.getInventory().addItem(AugmentManager.getFromCache("Experience", level).getItem(p));
 					}
 					else if (oldAugName.contains("Drop")) {
-						failed = p.getInventory().addItem(AugmentManager.augmentMap.get("Chest Chance").get(level).getItem(p));
+						failed = p.getInventory().addItem(AugmentManager.getFromCache("Chest Chance", level).getItem(p));
 					}
 					else {
-						ArrayList<String> table = AugmentManager.droptables.get("default");
-						Augment aug = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(level);
+						ArrayList<String> table = AugmentManager.getDropTables().get("default");
+						Augment aug = AugmentManager.getFromCache(table.get(gen.nextInt(table.size())), level);
 						failed = p.getInventory().addItem(aug.getItem(p));
 					}
 					
