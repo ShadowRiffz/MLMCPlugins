@@ -26,6 +26,9 @@ public class MinigameParameters {
 	public double getAmountMultiplier() {
 		return amountMultiplier;
 	}
+	public void setAmountMultiplier(double amountMultiplier) {
+		this.amountMultiplier = amountMultiplier;
+	}
 	public void addRarityWeightMultiplier(Rarity rarity, double mult) {
 		rarityWeightMultipliers.put(rarity, rarityWeightMultipliers.getOrDefault(rarity, 1D) * mult);
 	}

@@ -2,9 +2,11 @@ package me.Neoblade298.NeoProfessions.Minigames;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
 import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
@@ -18,7 +20,6 @@ public class Minigame {
 	private MinigameDroptable droptable;
 	private String display;
 	int numDrops, difficulty, level;
-	public static MinigameParameters defaultParams = new MinigameParameters();
 	
 	public Minigame(String display, ProfessionType type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty, int level) {
 		this.type = type;
@@ -31,10 +32,6 @@ public class Minigame {
 	
 	private ArrayList<MinigameDrop> generateDrops(MinigameParameters params) {
 		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
-		
-		if (params == null) {
-			params = defaultParams;
-		}
 		
 		for (int i = 0; i < numDrops; i++) {
 			int rand = Professions.gen.nextInt(droptable.getTotalWeight());
@@ -68,6 +65,13 @@ public class Minigame {
 			p.sendMessage("§cYour §6" + type.getDisplay() + " §clevel is too low! It must be at least level §e" + level);
 			return false;
 		}
+		
+		if (params == null) {
+			params = new MinigameParameters();
+		}
+		
+		ProfessionHarvestEvent e = new ProfessionHarvestEvent(p, params, type);
+		Bukkit.getPluginManager().callEvent(e);
 		
 		if (type.equals(ProfessionType.STONECUTTER)) {
 			new StonecuttingMinigame(MinigameManager.main, p, generateDrops(params), display, difficulty);

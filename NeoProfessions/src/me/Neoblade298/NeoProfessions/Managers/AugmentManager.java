@@ -23,26 +23,16 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.FlagApplyEvent;
-import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
-import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
-import com.sucy.skill.api.event.PlayerCriticalCheckEvent;
-import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
-import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
-import com.sucy.skill.api.event.PlayerExperienceGainEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
-import com.sucy.skill.api.event.PlayerManaGainEvent;
-import com.sucy.skill.api.event.PlayerRegenEvent;
-import com.sucy.skill.api.event.PlayerTauntEvent;
-import com.sucy.skill.api.event.SkillBuffEvent;
-import com.sucy.skill.api.event.SkillHealEvent;
+import com.sucy.skill.api.event.*;
 import com.sucy.skill.api.player.PlayerData;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
+import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
+import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
+import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
@@ -636,6 +626,7 @@ public class AugmentManager implements Listener {
 		e.setExp(e.getExp() * multiplier + flat);
 	}
 
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestDrop(ChestDropEvent e) {
 		Player p = e.getPlayer();
 		
@@ -681,6 +672,32 @@ public class AugmentManager implements Listener {
 			}
 		}
 		e.setChance(e.getChance() * multiplier + flat);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onProfessionHarvest(ProfessionHarvestEvent e) {
+		Player p = e.getPlayer();
+		
+		// Check charms
+		double amountMult = 1;
+		MinigameParameters params = e.getParams();
+		if (containsAugments(p, EventType.PROFESSION_HARVEST)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.PROFESSION_HARVEST)) {
+				if (augment instanceof ModProfessionHarvestAugment) {
+					ModProfessionHarvestAugment aug = (ModProfessionHarvestAugment) augment;
+					if (aug.canUse(p, e.getType())) {
+						aug.applyHarvestEffects(p);
+						
+						amountMult += aug.getAmountMult(p);
+						
+						for (Rarity rarity : aug.getRarityMults(p).keySet()) {
+							params.addRarityWeightMultiplier(rarity, aug.getRarityMults(p).get(rarity));
+						}
+					}
+				}
+			}
+		}
+		params.setAmountMultiplier(params.getAmountMultiplier() + amountMult);
 	}
 	
 	public static Augment getAugment(String key) {
