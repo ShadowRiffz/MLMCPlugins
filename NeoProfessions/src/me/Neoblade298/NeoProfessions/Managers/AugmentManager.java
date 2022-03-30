@@ -122,8 +122,12 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Chest Chance", new ChestChanceAugment());
 		augmentMap.put("Research", new ResearchAugment());
 		
-		// Boss Relics
+		// Professions
+		augmentMap.put("Miner", new MinerAugment());
+		augmentMap.put("Woodcutter", new WoodcutterAugment());
+		augmentMap.put("Herbalist", new HerbalistAugment());
 		
+		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
 			augmentMap.put(set, new BossRelic(set));
