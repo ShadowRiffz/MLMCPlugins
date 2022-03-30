@@ -178,7 +178,7 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		// Potion effects
 		ArrayList<PotionEffect> potions = cons.getPotions();
-		for (String potion : config.getStringList("effects")) {
+		for (String potion : config.getStringList("potion-effects")) {
 			String[] split = potion.split(",");
 			PotionEffectType type = PotionEffectType.getByName(split[0]);
 			int amp = Integer.parseInt(split[1]);
@@ -207,7 +207,7 @@ public class Consumables extends JavaPlugin implements Listener {
 				add = false;
 				flag = flag.substring(1);
 			}
-			cons.addFlag(new FlagAction(flag, Integer.parseInt(flagArgs[1]), add));
+			cons.addFlag(new FlagAction(flag, add ? Integer.parseInt(flagArgs[1]) : -1, add));
 		}
 		
 		for (String buffLine : config.getStringList("buffs")) {
