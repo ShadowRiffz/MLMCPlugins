@@ -162,7 +162,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/prof sell [playername]");
+				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
+				sender.sendMessage("§7- §4/prof give item [id] [amount]");
 				sender.sendMessage("§7- §4/prof debug");
 				sender.sendMessage("§7- §4/prof start [minigame] [playername]");
 				sender.sendMessage("§7- §4/prof repair [playername]");
