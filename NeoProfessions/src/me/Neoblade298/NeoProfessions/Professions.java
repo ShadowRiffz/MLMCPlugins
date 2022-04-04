@@ -129,7 +129,7 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		super.onDisable();
-		if (!isInstance) {
+		if (!isInstance && io != null) {
 			io.handleDisable();
 		}
 		Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
