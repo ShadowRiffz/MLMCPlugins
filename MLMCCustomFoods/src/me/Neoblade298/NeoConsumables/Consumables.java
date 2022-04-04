@@ -212,8 +212,8 @@ public class Consumables extends JavaPlugin implements Listener {
 		
 		for (String buffLine : config.getStringList("buffs")) {
 			String[] buffArgs = buffLine.split(",");
-			double value = Double.parseDouble(buffArgs[2]);
-			int duration = Integer.parseInt(buffArgs[1]);
+			double value = Double.parseDouble(buffArgs[1]);
+			int duration = Integer.parseInt(buffArgs[2]);
 			boolean isPercent = Boolean.parseBoolean(buffArgs[3]);
 			cons.addBuff(new BuffAction(BuffType.valueOf(buffArgs[0]), value, duration, isPercent));
 		}
