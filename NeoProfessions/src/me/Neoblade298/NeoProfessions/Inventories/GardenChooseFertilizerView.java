@@ -25,7 +25,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	private Player p;
 	private ProfessionType type;
 	private int min, max, id, slot;
-	private static final int FERTILIZER_BASE = 5000, FERTILIZER_MAX = 5099,
+	private static final int FERTILIZER_BASE = 4000, FERTILIZER_MAX = 4099,
 			BACK_BUTTON = 45, SEED_ICON = 49;
 
 	public GardenChooseFertilizerView(Player p, int id, int min, int max, int slot, ProfessionType type) {

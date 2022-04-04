@@ -43,12 +43,10 @@ public class StorageView extends ProfessionInventory {
 	public static final String NEXT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzYWU4ZGU3ZWQwNzllMzhkMmM4MmRkNDJiNzRjZmNiZDk0YjM0ODAzNDhkYmI1ZWNkOTNkYThiODEwMTVlMyJ9fX0=";
 	
 	static {
-		info.add("§9§oLeft click §7§oto create 1x voucher");
-		info.add("§9§oRight click §7§oto sell 1x");
-		info.add("§9§oShift click §7§ofor 10x");
+		info.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
+		info.add("§9§oRight click §7§oto show relevant recipes");
 		info.add("§9§oPress 1 §7§ofor info mode (Current)");
 		info.add("§9§oPress 2 §7§ofor display mode");
-		info.add("§9§oPress 3 §7§oto see relevant recipes");
 	}
 	
 	public StorageView(Player p, int min, int max) {
@@ -174,12 +172,10 @@ public class StorageView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§9§oLeft click §7§oto create 1x voucher");
-		lore.add("§9§oRight click §7§oto sell 1x");
-		lore.add("§9§oShift click §7§ofor 10x");
-		lore.add("§9§oPress 1 §7§ofor info mode");
-		lore.add("§9§oPress 2 §7§ofor display mode");
-		lore.add("§9§oPress 3 §7§oto see relevant recipes");
+		info.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
+		info.add("§9§oRight click §7§oto show relevant recipes");
+		info.add("§9§oPress 1 §7§ofor info mode");
+		info.add("§9§oPress 2 §7§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -242,14 +238,9 @@ public class StorageView extends ProfessionInventory {
 				createVoucher(p, 10, slot);
 			}
 		}
-		else if (e.getClick().equals(ClickType.RIGHT)) {
+		else if (e.getClick().equals(ClickType.RIGHT) || e.getClick().equals(ClickType.SHIFT_RIGHT)) {
 			if (slot < 45) {
-				sellItem(p, 1, slot);
-			}
-		}
-		else if (e.getClick().equals(ClickType.SHIFT_RIGHT)) {
-			if (slot < 45) {
-				sellItem(p, 10, slot);
+				viewRecipes(p, slot);
 			}
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
@@ -257,9 +248,6 @@ public class StorageView extends ProfessionInventory {
 			if (slot < 45) {
 				if (slot < 45 && (hotbar == 1 || hotbar == 2)) {
 					changeMode(hotbar);
-				}
-				else if (hotbar == 3) {
-					viewRecipes(p, slot);
 				}
 			}
 			else if (type.equals("sort")) {
@@ -271,15 +259,6 @@ public class StorageView extends ProfessionInventory {
 	@Override
 	public void handleInventoryDrag(InventoryDragEvent e) {
 		e.setCancelled(true);
-	}
-	
-	private void sellItem(Player p, int amount, int slot) {
-		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
-		if (si.sell(p, amount)) {
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold " + si.getItem().getDisplay() + " §fx" + amount + 
-					" §7for §a" + (amount * si.getItem().getValue()) + "g§7!");
-		}
-		inv.setContents(updateSlot(inv.getContents(), slot));
 	}
 	
 	private void createVoucher(Player p, int amount, int slot) {

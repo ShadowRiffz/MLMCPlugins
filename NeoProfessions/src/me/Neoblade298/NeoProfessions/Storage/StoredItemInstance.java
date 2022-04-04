@@ -98,6 +98,7 @@ public class StoredItemInstance {
 		NBTItem nbti = new NBTItem(item);
 		nbti.setInteger("id", this.item.getId());
 		nbti.setInteger("amount", amount);
+		nbti.setDouble("value", this.item.getValue() * amount);
 		return nbti.getItem();
 	}
 }
