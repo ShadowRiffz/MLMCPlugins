@@ -19,6 +19,7 @@ import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
+import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import net.milkbowl.vault.economy.Economy;
 
 public class Professions extends JavaPlugin implements Listener {
@@ -47,6 +48,8 @@ public class Professions extends JavaPlugin implements Listener {
 	public me.neoblade298.neogear.Gear neogear;
 	
 	public static HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
+	private static HashMap<Rarity, Double> expMultipliers = new HashMap<Rarity, Double>();
+	private static HashMap<Rarity, Integer> defaultWeights = new HashMap<Rarity, Integer>();
 
 	public void onEnable() {
 		super.onEnable();
@@ -67,9 +70,6 @@ public class Professions extends JavaPlugin implements Listener {
 		cfg = YamlConfiguration.loadConfiguration(file);
 
 		loadConfig();
-		if (new File(getDataFolder(), "instance").exists()) {
-			isInstance = true;
-		}
 
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this); // Repairs
@@ -116,6 +116,10 @@ public class Professions extends JavaPlugin implements Listener {
 	}
 	
 	private void loadConfig() {
+		if (new File(getDataFolder(), "instance").exists()) {
+			isInstance = true;
+		}
+		
 		// sql
 		ConfigurationSection sql = cfg.getConfigurationSection("sql");
 		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
@@ -125,6 +129,20 @@ public class Professions extends JavaPlugin implements Listener {
 		
 		// general
 		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
+		
+		// exp multipliers
+		ConfigurationSection expcfg = cfg.getConfigurationSection("exp-multipliers");
+		for (String key : expcfg.getKeys(false)) {
+			Rarity rarity = Rarity.valueOf(key.toUpperCase());
+			expMultipliers.put(rarity, expcfg.getDouble(key));
+		}
+		
+		// default weights
+		ConfigurationSection wtcfg = cfg.getConfigurationSection("default-weights");
+		for (String key : wtcfg.getKeys(false)) {
+			Rarity rarity = Rarity.valueOf(key.toUpperCase());
+			defaultWeights.put(rarity, wtcfg.getInt(key));
+		}
 	}
 
 	public void onDisable() {
@@ -154,5 +172,13 @@ public class Professions extends JavaPlugin implements Listener {
 	
 	public static CurrencyManager getCurrencyManager() {
 		return cm;
+	}
+	
+	public static double getExpMultiplier(Rarity rarity) {
+		return expMultipliers.get(rarity);
+	}
+	
+	public static int getDefaultWeight(Rarity rarity) {
+		return defaultWeights.get(rarity);
 	}
 }

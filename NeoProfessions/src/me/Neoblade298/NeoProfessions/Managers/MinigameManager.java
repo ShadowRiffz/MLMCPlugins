@@ -47,11 +47,13 @@ public class MinigameManager {
 					ArrayList<MinigameDrops> parsed = new ArrayList<MinigameDrops>();
 					for (String line : drops) {
 						String[] lineArgs = line.split(" ");
+						// defaults
 						int itemId = 0;
 						int minAmt = 1;
 						int maxAmt = 1;
-						int weight = 1;
-						int exp = 1;
+						int weight = -1;
+						int exp = -1;
+						
 						for (String lineArg : lineArgs) {
 							String[] args = lineArg.split(":");
 							switch (args[0]) {
@@ -71,8 +73,17 @@ public class MinigameManager {
 								break;
 							}
 						}
+						
+						// Post-processing (auto-generate exp)
 						StoredItem sitem = StorageManager.getItem(itemId);
 						sitem.addSource(display, false);
+						if (exp == -1) {
+							exp = sitem.getDefaultExp();
+						}
+						if (weight == -1) {
+							weight = Professions.getDefaultWeight(sitem.getRarity());
+						}
+						
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
 					games.put(Integer.parseInt(key), new Minigame(display, type, parsed, numDrops, difficulty, level));

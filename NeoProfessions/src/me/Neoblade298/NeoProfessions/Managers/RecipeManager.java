@@ -108,7 +108,7 @@ public class RecipeManager implements IOComponent {
 						}
 						
 						String display = sec.getString("display");
-						int exp = sec.getInt("exp");
+						int exp = sec.getInt("exp", -1);
 						boolean canMulticraft = sec.getBoolean("can-multicraft");
 						recipes.put(key, new Recipe(key, display, exp, level, reqs, components, result, canMulticraft));
 					}

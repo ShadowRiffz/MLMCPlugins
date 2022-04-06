@@ -35,6 +35,13 @@ public class Recipe {
 		this.components = components;
 		this.result = result;
 		this.canMulticraft = canMulticraft;
+		
+		if (exp == -1) {
+			exp = 0;
+			for (StoredItemInstance component : components) {
+				exp += component.getItem().getDefaultExp();
+			}
+		}
 	}
 	
 	public String getKey() {

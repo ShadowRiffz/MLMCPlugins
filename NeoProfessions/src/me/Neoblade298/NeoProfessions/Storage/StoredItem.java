@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.SkullCreator;
@@ -21,6 +22,7 @@ public class StoredItem {
 	private String name;
 	private int id;
 	private int level;
+	private int defaultExp;
 	private double value;
 	private Rarity rarity;
 	private ArrayList<String> baseLore;
@@ -52,6 +54,8 @@ public class StoredItem {
 		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
+		
+		this.defaultExp = (int) (level * Professions.getExpMultiplier(this.rarity));
 	}
 	
 	public void addRelevantRecipe(String key) {
@@ -129,6 +133,10 @@ public class StoredItem {
 		item.setItemMeta(meta);
 		item.setAmount(amount > 64 ? 64 : amount);
 		return item;
+	}
+	
+	public int getDefaultExp() {
+		return defaultExp;
 	}
 	
 	public ItemStack getStorageView(int amount) {
