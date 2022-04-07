@@ -28,7 +28,6 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class LoggingMinigame extends ProfessionInventory {
 	private static float ERROR = 0.594604F;
-	private static int TICK_RATE = 8;
 	private static int TOTAL_TICKS = 20;
 	private static int END_TICKS = 6;
 	int tickrate;
@@ -155,7 +154,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		items = new HashMap<Integer, MinigameDrop>();
 		itemsAfter = new HashMap<Integer, MinigameDrop>();
 		ThreadLocalRandom.current().ints(0, TOTAL_TICKS).distinct().limit(drops.size()).forEach(num -> {
-			int key = num * TICK_RATE;
+			int key = num * tickrate;
 			items.put(key, drops.get(dropNum));
 			itemsAfter.put(key, drops.get(dropNum));
 			dropNum++;
@@ -170,8 +169,8 @@ public class LoggingMinigame extends ProfessionInventory {
 				}
 				moveRowsDown();
 				spawnRow(tick);
-				tick += TICK_RATE;
-				if (tick >= (TICK_RATE * TOTAL_TICKS) + (TICK_RATE * END_TICKS)) {
+				tick += tickrate;
+				if (tick >= (tickrate * TOTAL_TICKS) + (tickrate * END_TICKS)) {
 					this.cancel();
 					p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 					endGame();
