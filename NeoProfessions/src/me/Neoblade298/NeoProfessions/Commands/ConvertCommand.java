@@ -25,6 +25,7 @@ import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 public class ConvertCommand implements CommandExecutor {
 	Professions main;
 	ArrayList<String> currencyTypes = new ArrayList<String>();
+	HashMap<Integer, Integer> essenceLimit = new HashMap<Integer, Integer>();
 	
 	public ConvertCommand(Professions main) {
 		this.main = main;
@@ -36,6 +37,19 @@ public class ConvertCommand implements CommandExecutor {
 		currencyTypes.add("topaz");
 		currencyTypes.add("garnet");
 		currencyTypes.add("adamantium");
+		
+		essenceLimit.put(5, 2500);
+		essenceLimit.put(10, 2000);
+		essenceLimit.put(15, 1500);
+		essenceLimit.put(20, 1000);
+		essenceLimit.put(25, 1000);
+		essenceLimit.put(30, 1000);
+		essenceLimit.put(35, 1000);
+		essenceLimit.put(40, 1000);
+		essenceLimit.put(45, 1000);
+		essenceLimit.put(50, 1000);
+		essenceLimit.put(55, 1000);
+		essenceLimit.put(60, 1000);
 	}
 	
 	@Override
@@ -61,18 +75,18 @@ public class ConvertCommand implements CommandExecutor {
 					try {	
 						Statement stmt = con.createStatement();
 						int count = 0;
-						int total = rs.getFetchSize();
+						int skipped = 0;
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							try {
-								currencies.put("essence", parseLine(rs.getString("2")));
-								currencies.put("ruby", parseLine(rs.getString("3")));
-								currencies.put("amethyst", parseLine(rs.getString("4")));
-								currencies.put("sapphire", parseLine(rs.getString("5")));
-								currencies.put("emerald", parseLine(rs.getString("6")));
-								currencies.put("topaz", parseLine(rs.getString("7")));
-								currencies.put("garnet", parseLine(rs.getString("8")));
-								currencies.put("adamantium", parseLine(rs.getString("9")));
+								currencies.put("essence", parseLine(rs.getString(2)));
+								currencies.put("ruby", parseLine(rs.getString(3)));
+								currencies.put("amethyst", parseLine(rs.getString(4)));
+								currencies.put("sapphire", parseLine(rs.getString(5)));
+								currencies.put("emerald", parseLine(rs.getString(6)));
+								currencies.put("topaz", parseLine(rs.getString(7)));
+								currencies.put("garnet", parseLine(rs.getString(8)));
+								currencies.put("adamantium", parseLine(rs.getString(9)));
 								
 								// If everything is empty, skip it
 								boolean empty = true;
@@ -83,7 +97,7 @@ public class ConvertCommand implements CommandExecutor {
 									}
 								}
 								if (empty) {
-									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] UUID " + uuid + " is empty. Skipping.");
+									skipped++;
 									continue;
 								}
 								
@@ -107,14 +121,17 @@ public class ConvertCommand implements CommandExecutor {
 								stmt.executeBatch();
 								count++;
 								if (count % 50 == 0 && count != 0) {
-									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Completed " + count + " / " + total + " conversions.");
+									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Completed " + count + " conversions. Skipped " + skipped + ".");
 								}
 							}
 							catch (Exception e) {
 								Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to convert UUID: " + uuid);
 								e.printStackTrace();
+								this.cancel();
+								return;
 							}
 						}
+						Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Done! A total of " + count + " conversions. Skipped " + skipped + ".");
 					}
 					catch (Exception ex) {
 						ex.printStackTrace();
@@ -135,7 +152,7 @@ public class ConvertCommand implements CommandExecutor {
 		for (int i = 5; i <= 60; i += 5) {
 			int num = Integer.parseInt(args[count++]);
 			if (num > 0) {
-				currency.put(i, Integer.parseInt(args[count++]));
+				currency.put(i, Math.min(num, essenceLimit.get(i)));
 			}
 		}
 		return currency;
