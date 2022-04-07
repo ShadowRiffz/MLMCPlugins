@@ -31,6 +31,7 @@ public class LoggingMinigame extends ProfessionInventory {
 	private static int TICK_RATE = 8;
 	private static int TOTAL_TICKS = 20;
 	private static int END_TICKS = 6;
+	int tickrate;
 	Professions main;
 	Player p;
 	int stage = 0;
@@ -50,7 +51,8 @@ public class LoggingMinigame extends ProfessionInventory {
 		this.p = p;
 		this.drops = drops;
 		this.difficulty = difficulty;
-		baseSpawnChance += difficulty * 0.1;
+		this.tickrate = 9 - (difficulty / 4);
+		baseSpawnChance += difficulty * 0.15;
 		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
 		
 		ItemStack[] contents = inv.getContents();
