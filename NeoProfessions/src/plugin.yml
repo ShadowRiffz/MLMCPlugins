@@ -33,3 +33,6 @@ commands:
   eset:
     description: Eset command
     usage: /epay [args]
+  convert:
+    description: Convert command for professions
+    usage: /convert - Used for professions converting one-time

@@ -102,4 +102,19 @@ public class ProfessionManager implements IOComponent {
 	public String getComponentName() {
 		return "ProfessionManager";
 	}
+	
+	public static void convertPlayer(UUID uuid, HashMap<ProfessionType, Profession> profs, Statement stmt) {
+		try {
+			for (Entry<ProfessionType, Profession> entry : profs.entrySet()) {
+				Profession prof = entry.getValue();
+				stmt.addBatch("REPLACE INTO professions_accounts "
+						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
+						prof.getExp()  +");");
+			}
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save professions for uuid " + uuid);
+			e.printStackTrace();
+		}
+	}
 }

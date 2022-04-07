@@ -74,9 +74,6 @@ public class CurrencyManager implements IOComponent, Listener {
 		
 		try {
 			for (Entry<Integer, Integer> entry : essence.get(uuid).entrySet()) {
-				if (entry.getValue() == 0) {
-					continue;
-				}
 				stmt.addBatch("REPLACE INTO professions_essence "
 						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
 			}
@@ -189,5 +186,19 @@ public class CurrencyManager implements IOComponent, Listener {
 	@Override
 	public String getComponentName() {
 		return "CurrencyManager";
+	}
+	
+	// Used only for converting
+	public static void convertPlayer(UUID uuid, HashMap<Integer, Integer> essences, Statement stmt) {
+		try {
+			for (Entry<Integer, Integer> entry : essences.entrySet()) {
+				stmt.addBatch("REPLACE INTO professions_essence "
+						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
+			}
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save currency for uuid " + uuid);
+			e.printStackTrace();
+		}
 	}
 }

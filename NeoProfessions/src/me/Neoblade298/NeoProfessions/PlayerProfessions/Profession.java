@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.PlayerProfessions;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -11,6 +12,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 public class Profession {
 	ProfessionType type;
 	int exp, level;
+	private static final int MAX_LEVEL = 60;
 	static HashMap<Integer, Integer> nextLv= new HashMap<Integer, Integer>();
 	
 	static {
@@ -54,11 +56,14 @@ public class Profession {
 	}
 	
 	public void addExp(Player p, int exp) {
+		if (this.level == MAX_LEVEL) {
+			return;
+		}
 		double newExp = exp + this.exp;
 		int percent = (int) ((newExp / (double) nextLv.get(this.level)) * 100);
 		percent = Math.min(100, percent);
 		
-		// If next level exists, check that the player can reach it, else just add
+		// If next level exists, check that the player can reach it
 		p.sendMessage("§a+" + exp + " §7(§f" + percent + "%§7) §6" + type.getDisplay() + " §7exp");
 		boolean levelup = false;
 		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level)) {
@@ -71,6 +76,31 @@ public class Profession {
 					.replaceAll("%profname%", type.getDisplay()));
 			p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1, 1);
 		}
-		this.exp = (int) newExp;
+		
+		if (levelup && this.level == MAX_LEVEL) {
+			this.exp = 0;
+		}
+		else {
+			this.exp = (int) newExp;
+		}
+	}
+	
+	public void convertExp(HashMap<Integer, Integer> currency, int divider) {
+		int newExp = this.exp;
+		for (Entry<Integer, Integer> entry : currency.entrySet()) {
+			newExp += (entry.getKey() * entry.getValue()) / divider;
+		}
+		
+		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level)) {
+			newExp -= nextLv.get(this.level);
+			this.level++;
+		}
+		if (level >= 60) {
+			this.level = 60;
+			this.exp = 0;
+		}
+		else {
+			this.exp = newExp;
+		}
 	}
 }

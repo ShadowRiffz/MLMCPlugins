@@ -149,9 +149,6 @@ public class StorageManager implements IOComponent, Listener {
 		
 		try {
 			for (Entry<Integer, Integer> entry : storages.get(uuid).entrySet()) {
-				if (entry.getValue() == 0) {
-					continue;
-				}
 				stmt.addBatch("REPLACE INTO professions_items "
 						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
 			}

@@ -12,7 +12,7 @@ public class Garden {
 	int size;
 	HashMap<Integer, GardenSlot> slots;
 	private static final long DEFAULT_GROW_TIME = 1800000; // 30 minutes
-	private static final int BASE_SIZE = 3;
+	private static final int BASE_SIZE = 1;
 	private static final MinigameParameters defaultParams = new MinigameParameters();
 	
 	public Garden() {

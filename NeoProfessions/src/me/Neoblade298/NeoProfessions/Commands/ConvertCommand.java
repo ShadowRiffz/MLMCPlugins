@@ -1,0 +1,143 @@
+package me.Neoblade298.NeoProfessions.Commands;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
+import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+
+
+public class ConvertCommand implements CommandExecutor {
+	Professions main;
+	ArrayList<String> currencyTypes = new ArrayList<String>();
+	
+	public ConvertCommand(Professions main) {
+		this.main = main;
+		currencyTypes.add("essence");
+		currencyTypes.add("ruby");
+		currencyTypes.add("amethyst");
+		currencyTypes.add("sapphire");
+		currencyTypes.add("emerald");
+		currencyTypes.add("topaz");
+		currencyTypes.add("garnet");
+		currencyTypes.add("adamantium");
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
+		if (args.length == 0 && sender.hasPermission("neoprofessions.admin")) {
+			sender.sendMessage("Starting conversion of professions...");
+			convertAll();
+			return true;
+		}
+		return false;
+	}
+	
+	private void convertAll() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(Professions.connection, Professions.sqlUser, Professions.sqlPass);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neoprofessions_currency;");
+			
+			new BukkitRunnable() {
+				public void run() {
+					HashMap<String, HashMap<Integer, Integer>> currencies = new HashMap<String, HashMap<Integer, Integer>>();
+					try {	
+						Statement stmt = con.createStatement();
+						int count = 0;
+						int total = rs.getFetchSize();
+						while (rs.next()) {
+							UUID uuid = UUID.fromString(rs.getString(1));
+							try {
+								currencies.put("essence", parseLine(rs.getString("2")));
+								currencies.put("ruby", parseLine(rs.getString("3")));
+								currencies.put("amethyst", parseLine(rs.getString("4")));
+								currencies.put("sapphire", parseLine(rs.getString("5")));
+								currencies.put("emerald", parseLine(rs.getString("6")));
+								currencies.put("topaz", parseLine(rs.getString("7")));
+								currencies.put("garnet", parseLine(rs.getString("8")));
+								currencies.put("adamantium", parseLine(rs.getString("9")));
+								
+								// If everything is empty, skip it
+								boolean empty = true;
+								for (String type : currencyTypes) {
+									if (!currencies.get(type).isEmpty()) {
+										empty = false;
+										break;
+									}
+								}
+								if (empty) {
+									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] UUID " + uuid + " is empty. Skipping.");
+									continue;
+								}
+								
+								// Convert essence first
+								CurrencyManager.convertPlayer(uuid, currencies.get("essence"), stmt);
+								
+								// Convert ores into exp
+								HashMap<ProfessionType, Profession> profs = new HashMap<ProfessionType, Profession>();
+								for (ProfessionType prof : ProfessionType.values()) {
+									profs.put(prof, new Profession(prof));
+								}
+								profs.get(ProfessionType.HARVESTER).convertExp(currencies.get("ruby"), 2);
+								profs.get(ProfessionType.HARVESTER).convertExp(currencies.get("amethyst"), 2);
+								profs.get(ProfessionType.LOGGER).convertExp(currencies.get("emerald"), 2);
+								profs.get(ProfessionType.LOGGER).convertExp(currencies.get("sapphire"), 2);
+								profs.get(ProfessionType.STONECUTTER).convertExp(currencies.get("topaz"), 2);
+								profs.get(ProfessionType.STONECUTTER).convertExp(currencies.get("garnet"), 2);
+								profs.get(ProfessionType.CRAFTER).convertExp(currencies.get("adamantium"), 1);
+								ProfessionManager.convertPlayer(uuid, profs, stmt);
+								
+								stmt.executeBatch();
+								count++;
+								if (count % 50 == 0 && count != 0) {
+									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Completed " + count + " / " + total + " conversions.");
+								}
+							}
+							catch (Exception e) {
+								Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to convert UUID: " + uuid);
+								e.printStackTrace();
+							}
+						}
+					}
+					catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			}.runTaskAsynchronously(main);
+
+			// Save account
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+	}
+	
+	private HashMap<Integer, Integer> parseLine(String line) {
+		HashMap<Integer, Integer> currency = new HashMap<Integer, Integer>();
+		String[] args = line.split(":");
+		int count = 0;
+		for (int i = 5; i <= 60; i += 5) {
+			int num = Integer.parseInt(args[count++]);
+			if (num > 0) {
+				currency.put(i, Integer.parseInt(args[count++]));
+			}
+		}
+		return currency;
+	}
+}
