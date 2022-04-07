@@ -176,7 +176,7 @@ public class LoggingMinigame extends ProfessionInventory {
 					endGame();
 				}
 			}
-		}.runTaskTimer(MinigameManager.main, 0, TICK_RATE);
+		}.runTaskTimer(MinigameManager.main, 0, tickrate);
 	}
 	
 	private void endGame() {

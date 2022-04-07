@@ -22,7 +22,7 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class StorageView extends ProfessionInventory {
-	private static InvSorter invsorter;
+	private InvSorter invsorter;
 	private Player p;
 	private ArrayList<StoredItemInstance> items;
 	private int page = 1;

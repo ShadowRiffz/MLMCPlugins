@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -31,6 +32,8 @@ public class ComponentView extends ProfessionInventory {
 	private Sorter[] sorters;
 	private int mode = 0;
 	private Recipe recipe;
+	private String name;
+	private List<String> recipeList;
 	
 	private int min, max;
 	public static ArrayList<String> info = new ArrayList<String>();
@@ -46,6 +49,42 @@ public class ComponentView extends ProfessionInventory {
 		info.add("§9§oLeft click §7§oto see relevant recipes");
 		info.add("§9§oPress 1 §7§ofor info mode (Current)");
 		info.add("§9§oPress 2 §7§ofor display mode");
+	}
+	
+	public ComponentView(Player p, Recipe recipe, String name, List<String> recipeList) {
+		this.p = p;
+		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
+		p.openInventory(inv);
+		this.name = name;
+		this.recipe = recipe;
+		this.recipeList = recipeList;
+		this.sorters = new Sorter[5];
+		invsorter = new InvSorter();
+		
+		// Setup sorters
+		int namePriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "name-priority");
+		int levelPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "level-priority");
+		int rarityPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "rarity-priority");
+		int amountPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "amount-priority");
+		boolean nameOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "name-order");
+		boolean levelOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "level-order");
+		boolean rarityOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "rarity-order");
+		boolean amountOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "amount-order");
+		sorters[namePriority] = new Sorter(Sorter.NAME_SORT, namePriority, nameOrder);
+		sorters[levelPriority] = new Sorter(Sorter.LEVEL_SORT, levelPriority, levelOrder);
+		sorters[rarityPriority] = new Sorter(Sorter.RARITY_SORT, rarityPriority, rarityOrder);
+		sorters[amountPriority] = new Sorter(Sorter.AMOUNT_SORT, amountPriority, amountOrder);
+		
+		// Setup itemstacks to be used for sorting
+		components = new ArrayList<StoredItemInstance>();
+		for (StoredItemInstance si : recipe.getComponents()) {
+			components.add(si);
+		}
+		Collections.sort(components, invsorter);
+		
+		inv.setContents(new ItemStack[54]);
+		inv.setContents(setupAll(inv.getContents()));
+		Professions.viewingInventory.put(p, this);
 	}
 	
 	public ComponentView(Player p, Recipe recipe, StoredItem base, int min, int max) {
@@ -84,7 +123,7 @@ public class ComponentView extends ProfessionInventory {
 		inv.setContents(setupAll(inv.getContents()));
 		Professions.viewingInventory.put(p, this);
 	}
-	
+
 	private ItemStack[] setupAll(ItemStack[] contents) {
 		return setupUtilityButtons(setupInventory(contents));
 	}
@@ -238,7 +277,12 @@ public class ComponentView extends ProfessionInventory {
 	}
 	
 	private void returnToRecipe() {
-		new RecipeView(p, base, min, max);
+		if (base != null) {
+			new RecipeView(p, base, min, max);
+		}
+		else {
+			new RecipeView(p, name, recipeList);
+		}
 	}
 	
 	private void viewRecipes(Player p, int slot) {

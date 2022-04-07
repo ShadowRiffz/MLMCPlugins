@@ -128,8 +128,8 @@ public class GardenManager implements IOComponent {
 		}
 	}
 	
-	public static HashMap<ProfessionType, Garden> getGardens(Player p) {
-		return gardens.get(p.getUniqueId());
+	public static Garden getGarden(Player p, ProfessionType type) {
+		return gardens.get(p.getUniqueId()).get(type);
 	}
 	
 	public static Fertilizer getFertilizer(int id) {

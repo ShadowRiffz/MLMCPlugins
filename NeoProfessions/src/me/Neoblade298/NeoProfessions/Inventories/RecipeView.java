@@ -29,7 +29,9 @@ public class RecipeView extends ProfessionInventory {
 	StoredItem base;
 	private int page = 1;
 	private int mode = 0;
-	private static RecipeSorter rsorter;
+	private RecipeSorter rsorter;
+	private String name;
+	private List<String> recipeList;
 	
 	private int min, max;
 	
@@ -51,6 +53,26 @@ public class RecipeView extends ProfessionInventory {
 		info.add("§9§oPress 2 §7§ofor result mode");
 	}
 	
+	public RecipeView(Player p, String name, List<String> recipeList) {
+		this.p = p;
+		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + name);
+		this.name = name;
+		this.recipeList = recipeList;
+		p.openInventory(inv);
+		rsorter = new RecipeSorter();
+		
+		// Setup recipes relevant to the base
+		recipes = new ArrayList<Recipe>();
+		for (String key : recipeList) {
+			recipes.add(RecipeManager.getRecipe(key));
+		}
+		Collections.sort(recipes, rsorter);
+		
+		inv.setContents(new ItemStack[54]);
+		inv.setContents(setupAll(inv.getContents()));
+		Professions.viewingInventory.put(p, this);
+	}
+	
 	public RecipeView(Player p, StoredItem base, int min, int max) {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + base.getDisplay());
@@ -64,7 +86,7 @@ public class RecipeView extends ProfessionInventory {
 		// Setup recipes relevant to the base
 		recipes = new ArrayList<Recipe>();
 		for (String key : base.getRelevantRecipes()) {
-			recipes.add(RecipeManager.recipes.get(key));
+			recipes.add(RecipeManager.getRecipe(key));
 		}
 		Collections.sort(recipes, rsorter);
 		
@@ -126,7 +148,9 @@ public class RecipeView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Recipes with: " + base.getDisplay());
+		if (base != null) {
+			lore.add("§7Recipes with: " + base.getDisplay());
+		}
 		lore.add("§9§oLeft click §7§oto craft 1x");
 		lore.add("§9§oShift left click §7§ofor 10x");
 		lore.add("§9§oRight click §7§oto view components");
@@ -224,7 +248,12 @@ public class RecipeView extends ProfessionInventory {
 	
 	private void viewComponents(Player p, int slot) {
 		Recipe recipe = this.recipes.get(((page - 1) * 45) + slot);
-		new ComponentView(p, recipe, base, min, max);
+		if (base != null) {
+			new ComponentView(p, recipe, base, min, max);
+		}
+		else {
+			new ComponentView(p, recipe, name, recipeList);
+		}
 	}
 	
 	private void craftItem(int slot, int amount) {

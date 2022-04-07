@@ -128,7 +128,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 				StorageManager.takePlayer(p, fertilizerId, 1);
 			}
 			CurrencyManager.subtract(p, level, 2);
-			GardenManager.getGardens(p).get(type).plantSeed(this.slot, id, fertilizerId);
+			GardenManager.getGarden(p, type).plantSeed(this.slot, id, fertilizerId);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 			new GardenInventory(p, type);
 		}

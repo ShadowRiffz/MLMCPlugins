@@ -43,7 +43,7 @@ public class GardenInventory extends ProfessionInventory {
 		default: display = "§9Your Area";
 		break;
 		}
-		garden = GardenManager.getGardens(p).get(type);
+		garden = GardenManager.getGarden(p, type);
 		
 		inv = Bukkit.createInventory(p, 54, display);
 
@@ -147,7 +147,7 @@ public class GardenInventory extends ProfessionInventory {
 				return;
 			}
 			else if (nbti.getInteger("type") == MATURE) {
-				GardenManager.getGardens(p).get(type).harvestSeed(p, slot);
+				GardenManager.getGarden(p, type).harvestSeed(p, slot);
 				return;
 			}
 		}

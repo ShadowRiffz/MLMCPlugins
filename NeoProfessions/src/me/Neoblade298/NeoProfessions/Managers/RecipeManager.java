@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -31,12 +32,19 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class RecipeManager implements IOComponent {
 	Professions main;
-	public static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
-	public static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
+	private static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
+	private static HashMap<String, List<String>> recipeLists = new HashMap<String, List<String>>();
+	private static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
+	
 	public RecipeManager(Professions main) {
 		this.main = main;
 		
 		loadRecipes(new File(main.getDataFolder(), "recipes"));
+		
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(main.getDataFolder(), "recipe-lists.yml"));
+		for (String key : cfg.getKeys(false)) {
+			recipeLists.put(key, cfg.getStringList(key));
+		}
 	}
 	
 	private void loadRecipes(File dir) {
@@ -166,5 +174,20 @@ public class RecipeManager implements IOComponent {
 	@Override
 	public String getComponentName() {
 		return "RecipeManager";
+	}
+	
+	public List<String> getRecipeList(String key) {
+		return recipeLists.get(key);
+	}
+	
+	public static boolean hasKnowledge(Player p, String key) {
+		if (knowledge.containsKey(p.getUniqueId())) {
+			return knowledge.get(p.getUniqueId()).contains(key);
+		}
+		return false;
+	}
+	
+	public static Recipe getRecipe(String key) {
+		return recipes.get(key);
 	}
 }

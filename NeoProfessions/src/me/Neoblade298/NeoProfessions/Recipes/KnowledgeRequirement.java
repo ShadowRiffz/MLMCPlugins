@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoProfessions.Recipes;
 
-import java.util.HashSet;
-
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
@@ -21,8 +19,7 @@ public class KnowledgeRequirement implements RecipeRequirement {
 	}
 	
 	public boolean passesReq(Player p) {
-		HashSet<String> knowledge = RecipeManager.knowledge.get(p.getUniqueId());
-		return knowledge != null && knowledge.contains(this.key);
+		return RecipeManager.hasKnowledge(p, key);
 	}
 
 	public String failMessage(Player p) {
