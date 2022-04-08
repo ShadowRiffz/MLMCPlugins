@@ -14,7 +14,7 @@ public class GardenUpgradeResult implements RecipeResult {
 	int newSize;
 	String display;
 
-	public GardenUpgradeResult(String key, String[] lineArgs) {
+	public GardenUpgradeResult(String[] lineArgs) {
 		this.type = ProfessionType.HARVESTER;
 		this.newSize = 1;
 		
@@ -22,7 +22,7 @@ public class GardenUpgradeResult implements RecipeResult {
 			if (arg.startsWith("size")) {
 				newSize = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
 			}
-			else if (arg.startsWith("amount")) {
+			else if (arg.startsWith("type")) {
 				type = ProfessionType.valueOf(arg.substring(arg.indexOf(':') + 1).toUpperCase());
 			}
 		}

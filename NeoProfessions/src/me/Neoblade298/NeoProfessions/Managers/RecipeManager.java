@@ -20,6 +20,8 @@ import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
+import me.Neoblade298.NeoProfessions.Recipes.GardenSizeRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.GardenUpgradeResult;
 import me.Neoblade298.NeoProfessions.Recipes.GearResult;
 import me.Neoblade298.NeoProfessions.Recipes.KnowledgeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.LevelRequirement;
@@ -92,6 +94,9 @@ public class RecipeManager implements IOComponent {
 							else if (args[0].equalsIgnoreCase("level")) {
 								reqs.add(new LevelRequirement(args));
 							}
+							else if (args[0].equalsIgnoreCase("garden-size")) {
+								reqs.add(new GardenSizeRequirement(args));
+							}
 						}
 						
 						int level = sec.getInt("level");
@@ -113,6 +118,9 @@ public class RecipeManager implements IOComponent {
 						}
 						else if (resultArgs[0].startsWith("augment")) {
 							result = new AugmentResult(resultArgs);
+						}
+						else if (resultArgs[0].startsWith("garden-upgrade")) {
+							result = new GardenUpgradeResult(resultArgs);
 						}
 						
 						String display = sec.getString("display");
