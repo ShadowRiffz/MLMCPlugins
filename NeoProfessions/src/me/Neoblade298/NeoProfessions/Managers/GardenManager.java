@@ -46,8 +46,10 @@ public class GardenManager implements IOComponent {
 					
 					HashMap<Rarity, Double> rarityWeightMults = new HashMap<Rarity, Double>();
 					ConfigurationSection rwcfg = cfg.getConfigurationSection("rarity-weight-multipliers");
-					for (String rar : rwcfg.getKeys(false)) {
-						rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
+					if (rwcfg != null) {
+						for (String rar : rwcfg.getKeys(false)) {
+							rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
+						}
 					}
 					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMults);
 					fertilizers.put(id, new Fertilizer(id, params, timeMult));
