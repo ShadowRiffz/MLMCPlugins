@@ -82,6 +82,21 @@ public class StorageManager implements IOComponent, Listener {
 		return false;
 	}
 	
+	public static boolean setPlayer(Player p, int id, int amount) {
+		if (amount > 0) {
+			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+			int total = amount;
+			storage.put(id, total);
+			return true;
+		}
+		else if (amount == 0) {
+			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
+			storage.remove(id);
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean playerHas(Player p, int id, int amount) {
 		if (amount > 0) {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());

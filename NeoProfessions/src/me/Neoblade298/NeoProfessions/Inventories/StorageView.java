@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -88,24 +89,48 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private void setupItems() {
+		ArrayList<Integer> removedItems = new ArrayList<Integer>();
+		
 		for (int id : StorageManager.getStorage(p).keySet()) {
 			StoredItem item = StorageManager.getItem(id);
+			if (item == null) {
+				Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Player " + p.getName() + " tried to load nonexistent id: " + id +". Deleting from inventory.");
+				removedItems.add(id);
+				continue;
+			}
+			
 			int amount = StorageManager.getAmount(p, id);
 			if (amount > 0) {
 				items.add(new StoredItemInstance(item, amount));
 			}
 		}
+		
+		for (int toRemove : removedItems) {
+			StorageManager.setPlayer(p, toRemove, 0);
+		}
 	}
 	
 	private void setupItems(int min, int max) {
+		ArrayList<Integer> removedItems = new ArrayList<Integer>();
+		
 		for (int i = min; i <= max; i++) {
 			if (StorageManager.getItem(i) == null) {
 				break;
 			}
 			StoredItem item = StorageManager.getItem(i);
+			if (item == null) {
+				Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Player " + p.getName() + " tried to load nonexistent id: " + i +". Deleting from inventory.");
+				removedItems.add(i);
+				continue;
+			}
+			
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
 				items.add(new StoredItemInstance(item, amount));
+			}
+			
+			for (int toRemove : removedItems) {
+				StorageManager.setPlayer(p, toRemove, 0);
 			}
 		}
 	}
@@ -141,7 +166,7 @@ public class StorageView extends ProfessionInventory {
 			else if (mode == DISPLAY_MODE) {
 				contents[count++] = items.get(i).getStorageView();
 			}
-		}	
+		}
 		
 		return contents;
 	}
@@ -172,10 +197,10 @@ public class StorageView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		info.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
-		info.add("§9§oRight click §7§oto show relevant recipes");
-		info.add("§9§oPress 1 §7§ofor info mode");
-		info.add("§9§oPress 2 §7§ofor display mode");
+		lore.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
+		lore.add("§9§oRight click §7§oto show relevant recipes");
+		lore.add("§9§oPress 1 §7§ofor info mode");
+		lore.add("§9§oPress 2 §7§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
