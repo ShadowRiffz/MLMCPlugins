@@ -746,4 +746,13 @@ public class AugmentManager implements Listener {
 		// See if there's a set of levels for the aug, create if not
 		return getFromCache(augmentMap.get(key), level);
 	}
+	
+	public static Augment getViaDroptable(String droptable, int level) {
+		ArrayList<String> table = droptables.get(droptable);
+		return getFromCache(table.get(Professions.gen.nextInt(table.size())), level);
+	}
+	
+	public static boolean isDroptable(String droptable) {
+		return droptables.containsKey(droptable);
+	}
 }

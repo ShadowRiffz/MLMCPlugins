@@ -1,8 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -36,7 +34,6 @@ import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class NeoprofessionsCommands implements CommandExecutor {
 
-	private static final Random gen = new Random();
 	Professions main;
 
 	public NeoprofessionsCommands(Professions main) {
@@ -289,17 +286,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		
 					if (type.equalsIgnoreCase("augment")) {
 						Augment augment = null;
-						HashMap<String, ArrayList<String>> tables = AugmentManager.getDropTables();
-						if (tables.containsKey(aug)) {
-							ArrayList<String> table = tables.get(aug);
-							augment = AugmentManager.getFromCache(table.get(gen.nextInt(table.size())), lv);
+						if (AugmentManager.isDroptable(aug)) {
+							augment = AugmentManager.getViaDroptable(aug, lv);
 						}
 						else if (AugmentManager.hasAugment(aug)) {
 							augment = AugmentManager.getFromCache(aug, lv);
 						}
 						else {
-							ArrayList<String> table = tables.get("default");
-							augment = AugmentManager.getFromCache(table.get(gen.nextInt(table.size())), lv);
+							augment = AugmentManager.getViaDroptable("default", lv);
 						}
 						ItemStack item = augment.getItem(p);
 						item.setAmount(amt);
