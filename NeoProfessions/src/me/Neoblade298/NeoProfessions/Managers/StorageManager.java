@@ -126,6 +126,9 @@ public class StorageManager implements IOComponent, Listener {
 					ArrayList<String> lore = (ArrayList<String>) itemCfg.getStringList("lore");
 					int intid = Integer.parseInt(id);
 					StoredItem item = new StoredItem(intid, name, level, rarity, mat, lore);
+					for (String source : itemCfg.getStringList("sources")) {
+						item.addSource(source, true);
+					}
 					items.put(intid, item);
 				}
 			}
