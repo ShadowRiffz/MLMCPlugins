@@ -47,6 +47,10 @@ public class StoredItemInstance {
 		return item.getStorageView(amt);
 	}
 	
+	public ItemStack getSourceView(Player p, int compare) {
+		return item.getSourceView(p, compare);
+	}
+	
 	public ItemStack getCompareView(Player p, int compare) {
 		return item.getCompareView(p, compare);
 	}

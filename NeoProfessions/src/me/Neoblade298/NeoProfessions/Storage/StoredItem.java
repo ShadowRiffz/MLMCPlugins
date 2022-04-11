@@ -28,6 +28,7 @@ public class StoredItem {
 	private ArrayList<String> baseLore;
 	private ArrayList<String> storageLore;
 	private ArrayList<String> sources;
+	private ArrayList<String> sourceLore;
 	private TreeSet<String> relevantRecipes;
 	
 	private static final int SOURCES_POS = 2;
@@ -54,6 +55,8 @@ public class StoredItem {
 		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
+		this.sourceLore = new ArrayList<String>();
+		this.sourceLore.add("§6Sources§7:");
 		
 		this.defaultExp = (int) (level * Professions.getExpMultiplier(this.rarity));
 	}
@@ -103,11 +106,8 @@ public class StoredItem {
 			}
 		}
 		this.storageLore.add(SOURCES_POS + 1, "§7- " + source);
+		this.sourceLore.add("§7- " + source);
 		sources.add(source);
-	}
-	
-	public ArrayList<String> getSources() {
-		return sources;
 	}
 	
 	public ItemStack getItem() {
@@ -116,7 +116,7 @@ public class StoredItem {
 			item = SkullCreator.itemFromBase64(mat);
 		}
 		else {
-			item = new ItemStack(Material.getMaterial(mat));
+			item = new ItemStack(Material.getMaterial(mat.toUpperCase()));
 		}
 		
 		return item;
@@ -149,6 +149,18 @@ public class StoredItem {
 		meta.setDisplayName(display + " §fx" + amount);
 		item.setItemMeta(meta);
 		item.setAmount(amount > 64 ? 64 : amount);
+		return item;
+	}
+	
+	public ItemStack getSourceView(Player p, int compare) {
+		ItemStack item = getItem();
+		ItemMeta meta = item.getItemMeta();
+		int playerHas = StorageManager.getAmount(p, id);
+		String display = playerHas >= compare ? "§a" : "§c";
+		display += ChatColor.stripColor(this.display) + " " + playerHas + " / " + compare;
+		meta.setDisplayName(display);
+		meta.setLore(sourceLore);
+		item.setItemMeta(meta);
 		return item;
 	}
 	

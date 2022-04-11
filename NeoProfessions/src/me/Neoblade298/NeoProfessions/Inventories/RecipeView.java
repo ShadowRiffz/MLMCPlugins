@@ -162,12 +162,9 @@ public class RecipeView extends ProfessionInventory {
 		if (base != null) {
 			lore.add("§7Recipes with: " + base.getDisplay());
 		}
-		lore.add("§9§oLeft click §7§oto craft 1x");
-		lore.add("§9§oShift left click §7§ofor 10x");
-		lore.add("§9§oRight click §7§oto view components");
-		lore.add("§9§oPress 1 §7§ofor info mode");
-		lore.add("§9§oPress 2 §7§ofor requirements mode");
-		lore.add("§9§oPress 3 §7§ofor display mode");
+		for (String line : info) {
+			lore.add(line);
+		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -294,11 +291,11 @@ public class RecipeView extends ProfessionInventory {
 	    public int compare(Recipe a, Recipe b)
 	    {
 	    	int comp = 0;
-    		comp = b.getLevel() - a.getLevel();
+    		comp = a.getLevel() - b.getLevel(); // Ascending level
 	    	if (comp == 0) {
 		    	int canA = a.canCraft(p) ? 1 : 0;
 		    	int canB = b.canCraft(p) ? 1 : 0;
-		    	comp = canB - canA;
+		    	comp = canA - canB;
 	    		if (comp == 0) {
 		    		comp = b.getKey().compareTo(a.getKey());
 	    		}

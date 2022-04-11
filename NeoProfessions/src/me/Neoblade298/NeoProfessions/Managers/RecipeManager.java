@@ -57,7 +57,7 @@ public class RecipeManager implements IOComponent {
 				}
 			}
 			for (String file : files) {
-				for (String recipe : YamlConfiguration.loadConfiguration(new File (main.getDataFolder(), "recipes\\" + file)).getKeys(false)) {
+				for (String recipe : YamlConfiguration.loadConfiguration(new File (main.getDataFolder(), "recipes/" + file)).getKeys(false)) {
 					rlist.add(recipe);
 				}
 			}

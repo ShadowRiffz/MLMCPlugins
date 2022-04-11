@@ -140,9 +140,13 @@ public class ComponentView extends ProfessionInventory {
 			}
 			StoredItemInstance si = components.get(i);
 			if (mode == INFO_MODE) {
-				ItemStack item = si.getCompareView(p, si.getAmount());
+				ItemStack item = si.getSourceView(p, si.getAmount());
 				ItemMeta meta = item.getItemMeta();
-				meta.setLore(info);
+				List<String> lore = meta.getLore();
+				for (String line : info) {
+					lore.add(line);
+				}
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				contents[count++] = item;
 			}

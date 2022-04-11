@@ -59,6 +59,9 @@ public class Profession {
 		if (this.level == MAX_LEVEL) {
 			return;
 		}
+		if (exp == -1) {
+			exp = 10; // Basically just for inept healing potion
+		}
 		double newExp = exp + this.exp;
 		int percent = (int) ((newExp / (double) nextLv.get(this.level)) * 100);
 		percent = Math.min(100, percent);
