@@ -148,8 +148,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("recipes")) {
-			System.out.println(RecipeManager.getRecipeList(args[2]));
-			new RecipeView(p, args[1], RecipeManager.getRecipeList(args[2]));
+			new RecipeView(p, args[1].replaceAll("_", " "), RecipeManager.getRecipeList(args[2]));
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("gardens")) {
