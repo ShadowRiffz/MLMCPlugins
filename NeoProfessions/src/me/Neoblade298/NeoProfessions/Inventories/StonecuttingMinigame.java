@@ -319,7 +319,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 			int id = si.getItem().getId();
 			int amount = si.getAmount();
 			items.put(id, items.getOrDefault(id, 0) + amount);
-			totalExp += drop.getExp();
+			totalExp += drop.getExp() * amount;
 		}
 		
 		for (Entry<Integer, Integer> e : items.entrySet()) {
