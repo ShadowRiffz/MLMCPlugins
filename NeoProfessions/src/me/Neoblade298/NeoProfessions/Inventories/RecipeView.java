@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public class RecipeView extends ProfessionInventory {
 	
 	public RecipeView(Player p, String name, List<String> recipeList) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + name);
+		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + name + " Recipes");
 		this.name = name;
 		this.recipeList = recipeList;
 		p.openInventory(inv);
@@ -64,7 +65,12 @@ public class RecipeView extends ProfessionInventory {
 		// Setup recipes relevant to the base
 		recipes = new ArrayList<Recipe>();
 		for (String key : recipeList) {
-			recipes.add(RecipeManager.getRecipe(key));
+			Recipe recipe = RecipeManager.getRecipe(key);
+			if (recipe == null) {
+				Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load recipe " + key + " in RecipeView. Skipping.");
+				continue;
+			}
+			recipes.add(recipe);
 		}
 		Collections.sort(recipes, rsorter);
 		
@@ -86,7 +92,12 @@ public class RecipeView extends ProfessionInventory {
 		// Setup recipes relevant to the base
 		recipes = new ArrayList<Recipe>();
 		for (String key : base.getRelevantRecipes()) {
-			recipes.add(RecipeManager.getRecipe(key));
+			Recipe recipe = RecipeManager.getRecipe(key);
+			if (recipe == null) {
+				Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load recipe " + key + " in RecipeView. Skipping.");
+				continue;
+			}
+			recipes.add(recipe);
 		}
 		Collections.sort(recipes, rsorter);
 		

@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -45,7 +46,22 @@ public class RecipeManager implements IOComponent {
 		
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(main.getDataFolder(), "recipe-lists.yml"));
 		for (String key : cfg.getKeys(false)) {
-			recipeLists.put(key, cfg.getStringList(key));
+			List<String> rlist = cfg.getStringList(key);
+			ArrayList<String> files = new ArrayList<String>();
+			Iterator<String> iter = rlist.iterator();
+			while (iter.hasNext()) {
+				String recipe = iter.next();
+				if (recipe.startsWith("file:")) {
+					iter.remove();
+					files.add(recipe.substring(recipe.indexOf(':') + 1));
+				}
+			}
+			for (String file : files) {
+				for (String recipe : YamlConfiguration.loadConfiguration(new File (main.getDataFolder(), "recipes\\" + file)).getKeys(false)) {
+					rlist.add(recipe);
+				}
+			}
+			recipeLists.put(key, rlist);
 		}
 	}
 	
@@ -184,7 +200,7 @@ public class RecipeManager implements IOComponent {
 		return "RecipeManager";
 	}
 	
-	public List<String> getRecipeList(String key) {
+	public static List<String> getRecipeList(String key) {
 		return recipeLists.get(key);
 	}
 	

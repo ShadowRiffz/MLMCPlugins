@@ -21,12 +21,14 @@ import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 
 import me.Neoblade298.NeoProfessions.Inventories.GardenSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
+import me.Neoblade298.NeoProfessions.Inventories.RecipeView;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
 import me.Neoblade298.NeoProfessions.Inventories.StorageView;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
@@ -50,9 +52,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
+			// /prof storage [min] [max]
+			// /prof recipes [menu name] [recipe list]
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
-			sender.sendMessage("§7- §c/prof storage [min] [max]");
 			sender.sendMessage("§7- §c/prof gardens");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
@@ -142,6 +145,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 		else if (args[0].equalsIgnoreCase("storage")) {
 			new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("recipes")) {
+			System.out.println(RecipeManager.getRecipeList(args[2]));
+			new RecipeView(p, args[1], RecipeManager.getRecipeList(args[2]));
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("gardens")) {
