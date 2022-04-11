@@ -12,7 +12,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -24,7 +23,6 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
 
 public class RecipeView extends ProfessionInventory {
-	private Inventory inv;
 	private Player p;
 	private ArrayList<Recipe> recipes;
 	StoredItem base;
