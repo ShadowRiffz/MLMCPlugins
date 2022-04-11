@@ -26,7 +26,7 @@ public class GearConfig {
 	private Gear main;
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	public static final String DURAPREFIX = "§7Durability ";
-	public String name, display, title;
+	public String id, type, title;
 	public Material material;
 	public ArrayList<String> prefixes, displayNames;
 	public ArrayList<String> lore;
@@ -41,7 +41,7 @@ public class GearConfig {
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
 	
-	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
+	public GearConfig(Gear main, String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
 			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
 			int startingSlotsBase, int startingSlotsRange, double price, int version, ArrayList<String> lore) {
@@ -55,14 +55,14 @@ public class GearConfig {
 		}
 		
 		this.main = main;
-		this.name = name;
+		this.id = id;
 		if (title == null) {
-			this.title = "§7Standard " + display;
+			this.title = "§7Standard " + type;
 		}
 		else {
 			this.title = title;
 		}
-		this.display = display;
+		this.type = type;
 		this.material = material;
 		this.prefixes = prefixes;
 		this.displayNames = displayNames;
@@ -171,7 +171,7 @@ public class GearConfig {
 		}
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
-		lore.add("§7Type: " + this.display);
+		lore.add("§7Type: " + this.type);
 		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
 		lore.add("§7Level: " + level);
 		lore.add("§7Max Slots: " + maxSlots);
@@ -240,7 +240,7 @@ public class GearConfig {
 		NBTItem nbti = new NBTItem(item);
 		double price = this.price * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
-		nbti.setString("gear", name);
+		nbti.setString("gear", id);
 		nbti.setInteger("version", version);
 		nbti.setInteger("slotsMax", maxSlots);
 		nbti.setInteger("level", level);
