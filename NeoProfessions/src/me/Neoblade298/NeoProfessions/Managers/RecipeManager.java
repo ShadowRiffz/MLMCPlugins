@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
@@ -171,7 +173,20 @@ public class RecipeManager implements IOComponent {
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init storage for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init recipes for user " + p.getName());
+			e.printStackTrace();
+		}
+	}
+	
+	public static void convertPlayer(UUID uuid, HashSet<String> knowledge, Statement stmt) {
+		try {
+			for (String key : knowledge) {
+				stmt.addBatch("REPLACE INTO professions_knowledge "
+						+ "VALUES ('" + uuid + "', '" + key + "');");
+			}
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save recipes for user " + uuid);
 			e.printStackTrace();
 		}
 	}
@@ -181,12 +196,12 @@ public class RecipeManager implements IOComponent {
 		UUID uuid = p.getUniqueId();
 		try {
 			for (String key : knowledge.get(uuid)) {
-				stmt.addBatch("REPLACE INTO professions_accounts "
+				stmt.addBatch("REPLACE INTO professions_knowledge "
 						+ "VALUES ('" + uuid + "', '" + key + "');");
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save recipes for user " + p.getName());
 			e.printStackTrace();
 		}
 	}
@@ -213,5 +228,13 @@ public class RecipeManager implements IOComponent {
 	
 	public static Recipe getRecipe(String key) {
 		return recipes.get(key);
+	}
+	
+	public static void giveKnowledge(Player p, String key) {
+		giveKnowledge(p.getUniqueId(), key);
+	}
+	
+	public static void giveKnowledge(UUID uuid, String key) {
+		knowledge.get(uuid).add(key);
 	}
 }

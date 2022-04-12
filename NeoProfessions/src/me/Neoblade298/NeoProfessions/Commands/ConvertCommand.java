@@ -6,25 +6,34 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
+import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.model.user.UserManager;
+import net.luckperms.api.node.Node;
 
 
 public class ConvertCommand implements CommandExecutor {
 	Professions main;
 	ArrayList<String> currencyTypes = new ArrayList<String>();
+	HashMap<String, String> legendaryRecipes = new HashMap<String, String>();
 	HashMap<Integer, Integer> essenceLimit = new HashMap<Integer, Integer>();
 	
 	public ConvertCommand(Professions main) {
@@ -37,6 +46,17 @@ public class ConvertCommand implements CommandExecutor {
 		currencyTypes.add("topaz");
 		currencyTypes.add("garnet");
 		currencyTypes.add("adamantium");
+		
+		legendaryRecipes.put("recipes.tlegend1", "DragonScrambledEggs");
+		legendaryRecipes.put("recipes.tlegend2", "NeosFullCourseSpecial");
+		legendaryRecipes.put("recipes.tlegend3", "UltimatoeRoastedSoup");
+		legendaryRecipes.put("recipes.tlegend4", "ShanasPokeBowl");
+		legendaryRecipes.put("recipes.tlegend5", "MattiforniaRoll");
+		legendaryRecipes.put("recipes.tlegend6", "JJJawbreaker");
+		legendaryRecipes.put("recipes.tlegend7", "SupersSundae");
+		legendaryRecipes.put("recipes.tlegend8", "CommunityCake");
+		legendaryRecipes.put("recipes.tlegend9", "MonasBobaTea");
+		legendaryRecipes.put("recipes.tlegend10", "RandumsCheesecake");
 		
 		essenceLimit.put(5, 2500);
 		essenceLimit.put(10, 2000);
@@ -72,6 +92,9 @@ public class ConvertCommand implements CommandExecutor {
 			new BukkitRunnable() {
 				public void run() {
 					HashMap<String, HashMap<Integer, Integer>> currencies = new HashMap<String, HashMap<Integer, Integer>>();
+				    RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+			        LuckPerms api = provider.getProvider();
+					UserManager mngr = api.getUserManager();
 					try {	
 						Statement stmt = con.createStatement();
 						int count = 0;
@@ -119,6 +142,14 @@ public class ConvertCommand implements CommandExecutor {
 								ProfessionManager.convertPlayer(uuid, profs, stmt);
 								
 								stmt.executeBatch();
+								
+								User user = mngr.getUser(uuid);
+								HashSet<String> knowledge = new HashSet<String>();
+								user.getNodes().stream()
+								.filter(e -> legendaryRecipes.containsKey(e.getKey()))
+								.forEach(e -> knowledge.add(legendaryRecipes.get(e.getKey())));
+								RecipeManager.convertPlayer(uuid, knowledge, stmt);
+								
 								count++;
 								if (count % 50 == 0 && count != 0) {
 									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Completed " + count + " conversions. Skipped " + skipped + ".");
