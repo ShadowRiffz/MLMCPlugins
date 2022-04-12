@@ -34,6 +34,7 @@ public class ComponentView extends ProfessionInventory {
 	private Recipe recipe;
 	private String name;
 	private List<String> recipeList;
+	private String returnTo;
 	
 	private int min, max;
 	public static ArrayList<String> info = new ArrayList<String>();
@@ -51,9 +52,10 @@ public class ComponentView extends ProfessionInventory {
 		info.add("§9§oPress 2 §7§ofor display mode");
 	}
 	
-	public ComponentView(Player p, Recipe recipe, String name, List<String> recipeList) {
+	public ComponentView(Player p, Recipe recipe, String name, List<String> recipeList, String returnTo) {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
+		this.returnTo = returnTo;
 		p.openInventory(inv);
 		this.name = name;
 		this.recipe = recipe;
@@ -233,13 +235,22 @@ public class ComponentView extends ProfessionInventory {
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
 		e.setCancelled(true);
+		int slot = e.getRawSlot();
+		// Hotbar actions can be done anywhere in the inv
+		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+			int hotbar = e.getHotbarButton() + 1;
+			if (slot < 45 && hotbar == 1 || hotbar == 2) {
+				changeMode(hotbar);
+				return;
+			}
+		}
+		
 		ItemStack item = e.getCurrentItem();
 		if (item == null || item.getType().isAir()) {
 			return;
 		}
 		NBTItem nbti = new NBTItem(item);
 		String type = nbti.getString("type");
-		int slot = e.getRawSlot();
 		
 		if (type.equals("next")) {
 			page++;
@@ -266,11 +277,11 @@ public class ComponentView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (slot < 45) {
-				changeMode(hotbar);
-			}
-			else if (type.equals("sort")) {
+			if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
+			}
+			else if (slot < 45) {
+				changeMode(hotbar);
 			}
 		}
 	}
@@ -282,17 +293,17 @@ public class ComponentView extends ProfessionInventory {
 	
 	private void returnToRecipe() {
 		if (base != null) {
-			new RecipeView(p, base, min, max);
+			new RecipeView(p, base, min, max, returnTo);
 		}
 		else {
-			new RecipeView(p, name, recipeList);
+			new RecipeView(p, name, recipeList, returnTo);
 		}
 	}
 	
 	private void viewRecipes(Player p, int slot) {
 		StoredItemInstance si = this.components.get(((page - 1) * 45) + slot);
 		if (si.getItem().getRelevantRecipes().size() > 0) {
-			new RecipeView(p, si.getItem(), min, max);
+			new RecipeView(p, si.getItem(), min, max, returnTo);
 		}
 	}
 	

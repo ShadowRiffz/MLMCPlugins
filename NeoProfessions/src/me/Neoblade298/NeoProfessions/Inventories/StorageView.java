@@ -173,6 +173,7 @@ public class StorageView extends ProfessionInventory {
 	
 	private ItemStack[] setupUtilityButtons(ItemStack[] contents) {
 		contents[INFO_BUTTON] = createInfoItem();
+		contents[RecipeView.HOME_BUTTON] = createHomeItem();
 		if (page > 1) {
 			contents[PREVIOUS_BUTTON] = createPreviousButton();
 		}
@@ -208,6 +209,19 @@ public class StorageView extends ProfessionInventory {
 		return nbti.getItem();
 	}
 	
+	private ItemStack createHomeItem() {
+		ItemStack item = SkullCreator.itemFromBase64(RecipeView.HOUSE_HEAD);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§9Back");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("§7§oReturn to storage selection");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("type", "home");
+		return nbti.getItem();
+	}
+	
 	private ItemStack createPreviousButton() {
 		ItemStack item = SkullCreator.itemFromBase64(PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
@@ -231,12 +245,22 @@ public class StorageView extends ProfessionInventory {
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
 		e.setCancelled(true);
+		int slot = e.getRawSlot();
+		
+		// Hotbar actions can be done anywhere in the inv
+		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+			int hotbar = e.getHotbarButton() + 1;
+			if (slot < 45 && hotbar == 1 || hotbar == 2) {
+				changeMode(hotbar);
+				return;
+			}
+		}
+		
 		ItemStack item = e.getCurrentItem();
 		if (item == null || item.getType().isAir()) {
 			return;
 		}
 		NBTItem nbti = new NBTItem(item);
-		int slot = e.getRawSlot();
 		String type = nbti.getString("type");
 		
 		if (type.equals("next")) {
@@ -247,6 +271,10 @@ public class StorageView extends ProfessionInventory {
 		else if (type.equals("previous")) {
 			page--;
 			inv.setContents(setupAll(inv.getContents()));
+			return;
+		}
+		else if (type.equals("home")) {
+			new StorageSelectInventory(p);
 			return;
 		}
 		
@@ -270,13 +298,11 @@ public class StorageView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (slot < 45) {
-				if (slot < 45 && (hotbar == 1 || hotbar == 2)) {
-					changeMode(hotbar);
-				}
-			}
-			else if (type.equals("sort")) {
+			if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
+			}
+			else if (hotbar == 1 || hotbar == 2) {
+				changeMode(hotbar);
 			}
 		}
 	}
@@ -297,7 +323,7 @@ public class StorageView extends ProfessionInventory {
 	private void viewRecipes(Player p, int slot) {
 		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
 		if (si.getItem().getRelevantRecipes().size() > 0) {
-			new RecipeView(p, si.getItem(), min, max);
+			new RecipeView(p, si.getItem(), min, max, this.getClass().getName());
 		}
 	}
 	

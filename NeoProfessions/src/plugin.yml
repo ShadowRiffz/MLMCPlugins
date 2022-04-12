@@ -33,3 +33,12 @@ commands:
   eset:
     description: Eset command
     usage: /epay [args]
+  craft:
+    description: Craft command
+    usage: /craft
+  inv:
+    description: Inv command
+    usage: /inv
+  convert:
+    description: Convert command
+    usage: /convert

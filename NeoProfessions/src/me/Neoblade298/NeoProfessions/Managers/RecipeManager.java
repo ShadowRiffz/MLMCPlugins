@@ -63,6 +63,13 @@ public class RecipeManager implements IOComponent {
 			}
 			recipeLists.put(key, rlist);
 		}
+		
+		// Add a recipe list for all recipes
+		List<String> allList = new ArrayList<String>();
+		for (String recipe : recipes.keySet()) {
+			allList.add(recipe);
+		}
+		recipeLists.put("all", allList);
 	}
 	
 	private void loadRecipes(File dir) {

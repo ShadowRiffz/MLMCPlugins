@@ -19,6 +19,7 @@ import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 
 import me.Neoblade298.NeoProfessions.Inventories.GardenSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
+import me.Neoblade298.NeoProfessions.Inventories.RecipeSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RecipeView;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
@@ -145,7 +146,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("recipes")) {
-			new RecipeView(p, args[1].replaceAll("_", " "), RecipeManager.getRecipeList(args[2]));
+			new RecipeView(p, args[1].replaceAll("_", " "), RecipeManager.getRecipeList(args[2]), RecipeSelectInventory.class.getName());
 			return true;
 		}
 		else if (args[0].equalsIgnoreCase("gardens")) {

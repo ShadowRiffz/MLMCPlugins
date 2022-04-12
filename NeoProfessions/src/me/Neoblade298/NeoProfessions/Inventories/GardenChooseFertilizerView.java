@@ -103,35 +103,46 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 			return;
 		}
 		else if (slot < 45) {
-			NBTItem nbti = new NBTItem(inv.getContents()[slot]);
-			int fertilizerId = nbti.getInteger("id");
-			int level = StorageManager.getItem(id).getLevel();
-			
-			// Make sure the player has enough
-			if (!StorageManager.playerHas(p, id, 1)) {
-				p.sendMessage("§cYou don't have enough of this seed!");
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
-				return;
-			}
-			else if (!StorageManager.playerHas(p, fertilizerId, 1) && fertilizerId != -1) {
-				p.sendMessage("§cYou don't have enough of this fertilizer!");
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
-				return;
-			}
-			else if (!CurrencyManager.hasEnough(p, level, 1)) {
-				p.sendMessage("§cYou don't have 2 Level " + level + " Essence!");
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
-				return;
-			}
-			StorageManager.takePlayer(p, id, 1);
-			if (fertilizerId != -1) {
-				StorageManager.takePlayer(p, fertilizerId, 1);
-			}
-			CurrencyManager.subtract(p, level, 2);
-			GardenManager.getGarden(p, type).plantSeed(this.slot, id, fertilizerId);
-			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			new GardenInventory(p, type);
+			chooseFertilizer(slot);
 		}
+	}
+	
+	private void chooseFertilizer(int slot) { 
+		NBTItem nbti = new NBTItem(inv.getContents()[slot]);
+		int fertilizerId = nbti.getInteger("id");
+		int seedLevel = StorageManager.getItem(id).getLevel();
+		int fertilizerLevel = StorageManager.getItem(fertilizerId).getLevel();
+		
+		// Make sure the level of the fertilizer is high enough
+		if (fertilizerLevel < seedLevel || fertilizerId == -1) {
+			p.sendMessage("§cThis fertilizer is not high enough level!");
+			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
+			return;
+		}
+		// Make sure the player has enough
+		else if (!StorageManager.playerHas(p, id, 1)) {
+			p.sendMessage("§cYou don't have enough of this seed!");
+			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
+			return;
+		}
+		else if (!StorageManager.playerHas(p, fertilizerId, 1) && fertilizerId != -1) {
+			p.sendMessage("§cYou don't have enough of this fertilizer!");
+			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
+			return;
+		}
+		else if (!CurrencyManager.hasEnough(p, seedLevel, 1)) {
+			p.sendMessage("§cYou don't have 1 Level " + seedLevel + " Essence!");
+			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
+			return;
+		}
+		StorageManager.takePlayer(p, id, 1);
+		if (fertilizerId != -1) {
+			StorageManager.takePlayer(p, fertilizerId, 1);
+		}
+		CurrencyManager.subtract(p, seedLevel, 1);
+		GardenManager.getGarden(p, type).plantSeed(this.slot, id, fertilizerId);
+		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+		new GardenInventory(p, type);
 	}
 
 	// Cancel dragging in this inventory

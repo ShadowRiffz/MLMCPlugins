@@ -31,6 +31,7 @@ public class RecipeView extends ProfessionInventory {
 	private RecipeSorter rsorter;
 	private String name;
 	private List<String> recipeList;
+	private String returnTo;
 	
 	private int min, max;
 	
@@ -52,10 +53,11 @@ public class RecipeView extends ProfessionInventory {
 		info.add("§9§oPress 2 §7§ofor result mode");
 	}
 	
-	public RecipeView(Player p, String name, List<String> recipeList) {
+	public RecipeView(Player p, String name, List<String> recipeList, String returnTo) {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + name + " Recipes");
 		this.name = name;
+		this.returnTo = returnTo;
 		this.recipeList = recipeList;
 		p.openInventory(inv);
 		rsorter = new RecipeSorter();
@@ -77,9 +79,10 @@ public class RecipeView extends ProfessionInventory {
 		Professions.viewingInventory.put(p, this);
 	}
 	
-	public RecipeView(Player p, StoredItem base, int min, int max) {
+	public RecipeView(Player p, StoredItem base, int min, int max, String returnTo) {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + base.getDisplay());
+		this.returnTo = returnTo;
 		p.openInventory(inv);
 		this.base = base;
 		rsorter = new RecipeSorter();
@@ -206,6 +209,15 @@ public class RecipeView extends ProfessionInventory {
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
 		e.setCancelled(true);
+		
+		// Hotbar actions can be done anywhere in the inv
+		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+			int hotbar = e.getHotbarButton();
+			if (hotbar == 1 || hotbar == 2) {
+				changeMode(hotbar);
+			}
+		}
+		
 		ItemStack item = e.getCurrentItem();
 		if (item == null || item.getType().isAir()) {
 			return;
@@ -225,7 +237,12 @@ public class RecipeView extends ProfessionInventory {
 			return;
 		}
 		else if (type.equals("home")) {
-			new StorageView(p, min, max);
+			if (this.returnTo.equals(StorageView.class.getName())) {
+				new StorageView(p, min, max);
+			}
+			else if (this.returnTo.equals(RecipeSelectInventory.class.getName())) {
+				new RecipeSelectInventory(p);
+			}
 			return;
 		}
 		
@@ -246,7 +263,7 @@ public class RecipeView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (slot < 45) {
+			if (hotbar == 1 || hotbar == 2) {
 				changeMode(hotbar);
 			}
 		}
@@ -258,7 +275,7 @@ public class RecipeView extends ProfessionInventory {
 			new ComponentView(p, recipe, base, min, max);
 		}
 		else {
-			new ComponentView(p, recipe, name, recipeList);
+			new ComponentView(p, recipe, name, recipeList, returnTo);
 		}
 	}
 	
@@ -289,11 +306,11 @@ public class RecipeView extends ProfessionInventory {
 	    public int compare(Recipe a, Recipe b)
 	    {
 	    	int comp = 0;
-    		comp = a.getLevel() - b.getLevel(); // Ascending level
+	    	int canA = a.canCraft(p) ? 1 : 0;
+	    	int canB = b.canCraft(p) ? 1 : 0;
+	    	comp = canA - canB;
 	    	if (comp == 0) {
-		    	int canA = a.canCraft(p) ? 1 : 0;
-		    	int canB = b.canCraft(p) ? 1 : 0;
-		    	comp = canA - canB;
+	    		comp = a.getLevel() - b.getLevel(); // Ascending level
 	    		if (comp == 0) {
 		    		comp = b.getKey().compareTo(a.getKey());
 	    		}

@@ -100,6 +100,7 @@ public class MinigameManager {
 		games.get(params.getId()).startMinigame(p, params);
 	}
 	
+	// Cooldown in seconds
 	public static void startMinigame(Player p, int key, UUID mob, int cooldown) {
 		if (!playerCooldowns.containsKey(p.getUniqueId())) {
 			playerCooldowns.put(p.getUniqueId(), new HashMap<UUID, Long>());
@@ -116,7 +117,7 @@ public class MinigameManager {
 		}
 		
 		if (games.get(key).startMinigame(p, null)) {
-			cooldowns.put(mob, System.currentTimeMillis() + cooldown);
+			cooldowns.put(mob, System.currentTimeMillis() + (cooldown * 1000));
 		}
 	}
 }
