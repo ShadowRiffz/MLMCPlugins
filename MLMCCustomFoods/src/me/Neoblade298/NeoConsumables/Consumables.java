@@ -12,6 +12,7 @@ import me.Neoblade298.NeoConsumables.bosschests.GearReward;
 import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
 import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
 import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
+import me.Neoblade298.NeoConsumables.bosschests.StoredItemReward;
 import me.Neoblade298.NeoConsumables.objects.BuffAction;
 import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
@@ -292,6 +293,9 @@ public class Consumables extends JavaPlugin implements Listener {
 					break;
 				case "augment":
 					cr = AugmentReward.parse(args, level);
+					break;
+				case "storeditem":
+					cr = StoredItemReward.parse(args, level);
 					break;
 				}
 				if (cr == null) {
