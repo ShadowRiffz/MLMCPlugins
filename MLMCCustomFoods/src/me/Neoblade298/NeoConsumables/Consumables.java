@@ -246,7 +246,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
 		String display = config.getString("display", internal);
-		Sound initSound = Sound.valueOf(config.getString("sound"));
+		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 
 		// Chest stages
 		LinkedList<ChestStage> stages = new LinkedList<ChestStage>();
