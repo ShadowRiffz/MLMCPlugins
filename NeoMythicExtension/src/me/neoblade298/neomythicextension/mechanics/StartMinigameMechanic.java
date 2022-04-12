@@ -26,7 +26,7 @@ public class StartMinigameMechanic extends SkillMechanic implements ITargetedEnt
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
-			MinigameManager.startMinigame((Player) target, id, data.getCaster().getEntity().getUniqueId(), this.cd);
+			MinigameManager.startMinigame((Player) target.getBukkitEntity(), id, data.getCaster().getEntity().getUniqueId(), this.cd);
 			return true;
 		}
 		return false;
