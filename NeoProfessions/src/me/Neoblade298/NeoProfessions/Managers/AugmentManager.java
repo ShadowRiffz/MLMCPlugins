@@ -683,8 +683,8 @@ public class AugmentManager implements Listener {
 		Player p = e.getPlayer();
 		
 		// Check charms
-		double amountMult = 1;
 		MinigameParameters params = e.getParams();
+		double amountMult = params.getAmountMultiplier();
 		if (containsAugments(p, EventType.PROFESSION_HARVEST)) {
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.PROFESSION_HARVEST)) {
 				if (augment instanceof ModProfessionHarvestAugment) {
@@ -701,7 +701,7 @@ public class AugmentManager implements Listener {
 				}
 			}
 		}
-		params.setAmountMultiplier(params.getAmountMultiplier() + amountMult);
+		params.setAmountMultiplier(amountMult);
 	}
 	
 	public static Augment getAugment(String key) {

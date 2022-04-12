@@ -51,7 +51,7 @@ public class Minigame {
 			max *= params.getAmountMultiplier();
 			
 			drops.add(new MinigameDrop(new StoredItemInstance(mdrops.getItem(),
-					Professions.gen.nextInt(max + 1 - min) + min), mdrops.getExp()));
+					max == min ? min :Professions.gen.nextInt(max - min) + min), mdrops.getExp()));
 		}
 		return drops;
 	}
