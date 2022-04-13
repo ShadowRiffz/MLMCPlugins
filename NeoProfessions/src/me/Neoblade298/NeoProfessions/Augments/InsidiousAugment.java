@@ -16,13 +16,13 @@ public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 	
 	public InsidiousAugment() {
 		super();
-		this.name = "Protection";
+		this.name = "Insidious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
 	public InsidiousAugment(int level) {
 		super(level);
-		this.name = "Protection";
+		this.name = "Insidious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
@@ -44,6 +44,11 @@ public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 	@Override
 	public boolean isPermanent() {
 		return true;
+	}
+
+	@Override
+	public String getLine() {
+		return "§7[§4§o" + name + " Lv " + level + "§7]";
 	}
 
 	public ItemStack getItem(Player user) {
