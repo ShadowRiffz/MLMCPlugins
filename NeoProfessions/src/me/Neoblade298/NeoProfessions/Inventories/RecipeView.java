@@ -74,8 +74,7 @@ public class RecipeView extends ProfessionInventory {
 		}
 		Collections.sort(recipes, rsorter);
 		
-		inv.setContents(new ItemStack[54]);
-		inv.setContents(setupAll(inv.getContents()));
+		inv.setContents(setupAll());
 		Professions.viewingInventory.put(p, this);
 	}
 	
@@ -103,11 +102,12 @@ public class RecipeView extends ProfessionInventory {
 		Collections.sort(recipes, rsorter);
 		
 		inv.setContents(new ItemStack[54]);
-		inv.setContents(setupAll(inv.getContents()));
+		inv.setContents(setupAll());
 		Professions.viewingInventory.put(p, this);
 	}
 	
-	private ItemStack[] setupAll(ItemStack[] contents) {
+	private ItemStack[] setupAll() {
+		ItemStack[] contents = new ItemStack[54];
 		return setupUtilityButtons(setupInventory(contents));
 	}
 	
@@ -228,12 +228,12 @@ public class RecipeView extends ProfessionInventory {
 		
 		if (type.equals("next")) {
 			page++;
-			inv.setContents(setupAll(inv.getContents()));
+			inv.setContents(setupAll());
 			return;
 		}
 		else if (type.equals("previous")) {
 			page--;
-			inv.setContents(setupAll(inv.getContents()));
+			inv.setContents(setupAll());
 			return;
 		}
 		else if (type.equals("home")) {
