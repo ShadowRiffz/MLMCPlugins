@@ -390,4 +390,8 @@ public class GearConfig {
 
 		return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
 	}
+	
+	public ArrayList<String> getRequiredAugments() {
+		return requiredAugments;
+	}
 }
