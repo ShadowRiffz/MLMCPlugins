@@ -17,10 +17,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
+import me.Neoblade298.NeoProfessions.Recipes.GearResult;
 import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
+import me.neoblade298.neogear.objects.GearConfig;
 
 public class RecipeView extends ProfessionInventory {
 	private Player p;
@@ -37,6 +41,7 @@ public class RecipeView extends ProfessionInventory {
 	
 	private static final int CRAFTING_MODE = 0;
 	private static final int RESULT_MODE = 1;
+	private static final int AUGMENT_MODE = 2;
 	public static ArrayList<String> info = new ArrayList<String>();
 	
 	public static final String HOUSE_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzVhMzViNWNhMTUyNjg2ODVjNDY2MDUzNWU1ODgzZDIxYTVlYzU3YzU1ZDM5NzIzNDI2OWFjYjVkYzI5NTRmIn19fQ==";
@@ -51,6 +56,7 @@ public class RecipeView extends ProfessionInventory {
 		info.add("§9§oRight click §7§oto view components");
 		info.add("§9§oPress 1 §7§ofor crafting mode (Current)");
 		info.add("§9§oPress 2 §7§ofor result mode");
+		info.add("§9§oPress 3 §7§ofor augment mode");
 	}
 	
 	public RecipeView(Player p, String name, List<String> recipeList, String returnTo) {
@@ -137,6 +143,29 @@ public class RecipeView extends ProfessionInventory {
 			else if (mode == RESULT_MODE) {
 				contents[count++] = recipe.getResult().getResultItem(p, recipe.canCraft(p));
 			}
+			else if (mode == AUGMENT_MODE) {
+				ItemStack item = recipe.getResult().getResultItem(p, recipe.canCraft(p));
+				ItemMeta meta = item.getItemMeta();
+				List<String> lore = new ArrayList<String>();
+				if (recipe.getResult() instanceof GearResult) {
+					GearConfig cfg = ((GearResult) recipe.getResult()).getConfig();
+					if (cfg.getRequiredAugments() != null) {
+						for (String augment : cfg.getRequiredAugments()) {
+							Augment aug = AugmentManager.getAugment(augment);
+							lore.add(aug.getLine());
+							for (String line : aug.getItem(p).getItemMeta().getLore()) {
+								lore.add(line);
+							}
+						}
+					}
+				}
+				if (lore.isEmpty()) {
+					lore.add("§7This item has no augments.");
+				}
+				meta.setLore(lore);
+				item.setItemMeta(meta);
+				contents[count++] = item;
+			}
 		}	
 		
 		return contents;
@@ -163,9 +192,11 @@ public class RecipeView extends ProfessionInventory {
 		if (base != null) {
 			lore.add("§7Recipes with: " + base.getDisplay());
 		}
-		for (String line : info) {
-			lore.add(line);
-		}
+		lore.add("§9§oLeft/Shift click §7§oto craft 1x/10x");
+		lore.add("§9§oRight click §7§oto view components");
+		lore.add("§9§oPress 1 §7§ofor crafting mode");
+		lore.add("§9§oPress 2 §7§ofor result mode");
+		lore.add("§9§oPress 3 §7§ofor augment mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -213,7 +244,7 @@ public class RecipeView extends ProfessionInventory {
 		// Hotbar actions can be done anywhere in the inv
 		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton();
-			if (hotbar == 1 || hotbar == 2) {
+			if (hotbar >= 1 && hotbar <= 3) {
 				changeMode(hotbar);
 			}
 		}
@@ -263,7 +294,7 @@ public class RecipeView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (hotbar == 1 || hotbar == 2) {
+			if (hotbar >= 1 && hotbar <= 3) {
 				changeMode(hotbar);
 			}
 		}

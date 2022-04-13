@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.neoblade298.neogear.Gear;
+import me.neoblade298.neogear.objects.GearConfig;
 import net.md_5.bungee.api.ChatColor;
 
 public class GearResult implements RecipeResult {
@@ -55,5 +56,9 @@ public class GearResult implements RecipeResult {
 	@Override
 	public String getDisplay() {
 		return display;
+	}
+	
+	public GearConfig getConfig() {
+		return Gear.settings.get(type).get(level);
 	}
 }
