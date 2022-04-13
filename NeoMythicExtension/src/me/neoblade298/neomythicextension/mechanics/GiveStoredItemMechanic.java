@@ -26,7 +26,7 @@ public class GiveStoredItemMechanic extends SkillMechanic implements ITargetedEn
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
-			StorageManager.givePlayer((Player) target, this.id, this.amount);
+			StorageManager.givePlayer((Player) target.getBukkitEntity(), this.id, this.amount);
 			return true;
 		}
 		return false;
