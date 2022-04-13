@@ -151,7 +151,8 @@ public class RecipeView extends ProfessionInventory {
 					GearConfig cfg = ((GearResult) recipe.getResult()).getConfig();
 					if (cfg.getRequiredAugments() != null) {
 						for (String augment : cfg.getRequiredAugments()) {
-							Augment aug = AugmentManager.getAugment(augment);
+							String[] args = augment.split(":");
+							Augment aug = AugmentManager.getFromCache(args[0], Integer.parseInt(args[1]));
 							lore.add(aug.getLine());
 							for (String line : aug.getItem(p).getItemMeta().getLore()) {
 								lore.add(line);

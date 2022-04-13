@@ -33,6 +33,9 @@ commands:
   eset:
     description: Eset command
     usage: /epay [args]
+  gardens:
+    description: Gardens command
+    usage: /gardens
   craft:
     description: Craft command
     usage: /craft

@@ -56,7 +56,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			// /prof recipes [menu name] [recipe list]
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
-			sender.sendMessage("§7- §c/prof gardens");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemStack main = p.getInventory().getItemInMainHand();
@@ -149,10 +148,6 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 		else if (args[0].equalsIgnoreCase("recipes")) {
 			new RecipeView(p, args[1].replaceAll("_", " "), RecipeManager.getRecipeList(args[2]), RecipeSelectInventory.class.getName());
-			return true;
-		}
-		else if (args[0].equalsIgnoreCase("gardens")) {
-			new GardenSelectInventory(p);
 			return true;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {
