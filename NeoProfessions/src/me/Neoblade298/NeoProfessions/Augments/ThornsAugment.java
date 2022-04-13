@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.util.FlagManager;
 
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
@@ -40,7 +41,7 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	}
 
 	@Override
-	public boolean canUse(Player user, LivingEntity target) {
+	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		return FlagManager.hasFlag(user, "aug_thorns");
 	}
 

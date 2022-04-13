@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
+
 public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 	
 	public DaredevilAugment() {
@@ -34,7 +36,7 @@ public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 	}
 
 	@Override
-	public boolean canUse(Player user, LivingEntity target) {
+	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		double percentage = (user.getPlayer().getHealth() / user.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		return percentage < 0.3;
 	}

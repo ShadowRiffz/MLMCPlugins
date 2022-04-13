@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
@@ -43,7 +44,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 	}
 
 	@Override
-	public boolean canUse(Player user, LivingEntity target) {
+	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		// damage taken
 		return FlagManager.hasFlag(user, "aug_ferocious");
 	}

@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.enums.ManaSource;
+import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 
@@ -47,7 +48,7 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 	}
 
 	@Override
-	public boolean canUse(Player user, LivingEntity target) {
+	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		Location diff = user.getLocation().subtract(target.getLocation());
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
 		return diffxy >= 144;

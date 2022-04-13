@@ -10,15 +10,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 
-public class ProtectionAugment extends Augment implements ModDamageTakenAugment {
+import me.Neoblade298.NeoProfessions.Professions;
+
+public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 	
-	public ProtectionAugment() {
+	public InsidiousAugment() {
 		super();
 		this.name = "Protection";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 	}
 
-	public ProtectionAugment(int level) {
+	public InsidiousAugment(int level) {
 		super(level);
 		this.name = "Protection";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
@@ -26,16 +28,21 @@ public class ProtectionAugment extends Augment implements ModDamageTakenAugment 
 
 	@Override
 	public double getDamageTakenMult(LivingEntity user) {
-		return 0.004 * (level / 5);
+		return 1;
 	}
 
 	@Override
 	public Augment createNew(int level) {
-		return new ProtectionAugment(level);
+		return new InsidiousAugment(level);
 	}
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
+		return e.getDamage() < 300 && Professions.gen.nextDouble() <= 0.3;
+	}
+	
+	@Override
+	public boolean isPermanent() {
 		return true;
 	}
 
@@ -43,7 +50,8 @@ public class ProtectionAugment extends Augment implements ModDamageTakenAugment 
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Decreases damage taken by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7.");
+		lore.add("§7Upon taking <300 damage pre-defense,");
+		lore.add("§f30%§7 chance to take 0 damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

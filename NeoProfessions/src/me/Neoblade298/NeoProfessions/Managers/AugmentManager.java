@@ -92,6 +92,7 @@ public class AugmentManager implements Listener {
 		
 		// Damage Taken
 		augmentMap.put("Daredevil", new DaredevilAugment());
+		augmentMap.put("Insidious", new InsidiousAugment());
 		augmentMap.put("Menacing", new MenacingAugment());
 		augmentMap.put("Protection", new ProtectionAugment());
 		augmentMap.put("Thorns", new ThornsAugment());
@@ -354,7 +355,7 @@ public class AugmentManager implements Listener {
 								posmult += mult;
 							}
 							else if (mult < 0) {
-								negmult *= (1 - mult);
+								negmult *= (1 + mult);
 							}
 							flat += aug.getDamageDealtFlat(p);
 						}
@@ -367,7 +368,7 @@ public class AugmentManager implements Listener {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
 					if (augment instanceof ModDamageTakenAugment) {
 						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
-						if (aug.canUse(p, (LivingEntity) e.getTarget())) {
+						if (aug.canUse(p, (LivingEntity) e.getTarget(), e)) {
 							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
 
 							double mult = aug.getDamageTakenMult(p);
@@ -375,7 +376,7 @@ public class AugmentManager implements Listener {
 								posmult += mult;
 							}
 							else if (mult < 0) {
-								negmult *= (1 - mult);
+								negmult *= (1 + mult);
 							}
 							flat += aug.getDamageTakenFlat(p);
 						}
