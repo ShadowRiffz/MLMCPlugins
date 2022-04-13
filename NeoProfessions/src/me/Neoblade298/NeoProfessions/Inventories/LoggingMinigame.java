@@ -258,13 +258,13 @@ public class LoggingMinigame extends ProfessionInventory {
 		}
 		double spawnChance = this.baseSpawnChance;
 		spawnChance -= Professions.gen.nextDouble();
-		while (spawnChance >= 0 && toSpawn.size() < 9) {
+		int sizeLimit = items.containsKey(tick) ? 8 : 9;
+		while (spawnChance >= 0 && toSpawn.size() < sizeLimit) {
 			toSpawn.add(generateBeehive());
 			spawnChance -= Professions.gen.nextDouble();
 		}
 		
-		int numToSpawn = toSpawn.size();
-		numToSpawn += items.containsKey(tick) ? 1 : 0;
+		int numToSpawn = toSpawn.size() + (items.containsKey(tick) ? 1 : 0);
 		ItemStack[] contents = inv.getContents();
 		ThreadLocalRandom.current().ints(0, 9).distinct().limit(numToSpawn).forEach(num -> {
 			ItemStack item;
