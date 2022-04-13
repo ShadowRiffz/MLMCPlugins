@@ -270,7 +270,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					String type = args[1 + offset];
 					// Augment-specific parsing
 					if (args[1 + offset].equalsIgnoreCase("augment")) {
-						if (StringUtils.isNumeric(args[2 + offset])) {
+						if (!StringUtils.isNumeric(args[2 + offset])) {
 							aug = args[2 + offset].replaceAll("_", " ");
 							offset++;
 						}
