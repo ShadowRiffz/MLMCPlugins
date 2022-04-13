@@ -113,7 +113,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		int seedLevel = StorageManager.getItem(id).getLevel();
 		
 		// Make sure the level of the fertilizer is high enough
-		if (fertilizerId == -1 || StorageManager.getItem(fertilizerId).getLevel() < seedLevel) {
+		if (fertilizerId != -1 && StorageManager.getItem(fertilizerId).getLevel() < seedLevel) {
 			p.sendMessage("§cThis fertilizer is not high enough level!");
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 			return;
