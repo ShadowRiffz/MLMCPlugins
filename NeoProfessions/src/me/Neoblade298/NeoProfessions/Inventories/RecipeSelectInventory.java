@@ -38,8 +38,8 @@ public class RecipeSelectInventory extends ProfessionInventory {
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
-		nbti.setString("display", recipeDisplay);
-		nbti.setString("list", recipeList);
+		nbti.setString("recipeDisplay", recipeDisplay);
+		nbti.setString("recipeList", recipeList);
 		return nbti.getItem();
 	}
 
@@ -58,8 +58,8 @@ public class RecipeSelectInventory extends ProfessionInventory {
 		}
 
 		NBTItem nbti = new NBTItem(clickedItem);
-		String display = nbti.getString("display");
-		String list = nbti.getString("list");
+		String display = nbti.getString("recipeDisplay");
+		String list = nbti.getString("recipeList");
 		new RecipeView(p, display, RecipeManager.getRecipeList(list), this.getClass().getName());
 	}
 
