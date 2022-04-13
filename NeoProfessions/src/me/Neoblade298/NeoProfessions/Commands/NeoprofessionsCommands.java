@@ -2,6 +2,8 @@ package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -273,9 +275,11 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					String type = args[1 + offset];
 					// Augment-specific parsing
-					if (args[1].equalsIgnoreCase("augment")) {
-						aug = args[2 + offset].replaceAll("_", " ");
-						offset++;
+					if (args[1 + offset].equalsIgnoreCase("augment")) {
+						if (StringUtils.isNumeric(args[2 + offset])) {
+							aug = args[2 + offset].replaceAll("_", " ");
+							offset++;
+						}
 					}
 
 					int lv = Integer.parseInt(args[2 + offset]);
