@@ -340,7 +340,7 @@ public class RecipeView extends ProfessionInventory {
 	    	int comp = 0;
 	    	int canA = a.canCraft(p) ? 1 : 0;
 	    	int canB = b.canCraft(p) ? 1 : 0;
-	    	comp = canA - canB;
+	    	comp = canB - canA;
 	    	if (comp == 0) {
 	    		comp = a.getLevel() - b.getLevel(); // Ascending level
 	    		if (comp == 0) {
