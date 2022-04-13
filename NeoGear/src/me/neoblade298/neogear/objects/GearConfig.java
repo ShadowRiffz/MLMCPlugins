@@ -19,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neogear.Gear;
 import net.md_5.bungee.api.ChatColor;
 
@@ -221,10 +223,11 @@ public class GearConfig {
 		for (String augment : requiredAugments) {
 			currentSlot++;
 			String args[] = augment.split(":");
-			lore.add(translateHexCodes(args[0]));
+			Augment aug = AugmentManager.getFromCache(args[0], Integer.parseInt(args[1]));
+			lore.add(aug.getLine());
 			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
-			nbtIntegers.put("slot" + currentSlot + "Level", Integer.parseInt(args[2]));
-			nbtStrings.put("slot" + currentSlot + "Augment", args[1]);
+			nbtIntegers.put("slot" + currentSlot + "Level", aug.getLevel());
+			nbtStrings.put("slot" + currentSlot + "Augment", aug.getName());
 		}
 		for (int i = 0; i < numSlots; i++) {
 			currentSlot++;
