@@ -128,6 +128,9 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Woodcutter", new WoodcutterAugment());
 		augmentMap.put("Herbalist", new HerbalistAugment());
 		
+		// Skill Cast
+		augmentMap.put("Barrier", new BarrierAugment());
+		
 		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
@@ -703,6 +706,22 @@ public class AugmentManager implements Listener {
 			}
 		}
 		params.setAmountMultiplier(amountMult);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onCastSkill(PlayerSkillCastSuccessEvent e) {
+		Player p = e.getPlayer();
+		
+		if (containsAugments(p, EventType.SKILL_CAST)) {
+			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.SKILL_CAST)) {
+				if (augment instanceof ModSkillCastAugment) {
+					ModSkillCastAugment aug = (ModSkillCastAugment) augment;
+					if (aug.canUse(p, e)) {
+						aug.applySkillCastEffects(p, e);
+					}
+				}
+			}
+		}
 	}
 	
 	public static Augment getAugment(String key) {

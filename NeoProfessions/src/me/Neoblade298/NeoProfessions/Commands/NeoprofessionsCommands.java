@@ -19,7 +19,6 @@ import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 
-import me.Neoblade298.NeoProfessions.Inventories.GardenSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RecipeSelectInventory;
 import me.Neoblade298.NeoProfessions.Inventories.RecipeView;
