@@ -22,6 +22,7 @@ public class PlayerAugments {
 	public PlayerAugments(Player p) {
 		this.p = p;
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
+		this.counts = new HashMap<Augment, Integer>();
 		this.hitCount = new HashMap<Augment, Integer>();
 		this.invChanged = true;
 		this.prevSlot = -1;
