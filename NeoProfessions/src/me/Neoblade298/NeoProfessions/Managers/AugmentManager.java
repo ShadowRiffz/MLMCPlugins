@@ -70,6 +70,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Brawler", new BrawlerAugment());
 		augmentMap.put("Cornered", new CorneredAugment());
 		augmentMap.put("Ferocious", new FerociousAugment());
+		augmentMap.put("Killer Instinct", new KillerInstinctAugment());
 		augmentMap.put("Precision", new PrecisionAugment());
 		augmentMap.put("Spellweaving", new SpellweavingAugment());
 		augmentMap.put("Sundering", new SunderingAugment());
@@ -79,8 +80,10 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Bruiser", new BruiserAugment());
 		augmentMap.put("Burst", new BurstAugment());
 		augmentMap.put("Calming", new CalmingAugment());
+		augmentMap.put("Deadeye", new DeadeyeAugment());
 		augmentMap.put("Desperation", new DesperationAugment());
 		augmentMap.put("Finisher", new FinisherAugment());
+		augmentMap.put("Hammer Time", new HammerTimeAugment());
 		augmentMap.put("Hearty", new HeartyAugment());
 		augmentMap.put("Initiator", new InitiatorAugment());
 		augmentMap.put("Intimidating", new IntimidatingAugment());
@@ -88,6 +91,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Overload", new OverloadAugment());
 		augmentMap.put("Sentinel", new SentinelAugment());
 		augmentMap.put("Sniper", new SniperAugment());
+		augmentMap.put("Torrent", new TorrentAugment());
 		augmentMap.put("Underdog", new UnderdogAugment());
 		
 		// Damage Taken
@@ -96,6 +100,7 @@ public class AugmentManager implements Listener {
 		augmentMap.put("Menacing", new MenacingAugment());
 		augmentMap.put("Protection", new ProtectionAugment());
 		augmentMap.put("Thorns", new ThornsAugment());
+		augmentMap.put("Inexorable", new InexorableAugment());
 		
 		// Flags
 		augmentMap.put("Holy", new HolyAugment());
@@ -130,6 +135,8 @@ public class AugmentManager implements Listener {
 		
 		// Skill Cast
 		augmentMap.put("Barrier", new BarrierAugment());
+		
+		// Interact
 		
 		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
@@ -360,7 +367,7 @@ public class AugmentManager implements Listener {
 							else if (mult < 0) {
 								negmult *= (1 + mult);
 							}
-							flat += aug.getDamageDealtFlat(p);
+							flat += aug.getDamageDealtFlat(p, e);
 						}
 					}
 				}

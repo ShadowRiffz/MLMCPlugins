@@ -13,6 +13,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PlayerAugments {
 	private HashMap<EventType, ArrayList<Augment>> augments;
+	private HashMap<Augment, Integer> hitCount;
+	private HashMap<Augment, Integer> counts;
 	private Player p;
 	private boolean invChanged;
 	private int prevSlot;
@@ -20,6 +22,7 @@ public class PlayerAugments {
 	public PlayerAugments(Player p) {
 		this.p = p;
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
+		this.hitCount = new HashMap<Augment, Integer>();
 		this.invChanged = true;
 		this.prevSlot = -1;
 
@@ -53,6 +56,9 @@ public class PlayerAugments {
 							augments.put(etype, list);
 						}
 					}
+					
+					// Add augment to counts
+					counts.put(aug, counts.getOrDefault(aug, 0) + 1);
 				}
 			}
 		}
@@ -60,6 +66,10 @@ public class PlayerAugments {
 	
 	public List<Augment> getAugments(EventType etype) {
 		return augments.get(etype);
+	}
+	
+	public int getCount(Augment aug) {
+		return counts.getOrDefault(aug, 0);
 	}
 	
 	public boolean containsAugments(EventType etype) {
@@ -70,6 +80,7 @@ public class PlayerAugments {
 		// 2: Mainhand is same slot and inv has changed
 		if (inv.getHeldItemSlot() != prevSlot || invChanged) {
 			augments.clear();
+			counts.clear();
 			checkAugments(inv.getChestplate());
 			checkAugments(inv.getLeggings());
 			checkAugments(inv.getItemInMainHand());
@@ -82,5 +93,17 @@ public class PlayerAugments {
 	
 	public String toString() {
 		return augments.toString();
+	}
+	
+	public void incrementHitCount(Augment aug) {
+		hitCount.put(aug, hitCount.getOrDefault(aug, 0) + 1);
+	}
+	
+	public void resetHitCount(Augment aug) {
+		hitCount.put(aug, 0);
+	}
+	
+	public int getHitCount(Augment aug) {
+		return hitCount.getOrDefault(aug, 0);
 	}
 }

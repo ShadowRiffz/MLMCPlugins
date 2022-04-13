@@ -50,7 +50,6 @@ public class BarrierAugment extends Augment implements ModSkillCastAugment {
 
 	@Override
 	public boolean canUse(Player user, PlayerSkillCastSuccessEvent e) {
-		System.out.println(e.getSkill().getData().getName());
 		return true;
 	}
 
