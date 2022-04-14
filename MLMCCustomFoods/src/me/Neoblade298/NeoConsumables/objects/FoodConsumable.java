@@ -288,7 +288,9 @@ public class FoodConsumable extends Consumable {
 			lore.add(line);
 		}
 		// Hunger
-		lore.add("§6Hunger +" + hunger + ", Saturation +" + saturation);
+		if (hunger > 0) {
+			lore.add("§6Hunger +" + hunger + ", Saturation +" + saturation);
+		}
 		
 		// Potions
 		if (!potions.isEmpty()) {
