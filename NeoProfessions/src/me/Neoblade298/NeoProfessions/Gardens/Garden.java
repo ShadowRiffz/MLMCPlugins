@@ -11,9 +11,8 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 public class Garden {
 	int size;
 	HashMap<Integer, GardenSlot> slots;
-	private static final long DEFAULT_GROW_TIME = 1800000; // 30 minutes
+	private static final long DEFAULT_GROW_TIME = 10000; // 30 minutes
 	private static final int BASE_SIZE = 1;
-	private static final MinigameParameters defaultParams = new MinigameParameters();
 	
 	public Garden() {
 		this.size = BASE_SIZE;
@@ -46,7 +45,7 @@ public class Garden {
 		GardenSlot gs = slots.get(slot);
 		if (gs != null && gs.getEndTime() <= System.currentTimeMillis()) {
 			slots.remove(slot);
-			MinigameManager.startMinigame(p, gs.getFertilizer() != null ? gs.getFertilizer().getParams() : defaultParams);
+			MinigameManager.startMinigame(p, gs.getId(), gs.getFertilizer() != null ? gs.getFertilizer().getParams() : new MinigameParameters());
 		}
 	}
 }

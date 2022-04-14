@@ -96,8 +96,8 @@ public class MinigameManager {
 		games.get(key).startMinigame(p, null);
 	}
 	
-	public static void startMinigame(Player p, MinigameParameters params) {
-		games.get(params.getId()).startMinigame(p, params);
+	public static void startMinigame(Player p, int id, MinigameParameters params) {
+		games.get(id).startMinigame(p, params);
 	}
 	
 	// Cooldown in seconds

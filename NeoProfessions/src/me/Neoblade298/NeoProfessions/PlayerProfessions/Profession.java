@@ -62,7 +62,7 @@ public class Profession {
 		if (exp < 0) {
 			exp = 1;
 		}
-		double newExp = exp + this.exp;
+		int newExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it
 		p.sendMessage("§a+" + exp + " §7(§f" + newExp + " / " + nextLv.get(this.level) + "§7) §6" + type.getDisplay() + " §7exp");

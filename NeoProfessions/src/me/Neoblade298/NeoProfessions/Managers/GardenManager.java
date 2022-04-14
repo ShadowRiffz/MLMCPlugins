@@ -51,7 +51,7 @@ public class GardenManager implements IOComponent {
 							rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
 						}
 					}
-					MinigameParameters params = new MinigameParameters(id, amountMult, rarityWeightMults);
+					MinigameParameters params = new MinigameParameters(amountMult, rarityWeightMults);
 					fertilizers.put(id, new Fertilizer(id, params, timeMult));
 				}
 			}
