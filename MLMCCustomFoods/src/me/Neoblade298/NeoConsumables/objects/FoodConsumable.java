@@ -117,7 +117,6 @@ public class FoodConsumable extends Consumable {
 		if (ConsumableManager.effects.containsKey(uuid)) {
 			ConsumableManager.effects.get(uuid).endEffects(true);
 		}
-		System.out.println("Total duration: " + getTotalDuration());
 		
 		// Sounds, commands
 		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");
@@ -214,7 +213,6 @@ public class FoodConsumable extends Consumable {
 				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + health));
 		}
 		else if (healthReps > 0 && !p.isDead()) {
-			System.out.println("Started " + healthPeriod);
 			tasks.add(new HealthRunnable(p, health, healthReps).runTaskTimer(main, 0, healthPeriod * 20));
 		}
 		
@@ -308,7 +306,6 @@ public class FoodConsumable extends Consumable {
 			}
 		}
 		
-		// Desc
 		if (!desc.isEmpty()) {
 			lore.add("§2Desc:");
 			for (String loreline : desc) {
@@ -322,9 +319,9 @@ public class FoodConsumable extends Consumable {
 	}
 	
 	public void setDescription(List<String> desc) {
-		desc.clear();
+		this.desc.clear();
 		for (String line : desc) {
-			desc.add(correctColors(line));
+			this.desc.add(correctColors(line));
 		}
 	}
 	
