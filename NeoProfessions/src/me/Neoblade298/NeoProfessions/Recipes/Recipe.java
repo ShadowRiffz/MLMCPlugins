@@ -30,7 +30,6 @@ public class Recipe {
 		this.key = key;
 		this.display = display;
 		this.level = level;
-		this.exp = exp;
 		this.reqs = reqs;
 		this.components = components;
 		this.result = result;
@@ -38,10 +37,18 @@ public class Recipe {
 		
 		if (exp == -1) {
 			exp = 0;
+			for (RecipeRequirement req : reqs) {
+				if (req instanceof EssenceRequirement) {
+					EssenceRequirement ereq = (EssenceRequirement) req;
+					exp += ereq.level * ereq.amount;
+				}
+			}
+			
 			for (StoredItemInstance component : components) {
 				exp += component.getItem().getDefaultExp();
 			}
 		}
+		this.exp = exp;
 	}
 	
 	public String getKey() {

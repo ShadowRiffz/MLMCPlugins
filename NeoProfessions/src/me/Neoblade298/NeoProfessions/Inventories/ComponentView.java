@@ -239,7 +239,7 @@ public class ComponentView extends ProfessionInventory {
 		// Hotbar actions can be done anywhere in the inv
 		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			if (slot < 45 && hotbar == 1 || hotbar == 2) {
+			if (slot < 45 && (hotbar == 1 || hotbar == 2)) {
 				changeMode(hotbar);
 				return;
 			}

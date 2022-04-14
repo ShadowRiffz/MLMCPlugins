@@ -34,7 +34,7 @@ public class FoodResult implements RecipeResult {
 	public void giveResult(Player p, int amount) {
 		ItemStack item = Consumables.getFood(this.key).getItem(this.amount);
 		item.setAmount(this.amount * amount);
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem();
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(item);
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}

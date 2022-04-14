@@ -210,7 +210,7 @@ public class RecipeView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Back");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oReturn to storage");
+		lore.add("§7§oPrevious Menu");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);

@@ -269,8 +269,7 @@ public class StorageView extends ProfessionInventory {
 		// Hotbar actions can be done anywhere in the inv
 		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			System.out.println("test2 " + hotbar + " " + slot);
-			if (slot < 45 && hotbar == 1 || hotbar == 2) {
+			if (slot < 45 && (hotbar == 1 || hotbar == 2)) {
 				changeMode(hotbar);
 				return;
 			}
@@ -318,7 +317,6 @@ public class StorageView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
-			System.out.println("test1 " + hotbar);
 			if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
 			}
@@ -367,7 +365,6 @@ public class StorageView extends ProfessionInventory {
 			return;
 		}
 		if (oldPriority == hotbar) {
-			System.out.println("Old=Hotbar " + oldPriority + " " + hotbar);
 			return;
 		}
 		
