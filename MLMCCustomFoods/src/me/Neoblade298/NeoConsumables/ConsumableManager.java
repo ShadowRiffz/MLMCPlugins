@@ -144,11 +144,6 @@ public class ConsumableManager implements Listener {
 			e.printStackTrace();
 		}
 	}
-	
-	@EventHandler
-	public void onLoadSQL(PlayerLoadCompleteEvent e) {
-		startEffects(e.getPlayer().getUniqueId());
-	}
 
 	@EventHandler
 	public void onSaveSQL(PlayerSaveEvent e) {
