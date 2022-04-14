@@ -54,6 +54,7 @@ public class FoodConsumable extends Consumable {
 	String display, base64;
 	boolean isDuration;
 	int totalDuration;
+	Rarity rarity;
 	
 	public FoodConsumable(Consumables main, String key) {
 		super(main, key);
@@ -264,6 +265,8 @@ public class FoodConsumable extends Consumable {
 		lore.clear();
 		String line = "";
 		
+		lore.add("§7Rarity: " + rarity.getDisplay());
+		
 		// Health & mana
 		if (this.healthReps > 1) {
 			line = "§aHP +" + health + "/" + (healthPeriod == 0 ? healthPeriod + "s" : "s");
@@ -451,6 +454,10 @@ public class FoodConsumable extends Consumable {
 	
 	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+	
+	public void setRarity(Rarity rarity) {
+		this.rarity = rarity;
 	}
 	
 	public void setSpeedTime(int time) {

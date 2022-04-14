@@ -18,6 +18,7 @@ import me.Neoblade298.NeoConsumables.objects.ChestConsumable;
 import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
+import me.Neoblade298.NeoConsumables.objects.Rarity;
 import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
 import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
@@ -176,6 +177,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 		cons.setDisplay(config.getString("display"));
 		cons.setDescription(config.getStringList("desc"));
+		cons.setRarity(Rarity.valueOf(config.getString("rarity").toUpperCase()));
 
 		// Potion effects
 		ArrayList<PotionEffect> potions = cons.getPotions();
