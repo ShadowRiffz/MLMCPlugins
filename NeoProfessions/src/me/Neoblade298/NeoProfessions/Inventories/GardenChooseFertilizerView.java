@@ -53,7 +53,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 			StoredItem si = StorageManager.getItem(i);
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
-				ItemStack item = new StoredItemInstance(si, amount).getStorageView();
+				ItemStack item = new StoredItemInstance(si, amount).getStorageView(true);
 				ItemMeta meta = item.getItemMeta();
 				meta.setLore(GardenManager.getFertilizer(i).getEffects());
 				item.setItemMeta(meta);

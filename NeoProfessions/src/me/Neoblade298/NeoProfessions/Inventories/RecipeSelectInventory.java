@@ -22,10 +22,12 @@ public class RecipeSelectInventory extends ProfessionInventory {
 
 		ItemStack[] contents = inv.getContents();
 		contents[0] = createItem(Material.COOKED_BEEF, "§9Food Recipes", "Food", "food");
-		contents[2] = createItem(Material.IRON_SWORD, "§9Gear Recipes", "Gear", "gear");
-		contents[4] = createItem(Material.COMPOSTER, "§9Fertilizer Recipes", "Fertilizers", "fertilizer");
-		contents[6] = createItem(Material.OAK_SAPLING, "§9Garden Upgrades", "Garden Upgrades", "garden-upgrades");
-		contents[8] = createItem(Material.CHEST, "§9All Recipes", "All", "all");
+		contents[1] = createItem(Material.IRON_SWORD, "§9Gear Recipes", "Gear", "gear");
+		contents[2] = createItem(Material.ENDER_PEARL, "§9Augment Recipes", "Augments", "augments");
+		contents[3] = createItem(Material.COMPOSTER, "§9Fertilizer Recipes", "Fertilizers", "fertilizer");
+		contents[4] = createItem(Material.OAK_SAPLING, "§9Garden Upgrades", "Garden Upgrades", "garden-upgrades");
+		contents[5] = createItem(Material.CHEST, "§9All Recipes", "All", "all");
+		contents[8] = createItem(Material.HOPPER, "§9/inv", "All", "all");
 		inv.setContents(contents);
 
 		p.openInventory(inv);
@@ -54,6 +56,11 @@ public class RecipeSelectInventory extends ProfessionInventory {
 
 		// verify current item is not null
 		if (clickedItem == null || clickedItem.getType().isAir()) {
+			return;
+		}
+		
+		if (e.getRawSlot() == 8) {
+			new StorageSelectInventory(p);
 			return;
 		}
 

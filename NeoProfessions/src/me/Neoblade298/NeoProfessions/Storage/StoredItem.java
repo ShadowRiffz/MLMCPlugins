@@ -139,10 +139,10 @@ public class StoredItem {
 		return defaultExp;
 	}
 	
-	public ItemStack getStorageView(int amount) {
+	public ItemStack getStorageView(int amount, boolean fullLore) {
 		ItemStack item = getItem();
 		ItemMeta meta = item.getItemMeta();
-		meta.setLore(storageLore);
+		meta.setLore(fullLore ? storageLore : sourceLore);
 		if (amount <= 0) {
 			return null;
 		}

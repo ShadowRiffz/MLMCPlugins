@@ -31,8 +31,10 @@ public class FoodResult implements RecipeResult {
 	}
 
 	@Override
-	public void giveResult(Player p) {
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Consumables.getFood(this.key).getItem(this.amount));
+	public void giveResult(Player p, int amount) {
+		ItemStack item = Consumables.getFood(this.key).getItem(this.amount);
+		item.setAmount(this.amount * amount);
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem();
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}

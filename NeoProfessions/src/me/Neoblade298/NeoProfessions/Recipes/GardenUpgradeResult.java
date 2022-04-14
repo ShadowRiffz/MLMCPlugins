@@ -32,7 +32,7 @@ public class GardenUpgradeResult implements RecipeResult {
 	}
 
 	@Override
-	public void giveResult(Player p) {
+	public void giveResult(Player p, int amount) {
 		GardenManager.getGarden(p, type).setSize(newSize);
 	}
 	

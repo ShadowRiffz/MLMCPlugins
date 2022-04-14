@@ -67,10 +67,10 @@ public class Recipe {
 		return this.level;
 	}
 	
-	public boolean craftRecipe(Player p) {
+	public boolean craftRecipe(Player p, int amount) {
 		// First make sure everything required is available
 		for (RecipeRequirement req : reqs) {
-			if (!req.passesReq(p)) {
+			if (!req.passesReq(p, amount)) {
 				p.sendMessage(req.failMessage(p));
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				return false;
@@ -86,14 +86,14 @@ public class Recipe {
 		
 		// Take all things required
 		for (RecipeRequirement req : reqs) {
-			req.useReq(p);
+			req.useReq(p, amount);
 		}
 		for (StoredItemInstance component : components) {
 			StorageManager.takePlayer(p, component.getItem().getId(), component.getAmount());
 		}
 		
-		result.giveResult(p);
-		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp);
+		result.giveResult(p, amount);
+		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp * amount);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay());
 		return true;
@@ -122,7 +122,7 @@ public class Recipe {
 	
 	public boolean canCraft(Player p) {
 		for (RecipeRequirement req : reqs) {
-			if (!req.passesReq(p)) {
+			if (!req.passesReq(p, 1)) {
 				return false;
 			}
 		}

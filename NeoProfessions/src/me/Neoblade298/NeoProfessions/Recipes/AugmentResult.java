@@ -20,7 +20,7 @@ public class AugmentResult implements RecipeResult {
 		for (String lineArg : lineArgs) {
 			String[] args = lineArg.split(":");
 			if (args[0].equalsIgnoreCase("type")) {
-				this.type = args[1];
+				this.type = args[1].replaceAll("_", " ");
 			}
 			else if (args[0].equalsIgnoreCase("level")) {
 				this.level = Integer.parseInt(args[1]);
@@ -31,8 +31,10 @@ public class AugmentResult implements RecipeResult {
 	}
 
 	@Override
-	public void giveResult(Player p) {
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(AugmentManager.getFromCache(type, level).getItem(p));
+	public void giveResult(Player p, int amount) {
+		ItemStack item = AugmentManager.getFromCache(type, level).getItem(p);
+		item.setAmount(amount);
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(item);
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}

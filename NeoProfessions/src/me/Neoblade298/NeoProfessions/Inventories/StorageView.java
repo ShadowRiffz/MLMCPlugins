@@ -3,9 +3,11 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,7 +46,7 @@ public class StorageView extends ProfessionInventory {
 	public static final String NEXT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzYWU4ZGU3ZWQwNzllMzhkMmM4MmRkNDJiNzRjZmNiZDk0YjM0ODAzNDhkYmI1ZWNkOTNkYThiODEwMTVlMyJ9fX0=";
 	
 	static {
-		info.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
+		info.add("§9§oLeft/Shift click §7§oto make 1x/10x voucher");
 		info.add("§9§oRight click §7§oto show relevant recipes");
 		info.add("§9§oPress 1 §7§ofor info mode (Current)");
 		info.add("§9§oPress 2 §7§ofor display mode");
@@ -141,7 +143,20 @@ public class StorageView extends ProfessionInventory {
 	
 	private ItemStack[] updateSlot(ItemStack[] contents, int slot) {
 		int top = (page - 1) * 45;
-		contents[slot] = items.get(top + slot).getStorageView();
+		if (mode == INFO_MODE) {
+			ItemStack item = items.get(top + slot).getStorageView(false);
+			ItemMeta meta = item.getItemMeta();
+			List<String> lore = meta.getLore();
+			for (String line : info) {
+				lore.add(line);
+			}
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			contents[slot] = item;
+		}
+		else if (mode == DISPLAY_MODE) {
+			contents[slot] = items.get(top + slot).getStorageView(true);
+		}
 		return contents;
 	}
 	
@@ -157,14 +172,18 @@ public class StorageView extends ProfessionInventory {
 			}
 			
 			if (mode == INFO_MODE) {
-				ItemStack item = items.get(i).getStorageView();
+				ItemStack item = items.get(i).getStorageView(false);
 				ItemMeta meta = item.getItemMeta();
-				meta.setLore(info);
+				List<String> lore = meta.getLore();
+				for (String line : info) {
+					lore.add(line);
+				}
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				contents[count++] = item;
 			}
 			else if (mode == DISPLAY_MODE) {
-				contents[count++] = items.get(i).getStorageView();
+				contents[count++] = items.get(i).getStorageView(true);
 			}
 		}
 		
@@ -198,7 +217,7 @@ public class StorageView extends ProfessionInventory {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§9§oLeft/Shift left click §7§oto create 1x/10x voucher");
+		lore.add("§9§oLeft/Shift click §7§oto make 1x/10x voucher");
 		lore.add("§9§oRight click §7§oto show relevant recipes");
 		lore.add("§9§oPress 1 §7§ofor info mode");
 		lore.add("§9§oPress 2 §7§ofor display mode");
@@ -250,6 +269,7 @@ public class StorageView extends ProfessionInventory {
 		// Hotbar actions can be done anywhere in the inv
 		if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
+			System.out.println("test2 " + hotbar + " " + slot);
 			if (slot < 45 && hotbar == 1 || hotbar == 2) {
 				changeMode(hotbar);
 				return;
@@ -298,6 +318,7 @@ public class StorageView extends ProfessionInventory {
 		}
 		else if (e.getClick().equals(ClickType.NUMBER_KEY)) {
 			int hotbar = e.getHotbarButton() + 1;
+			System.out.println("test1 " + hotbar);
 			if (type.equals("sort")) {
 				changeSortPriority(nbti.getInteger("priority"), hotbar);
 			}
@@ -346,6 +367,7 @@ public class StorageView extends ProfessionInventory {
 			return;
 		}
 		if (oldPriority == hotbar) {
+			System.out.println("Old=Hotbar " + oldPriority + " " + hotbar);
 			return;
 		}
 		
@@ -358,6 +380,7 @@ public class StorageView extends ProfessionInventory {
 		toChange.setPriority(hotbar);
 		sorters[oldPriority] = changingWith;
 		sorters[hotbar] = toChange;
+		p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
 		sortItems();
 		inv.setContents(setupAll());
 	}

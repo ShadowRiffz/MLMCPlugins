@@ -21,10 +21,11 @@ public class StorageSelectInventory extends ProfessionInventory {
 
 		ItemStack[] contents = inv.getContents();
 		contents[0] = createItem(Material.TALL_GRASS, "§9Harvesting Items", 0, 999);
-		contents[2] = createItem(Material.OAK_LOG, "§9Logging Items", 1000, 1999);
-		contents[4] = createItem(Material.IRON_ORE, "§9Stonecutting Items", 2000, 2999);
-		contents[6] = createItem(Material.ROTTEN_FLESH, "§9Mob Drops", 3000, 3999);
-		contents[8] = createItem(Material.CHEST, "§9All Items", -1, 1);
+		contents[1] = createItem(Material.OAK_LOG, "§9Logging Items", 1000, 1999);
+		contents[2] = createItem(Material.IRON_ORE, "§9Stonecutting Items", 2000, 2999);
+		contents[3] = createItem(Material.ROTTEN_FLESH, "§9Mob Drops", 3000, 3999);
+		contents[4] = createItem(Material.CHEST, "§9All Items", -1, 1);
+		contents[8] = createItem(Material.CRAFTING_TABLE, "§9/craft", -1, 1);
 		inv.setContents(contents);
 
 		p.openInventory(inv);
@@ -53,6 +54,11 @@ public class StorageSelectInventory extends ProfessionInventory {
 
 		// verify current item is not null
 		if (clickedItem == null || clickedItem.getType().isAir()) {
+			return;
+		}
+		
+		if (e.getRawSlot() == 8) {
+			new RecipeSelectInventory(p);
 			return;
 		}
 

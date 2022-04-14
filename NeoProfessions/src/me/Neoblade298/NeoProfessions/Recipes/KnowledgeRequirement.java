@@ -18,7 +18,7 @@ public class KnowledgeRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
+	public boolean passesReq(Player p, int amount) {
 		return RecipeManager.hasKnowledge(p, key);
 	}
 
@@ -27,7 +27,7 @@ public class KnowledgeRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- Recipe knowledge";
 		return msg;
 	}

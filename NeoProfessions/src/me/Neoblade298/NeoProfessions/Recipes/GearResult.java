@@ -37,7 +37,7 @@ public class GearResult implements RecipeResult {
 	}
 
 	@Override
-	public void giveResult(Player p) {
+	public void giveResult(Player p, int amount) {
 		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Gear.settings.get(type).get(level).generateItem(rarity, level));
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));

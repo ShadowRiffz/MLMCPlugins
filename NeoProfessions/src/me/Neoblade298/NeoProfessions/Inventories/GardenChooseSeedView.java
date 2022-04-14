@@ -58,7 +58,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 			StoredItem item = StorageManager.getItem(i);
 			int amount = StorageManager.getAmount(p, i);
 			if (amount > 0) {
-				NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView());
+				NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView(true));
 				nbti.setInteger("id", i);
 				contents[count++] = nbti.getItem();
 			}
@@ -70,7 +70,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 				StoredItem item = StorageManager.getItem(i);
 				int amount = StorageManager.getAmount(p, i);
 				if (amount > 0) {
-					NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView());
+					NBTItem nbti = new NBTItem(new StoredItemInstance(item, amount).getStorageView(true));
 					nbti.setInteger("id", i);
 					contents[count++] = nbti.getItem();
 				}

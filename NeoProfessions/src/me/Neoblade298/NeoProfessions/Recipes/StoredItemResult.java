@@ -33,13 +33,13 @@ public class StoredItemResult implements RecipeResult {
 	}
 
 	@Override
-	public void giveResult(Player p) {
-		StorageManager.givePlayer(p, item.getId(), amount);
+	public void giveResult(Player p, int amount) {
+		StorageManager.givePlayer(p, item.getId(), this.amount * amount);
 	}
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = this.item.getStorageView(amount);
+		ItemStack item = this.item.getStorageView(amount, true);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);

@@ -23,20 +23,20 @@ public class EssenceRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
-		return CurrencyManager.hasEnough(p, level, amount);
+	public boolean passesReq(Player p, int amount) {
+		return CurrencyManager.hasEnough(p, level, this.amount * amount);
 	}
 
 	public String failMessage(Player p) {
 		return "§4[§c§lMLMC§4] §cYou don't have enough level " + level + " essence!";
 	}
 	
-	public void useReq(Player p) {
-		CurrencyManager.subtract(p, level, amount);
+	public void useReq(Player p, int amount) {
+		CurrencyManager.subtract(p, level, this.amount * amount);
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- " + amount + "x Lv " + level + " Essence";
 		return msg;
 	}

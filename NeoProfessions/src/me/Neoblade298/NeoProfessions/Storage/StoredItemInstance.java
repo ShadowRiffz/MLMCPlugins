@@ -43,8 +43,8 @@ public class StoredItemInstance {
 		return item.getBaseView(amt);
 	}
 	
-	public ItemStack getStorageView() {
-		return item.getStorageView(amt);
+	public ItemStack getStorageView(boolean fullLore) {
+		return item.getStorageView(amt, fullLore);
 	}
 	
 	public ItemStack getSourceView(Player p, int compare) {

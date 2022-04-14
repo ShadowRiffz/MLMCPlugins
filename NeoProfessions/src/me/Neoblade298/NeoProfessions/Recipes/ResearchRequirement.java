@@ -18,7 +18,7 @@ public class ResearchRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
+	public boolean passesReq(Player p, int amount) {
 		return Research.getPlayerStats(p).getCompletedResearchItems().containsKey(key);
 	}
 
@@ -28,7 +28,7 @@ public class ResearchRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- " + Research.getResearchItems().get(key).getName();
 		return msg;
 	}

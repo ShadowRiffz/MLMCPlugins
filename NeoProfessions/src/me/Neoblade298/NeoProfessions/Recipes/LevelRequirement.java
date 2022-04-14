@@ -32,7 +32,7 @@ public class LevelRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
+	public boolean passesReq(Player p, int amount) {
 		HashMap<ProfessionType, Profession> profs = ProfessionManager.getAccount(p.getUniqueId());
 		return profs != null && profs.get(type).getLevel() >= min;
 	}
@@ -42,7 +42,7 @@ public class LevelRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- Lv " + min + " " + type.getDisplay();
 		return msg;
 	}

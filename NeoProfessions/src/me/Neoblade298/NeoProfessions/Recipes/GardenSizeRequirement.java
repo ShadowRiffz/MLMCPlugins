@@ -24,7 +24,7 @@ public class GardenSizeRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
+	public boolean passesReq(Player p, int amount) {
 		return GardenManager.getGarden(p, type).getSize() == size;
 	}
 
@@ -33,7 +33,7 @@ public class GardenSizeRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- " + type.getDisplay() + " Garden size of " + size;
 		return msg;
 	}

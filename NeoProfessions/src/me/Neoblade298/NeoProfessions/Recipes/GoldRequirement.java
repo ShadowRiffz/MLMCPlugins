@@ -18,20 +18,20 @@ public class GoldRequirement implements RecipeRequirement {
 		}
 	}
 	
-	public boolean passesReq(Player p) {
-		return Professions.econ.has(p, this.amount);
+	public boolean passesReq(Player p, int amount) {
+		return Professions.econ.has(p, this.amount * amount);
 	}
 
 	public String failMessage(Player p) {
 		return "§4[§c§lMLMC§4] §cYou don't have enough gold!";
 	}
 	
-	public void useReq(Player p) {
-		Professions.econ.withdrawPlayer(p, this.amount);
+	public void useReq(Player p, int amount) {
+		Professions.econ.withdrawPlayer(p, this.amount * amount);
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "§a" : "§c";
 		msg += "- " + amount + "g";
 		return msg;
 	}

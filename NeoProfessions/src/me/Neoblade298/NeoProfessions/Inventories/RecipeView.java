@@ -314,7 +314,7 @@ public class RecipeView extends ProfessionInventory {
 	private void craftItem(int slot, int amount) {
 		Recipe recipe = this.recipes.get(((page - 1) * 45) + slot);
 		if (recipe.canMulticraft() || amount == 1) {
-			recipe.craftRecipe(p);
+			recipe.craftRecipe(p, amount);
 		}
 	}
 	
