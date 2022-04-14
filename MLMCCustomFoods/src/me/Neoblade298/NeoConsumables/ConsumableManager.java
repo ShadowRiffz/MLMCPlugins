@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.Neoblade298.NeoConsumables.objects.DurationEffects;

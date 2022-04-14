@@ -23,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
 
