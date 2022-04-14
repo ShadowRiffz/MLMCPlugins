@@ -63,11 +63,9 @@ public class Profession {
 			exp = 1;
 		}
 		double newExp = exp + this.exp;
-		int percent = (int) ((newExp / (double) nextLv.get(this.level)) * 100);
-		percent = Math.min(100, percent);
 		
 		// If next level exists, check that the player can reach it
-		p.sendMessage("§a+" + exp + " §7(§f" + percent + "%§7) §6" + type.getDisplay() + " §7exp");
+		p.sendMessage("§a+" + exp + " §7(§f" + newExp + " / " + nextLv.get((this.level) "§7) §6" + type.getDisplay() + " §7exp");
 		boolean levelup = false;
 		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level)) {
 			newExp -= nextLv.get(this.level);
