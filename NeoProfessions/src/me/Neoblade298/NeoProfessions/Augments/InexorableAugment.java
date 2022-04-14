@@ -56,6 +56,11 @@ public class InexorableAugment extends Augment implements ModDamageTakenAugment 
 		// If on CD, only works if it's active and user blocking
 		return FlagManager.hasFlag(user, "aug_inexorable") && user.isBlocking();
 	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
+	}
 
 	@Override
 	public String getLine() {

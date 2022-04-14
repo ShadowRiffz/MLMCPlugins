@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 	
@@ -36,7 +37,8 @@ public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
-		return (user.getMana() / user.getMaxMana()) > 0.5;
+		return ((user.getMana() / user.getMaxMana()) > 0.5) && 
+				!user.getClass("class").getData().getManaName().endsWith("MP");
 	}
 
 	public ItemStack getItem(Player user) {

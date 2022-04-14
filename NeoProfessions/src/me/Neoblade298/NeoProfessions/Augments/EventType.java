@@ -19,5 +19,6 @@ public enum EventType {
 	PROFESSION_HARVEST,
 	MANA_GAIN,
 	SKILL_CAST,
+	POTION,
 	INTERACT;
 }

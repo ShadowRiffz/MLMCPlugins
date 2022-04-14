@@ -42,6 +42,11 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
 		return diffxy >= 100;
 	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
+	}
 
 	@Override
 	public String getLine() {

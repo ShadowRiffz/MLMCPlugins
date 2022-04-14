@@ -52,6 +52,11 @@ public class BarrierAugment extends Augment implements ModSkillCastAugment {
 	public boolean canUse(Player user, PlayerSkillCastSuccessEvent e) {
 		return true;
 	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
+	}
 
 	@Override
 	public String getLine() {

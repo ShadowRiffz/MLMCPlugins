@@ -42,6 +42,11 @@ public class HammerTimeAugment extends Augment implements ModDamageDealtAugment 
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
 		return diffxy <= 9;
 	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
+	}
 
 	@Override
 	public String getLine() {

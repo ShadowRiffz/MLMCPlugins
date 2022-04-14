@@ -41,6 +41,11 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 	}
 
 	@Override
+	public boolean isPermanent() {
+		return true;
+	}
+	
+	@Override
 	public String getLine() {
 		return "§7[§4§o" + name + " Lv " + level + "§7]";
 	}

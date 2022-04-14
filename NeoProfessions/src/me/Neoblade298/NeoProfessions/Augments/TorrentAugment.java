@@ -40,6 +40,11 @@ public class TorrentAugment extends Augment implements ModDamageDealtAugment {
 		}
 		return AugmentManager.getPlayerAugments(user).getHitCount(this) >= 5;
 	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
+	}
 
 	@Override
 	public String getLine() {
