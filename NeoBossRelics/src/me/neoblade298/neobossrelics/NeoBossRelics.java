@@ -138,11 +138,6 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		}
 	}
 	
-	@EventHandler
-	public void onSQLLoad(PlayerLoadCompleteEvent e) {
-		recalculateSetEffect(e.getPlayer());
-	}
-	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChangeSlot(PlayerItemHeldEvent e) {
 		Player p = e.getPlayer();
