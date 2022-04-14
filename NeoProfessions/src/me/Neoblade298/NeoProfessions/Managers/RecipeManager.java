@@ -20,6 +20,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
+import me.Neoblade298.NeoProfessions.Recipes.EssenceRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
 import me.Neoblade298.NeoProfessions.Recipes.GardenSizeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.GardenUpgradeResult;
@@ -108,8 +109,11 @@ public class RecipeManager implements IOComponent {
 						ArrayList<RecipeRequirement> reqs = new ArrayList<RecipeRequirement>();
 						for (String line : stringReqs) {
 							String[] args = line.split(" ");
-							if (args[0].equalsIgnoreCase("recipe")) {
+							if (args[0].equalsIgnoreCase("knowledge")) {
 								reqs.add(new KnowledgeRequirement(args));
+							}
+							else if (args[0].equalsIgnoreCase("essence")) {
+								reqs.add(new EssenceRequirement(args));
 							}
 							else if (args[0].equalsIgnoreCase("rgoal")) {
 								reqs.add(new ResearchRequirement(args));
