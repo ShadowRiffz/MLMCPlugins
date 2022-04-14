@@ -10,11 +10,13 @@ import org.bukkit.inventory.PlayerInventory;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+import me.Neoblade298.NeoProfessions.Objects.StoredAttributes;
 
 public class PlayerAugments {
 	private HashMap<EventType, ArrayList<Augment>> augments;
 	private HashMap<Augment, Integer> hitCount;
 	private HashMap<Augment, Integer> counts;
+	private HashMap<Augment, StoredAttributes> attrs;
 	private Player p;
 	private boolean invChanged;
 	private int prevSlot;
@@ -24,6 +26,7 @@ public class PlayerAugments {
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
 		this.counts = new HashMap<Augment, Integer>();
 		this.hitCount = new HashMap<Augment, Integer>();
+		this.attrs = new HashMap<Augment, StoredAttributes>();
 		this.invChanged = true;
 		this.prevSlot = -1;
 
@@ -107,4 +110,6 @@ public class PlayerAugments {
 	public int getHitCount(Augment aug) {
 		return hitCount.getOrDefault(aug, 0);
 	}
+	
+	public void 
 }
