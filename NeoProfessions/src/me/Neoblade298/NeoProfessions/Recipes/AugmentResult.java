@@ -20,7 +20,7 @@ public class AugmentResult implements RecipeResult {
 		for (String lineArg : lineArgs) {
 			String[] args = lineArg.split(":");
 			if (args[0].equalsIgnoreCase("type")) {
-				this.type = args[1].replaceAll("_", " ");
+				this.type = args[1].replaceAll("_", " ").toLowerCase();
 			}
 			else if (args[0].equalsIgnoreCase("level")) {
 				this.level = Integer.parseInt(args[1]);

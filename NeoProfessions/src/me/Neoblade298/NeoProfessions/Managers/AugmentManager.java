@@ -3,6 +3,8 @@ package me.Neoblade298.NeoProfessions.Managers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -755,7 +757,11 @@ public class AugmentManager implements Listener {
 	
 	public static Augment getFromCache(String key, int level) {
 		// See if there's a set of levels for the aug, create if not
-		return getFromCache(augmentMap.get(key), level);
+		if (!augmentMap.containsKey(key.toLowerCase())) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load augment of key: " + key);
+			return null;
+		}
+		return getFromCache(augmentMap.get(key.toLowerCase()), level);
 	}
 	
 	public static Augment getViaDroptable(String droptable, int level) {

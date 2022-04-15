@@ -24,7 +24,6 @@ import me.Neoblade298.NeoProfessions.Recipes.GearResult;
 import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Utilities.SkullCreator;
-import me.neoblade298.neogear.objects.GearConfig;
 
 public class RecipeView extends ProfessionInventory {
 	private Player p;
@@ -148,11 +147,10 @@ public class RecipeView extends ProfessionInventory {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
 				if (recipe.getResult() instanceof GearResult) {
-					GearConfig cfg = ((GearResult) recipe.getResult()).getConfig();
-					if (cfg.getRequiredAugments() != null) {
-						for (String augment : cfg.getRequiredAugments()) {
-							String[] args = augment.split(":");
-							Augment aug = AugmentManager.getFromCache(args[0], Integer.parseInt(args[1]));
+					NBTItem nbti = new NBTItem(recipe.getResult().getResultItem(p, recipe.canCraft(p)));
+					for (int slot = 1; slot <= nbti.getInteger("slotsCreated"); slot++) {
+						if (nbti.hasKey("slot" + slot + "Augment")) {
+							Augment aug = AugmentManager.getFromCache(nbti.getString("slot" + slot + "Augment"), nbti.getInteger("slot" + slot + "Level"));
 							lore.add(aug.getLine());
 							for (String line : aug.getItem(p).getItemMeta().getLore()) {
 								lore.add(line);
