@@ -288,8 +288,8 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						if (AugmentManager.isDroptable(aug)) {
 							augment = AugmentManager.getViaDroptable(aug, lv);
 						}
-						else if (AugmentManager.hasAugment(aug)) {
-							augment = AugmentManager.getFromCache(aug, lv);
+						else if (AugmentManager.hasAugment(aug.toLowerCase())) {
+							augment = AugmentManager.getFromCache(aug.toLowerCase(), lv);
 						}
 						else {
 							augment = AugmentManager.getViaDroptable("default", lv);

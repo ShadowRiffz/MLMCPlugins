@@ -59,86 +59,70 @@ public class AugmentManager implements Listener {
 	
 	public AugmentManager(Professions main) {
 		AugmentManager.main = main;
+
+		augmentMap.put("barrier", new BarrierAugment());
+		augmentMap.put("brace", new BraceAugment());
+		augmentMap.put("brawler", new BrawlerAugment());
+		augmentMap.put("breath of life", new BreathOfLifeAugment());
+		augmentMap.put("bruiser", new BruiserAugment());
+		augmentMap.put("burst", new BurstAugment());
+		augmentMap.put("calming", new CalmingAugment());
+		augmentMap.put("chest chance", new ChestChanceAugment());
+		augmentMap.put("commander", new CommanderAugment());
+		augmentMap.put("cornered", new CorneredAugment());
+		augmentMap.put("crimson pact", new CrimsonPactAugment());
+		augmentMap.put("daredevil", new DaredevilAugment());
+		augmentMap.put("deadeye", new DeadeyeAugment());
+		augmentMap.put("defiance", new DefianceAugment());
+		augmentMap.put("desperation", new DesperationAugment());
+		augmentMap.put("entropy", new EntropyAugment());
+		augmentMap.put("experience", new ExperienceAugment());
+		augmentMap.put("ferocious", new FerociousAugment());
+		augmentMap.put("final light", new FinalLightAugment());
+		augmentMap.put("finisher", new FinisherAugment());
+		augmentMap.put("ghosts of the past", new GhostsOfThePastAugment());
+		augmentMap.put("guardian", new GuardianAugment());
+		augmentMap.put("hammer time", new HammerTimeAugment());
+		augmentMap.put("hearty", new HeartyAugment());
+		augmentMap.put("herbalist", new HerbalistAugment());
+		augmentMap.put("holy", new HolyAugment());
+		augmentMap.put("imposing", new ImposingAugment());
+		augmentMap.put("inexorable", new InexorableAugment());
+		augmentMap.put("initiator", new InitiatorAugment());
+		augmentMap.put("insidious", new InsidiousAugment());
+		augmentMap.put("inspire", new InspireAugment());
+		augmentMap.put("intimidating", new IntimidatingAugment());
+		augmentMap.put("killer instinct", new KillerInstinctAugment());
+		augmentMap.put("last breath", new LastBreathAugment());
+		augmentMap.put("menacing", new MenacingAugment());
+		augmentMap.put("miner", new MinerAugment());
+		augmentMap.put("opportunist", new OpportunistAugment());
+		augmentMap.put("overload", new OverloadAugment());
+		augmentMap.put("perceptive", new PerceptiveAugment());
+		augmentMap.put("phantom", new PhantomAugment());
+		augmentMap.put("precision", new PrecisionAugment());
+		augmentMap.put("protection", new ProtectionAugment());
+		augmentMap.put("queen's grace", new QueensGraceAugment());
+		augmentMap.put("rally", new RallyAugment());
+		augmentMap.put("redemption", new RedemptionAugment());
+		augmentMap.put("rejuvenating", new RejuvenatingAugment());
+		augmentMap.put("research", new ResearchAugment());
+		augmentMap.put("sanguine thirst", new SanguineThirstAugment());
+		augmentMap.put("selfish", new SelfishAugment());
+		augmentMap.put("sentinel", new SentinelAugment());
+		augmentMap.put("sniper", new SniperAugment());
+		augmentMap.put("spectre", new SpectreAugment());
+		augmentMap.put("spellweaving", new SpellweavingAugment());
+		augmentMap.put("steadfast", new SteadfastAugment());
+		augmentMap.put("sundering", new SunderingAugment());
+		augmentMap.put("tenacity", new TenacityAugment());
+		augmentMap.put("thorns", new ThornsAugment());
+		augmentMap.put("torrent", new TorrentAugment());
+		augmentMap.put("underdog", new UnderdogAugment());
+		augmentMap.put("vampiric", new VampiricAugment());
+		augmentMap.put("weightless", new WeightlessAugment());
+		augmentMap.put("woodcutter", new WoodcutterAugment());
 		
-		// Buffs
-		augmentMap.put("Brace", new BraceAugment());
-		augmentMap.put("Commander", new CommanderAugment());
-		augmentMap.put("Guardian", new GuardianAugment());
-		augmentMap.put("Inspire", new InspireAugment());
-		
-		// Crits
-		augmentMap.put("Brawler", new BrawlerAugment());
-		augmentMap.put("Cornered", new CorneredAugment());
-		augmentMap.put("Ferocious", new FerociousAugment());
-		augmentMap.put("Killer Instinct", new KillerInstinctAugment());
-		augmentMap.put("Precision", new PrecisionAugment());
-		augmentMap.put("Spellweaving", new SpellweavingAugment());
-		augmentMap.put("Sundering", new SunderingAugment());
-		augmentMap.put("Vampiric", new VampiricAugment());
-		
-		// Damage Dealt
-		augmentMap.put("Bruiser", new BruiserAugment());
-		augmentMap.put("Burst", new BurstAugment());
-		augmentMap.put("Calming", new CalmingAugment());
-		augmentMap.put("Deadeye", new DeadeyeAugment());
-		augmentMap.put("Desperation", new DesperationAugment());
-		augmentMap.put("Finisher", new FinisherAugment());
-		augmentMap.put("Hammer Time", new HammerTimeAugment());
-		augmentMap.put("Hearty", new HeartyAugment());
-		augmentMap.put("Initiator", new InitiatorAugment());
-		augmentMap.put("Intimidating", new IntimidatingAugment());
-		augmentMap.put("Opportunist", new OpportunistAugment());
-		augmentMap.put("Overload", new OverloadAugment());
-		augmentMap.put("Sentinel", new SentinelAugment());
-		augmentMap.put("Sniper", new SniperAugment());
-		augmentMap.put("Torrent", new TorrentAugment());
-		augmentMap.put("Underdog", new UnderdogAugment());
-		
-		// Damage Taken
-		augmentMap.put("Daredevil", new DaredevilAugment());
-		augmentMap.put("Insidious", new InsidiousAugment());
-		augmentMap.put("Menacing", new MenacingAugment());
-		augmentMap.put("Protection", new ProtectionAugment());
-		augmentMap.put("Thorns", new ThornsAugment());
-		augmentMap.put("Inexorable", new InexorableAugment());
-		
-		// Flags
-		augmentMap.put("Holy", new HolyAugment());
-		augmentMap.put("Tenacity", new TenacityAugment());
-		
-		// Healing
-		augmentMap.put("Rally", new RallyAugment());
-		augmentMap.put("Rejuvenating", new RejuvenatingAugment());
-		augmentMap.put("Selfish", new SelfishAugment());
-		
-		// Mana Gain
-		augmentMap.put("Defiance", new DefianceAugment());
-		augmentMap.put("Final Light", new FinalLightAugment());
-		augmentMap.put("Perceptive", new PerceptiveAugment());
-		
-		// Regen
-		augmentMap.put("Last Breath", new LastBreathAugment());
-		
-		// Taunt
-		augmentMap.put("Imposing", new ImposingAugment());
-		augmentMap.put("Steadfast", new SteadfastAugment());
-		
-		// Charms
-		augmentMap.put("Experience", new ExperienceAugment());
-		augmentMap.put("Chest Chance", new ChestChanceAugment());
-		augmentMap.put("Research", new ResearchAugment());
-		
-		// Professions
-		augmentMap.put("Miner", new MinerAugment());
-		augmentMap.put("Woodcutter", new WoodcutterAugment());
-		augmentMap.put("Herbalist", new HerbalistAugment());
-		
-		// Skill Cast
-		augmentMap.put("Barrier", new BarrierAugment());
-		
-		// Interact
-		
-		// Boss Relics
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
 			augmentMap.put(set, new BossRelic(set));
