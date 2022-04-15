@@ -245,7 +245,7 @@ public class GearConfig {
 		nbti.setDouble("value", price);
 		nbti.setString("gear", id);
 		nbti.setInteger("version", version);
-		nbti.setInteger("slotsMax", maxSlots);
+		nbti.setInteger("slotsMax", Math.max(currentSlot, maxSlots));
 		nbti.setInteger("level", level);
 		nbti.setString("rarity", rarity.toLowerCase());
 		nbti.setInteger("slotsCreated", currentSlot);
