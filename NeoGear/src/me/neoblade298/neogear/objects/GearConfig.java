@@ -222,11 +222,10 @@ public class GearConfig {
 		if (lore.size() >= 6) { lore.add("§8§m-----"); }
 		for (String augment : requiredAugments) {
 			currentSlot++;
-			String args[] = augment.split(":");
-			Augment aug = AugmentManager.getFromCache(args[0].toLowerCase(), Integer.parseInt(args[1]));
+			Augment aug = AugmentManager.getFromCache(augment.toLowerCase(), level);
 			lore.add(aug.getLine());
 			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
-			nbtIntegers.put("slot" + currentSlot + "Level", aug.getLevel());
+			nbtIntegers.put("slot" + currentSlot + "Level", level);
 			nbtStrings.put("slot" + currentSlot + "Augment", aug.getName());
 		}
 		for (int i = 0; i < numSlots; i++) {
