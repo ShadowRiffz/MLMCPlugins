@@ -3,15 +3,12 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
-import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.api.skills.SkillShot;
 
