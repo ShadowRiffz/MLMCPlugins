@@ -39,7 +39,7 @@ public class InexorableAugment extends Augment implements ModDamageTakenAugment 
 	}
 	
 	@Override
-	public void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
+	public void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		user.playSound(user.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0F, 1.0F);
 	}
 

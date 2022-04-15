@@ -28,7 +28,7 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 	}
 	
 	@Override
-	public void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
+	public void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		FlagManager.addFlag(user, user, "aug_menacing", 40);
 	}
 

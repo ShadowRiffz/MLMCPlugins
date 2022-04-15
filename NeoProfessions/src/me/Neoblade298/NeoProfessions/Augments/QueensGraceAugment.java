@@ -4,18 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Action;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ManaSource;
-import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.util.FlagManager;
 
 public class QueensGraceAugment extends Augment implements ModPotionAugment {

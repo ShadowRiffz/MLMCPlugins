@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 
 public class SanguineThirstAugment extends Augment implements ModDamageDealtAugment {
@@ -46,7 +44,7 @@ public class SanguineThirstAugment extends Augment implements ModDamageDealtAugm
 		Player p = user.getPlayer();
 		double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		p.setHealth(Math.min(max, p.getHealth() + (max * 0.02)));
-		FlagManager.addFlag(user, user, "aug_sanguineThirst", 100);
+		FlagManager.addFlag(user, user, "aug_sanguineThirst", 200);
 	}
 
 	@Override

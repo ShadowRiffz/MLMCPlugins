@@ -12,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sucy.skill.api.event.FlagApplyEvent;
 import com.sucy.skill.api.util.FlagManager;
 
 public class PhantomAugment extends Augment implements ModPotionAugment, ModDamageDealtAugment {

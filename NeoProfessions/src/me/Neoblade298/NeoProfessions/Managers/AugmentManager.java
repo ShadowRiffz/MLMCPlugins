@@ -39,7 +39,7 @@ import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class AugmentManager implements Listener {
-	Professions main;
+	static Professions main = null;
 	private static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
@@ -58,7 +58,7 @@ public class AugmentManager implements Listener {
 	}
 	
 	public AugmentManager(Professions main) {
-		this.main = main;
+		AugmentManager.main = main;
 		
 		// Buffs
 		augmentMap.put("Brace", new BraceAugment());
@@ -379,7 +379,7 @@ public class AugmentManager implements Listener {
 					if (augment instanceof ModDamageTakenAugment) {
 						ModDamageTakenAugment aug = (ModDamageTakenAugment) augment;
 						if (aug.canUse(p, (LivingEntity) e.getTarget(), e)) {
-							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e.getDamage());
+							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e);
 
 							double mult = aug.getDamageTakenMult(p);
 							if (mult > 0) {
@@ -781,5 +781,9 @@ public class AugmentManager implements Listener {
 	
 	public static boolean isDroptable(String droptable) {
 		return droptables.containsKey(droptable);
+	}
+	
+	public static Professions getMain() {
+		return main;
 	}
 }

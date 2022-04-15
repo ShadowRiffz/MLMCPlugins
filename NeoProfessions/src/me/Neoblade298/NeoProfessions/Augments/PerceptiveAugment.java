@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sucy.skill.api.enums.ManaSource;
 import com.sucy.skill.api.player.PlayerData;
-import com.sucy.skill.api.util.FlagManager;
 
 public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 	

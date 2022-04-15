@@ -111,5 +111,14 @@ public class PlayerAugments {
 		return hitCount.getOrDefault(aug, 0);
 	}
 	
-	public void 
+	public void applyAttributes(Augment aug, StoredAttributes sattr) {
+		sattr.applyAttributes(p);
+		attrs.put(aug, sattr);
+	}
+	
+	public void removeAttributes(Augment aug) {
+		if (attrs.containsKey(aug)) {
+			attrs.remove(aug).removeAttributes(p);
+		}
+	}
 }

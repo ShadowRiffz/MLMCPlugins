@@ -30,7 +30,7 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	}
 
 	@Override
-	public void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
+	public void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		target.damage(getDamageReturned(user));
 		FlagManager.addFlag(user, user, "aug_thorns", 20);
 	}

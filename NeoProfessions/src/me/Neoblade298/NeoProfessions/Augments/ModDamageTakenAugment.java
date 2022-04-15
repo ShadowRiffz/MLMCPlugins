@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 
 public interface ModDamageTakenAugment {
-	public default void applyDamageTakenEffects(Player user, LivingEntity target, double damage) {
+	public default void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		// Empty unless overridden
 	}
 	
