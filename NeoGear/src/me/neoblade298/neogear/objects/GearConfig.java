@@ -223,7 +223,7 @@ public class GearConfig {
 		for (String augment : requiredAugments) {
 			currentSlot++;
 			String args[] = augment.split(":");
-			Augment aug = AugmentManager.getFromCache(args[0], Integer.parseInt(args[1]));
+			Augment aug = AugmentManager.getFromCache(args[0].toLowerCase(), Integer.parseInt(args[1]));
 			lore.add(aug.getLine());
 			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
 			nbtIntegers.put("slot" + currentSlot + "Level", aug.getLevel());
