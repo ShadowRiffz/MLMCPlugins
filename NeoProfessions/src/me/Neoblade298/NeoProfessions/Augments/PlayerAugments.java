@@ -31,8 +31,10 @@ public class PlayerAugments {
 		this.prevSlot = -1;
 
 		PlayerInventory inv = p.getInventory();
+		checkAugments(inv.getHelmet());
 		checkAugments(inv.getChestplate());
 		checkAugments(inv.getLeggings());
+		checkAugments(inv.getBoots());
 		checkAugments(inv.getItemInMainHand());
 		checkAugments(inv.getItemInOffHand());
 	}
@@ -85,8 +87,10 @@ public class PlayerAugments {
 		if (inv.getHeldItemSlot() != prevSlot || invChanged) {
 			augments.clear();
 			counts.clear();
+			checkAugments(inv.getHelmet());
 			checkAugments(inv.getChestplate());
 			checkAugments(inv.getLeggings());
+			checkAugments(inv.getBoots());
 			checkAugments(inv.getItemInMainHand());
 			checkAugments(inv.getItemInOffHand());
 			prevSlot = inv.getHeldItemSlot();
