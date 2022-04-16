@@ -73,12 +73,7 @@ public class StorageManager implements IOComponent, Listener {
 		if (amount > 0) {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) - amount;
-			if (total <= 0) {
-				storage.remove(id);
-			}
-			else {
-				storage.put(id, storage.get(id) - amount);
-			}
+			storage.put(id, storage.get(id) - amount);
 			p.sendMessage("§c-" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
 			return true;
 		}
@@ -86,15 +81,10 @@ public class StorageManager implements IOComponent, Listener {
 	}
 	
 	public static boolean setPlayer(Player p, int id, int amount) {
-		if (amount > 0) {
+		if (amount >= 0) {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = amount;
 			storage.put(id, total);
-			return true;
-		}
-		else if (amount == 0) {
-			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
-			storage.remove(id);
 			return true;
 		}
 		return false;
@@ -131,6 +121,11 @@ public class StorageManager implements IOComponent, Listener {
 					StoredItem item = new StoredItem(intid, name, level, rarity, mat, lore);
 					for (String source : itemCfg.getStringList("sources")) {
 						item.addSource(source, true);
+					}
+					if (preloadedSources.containsKey(intid)) {
+						for (StoredItemSource source : preloadedSources.get(intid)) {
+							item.addSource(source.getSource(), source.isMob());
+						}
 					}
 					items.put(intid, item);
 				}
@@ -177,6 +172,17 @@ public class StorageManager implements IOComponent, Listener {
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save storage for user " + p.getName());
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void cleanup(Statement stmt) {
+		try {
+			stmt.addBatch("DELETE FROM professions_items WHERE amount <= 0");
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to cleanup storage");
 			e.printStackTrace();
 		}
 	}

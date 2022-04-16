@@ -93,6 +93,11 @@ public class ProfessionManager implements IOComponent {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void cleanup(Statement stmt) {
+		
+	}
 	
 	public static HashMap<ProfessionType, Profession> getAccount(UUID uuid) {
 		return accounts.get(uuid);

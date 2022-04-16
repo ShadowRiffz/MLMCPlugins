@@ -214,6 +214,11 @@ public class RecipeManager implements IOComponent {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void cleanup(Statement stmt) {
+
+	}
 	
 	public static HashSet<String> getKnowledge(Player p) {
 		return knowledge.get(p.getUniqueId());

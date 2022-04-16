@@ -130,6 +130,11 @@ public class GardenManager implements IOComponent {
 		}
 	}
 	
+	@Override
+	public void cleanup(Statement stmt) {
+		
+	}
+	
 	public static Garden getGarden(Player p, ProfessionType type) {
 		return gardens.get(p.getUniqueId()).get(type);
 	}

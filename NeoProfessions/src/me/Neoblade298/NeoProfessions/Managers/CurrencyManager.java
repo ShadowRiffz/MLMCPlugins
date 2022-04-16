@@ -83,6 +83,17 @@ public class CurrencyManager implements IOComponent, Listener {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void cleanup(Statement stmt) {
+		try {
+			stmt.addBatch("DELETE FROM professions_essence WHERE amount <= 0");
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to cleanup currency");
+			e.printStackTrace();
+		}
+	}
 	
 	public static void add(Player p, int level, int amount) {
 		// Standardize the level

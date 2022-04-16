@@ -128,6 +128,17 @@ public class IOListeners implements Listener {
 					}
 				}
 			}
+			
+			// Any final cleanup
+			for (IOComponent component : components) {
+				try {
+					
+				}
+				catch (Exception ex) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to handle cleanup for component " + component.getComponentName());
+					ex.printStackTrace();
+				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
