@@ -177,7 +177,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 		cons.setDisplay(config.getString("display"));
 		cons.setDescription(config.getStringList("desc"));
-		cons.setRarity(Rarity.valueOf(config.getString("rarity").toUpperCase()));
+		cons.setRarity(Rarity.valueOf(config.getString("rarity", "common").toUpperCase()));
 
 		// Potion effects
 		ArrayList<PotionEffect> potions = cons.getPotions();
@@ -297,7 +297,7 @@ public class Consumables extends JavaPlugin implements Listener {
 					cr = AugmentReward.parse(args, level);
 					break;
 				case "storeditem":
-					cr = StoredItemReward.parse(args, level);
+					cr = StoredItemReward.parse(args, level, display);
 					break;
 				}
 				if (cr == null) {

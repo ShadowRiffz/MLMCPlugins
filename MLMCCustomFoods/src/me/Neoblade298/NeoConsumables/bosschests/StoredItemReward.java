@@ -24,7 +24,7 @@ public class StoredItemReward extends ChestReward {
 		Util.sendMessage(p, "&7- &e" + amount + " " + StorageManager.getItem(id).getDisplay());
 	}
 
-	public static StoredItemReward parse(String args[], int level) {
+	public static StoredItemReward parse(String args[], int level, String display) {
 		int id = -1;
 		int weight = 1;
 		int amount = 1;
@@ -41,6 +41,7 @@ public class StoredItemReward extends ChestReward {
 		}
 		StoredItemReward r = new StoredItemReward(id, amount);
 		r.setWeight(weight);
+		StorageManager.addSource(id, "§4§l" + display + " Boss Chest", false);
 		return r;
 	}
 }
