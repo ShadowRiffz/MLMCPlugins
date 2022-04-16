@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -33,6 +34,8 @@ public class StorageManager implements IOComponent, Listener {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static Professions main;
+	static HashMap<Integer, ArrayList<StoredItemSource>> preloadedSources = new HashMap<Integer, ArrayList<StoredItemSource>>();
+	static boolean itemsLoaded = false;
 
 	public static Settings settings;
 	
@@ -133,6 +136,7 @@ public class StorageManager implements IOComponent, Listener {
 				}
 			}
 		}
+		itemsLoaded = true;
 	}
 	
 	@Override
@@ -217,5 +221,21 @@ public class StorageManager implements IOComponent, Listener {
 	@Override
 	public String getComponentName() {
 		return "StorageManager";
+	}
+	
+	public static void addSource(int id, String source, boolean isMob) {
+		if (itemsLoaded) {
+			if (items.containsKey(id)) {
+				items.get(id).addSource(source, isMob);
+			}
+			else {
+				Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to add source " + source + " for id " + id + ".");
+			}
+		}
+		else {
+			ArrayList<StoredItemSource> idSources = preloadedSources.getOrDefault(id, new ArrayList<StoredItemSource>());
+			idSources.add(new StoredItemSource(source, isMob));
+			preloadedSources.put(id, idSources);
+		}
 	}
 }
