@@ -98,6 +98,10 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
+		if (sources.contains(source)) {
+			return;
+		}
+		
 		source = source.replaceAll("&", "§");
 		if (isMob) {
 			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
