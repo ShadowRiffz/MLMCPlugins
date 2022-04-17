@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -139,13 +140,15 @@ public class ConvertCommand implements CommandExecutor {
 								ProfessionManager.convertPlayer(uuid, profs, stmt);
 								
 								stmt.executeBatch();
-								
-								User user = mngr.getUser(uuid);
+
+								CompletableFuture<User> userFuture = mngr.loadUser(uuid);
 								HashSet<String> knowledge = new HashSet<String>();
-								user.getNodes().stream()
-								.filter(e -> legendaryRecipes.containsKey(e.getKey()))
-								.forEach(e -> knowledge.add(legendaryRecipes.get(e.getKey())));
-								RecipeManager.convertPlayer(uuid, knowledge, stmt);
+								userFuture.thenAcceptAsync(user -> {
+									user.getNodes().stream()
+									.filter(e -> legendaryRecipes.containsKey(e.getKey()))
+									.forEach(e -> knowledge.add(legendaryRecipes.get(e.getKey())));
+									RecipeManager.convertPlayer(uuid, knowledge, stmt);
+								});
 								
 								count++;
 								if (count % 50 == 0 && count != 0) {
