@@ -36,7 +36,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.03 * (level / 5);
+		return 0.015 * (level / 5);
 	}
 
 	@Override

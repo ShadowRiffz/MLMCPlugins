@@ -25,7 +25,7 @@ public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.05 * (level / 5);
+		return 0.03 * (level / 5);
 	}
 
 	@Override

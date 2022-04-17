@@ -30,7 +30,11 @@ public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		double scale = Math.min(2, 1 + (0.05 * (data.getCaster().getLevel() - 1)));
+		if (data.getCaster().getLevel() < 1) {
+			return true;
+		}
+		
+		double scale = Math.min(2, 1 + (0.02 * (data.getCaster().getLevel() - 1)));
 		double scaledMin = this.min * scale;
 		double scaledMax = this.max * scale;
 		ArrayList<Player> players = nbi.getActiveFights().get(this.boss);

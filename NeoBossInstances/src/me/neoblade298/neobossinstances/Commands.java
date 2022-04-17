@@ -140,7 +140,11 @@ public class Commands implements CommandExecutor {
 				}
 				
 				// Actually send them
-				int level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
+				int level = (int) main.settings.getValue(p.getUniqueId(), boss);
+				if (level >= 1) {
+					level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
+				}
+				
 				for (Player target : targets) {
 					SkillAPI.saveSingle(target);
 					UUID uuid = target.getUniqueId();
@@ -165,7 +169,7 @@ public class Commands implements CommandExecutor {
 					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + target.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
-					if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+					if (main.bossInfo.get(boss).isRaid() || target.hasPermission(main.bossInfo.get(boss).getPermission())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
 

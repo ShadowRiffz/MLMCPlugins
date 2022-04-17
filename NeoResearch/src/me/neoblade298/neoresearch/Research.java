@@ -260,6 +260,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						for (Integer key : pAttrs.keySet()) {
 							StoredAttributes pAttr = pAttrs.get(key);
 							int actualAttrs = pAttr.countAttributes();
+							if (debug) {
+								Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Loading account " + p.getName() + 
+										"Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+							}
 							if (expectedAttrs > actualAttrs) {
 								pAttr.addAttribute("unused", expectedAttrs - actualAttrs);
 							}
@@ -353,8 +357,8 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				// Save attrs
 				for (Integer key : playerAttrs.get(uuid).keySet()) {
 					StoredAttributes pAttrs = playerAttrs.get(uuid).get(key);
-					for (Entry<String, Integer> attr : pAttrs.getStoredAttrs().entrySet()) {
-						stmt.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr.getKey() + "'," + attr.getValue() + "," +
+					for (String attr : StoredAttributes.attrs) {
+						stmt.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
 								key + ");");
 					}
 				}
@@ -458,7 +462,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 							completedItems.put(researchItem.getId(), researchItem);
 							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1, 1);
 							stats.addExp(p, researchItem.getExp());
-							updateBonuses(p);
+							for (Entry<Integer, StoredAttributes> acc : playerAttrs.get(p.getUniqueId()).entrySet()) {
+								acc.getValue().addAttribute("unused", 1);
+							}
 						}
 					}
 				}

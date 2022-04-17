@@ -7,8 +7,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
@@ -84,7 +86,7 @@ public class Main extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, Long> bossRunnableTimers = new ConcurrentHashMap<String, Long>();
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
-	public ConcurrentHashMap<UUID, Boss> spectatingBoss = new ConcurrentHashMap<UUID, Boss>();
+	public static HashMap<UUID, Boss> spectatingBoss = new HashMap<UUID, Boss>();
 	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
 	public ConcurrentHashMap<String, PlayerStat> playerStats = new ConcurrentHashMap<String, PlayerStat>();
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
@@ -249,6 +251,9 @@ public class Main extends JavaPlugin implements Listener {
 			
 			if (p.isDead()) {
 				p.spigot().respawn();
+			}
+			for (PotionEffect pe : p.getActivePotionEffects()) {
+				p.removePotionEffect(pe.getType());
 			}
 			
 			// Connect
@@ -511,6 +516,7 @@ public class Main extends JavaPlugin implements Listener {
 							Player fighter = fighters.next();
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
+								fighters.remove();
 							}
 							fighters.remove();
 						}
@@ -674,11 +680,14 @@ public class Main extends JavaPlugin implements Listener {
 			// Anything above 50k is probably some sort of instakill, don't multiply it
 			if (e.getDamage() < 50000) {
 				ActiveMob am = api.getMythicMobInstance(e.getDamager());
-				if (am.getLevel() <= 6) {
+				if (am.getLevel() <= 6 && am.getLevel() >= 1) {
 					e.setDamage(e.getDamage() * (1 + (0.1 * (am.getLevel() - 1))));
 				}
-				else {
+				else if (am.getLevel() > 6) {
 					e.setDamage(e.getDamage() * (1 + (0.3 * (am.getLevel() - 1))));
+				}
+				else if (am.getLevel() >= -99){
+					e.setDamage(e.getDamage() * (1 + (0.01 * (am.getLevel()))));
 				}
 			}
 		}
@@ -813,5 +822,9 @@ public class Main extends JavaPlugin implements Listener {
 			return bossRunnableTimers.getOrDefault(fightingBoss.get(p.getUniqueId()), -1L);
 		}
 		return -1;
+	}
+	
+	public static Set<UUID> getSpectators() {
+		return spectatingBoss.keySet();
 	}
 }

@@ -242,7 +242,7 @@ public class Settings {
 			}
 			else if (defaults.get(key).getClass() == Integer.class) {
 				value = Integer.parseInt(v);
-				if ((Integer) value > 100000 || (Integer) value < 1) {
+				if ((Integer) value > 100000 || (Integer) value < -99) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoSettings] Failed to change setting of " + this.getKey() + "." + key + " for " + uuid + ". Value was out of bounds.");
 					return false;
 				}

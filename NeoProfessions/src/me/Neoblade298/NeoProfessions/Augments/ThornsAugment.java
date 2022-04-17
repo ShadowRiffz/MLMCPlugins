@@ -12,8 +12,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.util.FlagManager;
 
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Augments.EventType;
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
+
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	private double maxHealthMod;
+	
+	private static FlagSettings flag = new FlagSettings("aug_thorns", 20);
 	
 	public ThornsAugment() {
 		super();
@@ -32,7 +38,11 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	@Override
 	public void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		target.damage(getDamageReturned(user));
-		FlagManager.addFlag(user, user, "aug_thorns", 20);
+	}
+	
+	@Override
+	public FlagSettings setFlagAfter() {
+		return flag;
 	}
 
 	@Override
@@ -41,8 +51,12 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	}
 
 	@Override
-	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
-		return FlagManager.hasFlag(user, "aug_thorns");
+	public boolean canUse(Player user, LivingEntity target) {
+		return !FlagManager.hasFlag(user, "aug_thorns");
+	}
+	
+	public double getThorns(Player user) {
+		return getDamageReturned(user);
 	}
 
 	public ItemStack getItem(Player user) {

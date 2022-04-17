@@ -44,11 +44,14 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
+			if (data.getCaster().getLevel() < 1) {
+				return true;
+			}
+			
 			double rand = this.rand.nextDouble();
-			double chance = this.basechance;
 
 			// Increases chance by boss level
-			chance += Math.min(0.25, 0 + (0.0025 * (data.getCaster().getLevel() - 1)));;
+			double chance = Math.min(0.5, this.basechance + (0.005 * (data.getCaster().getLevel() - 1)));
 			double moddedChance = chance;
 			
 			// Check if player is holding a drop charm
@@ -61,7 +64,7 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 				moddedChance = 1;
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
 			}
-			
+
 			ChestDropEvent e = new ChestDropEvent(p, chance, dropType);
 			Bukkit.getPluginManager().callEvent(e);
 			moddedChance = e.getChance();

@@ -291,7 +291,12 @@ public class GearConfig {
 					index = line.indexOf('-');
 				}
 				String num = line.substring(index);
-                int amt = Integer.parseInt(num.replaceAll("[^0-9-]", ""));
+                double dbleAmt = Double.parseDouble(num.replaceAll("[^0-9-.]", ""));
+				if (key.equals("hlr") || key.equals("rrg")) {
+					// Turn decimals to int
+					dbleAmt *= 10;
+				}
+				int amt = (int) dbleAmt;
                 
                 AttributeSet aset = attributes.get(key);
                 AttributeSet rset = rarities.get(rarity).attributes.get(key);
@@ -309,10 +314,10 @@ public class GearConfig {
                 	loreIter.remove();
                 	// If max = 0, attribute was deleted entirely
                 	if (max > 0) {
-        				if (attr.equals("hlr") || attr.equals("rrg")) {
+        				if (key.equals("hlr") || key.equals("rrg")) {
         					double amount = min + Gear.gen.nextInt(max - min + 1);
         					amount /= 10;
-        					line = aset.format(amount);
+        					loreIter.add(aset.format(amount));
         				}
         				else {
                         	loreIter.add(aset.format(min + Gear.gen.nextInt(max - min + 1)));

@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.*;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.FlagManager;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
@@ -35,6 +36,7 @@ import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
@@ -338,6 +340,8 @@ public class AugmentManager implements Listener {
 		double posmult = e.getPosmult();
 		double negmult = e.getNegmult();
 		double flat = e.getFlat();
+		double thorns = 0;
+		FlagSettings flag = null;
 		if (containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
@@ -359,7 +363,7 @@ public class AugmentManager implements Listener {
 				}
 			}
 		}
-		else if (containsType(e.getTypes(), "PHYSICAL_DEFENSE", "SKILL_DEFENSE")) {
+		else if (containsType(e.getTypes(), "DEFENSE", "SKILL_DEFENSE")) {
 			if (containsAugments(p, EventType.DAMAGE_TAKEN)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_TAKEN)) {
 					if (augment instanceof ModDamageTakenAugment) {
@@ -368,15 +372,25 @@ public class AugmentManager implements Listener {
 							aug.applyDamageTakenEffects(p, (LivingEntity) e.getTarget(), e);
 
 							double mult = aug.getDamageTakenMult(p);
-							if (mult > 0) {
+							// These are reversed intentionally for defense increase
+							if (mult < 0) {
 								posmult += mult;
 							}
-							else if (mult < 0) {
+							else if (mult > 0) {
 								negmult *= (1 + mult);
 							}
-							flat += aug.getDamageTakenFlat(p);
+							flat -= aug.getDamageTakenFlat(p);
+							flag = aug.setFlagAfter();
+							if (aug instanceof ThornsAugment) {
+								thorns += ((ThornsAugment) aug).getThorns(p);
+							}
 						}
 					}
+				}
+				// basically just for thorns
+				e.getTarget().damage(thorns);
+				if (flag != null) {
+					FlagManager.addFlag(p, e.getTarget(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}
@@ -629,6 +643,9 @@ public class AugmentManager implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestDrop(ChestDropEvent e) {
+		if (e.getDropType() == 2) {
+			return; // Boss chest token
+		}
 		Player p = e.getPlayer();
 		
 		// Check charms

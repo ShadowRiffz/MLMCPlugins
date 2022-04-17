@@ -86,6 +86,9 @@ public class ResearchAttributesInventory implements ResearchInventory {
 
 		e.setCancelled(true);
 		ItemStack item = e.getCurrentItem();
+		if (item == null || item.getType().isAir()) {
+			return;
+		}
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("attribute")) 
 			return;

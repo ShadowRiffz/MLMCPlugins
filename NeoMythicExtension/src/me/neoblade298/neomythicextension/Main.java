@@ -23,6 +23,7 @@ import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.*;
 import me.neoblade298.neomythicextension.triggers.*;
+import me.neoblade298.neomythicextension.triggers.StatusTrigger;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -86,6 +87,11 @@ public class Main extends JavaPlugin implements Listener {
 			StrongPlayerWithin condition = new StrongPlayerWithin(event.getConfig());
 			event.register(condition);
 		}
+
+		else if (event.getConditionName().equalsIgnoreCase("fightingboss")) {
+			FightingBossCondition condition = new FightingBossCondition(event.getConfig());
+			event.register(condition);
+		}
 	}
 
 	@EventHandler
@@ -105,13 +111,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
-		String name = event.getMechanicName();
-		if (name.equalsIgnoreCase("instancetp")) {
-			InstanceTpMechanic mechanic = new InstanceTpMechanic(event.getConfig());
-			event.register(mechanic);
-		}
 
-		else if (name.equalsIgnoreCase("nscore")) {
+		if (event.getMechanicName().equalsIgnoreCase("nscore")) {
 			ModScore mechanic = new ModScore(event.getConfig());
 			event.register(mechanic);
 		}

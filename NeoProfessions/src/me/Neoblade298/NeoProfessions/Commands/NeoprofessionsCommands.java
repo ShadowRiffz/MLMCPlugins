@@ -1,7 +1,13 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.logging.Level;
+=======
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Map.Entry;
+>>>>>>> master
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -251,6 +257,9 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					p.sendMessage("Debug set to " + main.debug);
 					return true;
 				}
+				else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
+					sender.sendMessage(main.viewingInventory.toString());
+				}
 				// /prof givepaint [player] R G B
 				else if (args[0].equalsIgnoreCase("1paint")) {
 					ProfessionsMethods.givePaint(Bukkit.getPlayer(args[1]), args[2], args[3], args[4]);
@@ -266,7 +275,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						ProfessionsMethods.artifactItem(p);
 					}
 				}
-				// /prof give [repair/augment/item] <aug/item> [level] [amount]
+				// /prof give/get [essence/oretype/repair/augment] <aug> [level] [amount]
 				else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 					int offset = 0;
 					String aug = null;
@@ -290,7 +299,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					if (args.length > 3 + offset) {
 						amt = Integer.parseInt(args[3 + offset]);
 					}
-		
+
 					if (type.equalsIgnoreCase("augment")) {
 						Augment augment = null;
 						if (AugmentManager.isDroptable(aug)) {

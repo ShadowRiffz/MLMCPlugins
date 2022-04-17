@@ -37,6 +37,9 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
+			if (data.getCaster().getLevel() <= 0) {
+				return true;
+			}
 			String mob = this.alias;
 			Player p = (Player) target.getBukkitEntity();
 			if (this.alias.equals("default")) {

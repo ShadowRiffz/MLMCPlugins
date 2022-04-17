@@ -570,10 +570,13 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 
 	public boolean isQuestGear(ItemStack item) {
+		if (item == null || !item.hasItemMeta()) {
+			return false;
+		}
 		if (new NBTItem(item).hasKey("gear")) {
 			return true;
 		}
-		return item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
+		return item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().get(0).contains("Tier") && !item.getType().equals(Material.PLAYER_HEAD);
 	}
 

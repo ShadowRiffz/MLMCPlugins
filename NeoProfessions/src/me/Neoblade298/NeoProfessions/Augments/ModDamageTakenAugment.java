@@ -4,6 +4,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public interface ModDamageTakenAugment {
 	public default void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
@@ -14,9 +15,21 @@ public interface ModDamageTakenAugment {
 		return 0;
 	}
 	
+	public default double getDamageReturnedFlat(LivingEntity user) {
+		return 0;
+	}
+	
 	public default double getDamageTakenMult(LivingEntity user) {
 		return 0;
 	}
 	
+<<<<<<< HEAD:NeoProfessions/src/me/Neoblade298/NeoProfessions/Augments/ModDamageTakenAugment.java
 	public abstract boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e);
+=======
+	public default FlagSettings setFlagAfter() {
+		return null;
+	}
+	
+	public abstract boolean canUse(Player user, LivingEntity target);
+>>>>>>> master:NeoProfessions/src/me/Neoblade298/NeoProfessions/Augments/DamageTaken/ModDamageTakenAugment.java
 }

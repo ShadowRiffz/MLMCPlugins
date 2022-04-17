@@ -1,5 +1,6 @@
 package me.neoblade298.neoplaceholders;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import me.neoblade298.neosettings.NeoSettings;
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 	private NeoSettings plugin;
 	private HashMap<String, Integer> health;
+	private static DecimalFormat df = new DecimalFormat("##.##");
 
 	public BossMultipliersPlaceholders(HashMap<String, Integer> health) {
 		this.health = health;
@@ -70,32 +72,47 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		int level = (int) plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
-			double scale = Math.min(2, 1 + (0.05 * (level - 1)));
-			return "" + scale;
+			if (level < 1) {
+				return "" + 0;
+			}
+			double scale = Math.min(2, 1 + (0.02 * (level - 1)));
+			return df.format(scale);
 		}
 		else if (id.equalsIgnoreCase("chest")) {
-			double scale = Math.min(50, 25 + (0.25 * (level - 1)));
-			return "" + scale;
+			if (level < 1) {
+				return "" + 0;
+			}
+			double scale = Math.min(50, 25 + (0.5 * (level - 1)));
+			return df.format(scale);
 		}
 		else if (id.equalsIgnoreCase("damage")) {
 
-			if (level <= 6) {
+			if (level <= 6 && level >= 1) {
 				double scale = 1 + (0.1 * (level - 1));
-				return "" + scale;
+				return df.format(scale);
 			}
-			else {
+			else if (level > 6) {
 				double scale = 1 + (0.3 * (level - 1));
-				return "" + scale;
+				return df.format(scale);
+			}
+			else if (level < 1) {
+				double scale = 1 + (0.01 * (level));
+				return df.format(scale);
 			}
 		}
 		else if (id.equalsIgnoreCase("health")) {
     		double oldHealth = this.health.get(boss);
     		double newHealth = oldHealth;
-			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
-			if (level > 6) {
-				newHealth += (level - 6) * 0.2 * oldHealth;
-			}
-			return "" + newHealth;
+    		if (level >= 1) {
+    			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
+    			if (level > 6) {
+    				newHealth += (level - 6) * 0.2 * oldHealth;
+    			}
+    		}
+    		else {
+    			newHealth *= 1 + (level  * 0.01);
+    		}
+			return df.format(newHealth);
 		}
 		return "Invalid placeholder";
 	}
