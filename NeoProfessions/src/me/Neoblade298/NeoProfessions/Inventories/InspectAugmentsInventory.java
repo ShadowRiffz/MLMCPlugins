@@ -16,11 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class InspectAugmentsInventory extends ProfessionInventory {
@@ -126,7 +126,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		String aug = nbti.getString("augment");
 		int level = nbti.getInteger("level");
 		int slot = nbti.getInteger("slot");
-		if (!CurrencyManager.hasEnough(p, "essence", level, ESSENCE_COST)) {
+		if (!CurrencyManager.hasEnough(p, level, ESSENCE_COST)) {
 			return;
 		}
 
@@ -135,8 +135,8 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 			Util.sendMessage(p, "&7Successfully unslotted item!");
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 			Professions.econ.withdrawPlayer(p, GOLD_COST);
-			CurrencyManager.subtract(p, "essence", level, ESSENCE_COST);
-			Augment augment = AugmentManager.augmentMap.get(aug).get(level);
+			CurrencyManager.subtract(p, level, ESSENCE_COST);
+			Augment augment = AugmentManager.getFromCache(aug, level);
 			HashMap<Integer, ItemStack> failed = p.getInventory().addItem(augment.getItem(p));
 			if (!failed.isEmpty()) {
 				for (Integer key : failed.keySet()) {

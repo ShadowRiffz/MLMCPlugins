@@ -49,11 +49,6 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	public Augment createNew(int level) {
 		return new ThornsAugment(level);
 	}
-
-	@Override
-	public boolean canUse(Player user, LivingEntity target) {
-		return !FlagManager.hasFlag(user, "aug_thorns");
-	}
 	
 	public double getThorns(Player user) {
 		return getDamageReturned(user);
@@ -73,6 +68,11 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	
 	private double getDamageReturned(Player p) {
 		return p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
+	}
+
+	@Override
+	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
+		return !FlagManager.hasFlag(user, "aug_thorns");
 	}
 
 }

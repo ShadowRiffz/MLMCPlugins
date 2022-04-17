@@ -22,7 +22,6 @@ import me.neoblade298.neomythicextension.conditions.*;
 import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.*;
-import me.neoblade298.neomythicextension.triggers.*;
 import me.neoblade298.neomythicextension.triggers.StatusTrigger;
 
 public class Main extends JavaPlugin implements Listener {
@@ -111,8 +110,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
+		String name = event.getMechanicName();
 
-		if (event.getMechanicName().equalsIgnoreCase("nscore")) {
+		if (name.equalsIgnoreCase("nscore")) {
 			ModScore mechanic = new ModScore(event.getConfig());
 			event.register(mechanic);
 		}

@@ -23,13 +23,9 @@ public interface ModDamageTakenAugment {
 		return 0;
 	}
 	
-<<<<<<< HEAD:NeoProfessions/src/me/Neoblade298/NeoProfessions/Augments/ModDamageTakenAugment.java
 	public abstract boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e);
-=======
+	
 	public default FlagSettings setFlagAfter() {
 		return null;
 	}
-	
-	public abstract boolean canUse(Player user, LivingEntity target);
->>>>>>> master:NeoProfessions/src/me/Neoblade298/NeoProfessions/Augments/DamageTaken/ModDamageTakenAugment.java
 }

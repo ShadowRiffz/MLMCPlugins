@@ -29,7 +29,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 	
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
-		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_ferocious", 60);
+		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_brawler", 60);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 	@Override
 	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		// damage taken
-		return FlagManager.hasFlag(user, "aug_ferocious");
+		return FlagManager.hasFlag(user, "aug_brawler");
 	}
 	
 	@Override

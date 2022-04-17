@@ -1,13 +1,7 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.logging.Level;
-=======
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Map.Entry;
->>>>>>> master
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -258,7 +252,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					return true;
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
-					sender.sendMessage(main.viewingInventory.toString());
+					sender.sendMessage(Professions.viewingInventory.toString());
 				}
 				// /prof givepaint [player] R G B
 				else if (args[0].equalsIgnoreCase("1paint")) {
