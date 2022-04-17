@@ -129,7 +129,7 @@ public class AugmentManager implements Listener {
 		
 		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
 		for (String set : relics.sets.keySet()) {
-			augmentMap.put(set, new BossRelic(set));
+			augmentMap.put(set.toLowerCase(), new BossRelic(set));
 		}
 		
 		// Droptables
@@ -775,7 +775,7 @@ public class AugmentManager implements Listener {
 	public static Augment getFromCache(String key, int level) {
 		// See if there's a set of levels for the aug, create if not
 		if (!augmentMap.containsKey(key.toLowerCase())) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load augment of key: " + key);
+			Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load augment of key: " + key.toLowerCase());
 			return null;
 		}
 		return getFromCache(augmentMap.get(key.toLowerCase()), level);

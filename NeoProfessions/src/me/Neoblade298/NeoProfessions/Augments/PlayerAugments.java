@@ -52,14 +52,16 @@ public class PlayerAugments {
 					Augment aug = AugmentManager.getFromCache(augmentName, nbti.getInteger("slot" + i + "Level"));
 					
 					// Add augment to hashmap
-					for (EventType etype : aug.getEventTypes()) {
-						if (augments.containsKey(etype)) {
-							augments.get(etype).add(aug);
-						}
-						else {
-							ArrayList<Augment> list = new ArrayList<Augment>();
-							list.add(aug);
-							augments.put(etype, list);
+					if (aug.getEventTypes() != null) {
+						for (EventType etype : aug.getEventTypes()) {
+							if (augments.containsKey(etype)) {
+								augments.get(etype).add(aug);
+							}
+							else {
+								ArrayList<Augment> list = new ArrayList<Augment>();
+								list.add(aug);
+								augments.put(etype, list);
+							}
 						}
 					}
 					
