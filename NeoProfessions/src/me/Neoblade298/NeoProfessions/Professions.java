@@ -90,6 +90,7 @@ public class Professions extends JavaPlugin implements Listener {
 			io = new IOListeners(this);
 			gm = new GardenManager(this);
 			getServer().getPluginManager().registerEvents(io, this);
+			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
 			IOListeners.addComponent(cm);

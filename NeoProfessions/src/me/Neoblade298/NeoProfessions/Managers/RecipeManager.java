@@ -12,10 +12,20 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
@@ -32,9 +42,10 @@ import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
 import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
+import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
-public class RecipeManager implements IOComponent {
+public class RecipeManager implements IOComponent, Listener {
 	Professions main;
 	private static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
 	private static HashMap<String, List<String>> recipeLists = new HashMap<String, List<String>>();
@@ -250,5 +261,32 @@ public class RecipeManager implements IOComponent {
 	
 	public static void giveKnowledge(UUID uuid, String key) {
 		knowledge.get(uuid).add(key);
+	}
+	
+	@EventHandler
+	public void onVoucherClaim(PlayerInteractEvent e) {
+		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+		if (!e.getHand().equals(EquipmentSlot.HAND)) {
+			return;
+		}
+
+		ItemStack item = e.getItem();
+		if (item == null || !item.getType().equals(Material.PAPER)) {
+			return;
+		}
+		ItemStack clone = e.getItem().clone();
+
+		Player p = e.getPlayer();
+		clone.setAmount(1);
+		NBTItem nbti = new NBTItem(clone);
+		if (nbti.hasKey("knowledge")) {
+			String key = nbti.getString("knowledge");
+			String display = nbti.getString("knowledge-display");
+			p.getInventory().removeItem(clone);
+			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+			p.sendMessage("§4[§c§lMLMC§4] §7You acquired knowledge of §f" + display + "§7!");
+		}
 	}
 }

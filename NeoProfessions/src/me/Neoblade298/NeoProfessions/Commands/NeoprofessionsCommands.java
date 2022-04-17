@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.Neoblade298.NeoProfessions.Professions;
@@ -37,6 +39,11 @@ import me.neoblade298.neogear.listeners.DurabilityListener;
 public class NeoprofessionsCommands implements CommandExecutor {
 
 	Professions main;
+	private static ArrayList<String> voucherLore = new ArrayList<String>();
+	
+	static {
+		voucherLore.add("§7§oRight click to claim!");
+	}
 
 	public NeoprofessionsCommands(Professions main) {
 		this.main = main;
@@ -165,13 +172,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			if (args.length == 0) {
 				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
+				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
 				sender.sendMessage("§7- §4/prof debug");
-				sender.sendMessage("§7- §4/prof start [minigame] [playername]");
-				sender.sendMessage("§7- §4/prof repair [playername]");
-				sender.sendMessage("§7- §4/prof checkaugments [playername]");
+				// sender.sendMessage("§7- §4/prof start [minigame] [playername]");
+				// sender.sendMessage("§7- §4/prof repair [playername]");
+				// sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof createslot [playername]");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
-				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
+				// sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
 				return true;
 			}
 			else {
@@ -310,6 +318,21 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " " + StorageManager.getItem(id).getDisplay() +
 								" to " + p.getName() + "!");
 					}
+					return true;
+				}
+				// /prof vouch knowledge [key] [display]
+				else if (args[0].equalsIgnoreCase("vouch") && args[1].equalsIgnoreCase("knowledge") && args.length == 4) {
+					String key = args[2];
+					String display = args[3].replaceAll("_", " ");
+					ItemStack item = new ItemStack(Material.PAPER);
+					ItemMeta meta = item.getItemMeta();
+					meta.setDisplayName("§7Recipe: " + display);
+					meta.setLore(voucherLore);
+					item.setItemMeta(meta);
+					NBTItem nbti = new NBTItem(item);
+					nbti.setString("knowledge", key);
+					nbti.setString("knowledge-display", display);
+					p.getInventory().addItem(nbti.getItem());
 					return true;
 				}
 			}
