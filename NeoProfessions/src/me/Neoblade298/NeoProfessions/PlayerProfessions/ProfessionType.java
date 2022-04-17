@@ -1,9 +1,9 @@
 package me.Neoblade298.NeoProfessions.PlayerProfessions;
 
 public enum ProfessionType {
-	STONECUTTER("Stonecutter"),
-	LOGGER("Logger"),
 	HARVESTER("Harvester"),
+	LOGGER("Logger"),
+	STONECUTTER("Stonecutter"),
 	CRAFTER("Crafter");
 	
 	private final String display;

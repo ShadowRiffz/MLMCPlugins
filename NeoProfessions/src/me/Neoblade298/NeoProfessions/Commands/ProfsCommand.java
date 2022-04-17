@@ -35,14 +35,10 @@ public class ProfsCommand implements CommandExecutor {
 	
 	private void sendProfs(Player viewed, CommandSender viewer) {
 		HashMap<ProfessionType, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
-		Profession harv = account.get(ProfessionType.HARVESTER);
-		Profession stone = account.get(ProfessionType.STONECUTTER);
-		Profession craft = account.get(ProfessionType.CRAFTER);
-		Profession log = account.get(ProfessionType.LOGGER);
-		String line = "&7-- " + getProfessionBlock(harv) + " " + getProfessionBlock(log) + "&7 --";
-		viewer.sendMessage(line.replaceAll("&", "§"));
-		line = "&7-- " + getProfessionBlock(stone) + " " + getProfessionBlock(craft) + "&7 --";
-		viewer.sendMessage(line.replaceAll("&", "§"));
+		for (ProfessionType prof : ProfessionType.values()) {
+			String line = "&7-- " + getProfessionBlock(account.get(prof)) + "&7 --";
+			viewer.sendMessage(line.replaceAll("&", "§"));
+		}
 	}
 	
 	private String getProfessionBlock(Profession prof) {
