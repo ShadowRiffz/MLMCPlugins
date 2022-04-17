@@ -47,8 +47,6 @@ public class EssenceGiveCommand implements CommandExecutor {
 			
 			Util.sendMessage(sender,
 					"&7You gave &c" + recipient.getName() + " &e" + amount + " &6Lv " + level + " &7Essence");
-			Util.sendMessage(recipient,
-					"&c" + sender.getName() + "&7 gave you &e" + amount + " &6Lv " + level + " &7Essence");
 			CurrencyManager.add(recipient, level, amount);
 			return true;
 		}

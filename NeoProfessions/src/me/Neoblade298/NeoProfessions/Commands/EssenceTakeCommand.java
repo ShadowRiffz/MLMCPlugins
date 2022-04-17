@@ -47,8 +47,6 @@ public class EssenceTakeCommand implements CommandExecutor {
 			
 			Util.sendMessage(sender,
 					"&7You took &e" + amount + " &6Lv " + level + " &7Essence from &c" + recipient.getName());
-			Util.sendMessage(recipient,
-					"&c" + sender.getName() + "&7 took &e" + amount + " &6Lv " + level + " &7Essence from you");
 			CurrencyManager.subtract(recipient, level, amount);
 			return true;
 		}
