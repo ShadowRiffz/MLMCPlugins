@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -171,8 +172,8 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 			else {
 				YamlConfiguration gearCfg = YamlConfiguration.loadConfiguration(file);
-				String name = gearCfg.getString("name");
-				String display = gearCfg.getString("display");
+				String id = gearCfg.getString("id");
+				String type = gearCfg.getString("type");
 				String title = gearCfg.getString("title");
 				Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
 				double price = gearCfg.getDouble("price");
@@ -234,7 +235,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, name, display, title, material, prefixes, displayNames,
+					GearConfig gearConf = new GearConfig(this, id, type, title, material, prefixes, displayNames,
 							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes,
 							rarities, slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
 
@@ -247,7 +248,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 					}
 					gearLvli.put(i, gearConf);
 				}
-				settings.put(name, gearLvli);
+				if (settings.containsKey(id)) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Failed to load file " + file.getName() + ", gear id already exists: " + id);
+				}
+				else {
+					settings.put(id, gearLvli);
+				}
 			}
 		}
 	}

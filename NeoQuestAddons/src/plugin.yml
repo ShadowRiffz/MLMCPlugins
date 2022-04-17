@@ -12,3 +12,6 @@ commands:
    viewquest:
       description: Views the objectives of the quest someone's on
       usage: /viewquest [player]
+   refundquests:
+      description: Checks gold cost of resetting all quests
+      usage: /refundquests [player]

@@ -21,7 +21,7 @@ public class ManaRunnable extends BukkitRunnable {
 	
 	@Override
 	public void run() {
-		if (!p.isDead() && data != null) {
+		if (p != null && !p.isDead() && data != null) {
 			this.reps -= 1;
 			data.giveMana(mana);
 			if (this.reps <= 0) {

@@ -19,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neogear.Gear;
 import net.md_5.bungee.api.ChatColor;
 
@@ -26,7 +28,7 @@ public class GearConfig {
 	private Gear main;
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	public static final String DURAPREFIX = "§7Durability ";
-	public String name, display, title;
+	public String id, type, title;
 	public Material material;
 	public ArrayList<String> prefixes, displayNames;
 	public ArrayList<String> lore;
@@ -41,7 +43,7 @@ public class GearConfig {
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
 	
-	public GearConfig(Gear main, String name, String display, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
+	public GearConfig(Gear main, String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
 			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
 			int startingSlotsBase, int startingSlotsRange, double price, int version, ArrayList<String> lore) {
@@ -55,14 +57,14 @@ public class GearConfig {
 		}
 		
 		this.main = main;
-		this.name = name;
+		this.id = id;
 		if (title == null) {
-			this.title = "§7Standard " + display;
+			this.title = "§7Standard " + type;
 		}
 		else {
 			this.title = title;
 		}
-		this.display = display;
+		this.type = type;
 		this.material = material;
 		this.prefixes = prefixes;
 		this.displayNames = displayNames;
@@ -171,7 +173,7 @@ public class GearConfig {
 		}
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
-		lore.add("§7Type: " + this.display);
+		lore.add("§7Type: " + this.type);
 		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
 		lore.add("§7Level: " + level);
 		lore.add("§7Max Slots: " + maxSlots);
@@ -220,11 +222,11 @@ public class GearConfig {
 		if (lore.size() >= 6) { lore.add("§8§m-----"); }
 		for (String augment : requiredAugments) {
 			currentSlot++;
-			String args[] = augment.split(":");
-			lore.add(translateHexCodes(args[0]));
+			Augment aug = AugmentManager.getFromCache(augment.toLowerCase(), level);
+			lore.add(aug.getLine());
 			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
-			nbtIntegers.put("slot" + currentSlot + "Level", Integer.parseInt(args[2]));
-			nbtStrings.put("slot" + currentSlot + "Augment", args[1]);
+			nbtIntegers.put("slot" + currentSlot + "Level", level);
+			nbtStrings.put("slot" + currentSlot + "Augment", aug.getName());
 		}
 		for (int i = 0; i < numSlots; i++) {
 			currentSlot++;
@@ -240,12 +242,12 @@ public class GearConfig {
 		NBTItem nbti = new NBTItem(item);
 		double price = this.price * main.rarities.get(rarity).priceModifier;
 		nbti.setDouble("value", price);
-		nbti.setString("gear", name);
+		nbti.setString("gear", id);
 		nbti.setInteger("version", version);
-		nbti.setInteger("slotsMax", maxSlots);
+		nbti.setInteger("slotsMax", Math.max(currentSlot, maxSlots));
 		nbti.setInteger("level", level);
 		nbti.setString("rarity", rarity.toLowerCase());
-		nbti.setInteger("slotsCreated", numSlots);
+		nbti.setInteger("slotsCreated", currentSlot);
 		for (String key : nbtIntegers.keySet()) {
 			nbti.setInteger(key, nbtIntegers.get(key));
 		}
@@ -394,5 +396,9 @@ public class GearConfig {
 		}
 
 		return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
+	}
+	
+	public ArrayList<String> getRequiredAugments() {
+		return requiredAugments;
 	}
 }

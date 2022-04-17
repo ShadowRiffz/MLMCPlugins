@@ -1,13 +1,16 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
+import java.util.logging.Level;
+=======
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
+>>>>>>> master
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,45 +22,37 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
+
 import me.Neoblade298.NeoProfessions.Inventories.InspectAugmentsInventory;
+import me.Neoblade298.NeoProfessions.Inventories.RecipeSelectInventory;
+import me.Neoblade298.NeoProfessions.Inventories.RecipeView;
 import me.Neoblade298.NeoProfessions.Inventories.RepairInventory;
 import me.Neoblade298.NeoProfessions.Inventories.SellInventory;
-import me.Neoblade298.NeoProfessions.Legacy.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.CommonItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.DrinksRecipeItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.IngredientRecipeItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.MasonItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Inventories.StorageView;
+import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
+import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class NeoprofessionsCommands implements CommandExecutor {
 
-	private static final Random gen = new Random();
 	Professions main;
-	Util util;
-	CommonItems common;
-	BlacksmithItems bItems;
-	StonecutterItems sItems;
-	MasonItems mItems;
-	IngredientRecipeItems ingr;
-	DrinksRecipeItems drink;
+	private static ArrayList<String> voucherLore = new ArrayList<String>();
+	
+	static {
+		voucherLore.add("§7§oRight click to claim!");
+	}
 
 	public NeoprofessionsCommands(Professions main) {
 		this.main = main;
-		util = new Util();
-		common = new CommonItems();
-		bItems = new BlacksmithItems();
-		sItems = new StonecutterItems();
-		mItems = new MasonItems();
-		ingr = new IngredientRecipeItems();
 	}
 
 	@Override
@@ -69,15 +64,10 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
+			// /prof storage [min] [max]
+			// /prof recipes [menu name] [recipe list]
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
-			sender.sendMessage("§7- §c/prof update §7- Updates augment lore to match latest version");
-			sender.sendMessage("§7- §c/prof pay [player] [essence/oretype] [level] [amount]");
-			sender.sendMessage(
-					"§7- §c/prof liquidate [essence/oretype] [level] [amount] §7- Virtualizes all ore and essence in inventory");
-			sender.sendMessage(
-					"§7- §c/prof solidify [essence/oretype] [level] [amount] §7- Turns ore/essence into an item in inventory");
-			sender.sendMessage("§7- §c/prof balance <player> [essence/oretype] [level]");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemStack main = p.getInventory().getItemInMainHand();
@@ -93,7 +83,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int lv = Integer.parseInt(lvLine.substring(lvLine.indexOf("Lv ") + 3));
 						int amt = main.getAmount();
 						p.getInventory().removeItem(main);
-						ItemStack converted = bItems.getRepairItem(lv);
+						ItemStack converted = BlacksmithItems.getRepairItem(lv);
 						converted.setAmount(amt);
 						p.getInventory().addItem(converted);
 						Util.sendMessage(p, "&7Successfully converted item!");
@@ -119,7 +109,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						int lv = main.getEnchantmentLevel(Enchantment.DURABILITY);
 						int amt = main.getAmount();
 						p.getInventory().removeItem(main);
-						ItemStack converted = AugmentManager.augmentMap.get(type).get(lv).getItem(p);
+						ItemStack converted = AugmentManager.getFromCache(type, lv).getItem(p);
 						converted.setAmount(amt);
 						p.getInventory().addItem(converted);
 						Util.sendMessage(p, "&7Successfully converted item!");
@@ -164,6 +154,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			}
 			return true;
 		}
+		else if (args[0].equalsIgnoreCase("storage")) {
+			new StorageView(p, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("recipes")) {
+			new RecipeView(p, args[1].replaceAll("_", " "), RecipeManager.getRecipeList(args[2]), RecipeSelectInventory.class.getName());
+			return true;
+		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("inspect")) {
 			ItemStack item = p.getInventory().getItemInMainHand();
 			if (item != null && !item.getType().isAir() && item.hasItemMeta()) {
@@ -175,201 +173,19 @@ public class NeoprofessionsCommands implements CommandExecutor {
 			Util.sendMessage(p, "&cCould not inspect this item!");
 			return true;
 		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
-			ItemStack item = p.getInventory().getItemInMainHand();
-			if (item != null && !item.getType().isAir() && item.hasItemMeta()) {
-				NBTItem nbti = new NBTItem(item);
-				if(nbti.hasKey("augment")) {
-					ItemMeta meta = item.getItemMeta();
-					Augment aug = AugmentManager.augmentMap.get(nbti.getString("augment")).get(nbti.getInteger("level"));
-					meta.setLore(aug.getItem(p).getItemMeta().getLore());
-					item.setItemMeta(meta);
-					return true;
-				}
-			}
-			Util.sendMessage(p, "&cCould not update this, are you sure it's an augment?");
-			return true;
-		}
-		else if (args.length == 5 && args[0].equalsIgnoreCase("pay")) {
-			if (Bukkit.getPlayer(args[1]) == null) {
-				Util.sendMessage(p, "&cPlayer must be online!");
-				return true;
-			}
-			if (!Professions.cm.validType(args[2])) {
-				Util.sendMessage(p, "&cInvalid type!");
-				return true;
-			}
-			int level = Integer.parseInt(args[3]);
-			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(p, "&cInvalid level!");
-				return true;
-			}
-			int amount = Integer.parseInt(args[4]);
-			if (amount <= 0 || amount >= 99999 || !CurrencyManager.hasEnough(p, args[2], level, amount)) {
-				Util.sendMessage(p, "&cInvalid amount!");
-				return true;
-			}
-			Player recipient = Bukkit.getPlayer(args[1]);
-			CurrencyManager.add(recipient, args[2], level, amount);
-			CurrencyManager.subtract(p, args[2], level, amount);
-			Util.sendMessage(p,
-					"&7You paid &e" + recipient.getName() + " " + amount + " Lv " + level + " " + args[2]);
-			Util.sendMessage(recipient,
-					"&e" + p.getName() + "&7 has paid you &e" + amount + " Lv " + level + " " + args[2]);
-			return true;
-		}
-		else if (args.length == 4 && args[0].equalsIgnoreCase("balance")) {
-			if (Bukkit.getPlayer(args[1]) == null) {
-				Util.sendMessage(p, "&cPlayer must be online!");
-				return true;
-			}
-			if (!Professions.cm.validType(args[2])) {
-				Util.sendMessage(p, "&cInvalid type!");
-				return true;
-			}
-			int level = Integer.parseInt(args[3]);
-			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(p, "&cInvalid level!");
-				return true;
-			}
-			Util.sendMessage(p, "&7Balance: &e" + CurrencyManager.get(Bukkit.getPlayer(args[1]), args[2], level));
-			return true;
-		}
-		else if (args.length == 3 && args[0].equalsIgnoreCase("balance")) {
-			if (!Professions.cm.validType(args[1])) {
-				Util.sendMessage(p, "&cInvalid type!");
-				return true;
-			}
-			int level = Integer.parseInt(args[2]);
-			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(p, "&cInvalid level!");
-				return true;
-			}
-			Util.sendMessage(p, "&7Balance: &e" + CurrencyManager.get(p, args[1], level));
-			return true;
-		}
-
-		// /prof solidify [type] [level] [amount]
-		else if (args.length == 4 && args[0].equalsIgnoreCase("solidify")) {
-			if (p.getGameMode().equals(GameMode.CREATIVE)) {
-				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
-				return true;
-			}
-			if (!Professions.cm.containsKey(args[1])) {
-				Util.sendMessage(p, "&cInvalid essence or ore type!");
-				return true;
-			}
-			if (!StringUtils.isNumeric(args[2]) || !StringUtils.isNumeric(args[3])) {
-				Util.sendMessage(p, "&cLevel and amount should be a number!");
-				return true;
-			}
-			
-			int level = Integer.parseInt(args[2]);
-			int amount = Integer.parseInt(args[3]);
-			if (level % 5 != 0 || level <= 0 || level > 60) {
-				Util.sendMessage(p, "&cInvalid level!");
-				return true;
-			}
-			if (!CurrencyManager.hasEnough(p, args[1], level, amount)) {
-				Util.sendMessage(p, "&cYou don't have enough to solidify that amount!");
-				return true;
-			}
-			
-			HashMap<Integer, ItemStack> result = null;
-			if (args[1].equalsIgnoreCase("essence")) {
-				result = p.getInventory().addItem(util.setAmount(common.getEssence(level, false), amount));
-			}
-			else {
-				result = p.getInventory().addItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
-			}
-			if (!result.isEmpty()) {
-				int notAdded = 0;
-				for (Entry<Integer, ItemStack> item : result.entrySet()) {
-					notAdded += item.getValue().getAmount();
-				}
-				CurrencyManager.subtract(p, args[1], level, amount - notAdded);
-				Util.sendMessage(p, "&7Solidified &e" + (amount - notAdded) + " &7" + args[1] + "!");
-				return true;
-			}
-			else {
-				CurrencyManager.subtract(p, args[1], level, amount);
-				Util.sendMessage(p, "&7Solidified &e" + amount + " &7" + args[1] + "!");
-				return true;
-			}
-		}
-		// /prof liquidate [type] [level] [amount]
-		else if (args.length == 4 && args[0].equalsIgnoreCase("liquidate")) {
-			if (p.getGameMode().equals(GameMode.CREATIVE)) {
-				Util.sendMessage(p, "&cCannot be in creative mode for this command!");
-				return true;
-			}
-			if (!Professions.cm.containsKey(args[1])) {
-				Util.sendMessage(p, "&cInvalid essence or ore type!");
-				return true;
-			}
-			if (!StringUtils.isNumeric(args[2]) || !StringUtils.isNumeric(args[3])) {
-				Util.sendMessage(p, "&cLevel and amount should be a number!");
-				return true;
-			}
-			
-			int level = Integer.parseInt(args[2]);
-			int amount = Integer.parseInt(args[3]);
-			if (level % 5 != 0 || level <= 0 || level > 60) {
-				Util.sendMessage(p, "&cInvalid level!");
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(common.getEssence(level, false), amount)) {
-				HashMap<Integer, ItemStack> result = p.getInventory()
-						.removeItem(util.setAmount(common.getEssence(level, false), amount));
-				if (!result.isEmpty()) {
-					int notAdded = 0;
-					for (Entry<Integer, ItemStack> item : result.entrySet()) {
-						notAdded += item.getValue().getAmount();
-					}
-					CurrencyManager.add(p, args[1], level, amount - notAdded);
-					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-					return true;
-				}
-				else {
-					CurrencyManager.add(p, args[1], level, amount);
-					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7essence!");
-					return true;
-				}
-			}
-			else if (!args[1].equalsIgnoreCase("essence") && p.getInventory().containsAtLeast(sItems.getOreSolidify(args[1], level), amount)) {
-				HashMap<Integer, ItemStack> result = p.getInventory()
-						.removeItem(util.setAmount(sItems.getOreSolidify(args[1], level), amount));
-				if (!result.isEmpty()) {
-					int notAdded = 0;
-					for (Entry<Integer, ItemStack> item : result.entrySet()) {
-						notAdded += item.getValue().getAmount();
-					}
-					CurrencyManager.add(p, args[1], level, amount - notAdded);
-					Util.sendMessage(p, "&7Liquidated &e" + (amount - notAdded) + " &7essence!");
-					return true;
-				}
-				else {
-					CurrencyManager.add(p, args[1], level, amount);
-					Util.sendMessage(p, "&7Liquidated &e" + amount + " &7" + args[1] + "!");
-					return true;
-				}
-			}
-			else {
-				Util.sendMessage(p, "&cYou don't have enough to liquidate that amount!");
-				return true;
-			}
-		}
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/prof sell [playername]");
-				sender.sendMessage("§7- §4/prof repair [playername]");
-				sender.sendMessage("§7- §4/prof checkaugments [playername]");
+				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
+				sender.sendMessage("§7- §4/prof give item [id] [amount]");
+				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
+				sender.sendMessage("§7- §4/prof debug");
+				// sender.sendMessage("§7- §4/prof start [minigame] [playername]");
+				// sender.sendMessage("§7- §4/prof repair [playername]");
+				// sender.sendMessage("§7- §4/prof checkaugments [playername]");
 				sender.sendMessage("§7- §4/prof createslot [playername]");
-				sender.sendMessage("§7- §4/prof {reset/sober/repair} [playername]");
-				sender.sendMessage("§7- §4/prof give <p> {essence/ore/repair/augment} <aug> [level] <amount>");
 				sender.sendMessage("§7- §4/prof artifact <playername>");
-				sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
+				// sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
 				return true;
 			}
 			else {
@@ -382,8 +198,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("repair")) {
-					
+				else if (args[0].equalsIgnoreCase("repair")) {
 					if (args.length == 1) {
 						DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand());
 					}
@@ -403,7 +218,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("createslot")) {
+				else if (args[0].equalsIgnoreCase("createslot")) {
 					if (args.length == 1) {
 						ProfessionsMethods.createSlot(p, p.getInventory().getItemInMainHand());
 						p.updateInventory();
@@ -424,16 +239,20 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("checkaugments")) {
+				else if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
-						sender.sendMessage("" + AugmentManager.playerAugments.get((Player) sender));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments((Player) sender));
 					}
 					else {
-						sender.sendMessage("" + AugmentManager.playerAugments.get(Bukkit.getPlayer(args[1])));
+						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments(Bukkit.getPlayer(args[1])));
 					}
 					return true;
 				}
-				else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
+				else if (args[0].equalsIgnoreCase("start")) {
+					MinigameManager.startMinigame(Bukkit.getPlayer(args[2]), Integer.parseInt(args[1]));
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("debug")) {
 					main.debug = !main.debug;
 					p.sendMessage("Debug set to " + main.debug);
 					return true;
@@ -442,7 +261,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 					sender.sendMessage(main.viewingInventory.toString());
 				}
 				// /prof givepaint [player] R G B
-				else if (args[0].equalsIgnoreCase("givepaint")) {
+				else if (args[0].equalsIgnoreCase("1paint")) {
 					ProfessionsMethods.givePaint(Bukkit.getPlayer(args[1]), args[2], args[3], args[4]);
 					return true;
 				}
@@ -466,40 +285,31 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						offset++;
 					}
 					String type = args[1 + offset];
-					// Is an augment
-					if (!StringUtils.isNumeric(args[2 + offset])) {
-						aug = args[2 + offset].replaceAll("_", " ");
-						offset++;
+					// Augment-specific parsing
+					if (args[1 + offset].equalsIgnoreCase("augment")) {
+						if (!StringUtils.isNumeric(args[2 + offset])) {
+							aug = args[2 + offset].replaceAll("_", " ");
+							offset++;
+						}
 					}
+
 					int lv = Integer.parseInt(args[2 + offset]);
+					int id = lv;
 					lv -= lv % 5; // Round to nearest 5
 					if (args.length > 3 + offset) {
 						amt = Integer.parseInt(args[3 + offset]);
 					}
-					
-					if (type.equalsIgnoreCase("randomore")) {
-						String otype = CurrencyManager.types[gen.nextInt(7) + 1];
-						CurrencyManager.add(p, otype, lv, amt);
-						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " " + type + " ore to " + p.getName() + "!");
-						return true;
-					}
-					else if (type.equalsIgnoreCase("essence")) {
-						CurrencyManager.add(p, type, lv, amt);
-						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " essence to " + p.getName() + "!");
-						return true;
-					}
-					else if (type.equalsIgnoreCase("augment")) {
+
+					if (type.equalsIgnoreCase("augment")) {
 						Augment augment = null;
-						if (AugmentManager.droptables.containsKey(aug)) {
-							ArrayList<String> table = AugmentManager.droptables.get(aug);
-							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
+						if (AugmentManager.isDroptable(aug)) {
+							augment = AugmentManager.getViaDroptable(aug, lv);
 						}
-						else if (AugmentManager.augmentMap.containsKey(aug)) {
-							augment = AugmentManager.augmentMap.get(aug).get(lv);
+						else if (AugmentManager.hasAugment(aug.toLowerCase())) {
+							augment = AugmentManager.getFromCache(aug.toLowerCase(), lv);
 						}
 						else {
-							ArrayList<String> table = AugmentManager.droptables.get("default");
-							augment = AugmentManager.augmentMap.get(table.get(gen.nextInt(table.size()))).get(lv);
+							augment = AugmentManager.getViaDroptable("default", lv);
 						}
 						ItemStack item = augment.getItem(p);
 						item.setAmount(amt);
@@ -507,11 +317,31 @@ public class NeoprofessionsCommands implements CommandExecutor {
 						Util.sendMessage(sender, "&7Successfully gave " + augment.getLine() + " §7to " + p.getName() + "!");
 					}
 					else if (type.equalsIgnoreCase("repair")) {
-						ItemStack item = bItems.getRepairItem(lv);
+						ItemStack item = BlacksmithItems.getRepairItem(lv);
 						item.setAmount(amt);
 						p.getInventory().addItem(item);
 						Util.sendMessage(sender, "&7Successfully gave " + amt + " Lv " + lv + " repairs to " + p.getName() + "!");
 					}
+					else if (type.equalsIgnoreCase("item")) {
+						StorageManager.givePlayer(p, id, amt);
+						Util.sendMessage(sender, "&7Successfully gave " + amt + " " + StorageManager.getItem(id).getDisplay() +
+								" to " + p.getName() + "!");
+					}
+					return true;
+				}
+				// /prof vouch knowledge [key] [display]
+				else if (args[0].equalsIgnoreCase("vouch") && args[1].equalsIgnoreCase("knowledge") && args.length == 4) {
+					String key = args[2];
+					String display = args[3].replaceAll("_", " ");
+					ItemStack item = new ItemStack(Material.PAPER);
+					ItemMeta meta = item.getItemMeta();
+					meta.setDisplayName("§7Recipe: " + display);
+					meta.setLore(voucherLore);
+					item.setItemMeta(meta);
+					NBTItem nbti = new NBTItem(item);
+					nbti.setString("knowledge", key);
+					nbti.setString("knowledge-display", display);
+					p.getInventory().addItem(nbti.getItem());
 					return true;
 				}
 			}

@@ -21,6 +21,7 @@ public class QuestAddons extends JavaPlugin implements org.bukkit.event.Listener
 		
 	    this.getCommand("quitquest").setExecutor(new CmdQuitQuest(this));
 	    this.getCommand("viewquest").setExecutor(new CmdViewQuest(this));
+	    this.getCommand("refundquests").setExecutor(new CmdRefundQuests(this));
 	    quests = (Quests) Bukkit.getPluginManager().getPlugin("Quests");
 	   //  gps = new GPSAPI(this);
 	}

@@ -23,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
 
@@ -136,11 +135,6 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		if (this.playersets.containsKey(uuid)) {
 			if (checkRelic(p, e.getBrokenItem())) this.playersets.get(uuid).decrementNum();
 		}
-	}
-	
-	@EventHandler
-	public void onSQLLoad(PlayerLoadCompleteEvent e) {
-		recalculateSetEffect(e.getPlayer());
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

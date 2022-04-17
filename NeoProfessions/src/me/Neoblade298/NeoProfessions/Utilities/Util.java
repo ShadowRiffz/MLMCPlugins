@@ -13,6 +13,9 @@ public class Util {
 		String message = "&4[&c&lMLMC&4] " + m;
 		p.sendMessage(message.replaceAll("&", "§"));
 	}
+	public static void sendMessageNoPrefix(CommandSender p, String m) {
+		p.sendMessage(m.replaceAll("&", "§"));
+	}
 
 	public ItemStack setAmount(ItemStack item, int amount) {
 		item.setAmount(amount);

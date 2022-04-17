@@ -2,7 +2,6 @@ package me.Neoblade298.NeoProfessions.Augments;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -82,24 +81,4 @@ public abstract class Augment {
 	}
 	
 	public abstract Augment createNew(int level);
-
-	public Augment get(int level) {
-		HashMap<Integer, Augment> levelCache;
-		if (AugmentManager.augmentCache.containsKey(this.name)) {
-			levelCache = AugmentManager.augmentCache.get(this.name);
-		}
-		else {
-			levelCache = new HashMap<Integer, Augment>();
-			AugmentManager.augmentCache.put(this.name, levelCache);
-		}
-		
-		if (levelCache.containsKey(level)) {
-			return levelCache.get(level);
-		}
-		else {
-			Augment aug = createNew(level);
-			levelCache.put(level, aug);
-			return aug;
-		}
-	}
 }

@@ -518,6 +518,7 @@ public class Main extends JavaPlugin implements Listener {
 								returnToMain(fighter);
 								fighters.remove();
 							}
+							fighters.remove();
 						}
 					}
 				};

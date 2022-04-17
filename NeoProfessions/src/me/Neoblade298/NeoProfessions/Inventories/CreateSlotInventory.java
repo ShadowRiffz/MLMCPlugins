@@ -16,11 +16,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class CreateSlotInventory implements ProfessionInventory {
+public class CreateSlotInventory extends ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
@@ -69,9 +70,9 @@ public class CreateSlotInventory implements ProfessionInventory {
 		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
 				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
-		main.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {
@@ -96,7 +97,7 @@ public class CreateSlotInventory implements ProfessionInventory {
 				p.closeInventory();
 				return;
 			}
-			else if (!CurrencyManager.hasEnough(p, "essence", level, essenceCost)) {
+			else if (!CurrencyManager.hasEnough(p, level, essenceCost)) {
 				Util.sendMessage(p, "&cYou don't have enough essence!");
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
 				p.closeInventory();
@@ -109,7 +110,7 @@ public class CreateSlotInventory implements ProfessionInventory {
 				return;
 			}
 			Professions.econ.withdrawPlayer(p, goldCost);
-			CurrencyManager.add(p, "essence", level, -essenceCost);
+			CurrencyManager.add(p, level, -essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}

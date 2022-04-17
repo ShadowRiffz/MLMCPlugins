@@ -16,10 +16,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
-public class RepairInventory implements ProfessionInventory {
+public class RepairInventory extends ProfessionInventory {
 	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
@@ -62,9 +63,9 @@ public class RepairInventory implements ProfessionInventory {
 		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
 				"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
-		main.viewingInventory.put(p, this);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {
@@ -89,7 +90,7 @@ public class RepairInventory implements ProfessionInventory {
 				p.closeInventory();
 				return;
 			}
-			else if (!CurrencyManager.hasEnough(p, "essence", level, essenceCost)) {
+			else if (!CurrencyManager.hasEnough(p, level, essenceCost)) {
 				Util.sendMessage(p, "&cYou don't have enough essence!");
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
 				p.closeInventory();
@@ -98,7 +99,7 @@ public class RepairInventory implements ProfessionInventory {
 			
 			DurabilityListener.fullRepairItem(p, item);
 			Professions.econ.withdrawPlayer(p, goldCost.get(level));
-			CurrencyManager.subtract(p, "essence", level, essenceCost);
+			CurrencyManager.add(p, level, essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
 			p.closeInventory();
 		}

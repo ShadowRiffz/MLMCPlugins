@@ -1,10 +1,13 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -15,170 +18,140 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.SkillBuffEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.util.Buff;
+import com.sucy.skill.api.util.BuffManager;
+import com.sucy.skill.api.util.BuffType;
 import com.sucy.skill.api.util.FlagManager;
-import com.sucy.skill.api.util.StatusFlag;
+import com.sucy.skill.listener.AttributeListener;
+import com.sucy.skill.listener.MechanicListener;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoConsumables.ConsumableManager;
 import me.Neoblade298.NeoConsumables.Consumables;
-import me.Neoblade298.NeoConsumables.runnables.AttributeRunnable;
-import me.Neoblade298.NeoConsumables.runnables.AttributeTask;
+import me.Neoblade298.NeoConsumables.SkullCreator;
+import me.Neoblade298.NeoConsumables.runnables.AttrRemoveRunnable;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
 public class FoodConsumable extends Consumable {
-	ArrayList<PotionEffect> potions = new ArrayList<PotionEffect>();
-	Attributes attributes = null;
+	
+	Material mat;
+	ArrayList<PotionEffect> potions;
+	ArrayList<FlagAction> flags;
+	ArrayList<BuffAction> buffs;
+	StoredAttributes attributes;
 	int attributeTime;
-	ArrayList<String> commands = new ArrayList<String>();
-	ArrayList<String> worlds = new ArrayList<String>();
+	ArrayList<String> commands, worlds, desc, lore;
 	double saturation;
 	int hunger;
-	int health, healthTime, healthDelay;
-	int mana, manaTime, manaDelay;
-	long cooldown = 0;
-	boolean ignoreGcd = false;
+	double speed;
+	int speedTime;
+	int health, healthReps, healthPeriod;
+	int mana, manaReps, manaPeriod;
+	int cooldown;
+	String display, base64;
+	boolean isDuration;
+	int totalDuration;
+	Rarity rarity;
 	
-	public FoodConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
-		super(main, name, sounds, lore, nbt);
-	}
-
-	public int getHunger() {
-		return this.hunger;
-	}
-
-	public double getSaturation() {
-		return this.saturation;
-	}
-
-	public boolean isSimilar(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		if (!getLore().isEmpty()) {
-			if (!meta.hasLore()) {
-				return false;
-			}
-
-			ArrayList<String> flore = getLore();
-			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
-
-			for (int i = 0; i < flore.size(); i++) {
-				String fLine = getLore().get(i);
-				String mLine = mlore.get(i);
-				if (!mLine.contains(fLine)) {
-					return false;
-				}
-			}
-		}
-		return true;
+	public FoodConsumable(Consumables main, String key) {
+		super(main, key);
+		
+		potions = new ArrayList<PotionEffect>();
+		attributes = new StoredAttributes();
+		commands = new ArrayList<String>();
+		worlds = new ArrayList<String>();
+		desc = new ArrayList<String>();
+		lore = new ArrayList<String>();
+		flags = new ArrayList<FlagAction>();
+		buffs = new ArrayList<BuffAction>();
+		display = null;
+		base64 = null;
+		
+		cooldown = 15000; // Default 15 seconds
+		isDuration = false; // Default instant
+		
+		totalDuration = 0;
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
-		// Check gcd
-		UUID uuid = p.getUniqueId();
-		if (!isOffGcd(p) && !ignoreGcd) {
-			long remainingCooldown = main.globalCooldowns.get(p.getUniqueId()) - System.currentTimeMillis();
-			remainingCooldown /= 1000L;
-			String message = "§4[§c§lMLMC§4] &cConsumables cooldown: §e" + remainingCooldown + "s§7.";
-			message = message.replaceAll("&", "§");
-			p.sendMessage(message);
-			return false;
-		}
-
-		// Check per-consumable cooldown
-		if (main.foodCooldowns.containsKey(uuid) && main.foodCooldowns.get(uuid).containsKey(this)) {
-			long nextEat = main.foodCooldowns.get(uuid).get(this);
-			if (System.currentTimeMillis() < nextEat) {
-				long remainingCooldown = nextEat - System.currentTimeMillis();
-				remainingCooldown /= 1000L;
-				String message = "§4[§c§lMLMC§4] " + this.displayname + " §ccooldown: §e" + remainingCooldown + "s§7.";
-				message = message.replaceAll("&", "§");
-				p.sendMessage(message);
-				return false;
-			}
-		}
-		
 		// Check world compatible
-		if (!getWorlds().contains(p.getWorld().getName())) {
+		if (!worlds.contains(p.getWorld().getName())) {
 			String message = "§4[§c§lMLMC§4] §cYou cannot use this consumable in this world";
 			p.sendMessage(message);
 			return false;
 		}
-		return true;
-	}
-	
-	private boolean isOffGcd(Player p) {
-		if (main.globalCooldowns.containsKey(p.getUniqueId())) {
-			return System.currentTimeMillis() > main.globalCooldowns.get(p.getUniqueId());
+
+		// Check cds
+		UUID uuid = p.getUniqueId();
+		if (!ConsumableManager.cds.containsKey(uuid)) {
+			ConsumableManager.cds.put(uuid, new PlayerCooldowns());
+			return true;
 		}
-		return true;
+		
+		if (!isDuration) {
+			long remaining = ConsumableManager.cds.get(uuid).getInstantCooldown() - System.currentTimeMillis();
+			if (remaining <= 0) {
+				return true;
+			}
+			remaining /= 1000L;
+			p.sendMessage("§4[§c§lMLMC§4] §cInstant consumables cooldown: §e" + remaining + "s§7.");
+			return false;
+		}
+		else {
+			long remaining = ConsumableManager.cds.get(uuid).getDurationCooldown() - System.currentTimeMillis();
+			if (remaining <= 0) {
+				return true;
+			}
+			remaining /= 1000L;
+			p.sendMessage("§4[§c§lMLMC§4] §cDuration consumables cooldown: §e" + remaining + "s§7.");
+			return false;
+		}
 	}
 
 	public void use(final Player p, ItemStack item) {
+		// First get rid of any existing effects
+		UUID uuid = p.getUniqueId();
+		ArrayList<BukkitTask> tasks = new ArrayList<BukkitTask>();
+		if (ConsumableManager.effects.containsKey(uuid)) {
+			ConsumableManager.effects.get(uuid).endEffects(true);
+		}
+		
 		// Sounds, commands
-		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + displayname + "§7!");
+		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 		executeCommands(p);
 		
-		
 		// Food event only happens if hunger is changing
-		UUID uuid = p.getUniqueId();
-		int foodLevel = Math.min(20, p.getFoodLevel() + getHunger());
-		if (getHunger() > 0) {
+		int foodLevel = Math.min(20, p.getFoodLevel() + hunger);
+		if (hunger > 0) {
 			FoodLevelChangeEvent event = new FoodLevelChangeEvent(p, foodLevel);
 			Bukkit.getPluginManager().callEvent(event);
 			if (!event.isCancelled()) {
 				p.setFoodLevel(foodLevel);
-				p.setSaturation((float) Math.min(p.getFoodLevel(), this.getSaturation() + p.getSaturation()));
-			}
-		}
-		
-		// Calculate multipliers and remove flags
-		double garnish = 1, preserve = 1, spice = 1;
-		for (String line : item.getItemMeta().getLore()) {
-			if (line.contains("Garnished")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				garnish = Double.parseDouble(toParse);
-			}
-			if (line.contains("Preserved")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				preserve = Double.parseDouble(toParse);
-			}
-			if (line.contains("Spiced")) {
-				String toParse = line.substring(line.indexOf('(') + 1, line.indexOf('x'));
-				spice = Double.parseDouble(toParse);
-			}
-			if (line.contains("Remedies")) {
-				if (line.contains("Remedies stun")) {
-					FlagManager.removeFlag(p, StatusFlag.STUN);
-				}
-				else if (line.contains("Remedies curse")) {
-					FlagManager.removeFlag(p, "curse");
-				}
-				else if (line.contains("Remedies root")) {
-					FlagManager.removeFlag(p, StatusFlag.ROOT);
-				}
-				else if (line.contains("Remedies silence")) {
-					FlagManager.removeFlag(p, StatusFlag.SILENCE);
-				}
+				p.setSaturation((float) Math.min(p.getFoodLevel(), this.saturation + p.getSaturation()));
 			}
 		}
 
-		// Set cooldowns
-		long nextEat = System.currentTimeMillis() + (long) (this.cooldown * 50L * preserve);
-		long ticks = (long) (this.cooldown * preserve);
-		if (!ignoreGcd) {
-			main.globalCooldowns.put(uuid, System.currentTimeMillis() + 20000L);
-		}
-		if (this.cooldown > 0) {
-			main.foodCooldowns.get(uuid).put(this, nextEat);
+		// Set cooldown
+		long nextEat = System.currentTimeMillis() + (this.cooldown * 1000);
+		if (!isDuration) {
+			ConsumableManager.cds.get(uuid).setInstantCooldown(nextEat);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
-					String message = "§4[§c§lMLMC§4] " + displayname + "&7 can be eaten again.";
-					message = message.replaceAll("&", "§");
-					p.sendMessage(message);
+					if (p != null) {
+						String message = "§4[§c§lMLMC§4] Instant consumables can be eaten again.";
+						p.sendMessage(message);
+					}
 				}
-			}, ticks);
+			}, this.cooldown * 20);
+		}
+		else {
+			ConsumableManager.cds.get(uuid).setDurationCooldown(nextEat);
 		}
 
 		// Potion effects
@@ -187,39 +160,75 @@ public class FoodConsumable extends Consumable {
 		}
 
 		// SkillAPI Attributes
-		if (attributes != null) {
-			// If food already consumed before, remove the attributes, cancel the remove task, then add new
-			if (main.attributes.get(uuid).containsKey(this)) {
-				AttributeTask at = main.attributes.get(uuid).get(this);
-				at.getAttr().removeAttributes(p);
-				at.getTask().cancel();
+		if (!attributes.isEmpty()) {
+			attributes.applyAttributes(p);
+			tasks.add(new AttrRemoveRunnable(p, attributes).runTaskLater(main, attributeTime * 20));
+		}
+		
+		// Flags
+		for (FlagAction flag : flags) {
+			if (flag.isAdd()) {
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration() * 20);
 			}
-			Attributes newAttr = attributes.clone();
-			newAttr.multiply(garnish);
-			newAttr.applyAttributes(p);
-			BukkitTask newTask = new AttributeRunnable(main, p, newAttr, this).runTaskLater(main, this.attributeTime);
-			main.attributes.get(uuid).put(this, new AttributeTask(newTask, newAttr));
+			else {
+				FlagManager.removeFlag(p, flag.getFlag());
+			}
+		}
+		
+		// Buffs
+		for (BuffAction buff : buffs) {
+	        BuffType buffType = buff.getType();
+	        int seconds = buff.getDuration();
+	        String category = buff.getCategory();
+	        int buffticks = seconds * 20;
+            SkillBuffEvent event = new SkillBuffEvent(p, p, buff.getValue(), buffticks, buffType, buff.isPercent());
+            Bukkit.getPluginManager().callEvent(event);
+            
+            if (!event.isCancelled()) {
+            	if (category == null) {
+                    BuffManager.getBuffData(p).addBuff(
+                            buffType,
+                            new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
+                            event.getTicks());
+            	}
+            	else {
+                    BuffManager.getBuffData(p).addBuff(
+                            buffType,
+                            category,
+                            new Buff(key + "-" + p, event.getAmount(), buff.isPercent()),
+                            event.getTicks());
+            	}
+            }
+		}
+		
+		// Speed
+		if (speedTime > 0) {
+            AttributeListener.refreshSpeed(p);
+            FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime * 20);
+            p.setWalkSpeed((float) (speed * p.getWalkSpeed()));
 		}
 
 		// Health and mana regen
 		PlayerData data = SkillAPI.getPlayerData(p);
-
-		if (getHealthTime() == 0 && !p.isDead()) {
-				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + (health * spice)));
+		if (healthReps == 0 && !p.isDead()) {
+				p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + health));
 		}
-		else if (getHealthTime() > 0 && !p.isDead()) {
-			new HealthRunnable(p, health * spice, getHealthTime()).runTaskTimer(main, 0, getHealthDelay());
+		else if (healthReps > 0 && !p.isDead()) {
+			tasks.add(new HealthRunnable(p, health, healthReps).runTaskTimer(main, 0, healthPeriod * 20));
 		}
 		
 		if (data.getMainClass().getData().getManaName().contains("MP")) {
-			if (getManaTime() == 0 && !p.isDead()) {
-				data.setMana(Math.min(data.getMaxMana(), data.getMana() + (mana * spice)));
+			if (manaReps == 0 && !p.isDead()) {
+				data.setMana(Math.min(data.getMaxMana(), data.getMana() + mana));
 			}
-			else if (getManaTime() > 0 && !p.isDead()) {
-				new ManaRunnable(p, mana * spice, getHealthTime()).runTaskTimer(main, 0, getManaDelay());
+			else if (manaReps > 0 && !p.isDead()) {
+				tasks.add(new ManaRunnable(p, mana, manaReps).runTaskTimer(main, 0, manaPeriod * 20));
 			}
 		}
 		
+		if (isDuration) {
+			ConsumableManager.effects.put(uuid, new DurationEffects(main, this, System.currentTimeMillis(), uuid, tasks));
+		}
 		item.setAmount(item.getAmount() - 1);
 	}
 
@@ -227,6 +236,104 @@ public class FoodConsumable extends Consumable {
 		for (String cmd : this.commands) {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%p", player.getName()));
 		}
+	}
+	
+	public ItemStack getItem(int amount) {
+		ItemStack item;
+		if (base64 != null) {
+			item = SkullCreator.itemFromBase64(base64);
+		}
+		else {
+			item = new ItemStack(mat);
+		}
+		item.setAmount(amount);
+		
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		meta.setDisplayName(display);
+		item.setItemMeta(meta);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("consumable", key);
+		return nbti.getItem();
+	}
+	
+	private String correctColors(String line) {
+		return line.replaceAll("\\\\&", "@").replaceAll("&", "§").replaceAll("@", "&");
+	}
+	
+	public void generateLore() {
+		lore.clear();
+		String line = "";
+		
+		lore.add("§7Rarity: " + rarity.getDisplay());
+		
+		// Health & mana
+		if (this.healthReps > 1) {
+			line = "§aHP +" + health + "/" + (healthPeriod == 0 ? healthPeriod + "s" : "s");
+			line += " [" + healthReps + "x]";
+		}
+		else if (this.health > 0) {
+			line = "§aHP +" + health;
+		}
+		if (!line.isEmpty()) {
+			line += "§7, ";
+		}
+		if (this.manaReps > 1) {
+			line += "§9MP +" + mana + "/" + (manaPeriod == 0 ? manaPeriod + "s" : "s");
+			line += " [" + manaReps + "x]";
+		}
+		else if (this.mana > 0) {
+			line = "§aMP +" + mana;
+		}
+		if (!line.isEmpty()) {
+			lore.add(line);
+		}
+		// Hunger
+		if (hunger > 0) {
+			lore.add("§6Hunger +" + hunger + ", Saturation +" + saturation);
+		}
+		
+		// Potions
+		if (!potions.isEmpty()) {
+			lore.add("§9Potions:");
+			for (PotionEffect pot : potions) {
+				lore.add("§7- §9" + pot.getType().toString() + " " + pot.getAmplifier() + " [" + (pot.getDuration() / 20) + "s]");
+			}
+		}
+		
+		// Attributes
+		if (!attributes.isEmpty()) {
+			lore.add("§cAttributes [" + attributeTime + "s]:");
+			for (Entry<String, Integer> ent : attributes.getAttrs().entrySet()) {
+				lore.add("§c" + StringUtils.capitalize(ent.getKey()) + " +" + ent.getValue());
+			}
+		}
+		
+		if (!desc.isEmpty()) {
+			lore.add("§2Desc:");
+			for (String loreline : desc) {
+				lore.add(loreline.replaceAll("&", "§"));
+			}
+		}
+	}
+	
+	public void setDisplay(String display) {
+		this.display = correctColors(display);
+	}
+	
+	public void setDescription(List<String> desc) {
+		this.desc.clear();
+		for (String line : desc) {
+			this.desc.add(correctColors(line));
+		}
+	}
+	
+	public void setMaterial(String mat) {
+		this.mat = Material.getMaterial(mat.toUpperCase());
+	}
+	
+	public void setBase64(String base64) {
+		this.base64 = base64;
 	}
 
 	public void setHealth(int health) {
@@ -237,80 +344,59 @@ public class FoodConsumable extends Consumable {
 		this.mana = mana;
 	}
 
-	public void setCooldown(long cooldown) {
-		this.cooldown = cooldown;
+	public void setHealthReps(int healthReps) {
+		this.healthReps = healthReps;
+		if (this.healthReps * this.healthPeriod > totalDuration) {
+			totalDuration = this.healthReps * this.healthPeriod;
+		}
 	}
 
-	public void setHealthTime(int healthTime) {
-		this.healthTime = healthTime;
+	public void setManaReps(int manaReps) {
+		this.manaReps = manaReps;
+		if (this.manaReps * this.manaPeriod > totalDuration) {
+			totalDuration = this.manaReps * this.manaPeriod;
+		}
 	}
 
-	public void setManaTime(int manaTime) {
-		this.manaTime = manaTime;
+	public void setHealthPeriod(int healthPeriod) {
+		this.healthPeriod = healthPeriod > 0 ? healthPeriod : 1;
+		if (this.healthReps * this.healthPeriod > totalDuration) {
+			totalDuration = this.healthReps * this.healthPeriod;
+		}
 	}
 
-	public void setHealthDelay(int healthDelay) {
-		this.healthDelay = healthDelay;
+	public void setManaPeriod(int manaPeriod) {
+		this.manaPeriod = manaPeriod > 0 ? manaPeriod : 1;
+		if (this.manaReps * this.manaPeriod > totalDuration) {
+			totalDuration = this.manaReps * this.manaPeriod;
+		}
 	}
-
-	public void setManaDelay(int manaDelay) {
-		this.manaDelay = manaDelay;
-	}
-
+	
 	public void setWorlds(List<String> worlds) {
-		this.worlds = new ArrayList<String>(worlds);
+		this.worlds = (ArrayList<String>) worlds;
 	}
-
-	public int getHealth() {
-		return this.health;
+	
+	public void setCommands(List<String> commands) {
+		this.commands = (ArrayList<String>) commands;
 	}
-
-	public int getMana() {
-		return this.mana;
-	}
-
-	public int getHealthTime() {
-		return this.healthTime;
-	}
-
-	public int getManaTime() {
-		return this.manaTime;
-	}
-
-	public int getHealthDelay() {
-		return this.healthDelay;
-	}
-
-	public int getManaDelay() {
-		return this.manaDelay;
-	}
-
-	public List<String> getWorlds() {
-		return this.worlds;
-	}
-
-	public void addEffect(PotionEffect effect) {
-		this.potions.add(effect);
+	
+	public void addEffect(PotionEffect eff) {
+		this.potions.add(eff);
+		if (eff.getDuration() / 20 > totalDuration) { 
+			totalDuration = eff.getDuration() / 20;
+		}
 	}
 
 	public ArrayList<PotionEffect> getEffect() {
 		return this.potions;
 	}
 
-	public Attributes getAttributes() {
+	public StoredAttributes getAttributes() {
 		return this.attributes;
-	}
-	
-	public void setAttributes(Attributes attributes) {
-		this.attributes = attributes;
 	}
 
 	public ArrayList<PotionEffect> getPotions() {
 		return potions;
-	}
-
-	public void setPotions(ArrayList<PotionEffect> effects) {
-		this.potions = effects;
 	}
 
 	public int getAttributeTime() {
@@ -319,34 +405,35 @@ public class FoodConsumable extends Consumable {
 
 	public void setAttributeTime(int attributeTime) {
 		this.attributeTime = attributeTime;
+		if (this.attributeTime > totalDuration) {
+			totalDuration = this.attributeTime;
+		}
 	}
 
 	public ArrayList<String> getCommands() {
 		return commands;
 	}
-
-	public void setCommands(ArrayList<String> commands) {
-		this.commands = commands;
+	
+	public void addFlag(FlagAction flag) {
+		this.flags.add(flag);
+		if (flag.getDuration() > totalDuration) {
+			totalDuration = flag.getDuration();
+		}
 	}
-
-	public boolean isIgnoreGcd() {
-		return ignoreGcd;
+	
+	public ArrayList<FlagAction> getFlags() {
+		return flags;
 	}
-
-	public void setIgnoreGcd(boolean ignoreGcd) {
-		this.ignoreGcd = ignoreGcd;
+	
+	public void addBuff(BuffAction buff) {
+		this.buffs.add(buff);
+		if (buff.getDuration() > totalDuration) {
+			totalDuration = buff.getDuration();
+		}
 	}
-
-	public long getCooldown() {
-		return cooldown;
-	}
-
-	public void setWorlds(ArrayList<String> worlds) {
-		this.worlds = worlds;
-	}
-
-	public void setLore(ArrayList<String> lore) {
-		this.lore = lore;
+	
+	public ArrayList<BuffAction> getBuffs() {
+		return buffs;
 	}
 
 	public void setSaturation(double saturation) {
@@ -355,5 +442,72 @@ public class FoodConsumable extends Consumable {
 
 	public void setHunger(int hunger) {
 		this.hunger = hunger;
+	}
+	
+	public void setCooldown(int cooldown) {
+		this.cooldown = cooldown;
+	}
+	
+	public void setIsDuration(boolean isDuration) {
+		this.isDuration = isDuration;
+	}
+	
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
+	public void setRarity(Rarity rarity) {
+		this.rarity = rarity;
+	}
+	
+	public void setSpeedTime(int time) {
+		this.speedTime = time;
+		if (this.speedTime > totalDuration) {
+			this.totalDuration = this.speedTime;
+		}
+	}
+	
+	public int getSpeedTime() {
+		return this.speedTime;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public int getHealthReps() {
+		return healthReps;
+	}
+
+	public int getHealthPeriod() {
+		return healthPeriod;
+	}
+
+	public int getMana() {
+		return mana;
+	}
+
+	public int getManaReps() {
+		return manaReps;
+	}
+
+	public int getManaPeriod() {
+		return manaPeriod;
+	}
+	
+	public int getTotalDuration() {
+		return totalDuration;
+	}
+	
+	public boolean isDuration() {
+		return isDuration;
+	}
+	
+	public String getDisplay() {
+		return display;
+	}
+	
+	public double getSpeed() {
+		return speed;
 	}
 }

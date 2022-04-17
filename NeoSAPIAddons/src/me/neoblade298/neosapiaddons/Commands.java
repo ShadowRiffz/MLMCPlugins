@@ -23,6 +23,7 @@ public class Commands implements CommandExecutor {
 		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args.length == 0) {
 				sender.sendMessage("§8neosapiaddons.use");
+				sender.sendMessage("§c/nsapi debug");
 				sender.sendMessage("§c/nsapi takexp [player] [exp] - remove class exp");
 				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
 				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
@@ -38,6 +39,16 @@ public class Commands implements CommandExecutor {
 				PlayerClass data = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("class");
 				data.setExp(data.getExp() - exp);
 				sender.sendMessage("§4[§c§lMLMC§4] §c" + args[1] + " §7has §e" + data.getExp() + " §7exp remaining.");
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("debug")) {
+				SAPIAddons.debug = !SAPIAddons.debug;
+				if (SAPIAddons.debug) {
+					sender.sendMessage("§4[§c§lMLMC§4] §7Debug mode enabled");
+				}
+				else {
+					sender.sendMessage("§4[§c§lMLMC§4] §7Debug mode disabled");
+				}
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("reset")) {

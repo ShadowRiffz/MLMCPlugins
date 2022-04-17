@@ -23,7 +23,7 @@ import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class InspectAugmentsInventory implements ProfessionInventory {
+public class InspectAugmentsInventory extends ProfessionInventory {
 	private final Inventory inv;
 	private Player p;
 	ItemStack item;
@@ -38,7 +38,6 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 		this.editor = new ItemEditor(item);
 		
 		inv = Bukkit.createInventory(p, 9, "§cAugment Viewer");
-		main.viewingInventory.put(p, this);
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -62,6 +61,7 @@ public class InspectAugmentsInventory implements ProfessionInventory {
 		inv.setContents(contents);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {

@@ -1,8 +1,11 @@
 package me.Neoblade298.NeoConsumables.runnables;
 
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.sucy.skill.api.event.SkillHealEvent;
 
 public class HealthRunnable extends BukkitRunnable {
 	Player p;
@@ -17,9 +20,13 @@ public class HealthRunnable extends BukkitRunnable {
 	
 	@Override
 	public void run() {
-		if (!p.isDead()) {
+		if (p != null && !p.isDead()) {
 			this.reps -= 1;
-			p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + healing));
+            SkillHealEvent event = new SkillHealEvent(p, p, this.healing, true);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+    			p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + event.getAmount()));
+            }
 			if (this.reps <= 0) {
 				this.cancel();
 			}

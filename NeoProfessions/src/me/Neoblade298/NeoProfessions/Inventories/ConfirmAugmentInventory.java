@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,11 +17,10 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
-import me.Neoblade298.NeoProfessions.Augments.AugmentManager;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class ConfirmAugmentInventory implements ProfessionInventory {
-	private final Inventory inv;
+public class ConfirmAugmentInventory extends ProfessionInventory {
 	ItemStack item;
 	ItemStack augment;
 	ItemEditor editor;
@@ -33,7 +31,6 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		this.editor = new ItemEditor(item);
 		
 		inv = Bukkit.createInventory(p, 9, "§cReplace which slot?");
-		main.viewingInventory.put(p, this);
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -58,6 +55,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 		inv.setContents(contents);
 
 		p.openInventory(inv);
+		Professions.viewingInventory.put(p, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {
@@ -109,7 +107,7 @@ public class ConfirmAugmentInventory implements ProfessionInventory {
 			String clicked = clickedItem.getItemMeta().getDisplayName();
 			int selected = Integer.parseInt(clicked.substring(clicked.length() - 1));
 			NBTItem nbtaug = new NBTItem(this.augment);
-			Augment aug = AugmentManager.augmentMap.get(nbtaug.getString("augment")).get(nbtaug.getInteger("level"));
+			Augment aug = AugmentManager.getFromCache(nbtaug.getString("augment"), nbtaug.getInteger("level"));
 			
 			String result = editor.setAugment(p, aug, selected);
 			if (result == null) {

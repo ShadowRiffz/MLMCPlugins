@@ -1,42 +1,18 @@
 package me.Neoblade298.NeoConsumables.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
 
 public class TokenConsumable extends Consumable {
 	ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
 	
-	public TokenConsumable(Consumables main, String name, ArrayList<Sound> sounds, ArrayList<String> lore, HashMap<String, String> nbt) {
-		super(main, name, sounds, lore, nbt);
-	}
-
-	public boolean isSimilar(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		if (!getLore().isEmpty()) {
-			if (!meta.hasLore()) {
-				return false;
-			}
-
-			ArrayList<String> flore = getLore();
-			ArrayList<String> mlore = (ArrayList<String>) meta.getLore();
-
-			for (int i = 0; i < flore.size(); i++) {
-				String fLine = getLore().get(i);
-				String mLine = mlore.get(i);
-				if (!mLine.contains(fLine)) {
-					return false;
-				}
-			}
-		}
-		return true;
+	public TokenConsumable(Consumables main, String key) {
+		super(main, key);
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
@@ -76,7 +52,7 @@ public class TokenConsumable extends Consumable {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 
-		p.sendMessage("§4[§c§lMLMC§4] §7You used " + displayname + "§7!");
+		p.sendMessage("§4[§c§lMLMC§4] §7You used " + item.getItemMeta().getDisplayName() + "§7!");
 		
 		item.setAmount(item.getAmount() - 1);
 	}

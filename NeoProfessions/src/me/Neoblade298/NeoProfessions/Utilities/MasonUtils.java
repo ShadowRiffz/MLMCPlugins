@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import me.Neoblade298.NeoProfessions.Legacy.Items.BlacksmithItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.MasonItems;
-import me.Neoblade298.NeoProfessions.Legacy.Items.StonecutterItems;
+import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
+import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
+import me.Neoblade298.NeoProfessions.Legacy.StonecutterItems;
 
 public class MasonUtils {
 
@@ -133,9 +133,9 @@ public class MasonUtils {
 		case 0:
 			potency = Integer.parseInt(line.substring(line.indexOf("+") + 1, line.length()));
 			if (isArmor) {
-				return bItems.getDurabilityItem(slottedLevel, "armor", potency);
+				return BlacksmithItems.getDurabilityItem(slottedLevel, "armor", potency);
 			} else {
-				return bItems.getDurabilityItem(slottedLevel, "weapon", potency);
+				return BlacksmithItems.getDurabilityItem(slottedLevel, "weapon", potency);
 			}
 			// Normal gem
 		case 1:

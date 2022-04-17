@@ -3,6 +3,7 @@ package me.Neoblade298.NeoConsumables.bosschests;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoConsumables.Util;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class AugmentReward extends ChestReward {
 	private int level;
@@ -15,7 +16,7 @@ public class AugmentReward extends ChestReward {
 
 	@Override
 	public void giveReward(Player p) {
-		Util.serverCommand("prof give " + p.getName() + " augment " + droptable + " " + level);
+		AugmentManager.getViaDroptable(droptable, level);
 	}
 
 	@Override
