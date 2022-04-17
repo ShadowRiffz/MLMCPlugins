@@ -41,7 +41,7 @@ public class StoredItemReward extends ChestReward {
 		}
 		StoredItemReward r = new StoredItemReward(id, amount);
 		r.setWeight(weight);
-		StorageManager.addSource(id, "§4§l" + display + " Boss Chest", false);
+		StorageManager.addSource(id, "§4§l" + display + " Chest", false);
 		return r;
 	}
 }
