@@ -42,7 +42,6 @@ import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
 import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class RecipeManager implements IOComponent, Listener {
@@ -287,6 +286,7 @@ public class RecipeManager implements IOComponent, Listener {
 			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
 			p.sendMessage("§4[§c§lMLMC§4] §7You acquired knowledge of §f" + display + "§7!");
+			RecipeManager.giveKnowledge(p, key);
 		}
 	}
 }
