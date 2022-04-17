@@ -95,6 +95,10 @@ public class CurrencyManager implements IOComponent, Listener {
 		}
 	}
 	
+	public static boolean hasPlayer(Player p) {
+		return essence.containsKey(p.getUniqueId());
+	}
+	
 	public static void add(Player p, int level, int amount) {
 		// Standardize the level
 		level -= (level % 5);
