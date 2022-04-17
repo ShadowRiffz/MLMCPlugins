@@ -326,7 +326,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				// /prof vouch knowledge [key] [display]
 				else if (args[0].equalsIgnoreCase("vouch") && args[1].equalsIgnoreCase("knowledge") && args.length == 4) {
 					String key = args[2];
-					String display = args[3].replaceAll("_", " ");
+					String display = args[3].replaceAll("_", " ").replaceAll("&", "§");
 					ItemStack item = new ItemStack(Material.PAPER);
 					ItemMeta meta = item.getItemMeta();
 					meta.setDisplayName("§7Recipe: " + display);
