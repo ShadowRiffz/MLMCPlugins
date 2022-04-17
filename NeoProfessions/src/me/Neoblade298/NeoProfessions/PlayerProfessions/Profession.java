@@ -62,6 +62,9 @@ public class Profession {
 		if (exp < 0) {
 			exp = 1;
 		}
+		
+		exp *= Professions.getExpMultiplier(this.type);
+		
 		int newExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it

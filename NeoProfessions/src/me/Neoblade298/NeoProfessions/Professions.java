@@ -20,6 +20,7 @@ import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import net.milkbowl.vault.economy.Economy;
 
 public class Professions extends JavaPlugin implements Listener {
@@ -48,7 +49,8 @@ public class Professions extends JavaPlugin implements Listener {
 	public me.neoblade298.neogear.Gear neogear;
 	
 	public static HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
-	private static HashMap<Rarity, Double> expMultipliers = new HashMap<Rarity, Double>();
+	private static HashMap<Rarity, Double> rarityExpMults = new HashMap<Rarity, Double>();
+	private static HashMap<ProfessionType, Double> profExpMults = new HashMap<ProfessionType, Double>();
 	private static HashMap<Rarity, Integer> defaultWeights = new HashMap<Rarity, Integer>();
 
 	public void onEnable() {
@@ -135,10 +137,17 @@ public class Professions extends JavaPlugin implements Listener {
 		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
 		
 		// exp multipliers
-		ConfigurationSection expcfg = cfg.getConfigurationSection("exp-multipliers");
+		ConfigurationSection expcfg = cfg.getConfigurationSection("rarity-exp-multipliers");
 		for (String key : expcfg.getKeys(false)) {
 			Rarity rarity = Rarity.valueOf(key.toUpperCase());
-			expMultipliers.put(rarity, expcfg.getDouble(key));
+			rarityExpMults.put(rarity, expcfg.getDouble(key));
+		}
+		
+		// profession exp multipliers
+		expcfg = cfg.getConfigurationSection("profession-exp-multipliers");
+		for (String key : expcfg.getKeys(false)) {
+			ProfessionType type = ProfessionType.valueOf(key.toUpperCase());
+			profExpMults.put(type, expcfg.getDouble(key));
 		}
 		
 		// default weights
@@ -179,10 +188,14 @@ public class Professions extends JavaPlugin implements Listener {
 	}
 	
 	public static double getExpMultiplier(Rarity rarity) {
-		return expMultipliers.get(rarity);
+		return rarityExpMults.getOrDefault(rarity, 1.0);
+	}
+	
+	public static double getExpMultiplier(ProfessionType prof) {
+		return profExpMults.getOrDefault(prof, 1.0);
 	}
 	
 	public static int getDefaultWeight(Rarity rarity) {
-		return defaultWeights.get(rarity);
+		return defaultWeights.getOrDefault(rarity, 1);
 	}
 }
