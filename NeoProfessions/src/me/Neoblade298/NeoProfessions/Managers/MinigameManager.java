@@ -35,12 +35,13 @@ public class MinigameManager {
 			else {
 				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 				for (String key : yaml.getKeys(false)) {
+					int id = Integer.parseInt(key);
 					ConfigurationSection itemCfg = yaml.getConfigurationSection(key);
 					String display = itemCfg.getString("display");
 					ProfessionType type = ProfessionType.valueOf(itemCfg.getString("type").toUpperCase());
 					int numDrops = itemCfg.getInt("num-drops");
 					int difficulty = itemCfg.getInt("difficulty");
-					int level = itemCfg.getInt("level");
+					int level = StorageManager.getItem(id).getLevel();
 					
 					// Parse drops
 					ArrayList<String> drops = (ArrayList<String>) itemCfg.getStringList("drops");
@@ -86,7 +87,7 @@ public class MinigameManager {
 						
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
-					games.put(Integer.parseInt(key), new Minigame(display, type, parsed, numDrops, difficulty, level));
+					games.put(id, new Minigame(display, type, parsed, numDrops, difficulty, level));
 				}
 			}
 		}
