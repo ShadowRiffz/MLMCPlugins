@@ -35,12 +35,15 @@ public class Commands implements CommandExecutor, TabCompleter {
 			}
 			// /cons give [player] boss/[key] [amount]
 			else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
-				Player p = (Player) sender;
+				Player p = null;
 				int offset = 0;
 				int amt = 1;
 				if (Bukkit.getPlayer(args[1]) != null) {
 					p = Bukkit.getPlayer(args[1]);
 					offset++;
+				}
+				else {
+					p = (Player) sender;
 				}
 				
 				if (args[1 + offset].equalsIgnoreCase("boss")) {
