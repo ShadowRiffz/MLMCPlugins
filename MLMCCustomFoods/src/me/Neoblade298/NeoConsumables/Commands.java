@@ -30,7 +30,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 			if (args.length == 0) {
 				sender.sendMessage("§7Permission: mycommand.staff");
 				sender.sendMessage("§c/cons get [food] {amount}");
-				sender.sendMessage("§c/cons give boss [player]");
+				sender.sendMessage("§c/cons give [player] boss");
 				sender.sendMessage("§c/cons reload");
 			}
 			// /cons give [player] boss/[key] [amount]
