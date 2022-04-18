@@ -735,11 +735,11 @@ public class AugmentManager implements Listener {
 	}
 	
 	public static Augment getAugment(String key) {
-		return augmentMap.get(key);
+		return augmentMap.get(key.toLowerCase());
 	}
 	
 	public static boolean hasAugment(String key) {
-		return augmentMap.containsKey(key);
+		return augmentMap.containsKey(key.toLowerCase());
 	}
 	
 	public static PlayerAugments getPlayerAugments(Player p) {
