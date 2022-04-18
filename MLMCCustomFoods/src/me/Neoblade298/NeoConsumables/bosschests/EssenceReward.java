@@ -3,6 +3,7 @@ package me.Neoblade298.NeoConsumables.bosschests;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoConsumables.Util;
+import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 
 public class EssenceReward extends ChestReward {
 	private int amount;
@@ -15,7 +16,7 @@ public class EssenceReward extends ChestReward {
 
 	@Override
 	public void giveReward(Player p) {
-		Util.serverCommand("prof give " + p.getName() + " essence " + level + " " + amount);
+		CurrencyManager.add(p, level, amount);
 	}
 
 	@Override
