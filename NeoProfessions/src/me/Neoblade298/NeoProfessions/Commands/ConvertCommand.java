@@ -139,19 +139,21 @@ public class ConvertCommand implements CommandExecutor {
 								profs.get(ProfessionType.CRAFTER).convertExp(currencies.get("adamantium"), 1);
 								ProfessionManager.convertPlayer(uuid, profs, stmt);
 								
-								stmt.executeBatch();
 
 								CompletableFuture<User> userFuture = mngr.loadUser(uuid);
-								HashSet<String> knowledge = new HashSet<String>();
 								userFuture.thenAcceptAsync(user -> {
+									HashSet<String> knowledge = new HashSet<String>();
 									user.getNodes().stream()
 									.filter(e -> legendaryRecipes.containsKey(e.getKey()))
-									.forEach(e -> knowledge.add(legendaryRecipes.get(e.getKey())));
+									.forEach(e -> {
+										knowledge.add(legendaryRecipes.get(e.getKey()));
+									});
 									RecipeManager.convertPlayer(uuid, knowledge, stmt);
 								});
+								stmt.executeBatch();
 								
 								count++;
-								if (count % 50 == 0 && count != 0) {
+								if (count % 1000 == 0 && count != 0) {
 									Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Completed " + count + " conversions. Skipped " + skipped + ".");
 								}
 							}

@@ -42,6 +42,3 @@ commands:
   inv:
     description: Inv command
     usage: /inv
-  convert:
-    description: Convert command
-    usage: /convert
