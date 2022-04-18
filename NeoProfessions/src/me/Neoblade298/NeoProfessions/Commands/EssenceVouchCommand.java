@@ -26,7 +26,9 @@ public class EssenceVouchCommand implements CommandExecutor {
 			sender.sendMessage("§c/evouch [level] [amount]");
 		}
 		else {
-			int level = Integer.parseInt(args[0]);
+			// Normalize essence level
+			int level = Integer.parseInt(args[1]);
+			level -= level % 5;
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 				Util.sendMessage(sender, "&cFailed to vouch essence, invalid level " + level + "!");
 				return true;

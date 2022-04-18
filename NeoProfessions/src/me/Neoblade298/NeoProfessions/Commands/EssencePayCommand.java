@@ -32,7 +32,9 @@ public class EssencePayCommand implements CommandExecutor {
 				Util.sendMessage(p, "&cPlayer must be online!");
 				return true;
 			}
+			// Normalize essence level
 			int level = Integer.parseInt(args[1]);
+			level -= level % 5;
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 				Util.sendMessage(sender, "&cFailed to pay essence, invalid level " + level + "!");
 				return true;

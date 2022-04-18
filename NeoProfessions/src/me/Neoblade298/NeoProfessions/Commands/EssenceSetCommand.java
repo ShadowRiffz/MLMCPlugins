@@ -34,7 +34,9 @@ public class EssenceSetCommand implements CommandExecutor {
 				Util.sendMessage(sender, "&cPlayer must be online!");
 				return true;
 			}
+			// Normalize essence level
 			int level = Integer.parseInt(args[1]);
+			level -= level % 5;
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
 				Util.sendMessage(sender, "&cFailed to give essence, invalid level " + level + "!");
 				return true;
