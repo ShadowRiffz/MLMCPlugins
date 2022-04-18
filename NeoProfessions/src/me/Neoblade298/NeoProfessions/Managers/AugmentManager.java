@@ -152,7 +152,7 @@ public class AugmentManager implements Listener {
 	
 	public static boolean isAugment(ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
-		return augmentMap.containsKey(nbti.getString("augment"));
+		return augmentMap.containsKey(nbti.getString("augment").toLowerCase());
 	}
 	
 	public boolean containsAugments(Player p, EventType etype) {
