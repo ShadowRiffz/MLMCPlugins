@@ -34,16 +34,16 @@ public class EssencePayCommand implements CommandExecutor {
 			}
 			int level = Integer.parseInt(args[1]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(p, "&cInvalid level!");
+				Util.sendMessage(sender, "&cFailed to pay essence, invalid level " + level + "!");
 				return true;
 			}
 			int amount = Integer.parseInt(args[2]);
 			if (amount <= 0 || amount >= 99999) {
-				Util.sendMessage(p, "&cInvalid amount!");
+				Util.sendMessage(sender, "&cFailed to pay essence, invalid amount " + amount + "!");
 				return true;
 			}
 			else if (!CurrencyManager.hasEnough(p, level, amount)) {
-				Util.sendMessage(p, "&cInsufficient essence!");
+				Util.sendMessage(sender, "&cFailed to pay essence, Insufficient essence!");
 				return true;
 			}
 			

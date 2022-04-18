@@ -36,12 +36,12 @@ public class EssenceTakeCommand implements CommandExecutor {
 			}
 			int level = Integer.parseInt(args[1]);
 			if (!(level <= 60 && level > 0 && level % 5 == 0)) {
-				Util.sendMessage(sender, "&cInvalid level!");
+				Util.sendMessage(sender, "&cFailed to take essence, invalid level " + level + "!");
 				return true;
 			}
 			int amount = Integer.parseInt(args[2]);
 			if (amount <= 0 || amount >= 99999) {
-				Util.sendMessage(sender, "&cInvalid amount!");
+				Util.sendMessage(sender, "&cFailed to take essence, invalid amount " + amount + "!");
 				return true;
 			}
 			
