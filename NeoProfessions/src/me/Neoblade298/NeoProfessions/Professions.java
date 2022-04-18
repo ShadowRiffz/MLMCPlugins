@@ -89,10 +89,11 @@ public class Professions extends JavaPlugin implements Listener {
 			mim = new MinigameManager(this);
 			io = new IOListeners(this);
 			gm = new GardenManager(this);
-			getServer().getPluginManager().registerEvents(io, this);
-			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
+			getServer().getPluginManager().registerEvents(rm, this);
+			getServer().getPluginManager().registerEvents(mim, this);
+			getServer().getPluginManager().registerEvents(io, this);
 			IOListeners.addComponent(cm);
 			IOListeners.addComponent(pm);
 			IOListeners.addComponent(sm);

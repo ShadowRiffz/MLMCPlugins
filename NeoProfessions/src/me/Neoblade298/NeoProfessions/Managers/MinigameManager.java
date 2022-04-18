@@ -8,15 +8,21 @@ import java.util.UUID;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
+import me.Neoblade298.NeoProfessions.Inventories.LoggingMinigame;
+import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
+import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
 import me.Neoblade298.NeoProfessions.Minigames.Minigame;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
-public class MinigameManager {
+public class MinigameManager implements Listener {
 	public static Professions main;
 	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
 	private static HashMap<UUID, HashMap<UUID, Long>> playerCooldowns = new HashMap<UUID, HashMap<UUID, Long>>();
@@ -123,6 +129,21 @@ public class MinigameManager {
 		
 		if (games.get(key).startMinigame(p, null)) {
 			cooldowns.put(mob, System.currentTimeMillis() + (cooldown * 1000));
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDamage(EntityDamageEvent e) {
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			ProfessionInventory inv = Professions.viewingInventory.get(p);
+			if (inv != null) {
+				if (inv instanceof StonecuttingMinigame ||
+						inv instanceof LoggingMinigame ||
+						inv instanceof HarvestingMinigame) {
+					e.setCancelled(true);
+				}
+			}
 		}
 	}
 }
