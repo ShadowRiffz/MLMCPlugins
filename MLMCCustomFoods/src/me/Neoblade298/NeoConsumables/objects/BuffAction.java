@@ -1,5 +1,7 @@
 package me.Neoblade298.NeoConsumables.objects;
 
+import java.util.HashMap;
+
 import com.sucy.skill.api.util.BuffType;
 
 public class BuffAction {
@@ -8,6 +10,14 @@ public class BuffAction {
 	double value;
 	boolean percent;
 	String category;
+	public static HashMap<BuffType, String> display = new HashMap<BuffType, String>();
+	
+	static {
+		display.put(BuffType.DAMAGE, "Damage");
+		display.put(BuffType.DEFENSE, "Defense");
+		display.put(BuffType.SKILL_DAMAGE, "Skill damage");
+		display.put(BuffType.HEALING, "Healing");
+	}
 	
 	public BuffAction(BuffType type, double value, int duration, boolean percent) {
 		this.type = type;
