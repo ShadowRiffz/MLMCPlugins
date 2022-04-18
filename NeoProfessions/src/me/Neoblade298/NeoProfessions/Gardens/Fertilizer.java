@@ -18,6 +18,7 @@ public class Fertilizer {
 		this.timeMultiplier = timeMultiplier;
 		
 		effects = new ArrayList<String>();
+		effects.add("§6Fertilizer Effects:");
 		if (timeMultiplier != 1) {
 			effects.add("§7- Harvest Time §e" + df.format(timeMultiplier) + "x");
 		}

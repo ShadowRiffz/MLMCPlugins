@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Storage;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.bukkit.ChatColor;
@@ -12,6 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
+import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.SkullCreator;
@@ -146,7 +149,17 @@ public class StoredItem {
 	public ItemStack getStorageView(int amount, boolean fullLore) {
 		ItemStack item = getItem();
 		ItemMeta meta = item.getItemMeta();
-		meta.setLore(fullLore ? storageLore : sourceLore);
+		List<String> lore = new ArrayList<String>();
+		Fertilizer fert = GardenManager.getFertilizer(this.id);
+		if (fert != null) {
+			for (String line : fert.getEffects()) {
+				lore.add(line);
+			}
+		}
+		for (String line : fullLore ? storageLore : sourceLore) {
+			lore.add(line);
+		}
+		meta.setLore(lore);
 		if (amount <= 0) {
 			return null;
 		}
