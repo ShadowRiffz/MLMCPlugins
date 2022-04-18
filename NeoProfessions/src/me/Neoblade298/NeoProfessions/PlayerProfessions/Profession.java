@@ -17,7 +17,7 @@ public class Profession {
 	
 	static {
 		for (int lv = 1; lv <= 60; lv++) {
-			nextLv.put(lv, (15 * lv^2) + (100 * lv));
+			nextLv.put(lv, (30 * lv^2) + (100 * lv));
 		}
 	}
 	
