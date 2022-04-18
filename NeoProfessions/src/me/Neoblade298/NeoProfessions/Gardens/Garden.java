@@ -11,7 +11,7 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 public class Garden {
 	int size;
 	HashMap<Integer, GardenSlot> slots;
-	private static final long DEFAULT_GROW_TIME = 10000; // 30 minutes
+	private static final long DEFAULT_GROW_TIME = 1800000; // 30 minutes
 	private static final int BASE_SIZE = 1;
 	
 	public Garden() {
