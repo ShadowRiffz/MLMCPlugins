@@ -42,6 +42,10 @@ public class MinigameManager {
 					int numDrops = itemCfg.getInt("num-drops");
 					int difficulty = itemCfg.getInt("difficulty");
 					int level = StorageManager.getItem(id).getLevel();
+					// Hardcode level 5 minimum
+					if (level <= 5) {
+						level = 1;
+					}
 					
 					// Parse drops
 					ArrayList<String> drops = (ArrayList<String>) itemCfg.getStringList("drops");
