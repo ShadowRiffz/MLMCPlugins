@@ -175,7 +175,7 @@ public class MinigameManager implements Listener, Manager {
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
-		if (!e.getHand().equals(EquipmentSlot.HAND)) {
+		if (e.getHand() != null && !e.getHand().equals(EquipmentSlot.HAND)) {
 			return;
 		}
 		if (!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
