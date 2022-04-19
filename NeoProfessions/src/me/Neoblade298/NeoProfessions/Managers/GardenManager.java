@@ -155,10 +155,12 @@ public class GardenManager implements IOComponent, Manager {
 				}
 			}
 			
-			for (BukkitTask task : gardenMsgs.get(p.getUniqueId())) {
-				task.cancel();
+			if (gardenMsgs.get(p.getUniqueId()) != null) {
+				for (BukkitTask task : gardenMsgs.get(p.getUniqueId())) {
+					task.cancel();
+				}
+				gardenMsgs.remove(p.getUniqueId());
 			}
-			gardenMsgs.remove(p.getUniqueId());
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save gardens for user " + p.getName());
