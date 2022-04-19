@@ -148,9 +148,9 @@ public class Commands implements CommandExecutor{
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
-				int currentPoints = Research.playerStats.get(uuid).getResearchPoints().get(args[2]);
+				int currentPoints = Research.getPlayerStats(uuid).getResearchPoints().get(args[2]);
 				int min = -1;
-				for (ResearchItem rItem : main.mobMap.get(args[2])) {
+				for (ResearchItem rItem : Research.getMobMap().get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
 					if (min < goal && goal <= currentPoints) min = goal;
 				}
@@ -160,7 +160,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				
-				Research.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
+				Research.getPlayerStats(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -198,9 +198,9 @@ public class Commands implements CommandExecutor{
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
-				int currentPoints = Research.playerStats.get(uuid).getResearchPoints().get(args[2]);
+				int currentPoints = Research.getPlayerStats(uuid).getResearchPoints().get(args[2]);
 				int min = -1;
-				for (ResearchItem rItem : main.mobMap.get(args[2])) {
+				for (ResearchItem rItem : Research.getMobMap().get(args[2])) {
 					int goal = rItem.getGoals().get(args[2]);
 					if (min < goal && goal <= currentPoints) min = goal;
 				}
@@ -210,7 +210,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				
-				Research.playerStats.get(uuid).getResearchPoints().put(args[2], currentPoints - needed);
+				Research.getPlayerStats(uuid).getResearchPoints().put(args[2], currentPoints - needed);
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
@@ -285,7 +285,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("setlevel")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				Research.playerStats.get(p.getUniqueId()).setLevel(amount);
+				Research.getPlayerStats(p.getUniqueId()).setLevel(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set level for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
@@ -293,7 +293,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("setexp")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				Research.playerStats.get(p.getUniqueId()).setExp(amount);
+				Research.getPlayerStats(p.getUniqueId()).setExp(amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set exp for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
@@ -301,23 +301,23 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("addexp")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				int amount = Integer.parseInt(args[2]);
-				Research.playerStats.get(p.getUniqueId()).addExp(p, amount);
+				Research.getPlayerStats(p.getUniqueId()).addExp(p, amount);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Added exp for " + p.getName() + " §7to §e" + amount);
 				return true;
 			}
 			// /nr inspect [player]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 2) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = Research.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
-						" §7with §e" + stats.getExp() + " / " + main.toNextLvl.get(stats.getLevel()) + " §7exp.");
+						" §7with §e" + stats.getExp() + " / " + Research.getNextLevel().get(stats.getLevel()) + " §7exp.");
 				return true;
 			}
 			// /nr inspect [player] [internalmob]
 			else if (args[0].equalsIgnoreCase("inspect") && args.length == 3) {
 				Player p = Bukkit.getPlayer(args[1]);
 				String mob = args[2];
-				PlayerStats stats = Research.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has §e" + stats.getResearchPoints().get(mob) +
 						" §7research points and §e" + stats.getMobKills().get(mob) + " §7kills for this mob.");
 				return true;
@@ -325,7 +325,7 @@ public class Commands implements CommandExecutor{
 			// /nr inspectgoals [player]
 			else if (args[0].equalsIgnoreCase("inspectgoals")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = Research.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				String msg = new String("§4[§c§lMLMC§4] §e" + p.getName() + " §7has: §e");
 				for (String id : stats.getCompletedResearchItems().keySet()) {
 					msg += id + " ";
@@ -336,7 +336,7 @@ public class Commands implements CommandExecutor{
 			// /nr takegoal [player] [goal]
 			else if (args[0].equalsIgnoreCase("takegoal")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				PlayerStats stats = Research.getPlayerStats(p);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				for (String id : stats.getCompletedResearchItems().keySet()) {
 					if (id.contains(args[2])) {
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully removed goal");
@@ -389,9 +389,9 @@ public class Commands implements CommandExecutor{
 			int minimax = max / 10;
 			
 			HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
-			for (String perm : main.converter.keySet()) {
+			for (String perm : Research.getConverter().keySet()) {
 				if (p.hasPermission(perm)) {
-					HashMap<String, Integer> mobs = main.converter.get(perm);
+					HashMap<String, Integer> mobs = Research.getConverter().get(perm);
 					
 					// Tally up points for each mob
 					for (String mob : mobs.keySet()) {
@@ -409,7 +409,7 @@ public class Commands implements CommandExecutor{
 			for (Entry<String, Integer> entry : mobKills.entrySet()) {
 				main.giveResearchKills(p, entry.getValue(), entry.getKey());
 				int points = 0;
-				if (main.minibosses.contains(entry.getKey())) {
+				if (Research.getMinibosses().contains(entry.getKey())) {
 					points = entry.getValue() >= minimax ? minimax : entry.getValue();
 				}
 				else {
@@ -425,13 +425,12 @@ public class Commands implements CommandExecutor{
 		}
 		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
 			Player p = (Player) sender;
-			UUID uuid = p.getUniqueId();
 			int acc = SkillAPI.getPlayerAccountData(p).getActiveId();
-			StoredAttributes pAttr = main.playerAttrs.get(uuid).get(acc);
+			StoredAttributes pAttr = Research.getPlayerAttributes(p);
 			if (pAttr == null) {
 				// Use same attrs as first account
-				pAttr = new StoredAttributes(main.playerAttrs.get(uuid).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
-				main.playerAttrs.get(uuid).put(acc, pAttr);
+				pAttr = new StoredAttributes(Research.getPlayerAttributeAccounts(p).getOrDefault(1, new StoredAttributes()).getStoredAttrs());
+				Research.getPlayerAttributeAccounts(p).put(acc, pAttr);
 			}
 			new ResearchAttributesInventory(p, pAttr);
 			return true;

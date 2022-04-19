@@ -60,8 +60,8 @@ public class PlayerStats {
 		
 		// If next level exists, check that the player can reach it, else just add
 		boolean levelup = false;
-		while (main.toNextLvl.containsKey(this.level) && remainingExp >= main.toNextLvl.get(this.level)) {
-			remainingExp -= main.toNextLvl.get(this.level);
+		while (Research.getNextLevel().containsKey(this.level) && remainingExp >= Research.getNextLevel().get(this.level)) {
+			remainingExp -= Research.getNextLevel().get(this.level);
 			this.level++;
 			levelup = true;
 		}
@@ -78,7 +78,7 @@ public class PlayerStats {
 			if (expToTake > this.exp) {
 				expToTake -= this.exp;
 				this.level--;
-				this.exp = main.toNextLvl.get(this.level);
+				this.exp = Research.getNextLevel().get(this.level);
 			}
 			else {
 				this.exp -= expToTake;

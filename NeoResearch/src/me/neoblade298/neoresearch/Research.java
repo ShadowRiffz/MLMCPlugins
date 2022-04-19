@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -49,20 +48,18 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
-	public String url, user, pass;
+	private static String url, user, pass;
 	public static HashMap<Player, ResearchInventory> viewingInventory = new HashMap<Player, ResearchInventory>();
-	public static HashMap<String, ResearchItem> researchItems;
-	public HashMap<String, ArrayList<ResearchItem>> mobMap;
-	public HashMap<String, String> displayNameMap;
-	public static HashMap<UUID, PlayerStats> playerStats;
-	public HashMap<Integer, Integer> toNextLvl;
-	public HashMap<UUID, HashMap<Integer, StoredAttributes>> playerAttrs;
-	public HashMap<String, HashMap<String, Integer>> converter;
-	public static ArrayList<String> attrs;
-	ArrayList<String> enabledWorlds;
-	public HashSet<String> minibosses;
-	public Random rand;
-	public boolean isInstance;
+	private static HashMap<String, ResearchItem> researchItems;
+	private static HashMap<String, ArrayList<ResearchItem>> mobMap;
+	private static HashMap<String, String> displayNameMap;
+	private static HashMap<UUID, PlayerStats> playerStats;
+	private static HashMap<Integer, Integer> toNextLvl;
+	private static HashMap<UUID, HashMap<Integer, StoredAttributes>> playerAttrs;
+	private static HashMap<String, HashMap<String, Integer>> converter;
+	private static ArrayList<String> enabledWorlds;
+	private static HashSet<String> minibosses;
+	public static Random rand;
 	public static boolean debug = false;
 	
 	public HashMap<UUID, Long> lastSave;
@@ -73,7 +70,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		Bukkit.getServer().getLogger().info("NeoResearch Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this);
-		attrs = new ArrayList<String>(Arrays.asList("str", "dex", "int", "spr", "end"));
 		this.getCommand("nr").setExecutor(new Commands(this));
 		enabledWorlds = new ArrayList<String>();
 		enabledWorlds.add("Dev");
@@ -116,9 +112,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
 		levelup = general.getString("research_levelup").replaceAll("&", "§");
 		discovery = general.getString("discovery");
-		if (new File(getDataFolder(), "instance").exists()) {
-			isInstance = true;
-		}
 
 		// Exp
 		toNextLvl = new HashMap<Integer, Integer>();
@@ -691,8 +684,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public static PlayerStats getPlayerStats(Player p) {
-		return playerStats.get(p.getUniqueId());
+	public static HashMap<String, ArrayList<ResearchItem>> getMobMap() {
+		return mobMap;
+	}
+	
+	public static PlayerStats getPlayerStats(UUID uuid) {
+		return playerStats.get(uuid);
 	}
 	
 	public static HashMap<String, ResearchItem> getResearchItems() {
@@ -703,16 +700,33 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		return researchItems.size();
 	}
 	
-	public HashMap<Integer, Integer> getNextLvl() {
+	public static HashMap<Integer, Integer> getNextLevel() {
 		return toNextLvl;
 	}
 	
-	public StoredAttributes getPlayerAttributes(Player p, int acc) {
+	public static HashMap<Integer, StoredAttributes> getPlayerAttributeAccounts(Player p) {
+		return playerAttrs.get(p.getUniqueId());
+	}
+	
+	public static StoredAttributes getPlayerAttributes(Player p, int acc) {
 		return playerAttrs.get(p.getUniqueId()).get(acc);
 	}
 	
-	public boolean isCompleted(Player p, String id) {
+	public static StoredAttributes getPlayerAttributes(Player p) {
+		int acc = SkillAPI.getPlayerAccountData(p).getActiveId();
+		return playerAttrs.get(p.getUniqueId()).get(acc);
+	}
+	
+	public static boolean isCompleted(Player p, String id) {
 		return playerStats.get(p.getUniqueId()).getCompletedResearchItems().containsKey(id);
+	}
+	
+	public static HashMap<String, HashMap<String, Integer>> getConverter() {
+		return converter;
+	}
+	
+	public static HashSet<String> getMinibosses() {
+		return minibosses;
 	}
 	
 	// Below are situations where research should load
