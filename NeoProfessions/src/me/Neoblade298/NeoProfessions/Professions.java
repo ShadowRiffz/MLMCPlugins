@@ -20,7 +20,6 @@ import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
@@ -119,7 +118,7 @@ public class Professions extends JavaPlugin implements Listener {
 			this.getCommand("egive").setExecutor(new EssenceGiveCommand(this));
 			this.getCommand("etake").setExecutor(new EssenceTakeCommand(this));
 			this.getCommand("eset").setExecutor(new EssenceSetCommand(this));
-			this.getCommand("prof").setExecutor(new NeoprofessionsCommands(this));
+			this.getCommand("prof").setExecutor(new ProfCommand(this));
 			this.getCommand("profs").setExecutor(new ProfsCommand(this));
 			this.getCommand("gardens").setExecutor(new GardensCommand(this));
 			this.getCommand("craft").setExecutor(new CraftCommand(this));
