@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neoresearch.Attributes;
 import me.neoblade298.neoresearch.PlayerStats;
 import me.neoblade298.neoresearch.Research;
 
@@ -53,9 +52,9 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		
 		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
-		PlayerStats stats = nr.getPlayerStats(p);
+		PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 		if (args[0].equalsIgnoreCase("complete")) {
-			if (nr.isCompleted(p, args[1])) {
+			if (Research.isCompleted(p, args[1])) {
 				return "T";
 			}
 			else {
@@ -75,19 +74,7 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 			return "" + (nr.getNumResearchItems() - stats.getCompletedResearchItems().size());
 		}
 		else if (args[0].equalsIgnoreCase("neededexp")) {
-			return "" + nr.getNextLvl().get(stats.getLevel());
-		}
-		else if (args[0].equalsIgnoreCase("attr")) {
-			Attributes attr = nr.getPlayerAttributes(p);
-			switch (args[1]) {
-				case "str": return "" + attr.getStrength();
-				case "dex": return "" + attr.getDexterity();
-				case "int": return "" + attr.getIntelligence();
-				case "spr": return "" + attr.getSpirit();
-				case "prc": return "" + attr.getPerception();
-				case "end": return "" + attr.getEndurance();
-				case "vit": return "" + attr.getVitality();
-			}
+			return "" + Research.getNextLevel().get(stats.getLevel());
 		}
     	return "§c???";
 	}

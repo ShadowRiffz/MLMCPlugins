@@ -60,8 +60,7 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 			name += args[i];
 		}
 		name = name.replaceAll("@", "§");
-		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
-		HashMap<String, Integer> mobKills = nr.getPlayerStats(p).getMobKills();
+		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(mob)) {
 			int kills = mobKills.get(mob);
 			return name + "§7: §e" + kills;

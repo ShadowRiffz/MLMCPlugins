@@ -61,8 +61,7 @@ public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 			return "Invalid placeholder";
 		}
 		String name = mm.getDisplayName().get();
-		Research nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
-		HashMap<String, Integer> researchPoints = nr.getPlayerStats(p).getResearchPoints();
+		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
 		if (researchPoints.containsKey(mob)) {
 			int points = researchPoints.get(mob);
 			return name + "§7: §e" + points;
