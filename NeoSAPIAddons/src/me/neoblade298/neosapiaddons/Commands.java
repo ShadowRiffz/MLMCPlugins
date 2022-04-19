@@ -3,6 +3,7 @@ package me.neoblade298.neosapiaddons;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.skills.Skill;
+import com.sucy.skill.api.util.FlagManager;
 
 import me.neoblade298.neosapiaddons.methods.ProfessClass;
 import me.neoblade298.neosapiaddons.methods.ResetClass;
@@ -24,24 +25,16 @@ public class Commands implements CommandExecutor {
 			if (args.length == 0) {
 				sender.sendMessage("§8neosapiaddons.use");
 				sender.sendMessage("§c/nsapi debug");
-				sender.sendMessage("§c/nsapi takexp [player] [exp] - remove class exp");
 				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
-				sender.sendMessage("§c/nsapi points [player] [classtype] [amount] - give class points");
 				sender.sendMessage("§c/nsapi refresh [player] - update equips");
 				sender.sendMessage("§c/nsapi profess [player] [class] - safely profess player to next tier");
 				sender.sendMessage("§c/nsapi reset [player] - reset player to previous tier");
 				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
+				sender.sendMessage("§c/nsapi flag <player> [flag] - check if player has flag");
 				sender.sendMessage("§c/nsapi update [player] - Fixes AP and SP");
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("takexp") && (StringUtils.isNumeric(args[2]))) {
-				double exp = Integer.parseInt(args[2]);
-				PlayerClass data = SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass("class");
-				data.setExp(data.getExp() - exp);
-				sender.sendMessage("§4[§c§lMLMC§4] §c" + args[1] + " §7has §e" + data.getExp() + " §7exp remaining.");
-				return true;
-			}
-			else if (args[0].equalsIgnoreCase("debug")) {
+			if (args[0].equalsIgnoreCase("debug")) {
 				SAPIAddons.debug = !SAPIAddons.debug;
 				if (SAPIAddons.debug) {
 					sender.sendMessage("§4[§c§lMLMC§4] §7Debug mode enabled");
@@ -65,20 +58,6 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");
 				return true;
 			}
-
-			else if (args[0].equalsIgnoreCase("debug")) {
-				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
-				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
-				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");
-				return true;
-			}
-
-			// neosapiaddons points [player] [classtype] [amount]
-			else if (args[0].equalsIgnoreCase("points")) {
-				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).getClass(args[2]).givePoints(Integer.parseInt(args[3]));
-				sender.sendMessage("§4[§c§lMLMC§4] §7Points given.");
-				return true;
-			}
 			else if (args[0].equalsIgnoreCase("refresh")) {
 	            Player p = Bukkit.getPlayer(args[1]);
                 SkillAPI.getPlayerData(p).getEquips().update(p);
@@ -88,6 +67,18 @@ public class Commands implements CommandExecutor {
 	            Player p = (Player) sender;
                 sender.sendMessage("§4[§c§lMLMC§4] §7Attribute has: " + SkillAPI.getPlayerData(p).getAttribute(args[1]) + ".");
                 return true;
+			}
+			else if (args[0].equalsIgnoreCase("flag")) {
+				if (args.length == 2) {
+		            Player p = (Player) sender;
+	                sender.sendMessage("§4[§c§lMLMC§4] §7Flag " + args[1] + ": " + FlagManager.hasFlag(p, args[1]));
+	                return true;
+				}
+				else {
+		            Player p = Bukkit.getPlayer(args[1]);
+	                sender.sendMessage("§4[§c§lMLMC§4] §7Flag " + args[2] + ": " + FlagManager.hasFlag(p, args[2]));
+	                return true;
+				}
 			}
 			else if (args[0].equalsIgnoreCase("update")) {
 				if (args.length == 0) {
