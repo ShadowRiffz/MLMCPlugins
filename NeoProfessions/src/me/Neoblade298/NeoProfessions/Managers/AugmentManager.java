@@ -713,7 +713,7 @@ public class AugmentManager implements Listener, Manager {
 					if (aug.canUse(p, e.getType())) {
 						aug.applyHarvestEffects(p);
 						
-						amountMult += aug.getAmountMult(p);
+						amountMult = Math.max(amountMult, aug.getAmountMult(p));
 						
 						if (aug.getRarityMults(p) != null) {
 							for (Rarity rarity : aug.getRarityMults(p).keySet()) {

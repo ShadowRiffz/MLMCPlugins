@@ -40,7 +40,7 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.STONECUTTER) && Professions.gen.nextDouble() >= getChance();
+		return type.equals(ProfessionType.STONECUTTER) && Professions.gen.nextDouble() <= getChance();
 	}
 
 	public ItemStack getItem(Player user) {

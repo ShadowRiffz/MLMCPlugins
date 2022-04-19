@@ -40,7 +40,7 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.LOGGER) && Professions.gen.nextDouble() >= getChance();
+		return type.equals(ProfessionType.LOGGER) && Professions.gen.nextDouble() <= getChance();
 	}
 
 	public ItemStack getItem(Player user) {

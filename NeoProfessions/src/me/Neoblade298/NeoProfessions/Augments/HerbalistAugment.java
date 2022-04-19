@@ -40,7 +40,7 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.HARVESTER) && Professions.gen.nextDouble() >= getChance();
+		return type.equals(ProfessionType.HARVESTER) && Professions.gen.nextDouble() <= getChance();
 	}
 
 	public ItemStack getItem(Player user) {
