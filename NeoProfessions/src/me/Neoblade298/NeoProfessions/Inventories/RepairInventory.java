@@ -98,7 +98,6 @@ public class RepairInventory extends ProfessionInventory {
 			Professions.econ.withdrawPlayer(p, goldCost.get(level));
 			CurrencyManager.subtract(p, level, essenceCost);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
-			p.getInventory().addItem(item);
 			p.closeInventory();
 		}
 		e.setCancelled(true);
