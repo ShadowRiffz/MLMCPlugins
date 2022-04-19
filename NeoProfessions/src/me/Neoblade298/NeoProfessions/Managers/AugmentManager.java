@@ -715,8 +715,10 @@ public class AugmentManager implements Listener, Manager {
 						
 						amountMult += aug.getAmountMult(p);
 						
-						for (Rarity rarity : aug.getRarityMults(p).keySet()) {
-							params.addRarityWeightMultiplier(rarity, aug.getRarityMults(p).get(rarity));
+						if (aug.getRarityMults(p) != null) {
+							for (Rarity rarity : aug.getRarityMults(p).keySet()) {
+								params.addRarityWeightMultiplier(rarity, aug.getRarityMults(p).get(rarity));
+							}
 						}
 					}
 				}
