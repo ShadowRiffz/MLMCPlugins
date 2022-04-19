@@ -139,6 +139,7 @@ public class AugmentManager implements Listener, Manager {
 	
 	@Override
 	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 		AugmentManager.droptables.clear();
 		loadDroptables(new File(main.getDataFolder(), "droptables"));
 	}

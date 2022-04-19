@@ -61,6 +61,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	
 	@Override
 	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Storage manager...");
 		items.clear();
 		loadItems(new File(main.getDataFolder(), "items"));
 	}

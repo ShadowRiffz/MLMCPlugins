@@ -30,10 +30,13 @@ import me.Neoblade298.NeoProfessions.Inventories.StorageView;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
+import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
+import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
@@ -174,6 +177,7 @@ public class ProfCommand implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof reload");
 				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
+				sender.sendMessage("§7- §4/prof setlevel/exp [type] [player] [level/exp]");
 				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
 				sender.sendMessage("§7- §4/prof debug");
 				// prof sell
@@ -216,9 +220,36 @@ public class ProfCommand implements CommandExecutor {
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("reload")) {
-					if (args.length == 0) {
+					if (args.length == 1) {
 						for (Manager mngr : Professions.managers) {
 							mngr.reload();
+						}
+						sender.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+					}
+					return true;
+				}
+				// prof setlevel [type] [player] [level]
+				else if (args[0].equalsIgnoreCase("setlevel") || args[0].equalsIgnoreCase("setexp")) {
+					Player target = null;
+					int val = 1;
+					if (args.length == 4) {
+						target = Bukkit.getPlayer(args[2]);
+						val = Integer.parseInt(args[3]);
+					}
+					else if (args.length == 3) {
+						target = (Player) sender;
+						val = Integer.parseInt(args[2]);
+					}
+					
+					if (target != null) {
+						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1].toUpperCase()));
+						if (args[0].equalsIgnoreCase("setlevel")) {
+							prof.setLevel(val);
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set player level.");
+						}
+						else {
+							prof.setLevel(val);
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set player exp.");
 						}
 					}
 					return true;

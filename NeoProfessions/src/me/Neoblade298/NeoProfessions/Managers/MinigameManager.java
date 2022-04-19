@@ -4,13 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Inventories.HarvestingMinigame;
@@ -26,8 +32,9 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
 public class MinigameManager implements Listener, Manager {
 	public static Professions main;
+	private static HashMap<Location, Integer> gameLocations = new HashMap<Location, Integer>();
 	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
-	private static HashMap<UUID, HashMap<UUID, Long>> playerCooldowns = new HashMap<UUID, HashMap<UUID, Long>>();
+	private static HashMap<UUID, HashMap<Location, Long>> playerCooldowns = new HashMap<UUID, HashMap<Location, Long>>();
 	
 	public MinigameManager(Professions main) {
 		MinigameManager.main = main;
@@ -36,7 +43,9 @@ public class MinigameManager implements Listener, Manager {
 	
 	@Override
 	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Minigame manager...");
 		games.clear();
+		gameLocations.clear();
 		loadMinigames(new File(main.getDataFolder(), "minigames"));
 	}
 	
@@ -55,9 +64,18 @@ public class MinigameManager implements Listener, Manager {
 					int numDrops = itemCfg.getInt("num-drops");
 					int difficulty = itemCfg.getInt("difficulty");
 					int level = StorageManager.getItem(id).getLevel();
+					int cooldown = itemCfg.getInt("cooldown");
 					// Hardcode level 5 minimum
 					if (level <= 5) {
 						level = 1;
+					}
+					
+					// Parse locations
+					ArrayList<String> locs = (ArrayList<String>) itemCfg.getStringList("locations");
+					for (String loc : locs) {
+						String[] args = loc.split(" ");
+						gameLocations.put(new Location(Bukkit.getWorld(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
+								Integer.parseInt(args[3])), id);
 					}
 					
 					// Parse drops
@@ -104,7 +122,7 @@ public class MinigameManager implements Listener, Manager {
 						
 						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
 					}
-					games.put(id, new Minigame(display, type, parsed, numDrops, difficulty, level));
+					games.put(id, new Minigame(display, type, parsed, numDrops, difficulty, level, cooldown));
 				}
 			}
 		}
@@ -119,13 +137,13 @@ public class MinigameManager implements Listener, Manager {
 	}
 	
 	// Cooldown in seconds
-	public static void startMinigame(Player p, int key, UUID mob, int cooldown) {
+	public static void startMinigame(Player p, Location loc) {
 		if (!playerCooldowns.containsKey(p.getUniqueId())) {
-			playerCooldowns.put(p.getUniqueId(), new HashMap<UUID, Long>());
+			playerCooldowns.put(p.getUniqueId(), new HashMap<Location, Long>());
 		}
 		
-		HashMap<UUID, Long> cooldowns = playerCooldowns.get(p.getUniqueId());
-		long currCd = cooldowns.getOrDefault(mob, 0L);
+		HashMap<Location, Long> cooldowns = playerCooldowns.get(p.getUniqueId());
+		long currCd = cooldowns.getOrDefault(loc, 0L);
 		if (currCd > System.currentTimeMillis()) {
 			int time = (int) ((currCd - System.currentTimeMillis()) / 1000); // Remaining time in seconds
 			int minutes = time / 60;
@@ -134,8 +152,9 @@ public class MinigameManager implements Listener, Manager {
 			return;
 		}
 		
-		if (games.get(key).startMinigame(p, null)) {
-			cooldowns.put(mob, System.currentTimeMillis() + (cooldown * 1000));
+		Minigame game = games.get(gameLocations.get(loc));
+		if (game.startMinigame(p, null)) {
+			cooldowns.put(loc, System.currentTimeMillis() + (game.getCooldown() * 1000));
 		}
 	}
 	
@@ -151,6 +170,21 @@ public class MinigameManager implements Listener, Manager {
 					e.setCancelled(true);
 				}
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if (!e.getHand().equals(EquipmentSlot.HAND)) {
+			return;
+		}
+		if (!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+		
+		Location loc = e.getClickedBlock().getLocation();
+		if (gameLocations.containsKey(loc)) {
+			startMinigame(e.getPlayer(), loc);
 		}
 	}
 }

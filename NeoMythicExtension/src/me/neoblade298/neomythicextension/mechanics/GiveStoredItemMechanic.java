@@ -28,18 +28,28 @@ public class GiveStoredItemMechanic extends SkillMechanic implements ITargetedEn
         this.id = config.getInteger(new String[] {"id", "i"}, 0);
         this.amount = config.getInteger(new String[] {"amount", "a"}, 1);
         
-        if (MythicMobs.inst().getMobManager().getMythicMob(this.mob) == null) {
-        	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
-        	return;
+        try {
+            if (MythicMobs.inst().getMobManager().getMythicMob(this.mob) == null) {
+            	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
+            	return;
+            }
+            StorageManager.addSource(this.id, this.mob, true);
         }
-        StorageManager.addSource(this.id, this.mob, true);
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
 	}
 	
 	@Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player) {
-			StorageManager.givePlayer((Player) target.getBukkitEntity(), this.id, this.amount);
-			return true;
+		try {
+			if (target.getBukkitEntity() instanceof Player) {
+				StorageManager.givePlayer((Player) target.getBukkitEntity(), this.id, this.amount);
+				return true;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 		return false;
     }

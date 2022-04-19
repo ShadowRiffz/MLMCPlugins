@@ -33,6 +33,7 @@ public class GardenManager implements IOComponent, Manager {
 	
 	@Override
 	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Garden manager...");
 		fertilizers.clear();
 		loadFertilizers(new File(main.getDataFolder(), "fertilizers"));
 	}

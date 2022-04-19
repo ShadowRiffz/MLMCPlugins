@@ -19,15 +19,16 @@ public class Minigame {
 	private ProfessionType type;
 	private MinigameDroptable droptable;
 	private String display;
-	int numDrops, difficulty, level;
+	int numDrops, difficulty, level, cooldown;
 	
-	public Minigame(String display, ProfessionType type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty, int level) {
+	public Minigame(String display, ProfessionType type, ArrayList<MinigameDrops> droptable, int numDrops, int difficulty, int level, int cooldown) {
 		this.type = type;
 		this.droptable = new MinigameDroptable(droptable);
 		this.numDrops = numDrops;
 		this.display = display;
 		this.difficulty = difficulty;
 		this.level = level;
+		this.cooldown = cooldown;
 	}
 	
 	private ArrayList<MinigameDrop> generateDrops(MinigameParameters params) {
@@ -86,5 +87,9 @@ public class Minigame {
 			return true;
 		}
 		return false;
+	}
+	
+	public int getCooldown() {
+		return cooldown;
 	}
 }

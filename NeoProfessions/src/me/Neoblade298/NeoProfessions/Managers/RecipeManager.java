@@ -59,6 +59,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	
 	@Override
 	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Recipe manager...");
 		recipes.clear();
 		loadRecipes(new File(main.getDataFolder(), "recipes"));
 		
