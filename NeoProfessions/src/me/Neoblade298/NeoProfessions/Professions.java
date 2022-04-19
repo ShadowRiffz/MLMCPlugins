@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
@@ -19,6 +20,8 @@ import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
+import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import net.milkbowl.vault.economy.Economy;
@@ -49,6 +52,7 @@ public class Professions extends JavaPlugin implements Listener {
 	public me.neoblade298.neogear.Gear neogear;
 	
 	public static HashMap<Player, ProfessionInventory> viewingInventory = new HashMap<Player, ProfessionInventory>();
+	public static ArrayList<Manager> managers = new ArrayList<Manager>();
 	private static HashMap<Rarity, Double> rarityExpMults = new HashMap<Rarity, Double>();
 	private static HashMap<ProfessionType, Double> profExpMults = new HashMap<ProfessionType, Double>();
 	private static HashMap<Rarity, Integer> defaultWeights = new HashMap<Rarity, Integer>();
@@ -87,8 +91,15 @@ public class Professions extends JavaPlugin implements Listener {
 			sm = new StorageManager(this);
 			rm = new RecipeManager(this);
 			mim = new MinigameManager(this);
-			io = new IOListeners(this);
 			gm = new GardenManager(this);
+			
+			managers.add(cm);
+			managers.add(pm);
+			managers.add(sm);
+			managers.add(rm);
+			managers.add(mim);
+			managers.add(gm);
+			io = new IOListeners(this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(sm, this);
 			getServer().getPluginManager().registerEvents(rm, this);

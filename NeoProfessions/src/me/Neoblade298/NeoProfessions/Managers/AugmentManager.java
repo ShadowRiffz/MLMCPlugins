@@ -37,12 +37,13 @@ import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
-public class AugmentManager implements Listener {
+public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
 	private static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
 	
@@ -133,6 +134,12 @@ public class AugmentManager implements Listener {
 		}
 		
 		// Droptables
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		AugmentManager.droptables.clear();
 		loadDroptables(new File(main.getDataFolder(), "droptables"));
 	}
 	

@@ -18,16 +18,22 @@ import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
-public class GardenManager implements IOComponent {
+public class GardenManager implements IOComponent, Manager {
 	public static Professions main;
 	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	public GardenManager(Professions main) {
 		GardenManager.main = main;
-
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		fertilizers.clear();
 		loadFertilizers(new File(main.getDataFolder(), "fertilizers"));
 	}
 	

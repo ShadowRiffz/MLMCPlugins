@@ -25,12 +25,13 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 
-public class StorageManager implements IOComponent, Listener {
+public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static Professions main;
@@ -43,7 +44,7 @@ public class StorageManager implements IOComponent, Listener {
 		StorageManager.main = main;
 		
 		// Load in items
-		loadItems(new File(main.getDataFolder(), "items"));
+		reload();
 		
 		// Load settings
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
@@ -56,6 +57,12 @@ public class StorageManager implements IOComponent, Listener {
 		settings.addSetting("rarity-order", false);
 		settings.addSetting("amount-order", false);
 		settings.addSetting("name-order", true);
+	}
+	
+	@Override
+	public void reload() {
+		items.clear();
+		loadItems(new File(main.getDataFolder(), "items"));
 	}
 	
 	public static boolean givePlayer(Player p, int id, int amount) {

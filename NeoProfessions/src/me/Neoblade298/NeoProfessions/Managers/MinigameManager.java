@@ -20,17 +20,23 @@ import me.Neoblade298.NeoProfessions.Inventories.StonecuttingMinigame;
 import me.Neoblade298.NeoProfessions.Minigames.Minigame;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameDrops;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
 
-public class MinigameManager implements Listener {
+public class MinigameManager implements Listener, Manager {
 	public static Professions main;
 	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
 	private static HashMap<UUID, HashMap<UUID, Long>> playerCooldowns = new HashMap<UUID, HashMap<UUID, Long>>();
 	
 	public MinigameManager(Professions main) {
 		MinigameManager.main = main;
-		
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		games.clear();
 		loadMinigames(new File(main.getDataFolder(), "minigames"));
 	}
 	

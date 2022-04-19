@@ -33,10 +33,11 @@ import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Methods.ProfessionsMethods;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
-public class NeoprofessionsCommands implements CommandExecutor {
+public class ProfCommand implements CommandExecutor {
 
 	Professions main;
 	private static ArrayList<String> voucherLore = new ArrayList<String>();
@@ -45,7 +46,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 		voucherLore.add("§7§oRight click to claim!");
 	}
 
-	public NeoprofessionsCommands(Professions main) {
+	public ProfCommand(Professions main) {
 		this.main = main;
 	}
 
@@ -170,6 +171,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
+				sender.sendMessage("§7- §4/prof reload");
 				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
 				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
@@ -210,6 +212,14 @@ public class NeoprofessionsCommands implements CommandExecutor {
 							return true;
 						}
 						new RepairInventory(main, p);
+					}
+					return true;
+				}
+				else if (args[0].equalsIgnoreCase("reload")) {
+					if (args.length == 0) {
+						for (Manager mngr : Professions.managers) {
+							mngr.reload();
+						}
 					}
 					return true;
 				}

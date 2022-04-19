@@ -12,16 +12,22 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
-public class ProfessionManager implements IOComponent {
+public class ProfessionManager implements IOComponent, Manager {
 	static Professions main;
 	
 	static HashMap<UUID, HashMap<ProfessionType, Profession>> accounts = new HashMap<UUID, HashMap<ProfessionType, Profession>>();
 	
 	public ProfessionManager(Professions main) {
 		ProfessionManager.main = main;
+	}
+	
+	@Override
+	public void reload() {
+		
 	}
 	
 	public static String getDisplay(Player p, ProfessionType prof) {

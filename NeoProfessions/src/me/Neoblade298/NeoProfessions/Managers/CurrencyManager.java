@@ -24,9 +24,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
-public class CurrencyManager implements IOComponent, Listener {
+public class CurrencyManager implements IOComponent, Listener, Manager {
 	// UUID, essence/oretype, amount
 	Professions main;
 	
@@ -40,6 +41,11 @@ public class CurrencyManager implements IOComponent, Listener {
 	public CurrencyManager(Professions main) {
 		this.main = main;
 		essence = new HashMap<UUID, HashMap<Integer, Integer>>();
+	}
+	
+	@Override
+	public void reload() {
+		
 	}
 	
 	@Override

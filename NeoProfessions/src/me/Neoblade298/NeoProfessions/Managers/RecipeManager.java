@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Objects.IOComponent;
+import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.EssenceRequirement;
@@ -44,7 +45,7 @@ import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
-public class RecipeManager implements IOComponent, Listener {
+public class RecipeManager implements IOComponent, Listener, Manager {
 	Professions main;
 	private static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
 	private static HashMap<String, List<String>> recipeLists = new HashMap<String, List<String>>();
@@ -53,8 +54,15 @@ public class RecipeManager implements IOComponent, Listener {
 	public RecipeManager(Professions main) {
 		this.main = main;
 		
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		recipes.clear();
 		loadRecipes(new File(main.getDataFolder(), "recipes"));
 		
+		recipeLists.clear();
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(main.getDataFolder(), "recipe-lists.yml"));
 		for (String key : cfg.getKeys(false)) {
 			List<String> rlist = cfg.getStringList(key);
