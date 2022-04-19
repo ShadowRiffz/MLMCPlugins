@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class MinerAugment extends Augment implements ModProfessionHarvestAugment {
