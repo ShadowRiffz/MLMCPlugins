@@ -101,10 +101,13 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
+		System.out.println("Adding source " + source);
 		if (sources.contains(source)) {
+			System.out.println("Already exists");
 			return;
 		}
-		
+
+		sources.add(source);
 		source = source.replaceAll("&", "§");
 		if (isMob) {
 			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
@@ -114,7 +117,6 @@ public class StoredItem {
 		}
 		this.storageLore.add(SOURCES_POS + 1, "§7- " + source);
 		this.sourceLore.add("§7- " + source);
-		sources.add(source);
 	}
 	
 	public ItemStack getItem() {
