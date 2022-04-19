@@ -23,9 +23,10 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 		this.name = "Herbalist";
 		this.etypes = Arrays.asList(new EventType[] {EventType.PROFESSION_HARVEST});
 	}
-	
+
+	@Override
 	public double getChance() {
-		return this.level * 0.01;
+		return (this.level / 5) * 0.01;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.HARVESTER) && Professions.gen.nextDouble() <= getChance();
+		return type.equals(ProfessionType.HARVESTER);
 	}
 
 	public ItemStack getItem(Player user) {

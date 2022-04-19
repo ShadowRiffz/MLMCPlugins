@@ -23,9 +23,10 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 		this.name = "Miner";
 		this.etypes = Arrays.asList(new EventType[] {EventType.PROFESSION_HARVEST});
 	}
-	
+
+	@Override
 	public double getChance() {
-		return this.level * 0.01;
+		return (this.level / 5) * 0.01;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.STONECUTTER) && Professions.gen.nextDouble() <= getChance();
+		return type.equals(ProfessionType.STONECUTTER);
 	}
 
 	public ItemStack getItem(Player user) {

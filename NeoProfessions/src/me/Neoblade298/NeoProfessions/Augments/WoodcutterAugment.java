@@ -24,8 +24,9 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 		this.etypes = Arrays.asList(new EventType[] {EventType.PROFESSION_HARVEST});
 	}
 	
+	@Override
 	public double getChance() {
-		return this.level * 0.01;
+		return (this.level / 5) * 0.01;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 
 	@Override
 	public boolean canUse(Player user, ProfessionType type) {
-		return type.equals(ProfessionType.LOGGER) && Professions.gen.nextDouble() <= getChance();
+		return type.equals(ProfessionType.LOGGER);
 	}
 
 	public ItemStack getItem(Player user) {

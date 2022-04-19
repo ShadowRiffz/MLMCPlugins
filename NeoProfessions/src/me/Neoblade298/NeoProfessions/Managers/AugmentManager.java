@@ -706,6 +706,7 @@ public class AugmentManager implements Listener, Manager {
 		
 		// Check charms
 		MinigameParameters params = e.getParams();
+		double multChance = 0;
 		double amountMult = params.getAmountMultiplier();
 		if (containsAugments(p, EventType.PROFESSION_HARVEST)) {
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.PROFESSION_HARVEST)) {
@@ -715,6 +716,7 @@ public class AugmentManager implements Listener, Manager {
 						aug.applyHarvestEffects(p);
 						
 						amountMult = Math.max(amountMult, aug.getAmountMult(p));
+						multChance += aug.getChance();
 						
 						if (aug.getRarityMults(p) != null) {
 							for (Rarity rarity : aug.getRarityMults(p).keySet()) {
@@ -725,7 +727,9 @@ public class AugmentManager implements Listener, Manager {
 				}
 			}
 		}
-		params.setAmountMultiplier(amountMult);
+		if (Professions.gen.nextDouble() <= multChance) {
+			params.setAmountMultiplier(amountMult);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

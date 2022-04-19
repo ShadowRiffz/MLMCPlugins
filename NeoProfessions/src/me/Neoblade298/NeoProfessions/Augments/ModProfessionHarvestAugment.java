@@ -21,5 +21,9 @@ public interface ModProfessionHarvestAugment {
 		return null;
 	}
 	
+	public default double getChance() {
+		return 0;
+	}
+	
 	public abstract boolean canUse(Player user, ProfessionType type);
 }
