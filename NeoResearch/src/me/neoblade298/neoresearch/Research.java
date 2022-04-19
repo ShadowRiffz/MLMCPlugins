@@ -260,13 +260,19 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 							if (expectedAttrs > actualAttrs) {
 								pAttr.addAttribute("unused", expectedAttrs - actualAttrs);
 								Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Loading account " + p.getName() + 
-										"Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+										" Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+								for (Entry<String, Integer> ent : pAttr.getStoredAttrs().entrySet()) {
+									Bukkit.getLogger().log(Level.INFO, ent.getKey() + ": " + ent.getValue());
+								}
 							}
 							else if (expectedAttrs < actualAttrs) {
 								pAttr.removeStoredAttributes();
 								pAttr.addAttribute("unused", expectedAttrs);
 								Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Loading account " + p.getName() + 
-										"Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+										" Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+								for (Entry<String, Integer> ent : pAttr.getStoredAttrs().entrySet()) {
+									Bukkit.getLogger().log(Level.INFO, ent.getKey() + ": " + ent.getValue());
+								}
 							}
 						}
 	
