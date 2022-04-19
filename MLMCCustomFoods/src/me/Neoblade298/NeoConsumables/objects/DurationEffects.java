@@ -55,7 +55,6 @@ public class DurationEffects {
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
-		System.out.println("Effects started");
 		
 		int secondsElapsed = (int) (System.currentTimeMillis() - startTime) / 1000;
 		Player p = Bukkit.getPlayer(uuid);
@@ -109,7 +108,6 @@ public class DurationEffects {
 		if (speedTime - secondsElapsed > 0) {
             AttributeListener.refreshSpeed(p);
             FlagManager.addFlag(p, p, MechanicListener.SPEED_KEY, speedTime * 20);
-            System.out.println("Here: " + p.getWalkSpeed());
             p.setWalkSpeed((float) (cons.getSpeed() * p.getWalkSpeed()));
 		}
 
@@ -136,7 +134,6 @@ public class DurationEffects {
 			ConsumableManager.effects.remove(uuid);
 			return;
 		}
-		System.out.println("Effects ended");
 		
 		
 		Player p = Bukkit.getPlayer(uuid);

@@ -40,7 +40,6 @@ public class ConsumableManager implements Listener {
 		if (eff != null) {
 			if (!eff.isRelevant()) {
 				ConsumableManager.effects.remove(uuid);
-				return;
 			}
 			
 			try {
@@ -49,7 +48,7 @@ public class ConsumableManager implements Listener {
 							+ "'," + eff.getStartTime() + ");");
 				}
 				else {
-					stmt.addBatch("REMOVE FROM consumables_effects WHERE uuid = '" + uuid + "';");
+					stmt.addBatch("DELETE FROM consumables_effects WHERE uuid = '" + uuid + "';");
 				}
 				
 				// Set to true if you're saving several accounts at once
