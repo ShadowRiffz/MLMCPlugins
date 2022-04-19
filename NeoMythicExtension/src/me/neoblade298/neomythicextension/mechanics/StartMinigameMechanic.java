@@ -20,7 +20,7 @@ public class StartMinigameMechanic extends SkillMechanic implements ITargetedEnt
         this.setTargetsCreativePlayers(false);
 
         this.id = config.getInteger(new String[] {"id", "i"}, 0);
-        this.cd = config.getInteger(new String[] {"cooldown", "cd"}, 600);
+        this.cd = config.getInteger(new String[] {"mgcd", "minigamecd"}, 600);
 	}
 	
 	@Override
