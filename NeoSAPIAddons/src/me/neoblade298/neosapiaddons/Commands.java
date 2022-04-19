@@ -1,14 +1,12 @@
 package me.neoblade298.neosapiaddons;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.api.util.FlagManager;
 
 import me.neoblade298.neosapiaddons.methods.ProfessClass;
 import me.neoblade298.neosapiaddons.methods.ResetClass;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
