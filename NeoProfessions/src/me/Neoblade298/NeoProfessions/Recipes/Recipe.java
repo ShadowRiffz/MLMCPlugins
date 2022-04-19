@@ -84,7 +84,7 @@ public class Recipe {
 			}
 		}
 		for (StoredItemInstance component : components) {
-			if (!StorageManager.playerHas(p, component.getItem().getId(), component.getAmount())) {
+			if (!StorageManager.playerHas(p, component.getItem().getId(), component.getAmount() * amount)) {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou lack the component: " + component.getItem().getDisplay());
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				return false;
@@ -96,7 +96,7 @@ public class Recipe {
 			req.useReq(p, amount);
 		}
 		for (StoredItemInstance component : components) {
-			StorageManager.takePlayer(p, component.getItem().getId(), component.getAmount());
+			StorageManager.takePlayer(p, component.getItem().getId(), component.getAmount() * amount);
 		}
 		
 		result.giveResult(p, amount);
