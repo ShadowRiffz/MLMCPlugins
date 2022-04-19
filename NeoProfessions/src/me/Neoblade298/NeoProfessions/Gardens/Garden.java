@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.Gardens;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -31,19 +32,21 @@ public class Garden {
 		return slots;
 	}
 	
-	public void plantSeed(int slot, int plantId, int fertilizerId) {
+	public void plantSeed(UUID uuid, int slot, int plantId, int fertilizerId) {
 		Fertilizer fert = null;
 		long growTime = DEFAULT_GROW_TIME;
 		if (fertilizerId != -1) {
 			fert = GardenManager.getFertilizer(fertilizerId);
 			growTime *= fert.getTimeMultiplier();
 		}
-		this.slots.put(slot, new GardenSlot(plantId, fert, System.currentTimeMillis() + growTime));
+		GardenSlot gs = new GardenSlot(plantId, fert, System.currentTimeMillis() + growTime);
+		this.slots.put(slot, gs);
+		GardenManager.addGardenMessage(uuid, gs);
 	}
 	
 	public void harvestSeed(Player p, int slot) {
 		GardenSlot gs = slots.get(slot);
-		if (gs != null && gs.getEndTime() <= System.currentTimeMillis()) {
+		if (gs != null && gs.canHarvest()) {
 			slots.remove(slot);
 			MinigameManager.startMinigame(p, gs.getId(), gs.getFertilizer() != null ? gs.getFertilizer().getParams() : new MinigameParameters());
 		}

@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Managers;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -12,6 +13,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
@@ -26,6 +30,7 @@ public class GardenManager implements IOComponent, Manager {
 	public static Professions main;
 	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
+	private static HashMap<UUID, ArrayList<BukkitTask>> gardenMsgs = new HashMap<UUID, ArrayList<BukkitTask>>();
 	public GardenManager(Professions main) {
 		GardenManager.main = main;
 		reload();
@@ -83,6 +88,7 @@ public class GardenManager implements IOComponent, Manager {
 		
 		try {
 			// Set up gardens
+			boolean hasHarvestable = false;
 			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_gardens WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				pgardens.get(ProfessionType.valueOf(rs.getString(2))).setSize(rs.getInt(3));
@@ -95,7 +101,25 @@ public class GardenManager implements IOComponent, Manager {
 					continue;
 				}
 				GardenSlot gslot = new GardenSlot(rs.getInt(4), GardenManager.getFertilizer(rs.getInt(6)), rs.getLong(5));
+				if (gslot.canHarvest()) {
+					hasHarvestable = true;
+				}
+				else {
+					addGardenMessage(p.getUniqueId(), gslot);
+				}
 				pgardens.get(ProfessionType.valueOf(rs.getString(2))).getSlots().put(rs.getInt(3), gslot);
+			}
+			
+			if (hasHarvestable) {
+				// Only send if player is on by now
+				new BukkitRunnable() {
+					public void run() {
+						Player online = Bukkit.getPlayer(p.getUniqueId());
+						if (online != null) {
+							online.sendMessage("§4[§c§lMLMC§4] §7Your §6/gardens §7have harvestable crops!");
+						}
+					}
+				}.runTaskLaterAsynchronously(main, 100L);
 			}
 		}
 		catch (Exception e) {
@@ -130,10 +154,35 @@ public class GardenManager implements IOComponent, Manager {
 					}
 				}
 			}
+			
+			for (BukkitTask task : gardenMsgs.get(p.getUniqueId())) {
+				task.cancel();
+			}
+			gardenMsgs.remove(p.getUniqueId());
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to save gardens for user " + p.getName());
 			e.printStackTrace();
+		}
+	}
+	
+	public static void addGardenMessage(UUID uuid, GardenSlot gs) {
+		BukkitTask task = new BukkitRunnable() {
+			public void run() {
+				Player online = Bukkit.getPlayer(uuid);
+				if (online != null) {
+					online.sendMessage("§4[§c§lMLMC§4] §7Your " + StorageManager.getItem(gs.getId()).getDisplay() + " §7can now be harvested!");
+				}
+			}
+		}.runTaskLater(main, gs.getTicksRemaining());
+		
+		if (gardenMsgs.containsKey(uuid)) {
+			gardenMsgs.get(uuid).add(task);
+		}
+		else {
+			ArrayList<BukkitTask> list = new ArrayList<BukkitTask>();
+			list.add(task);
+			gardenMsgs.put(uuid, list);
 		}
 	}
 	

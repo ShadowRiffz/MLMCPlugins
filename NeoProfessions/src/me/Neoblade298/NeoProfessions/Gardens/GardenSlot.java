@@ -68,4 +68,12 @@ public class GardenSlot {
 		int seconds = time % 60;
 		return "§cTime to harvest: " + String.format("§c%d:%02d", minutes, seconds);
 	}
+	
+	public boolean canHarvest() {
+		return endTime <= System.currentTimeMillis();
+	}
+	
+	public long getTicksRemaining() {
+		return (endTime - System.currentTimeMillis()) / 50; // Remaining time in ticks
+	}
 }
