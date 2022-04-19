@@ -101,9 +101,7 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
-		System.out.println("Adding source " + source);
 		if (sources.contains(source)) {
-			System.out.println("Already exists");
 			return;
 		}
 

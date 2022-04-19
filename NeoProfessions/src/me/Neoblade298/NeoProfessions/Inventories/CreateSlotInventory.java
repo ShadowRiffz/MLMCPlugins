@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,7 +20,6 @@ import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
 public class CreateSlotInventory extends ProfessionInventory {
-	private final Inventory inv;
 	private final ItemStack item;
 	private final Player p;
 	private final int goldCost;

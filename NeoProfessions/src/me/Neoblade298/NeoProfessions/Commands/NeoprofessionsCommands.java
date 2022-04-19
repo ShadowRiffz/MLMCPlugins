@@ -174,6 +174,7 @@ public class NeoprofessionsCommands implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
 				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
 				sender.sendMessage("§7- §4/prof debug");
+				// prof sell
 				// sender.sendMessage("§7- §4/prof start [minigame] [playername]");
 				// sender.sendMessage("§7- §4/prof repair [playername]");
 				// sender.sendMessage("§7- §4/prof checkaugments [playername]");
