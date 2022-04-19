@@ -9,9 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FindReplaceRecursive {
-	private static final String PATH = "C:\\Users\\Alex\\Downloads\\";
-	private static final String DIRECTORY = "gear";
-	private static final Pattern REPLACE_OLD = Pattern.compile("display: ");
+	private static final String PATH = "C:\\Users\\Alex\\Downloads\\"; // DO NOT CHANGE, USE DIRECTORY
+	private static final String DIRECTORY = "MM";
+	private static final Pattern REPLACE_OLD = Pattern.compile("t=TorvianDireReflectionMob2;r=100");
 	private static final String REPLACE_NEW = "type: ";
 	public static HashMap<File, String> pendingChanges = new HashMap<File, String>();
 	
@@ -59,7 +59,9 @@ public class FindReplaceRecursive {
 						count++;
 						m.appendReplacement(sb, REPLACE_NEW);
 					}
-					System.out.println(count + " changes: " + file.getName());
+					if (count > 0) {
+						System.out.println(count + " changes: " + file.getPath());
+					}
 					totalChanges += count;
 					m.appendTail(sb);
 					String newContent = sb.toString();
