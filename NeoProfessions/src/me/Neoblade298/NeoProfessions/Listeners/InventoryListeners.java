@@ -35,7 +35,6 @@ public class InventoryListeners implements Listener {
 	public void onInventoryClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
 		if (Professions.viewingInventory.containsKey(p) && e.getInventory() == Professions.viewingInventory.get(p).getInventory()) {
-			System.out.println("Successful handle");
 			Professions.viewingInventory.get(p).handleInventoryClose(e);
 			Professions.viewingInventory.remove(p);
 		}
