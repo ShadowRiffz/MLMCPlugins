@@ -133,7 +133,7 @@ public class Professions extends JavaPlugin implements Listener {
 	}
 	
 	public void loadConfig() {
-		if (new File(Bukkit.getDataFolder(), "instance").exists()) {
+		if (new File(getDataFolder(), "instance").exists()) {
 			isInstance = true;
 		}
 		
