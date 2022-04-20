@@ -142,7 +142,12 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private ItemStack[] updateSlot(ItemStack[] contents, int slot) {
+		// If item doesn't exist, re-setup inventory and skip the rest
 		int top = (page - 1) * 45;
+		if (items.get(top + slot).getAmount() <= 0) {
+			return setupInventory(contents);
+		}
+		
 		if (mode == INFO_MODE) {
 			ItemStack item = items.get(top + slot).getStorageView(false);
 			ItemMeta meta = item.getItemMeta();
