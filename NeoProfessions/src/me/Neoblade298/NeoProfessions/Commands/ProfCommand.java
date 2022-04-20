@@ -177,7 +177,7 @@ public class ProfCommand implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof reload");
 				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
-				sender.sendMessage("§7- §4/prof setlevel/exp [type] [player] [level/exp]");
+				sender.sendMessage("§7- §4/prof setlevel/exp [player] [type] [level/exp]");
 				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
 				sender.sendMessage("§7- §4/prof debug");
 				// prof sell
@@ -228,21 +228,21 @@ public class ProfCommand implements CommandExecutor {
 					}
 					return true;
 				}
-				// prof setlevel [type] [player] [level]
+				// prof setlevel/exp [player] [type] [level]
 				else if (args[0].equalsIgnoreCase("setlevel") || args[0].equalsIgnoreCase("setexp")) {
 					Player target = null;
-					int val = 1;
+					int offset = 0;
 					if (args.length == 4) {
-						target = Bukkit.getPlayer(args[2]);
-						val = Integer.parseInt(args[3]);
+						target = Bukkit.getPlayer(args[1]);
+						offset++;
 					}
 					else if (args.length == 3) {
 						target = (Player) sender;
-						val = Integer.parseInt(args[2]);
 					}
+					int val = Integer.parseInt(args[2 + offset]);
 					
 					if (target != null) {
-						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1].toUpperCase()));
+						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1 + offset].toUpperCase()));
 						if (args[0].equalsIgnoreCase("setlevel")) {
 							prof.setLevel(val);
 							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set player level.");
