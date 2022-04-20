@@ -304,7 +304,7 @@ public class FoodConsumable extends Consumable {
 		// Buffs
 		if (!buffs.isEmpty()) {
 			for (BuffAction buff : buffs) {
-				lore.add("§7- §9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x" : ""));
+				lore.add("§7- §9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x [" : " [") + (buff.getDuration() / 20) + "s]");
 			}
 		}
 		
