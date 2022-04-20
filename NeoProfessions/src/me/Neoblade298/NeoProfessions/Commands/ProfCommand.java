@@ -221,6 +221,7 @@ public class ProfCommand implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("reload")) {
 					if (args.length == 1) {
+						AugmentManager.getMain().loadConfig();
 						for (Manager mngr : Professions.managers) {
 							mngr.reload();
 						}

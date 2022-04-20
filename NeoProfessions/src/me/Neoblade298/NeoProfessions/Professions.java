@@ -132,8 +132,8 @@ public class Professions extends JavaPlugin implements Listener {
 		properties.setProperty("useSSL", "false");
 	}
 	
-	private void loadConfig() {
-		if (new File(getDataFolder(), "instance").exists()) {
+	public void loadConfig() {
+		if (new File(Bukkit.getDataFolder(), "instance").exists()) {
 			isInstance = true;
 		}
 		
@@ -148,6 +148,7 @@ public class Professions extends JavaPlugin implements Listener {
 		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
 		
 		// exp multipliers
+		rarityExpMults.clear();
 		ConfigurationSection expcfg = cfg.getConfigurationSection("rarity-exp-multipliers");
 		for (String key : expcfg.getKeys(false)) {
 			Rarity rarity = Rarity.valueOf(key.toUpperCase());
@@ -155,6 +156,7 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 		
 		// profession exp multipliers
+		profExpMults.clear();
 		expcfg = cfg.getConfigurationSection("profession-exp-multipliers");
 		for (String key : expcfg.getKeys(false)) {
 			ProfessionType type = ProfessionType.valueOf(key.toUpperCase());
@@ -162,6 +164,7 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 		
 		// default weights
+		defaultWeights.clear();
 		ConfigurationSection wtcfg = cfg.getConfigurationSection("default-weights");
 		for (String key : wtcfg.getKeys(false)) {
 			Rarity rarity = Rarity.valueOf(key.toUpperCase());
