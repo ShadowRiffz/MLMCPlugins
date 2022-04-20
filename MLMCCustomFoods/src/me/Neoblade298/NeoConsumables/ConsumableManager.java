@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.Neoblade298.NeoConsumables.objects.DurationEffects;
@@ -80,6 +81,9 @@ public class ConsumableManager implements Listener {
 
 	public static void loadPlayer(UUID uuid) {
 		ConsumableManager.effects.remove(uuid);
+		if (Consumables.debug) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Loading UUID " + uuid);
+		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
@@ -87,10 +91,16 @@ public class ConsumableManager implements Listener {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM consumables_effects WHERE uuid = '" + uuid + "';");
 			if (rs.next()) {
 				FoodConsumable cons = (FoodConsumable) Consumables.getConsumable(rs.getString(2));
+				if (Consumables.debug) {
+					Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] UUID effect loaded was " + cons.getKey());
+				}
 				if (cons.isDuration()) {
 					DurationEffects effs = new DurationEffects(main, cons, rs.getLong(3), uuid, new ArrayList<BukkitTask>());
 					if (effs.isRelevant()) {
 						// Don't start the effects until the player is actually loaded
+						if (Consumables.debug) {
+							Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Effect was placed in database");
+						}
 						ConsumableManager.effects.put(uuid, effs);
 					}
 				}
@@ -124,6 +134,9 @@ public class ConsumableManager implements Listener {
 	
 	public void startEffects(UUID uuid) {
 		DurationEffects effs = ConsumableManager.effects.get(uuid);
+		if (Consumables.debug) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Starting effects for UUID " + uuid);
+		}
 		if (effs != null) {
 			effs.startEffects();
 		}
@@ -146,6 +159,11 @@ public class ConsumableManager implements Listener {
 	@EventHandler
 	public void onSaveSQL(PlayerSaveEvent e) {
 		handleLeave(e.getUUID());
+	}
+	
+	@EventHandler
+	public void onSQLLoad(PlayerLoadCompleteEvent e) {
+		startEffects(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler

@@ -31,6 +31,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 				sender.sendMessage("§7Permission: mycommand.staff");
 				sender.sendMessage("§c/cons get [food] {amount}");
 				sender.sendMessage("§c/cons give [player] boss");
+				sender.sendMessage("§c/cons debug");
 				sender.sendMessage("§c/cons reload");
 			}
 			// /cons give [player] boss/[key] [amount]
@@ -72,6 +73,11 @@ public class Commands implements CommandExecutor, TabCompleter {
 			else if (args[0].equalsIgnoreCase("reload")) {
 				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded consumables");
 				main.reload();
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("debug")) {
+				Consumables.debug = !Consumables.debug;
+				sender.sendMessage("§4[§c§lMLMC§4] §7Set debug to " + Consumables.debug);
 				return true;
 			}
 			return true;

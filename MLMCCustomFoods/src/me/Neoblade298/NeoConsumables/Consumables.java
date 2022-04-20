@@ -58,7 +58,8 @@ public class Consumables extends JavaPlugin implements Listener {
 	public boolean isInstance = false;
 	public Settings settings;
 	public Settings hiddenSettings;
-
+	
+	public static boolean debug = false;
 	public static String sqlUser;
 	public static String sqlPass;
 	public static String connection;

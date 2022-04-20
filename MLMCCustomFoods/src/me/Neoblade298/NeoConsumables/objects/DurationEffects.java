@@ -57,8 +57,9 @@ public class DurationEffects {
 		}
 		
 		int secondsElapsed = (int) (System.currentTimeMillis() - startTime) / 1000;
+		int secondsLeft = cons.getTotalDuration() - secondsElapsed;
 		Player p = Bukkit.getPlayer(uuid);
-		p.sendMessage("§4[§c§lMLMC§4] §7Active consumable: §e" + cons.getDisplay() + " §7for §e" + secondsElapsed + " §7more seconds.");
+		p.sendMessage("§4[§c§lMLMC§4] §7Active consumable: §e" + cons.getDisplay() + " §7for §e" + secondsLeft + " §7more seconds.");
 		
 		// Attributes
 		if (cons.getAttributeTime() - secondsElapsed > 0) {
