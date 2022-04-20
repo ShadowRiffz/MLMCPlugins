@@ -33,20 +33,20 @@ public class Minigame {
 	
 	private ArrayList<MinigameDrop> generateDrops(MinigameParameters params) {
 		ArrayList<MinigameDrop> drops = new ArrayList<MinigameDrop>();
+		int totalWeight = droptable.calculateTotalWeight(params);
 		
 		for (int i = 0; i < numDrops; i++) {
-			int rand = Professions.gen.nextInt(droptable.getTotalWeight());
-			MinigameDrops mdrops = droptable.getDropTable().get(0);
+			int rand = Professions.gen.nextInt(totalWeight);
+			MinigameDrops mdrops = null;
 			int index = 0;
-			int weight = mdrops.getWeight();
-			weight *= params.getRarityWeightMultiplier(mdrops.getItem().getRarity());
-			
-			do {
+			int weight;
+			while (rand >= 0) {
 				mdrops = droptable.getDropTable().get(index);
+				weight = mdrops.getWeight();
+				weight *= params.getRarityWeightMultiplier(mdrops.getItem().getRarity());
 				rand -= weight;
 				index++;
 			}
-			while (rand >= 0);
 			int min = mdrops.getMinAmt(), max = mdrops.getMaxAmt();
 			min *= params.getAmountMultiplier();
 			max *= params.getAmountMultiplier();

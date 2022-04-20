@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class MinigameDroptable {
 	ArrayList<MinigameDrops> droptable;
-	int totalWeight;
 	public ArrayList<MinigameDrops> getDropTable() {
 		return droptable;
 	}
-	public int getTotalWeight() {
-		return totalWeight;
+	
+	public int calculateTotalWeight(MinigameParameters params) {
+		int weight = 0;
+		for (MinigameDrops drops : droptable) {
+			weight += drops.getWeight() * params.getRarityWeightMultiplier(drops.getItem().getRarity());
+		}
+		return weight;
 	}
+	
 	public MinigameDroptable(ArrayList<MinigameDrops> droptable) {
 		this.droptable = droptable;
-		
-		this.totalWeight = 0;
-		for (MinigameDrops drops : droptable) {
-			this.totalWeight += drops.getWeight();
-		}
 	}
 	
 }
