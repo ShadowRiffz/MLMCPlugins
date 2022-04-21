@@ -145,6 +145,7 @@ public class StorageView extends ProfessionInventory {
 		// If item doesn't exist, re-setup inventory and skip the rest
 		int top = (page - 1) * 45;
 		if (items.get(top + slot).getAmount() <= 0) {
+			items.remove(top + slot);
 			return setupInventory(contents);
 		}
 		
