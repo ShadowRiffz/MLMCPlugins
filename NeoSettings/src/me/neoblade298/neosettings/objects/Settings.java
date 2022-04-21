@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -18,7 +18,7 @@ public class Settings {
 	private NeoSettings main;
 	private final String key;
 	private HashMap<UUID, HashMap<String, Value>> values;
-	private HashMap<UUID, ArrayList<String>> changedValues;
+	private HashMap<UUID, HashSet<String>> changedValues;
 	private HashMap<String, Object> defaults;
 	private final boolean hidden;
 	
@@ -27,7 +27,7 @@ public class Settings {
 		this.key = key;
 		this.values = new HashMap<UUID, HashMap<String, Value>>();
 		this.defaults = new HashMap<String, Object>();
-		this.changedValues = new HashMap<UUID, ArrayList<String>>();
+		this.changedValues = new HashMap<UUID, HashSet<String>>();
 		this.hidden = hidden;
 	}
 	
@@ -160,7 +160,7 @@ public class Settings {
 	public void load(Connection con, UUID uuid) {
 		HashMap<String, Value> pSettings = new HashMap<String, Value>();
 		this.values.put(uuid, pSettings);
-		this.changedValues.put(uuid, new ArrayList<String>());
+		this.changedValues.put(uuid, new HashSet<String>());
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neosettings_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
