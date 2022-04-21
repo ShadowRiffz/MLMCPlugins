@@ -1,6 +1,8 @@
 package me.neoblade298.neogear;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -83,7 +85,8 @@ public class Commands implements CommandExecutor{
 					failures = p.getInventory().addItem(Gear.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
 				}
 				catch (Exception e) {
-					System.out.println("[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
+					Bukkit.getLogger().log(Level.WARNING,
+							"[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
 				}
 				if (failures > 0) {
 					sender.sendMessage("§4[§c§lMLMC§4] §cFailed to give " + rarity + " " + type + " to " + p.getName() + ", inventory full");
@@ -150,7 +153,8 @@ public class Commands implements CommandExecutor{
 					pClass = SkillAPI.getPlayerAccountData(p).getActiveData().getClass("class").getData().getName().toLowerCase();
 				}
 				catch (Exception e) {
-					System.out.println("[NeoGear] Failed to get player class of " + p.getName() + ", defaulting to " + DEFAULT_SET);
+					Bukkit.getLogger().log(Level.WARNING,
+							"[NeoGear] Failed to get player class of " + p.getName() + ", defaulting to " + DEFAULT_SET);
 					pClass = DEFAULT_SET;
 				}
 				if (main.itemSets.containsKey(pClass)) {

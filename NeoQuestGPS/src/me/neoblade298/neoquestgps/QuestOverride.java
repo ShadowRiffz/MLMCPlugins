@@ -10,7 +10,6 @@ public class QuestOverride {
 	private int stage;
 	
 	public QuestOverride(String stage, ArrayList<String> locations) {
-		System.out.println(stage);
 		this.stage = Integer.parseInt(stage);
 		
 		this.loc = new ArrayList<Location>();

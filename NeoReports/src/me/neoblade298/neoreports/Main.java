@@ -46,7 +46,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		catch(Exception e) {
 			getServer().getPluginManager().disablePlugin(this);
-			System.out.println(e);
+			e.printStackTrace();
 		}  
 	    
 	    // Get command listener

@@ -176,7 +176,7 @@ public class PPR {
 			con.close();
 		}
 		catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
@@ -198,7 +198,7 @@ public class PPR {
 			con.close();
 		}
 		catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
@@ -213,7 +213,7 @@ public class PPR {
 			con.close();
 		}
 		catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}

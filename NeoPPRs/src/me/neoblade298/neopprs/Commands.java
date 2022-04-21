@@ -222,7 +222,7 @@ public class Commands implements CommandExecutor {
 							}
 							con.close();
 						} catch (Exception e) {
-							System.out.println(e);
+							e.printStackTrace();
 							p.sendMessage(
 									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
@@ -251,7 +251,7 @@ public class Commands implements CommandExecutor {
 						}
 						con.close();
 					} catch (Exception e) {
-						System.out.println(e);
+						e.printStackTrace();
 						p.sendMessage(
 								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
@@ -270,7 +270,7 @@ public class Commands implements CommandExecutor {
 						}
 						con.close();
 					} catch (Exception e) {
-						System.out.println(e);
+						e.printStackTrace();
 						p.sendMessage(
 								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
@@ -337,7 +337,7 @@ public class Commands implements CommandExecutor {
 							}
 							con.close();
 						} catch (Exception e) {
-							System.out.println(e);
+							e.printStackTrace();
 							p.sendMessage(
 									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
@@ -359,7 +359,7 @@ public class Commands implements CommandExecutor {
 							}
 							con.close();
 						} catch (Exception e) {
-							System.out.println(e);
+							e.printStackTrace();
 							p.sendMessage(
 									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
@@ -409,7 +409,7 @@ public class Commands implements CommandExecutor {
 							p.sendMessage(message.substring(0, message.length() - 2));
 							con.close();
 						} catch (Exception e) {
-							System.out.println(e);
+							e.printStackTrace();
 							p.sendMessage(
 									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}

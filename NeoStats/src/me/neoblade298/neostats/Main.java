@@ -187,9 +187,6 @@ public class Main extends JavaPlugin implements Listener{
 	public void onMMDamage(EntityDamageByEntityEvent e) {
 		// If the entity is a mythicmob and in the list, record damage
 		// Also ignores "location" entities, which are for skillapi use
-		if(this.debug) {
-			System.out.println(e.getEntity().getName());
-		}
 		if (helper == null) {
 			helper = MythicMobs.inst().getAPIHelper();
 		}

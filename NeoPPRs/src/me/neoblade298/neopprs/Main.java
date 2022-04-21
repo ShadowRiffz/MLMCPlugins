@@ -42,7 +42,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		catch(Exception e) {
 			getServer().getPluginManager().disablePlugin(this);
-			System.out.println(e);
+			e.printStackTrace();
 		}  
 		
 	    // Initiate hashmaps
@@ -129,7 +129,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			con.close();
 		}
 		catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			viewer.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}

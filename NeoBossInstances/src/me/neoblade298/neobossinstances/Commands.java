@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
@@ -48,7 +49,8 @@ public class Commands implements CommandExecutor {
 					Statement stmt = con.createStatement();
 
 					if (main.isDebug) {
-						System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
+						Bukkit.getLogger().log(Level.INFO,
+								"Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
 								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					}
 					stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
@@ -156,7 +158,8 @@ public class Commands implements CommandExecutor {
 						Statement stmt = con.createStatement();
 
 						if (main.isDebug) {
-							System.out.println("Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+							Bukkit.getLogger().log(Level.INFO,
+									"Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
 									+ uuid + "','" + boss + "','" + instance + "'," + level + ");");
 						}
 						// Add boss level here
