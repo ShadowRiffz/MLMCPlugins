@@ -315,7 +315,7 @@ public class ProfCommand implements CommandExecutor {
 				// /prof give/get [essence/oretype/repair/augment] <aug> [level] [amount]
 				else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 					int offset = 0;
-					String aug = null;
+					String aug = "";
 					int amt = 1;
 					if (Bukkit.getPlayer(args[1]) != null) {
 						p = Bukkit.getPlayer(args[1]);
@@ -323,7 +323,7 @@ public class ProfCommand implements CommandExecutor {
 					}
 					String type = args[1 + offset];
 					// Augment-specific parsing
-					if (args[1 + offset].equalsIgnoreCase("augment")) {
+					if (type.equalsIgnoreCase("augment")) {
 						if (!StringUtils.isNumeric(args[2 + offset])) {
 							aug = args[2 + offset].replaceAll("_", " ");
 							offset++;
