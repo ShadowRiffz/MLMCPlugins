@@ -41,7 +41,7 @@ public class AugmentReward extends ChestReward {
 	}
 
 	public static AugmentReward parse(String args[], int level) {
-		String droptable = "random";
+		String droptable = "default";
 		int weight = 1;
 		for (String arg : args) {
 			if (arg.startsWith("droptable")) {
