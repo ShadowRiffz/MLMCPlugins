@@ -54,7 +54,7 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + getDamageDealtFlat(user, null) + ", §7which");
+		lore.add("§7Increases damage by §f" + formatDouble(getDamageDealtFlat(user, null)) + ", §7which");
 		lore.add("§7is §f" + formatPercentage(this.maxHealthMod) + "% §7of your max health.");
 		lore.add("§f2 §7second cooldown.");
 		meta.setLore(lore);
