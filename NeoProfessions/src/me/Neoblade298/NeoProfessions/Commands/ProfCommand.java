@@ -66,6 +66,7 @@ public class ProfCommand implements CommandExecutor {
 			// /prof recipes [menu name] [recipe list]
 			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
 			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
+			sender.sendMessage("§7- §c/prof update §7- Updates lore of old augments");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemStack main = p.getInventory().getItemInMainHand();
@@ -169,6 +170,21 @@ public class ProfCommand implements CommandExecutor {
 				}
 			}
 			Util.sendMessage(p, "&cCould not inspect this item!");
+			return true;
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
+			ItemStack item = p.getInventory().getItemInMainHand();
+			if (item != null && !item.getType().isAir() && item.hasItemMeta()) {
+				NBTItem nbti = new NBTItem(item);
+				if(nbti.hasKey("augment")) {
+					ItemMeta meta = item.getItemMeta();
+					Augment aug = AugmentManager.getFromCache(nbti.getString("augment"), nbti.getInteger("level"));
+					meta.setLore(aug.getItem(p).getItemMeta().getLore());
+					item.setItemMeta(meta);
+					return true;
+				}
+			}
+			Util.sendMessage(p, "&cCould not update this, are you sure it's an augment?");
 			return true;
 		}
 
