@@ -58,8 +58,8 @@ public class StoredItem {
 		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<String>();
-		this.sourceLore.add("§6Rarity§7: " + this.rarity.getDisplay());
 		this.sourceLore = new ArrayList<String>();
+		this.sourceLore.add("§6Rarity§7: " + this.rarity.getDisplay());
 		this.sourceLore.add("§6Sources§7:");
 		
 		this.defaultExp = (int) (level * Professions.getExpMultiplier(this.rarity));
