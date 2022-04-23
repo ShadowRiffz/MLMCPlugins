@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.google.common.collect.ImmutableList;
@@ -12,9 +13,10 @@ import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.custom.EditorOption;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
+import io.lumine.mythic.bukkit.BukkitAPIHelper;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 
 public class SpawnMythicmobMechanic extends CustomEffectComponent {
 
@@ -56,15 +58,27 @@ public class SpawnMythicmobMechanic extends CustomEffectComponent {
 		else {
 			moblevel = (int) ((double) data.get(levelKey));
 		}
-		MobManager mm = MythicMobs.inst().getMobManager();
+		BukkitAPIHelper api = MythicBukkit.inst().getAPIHelper();
 		
 		if (settings.getString("target").equalsIgnoreCase("caster")) {
-			ActiveMob am = mm.spawnMob(mob, caster.getLocation(), moblevel);
+			Entity ent = null;
+			try {
+				ent = api.spawnMythicMob(mob, caster.getLocation(), moblevel);
+			} catch (InvalidMobTypeException e) {
+				e.printStackTrace();
+			}
+			ActiveMob am = api.getMythicMobInstance(ent);
 			am.setOwner(caster.getUniqueId());
 		}
 		else {
 			for (LivingEntity ent : targets) {
-				ActiveMob am = mm.spawnMob(mob, ent.getLocation(), moblevel);
+				Entity spawned = null;
+				try {
+					spawned = api.spawnMythicMob(mob, ent.getLocation(), moblevel);
+				} catch (InvalidMobTypeException e) {
+					e.printStackTrace();
+				}
+				ActiveMob am = api.getMythicMobInstance(spawned);
 				am.setOwner(caster.getUniqueId());
 			}
 		}
