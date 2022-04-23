@@ -16,7 +16,7 @@ public class AugmentReward extends ChestReward {
 
 	@Override
 	public void giveReward(Player p) {
-		AugmentManager.getViaDroptable(droptable, level);
+		p.getInventory().addItem(AugmentManager.getViaDroptable(droptable, level).getItem(p));
 	}
 
 	@Override
