@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
-import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
@@ -126,6 +125,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void sweepTowns() {
 		deletableTowns.clear();
 		List<Town> towns = TownyAPI.getInstance().getDataSource().getTowns();
@@ -155,12 +155,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 		for (Town town : deletableTowns) {
 		    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter deleted " + town.getName());
 			Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
-			try {
-				town.getAccount().setBalance(0, "Town deleted");
-			} catch (EconomyException e) {
-				Bukkit.getServer().getLogger().info("NeoTownyAddons failed to remove money from " + town.getName());
-				e.printStackTrace();
-			}
+			town.getAccount().setBalance(0, "Town deleted");
 			TownyAPI.getInstance().getDataSource().removeTown(town);
 		}
 		deletableTowns.clear();
@@ -200,11 +195,6 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	
 	@EventHandler
 	public void onTownCreate(NewTownEvent e) {
-		try {
-			e.getTown().getAccount().deposit(2500, "Starter money");
-		} catch (EconomyException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		e.getTown().getAccount().deposit(2500, "Starter money");
 	}
 }
