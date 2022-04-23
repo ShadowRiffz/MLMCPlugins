@@ -41,8 +41,8 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -125,7 +125,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		mobMap = new HashMap<String, ArrayList<ResearchItem>>();
 		displayNameMap = new HashMap<String, String>();
 		
-		MobManager mm = MythicMobs.inst().getMobManager();
+		MobManager mm = MythicBukkit.inst().getMobManager();
 		ConfigurationSection rItems = cfg.getConfigurationSection("research_items");
 
 		for (String rItem : rItems.getKeys(false)) {
@@ -152,7 +152,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 						mobMap.get(mob).add(researchItem);
 						String mobdisplay = mob;
 						if (mm.getMythicMob(mob) != null) {
-							 mm.getMythicMob(mob).getDisplayName().get();
+							 mm.getMythicMob(mob).get().getDisplayName().get();
 						}
 						displayNameMap.put(mob, mobdisplay);
 					}
@@ -530,7 +530,7 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			PlayerStats pStats = playerStats.get(uuid);
 			HashMap<String, Integer> mobKills = pStats.getMobKills();
 			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
-			String display = MythicMobs.inst().getMobManager().getMythicMob(mob).getDisplayName().get();
+			String display = MythicBukkit.inst().getMobManager().getMythicMob(mob).get().getDisplayName().get();
 			
 			// New discovery
 			if (!researchPoints.containsKey(mob)) {

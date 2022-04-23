@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.SkillAPI;
 
 import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.neoblade298.neoresearch.inventories.ResearchAttributesInventory;
 
 
@@ -72,11 +72,11 @@ public class Commands implements CommandExecutor{
 			// /nr spawnbook [player] [internalmob] [point amt]
 			else if (args[0].equalsIgnoreCase("spawnbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
+				if (MythicBukkit.inst().getMobManager().getMythicMob(args[2]) == null) {
 					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
 					return true;
 				}
-				String display = MythicMobs.inst().getMobManager().getMythicMob(args[2]).getDisplayName().get();
+				String display = MythicBukkit.inst().getMobManager().getMythicMob(args[2]).get().getDisplayName().get();
 				int amt = Integer.parseInt(args[3]);
 
 				ItemStack item = new ItemStack(Material.BOOK);
@@ -139,11 +139,11 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("createbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
-				if (MythicMobs.inst().getMobManager().getMythicMob(args[2]) == null) {
+				if (MythicBukkit.inst().getMobManager().getMythicMob(args[2]) == null) {
 					sender.sendMessage("§4[§c§lMLMC§4] §cInvalid mob");
 					return true;
 				}
-				String display = MythicMobs.inst().getMobManager().getMythicMob(args[2]).getDisplayName().get();
+				String display = MythicBukkit.inst().getMobManager().getMythicMob(args[2]).get().getDisplayName().get();
 				int amt = Integer.parseInt(args[3]);
 				int needed = amt * 2;
 				
