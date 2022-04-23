@@ -8,15 +8,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
-public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ScaleChestMechanic implements ITargetedEntitySkill {
 
 	protected final ItemStack item;
 	protected final double basechance;
@@ -25,12 +25,8 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 	protected final Random rand;
 
 	public ScaleChestMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        
         String itemString = config.getString("i", "mi_sewerzombie");
-        this.item = MythicMobs.inst().getItemManager().getItemStack(itemString);
+        this.item = MythicBukkit.inst().getItemManager().getItemStack(itemString);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 0.25);
         this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "§");
         this.boss = config.getString("boss", "Ratface");
@@ -42,10 +38,10 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player) {
 			if (data.getCaster().getLevel() < 1) {
-				return true;
+				return SkillResult.CONDITION_FAILED;
 			}
 			
 			double rand = this.rand.nextDouble();
@@ -84,8 +80,8 @@ public class ScaleChestMechanic extends SkillMechanic implements ITargetedEntity
 				String name = this.item.getItemMeta().getDisplayName().replaceAll("§", "&");
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.INVALID_TARGET;
     }
 }

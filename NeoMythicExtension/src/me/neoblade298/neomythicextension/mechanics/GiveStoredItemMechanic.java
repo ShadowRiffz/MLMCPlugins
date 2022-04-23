@@ -5,31 +5,27 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 
-public class GiveStoredItemMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class GiveStoredItemMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
 	protected final int id;
 	protected final String mob;
 
 	public GiveStoredItemMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-
         this.mob = config.getString(new String[] {"mob", "m"}, "Ratface");
         this.id = config.getInteger(new String[] {"id", "i"}, 0);
         this.amount = config.getInteger(new String[] {"amount", "a"}, 1);
         
         try {
-            if (MythicMobs.inst().getMobManager().getMythicMob(this.mob) == null) {
+            if (MythicBukkit.inst().getMobManager().getMythicMob(this.mob) == null) {
             	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
             	return;
             }
@@ -41,16 +37,16 @@ public class GiveStoredItemMechanic extends SkillMechanic implements ITargetedEn
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		try {
 			if (target.getBukkitEntity() instanceof Player) {
 				StorageManager.givePlayer((Player) target.getBukkitEntity(), this.id, this.amount);
-				return true;
+				return SkillResult.SUCCESS;
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return SkillResult.INVALID_TARGET;
     }
 }

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
 import me.neoblade298.neobossinstances.Main;
 
-public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
+public class ScaleGoldMechanic implements INoTargetSkill {
 	
 	protected final int min;
 	protected final int max;
@@ -18,10 +19,6 @@ public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
 	protected final Main nbi;
 
 	public ScaleGoldMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        
         this.min = config.getInteger("min", 0);
         this.max = config.getInteger("max", 0);
         this.boss = config.getString("boss", "Ratface");
@@ -29,9 +26,9 @@ public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		if (data.getCaster().getLevel() < 1) {
-			return true;
+			return SkillResult.CONDITION_FAILED;
 		}
 		
 		double scale = Math.min(2, 1 + (0.02 * (data.getCaster().getLevel() - 1)));
@@ -50,6 +47,6 @@ public class ScaleGoldMechanic extends SkillMechanic implements INoTargetSkill {
 			Bukkit.dispatchCommand(console, command);
 			player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

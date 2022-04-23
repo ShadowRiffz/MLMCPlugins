@@ -4,30 +4,26 @@ import org.bukkit.entity.LivingEntity;
 
 import com.sucy.skill.api.util.FlagManager;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
 
-public class RemoveFlagMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class RemoveFlagMechanic implements ITargetedEntitySkill {
 
 	protected final String flag;
 
 	public RemoveFlagMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        
         this.flag = config.getString(new String[] {"flag", "f"}, "stun");
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof LivingEntity) {
 			FlagManager.removeFlag((LivingEntity) target.getBukkitEntity(), this.flag);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.INVALID_TARGET;
     }
 }

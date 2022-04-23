@@ -6,10 +6,11 @@ import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.skills.targeters.ILocationSelector;
 
 public class OffsetTargeter extends ILocationSelector {
 
@@ -18,7 +19,7 @@ public class OffsetTargeter extends ILocationSelector {
 	protected final double clockwise;
 
 	public OffsetTargeter(MythicLineConfig config) {
-		super(config);
+		super(MythicBukkit.inst().getSkillManager(), config);
 		this.forward = config.getDouble(new String[] {"forward", "f"}, 0);
 		this.upward = config.getDouble("y", 0);
 		this.clockwise = config.getDouble(new String[] {"clockwise", "c"}, 0);

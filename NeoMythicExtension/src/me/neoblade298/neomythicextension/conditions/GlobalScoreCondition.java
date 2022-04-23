@@ -1,24 +1,21 @@
 package me.neoblade298.neomythicextension.conditions;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import me.neoblade298.neomythicextension.Main;
 
-public class GlobalScoreCondition extends SkillCondition implements IEntityCondition {
+public class GlobalScoreCondition implements IEntityCondition {
     private String operation;
     private String objective;
     private int value;
     private Main nme;
     
-    public GlobalScoreCondition(MythicLineConfig mlc) {
-        super(mlc.getLine());
+    public GlobalScoreCondition(MythicLineConfig mlc, Main nme) {
         operation = mlc.getString(new String[] {"operation", "op"});
         objective = mlc.getString(new String[] {"objective", "obj", "o"});
         value = mlc.getInteger(new String[] {"value", "v"});
-        this.nme = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoMythicExtension");
+        this.nme = nme;
     }
 
     public boolean check(AbstractEntity t) {

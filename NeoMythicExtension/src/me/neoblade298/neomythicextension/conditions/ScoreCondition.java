@@ -2,19 +2,18 @@ package me.neoblade298.neomythicextension.conditions;
 
 import org.bukkit.Bukkit;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 
-public class ScoreCondition extends SkillCondition implements IEntityCondition {
+
+public class ScoreCondition implements IEntityCondition {
     private String operation;
     private String objective;
     private String entry;
     private int value;
     
     public ScoreCondition(MythicLineConfig mlc) {
-        super(mlc.getLine());
         operation = mlc.getString(new String[] {"operation", "op"});
         objective = mlc.getString(new String[] {"objective", "obj", "o"});
         entry = mlc.getString(new String[] {"entry", "e"});

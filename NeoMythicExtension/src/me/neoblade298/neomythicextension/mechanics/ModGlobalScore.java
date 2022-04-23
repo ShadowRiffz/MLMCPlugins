@@ -1,23 +1,19 @@
 package me.neoblade298.neomythicextension.mechanics;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
 import me.neoblade298.neomythicextension.Main;
 
-public class ModGlobalScore extends SkillMechanic implements INoTargetSkill {
+public class ModGlobalScore implements INoTargetSkill {
 	protected final String objective;
 	protected final String operation;
 	protected final int value;
 	Main nme;
 
-	public ModGlobalScore(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        this.nme = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoMythicExtension");
+	public ModGlobalScore(MythicLineConfig config, Main nme) {
+        this.nme = nme;
         
         this.objective = config.getString(new String[] {"objective", "obj", "o"}, "default");
         this.operation = config.getString(new String[] {"operation", "op"}, "=");
@@ -25,7 +21,7 @@ public class ModGlobalScore extends SkillMechanic implements INoTargetSkill {
 	}
 	
 	@Override
-    public boolean cast(SkillMetadata data) {
+    public SkillResult cast(SkillMetadata data) {
 		// Get current score
 		int score = 0;
 		if (nme.globalscores.containsKey(objective)) {
@@ -45,7 +41,7 @@ public class ModGlobalScore extends SkillMechanic implements INoTargetSkill {
 		case "/":
 			nme.globalscores.put(objective, score / value); break;
 		}
-		return true;
+		return SkillResult.SUCCESS;
     }
 
 }

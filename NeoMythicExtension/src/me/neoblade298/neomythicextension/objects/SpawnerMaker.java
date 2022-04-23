@@ -7,8 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.spawning.spawners.SpawnerManager;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.spawning.spawners.SpawnerManager;
 
 public class SpawnerMaker {
 	private Location loc1;
@@ -65,7 +65,7 @@ public class SpawnerMaker {
 		// Start generation process, loc 1 is ALWAYS less than loc 2
 		p.sendMessage("§4[§c§lMLMC§4] §7Commencing spawner generation!");
 		Location loc = loc1.clone();
-		SpawnerManager mm = MythicMobs.inst().getSpawnerManager();
+		SpawnerManager mm = MythicBukkit.inst().getSpawnerManager();
 		for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
 			loc.setY(loc1.getBlockY());
 			for (int y = loc1.getBlockY(); y <= loc2.getBlockY(); y++) {

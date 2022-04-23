@@ -14,8 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neomythicextension.objects.SpawnerDefinition;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 
@@ -120,7 +120,7 @@ public class Commands implements CommandExecutor{
 				// nme add [mm internal] [spawnername] [groupname] [block]
 				else if (args[0].equalsIgnoreCase("add")) {
 					if (main.spawnermakers.containsKey(uuid)) {
-						MythicMobs mm = MythicMobs.inst();
+						MythicBukkit mm = MythicBukkit.inst();
 						if (mm.getMobManager().getMythicMob(args[1]) == null) {
 							p.sendMessage("§4[§c§lMLMC§4] §cInvalid MythicMob!");
 							return true;
@@ -179,7 +179,7 @@ public class Commands implements CommandExecutor{
 		    }
 		    else if (args.length > 1 && args[0].equalsIgnoreCase("nbc")) {
 		    	UUID uuid = UUID.fromString(args[1]);
-		        Optional<ActiveMob> am = MythicMobs.inst().getMobManager().getActiveMob(uuid);
+		        Optional<ActiveMob> am = MythicBukkit.inst().getMobManager().getActiveMob(uuid);
 	    		ArrayList<Entity> near = (ArrayList<Entity>) am.get().getEntity().getBukkitEntity().getNearbyEntities(40, 40, 40);
 	    		String msg = "";
 	    		for (int i = 2; i < args.length; i++) {

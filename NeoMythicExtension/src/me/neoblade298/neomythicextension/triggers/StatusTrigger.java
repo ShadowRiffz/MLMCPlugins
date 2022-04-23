@@ -5,23 +5,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import com.sucy.skill.api.event.FlagApplyEvent;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.neoblade298.neomythicextension.Main;
 
 public class StatusTrigger implements Listener {
 	Main main;
-	MythicMobs mm;
+	MythicBukkit mm;
 	
 	public StatusTrigger(Main main) {
 		this.main = main;
-		mm = (MythicMobs) Bukkit.getPluginManager().getPlugin("MythicMobs");
+		mm = (MythicBukkit) Bukkit.getPluginManager().getPlugin("MythicMobs");
 	}
 	
 	@EventHandler
 	public void onFlagApply(FlagApplyEvent e) {
 		if (mm.getAPIHelper().isMythicMob(e.getEntity())) {
-			ActiveMob mob = mm.getAPIHelper().getMythicMobInstance(e.getEntity());
+			io.lumine.mythic.core.mobs.ActiveMob mob = mm.getAPIHelper().getMythicMobInstance(e.getEntity());
 			mob.signalMob(mob.getEntity(), e.getFlag());
 		}
 	}

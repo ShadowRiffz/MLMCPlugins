@@ -6,12 +6,13 @@ import java.util.HashSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractPlayer;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.skills.targeters.IEntitySelector;
 import me.neoblade298.neobossinstances.Main;
 
 public class PlayersInBossTargeter extends IEntitySelector {
@@ -20,13 +21,13 @@ public class PlayersInBossTargeter extends IEntitySelector {
 	protected final me.neoblade298.neobossinstances.Main nbi;
 
 	public PlayersInBossTargeter(MythicLineConfig config) {
-		super(config);
+		super(MythicBukkit.inst().getSkillManager(), config);
         this.boss = config.getString(new String[] {"boss", "b"}, "Ratface");
         this.nbi = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
 	}
 
 	@Override
-	public HashSet<AbstractEntity> getEntities(SkillMetadata arg0) {
+	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
 		if (nbi.getActiveFights().containsKey(this.boss)) {
 			ArrayList<Player> players = nbi.getActiveFights().get(this.boss);

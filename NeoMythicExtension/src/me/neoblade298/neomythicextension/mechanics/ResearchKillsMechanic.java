@@ -2,25 +2,22 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchKillsMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ResearchKillsMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
 	protected final Research nr;
 	protected final String alias;
 
 	public ResearchKillsMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        
         this.amount = config.getInteger("a");
         this.alias = config.getString("alias", "default");
         
@@ -28,10 +25,10 @@ public class ResearchKillsMechanic extends SkillMechanic implements ITargetedEnt
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
 			if (data.getCaster().getLevel() <= 0) {
-				return true;
+				return SkillResult.CONDITION_FAILED;
 			}
 			String mob = this.alias;
 			if (this.alias.equals("default")) {
@@ -40,8 +37,8 @@ public class ResearchKillsMechanic extends SkillMechanic implements ITargetedEnt
 			}
 			Player p = (Player) target.getBukkitEntity();
 			nr.giveResearchKills(p, this.amount, mob);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.INVALID_TARGET;
     }
 }

@@ -3,17 +3,17 @@ package me.neoblade298.neomythicextension.mechanics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ResearchPointsMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
 	protected int level;
@@ -22,10 +22,6 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 	protected String display;
 
 	public ResearchPointsMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-
         this.level = config.getInteger("l", 0);
         this.amount = config.getInteger("a");
         this.alias = config.getString("alias", "default");
@@ -35,10 +31,10 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
 			if (data.getCaster().getLevel() <= 0) {
-				return true;
+				return SkillResult.CONDITION_FAILED;
 			}
 			String mob = this.alias;
 			Player p = (Player) target.getBukkitEntity();
@@ -49,14 +45,14 @@ public class ResearchPointsMechanic extends SkillMechanic implements ITargetedEn
 				nr.giveResearchPoints(p, this.amount, mob, level, false, null);
 			}
 			else {
-				MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(mob);
+				MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
 				if (mm != null) {
 					display = mm.getDisplayName().get();
 				}
 				nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.INVALID_TARGET;
     }
 }

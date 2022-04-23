@@ -8,15 +8,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import com.sucy.skill.api.util.FlagManager;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neomythicextension.Main;
 
-public class SkillAPIFlagCondition extends SkillCondition implements IEntityCondition {
+public class SkillAPIFlagCondition implements IEntityCondition {
 	private String[] flags;
 	private boolean castinstead = false;
 	private boolean stunchildren = false;
@@ -27,7 +26,6 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 	private Main main;
 
 	public SkillAPIFlagCondition(MythicLineConfig mlc, Main main) {
-		super(mlc.getLine());
 		this.flags = mlc.getString(new String[] { "flag", "f" }).trim().split(",");
 		if (mlc.getString("action") != null) {
 			castinstead = mlc.getString("action").equals("castinstead");
@@ -47,7 +45,7 @@ public class SkillAPIFlagCondition extends SkillCondition implements IEntityCond
 	}
 
 	public boolean check(AbstractEntity t) {
-		ActiveMob am = MythicMobs.inst().getMobManager().getMythicMobInstance(t);
+		ActiveMob am = MythicBukkit.inst().getMobManager().getMythicMobInstance(t);
 		boolean result = false;
 		
 		// Checking a player for a flag

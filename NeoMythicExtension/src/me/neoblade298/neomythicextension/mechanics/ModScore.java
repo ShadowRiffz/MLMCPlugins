@@ -2,25 +2,21 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
 import me.neoblade298.neomythicextension.Main;
 
-public class ModScore extends SkillMechanic implements ITargetedEntitySkill {
+public class ModScore implements ITargetedEntitySkill {
 	protected final String objective;
 	protected final String operation;
 	protected final int value;
 	Main nme;
 
-	public ModScore(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        this.nme = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoMythicExtension");
+	public ModScore(MythicLineConfig config, Main nme) {
+        this.nme = nme;
         
         this.objective = config.getString(new String[] {"objective", "obj", "o"}, "default");
         this.operation = config.getString(new String[] {"operation", "op"}, "+");
@@ -28,7 +24,7 @@ public class ModScore extends SkillMechanic implements ITargetedEntitySkill {
 	}
 
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		String uuid = target.getBukkitEntity().getUniqueId().toString();
 		
 		// Check if this objective already exists
@@ -58,7 +54,7 @@ public class ModScore extends SkillMechanic implements ITargetedEntitySkill {
 		case "/":
 			nme.globalscores.put(objective, score / value);
 		}
-		return true;
+		return SkillResult.SUCCESS;
     }
 
 }

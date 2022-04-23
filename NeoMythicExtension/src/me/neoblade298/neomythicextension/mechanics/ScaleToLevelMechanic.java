@@ -1,24 +1,21 @@
 package me.neoblade298.neomythicextension.mechanics;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.Main;
 
-public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEntitySkill {
+public class ScaleToLevelMechanic implements ITargetedEntitySkill {
 	protected final String boss;
 	protected final double exlevel, exhealth, xlevel, xhealth;
 	protected Main nbi;
 
 	public ScaleToLevelMechanic(MythicLineConfig config) {
-		super(config.getLine(), config);
-        this.setAsyncSafe(false);
-        this.setTargetsCreativePlayers(false);
-        this.nbi = (Main) MythicMobs.inst().getServer().getPluginManager().getPlugin("NeoBossInstances");
+        this.nbi = (Main) MythicBukkit.inst().getServer().getPluginManager().getPlugin("NeoBossInstances");
         
         this.boss = config.getString("boss", "Ratface");
         this.xlevel = config.getDouble("xlevel", -1);
@@ -28,13 +25,13 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	}
 	
 	@Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (this.nbi.getActiveFights().containsKey(this.boss)) { 
 			int numPlayers = this.nbi.getActiveFights().get(this.boss).size();
 	
 	    	// Make sure target is a MythicMob
-	    	if (MythicMobs.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
-	    		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
+	    	if (MythicBukkit.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
+	    		ActiveMob am = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
 	    		double level = am.getLevel();
 	    		AbstractEntity ent = am.getEntity();
 	    		
@@ -45,7 +42,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 		    			level = numPlayers;
 	    			}
 	    			else {
-	    				return true;
+	    				return SkillResult.CONDITION_FAILED;
 	    			}
 	    		}
 	    		
@@ -74,7 +71,7 @@ public class ScaleToLevelMechanic extends SkillMechanic implements ITargetedEnti
 	    		}
 	    	}
 		}
-    	return true;
+    	return SkillResult.SUCCESS;
     }
 
 }

@@ -14,10 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
 import me.neoblade298.neomythicextension.conditions.*;
 import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
@@ -58,12 +57,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void onMythicConditionLoad(MythicConditionLoadEvent event) {
 		String name = event.getConditionName();
 		if (name.equalsIgnoreCase("hasflag")) {
-			SkillCondition condition = new SkillAPIFlagCondition(event.getConfig(), this);
+			SkillAPIFlagCondition condition = new SkillAPIFlagCondition(event.getConfig(), this);
 			event.register(condition);
 		}
 
 		else if (name.equalsIgnoreCase("nglobalscore")) {
-			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig());
+			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig(), this);
 			event.register(condition);
 		}
 
@@ -113,12 +112,12 @@ public class Main extends JavaPlugin implements Listener {
 		String name = event.getMechanicName();
 
 		if (name.equalsIgnoreCase("nscore")) {
-			ModScore mechanic = new ModScore(event.getConfig());
+			ModScore mechanic = new ModScore(event.getConfig(), this);
 			event.register(mechanic);
 		}
 
 		else if (name.equalsIgnoreCase("nglobalscore")) {
-			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig());
+			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig(), this);
 			event.register(mechanic);
 		}
 
