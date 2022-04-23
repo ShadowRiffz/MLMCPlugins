@@ -43,9 +43,9 @@ import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.mythic.bukkit.BukkitAPIHelper;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -673,7 +673,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (!isInstance) {
 			return;
 		}
-		BukkitAPIHelper api = MythicMobs.inst().getAPIHelper();
+		BukkitAPIHelper api = MythicBukkit.inst().getAPIHelper();
 		
 		// If a mob is damaging a player
 		if (api.isMythicMob(e.getDamager()) && e.getEntity() instanceof Player) {
@@ -699,7 +699,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (!isInstance) {
 			return;
 		}
-		BukkitAPIHelper api = MythicMobs.inst().getAPIHelper();
+		BukkitAPIHelper api = MythicBukkit.inst().getAPIHelper();
 		
 		// If the player is dealing damage
 		if (e.getDamager() instanceof Player) {
