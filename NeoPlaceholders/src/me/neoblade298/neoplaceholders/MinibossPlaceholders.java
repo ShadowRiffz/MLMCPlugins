@@ -3,7 +3,7 @@ package me.neoblade298.neoplaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class MinibossPlaceholders extends PlaceholderExpansion {
@@ -53,7 +53,7 @@ public class MinibossPlaceholders extends PlaceholderExpansion {
 		if (args.length != 2) return "Invalid placeholder";
 		if (!args[0].equalsIgnoreCase("cd")) return "Invalid placeholder";
 		String miniboss = args[1];
-		int time = MythicMobs.inst().getSpawnerManager().getSpawnerByName(miniboss).getRemainingCooldownSeconds();
+		int time = MythicBukkit.inst().getSpawnerManager().getSpawnerByName(miniboss).getRemainingCooldownSeconds();
 		int minutes = time / 60;
 		int seconds = time % 60;
 		if (time > 0) return String.format("§c%d:%02d", minutes, seconds);

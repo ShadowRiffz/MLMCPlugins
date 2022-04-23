@@ -8,8 +8,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 
@@ -25,12 +25,12 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		ConfigurationSection healthSec = YamlConfiguration.loadConfiguration(file).getConfigurationSection("Bosses");
 		HashMap<String, Integer> mobhealth = new HashMap<String, Integer>();
-		MobManager mm = MythicMobs.inst().getMobManager();
+		MobManager mm = MythicBukkit.inst().getMobManager();
 		for (String key : healthSec.getKeys(false)) {
 			int health = 0;
 			for (String mob : healthSec.getStringList(key)) {
 				if (mm.getMythicMob(mob) != null) {
-					health += mm.getMythicMob(mob).getHealth().get();
+					health += mm.getMythicMob(mob).get().getHealth().get();
 				}
 			}
 			mobhealth.put(key, health);

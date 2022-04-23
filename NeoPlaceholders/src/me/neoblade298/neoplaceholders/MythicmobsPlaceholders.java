@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.items.MythicItem;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class MythicmobsPlaceholders extends PlaceholderExpansion {
@@ -66,7 +66,7 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 			return "§cHealth not defined!";
 		}
 		else if (args[0].equalsIgnoreCase("itemlore")) {
-			Optional<MythicItem> item = MythicMobs.inst().getItemManager().getItem(args[1]);
+			Optional<MythicItem> item = MythicBukkit.inst().getItemManager().getItem(args[1]);
 			if (item.isPresent() && item.get().getLore().size() > 0) {
 				String lore = item.get().getLore().get(0);
 				for (int i = 1; i < item.get().getLore().size(); i++) {
