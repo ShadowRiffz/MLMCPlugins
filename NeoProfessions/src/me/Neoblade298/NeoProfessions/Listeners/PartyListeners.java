@@ -11,9 +11,9 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ExpSource;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobLootDropEvent;
-import io.lumine.xikage.mythicmobs.drops.Drop;
-import io.lumine.xikage.mythicmobs.drops.droppables.SkillAPIDrop;
+import io.lumine.mythic.bukkit.events.MythicMobLootDropEvent;
+import io.lumine.mythic.core.drops.Drop;
+import io.lumine.mythic.core.drops.droppables.SkillAPIDrop;
 import me.Neoblade298.NeoProfessions.Professions;
 
 public class PartyListeners implements Listener {

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 	double threatReduction;
@@ -29,7 +29,7 @@ public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 	
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
-		MythicMobs.inst().getAPIHelper().reduceThreat(target, user, damage * this.threatReduction);
+		MythicBukkit.inst().getAPIHelper().reduceThreat(target, user, damage * this.threatReduction);
 	}
 
 	@Override
