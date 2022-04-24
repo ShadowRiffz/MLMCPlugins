@@ -297,6 +297,7 @@ public class FoodConsumable extends Consumable {
 		if (!potions.isEmpty()) {
 			lore.add("§9Potions:");
 			for (PotionEffect pot : potions) {
+				// Only potions are in ticks because PotionEffect is a bukkit object
 				lore.add("§7- §9" + pot.getType().toString() + " " + pot.getAmplifier() + " [" + (pot.getDuration() / 20) + "s]");
 			}
 		}
@@ -304,7 +305,7 @@ public class FoodConsumable extends Consumable {
 		// Buffs
 		if (!buffs.isEmpty()) {
 			for (BuffAction buff : buffs) {
-				lore.add("§7- §9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x [" : " [") + (buff.getDuration() / 20) + "s]");
+				lore.add("§7- §9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x [" : " [") + buff.getDuration() + "s]");
 			}
 		}
 		
