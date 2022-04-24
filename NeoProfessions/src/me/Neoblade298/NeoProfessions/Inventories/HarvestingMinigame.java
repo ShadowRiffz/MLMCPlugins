@@ -91,11 +91,11 @@ public class HarvestingMinigame extends ProfessionInventory {
 
 	@Override
 	public void handleInventoryClick(InventoryClickEvent e) {
+		e.setCancelled(true);
 		ItemStack item = e.getCurrentItem();
 		if (item == null || item.getType().isAir()) {
 			return;
 		}
-		e.setCancelled(true);
 		
 		// Not yet started
 		if (stage == 0) {
