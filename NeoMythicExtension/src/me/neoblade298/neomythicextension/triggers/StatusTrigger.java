@@ -1,27 +1,31 @@
 package me.neoblade298.neomythicextension.triggers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import com.sucy.skill.api.event.FlagApplyEvent;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.mobs.MobExecutor;
 import me.neoblade298.neomythicextension.Main;
 
 public class StatusTrigger implements Listener {
 	Main main;
-	MythicBukkit mm;
+	MobExecutor mm;
 	
 	public StatusTrigger(Main main) {
 		this.main = main;
-		mm = (MythicBukkit) Bukkit.getPluginManager().getPlugin("MythicMobs");
+		mm = MythicBukkit.inst().getMobManager();
 	}
 	
 	@EventHandler
 	public void onFlagApply(FlagApplyEvent e) {
-		if (mm.getAPIHelper().isMythicMob(e.getEntity())) {
-			io.lumine.mythic.core.mobs.ActiveMob mob = mm.getAPIHelper().getMythicMobInstance(e.getEntity());
+		try {
+			ActiveMob mob = mm.getActiveMob(e.getEntity().getUniqueId()).get();
 			mob.signalMob(mob.getEntity(), e.getFlag());
+		}
+		catch (Exception ex) {
+			
 		}
 	}
 }
