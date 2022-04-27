@@ -44,7 +44,24 @@ public class ReportsCommand implements CommandExecutor {
 				return true;
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("check")) {
-				sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+				try {  
+					Class.forName("com.mysql.jdbc.Driver");
+					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Statement stmt = con.createStatement();
+					ResultSet rs;
+					rs = stmt.executeQuery("SELECT COUNT(*) FROM neoreports_bugs WHERE is_resolved = 0 AND is_urgent = 0;");
+					rs.next();
+					int numBugs = rs.getInt(1);
+					rs = stmt.executeQuery("SELECT COUNT(*) FROM neoreports_bugs WHERE is_resolved = 0 AND is_urgent = 1;");
+					rs.next();
+					int numUrgent = rs.getInt(1);
+					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + numBugs + "§7, # Urgent: §e" + numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+					con.close();
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Maybe use fewer special characters?");
+				}
 				return true;
 			}
 			else if ((args.length == 1 || (args.length == 2 && (!args[1].equalsIgnoreCase("bug") && !args[1].equalsIgnoreCase("urgent"))))
@@ -107,7 +124,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 				}
 				return true;
@@ -140,7 +157,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 					return true;
 				}
@@ -173,7 +190,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 					return true;
 				}
@@ -207,7 +224,7 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 						}
 						return true;
 					}
@@ -240,7 +257,7 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 						}
 						return true;
 					}
@@ -273,7 +290,7 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 						}
 						return true;
 					}
@@ -306,7 +323,7 @@ public class ReportsCommand implements CommandExecutor {
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 						}
 						return true;
 					}
@@ -349,7 +366,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 					return true;
 				}
@@ -375,11 +392,12 @@ public class ReportsCommand implements CommandExecutor {
 						else {
 							Main.numBugs++;
 						}
+						Main.numResolved--;
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 					return true;
 				}
@@ -403,7 +421,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
 					}
 					return true;
 				}

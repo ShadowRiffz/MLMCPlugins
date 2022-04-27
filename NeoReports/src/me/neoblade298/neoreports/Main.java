@@ -66,7 +66,24 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	    	BukkitRunnable joinTask = new BukkitRunnable() {
 				public void run() {
 					if (numUrgent > 0) {
-						p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
+						try{  
+							Class.forName("com.mysql.jdbc.Driver");
+							Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
+							Statement stmt = con.createStatement();
+							
+							ResultSet rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0");
+							while (rs.next()) {
+								numUrgent = rs.getInt(1);
+							}
+							con.close();
+						}
+						catch(Exception e) {
+							e.printStackTrace();
+						}
+						if (numUrgent > 0) {
+							// Double check that the number is urgent
+							p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
+						}
 					}
 					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
 
