@@ -111,6 +111,11 @@ public class Consumables extends JavaPlugin implements Listener {
 	public void reload() {
 		consumables.clear();
 		loadConsumableDirectory(new File(getDataFolder(), "consumables"));
+
+		// General
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
+		ConfigurationSection gen = cfg.getConfigurationSection("general");
+		FoodConsumable.setDefaultCooldown(gen.getInt("default-cooldown", 45) * 1000);
 	}
 
 	private void loadConsumableDirectory(File file) {

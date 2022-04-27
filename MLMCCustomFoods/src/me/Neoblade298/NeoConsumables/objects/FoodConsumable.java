@@ -36,7 +36,7 @@ import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
 public class FoodConsumable extends Consumable {
-	
+	private static int defaultCooldown = 45000;
 	Material mat;
 	ArrayList<PotionEffect> potions;
 	ArrayList<FlagAction> flags;
@@ -70,10 +70,14 @@ public class FoodConsumable extends Consumable {
 		display = null;
 		base64 = null;
 		
-		cooldown = 15000; // Default 15 seconds
+		cooldown = defaultCooldown;
 		isDuration = false; // Default instant
 		
 		totalDuration = 0;
+	}
+	
+	public static void setDefaultCooldown(int cooldown) {
+		defaultCooldown = cooldown;
 	}
 
 	public boolean canUse(Player p, ItemStack item) {
