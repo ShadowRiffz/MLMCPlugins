@@ -92,7 +92,7 @@ public class Settings {
 	
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
 	public void save(Connection con, Statement stmt, UUID uuid) {
-		if (changedValues.containsKey(uuid)) {
+		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
 			if (main.debug) {
 				Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Changed values: " + this.getKey() + " " + changedValues.get(uuid) + " for " + uuid + ".");
