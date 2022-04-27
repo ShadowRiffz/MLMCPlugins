@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -60,20 +61,8 @@ public class StorageView extends ProfessionInventory {
 		this.max = max;
 		this.sorters = new Sorter[5];
 		invsorter = new InvSorter();
+		setupSorters();
 		
-		// Setup sorters
-		int namePriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "name-priority");
-		int levelPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "level-priority");
-		int rarityPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "rarity-priority");
-		int amountPriority = (int) StorageManager.settings.getValue(p.getUniqueId(), "amount-priority");
-		boolean nameOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "name-order");
-		boolean levelOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "level-order");
-		boolean rarityOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "rarity-order");
-		boolean amountOrder = (boolean) StorageManager.settings.getValue(p.getUniqueId(), "amount-order");
-		sorters[namePriority] = new Sorter(Sorter.NAME_SORT, namePriority, nameOrder);
-		sorters[levelPriority] = new Sorter(Sorter.LEVEL_SORT, levelPriority, levelOrder);
-		sorters[rarityPriority] = new Sorter(Sorter.RARITY_SORT, rarityPriority, rarityOrder);
-		sorters[amountPriority] = new Sorter(Sorter.AMOUNT_SORT, amountPriority, amountOrder);
 		
 		// Setup itemstacks to be used for sorting
 		items = new ArrayList<StoredItemInstance>();
@@ -87,6 +76,51 @@ public class StorageView extends ProfessionInventory {
 		sortItems();
 		inv.setContents(setupAll());
 		Professions.viewingInventory.put(p, this);
+	}
+	
+	private void setupSorters() {
+		// Setup sorters
+		UUID uuid = p.getUniqueId();
+		int namePriority = (int) StorageManager.settings.getValue(uuid, "name-priority");
+		int levelPriority = (int) StorageManager.settings.getValue(uuid, "level-priority");
+		int rarityPriority = (int) StorageManager.settings.getValue(uuid, "rarity-priority");
+		int amountPriority = (int) StorageManager.settings.getValue(uuid, "amount-priority");
+		boolean nameOrder = (boolean) StorageManager.settings.getValue(uuid, "name-order");
+		boolean levelOrder = (boolean) StorageManager.settings.getValue(uuid, "level-order");
+		boolean rarityOrder = (boolean) StorageManager.settings.getValue(uuid, "rarity-order");
+		boolean amountOrder = (boolean) StorageManager.settings.getValue(uuid, "amount-order");
+		sorters[namePriority] = new Sorter(Sorter.NAME_SORT, namePriority, nameOrder);
+		sorters[levelPriority] = new Sorter(Sorter.LEVEL_SORT, levelPriority, levelOrder);
+		sorters[rarityPriority] = new Sorter(Sorter.RARITY_SORT, rarityPriority, rarityOrder);
+		sorters[amountPriority] = new Sorter(Sorter.AMOUNT_SORT, amountPriority, amountOrder);
+		
+		// Double check to make sure all sorters exist, if not, fail and default
+		boolean validated = true;
+		for (int i = 1; i <= 5;) {
+			if (sorters[i] == null) {
+				validated = false;
+				break;
+			}
+		}
+		
+		if (!validated) {
+			// If failed, use default sort order
+			namePriority = (int) StorageManager.settings.getDefault("name-priority");
+			levelPriority = (int) StorageManager.settings.getDefault("level-priority");
+			rarityPriority = (int) StorageManager.settings.getDefault("rarity-priority");
+			amountPriority = (int) StorageManager.settings.getDefault("amount-priority");
+			sorters[namePriority] = new Sorter(Sorter.NAME_SORT, namePriority, nameOrder);
+			sorters[levelPriority] = new Sorter(Sorter.LEVEL_SORT, levelPriority, levelOrder);
+			sorters[rarityPriority] = new Sorter(Sorter.RARITY_SORT, rarityPriority, rarityOrder);
+			sorters[amountPriority] = new Sorter(Sorter.AMOUNT_SORT, amountPriority, amountOrder);
+			
+			// Reset settings to default
+			Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Not all sorters loaded, resetting " + p.getName() + " to default.");
+			StorageManager.settings.resetSetting("name-priority", uuid);
+			StorageManager.settings.resetSetting("level-priority", uuid);
+			StorageManager.settings.resetSetting("rarity-priority", uuid);
+			StorageManager.settings.resetSetting("amount-priority", uuid);
+		}
 	}
 	
 	private void setupItems() {
