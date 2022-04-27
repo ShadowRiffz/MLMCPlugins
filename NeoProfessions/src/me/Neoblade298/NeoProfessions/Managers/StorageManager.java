@@ -63,6 +63,13 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	public void reload() {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Storage manager...");
 		items.clear();
+		itemsLoaded = false;
+		
+		// Reload all previously loaded sources
+		preloadedSources.clear();
+		for (Entry<Integer, StoredItem> ent : items.entrySet()) {
+			preloadedSources.put(ent.getKey(), ent.getValue().getSources());
+		}
 		loadItems(new File(main.getDataFolder(), "items"));
 	}
 	
@@ -127,9 +134,6 @@ public class StorageManager implements IOComponent, Listener, Manager {
 					ArrayList<String> lore = (ArrayList<String>) itemCfg.getStringList("lore");
 					int intid = Integer.parseInt(id);
 					StoredItem item = new StoredItem(intid, name, level, rarity, mat, lore);
-					for (String source : itemCfg.getStringList("sources")) {
-						item.addSource(source, true);
-					}
 					if (preloadedSources.containsKey(intid)) {
 						for (StoredItemSource source : preloadedSources.get(intid)) {
 							item.addSource(source.getSource(), source.isMob());

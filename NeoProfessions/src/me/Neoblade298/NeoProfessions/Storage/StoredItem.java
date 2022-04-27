@@ -18,6 +18,7 @@ import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.SkullCreator;
+import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 
 public class StoredItem {
 	private String mat;
@@ -30,7 +31,7 @@ public class StoredItem {
 	private Rarity rarity;
 	private ArrayList<String> baseLore;
 	private ArrayList<String> storageLore;
-	private ArrayList<String> sources;
+	private ArrayList<StoredItemSource> sources;
 	private ArrayList<String> sourceLore;
 	private TreeSet<String> relevantRecipes;
 	
@@ -57,7 +58,7 @@ public class StoredItem {
 		this.storageLore.add(SOURCES_POS, "§6Sources§7:");
 		this.level = level;
 		// Sources added as more things are loaded
-		this.sources = new ArrayList<String>();
+		this.sources = new ArrayList<StoredItemSource>();
 		this.sourceLore = new ArrayList<String>();
 		this.sourceLore.add("§6Rarity§7: " + this.rarity.getDisplay());
 		this.sourceLore.add("§6Sources§7:");
@@ -102,12 +103,13 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
-		if (sources.contains(source)) {
+		source = source.replaceAll("&", "§");
+		StoredItemSource src = new StoredItemSource(source, isMob);
+		if (sources.contains(src)) {
 			return;
 		}
 
-		sources.add(source);
-		source = source.replaceAll("&", "§");
+		sources.add(src);
 		if (isMob) {
 			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
 			if (mm != null) {
@@ -116,6 +118,10 @@ public class StoredItem {
 		}
 		this.storageLore.add(SOURCES_POS + 1, "§7- " + source);
 		this.sourceLore.add("§7- " + source);
+	}
+	
+	public ArrayList<StoredItemSource> getSources() {
+		return sources;
 	}
 	
 	public ItemStack getItem() {
