@@ -113,9 +113,7 @@ public class Settings {
 					
 					
 					try {
-						if (main.debug) {
-							Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Saving " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
-						}
+						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Saving " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
 						if (value instanceof String) {
 							stmt.addBatch("REPLACE INTO neosettings_strings VALUES ('" + uuid + "','" + this.getKey()
 							+ "','" + key + "','" + value + "'," + expiration + ");");
@@ -135,9 +133,7 @@ public class Settings {
 				// If value was set back to default
 				else {
 					Object def = defaults.get(key);
-					if (main.debug) {
-						Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Debug: Defaulting " + this.getKey() + "." + key + " to " + def + " for " + uuid + ".");
-					}
+					Bukkit.getLogger().log(Level.INFO, "[NeoSettings] Defaulting " + this.getKey() + "." + key + " to " + def + " for " + uuid + ".");
 					try {
 						if (def instanceof String || def instanceof Boolean) {
 							stmt.addBatch("DELETE FROM neosettings_strings WHERE setting = '" + this.getKey() + "' AND subsetting = '" + key +
