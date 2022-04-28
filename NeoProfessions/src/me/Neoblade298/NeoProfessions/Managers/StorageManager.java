@@ -36,6 +36,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<Integer, StoredItem> items = new HashMap<Integer, StoredItem>();
 	static Professions main;
 	static HashMap<Integer, ArrayList<StoredItemSource>> preloadedSources = new HashMap<Integer, ArrayList<StoredItemSource>>();
+	static HashMap<Integer, Integer> limits = new HashMap<Integer, Integer>();
 	static boolean itemsLoaded = false;
 
 	public static Settings settings;
@@ -140,6 +141,10 @@ public class StorageManager implements IOComponent, Listener, Manager {
 						}
 					}
 					items.put(intid, item);
+					
+					// Set the limits for each category
+					int key = intid / 1000;
+					limits.put(key, Math.max(limits.getOrDefault(key, -1), intid));
 				}
 			}
 		}
@@ -255,5 +260,9 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			idSources.add(new StoredItemSource(source, isMob));
 			preloadedSources.put(id, idSources);
 		}
+	}
+	
+	public static int getLimit(int id) {
+		return limits.getOrDefault(id, 0);
 	}
 }

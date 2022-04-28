@@ -148,9 +148,9 @@ public class StorageView extends ProfessionInventory {
 	private void setupItems(int min, int max) {
 		ArrayList<Integer> removedItems = new ArrayList<Integer>();
 		
-		for (int i = min; i <= max; i++) {
+		for (int i = min; i <= StorageManager.getLimit(min); i++) {
 			if (StorageManager.getItem(i) == null) {
-				break;
+				continue;
 			}
 			StoredItem item = StorageManager.getItem(i);
 			if (item == null) {
