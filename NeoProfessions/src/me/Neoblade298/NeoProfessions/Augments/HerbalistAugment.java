@@ -30,7 +30,7 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 
 	@Override
 	public double getAmountMult(Player user) {
-		return 2;
+		return 1;
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7" + formatPercentage(getChance()) + "% chance to double");
-		lore.add("§7harvester yield.");
+		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
+		lore.add("§7harvester base yield by " + formatPercentage(getAmountMult(user)) + ".");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

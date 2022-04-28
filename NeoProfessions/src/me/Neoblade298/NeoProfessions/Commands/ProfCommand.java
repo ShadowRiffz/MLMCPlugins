@@ -1,7 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -294,10 +293,10 @@ public class ProfCommand implements CommandExecutor {
 				}
 				else if (args[0].equalsIgnoreCase("checkaugments")) {
 					if (args.length == 1) {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments((Player) sender));
+						sender.sendMessage(AugmentManager.getPlayerAugments((Player) sender).toString());
 					}
 					else {
-						Bukkit.getLogger().log(Level.INFO, "" + AugmentManager.getPlayerAugments(Bukkit.getPlayer(args[1])));
+						sender.sendMessage(AugmentManager.getPlayerAugments(Bukkit.getPlayer(args[1])).toString());
 					}
 					return true;
 				}

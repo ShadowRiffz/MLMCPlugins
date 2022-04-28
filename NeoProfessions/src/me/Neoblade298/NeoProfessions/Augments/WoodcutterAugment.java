@@ -30,7 +30,7 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 
 	@Override
 	public double getAmountMult(Player user) {
-		return 2;
+		return 1;
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7" + formatPercentage(getChance()) + "% chance to double");
-		lore.add("§7logger yield.");
+		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
+		lore.add("§7logger base yield by " + formatPercentage(getAmountMult(user)) + ".");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

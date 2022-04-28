@@ -47,8 +47,8 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7" + formatPercentage(getChance()) + "% chance to double");
-		lore.add("§7stonecutter yield.");
+		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
+		lore.add("§7stonecutter base yield by " + formatPercentage(getAmountMult(user)) + ".");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Managers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -709,13 +710,17 @@ public class AugmentManager implements Listener, Manager {
 		double multChance = 0;
 		double amountMult = params.getAmountMultiplier();
 		if (containsAugments(p, EventType.PROFESSION_HARVEST)) {
+			HashSet<String> usedAugs = new HashSet<String>();
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.PROFESSION_HARVEST)) {
 				if (augment instanceof ModProfessionHarvestAugment) {
 					ModProfessionHarvestAugment aug = (ModProfessionHarvestAugment) augment;
 					if (aug.canUse(p, e.getType())) {
 						aug.applyHarvestEffects(p);
 						
-						amountMult = Math.max(amountMult, aug.getAmountMult(p));
+						if (!usedAugs.contains(augment.getName())) {
+							usedAugs.add(augment.getName());
+							amountMult += aug.getAmountMult(p);
+						}
 						multChance += aug.getChance();
 						
 						if (aug.getRarityMults(p) != null) {
