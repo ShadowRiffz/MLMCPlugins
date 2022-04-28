@@ -96,7 +96,7 @@ public class StorageView extends ProfessionInventory {
 		
 		// Double check to make sure all sorters exist, if not, fail and default
 		boolean validated = true;
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			if (sorters[i] == null) {
 				validated = false;
 				break;
