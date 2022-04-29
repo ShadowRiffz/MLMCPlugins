@@ -13,11 +13,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import com.google.common.collect.ImmutableList;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.SkillPlugin;
@@ -37,6 +41,7 @@ import me.neoblade298.neosapiaddons.conditions.AttackChargeCondition;
 import me.neoblade298.neosapiaddons.conditions.BlockingCondition;
 import me.neoblade298.neosapiaddons.conditions.ManaNameCondition;
 import me.neoblade298.neosapiaddons.mechanics.AddAbsorptionMechanic;
+import me.neoblade298.neosapiaddons.mechanics.AddShieldsMechanic;
 import me.neoblade298.neosapiaddons.mechanics.IncreasePotionMechanic;
 import me.neoblade298.neosapiaddons.mechanics.SpawnMythicmobMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueAttackSpeedMechanic;
@@ -49,6 +54,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 	public static HashMap<Integer, PointSet> skillPoints = new HashMap<Integer, PointSet>();
 	public static HashMap<Integer, PointSet> attrPoints = new HashMap<Integer, PointSet>();
 	public static boolean debug = false;
+	public static SAPIAddons inst;
 	
 	
 	public void onEnable() {
@@ -60,6 +66,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 		loadConfig();
 
 		getCommand("nsapi").setExecutor(new Commands(this));
+		inst = this;
 	}
 	
 	public void loadConfig() {
@@ -120,6 +127,20 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 					}
 				}
 			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onAnyDamage(EntityDamageEvent e) {
+		if (e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			double damage = Math.max(0, ShieldManager.useShields(p, e.getDamage()));
+			e.setDamage(damage);
+			new BukkitRunnable() {
+				public void run() {
+					ShieldManager.updatePlayerShields(p);
+				}
+			}.runTask(SAPIAddons.inst);
 		}
 	}
 	
@@ -246,6 +267,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
             new ValueMaxMechanic(),
             new SpawnMythicmobMechanic(),
             new AddAbsorptionMechanic(),
+            new AddShieldsMechanic(),
             new IncreasePotionMechanic(),
             new ValueAttackSpeedMechanic(),
             new ValueSkillLevelMechanic(),
