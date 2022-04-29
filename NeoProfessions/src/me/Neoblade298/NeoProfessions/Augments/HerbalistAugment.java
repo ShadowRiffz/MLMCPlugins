@@ -48,7 +48,7 @@ public class HerbalistAugment extends Augment implements ModProfessionHarvestAug
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
-		lore.add("§7harvester base yield by " + formatPercentage(getAmountMult(user)) + ".");
+		lore.add("§7harvester base yield by " + formatPercentage(getAmountMult(user)) + "%.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

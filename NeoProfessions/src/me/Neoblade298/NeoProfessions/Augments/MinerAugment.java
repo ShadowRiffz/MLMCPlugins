@@ -30,7 +30,7 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 
 	@Override
 	public double getAmountMult(Player user) {
-		return 2;
+		return 1;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class MinerAugment extends Augment implements ModProfessionHarvestAugment
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
-		lore.add("§7stonecutter base yield by " + formatPercentage(getAmountMult(user)) + ".");
+		lore.add("§7stonecutter base yield by " + formatPercentage(getAmountMult(user)) + "%.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

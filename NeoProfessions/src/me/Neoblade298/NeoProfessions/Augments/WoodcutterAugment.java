@@ -48,7 +48,7 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7" + formatPercentage(getChance()) + "% chance to increase");
-		lore.add("§7logger base yield by " + formatPercentage(getAmountMult(user)) + ".");
+		lore.add("§7logger base yield by " + formatPercentage(getAmountMult(user)) + "%.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
