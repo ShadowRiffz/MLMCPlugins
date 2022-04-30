@@ -34,17 +34,12 @@ public class PlayerShields {
 	}
 	
 	public double useShields(double damage) {
-		boolean changed = false;
 		while (!shields.isEmpty() && damage > 0) {
 			Shield curr = shields.peek();
 			damage = curr.useShield(damage);
 			if (!curr.isUsable()) {
 				shields.poll();
 			}
-			changed = true;
-		}
-		if (changed) {
-			ShieldManager.updatePlayerShields(p);
 		}
 		return damage;
 	}

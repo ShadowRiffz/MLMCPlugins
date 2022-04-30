@@ -28,6 +28,7 @@ public class Shield {
 				if (outOfShield || --reps <= 0) {
 					this.cancel();
 				}
+				ShieldManager.updatePlayerShields(p);
 			}
 		}.runTaskTimer(SAPIAddons.inst, (long) (decayDelay * 20), (long) (decayPeriod * 20));
 	}
