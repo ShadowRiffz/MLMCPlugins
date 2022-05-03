@@ -42,7 +42,7 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 		boolean isWithin = false;
 		for (Entity ent : user.getPlayer().getNearbyEntities(4, 4, 4)) {
 			if (!ent.hasMetadata("NPC")
-	                && (!ent.getType().equals(EntityType.ARMOR_STAND) && !(ent instanceof Player)) {
+	                && !ent.getType().equals(EntityType.ARMOR_STAND) && !(ent instanceof Player)) {
 				isWithin = true;
 				break;
 			}
