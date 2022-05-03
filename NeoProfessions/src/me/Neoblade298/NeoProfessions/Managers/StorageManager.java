@@ -144,7 +144,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 					
 					// Set the limits for each category
 					int key = intid / 1000;
-					limits.put(key, Math.max(limits.getOrDefault(key, -1), intid));
+					limits.put(key * 1000, Math.max(limits.getOrDefault(key, -1), intid));
 				}
 			}
 		}
