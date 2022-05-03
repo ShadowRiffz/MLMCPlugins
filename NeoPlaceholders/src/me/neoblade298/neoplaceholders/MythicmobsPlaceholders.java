@@ -65,6 +65,14 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 			}
 			return "§cHealth not defined!";
 		}
+		if (args[0].equalsIgnoreCase("name")) {
+			try {
+				return MythicBukkit.inst().getMobManager().getMythicMob(args[1]).get().getDisplayName().get();
+			}
+			catch (Exception e) {
+				return "§cInvalid name!";
+			}
+		}
 		else if (args[0].equalsIgnoreCase("itemlore")) {
 			Optional<MythicItem> item = MythicBukkit.inst().getItemManager().getItem(args[1]);
 			if (item.isPresent() && item.get().getLore().size() > 0) {
