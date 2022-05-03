@@ -29,8 +29,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		for (String key : healthSec.getKeys(false)) {
 			int health = 0;
 			for (String mob : healthSec.getStringList(key)) {
-				if (mm.getMythicMob(mob) != null) {
+				try {
 					health += mm.getMythicMob(mob).get().getHealth().get();
+				} catch (Exception e) {
+					health = 0;
 				}
 			}
 			mobhealth.put(key, health);
