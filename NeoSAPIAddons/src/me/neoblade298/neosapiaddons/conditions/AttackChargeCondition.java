@@ -10,7 +10,7 @@ import com.sucy.skill.dynamic.ComponentType;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
 import com.sucy.skill.dynamic.custom.EditorOption;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 public class AttackChargeCondition extends CustomEffectComponent {
 
@@ -39,7 +39,7 @@ public class AttackChargeCondition extends CustomEffectComponent {
 	public boolean execute(LivingEntity caster, int lvl, List<LivingEntity> targets, double critChance) {
 		double min = settings.getDouble("min");
 		double max = settings.getDouble("max");
-		float charge = MythicMobs.inst().getVolatileCodeHandler().getItemRecharge((Player) caster);
+		float charge = MythicBukkit.inst().getVolatileCodeHandler().getItemRecharge((Player) caster);
 		return min <= charge && charge <= max && executeChildren(caster, lvl, targets, critChance);
 	}
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 public class BossRelic extends Augment{
 	
@@ -23,7 +23,7 @@ public class BossRelic extends Augment{
 
 	@Override
 	public String getLine() {
-		ItemStack item = MythicMobs.inst().getItemManager().getItemStack(this.name);
+		ItemStack item = MythicBukkit.inst().getItemManager().getItemStack(this.name);
 		
 		String[] relicStrings = item.getItemMeta().getLore().get(0).split(" ");
 		String display = relicStrings[2];
@@ -36,7 +36,7 @@ public class BossRelic extends Augment{
 	
 	@Override
 	public ItemStack getItem(Player user) {
-		ItemStack item = MythicMobs.inst().getItemManager().getItemStack(this.name);
+		ItemStack item = MythicBukkit.inst().getItemManager().getItemStack(this.name);
 		NBTItem nbti = new NBTItem(item);
 		
 		nbti.setInteger("level", level);

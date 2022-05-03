@@ -2,13 +2,13 @@ package me.Neoblade298.NeoProfessions.Utilities;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Legacy.BlacksmithItems;
 import me.Neoblade298.NeoProfessions.Legacy.MasonItems;
 import me.Neoblade298.NeoProfessions.Legacy.StonecutterItems;
@@ -191,7 +191,7 @@ public class MasonUtils {
 			for (int i = 3; i < relicStrings.length; i++) {
 				relic += relicStrings[i];
 			}
-			return MythicMobs.inst().getItemManager().getItemStack(relic);
+			return MythicBukkit.inst().getItemManager().getItemStack(relic);
 		}
 		return null;
 	}

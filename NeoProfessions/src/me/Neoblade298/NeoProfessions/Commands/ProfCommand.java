@@ -2,7 +2,7 @@ package me.Neoblade298.NeoProfessions.Commands;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
@@ -128,7 +128,7 @@ public class ProfCommand implements CommandExecutor {
 					}
 
 					int amt = main.getAmount();
-					ItemStack converted = MythicMobs.inst().getItemManager().getItemStack(relic);
+					ItemStack converted = MythicBukkit.inst().getItemManager().getItemStack(relic);
 					if (converted != null) {
 						p.getInventory().removeItem(main);
 						converted.setAmount(amt);

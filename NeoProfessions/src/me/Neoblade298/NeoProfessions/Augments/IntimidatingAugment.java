@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 public class IntimidatingAugment extends Augment implements ModDamageDealtAugment {
 	private double threatMult;
@@ -29,7 +29,7 @@ public class IntimidatingAugment extends Augment implements ModDamageDealtAugmen
 
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
-		MythicMobs.inst().getAPIHelper().addThreat(target, user, threatMult);
+		MythicBukkit.inst().getAPIHelper().addThreat(target, user, threatMult);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class IntimidatingAugment extends Augment implements ModDamageDealtAugmen
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		return MythicMobs.inst().getAPIHelper().isMythicMob(target);
+		return MythicBukkit.inst().getAPIHelper().isMythicMob(target);
 	}
 
 	public ItemStack getItem(Player user) {

@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
@@ -111,7 +111,7 @@ public class StoredItem {
 
 		sources.add(src);
 		if (isMob) {
-			MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(source);
+			MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(source).get();
 			if (mm != null) {
 				source = mm.getDisplayName().get();
 			}
