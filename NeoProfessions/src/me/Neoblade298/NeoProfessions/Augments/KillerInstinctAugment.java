@@ -3,6 +3,8 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,7 +39,15 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 
 	@Override
 	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
-		return AugmentManager.getPlayerAugments(user.getPlayer()).getCount(this) >= 4;
+		boolean isWithin = false;
+		for (Entity ent : user.getPlayer().getNearbyEntities(4, 4, 4)) {
+			if (!ent.hasMetadata("NPC")
+	                && (!ent.getType().equals(EntityType.ARMOR_STAND) && !(ent instanceof Player)) {
+				isWithin = true;
+				break;
+			}
+		}
+		return AugmentManager.getPlayerAugments(user.getPlayer()).getCount(this) >= 4 && isWithin;
 	}
 
 	@Override
