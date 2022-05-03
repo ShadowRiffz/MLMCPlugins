@@ -34,11 +34,6 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 		this.maxHealthMod = (this.level / 5) * 0.002;
 	}
-
-	@Override
-	public void applyDamageTakenEffects(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
-		target.damage(getDamageReturned(user));
-	}
 	
 	@Override
 	public FlagSettings setFlagAfter() {

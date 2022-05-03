@@ -33,6 +33,7 @@ import com.sucy.skill.api.util.FlagManager;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
+import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
@@ -242,7 +243,7 @@ public class AugmentManager implements Listener, Manager {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).inventoryChanged();
+			playerAugments.get(p).checkAllAugments(p.getInventory());
 		}
 	}
 
@@ -253,7 +254,7 @@ public class AugmentManager implements Listener, Manager {
 			playerAugments.put(p, new PlayerAugments(p));
 		}
 		else {
-			playerAugments.get(p).inventoryChanged();
+			playerAugments.get(p).checkAllAugments(p.getInventory());
 		}
 	}
 
@@ -273,6 +274,24 @@ public class AugmentManager implements Listener, Manager {
 	public void onKicked(PlayerKickEvent e) {
 		Player p = e.getPlayer();
 		playerAugments.remove(p);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onAugmentCheck(AugmentInitCleanupEvent e) {
+		Player p = e.getPlayerAugments().getPlayer();
+		for (Augment augment : e.getInit()) {
+			if (augment instanceof ModInitAugment) {
+				ModInitAugment aug = (ModInitAugment) augment;
+				aug.applyInitEffects(p);
+			}
+		}
+		
+		for (Augment augment : e.getCleanup()) { 
+			if (augment instanceof ModCleanupAugment) {
+				ModCleanupAugment aug = (ModCleanupAugment) augment;
+				aug.applyCleanupEffects(p);
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -397,9 +416,11 @@ public class AugmentManager implements Listener, Manager {
 					}
 				}
 				// basically just for thorns
-				e.getTarget().damage(thorns);
+				if (thorns > 0) {
+					e.getTarget().damage(thorns, p);
+				}
 				if (flag != null) {
-					FlagManager.addFlag(p, e.getTarget(), flag.getFlag(), flag.getDuration());
+					FlagManager.addFlag(p, e.getCaster(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}

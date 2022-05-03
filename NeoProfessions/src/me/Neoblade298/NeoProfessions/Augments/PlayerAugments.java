@@ -3,20 +3,25 @@ package me.Neoblade298.NeoProfessions.Augments;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.StoredAttributes;
 
 public class PlayerAugments {
 	private HashMap<EventType, ArrayList<Augment>> augments;
-	private HashMap<Augment, Integer> hitCount;
-	private HashMap<Augment, Integer> counts;
+	private HashMap<String, Integer> hitCount;
+	private HashMap<String, Integer> counts;
 	private HashMap<Augment, StoredAttributes> attrs;
+	private HashSet<String> actives;
 	private Player p;
 	private boolean invChanged;
 	private int prevSlot;
@@ -24,19 +29,14 @@ public class PlayerAugments {
 	public PlayerAugments(Player p) {
 		this.p = p;
 		this.augments = new HashMap<EventType, ArrayList<Augment>>();
-		this.counts = new HashMap<Augment, Integer>();
-		this.hitCount = new HashMap<Augment, Integer>();
+		this.counts = new HashMap<String, Integer>();
+		this.hitCount = new HashMap<String, Integer>();
+		this.actives = new HashSet<String>();
 		this.attrs = new HashMap<Augment, StoredAttributes>();
 		this.invChanged = true;
 		this.prevSlot = -1;
 
-		PlayerInventory inv = p.getInventory();
-		checkAugments(inv.getHelmet());
-		checkAugments(inv.getChestplate());
-		checkAugments(inv.getLeggings());
-		checkAugments(inv.getBoots());
-		checkAugments(inv.getItemInMainHand());
-		checkAugments(inv.getItemInOffHand());
+		checkAllAugments(p.getInventory());
 	}
 	
 	public void inventoryChanged() {
@@ -66,7 +66,7 @@ public class PlayerAugments {
 					}
 					
 					// Add augment to counts
-					counts.put(aug, counts.getOrDefault(aug, 0) + 1);
+					counts.put(aug.getName(), counts.getOrDefault(aug.getName(), 0) + 1);
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class PlayerAugments {
 	}
 	
 	public int getCount(Augment aug) {
-		return counts.getOrDefault(aug, 0);
+		return counts.getOrDefault(aug.getName(), 0);
 	}
 	
 	public boolean containsAugments(EventType etype) {
@@ -87,14 +87,7 @@ public class PlayerAugments {
 		// 1: Mainhand has changed slots
 		// 2: Mainhand is same slot and inv has changed
 		if (inv.getHeldItemSlot() != prevSlot || invChanged) {
-			augments.clear();
-			counts.clear();
-			checkAugments(inv.getHelmet());
-			checkAugments(inv.getChestplate());
-			checkAugments(inv.getLeggings());
-			checkAugments(inv.getBoots());
-			checkAugments(inv.getItemInMainHand());
-			checkAugments(inv.getItemInOffHand());
+			checkAllAugments(inv);
 			prevSlot = inv.getHeldItemSlot();
 			invChanged = false;
 		}
@@ -114,15 +107,15 @@ public class PlayerAugments {
 	}
 	
 	public void incrementHitCount(Augment aug) {
-		hitCount.put(aug, hitCount.getOrDefault(aug, 0) + 1);
+		hitCount.put(aug.getName(), hitCount.getOrDefault(aug, 0) + 1);
 	}
 	
 	public void resetHitCount(Augment aug) {
-		hitCount.put(aug, 0);
+		hitCount.put(aug.getName(), 0);
 	}
 	
 	public int getHitCount(Augment aug) {
-		return hitCount.getOrDefault(aug, 0);
+		return hitCount.getOrDefault(aug.getName(), 0);
 	}
 	
 	public void applyAttributes(Augment aug, StoredAttributes sattr) {
@@ -134,5 +127,54 @@ public class PlayerAugments {
 		if (attrs.containsKey(aug)) {
 			attrs.remove(aug).removeAttributes(p);
 		}
+	}
+	
+	// Only used for init and cleanup
+	public HashSet<String> getActive() {
+		return actives;
+	}
+	
+	public Player getPlayer() {
+		return p;
+	}
+	
+	public void checkAllAugments(PlayerInventory inv) {
+		augments.clear();
+		counts.clear();
+		checkAugments(inv.getHelmet());
+		checkAugments(inv.getChestplate());
+		checkAugments(inv.getLeggings());
+		checkAugments(inv.getBoots());
+		checkAugments(inv.getItemInMainHand());
+		checkAugments(inv.getItemInOffHand());
+		
+		// Check for new inits or cleanups
+		ArrayList<Augment> newInits = new ArrayList<Augment>();
+		ArrayList<Augment> newCleanups = new ArrayList<Augment>();
+		Iterator<String> iter = actives.iterator();
+		while (iter.hasNext()) {
+			String name = iter.next();
+			boolean exists = false;
+			if (augments.containsKey(EventType.CLEANUP)) {
+				for (Augment aug : augments.get(EventType.CLEANUP)) {
+					if (aug.getName().equals(name)) {
+						exists = true;
+						break;
+					}
+				}
+			}
+			if (!exists) {
+				newCleanups.add(AugmentManager.getFromCache(name, 5));
+				iter.remove();
+			}
+		}
+		if (augments.containsKey(EventType.INIT)) {
+			for (Augment aug : augments.get(EventType.INIT)) {
+				if (actives.add(aug.getName())) {
+					newInits.add(aug);
+				}
+			}
+		}
+		Bukkit.getPluginManager().callEvent(new AugmentInitCleanupEvent(this, newInits, newCleanups));
 	}
 }

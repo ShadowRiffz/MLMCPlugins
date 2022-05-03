@@ -81,4 +81,9 @@ public abstract class Augment {
 	}
 	
 	public abstract Augment createNew(int level);
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }

@@ -41,7 +41,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public boolean canUse(PlayerData user, LivingEntity target) {
-		if (target instanceof Player && FlagManager.hasFlag(user.getPlayer(), "aug_rejuvenating")) {
+		if (target instanceof Player && !FlagManager.hasFlag(user.getPlayer(), "aug_rejuvenating")) {
 			Player p = (Player) target;
 			PlayerData data = SkillAPI.getPlayerData(p);
 			return data.getClass("class").getData().getManaName().endsWith("MP");
