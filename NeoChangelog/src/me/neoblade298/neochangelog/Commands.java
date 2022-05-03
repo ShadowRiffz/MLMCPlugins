@@ -19,10 +19,9 @@ public class Commands implements CommandExecutor {
 		main = plugin;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		List<List> days = main.getFM().getDays();
+		List<List<String>> days = main.getFM().getDays();
 
 		// View first 3 days
 		if (args.length < 1) {
@@ -32,13 +31,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				for (int day = 2; day >= 0; day--) {
-					sender.sendMessage(
-							"" + ChatColor.RED + "Date: " + days.get(day).get(0) + ChatColor.GRAY + " (" + day + ")");
-					sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
-					for (int entry = 1; entry < days.get(day).size(); entry++) {
-						sender.sendMessage(ChatColor.GOLD + "" + entry + ": " + ChatColor.GRAY
-								+ ((String) days.get(day).get(entry)).replaceAll("&", "§"));
-					}
+					printDay(sender, day, days);
 				}
 				ComponentBuilder builder = new ComponentBuilder("<< Previous")
 						.color(net.md_5.bungee.api.ChatColor.YELLOW).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -67,13 +60,7 @@ public class Commands implements CommandExecutor {
 				}
 				int day = chosenDay + 2 >= days.size() ? days.size() - 1 : chosenDay + 2;
 				while (day >= 0 && day >= chosenDay) {
-					sender.sendMessage(
-							"" + ChatColor.RED + "Date: " + days.get(day).get(0) + ChatColor.GRAY + " (" + day + ")");
-					sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
-					for (int entry = 1; entry < days.get(day).size(); entry++) {
-						sender.sendMessage(ChatColor.GOLD + "" + entry + ": " + ChatColor.GRAY
-								+ ((String) days.get(day).get(entry)).replaceAll("&", "§"));
-					}
+					printDay(sender, day, days);
 					day--;
 				}
 				int prev = page - 1 < 0 ? 0 : page - 1;
@@ -96,7 +83,7 @@ public class Commands implements CommandExecutor {
 		}
 
 		// View x-y pages
-		else if (args.length == 1) {
+		else if (args.length == 1 && StringUtils.isNumeric(args[0])) {
 			if (sender.hasPermission("changelog.view")) {
 				int arg1 = Integer.parseInt(args[0]);
 				if (arg1 >= days.size()) {
@@ -104,13 +91,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				for (int day = arg1 + 2; day >= 0; day--) {
-					sender.sendMessage(
-							"" + ChatColor.RED + "Date: " + days.get(day).get(0) + ChatColor.GRAY + " (" + day + ")");
-					sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
-					for (int entry = 1; entry < days.get(day).size(); entry++) {
-						sender.sendMessage(ChatColor.GOLD + "" + entry + ": " + ChatColor.GRAY
-								+ ((String) days.get(day).get(entry)).replaceAll("&", "§"));
-					}
+					printDay(sender, day, days);
 				}
 				return true;
 			}
@@ -158,7 +139,7 @@ public class Commands implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("addto")) {
 				if (sender.hasPermission("changelog.edit")) {
 					if (args.length > 2 && StringUtils.isNumeric(args[1])) {
-						int arg1 = Integer.parseInt(args[1]);
+						int arg1 = Integer.parseInt(args[1]) - 1;
 						String log = args[2];
 						for (int i = 3; i < args.length; i++) {
 							log += " " + args[i];
@@ -179,9 +160,9 @@ public class Commands implements CommandExecutor {
 				if (sender.hasPermission("changelog.edit")) {
 					if (args.length == 3) {
 						if (StringUtils.isNumeric(args[1]) && StringUtils.isNumeric(args[2])) {
-							int arg1 = Integer.parseInt(args[1]);
-							int arg2 = Integer.parseInt(args[2]);
-							if (main.getFM().removeLog(arg1, arg2)) {
+							int day = Integer.parseInt(args[1]) - 1;
+							int num = Integer.parseInt(args[2]);
+							if (main.getFM().removeLog(day, num)) {
 								sender.sendMessage("Successfully removed log!");
 								return true;
 							}
@@ -232,5 +213,15 @@ public class Commands implements CommandExecutor {
 			}
 		}
 		return false;
+	}
+	
+	private void printDay(CommandSender sender, int day, List<List<String>> days) {
+		sender.sendMessage(
+				"" + ChatColor.RED + "Date: " + days.get(day).get(0) + ChatColor.GRAY + " (" + (day + 1) + ")");
+		sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
+		for (int entry = 1; entry < days.get(day).size(); entry++) {
+			sender.sendMessage(ChatColor.GOLD + "" + entry + ": " + ChatColor.GRAY
+					+ ((String) days.get(day).get(entry)).replaceAll("&", "§"));
+		}
 	}
 }
