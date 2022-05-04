@@ -145,21 +145,26 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection goalsSec = rItemSec.getConfigurationSection("goals");
 				HashMap<String, Integer> goals = new HashMap<String, Integer>();
 				for (String mob : goalsSec.getKeys(false)) {
-					goals.put(mob, goalsSec.getInt(mob));
-	
-					// Add to mob map, research book min, display name map
-					if (mobMap.containsKey(mob)) {
-						mobMap.get(mob).add(researchItem);
-						String mobdisplay = mob;
-						if (mm.getMythicMob(mob) != null) {
-							 mm.getMythicMob(mob).get().getDisplayName().get();
+					try {
+						goals.put(mob, goalsSec.getInt(mob));
+		
+						// Add to mob map, research book min, display name map
+						if (mobMap.containsKey(mob)) {
+							mobMap.get(mob).add(researchItem);
+							String mobdisplay = mob;
+							if (mm.getMythicMob(mob).isPresent()) {
+								 mobdisplay = mm.getMythicMob(mob).get().getDisplayName().get();
+							}
+							displayNameMap.put(mob, mobdisplay);
 						}
-						displayNameMap.put(mob, mobdisplay);
-					}
-					else {
-						ArrayList<ResearchItem> list = new ArrayList<ResearchItem>();
-						list.add(researchItem);
-						mobMap.put(mob, list);
+						else {
+							ArrayList<ResearchItem> list = new ArrayList<ResearchItem>();
+							list.add(researchItem);
+							mobMap.put(mob, list);
+						}
+					} catch (Exception e) {
+						Bukkit.getLogger().log(Level.WARNING, "[NeoResearch] Failed to load mob " + mob);
+						e.printStackTrace();
 					}
 				}
 				researchItem.setGoals(goals);
