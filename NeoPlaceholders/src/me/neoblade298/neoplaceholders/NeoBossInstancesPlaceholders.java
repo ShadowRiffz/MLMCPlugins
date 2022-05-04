@@ -12,10 +12,10 @@ import org.bukkit.plugin.Plugin;
 import com.sucy.skill.api.util.FlagManager;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neobossinstances.Main;
+import me.neoblade298.neobossinstances.BossInstances;
 
 public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
-	private me.neoblade298.neobossinstances.Main plugin;
+	private BossInstances plugin;
 	private DateFormat formatter = new SimpleDateFormat("m:ss");
 
     @Override
@@ -28,7 +28,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
     	if (!canRegister()) return false;
     	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoBossInstances");
     	if (plugin == null) return false;
-    	this.plugin = (Main) plugin;
+    	this.plugin = (BossInstances) plugin;
     	return super.register();
     }
 
