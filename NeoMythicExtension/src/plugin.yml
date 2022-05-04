@@ -1,6 +1,6 @@
 name: NeoMythicExtension
 author: Neoblade298
-main: me.neoblade298.neomythicextension.Main
+main: me.neoblade298.neomythicextension.MythicExt
 version: 1.00
 depend: [MythicMobs]
 softdepend: [NeoBossInstances, NeoResearch, NeoSettings]
