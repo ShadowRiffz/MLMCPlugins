@@ -22,26 +22,31 @@ public class ModGlobalScore implements INoTargetSkill {
 	
 	@Override
     public SkillResult cast(SkillMetadata data) {
-		// Get current score
-		int score = 0;
-		if (nme.globalscores.containsKey(objective)) {
-			score = nme.globalscores.get(objective);
+		try {
+			// Get current score
+			int score = 0;
+			if (nme.globalscores.containsKey(objective)) {
+				score = nme.globalscores.get(objective);
+			}
+			
+			// Perform operation
+			switch (operation) {
+			case "=":
+				nme.globalscores.put(objective, value); break;
+			case "+":
+				nme.globalscores.put(objective, score + value); break;
+			case "-":
+				nme.globalscores.put(objective, score - value); break;
+			case "*":
+				nme.globalscores.put(objective, score * value); break;
+			case "/":
+				nme.globalscores.put(objective, score / value); break;
+			}
+			return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		
-		// Perform operation
-		switch (operation) {
-		case "=":
-			nme.globalscores.put(objective, value); break;
-		case "+":
-			nme.globalscores.put(objective, score + value); break;
-		case "-":
-			nme.globalscores.put(objective, score - value); break;
-		case "*":
-			nme.globalscores.put(objective, score * value); break;
-		case "/":
-			nme.globalscores.put(objective, score / value); break;
-		}
-		return SkillResult.SUCCESS;
     }
 
 }

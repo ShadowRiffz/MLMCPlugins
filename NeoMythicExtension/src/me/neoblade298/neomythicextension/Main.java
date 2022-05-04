@@ -195,11 +195,6 @@ public class Main extends JavaPlugin implements Listener {
 			GiveStoredItemMechanic mechanic = new GiveStoredItemMechanic(event.getConfig());
 			event.register(mechanic);
 		}
-
-		else if (name.equalsIgnoreCase("startminigame")) {
-			StartMinigameMechanic mechanic = new StartMinigameMechanic(event.getConfig());
-			event.register(mechanic);
-		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -18,9 +18,14 @@ public class TauntMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (MythicBukkit.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
-			MythicBukkit.inst().getAPIHelper().addThreat(target.getBukkitEntity(), (LivingEntity) data.getCaster().getEntity().getBukkitEntity(), this.amount);
+		try {
+			if (MythicBukkit.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
+				MythicBukkit.inst().getAPIHelper().addThreat(target.getBukkitEntity(), (LivingEntity) data.getCaster().getEntity().getBukkitEntity(), this.amount);
+			}
+	    	return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-    	return SkillResult.SUCCESS;
     }
 }

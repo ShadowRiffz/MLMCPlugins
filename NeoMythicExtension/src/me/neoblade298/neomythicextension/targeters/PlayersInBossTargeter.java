@@ -29,12 +29,16 @@ public class PlayersInBossTargeter extends IEntitySelector {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
-		if (nbi.getActiveFights().containsKey(this.boss)) {
-			ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
-			for (Player p : players) {
-				AbstractPlayer ap = BukkitAdapter.adapt(p);
-				targets.add(ap);
+		try {
+			if (nbi.getActiveFights().containsKey(this.boss)) {
+				ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
+				for (Player p : players) {
+					AbstractPlayer ap = BukkitAdapter.adapt(p);
+					targets.add(ap);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return targets;
 	}

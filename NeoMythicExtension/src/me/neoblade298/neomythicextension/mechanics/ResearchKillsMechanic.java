@@ -26,19 +26,24 @@ public class ResearchKillsMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
-			if (data.getCaster().getLevel() <= 0) {
-				return SkillResult.CONDITION_FAILED;
+		try {
+			if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
+				if (data.getCaster().getLevel() <= 0) {
+					return SkillResult.CONDITION_FAILED;
+				}
+				String mob = this.alias;
+				if (this.alias.equals("default")) {
+					ActiveMob amob = (ActiveMob) data.getCaster();
+					mob = amob.getType().getInternalName();
+				}
+				Player p = (Player) target.getBukkitEntity();
+				nr.giveResearchKills(p, this.amount, mob);
+				return SkillResult.SUCCESS;
 			}
-			String mob = this.alias;
-			if (this.alias.equals("default")) {
-				ActiveMob amob = (ActiveMob) data.getCaster();
-				mob = amob.getType().getInternalName();
-			}
-			Player p = (Player) target.getBukkitEntity();
-			nr.giveResearchKills(p, this.amount, mob);
-			return SkillResult.SUCCESS;
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }

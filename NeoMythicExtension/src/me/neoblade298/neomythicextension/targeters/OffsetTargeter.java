@@ -28,15 +28,18 @@ public class OffsetTargeter extends ILocationSelector {
 	@Override
 	public HashSet<AbstractLocation> getLocations(SkillMetadata data) {
 		HashSet<AbstractLocation> locs = new HashSet<AbstractLocation>();
-		Location loc = data.getCaster().getEntity().getBukkitEntity().getLocation();
-        final Vector dir = loc.getDirection().setY(0).normalize();
-
-        dir.multiply(this.forward);
-        dir.setY(this.upward);
-        dir.rotateAroundY(-this.clockwise * Math.PI / 180);
-        loc.add(dir);
-        locs.add(new AbstractLocation(data.getCaster().getLocation().getWorld(), loc.getX(), loc.getY(), loc.getZ()));
-
+		try {
+			Location loc = data.getCaster().getEntity().getBukkitEntity().getLocation();
+	        final Vector dir = loc.getDirection().setY(0).normalize();
+	
+	        dir.multiply(this.forward);
+	        dir.setY(this.upward);
+	        dir.rotateAroundY(-this.clockwise * Math.PI / 180);
+	        loc.add(dir);
+	        locs.add(new AbstractLocation(data.getCaster().getLocation().getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         return locs;
 	}
 }

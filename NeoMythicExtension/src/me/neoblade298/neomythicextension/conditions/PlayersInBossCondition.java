@@ -21,8 +21,14 @@ public class PlayersInBossCondition implements IEntityCondition {
     }
 
     public boolean check(AbstractEntity t) {
-    	int numPlayers = 0;
-		if (nbi.getActiveFights().containsKey(this.boss)) numPlayers = nbi.getActiveFights().get(this.boss).size();
-		return min <= numPlayers && numPlayers <= max;
+    	try {
+	    	int numPlayers = 0;
+			if (nbi.getActiveFights().containsKey(this.boss)) numPlayers = nbi.getActiveFights().get(this.boss).size();
+			return min <= numPlayers && numPlayers <= max;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

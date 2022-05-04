@@ -22,10 +22,15 @@ public class FlagMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof LivingEntity) {
-			FlagManager.addFlag((LivingEntity) data.getCaster().getEntity().getBukkitEntity(),(LivingEntity) target.getBukkitEntity(), this.flag, this.duration);
-			return SkillResult.SUCCESS;
+		try {
+			if (target.getBukkitEntity() instanceof LivingEntity) {
+				FlagManager.addFlag((LivingEntity) data.getCaster().getEntity().getBukkitEntity(),(LivingEntity) target.getBukkitEntity(), this.flag, this.duration);
+				return SkillResult.SUCCESS;
+			}
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }

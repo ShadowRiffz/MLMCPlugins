@@ -34,38 +34,43 @@ public class ResearchPointsChanceMechanic implements ITargetedEntitySkill {
 
 	@Override
 	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
-			if (data.getCaster().getLevel() <= 0) {
-				return SkillResult.CONDITION_FAILED;
-			}
-			double rand = this.rand.nextDouble();
-			double chance = this.basechance;
-			String mob = this.alias;
-			if (this.alias.equals("default")) {
-				ActiveMob amob = (ActiveMob) data.getCaster();
-				mob = amob.getType().getInternalName();
-				level = (int) amob.getLevel();
-			}
-
-			// Check if player is holding a drop charm
-			Player p = (Player) target.getBukkitEntity();
-			int dropType = 0;
-			MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
-			Bukkit.getPluginManager().callEvent(e);
-			chance = e.getChance();
-			dropType = e.getDropType();
-
-			// Check for successful drop
-			if (rand <= chance) {
-				if (dropType == 1 && rand >= this.basechance) {
-					nr.giveResearchPoints(p, this.amount, mob, level, true, "Research Augment");
+		try {
+			if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
+				if (data.getCaster().getLevel() <= 0) {
+					return SkillResult.CONDITION_FAILED;
 				}
-				else {
-					nr.giveResearchPoints(p, this.amount, mob, level, true, null);
+				double rand = this.rand.nextDouble();
+				double chance = this.basechance;
+				String mob = this.alias;
+				if (this.alias.equals("default")) {
+					ActiveMob amob = (ActiveMob) data.getCaster();
+					mob = amob.getType().getInternalName();
+					level = (int) amob.getLevel();
 				}
+	
+				// Check if player is holding a drop charm
+				Player p = (Player) target.getBukkitEntity();
+				int dropType = 0;
+				MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
+				Bukkit.getPluginManager().callEvent(e);
+				chance = e.getChance();
+				dropType = e.getDropType();
+	
+				// Check for successful drop
+				if (rand <= chance) {
+					if (dropType == 1 && rand >= this.basechance) {
+						nr.giveResearchPoints(p, this.amount, mob, level, true, "Research Augment");
+					}
+					else {
+						nr.giveResearchPoints(p, this.amount, mob, level, true, null);
+					}
+				}
+				return SkillResult.SUCCESS;
 			}
-			return SkillResult.SUCCESS;
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
 	}
 }

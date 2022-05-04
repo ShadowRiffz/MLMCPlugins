@@ -22,22 +22,28 @@ public class ScoreCondition implements IEntityCondition {
 
     // CURRENTLY UNUSED CONDITION
     public boolean check(AbstractEntity t) {
-    	int score = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective).getScore(entry).getScore();
-    	
-    	switch (operation) {
-    	case "==":
-    		return score == value;
-    	case "!=":
-			return score != value;
-    	case ">=":
-			return score >= value;
-    	case "<=":
-    		return score <= value;
-    	case ">":
-    		return score > value;
-    	case "<":
-    		return score < value;
-    	}
-    	return false;
+    	try {
+	    	int score = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective).getScore(entry).getScore();
+	    	
+	    	switch (operation) {
+	    	case "==":
+	    		return score == value;
+	    	case "!=":
+				return score != value;
+	    	case ">=":
+				return score >= value;
+	    	case "<=":
+	    		return score <= value;
+	    	case ">":
+	    		return score > value;
+	    	case "<":
+	    		return score < value;
+	    	}
+	    	return false;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

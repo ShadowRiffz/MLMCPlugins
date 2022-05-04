@@ -27,26 +27,31 @@ public class ScaleGoldMechanic implements INoTargetSkill {
 
 	@Override
 	public SkillResult cast(SkillMetadata data) {
-		if (data.getCaster().getLevel() < 1) {
-			return SkillResult.CONDITION_FAILED;
+		try {
+			if (data.getCaster().getLevel() < 1) {
+				return SkillResult.CONDITION_FAILED;
+			}
+			
+			double scale = Math.min(2, 1 + (0.02 * (data.getCaster().getLevel() - 1)));
+			double scaledMin = this.min * scale;
+			double scaledMax = this.max * scale;
+			ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
+	
+			// Get gold min and max for party size, generate gold
+			double gold = Math.random() * (scaledMax - scaledMin) + scaledMin;
+			gold = Math.round(gold / 25.0D) * 25L;
+			
+			// Give gold to each player
+			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+			for (Player player : players) {
+				String command = "eco give " + player.getName() + " " + (int) gold;
+				Bukkit.dispatchCommand(console, command);
+				player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
+			}
+			return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		
-		double scale = Math.min(2, 1 + (0.02 * (data.getCaster().getLevel() - 1)));
-		double scaledMin = this.min * scale;
-		double scaledMax = this.max * scale;
-		ArrayList<Player> players = nbi.getActiveFights().get(this.boss);
-
-		// Get gold min and max for party size, generate gold
-		double gold = Math.random() * (scaledMax - scaledMin) + scaledMin;
-		gold = Math.round(gold / 25.0D) * 25L;
-		
-		// Give gold to each player
-		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		for (Player player : players) {
-			String command = "eco give " + player.getName() + " " + (int) gold;
-			Bukkit.dispatchCommand(console, command);
-			player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
-		}
-		return SkillResult.SUCCESS;
 	}
 }

@@ -16,14 +16,19 @@ public class ScaleHealMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.isLiving()) {
-			if (data.getCaster().getLevel() >= 1) {
-				target.setHealth(Math.min(target.getMaxHealth(), target.getHealth() + (this.amount * (0.5 + (data.getCaster().getLevel() * 0.5)))));
+		try {
+			if (target.isLiving()) {
+				if (data.getCaster().getLevel() >= 1) {
+					target.setHealth(Math.min(target.getMaxHealth(), target.getHealth() + (this.amount * (0.5 + (data.getCaster().getLevel() * 0.5)))));
+				}
+				else if (data.getCaster().getLevel() >= -99){
+					target.setHealth(Math.min(target.getMaxHealth(), target.getHealth() + (this.amount * (1 + (data.getCaster().getLevel() * 0.01)))));
+				}
 			}
-			else if (data.getCaster().getLevel() >= -99){
-				target.setHealth(Math.min(target.getMaxHealth(), target.getHealth() + (this.amount * (1 + (data.getCaster().getLevel() * 0.01)))));
-			}
+			return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.SUCCESS;
     }
 }

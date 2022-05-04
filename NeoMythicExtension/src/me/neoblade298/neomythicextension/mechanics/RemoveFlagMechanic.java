@@ -20,10 +20,15 @@ public class RemoveFlagMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof LivingEntity) {
-			FlagManager.removeFlag((LivingEntity) target.getBukkitEntity(), this.flag);
-			return SkillResult.SUCCESS;
+		try {
+			if (target.getBukkitEntity() instanceof LivingEntity) {
+				FlagManager.removeFlag((LivingEntity) target.getBukkitEntity(), this.flag);
+				return SkillResult.SUCCESS;
+			}
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }

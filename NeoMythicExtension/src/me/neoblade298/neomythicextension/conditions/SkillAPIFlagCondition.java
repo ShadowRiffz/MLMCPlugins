@@ -45,18 +45,24 @@ public class SkillAPIFlagCondition implements IEntityCondition {
 	}
 
 	public boolean check(AbstractEntity t) {
-		ActiveMob am = MythicBukkit.inst().getMobManager().getMythicMobInstance(t);
-		boolean result = false;
-		
-		// Checking a player for a flag
-		if (t.getBukkitEntity() instanceof Player) {
-			Player p = (Player) t.getBukkitEntity();
-			result = checkPlayer(p);
+    	try {
+			ActiveMob am = MythicBukkit.inst().getMobManager().getMythicMobInstance(t);
+			boolean result = false;
+			
+			// Checking a player for a flag
+			if (t.getBukkitEntity() instanceof Player) {
+				Player p = (Player) t.getBukkitEntity();
+				result = checkPlayer(p);
+			}
+			else if (am != null) {
+				result = checkMob((LivingEntity) t.getBukkitEntity(), am);
+			}
+			return result;
 		}
-		else if (am != null) {
-			result = checkMob((LivingEntity) t.getBukkitEntity(), am);
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
-		return result;
 	}
 	
 	private boolean checkPlayer(Player p) {

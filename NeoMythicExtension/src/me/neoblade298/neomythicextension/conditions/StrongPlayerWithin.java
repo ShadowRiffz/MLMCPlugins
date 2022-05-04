@@ -16,15 +16,21 @@ public class StrongPlayerWithin implements IEntityCondition {
     }
 
     public boolean check(AbstractEntity t) {
-    	for (Entity e : t.getBukkitEntity().getNearbyEntities(radius, 256, radius)) {
-    		if (e instanceof Player) {
-    			Player p = (Player) e;
-    			ItemStack chestplate = p.getInventory().getArmorContents()[2];
-    			if (chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasLore()) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
+    	try {
+	    	for (Entity e : t.getBukkitEntity().getNearbyEntities(radius, 256, radius)) {
+	    		if (e instanceof Player) {
+	    			Player p = (Player) e;
+	    			ItemStack chestplate = p.getInventory().getArmorContents()[2];
+	    			if (chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasLore()) {
+	    				return true;
+	    			}
+	    		}
+	    	}
+	    	return false;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

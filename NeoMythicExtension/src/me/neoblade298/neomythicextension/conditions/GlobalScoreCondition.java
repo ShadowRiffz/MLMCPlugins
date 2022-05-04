@@ -19,26 +19,32 @@ public class GlobalScoreCondition implements IEntityCondition {
     }
 
     public boolean check(AbstractEntity t) {
-    	boolean toReturn = false;
-    	
-    	// Check if the value even exists
-    	if (nme.globalscores.containsKey(objective)) {
-    		int score = nme.globalscores.get(objective);
-        	switch (operation) {
-        	case "==":
-        		toReturn = score == value; break;
-        	case "!=":
-        		toReturn = score != value; break;
-        	case ">=":
-        		toReturn = score >= value; break;
-        	case "<=":
-        		toReturn = score <= value; break;
-        	case ">":
-        		toReturn = score > value; break;
-        	case "<":
-        		toReturn = score < value; break;
-        	}
-    	}
-    	return toReturn;
+    	try {
+	    	boolean toReturn = false;
+	    	
+	    	// Check if the value even exists
+	    	if (nme.globalscores.containsKey(objective)) {
+	    		int score = nme.globalscores.get(objective);
+	        	switch (operation) {
+	        	case "==":
+	        		toReturn = score == value; break;
+	        	case "!=":
+	        		toReturn = score != value; break;
+	        	case ">=":
+	        		toReturn = score >= value; break;
+	        	case "<=":
+	        		toReturn = score <= value; break;
+	        	case ">":
+	        		toReturn = score > value; break;
+	        	case "<":
+	        		toReturn = score < value; break;
+	        	}
+	    	}
+	    	return toReturn;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

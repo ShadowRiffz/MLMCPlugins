@@ -16,10 +16,16 @@ public class AboveBlockCondition implements IEntityCondition {
     }
 
     public boolean check(AbstractEntity t) {
-    	Location loc = t.getBukkitEntity().getLocation();
-    	while (loc.getBlock().getType().equals(Material.AIR) || loc.getBlock().isLiquid()) {
-    		loc.setY(loc.getY() - 1);
+    	try {
+        	Location loc = t.getBukkitEntity().getLocation();
+        	while (loc.getBlock().getType().equals(Material.AIR) || loc.getBlock().isLiquid()) {
+        		loc.setY(loc.getY() - 1);
+        	}
+        	return loc.getBlock().getType().equals(this.block);
     	}
-    	return loc.getBlock().getType().equals(this.block);
+    	catch (Exception e) {
+    		e.printStackTrace();
+    		return false;
+    	}
     }
 }

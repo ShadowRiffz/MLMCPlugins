@@ -32,27 +32,32 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
-			if (data.getCaster().getLevel() <= 0) {
-				return SkillResult.CONDITION_FAILED;
-			}
-			String mob = this.alias;
-			Player p = (Player) target.getBukkitEntity();
-			if (this.alias.equals("default")) {
-				ActiveMob amob = (ActiveMob) data.getCaster();
-				mob = amob.getType().getInternalName();
-				level = (int) amob.getLevel();
-				nr.giveResearchPoints(p, this.amount, mob, level, false, null);
-			}
-			else {
-				MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-				if (mm != null) {
-					display = mm.getDisplayName().get();
+		try {
+			if (target.getBukkitEntity() instanceof Player && data.getCaster() instanceof ActiveMob) {
+				if (data.getCaster().getLevel() <= 0) {
+					return SkillResult.CONDITION_FAILED;
 				}
-				nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
+				String mob = this.alias;
+				Player p = (Player) target.getBukkitEntity();
+				if (this.alias.equals("default")) {
+					ActiveMob amob = (ActiveMob) data.getCaster();
+					mob = amob.getType().getInternalName();
+					level = (int) amob.getLevel();
+					nr.giveResearchPoints(p, this.amount, mob, level, false, null);
+				}
+				else {
+					MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
+					if (mm != null) {
+						display = mm.getDisplayName().get();
+					}
+					nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
+				}
+				return SkillResult.SUCCESS;
 			}
-			return SkillResult.SUCCESS;
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }

@@ -25,36 +25,41 @@ public class ModScore implements ITargetedEntitySkill {
 
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		String uuid = target.getBukkitEntity().getUniqueId().toString();
-		
-		// Check if this objective already exists
-		ConcurrentHashMap<String, Integer> objScores = null;
-		if (nme.scores.containsKey(objective)) {
-			objScores = nme.scores.get(objective);
+		try {
+			String uuid = target.getBukkitEntity().getUniqueId().toString();
+			
+			// Check if this objective already exists
+			ConcurrentHashMap<String, Integer> objScores = null;
+			if (nme.scores.containsKey(objective)) {
+				objScores = nme.scores.get(objective);
+			}
+			else {
+				objScores = new ConcurrentHashMap<String, Integer>();
+				nme.scores.put(objective, objScores);
+			}
+	
+			// Get current score
+			int score = 0;
+			if (objScores.containsKey(uuid)) {
+				score = objScores.get(uuid);
+			}
+			
+			// Perform operation
+			switch (operation) {
+			case "+":
+				nme.globalscores.put(objective, score + value);
+			case "-":
+				nme.globalscores.put(objective, score - value);
+			case "*":
+				nme.globalscores.put(objective, score * value);
+			case "/":
+				nme.globalscores.put(objective, score / value);
+			}
+			return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		else {
-			objScores = new ConcurrentHashMap<String, Integer>();
-			nme.scores.put(objective, objScores);
-		}
-
-		// Get current score
-		int score = 0;
-		if (objScores.containsKey(uuid)) {
-			score = objScores.get(uuid);
-		}
-		
-		// Perform operation
-		switch (operation) {
-		case "+":
-			nme.globalscores.put(objective, score + value);
-		case "-":
-			nme.globalscores.put(objective, score - value);
-		case "*":
-			nme.globalscores.put(objective, score * value);
-		case "/":
-			nme.globalscores.put(objective, score / value);
-		}
-		return SkillResult.SUCCESS;
     }
 
 }

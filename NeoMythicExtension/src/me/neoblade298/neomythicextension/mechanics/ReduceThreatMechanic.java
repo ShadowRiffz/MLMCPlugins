@@ -18,7 +18,12 @@ public class ReduceThreatMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		MythicBukkit.inst().getAPIHelper().reduceThreat(data.getCaster().getEntity().getBukkitEntity(), (LivingEntity) target.getBukkitEntity(), this.amount);
-    	return SkillResult.SUCCESS;
+		try {
+			MythicBukkit.inst().getAPIHelper().reduceThreat(data.getCaster().getEntity().getBukkitEntity(), (LivingEntity) target.getBukkitEntity(), this.amount);
+	    	return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
+		}
     }
 }

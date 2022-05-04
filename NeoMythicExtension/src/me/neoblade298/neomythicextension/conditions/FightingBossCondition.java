@@ -11,6 +11,12 @@ public class FightingBossCondition implements IEntityCondition {
     }
 
     public boolean check(AbstractEntity t) {
-    	return !Main.getSpectators().contains(t.getUniqueId());
+    	try {
+    		return !Main.getSpectators().contains(t.getUniqueId());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

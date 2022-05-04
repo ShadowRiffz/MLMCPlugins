@@ -27,23 +27,28 @@ public class WarnMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-    	LivingEntity bukkitTarget = (LivingEntity) BukkitAdapter.adapt(target);
-
-    	// Check if target is player
-    	if (bukkitTarget instanceof Player) {
-    		Player p = (Player) bukkitTarget;
-    		
-    		// If player is in hashmap, check their cooldown.
-    		for (Entity e : p.getNearbyEntities(radius, radius, radius)) {
-    			if (e instanceof Player) {
-    				Player msgTarget = (Player) e;
-    				msgTarget.sendMessage(this.msg.replaceAll("<target.name>", target.getName()));
-    			}
-    		}
-    		if (warnTarget) {
-				p.sendMessage(this.msg.replaceAll("<target.name>", target.getName()));
-    		}
-    	}
-    	return SkillResult.SUCCESS;
+		try {
+	    	LivingEntity bukkitTarget = (LivingEntity) BukkitAdapter.adapt(target);
+	
+	    	// Check if target is player
+	    	if (bukkitTarget instanceof Player) {
+	    		Player p = (Player) bukkitTarget;
+	    		
+	    		// If player is in hashmap, check their cooldown.
+	    		for (Entity e : p.getNearbyEntities(radius, radius, radius)) {
+	    			if (e instanceof Player) {
+	    				Player msgTarget = (Player) e;
+	    				msgTarget.sendMessage(this.msg.replaceAll("<target.name>", target.getName()));
+	    			}
+	    		}
+	    		if (warnTarget) {
+					p.sendMessage(this.msg.replaceAll("<target.name>", target.getName()));
+	    		}
+	    	}
+	    	return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
+		}
     }
 }

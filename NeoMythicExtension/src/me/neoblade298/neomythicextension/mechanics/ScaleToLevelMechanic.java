@@ -26,52 +26,57 @@ public class ScaleToLevelMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (this.nbi.getActiveFights().containsKey(this.boss)) { 
-			int numPlayers = this.nbi.getActiveFights().get(this.boss).size();
-	
-	    	// Make sure target is a MythicMob
-	    	if (MythicBukkit.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
-	    		ActiveMob am = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
-	    		double level = am.getLevel();
-	    		AbstractEntity ent = am.getEntity();
-	    		
-	    		// Set level
-	    		if (level < numPlayers && level >= 1) {
-	    			if (ent.isValid()) {
-		    			am.setLevel(numPlayers);
-		    			level = numPlayers;
-	    			}
-	    			else {
-	    				return SkillResult.CONDITION_FAILED;
-	    			}
-	    		}
-	    		
-	    		// Check if the boss is x or ex
-	    		double oldHealth = ent.getMaxHealth();
-	    		double newHealth = oldHealth;
-	    		if (exlevel != -1 && level >= exlevel) {
-	    			
-	    		}
-	    		else if (xlevel != -1 && level >= xlevel) {
-	    			
-	    		}
-	    		else if (level >= 1) {
-	    			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
-	    			if (level > 6) {
-	    				newHealth += (level - 6) * 0.2 * oldHealth;
-	    			}
-	    		}
-	    		else if (level >= -99) {
-	    			newHealth *= 1 + (0.01 * level);
-	    		}
-	    		
-	    		if (ent.isValid()) {
-		    		ent.setMaxHealth(newHealth);
-		    		ent.setHealth(newHealth);
-	    		}
-	    	}
+		try {
+			if (this.nbi.getActiveFights().containsKey(this.boss)) { 
+				int numPlayers = this.nbi.getActiveFights().get(this.boss).size();
+		
+		    	// Make sure target is a MythicMob
+		    	if (MythicBukkit.inst().getAPIHelper().isMythicMob(target.getBukkitEntity())) {
+		    		ActiveMob am = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(target.getBukkitEntity());
+		    		double level = am.getLevel();
+		    		AbstractEntity ent = am.getEntity();
+		    		
+		    		// Set level
+		    		if (level < numPlayers && level >= 1) {
+		    			if (ent.isValid()) {
+			    			am.setLevel(numPlayers);
+			    			level = numPlayers;
+		    			}
+		    			else {
+		    				return SkillResult.CONDITION_FAILED;
+		    			}
+		    		}
+		    		
+		    		// Check if the boss is x or ex
+		    		double oldHealth = ent.getMaxHealth();
+		    		double newHealth = oldHealth;
+		    		if (exlevel != -1 && level >= exlevel) {
+		    			
+		    		}
+		    		else if (xlevel != -1 && level >= xlevel) {
+		    			
+		    		}
+		    		else if (level >= 1) {
+		    			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
+		    			if (level > 6) {
+		    				newHealth += (level - 6) * 0.2 * oldHealth;
+		    			}
+		    		}
+		    		else if (level >= -99) {
+		    			newHealth *= 1 + (0.01 * level);
+		    		}
+		    		
+		    		if (ent.isValid()) {
+			    		ent.setMaxHealth(newHealth);
+			    		ent.setHealth(newHealth);
+		    		}
+		    	}
+			}
+	    	return SkillResult.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-    	return SkillResult.SUCCESS;
     }
 
 }

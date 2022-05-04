@@ -20,11 +20,16 @@ public class ModManaMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player) {
-			Player p = (Player) target.getBukkitEntity();
-			SkillAPI.getPlayerData(p).giveMana(amount);
-			return SkillResult.SUCCESS;
+		try {
+			if (target.getBukkitEntity() instanceof Player) {
+				Player p = (Player) target.getBukkitEntity();
+				SkillAPI.getPlayerData(p).giveMana(amount);
+				return SkillResult.SUCCESS;
+			}
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }

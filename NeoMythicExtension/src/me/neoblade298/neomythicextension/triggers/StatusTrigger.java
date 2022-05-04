@@ -25,7 +25,7 @@ public class StatusTrigger implements Listener {
 			mob.signalMob(mob.getEntity(), e.getFlag());
 		}
 		catch (Exception ex) {
-			
+			ex.printStackTrace();
 		}
 	}
 }

@@ -21,18 +21,23 @@ public class ScaleExpMechanic implements ITargetedEntitySkill {
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity() instanceof Player) {
-			if (data.getCaster().getLevel() < 1) {
+		try {
+			if (target.getBukkitEntity() instanceof Player) {
+				if (data.getCaster().getLevel() < 1) {
+					return SkillResult.SUCCESS;
+				}
+				
+				Player p = (Player) target.getBukkitEntity();
+				double scale = Math.min(2, 1 + (0.1 * (data.getCaster().getLevel() - 1)));
+				double exp = Math.round(this.amount * scale);
+				SkillAPI.getPlayerData(p).giveExp(exp, ExpSource.MOB);
+				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + exp + " §7exp!");
 				return SkillResult.SUCCESS;
 			}
-			
-			Player p = (Player) target.getBukkitEntity();
-			double scale = Math.min(2, 1 + (0.1 * (data.getCaster().getLevel() - 1)));
-			double exp = Math.round(this.amount * scale);
-			SkillAPI.getPlayerData(p).giveExp(exp, ExpSource.MOB);
-			p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + exp + " §7exp!");
-			return SkillResult.SUCCESS;
+			return SkillResult.INVALID_TARGET;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SkillResult.ERROR;
 		}
-		return SkillResult.INVALID_TARGET;
     }
 }
