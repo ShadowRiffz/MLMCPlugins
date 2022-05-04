@@ -7,15 +7,15 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import me.neoblade298.neobossinstances.Main;
+import me.neoblade298.neobossinstances.BossInstances;
 
 public class ScaleToLevelMechanic implements ITargetedEntitySkill {
 	protected final String boss;
 	protected final double exlevel, exhealth, xlevel, xhealth;
-	protected Main nbi;
+	protected BossInstances nbi;
 
-	public ScaleToLevelMechanic(MythicLineConfig config) {
-        this.nbi = (Main) MythicBukkit.inst().getServer().getPluginManager().getPlugin("NeoBossInstances");
+	public ScaleToLevelMechanic(MythicLineConfig config, BossInstances nbi) {
+        this.nbi = nbi;
         
         this.boss = config.getString("boss", "Ratface");
         this.xlevel = config.getDouble("xlevel", -1);

@@ -10,13 +10,11 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.bukkit.BukkitAdapter;
-import me.neoblade298.neobossinstances.Main;
 
 public class WarnMechanic implements ITargetedEntitySkill {
 	protected final int radius;
 	protected String msg;
 	protected final boolean warnTarget;
-	Main nbi;
 
 	public WarnMechanic(MythicLineConfig config) {
         this.radius = config.getInteger(new String[] {"radius", "r"}, 30);

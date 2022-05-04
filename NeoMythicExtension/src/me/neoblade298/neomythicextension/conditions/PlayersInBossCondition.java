@@ -1,23 +1,21 @@
 package me.neoblade298.neomythicextension.conditions;
 
-import org.bukkit.Bukkit;
-
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
-import me.neoblade298.neobossinstances.Main;
+import me.neoblade298.neobossinstances.BossInstances;
 
 public class PlayersInBossCondition implements IEntityCondition {
 	private int min;
 	private int max;
 	private String boss;
-	protected final me.neoblade298.neobossinstances.Main nbi;
+	protected final BossInstances nbi;
     
-    public PlayersInBossCondition(MythicLineConfig mlc) {
+    public PlayersInBossCondition(MythicLineConfig mlc, BossInstances nbi) {
         this.boss = mlc.getString(new String[] {"boss", "b"}, "Ratface");
         this.min = mlc.getInteger("min", 0);
         this.max = mlc.getInteger("max", 0);
-        this.nbi = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
+        this.nbi = nbi;
     }
 
     public boolean check(AbstractEntity t) {

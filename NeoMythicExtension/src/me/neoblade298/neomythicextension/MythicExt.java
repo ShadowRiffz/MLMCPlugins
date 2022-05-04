@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
+import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neomythicextension.conditions.*;
 import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
@@ -35,6 +36,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
 	public static MythicExt inst;
 	public static Economy econ;
+	private BossInstances nbi;
 
 	@Override
 	public void onEnable() {
@@ -44,6 +46,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 		globalscores = new ConcurrentHashMap<String, Integer>();
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
+		nbi = (BossInstances) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
 		
 		// Create Settings
 		// settings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
@@ -95,7 +98,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 		}
 
 		else if (name.equalsIgnoreCase("playersinboss")) {
-			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig());
+			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig(), nbi);
 			event.register(condition);
 		}
 
@@ -120,7 +123,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 		String name = event.getTargeterName();
 		if (name.equalsIgnoreCase("playersinboss")
 				|| event.getTargeterName().equalsIgnoreCase("pib")) {
-			PlayersInBossTargeter targeter = new PlayersInBossTargeter(event.getConfig());
+			PlayersInBossTargeter targeter = new PlayersInBossTargeter(event.getConfig(), nbi);
 			event.register(targeter);
 		}
 
@@ -175,12 +178,12 @@ public class MythicExt extends JavaPlugin implements Listener {
 		}
 
 		else if (name.equalsIgnoreCase("scaletolevel")) {
-			ScaleToLevelMechanic mechanic = new ScaleToLevelMechanic(event.getConfig());
+			ScaleToLevelMechanic mechanic = new ScaleToLevelMechanic(event.getConfig(), nbi);
 			event.register(mechanic);
 		}
 
 		else if (name.equalsIgnoreCase("scalegold")) {
-			ScaleGoldMechanic mechanic = new ScaleGoldMechanic(event.getConfig());
+			ScaleGoldMechanic mechanic = new ScaleGoldMechanic(event.getConfig(), nbi);
 			event.register(mechanic);
 		}
 

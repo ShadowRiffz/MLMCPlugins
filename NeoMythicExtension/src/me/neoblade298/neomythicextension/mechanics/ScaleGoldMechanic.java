@@ -1,14 +1,13 @@
 package me.neoblade298.neomythicextension.mechanics;
 
 import java.util.ArrayList;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.INoTargetSkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
-import me.neoblade298.neobossinstances.Main;
+import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neomythicextension.MythicExt;
 
 public class ScaleGoldMechanic implements INoTargetSkill {
@@ -16,13 +15,13 @@ public class ScaleGoldMechanic implements INoTargetSkill {
 	protected final int min;
 	protected final int max;
 	protected final String boss;
-	protected final Main nbi;
+	protected final BossInstances nbi;
 
-	public ScaleGoldMechanic(MythicLineConfig config) {
+	public ScaleGoldMechanic(MythicLineConfig config, BossInstances nbi) {
         this.min = config.getInteger("min", 0);
         this.max = config.getInteger("max", 0);
         this.boss = config.getString("boss", "Ratface");
-        this.nbi = (Main) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
+        this.nbi = nbi;
 	}
 
 	@Override
