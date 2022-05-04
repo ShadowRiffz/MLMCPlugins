@@ -59,7 +59,6 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 				if (p.hasPermission("tokens.active.boss")) {
 					dropType = 2;
 					chance = 1;
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
 				}
 	
 				final ItemStack fitem = this.item;
@@ -67,6 +66,10 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 				final int fdrop = dropType;
 				new BukkitRunnable() {
 					public void run() {
+						if (p.hasPermission("tokens.active.boss")) {
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission unset tokens.active.boss");
+						}
+						
 						ChestDropEvent e = new ChestDropEvent(p, fchance, fdrop);
 						Bukkit.getPluginManager().callEvent(e);
 						double moddedChance = e.getChance();
