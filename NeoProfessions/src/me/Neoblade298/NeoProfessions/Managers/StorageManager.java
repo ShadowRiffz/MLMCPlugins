@@ -67,7 +67,6 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		itemsLoaded = false;
 		
 		// Reload all previously loaded sources
-		preloadedSources.clear();
 		for (Entry<Integer, StoredItem> ent : items.entrySet()) {
 			preloadedSources.put(ent.getKey(), ent.getValue().getSources());
 		}
@@ -120,6 +119,8 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	}
 	
 	private void loadItems(File dir) {
+		System.out.println("Loading items...");
+		System.out.println(preloadedSources);
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
 				loadItems(file);
