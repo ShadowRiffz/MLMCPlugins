@@ -1,6 +1,6 @@
 name: NeoBossInstances
 author: Neoblade298
-main: me.neoblade298.neobossinstances.Main
+main: me.neoblade298.neobossinstances.BossInstances
 api-version: 1.16
 version: 1.0
 loadbefore: [SkillAPI]
