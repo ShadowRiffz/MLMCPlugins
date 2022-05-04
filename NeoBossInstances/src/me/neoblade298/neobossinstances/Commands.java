@@ -26,9 +26,9 @@ import com.sucy.skill.SkillAPI;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 
 public class Commands implements CommandExecutor {
-	private Main main = null;
+	private BossInstances main = null;
 
-	public Commands(Main plugin) {
+	public Commands(BossInstances plugin) {
 		main = plugin;
 	}
 
@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor {
 				p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
 				try {
 					// Connect
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 					Statement stmt = con.createStatement();
 
 					if (main.isDebug) {
@@ -153,8 +153,8 @@ public class Commands implements CommandExecutor {
 					target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
 					try {
 						// Connect
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser,
-								Main.sqlPass);
+						Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+								BossInstances.sqlPass);
 						Statement stmt = con.createStatement();
 
 						if (main.isDebug) {
@@ -277,7 +277,7 @@ public class Commands implements CommandExecutor {
 			// /boss resetinstances
 			else if (args.length == 1 && args[0].equalsIgnoreCase("resetinstances") && !main.isInstance) {
 				try {
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 					Statement stmt = con.createStatement();
 
 					// First clear all the cooldowns on the SQL currently
@@ -534,7 +534,7 @@ public class Commands implements CommandExecutor {
 		else if (args.length == 1 && args[0].equalsIgnoreCase("instances")) {
 			if (!main.isInstance) {
 				try {
-					Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+					Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 					Statement stmt = con.createStatement();
 					ResultSet rs;
 
@@ -576,7 +576,7 @@ public class Commands implements CommandExecutor {
 				String name = WordUtils.capitalize(args[1]);
 				if (main.cooldowns.keySet().contains(name)) {
 					try {
-						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 						Statement stmt = con.createStatement();
 						ResultSet rs;
 

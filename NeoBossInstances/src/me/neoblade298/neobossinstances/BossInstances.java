@@ -50,7 +50,7 @@ import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 
-public class Main extends JavaPlugin implements Listener {
+public class BossInstances extends JavaPlugin implements Listener {
 
 	// Config items
 	File file = null;
@@ -177,7 +177,7 @@ public class Main extends JavaPlugin implements Listener {
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
 			try {
-				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				ResultSet rs;
 				
@@ -201,7 +201,7 @@ public class Main extends JavaPlugin implements Listener {
 		// Only save cooldowns that still matter (still on cooldown)
 		if (!isInstance) {
 			try {
-				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				
 				// First clear all the cooldowns on the SQL currently
@@ -258,7 +258,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 			// Connect
 			try {
-				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				ResultSet rs;
 			
@@ -432,7 +432,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public String findInstance(String boss) {
 		try {
-			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+			Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 			Statement stmt = con.createStatement();
 			ResultSet rs;
 			ArrayList<String> instanceNamesCopy = new ArrayList<String>(instanceNames);
@@ -526,7 +526,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 	    	// Delete player from all fights in sql
 			try {
-				Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
 				
