@@ -3,15 +3,15 @@ package me.neoblade298.neomythicextension.conditions;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
-import me.neoblade298.neomythicextension.Main;
+import me.neoblade298.neomythicextension.MythicExt;
 
 public class GlobalScoreCondition implements IEntityCondition {
     private String operation;
     private String objective;
     private int value;
-    private Main nme;
+    private MythicExt nme;
     
-    public GlobalScoreCondition(MythicLineConfig mlc, Main nme) {
+    public GlobalScoreCondition(MythicLineConfig mlc, MythicExt nme) {
         operation = mlc.getString(new String[] {"operation", "op"});
         objective = mlc.getString(new String[] {"objective", "obj", "o"});
         value = mlc.getInteger(new String[] {"value", "v"});

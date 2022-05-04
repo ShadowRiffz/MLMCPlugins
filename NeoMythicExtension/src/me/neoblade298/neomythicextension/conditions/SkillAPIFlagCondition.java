@@ -13,7 +13,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import me.neoblade298.neomythicextension.Main;
+import me.neoblade298.neomythicextension.MythicExt;
 
 public class SkillAPIFlagCondition implements IEntityCondition {
 	private String[] flags;
@@ -23,9 +23,9 @@ public class SkillAPIFlagCondition implements IEntityCondition {
 	private int setgcd = -1;
 	private String msg;
 	private ArrayList<Entity> near;
-	private Main main;
+	private MythicExt main;
 
-	public SkillAPIFlagCondition(MythicLineConfig mlc, Main main) {
+	public SkillAPIFlagCondition(MythicLineConfig mlc, MythicExt main) {
 		this.flags = mlc.getString(new String[] { "flag", "f" }).trim().split(",");
 		if (mlc.getString("action") != null) {
 			castinstead = mlc.getString("action").equals("castinstead");

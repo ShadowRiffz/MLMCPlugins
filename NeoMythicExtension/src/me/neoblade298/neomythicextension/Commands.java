@@ -21,9 +21,9 @@ import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 
 
 public class Commands implements CommandExecutor{
-	Main main;
+	MythicExt main;
 	
-	public Commands (Main main) {
+	public Commands (MythicExt main) {
 		this.main = main;
 	}
 

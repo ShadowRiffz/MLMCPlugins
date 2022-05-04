@@ -7,15 +7,15 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
-import me.neoblade298.neomythicextension.Main;
+import me.neoblade298.neomythicextension.MythicExt;
 
 public class ModScore implements ITargetedEntitySkill {
 	protected final String objective;
 	protected final String operation;
 	protected final int value;
-	Main nme;
+	MythicExt nme;
 
-	public ModScore(MythicLineConfig config, Main nme) {
+	public ModScore(MythicLineConfig config, MythicExt nme) {
         this.nme = nme;
         
         this.objective = config.getString(new String[] {"objective", "obj", "o"}, "default");

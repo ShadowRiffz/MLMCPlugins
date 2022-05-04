@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
@@ -22,8 +23,9 @@ import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.*;
 import me.neoblade298.neomythicextension.triggers.StatusTrigger;
+import net.milkbowl.vault.economy.Economy;
 
-public class Main extends JavaPlugin implements Listener {
+public class MythicExt extends JavaPlugin implements Listener {
 
 	private Logger log;
 	public ConcurrentHashMap<String, Integer> globalscores;
@@ -31,6 +33,8 @@ public class Main extends JavaPlugin implements Listener {
 	// integers
 	public ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> scores;
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
+	public static MythicExt inst;
+	public static Economy econ;
 
 	@Override
 	public void onEnable() {
@@ -47,7 +51,26 @@ public class Main extends JavaPlugin implements Listener {
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
+		inst = this;
+		
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 	}
+    
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 
 	public void onDisable() {
 		log.info("NeoMythicExtensions Disabled!");

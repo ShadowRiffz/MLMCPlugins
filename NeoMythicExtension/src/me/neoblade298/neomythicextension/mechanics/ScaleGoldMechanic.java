@@ -2,7 +2,6 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import io.lumine.mythic.api.config.MythicLineConfig;
@@ -10,6 +9,7 @@ import io.lumine.mythic.api.skills.INoTargetSkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import me.neoblade298.neobossinstances.Main;
+import me.neoblade298.neomythicextension.MythicExt;
 
 public class ScaleGoldMechanic implements INoTargetSkill {
 	
@@ -42,10 +42,8 @@ public class ScaleGoldMechanic implements INoTargetSkill {
 			gold = Math.round(gold / 25.0D) * 25L;
 			
 			// Give gold to each player
-			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 			for (Player player : players) {
-				String command = "eco give " + player.getName() + " " + (int) gold;
-				Bukkit.dispatchCommand(console, command);
+				MythicExt.econ.depositPlayer(player, gold);
 				player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
 			}
 			return SkillResult.SUCCESS;
