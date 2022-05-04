@@ -2,6 +2,7 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
@@ -11,6 +12,7 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neoresearch.Research;
 
 public class ResearchPointsMechanic implements ITargetedEntitySkill {
@@ -37,21 +39,27 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 				if (data.getCaster().getLevel() <= 0) {
 					return SkillResult.CONDITION_FAILED;
 				}
-				String mob = this.alias;
+				final String fmob = this.alias;
 				Player p = (Player) target.getBukkitEntity();
-				if (this.alias.equals("default")) {
-					ActiveMob amob = (ActiveMob) data.getCaster();
-					mob = amob.getType().getInternalName();
-					level = (int) amob.getLevel();
-					nr.giveResearchPoints(p, this.amount, mob, level, false, null);
-				}
-				else {
-					MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-					if (mm != null) {
-						display = mm.getDisplayName().get();
+				ResearchPointsMechanic cfg = this;
+				new BukkitRunnable() {
+					public void run() {
+						String mob = fmob;
+						if (cfg.alias.equals("default")) {
+							ActiveMob amob = (ActiveMob) data.getCaster();
+							mob = amob.getType().getInternalName();
+							level = (int) amob.getLevel();
+							nr.giveResearchPoints(p, cfg.amount, mob, level, false, null);
+						}
+						else {
+							MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
+							if (mm != null) {
+								display = mm.getDisplayName().get();
+							}
+							nr.giveResearchPointsAlias(p, cfg.amount, mob, level, display, false);
+						}
 					}
-					nr.giveResearchPointsAlias(p, this.amount, mob, level, display, false);
-				}
+				}.runTask(MythicExt.inst);
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

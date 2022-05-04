@@ -3,6 +3,7 @@ package me.neoblade298.neomythicextension.mechanics;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
@@ -10,6 +11,7 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 import me.neoblade298.neoresearch.Research;
 
@@ -51,20 +53,26 @@ public class ResearchPointsChanceMechanic implements ITargetedEntitySkill {
 				// Check if player is holding a drop charm
 				Player p = (Player) target.getBukkitEntity();
 				int dropType = 0;
-				MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
-				Bukkit.getPluginManager().callEvent(e);
-				chance = e.getChance();
-				dropType = e.getDropType();
-	
-				// Check for successful drop
-				if (rand <= chance) {
-					if (dropType == 1 && rand >= this.basechance) {
-						nr.giveResearchPoints(p, this.amount, mob, level, true, "Research Augment");
+				ResearchPointsChanceMechanic cfg = this;
+				final String fmob = mob;
+				new BukkitRunnable() {
+					public void run() {
+						MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
+						Bukkit.getPluginManager().callEvent(e);
+						double moddedChance = e.getChance();
+						int moddedDrop = e.getDropType();
+			
+						// Check for successful drop
+						if (rand <= moddedChance) {
+							if (moddedDrop == 1 && rand >= cfg.basechance) {
+								nr.giveResearchPoints(p, cfg.amount, fmob, level, true, "Research Augment");
+							}
+							else {
+								nr.giveResearchPoints(p, cfg.amount, fmob, level, true, null);
+							}
+						}
 					}
-					else {
-						nr.giveResearchPoints(p, this.amount, mob, level, true, null);
-					}
-				}
+				}.runTask(MythicExt.inst);
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;
