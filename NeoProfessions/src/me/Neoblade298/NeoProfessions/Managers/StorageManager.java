@@ -119,8 +119,6 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	}
 	
 	private void loadItems(File dir) {
-		System.out.println("Loading items...");
-		System.out.println(preloadedSources);
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
 				loadItems(file);
