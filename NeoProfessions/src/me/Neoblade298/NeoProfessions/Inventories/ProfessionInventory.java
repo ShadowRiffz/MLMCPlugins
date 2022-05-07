@@ -21,6 +21,6 @@ public abstract class ProfessionInventory {
 	public void setupInventory(Player p, Inventory inv, ProfessionInventory pinv) {
 		Professions.viewingInventory.put(p, this);
 		p.openInventory(inv);
-		Bukkit.getPluginManager().callEvent(new OpenProfessionInvEvent(pinv));
+		Bukkit.getPluginManager().callEvent(new OpenProfessionInvEvent(p, pinv));
 	}
 }

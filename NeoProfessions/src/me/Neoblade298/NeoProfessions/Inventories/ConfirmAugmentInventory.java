@@ -114,7 +114,7 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 				Util.sendMessage(p, "&7Successfully slotted item!");
 				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 				p.getInventory().removeItem(augment);
-				Bukkit.getPluginManager().callEvent(new ProfessionSlotSuccessEvent(editor.getItem(), aug));
+				Bukkit.getPluginManager().callEvent(new ProfessionSlotSuccessEvent(p, editor.getItem(), aug));
 				p.closeInventory();
 			}
 			else {

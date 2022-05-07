@@ -5,17 +5,14 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.Neoblade298.NeoProfessions.Recipes.Recipe;
-import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
 
 public class ProfessionCraftSuccessEvent extends Event {
 	Player p;
 	Recipe recipe;
-	RecipeResult result;
     private static final HandlerList handlers = new HandlerList();
 
-	public ProfessionCraftSuccessEvent(Player p, Recipe recipe, RecipeResult result) {
+	public ProfessionCraftSuccessEvent(Player p, Recipe recipe) {
 		this.recipe = recipe;
-		this.result = result;
 		this.p = p;
 	}
 	
@@ -25,10 +22,6 @@ public class ProfessionCraftSuccessEvent extends Event {
 	
 	public Recipe getRecipe() {
 		return recipe;
-	}
-	
-	public RecipeResult getResult() {
-		return result;
 	}
 
 	@Override

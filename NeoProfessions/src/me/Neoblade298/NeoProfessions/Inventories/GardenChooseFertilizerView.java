@@ -145,7 +145,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		}
 		GardenManager.getGarden(p, type).plantSeed(p.getUniqueId(), this.slot, id, fert);
 		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-		Bukkit.getPluginManager().callEvent(new ProfessionPlantSeedEvent(StorageManager.getItem(id), fert, GardenManager.getGarden(p, type)));
+		Bukkit.getPluginManager().callEvent(new ProfessionPlantSeedEvent(p, StorageManager.getItem(id), fert, GardenManager.getGarden(p, type)));
 		new GardenInventory(p, type);
 	}
 
