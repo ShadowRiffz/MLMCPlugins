@@ -1,12 +1,9 @@
 package me.neoblade298.neoquestmodules;
 
-import me.Neoblade298.NeoProfessions.Events.OpenProfessionInvEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quests;
-import net.ess3.api.events.UserBalanceUpdateEvent;
-
 import java.util.Map;
 
 import org.bukkit.Bukkit;

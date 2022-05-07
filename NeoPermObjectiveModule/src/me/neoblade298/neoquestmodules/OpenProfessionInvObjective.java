@@ -4,7 +4,6 @@ import me.Neoblade298.NeoProfessions.Events.OpenProfessionInvEvent;
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quests;
-import net.ess3.api.events.UserBalanceUpdateEvent;
 
 import java.util.Map;
 

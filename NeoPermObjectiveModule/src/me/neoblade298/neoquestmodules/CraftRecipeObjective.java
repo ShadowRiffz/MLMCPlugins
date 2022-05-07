@@ -1,8 +1,6 @@
 package me.neoblade298.neoquestmodules;
 
 import me.Neoblade298.NeoProfessions.Events.ProfessionCraftSuccessEvent;
-import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
-import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quests;
