@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="src/spigot-api-1.17.1-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="src/EssentialsX-2.19.1-dev+13-a7a1fcd.jar"/>
 	<classpathentry kind="lib" path="src/SkillAPI.jar"/>
+	<classpathentry kind="lib" path="src/NeoProfessions.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
