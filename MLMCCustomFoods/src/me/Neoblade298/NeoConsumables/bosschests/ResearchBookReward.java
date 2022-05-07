@@ -106,8 +106,8 @@ public class ResearchBookReward extends ChestReward {
 	@Override
 	public String toString() {
 		if (!this.type.equalsIgnoreCase("normal")) {
-			return this.display + "'s Advanced Research Book";
+			return this.display + "'s Adv Research";
 		}
-		return this.display + "'s Research Book";
+		return this.display + "'s Research";
 	}
 }

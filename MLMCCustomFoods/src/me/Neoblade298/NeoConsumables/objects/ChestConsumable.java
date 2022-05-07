@@ -30,13 +30,18 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	private ArrayList<String> lore;
 	private String display;
 	private static HashMap<Integer, ChatColor> stageToColor = new HashMap<Integer, ChatColor>();
+	private static HashMap<Integer, Character> stageToLetter = new HashMap<Integer, Character>();
 	private static DecimalFormat df = new DecimalFormat("#.#");
 	
 	static {
 		stageToColor.put(1, ChatColor.GRAY);
 		stageToColor.put(2, ChatColor.GREEN);
 		stageToColor.put(3, ChatColor.BLUE);
-		stageToColor.put(4, ChatColor.DARK_PURPLE);
+		stageToColor.put(4, ChatColor.DARK_RED);
+		stageToLetter.put(1, 'C');
+		stageToLetter.put(2, 'B');
+		stageToLetter.put(3, 'A');
+		stageToLetter.put(4, 'S');
 	}
 	
 	public ChestConsumable(Consumables main, String display, String key, LinkedList<ChestStage> stages, Sound sound) {
@@ -175,6 +180,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	
 	public void generateLore() {
 		lore = new ArrayList<String>();
+		lore.add("§7§oUp to 1 item per letter tier");
 		lore.add("§7[§ePotential Rewards§7]");
 		Iterator<ChestStage> iter = stages.iterator();
 		int stageNum = 0;
@@ -184,9 +190,10 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 			double chance = stage.getChance();
 			double totalWeight = stage.getTotalWeight();
 			ChatColor col = stageToColor.get(stageNum);
+			char letter = stageToLetter.get(stageNum);
 			for (ChestReward rew : stage.getRewards()) {
 				double pct = (rew.getWeight() / totalWeight) * chance;
-				lore.add("§7- " + col + rew.toString() + " §7(" + df.format(pct * 100) + "%)");
+				lore.add(col + ChatColor.BOLD.toString() + "{" + letter + "} " + col + rew.toString() + " §7(" + df.format(pct * 100) + "%)");
 			}
 		}
 	}
