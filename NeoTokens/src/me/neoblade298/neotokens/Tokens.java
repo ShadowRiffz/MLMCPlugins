@@ -50,7 +50,7 @@ public class Tokens extends JavaPlugin implements org.bukkit.event.Listener {
 			long usable = nbti.getLong("timestamp") + 86400000;
 			if (now > usable) {
 				p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
-				p.getInventory().remove(item);
+				p.getInventory().removeItem(item);
 				return;
 			}
 			
