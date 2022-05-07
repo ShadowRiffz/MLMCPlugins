@@ -93,6 +93,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public HashSet<String> joiningPlayers = new HashSet<String>();
 	public HashSet<String> leavingPlayers = new HashSet<String>();
 	public Settings settings;
+	public static String color;
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -120,6 +121,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 		// See if this is an instance
 		File instanceFile = new File(getDataFolder(), "instance.yml");
 		isInstance = instanceFile.exists();
+		if (isInstance) {
+			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name").replaceAll("&", "§");
+		}
 		
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");

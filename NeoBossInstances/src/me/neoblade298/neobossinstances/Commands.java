@@ -435,8 +435,8 @@ public class Commands implements CommandExecutor {
 		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 		        }
 			}
-			messages.add("§cPost-battle Stats §7(§4§l" + display + " x" + main.bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
-			messages.add("§7-----");
+			messages.add("§cBoss Stats §7[" + BossInstances.color + "§7] (§4§l" + display + " x" + main.bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
+			messages.add("§7----- ");
 			messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 			
 			// Calculate each person's stats (and clear them)
