@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.RecipeManager;
 
 public class RecipeSelectInventory extends ProfessionInventory {
@@ -30,8 +29,7 @@ public class RecipeSelectInventory extends ProfessionInventory {
 		contents[8] = createItem(Material.HOPPER, "§9/inv", "All", "all");
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createItem(Material mat, String name, String recipeDisplay, String recipeList) {

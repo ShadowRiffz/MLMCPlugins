@@ -19,7 +19,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.SkullCreator;
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.Storage.Sorter;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -56,7 +55,6 @@ public class StorageView extends ProfessionInventory {
 	public StorageView(Player p, int min, int max) {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Storage View");
-		p.openInventory(inv);
 		this.min = min;
 		this.max = max;
 		this.sorters = new Sorter[5];
@@ -75,7 +73,8 @@ public class StorageView extends ProfessionInventory {
 		
 		sortItems();
 		inv.setContents(setupAll());
-		Professions.viewingInventory.put(p, this);
+
+		setupInventory(p, inv, this);
 	}
 	
 	private void setupSorters() {

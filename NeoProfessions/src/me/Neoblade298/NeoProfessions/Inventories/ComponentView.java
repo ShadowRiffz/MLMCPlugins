@@ -58,7 +58,6 @@ public class ComponentView extends ProfessionInventory {
 		this.p = p;
 		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
 		this.returnTo = returnTo;
-		p.openInventory(inv);
 		this.name = name;
 		this.recipe = recipe;
 		this.recipeList = recipeList;
@@ -77,7 +76,8 @@ public class ComponentView extends ProfessionInventory {
 		
 		inv.setContents(new ItemStack[54]);
 		inv.setContents(setupAll(inv.getContents()));
-		Professions.viewingInventory.put(p, this);
+
+		setupInventory(p, inv, this);
 	}
 	
 	private void setupSorters() {

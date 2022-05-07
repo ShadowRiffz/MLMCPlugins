@@ -10,8 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
-
 public class StorageSelectInventory extends ProfessionInventory {
 	Player p;
 
@@ -28,8 +26,7 @@ public class StorageSelectInventory extends ProfessionInventory {
 		contents[8] = createItem(Material.CRAFTING_TABLE, "§9/craft", -1, 1);
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createItem(Material mat, String name, int min, int max) {

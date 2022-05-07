@@ -17,6 +17,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.ItemEditor;
+import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 
@@ -54,8 +55,7 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 		}
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {
@@ -114,6 +114,7 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 				Util.sendMessage(p, "&7Successfully slotted item!");
 				p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 				p.getInventory().removeItem(augment);
+				Bukkit.getPluginManager().callEvent(new ProfessionSlotSuccessEvent(editor.getItem(), aug));
 				p.closeInventory();
 			}
 			else {

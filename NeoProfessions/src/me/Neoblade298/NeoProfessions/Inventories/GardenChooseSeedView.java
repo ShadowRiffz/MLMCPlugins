@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -36,8 +35,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 		contents[BACK_BUTTON] = createBackButton();
 		inv.setContents(setupItems(contents, min, max));
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 	
 	private ItemStack[] setupItems(ItemStack[] contents, int min, int max) {

@@ -48,6 +48,10 @@ public class ItemEditor {
 		this.nbti = new NBTItem(item);
 	}
 	
+	public ItemStack getItem() {
+		return item;
+	}
+	
 	public Augment getAugment(int i) {
 		String augmentName = nbti.getString("slot" + i + "Augment");
 		if (AugmentManager.hasAugment(augmentName)) {

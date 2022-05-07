@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
@@ -63,8 +62,7 @@ public class GardenInventory extends ProfessionInventory {
 			}
 		}.runTaskTimer(GardenManager.main, 40L, 40L);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 	
 	private ItemStack updateIcon(int slot, ItemStack item) {

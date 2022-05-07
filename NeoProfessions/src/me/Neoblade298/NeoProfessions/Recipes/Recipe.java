@@ -2,11 +2,13 @@ package me.Neoblade298.NeoProfessions.Recipes;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.Neoblade298.NeoProfessions.Events.ProfessionCraftSuccessEvent;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
@@ -103,6 +105,7 @@ public class Recipe {
 		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp * amount);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
 		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay());
+		Bukkit.getPluginManager().callEvent(new ProfessionCraftSuccessEvent(this, result));
 		return true;
 	}
 	

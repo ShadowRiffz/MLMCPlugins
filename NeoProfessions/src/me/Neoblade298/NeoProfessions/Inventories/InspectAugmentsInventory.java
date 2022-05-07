@@ -58,8 +58,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		}
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {

@@ -54,8 +54,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		}
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 	
 	private ItemStack generateStartButton() {

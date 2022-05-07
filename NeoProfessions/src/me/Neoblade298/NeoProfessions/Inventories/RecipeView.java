@@ -64,7 +64,6 @@ public class RecipeView extends ProfessionInventory {
 		this.name = name;
 		this.returnTo = returnTo;
 		this.recipeList = recipeList;
-		p.openInventory(inv);
 		rsorter = new RecipeSorter();
 		
 		// Setup recipes relevant to the base
@@ -78,9 +77,9 @@ public class RecipeView extends ProfessionInventory {
 			recipes.add(recipe);
 		}
 		Collections.sort(recipes, rsorter);
-		
 		inv.setContents(setupAll());
-		Professions.viewingInventory.put(p, this);
+
+		setupInventory(p, inv, this);
 	}
 	
 	public RecipeView(Player p, StoredItem base, int min, int max, String returnTo) {

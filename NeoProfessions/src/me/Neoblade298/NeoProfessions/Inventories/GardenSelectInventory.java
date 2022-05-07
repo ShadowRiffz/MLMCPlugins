@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class GardenSelectInventory extends ProfessionInventory {
@@ -25,8 +24,7 @@ public class GardenSelectInventory extends ProfessionInventory {
 		contents[6] = createGarden(ProfessionType.STONECUTTER);
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createGarden(ProfessionType type) {

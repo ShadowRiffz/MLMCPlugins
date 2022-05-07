@@ -11,7 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
+import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
@@ -43,8 +44,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		contents[0] = createNoFertilizerButton();
 		inv.setContents(setupItems(contents));
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 	
 	private ItemStack[] setupItems(ItemStack[] contents) {
@@ -139,8 +139,13 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 			StorageManager.takePlayer(p, fertilizerId, 1);
 		}
 		CurrencyManager.subtract(p, seedLevel, 1);
-		GardenManager.getGarden(p, type).plantSeed(p.getUniqueId(), this.slot, id, fertilizerId);
+		Fertilizer fert = null;
+		if (fertilizerId != -1) {
+			fert = GardenManager.getFertilizer(fertilizerId);
+		}
+		GardenManager.getGarden(p, type).plantSeed(p.getUniqueId(), this.slot, id, fert);
 		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+		Bukkit.getPluginManager().callEvent(new ProfessionPlantSeedEvent(StorageManager.getItem(id), fert, GardenManager.getGarden(p, type)));
 		new GardenInventory(p, type);
 	}
 

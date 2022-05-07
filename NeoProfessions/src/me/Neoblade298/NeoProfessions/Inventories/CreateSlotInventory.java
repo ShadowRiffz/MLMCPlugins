@@ -68,8 +68,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {

@@ -31,8 +31,7 @@ public class SellInventory extends ProfessionInventory {
 		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell", "§7You can check the value of", "§7item with §c/value");
 		inv.setContents(contents);
 
-		p.openInventory(inv);
-		Professions.viewingInventory.put(p, this);
+		setupInventory(p, inv, this);
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, final String... lore) {
