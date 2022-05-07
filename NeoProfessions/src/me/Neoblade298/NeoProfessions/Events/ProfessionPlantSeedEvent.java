@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
@@ -10,12 +11,18 @@ public class ProfessionPlantSeedEvent extends Event {
 	StoredItem seed;
 	Fertilizer fertilizer;
 	Garden garden;
+	Player p;
     private static final HandlerList handlers = new HandlerList();
 
-	public ProfessionPlantSeedEvent(StoredItem seed, Fertilizer fertilizer, Garden garden) {
+	public ProfessionPlantSeedEvent(Player p, StoredItem seed, Fertilizer fertilizer, Garden garden) {
 		this.seed = seed;
 		this.fertilizer = fertilizer;
 		this.garden = garden;
+		this.p = p;
+	}
+	
+	public Player getPlayer() {
+		return p;
 	}
 	
 	public StoredItem getSeed() {
