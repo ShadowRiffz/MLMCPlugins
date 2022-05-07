@@ -14,7 +14,8 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
-import io.lumine.mythic.bukkit.MythicBukkit;
+import me.Neoblade298.NeoConsumables.Consumables;
+import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
@@ -27,15 +28,15 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 	protected final Random rand;
 
 	public ScaleChestMechanic(MythicLineConfig config) {
-        String itemString = config.getString("i", "mi_sewerzombie");
-        this.item = MythicBukkit.inst().getItemManager().getItemStack(itemString);
+        String key = config.getString("i", "mi_sewerzombie");
+        this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(1);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 0.25);
         this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "§");
         this.boss = config.getString("boss", "Ratface");
         this.rand = new Random();
         
         if (this.item == null) {
-        	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Item doesn't exist: " + itemString);
+        	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Item doesn't exist: " + key);
         }
 	}
 	
