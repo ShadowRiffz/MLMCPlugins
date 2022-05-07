@@ -56,4 +56,9 @@ public class RelicReward extends ChestReward {
 		r.setWeight(weight);
 		return r;
 	}
+	
+	@Override
+	public String toString() {
+		return this.display + "'s Relic";
+	}
 }

@@ -2,6 +2,7 @@ package me.Neoblade298.NeoConsumables.bosschests;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoConsumables.Util;
@@ -78,6 +79,11 @@ public class GearReward extends ChestReward {
 		r.setType(type);
 		r.setWeight(weight);
 		return r;
+	}
+	
+	@Override
+	public String toString() {
+		return "[Lv " + level + "] " + StringUtils.capitalize(rarity) + " Equipment";
 	}
 	
 }

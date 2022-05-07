@@ -102,4 +102,12 @@ public class ResearchBookReward extends ChestReward {
 		r.setWeight(weight);
 		return r;
 	}
+	
+	@Override
+	public String toString() {
+		if (!this.type.equalsIgnoreCase("normal")) {
+			return this.display + "'s Advanced Research Book";
+		}
+		return this.display + "'s Research Book";
+	}
 }

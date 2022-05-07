@@ -35,7 +35,7 @@ import me.Neoblade298.NeoConsumables.runnables.AttrRemoveRunnable;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
 
-public class FoodConsumable extends Consumable {
+public class FoodConsumable extends Consumable implements GeneratableConsumable {
 	private static int defaultCooldown = 45000;
 	Material mat;
 	ArrayList<PotionEffect> potions;
@@ -242,6 +242,7 @@ public class FoodConsumable extends Consumable {
 		}
 	}
 	
+	@Override
 	public ItemStack getItem(int amount) {
 		ItemStack item;
 		if (base64 != null) {

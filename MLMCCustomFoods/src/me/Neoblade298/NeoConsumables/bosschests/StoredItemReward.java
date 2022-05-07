@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoConsumables.bosschests;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoConsumables.Util;
@@ -43,5 +44,10 @@ public class StoredItemReward extends ChestReward {
 		r.setWeight(weight);
 		StorageManager.addSource(id, "§4§l" + display + " Chest", false);
 		return r;
+	}
+	
+	@Override
+	public String toString() {
+		return ChatColor.stripColor(StorageManager.getItem(id).getDisplay());
 	}
 }

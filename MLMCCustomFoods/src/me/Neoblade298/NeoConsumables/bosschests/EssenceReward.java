@@ -55,4 +55,9 @@ public class EssenceReward extends ChestReward {
 		r.setWeight(weight);
 		return r;
 	}
+	
+	@Override
+	public String toString() {
+		return "[Lv " + level + "] Essence";
+	}
 }

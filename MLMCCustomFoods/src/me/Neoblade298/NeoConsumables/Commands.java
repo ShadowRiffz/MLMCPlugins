@@ -11,17 +11,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
+import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 
 
 public class Commands implements CommandExecutor, TabCompleter {
-	Set<String> foods;
+	Set<String> generatableConsumables;
 	
 	Consumables main;
 	
-	public Commands(Consumables main, Set<String> foods) {
+	public Commands(Consumables main, Set<String> generatableConsumables) {
 		this.main = main;
-		this.foods = foods;
+		this.generatableConsumables = generatableConsumables;
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					return true;
 				}
 				else {
-					FoodConsumable cons = (FoodConsumable) Consumables.getConsumable(args[1 + offset]);
+					GeneratableConsumable cons = (GeneratableConsumable) Consumables.getConsumable(args[1 + offset]);
 					
 					if (args.length > 2 + offset) {
 						amt = Integer.parseInt(args[2 + offset]);
@@ -61,7 +61,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					
 					if (cons != null) {
 						p.getInventory().addItem(cons.getItem(amt));
-						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + " to §e" + p.getName());
+						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + "§7 to §e" + p.getName());
 						return true;
 					}
 					else {
@@ -88,10 +88,10 @@ public class Commands implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (args[0].equalsIgnoreCase("get") && args.length == 2) {
-			return foods.stream().filter(food -> food.startsWith(args[1])).collect(Collectors.toList());
+			return generatableConsumables.stream().filter(food -> food.startsWith(args[1])).collect(Collectors.toList());
 		}
 		else if (args[0].equalsIgnoreCase("give") && args.length == 3) {
-			return foods.stream().filter(food -> food.startsWith(args[2])).collect(Collectors.toList());
+			return generatableConsumables.stream().filter(food -> food.startsWith(args[2])).collect(Collectors.toList());
 		}
 		return null;
 	}

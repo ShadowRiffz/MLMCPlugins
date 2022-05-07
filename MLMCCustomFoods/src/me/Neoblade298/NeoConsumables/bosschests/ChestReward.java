@@ -13,4 +13,5 @@ public abstract class ChestReward {
 	public int getWeight() {
 		return weight;
 	}
+	public abstract String toString();
 }

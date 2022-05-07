@@ -27,6 +27,7 @@ import me.neoblade298.neosettings.objects.Settings;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -51,7 +52,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Consumables extends JavaPlugin implements Listener {
-	private static HashMap<String, FoodConsumable> food = new HashMap<String, FoodConsumable>();
+	private static HashSet<String> generatableConsumables = new HashSet<String>();
 	private static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
@@ -96,7 +97,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		// Load consumables and boss chests
 		reload();
 
-		getCommand("cons").setExecutor(new Commands(this, food.keySet()));
+		getCommand("cons").setExecutor(new Commands(this, generatableConsumables));
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getPluginManager().registerEvents(new ConsumableManager(this), this);
 	}
@@ -110,6 +111,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	
 	public void reload() {
 		consumables.clear();
+		generatableConsumables.clear();
 		loadConsumableDirectory(new File(getDataFolder(), "consumables"));
 
 		// General
@@ -246,14 +248,15 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
 		cons.generateLore();
-		food.put(key, cons);
+		generatableConsumables.add(key);
 		return cons;
 	}
 
 	private ChestConsumable loadChestConsumable(ConfigurationSection config, String key) {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
-		String display = config.getString("display", internal);
+		String display = config.getString("display").replaceAll("&", "§");
+		String bossDisplay = config.getString("boss-display", internal);
 		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 
 		// Chest stages
@@ -291,19 +294,19 @@ public class Consumables extends JavaPlugin implements Listener {
 					cr = GearReward.parse(args, level);
 					break;
 				case "relic":
-					cr = RelicReward.parse(args, internal, display);
+					cr = RelicReward.parse(args, internal, bossDisplay);
 					break;
 				case "recipe":
 					cr = RecipeReward.parse(args);
 					break;
 				case "rbook":
-					cr = ResearchBookReward.parse(args, internal, display);
+					cr = ResearchBookReward.parse(args, internal, bossDisplay);
 					break;
 				case "augment":
 					cr = AugmentReward.parse(args, level);
 					break;
 				case "storeditem":
-					cr = StoredItemReward.parse(args, level, display);
+					cr = StoredItemReward.parse(args, level, bossDisplay);
 					break;
 				}
 				if (cr == null) {
@@ -317,7 +320,10 @@ public class Consumables extends JavaPlugin implements Listener {
 			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
 		}
 		
-		return new ChestConsumable(this, key, stages, initSound);
+		ChestConsumable cc = new ChestConsumable(this, display, key, stages, initSound);
+		cc.generateLore();
+		generatableConsumables.add(key);
+		return cc;
 	}
 
 	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String key) {
@@ -428,10 +434,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		if (item.getType().equals(Material.CHEST) && new NBTItem(item).hasKey("consumable")) {
 			e.setCancelled(true);
 		}
-	}
-	
-	public static FoodConsumable getFood(String key) {
-		return food.get(key);
 	}
 	
 	public static Consumable getConsumable(String key) {

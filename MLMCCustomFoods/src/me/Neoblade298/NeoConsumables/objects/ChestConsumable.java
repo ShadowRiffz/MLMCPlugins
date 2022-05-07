@@ -1,30 +1,55 @@
 package me.Neoblade298.NeoConsumables.objects;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
 import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 
-public class ChestConsumable extends Consumable {
+public class ChestConsumable extends Consumable implements GeneratableConsumable {
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
 	private Sound sound;
+	private ArrayList<String> lore;
+	private String display;
+	private static HashMap<Integer, ChatColor> stageToColor = new HashMap<Integer, ChatColor>();
+	private static DecimalFormat df = new DecimalFormat("#.#");
 	
-	public ChestConsumable(Consumables main, String key, LinkedList<ChestStage> stages, Sound sound) {
+	static {
+		stageToColor.put(1, ChatColor.GRAY);
+		stageToColor.put(2, ChatColor.GREEN);
+		stageToColor.put(3, ChatColor.BLUE);
+		stageToColor.put(4, ChatColor.DARK_PURPLE);
+	}
+	
+	public ChestConsumable(Consumables main, String display, String key, LinkedList<ChestStage> stages, Sound sound) {
 		super(main, key);
 		this.main = main;
 		this.stages = stages;
 		this.sound = sound;
+		this.display = display;
+	}
+	
+	@Override
+	public String getDisplay() {
+		return display;
 	}
 	
 	public void useChest(Player p) {
@@ -146,5 +171,36 @@ public class ChestConsumable extends Consumable {
 		item.setAmount(item.getAmount() - 1);
 		useChest(p);
 		return;
+	}
+	
+	public void generateLore() {
+		lore = new ArrayList<String>();
+		lore.add("§7[§ePotential Rewards§7]");
+		Iterator<ChestStage> iter = stages.iterator();
+		int stageNum = 0;
+		while (iter.hasNext()) {
+			stageNum++;
+			ChestStage stage = iter.next();
+			double chance = stage.getChance();
+			double totalWeight = stage.getTotalWeight();
+			ChatColor col = stageToColor.get(stageNum);
+			for (ChestReward rew : stage.getRewards()) {
+				double pct = (rew.getWeight() / totalWeight) * chance;
+				lore.add("§7- " + col + rew.toString() + " §7(" + df.format(pct * 100) + "%)");
+			}
+		}
+	}
+	
+	@Override
+	public ItemStack getItem(int amount) {
+		ItemStack item = new ItemStack(Material.CHEST);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(display);
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		item.setAmount(amount);
+		NBTItem nbti = new NBTItem(item);
+		nbti.setString("consumable", key);
+		return nbti.getItem();
 	}
 }

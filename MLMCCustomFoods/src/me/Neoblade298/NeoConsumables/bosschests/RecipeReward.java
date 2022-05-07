@@ -63,5 +63,10 @@ public class RecipeReward extends ChestReward {
 		r.setWeight(weight);
 		return r;
 	}
+
 	
+	@Override
+	public String toString() {
+		return "Recipes";
+	}
 }
