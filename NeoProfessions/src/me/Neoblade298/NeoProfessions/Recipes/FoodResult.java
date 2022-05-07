@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.Neoblade298.NeoConsumables.Consumables;
+import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 
 public class FoodResult implements RecipeResult {
 	String key;
@@ -27,12 +28,12 @@ public class FoodResult implements RecipeResult {
 			}
 		}
 		
-		display = Consumables.getFood(this.key).getItem(this.amount).getItemMeta().getDisplayName();
+		display = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount).getItemMeta().getDisplayName();
 	}
 
 	@Override
 	public void giveResult(Player p, int amount) {
-		ItemStack item = Consumables.getFood(this.key).getItem(this.amount);
+		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount);
 		item.setAmount(this.amount * amount);
 		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(item);
 		for (Integer i : failed.keySet()) {
@@ -42,7 +43,7 @@ public class FoodResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = Consumables.getFood(this.key).getItem(this.amount);
+		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
