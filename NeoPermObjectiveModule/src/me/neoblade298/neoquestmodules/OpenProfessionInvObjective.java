@@ -31,7 +31,7 @@ public class OpenProfessionInvObjective extends CustomObjective implements Liste
     	for (Quest quest : qp.getQuester(p.getUniqueId()).getCurrentQuests().keySet()) {
     	    Map<String, Object> map = getDataForPlayer(p, this, quest);
     	    if (map != null) {
-    	    	if (((String) map.get("Type")).equalsIgnoreCase(e.getInventory().getClass().getName())) {
+    	    	if (((String) map.get("Type")).equalsIgnoreCase(e.getInventory().getClass().getSimpleName())) {
     				incrementObjective(p, this, 1, quest);
     	    	}
     	    }
