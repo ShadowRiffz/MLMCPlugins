@@ -122,7 +122,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		File instanceFile = new File(getDataFolder(), "instance.yml");
 		isInstance = instanceFile.exists();
 		if (isInstance) {
-			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name").replaceAll("&", "§");
+			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name", "").replaceAll("&", "§");
 		}
 		
 		// Save config if doesn't exist
