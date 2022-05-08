@@ -14,7 +14,6 @@ public class OpenProfessionInvEvent extends Event {
 	public OpenProfessionInvEvent(Player p, ProfessionInventory inv) {
 		this.inv = inv;
 		this.p = p;
-		System.out.println("Open inv event " + inv.getClass().getName());
 	}
 	
 	public Player getPlayer() {
