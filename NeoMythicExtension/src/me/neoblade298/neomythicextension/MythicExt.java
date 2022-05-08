@@ -16,10 +16,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicDropLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
 import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neomythicextension.conditions.*;
+import me.neoblade298.neomythicextension.drops.StoredItemDrop;
 import me.neoblade298.neomythicextension.mechanics.*;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 import me.neoblade298.neomythicextension.targeters.*;
@@ -115,6 +117,14 @@ public class MythicExt extends JavaPlugin implements Listener {
 		else if (event.getConditionName().equalsIgnoreCase("fightingboss")) {
 			FightingBossCondition condition = new FightingBossCondition(event.getConfig());
 			event.register(condition);
+		}
+	}
+	
+	@EventHandler
+	public void onMythicTargeterLoad(MythicDropLoadEvent event) {
+		String name = event.getDropName();
+		if (name.equalsIgnoreCase("storeditem")) {
+			event.register(new StoredItemDrop(event.getConfig()));
 		}
 	}
 
