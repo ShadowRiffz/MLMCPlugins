@@ -165,7 +165,7 @@ public class Consumables extends JavaPlugin implements Listener {
 				}
 			}
 			catch (Exception e) {
-				Bukkit.getLogger().log(Level.WARNING, "Couldn't load recipe " + key);
+				Bukkit.getLogger().log(Level.WARNING, "Couldn't load consumable " + key);
 				e.printStackTrace();
 			}
 		}
