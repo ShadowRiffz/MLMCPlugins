@@ -32,6 +32,7 @@ import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
 import me.Neoblade298.NeoProfessions.Recipes.EssenceRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.EssenceResult;
 import me.Neoblade298.NeoProfessions.Recipes.FoodResult;
 import me.Neoblade298.NeoProfessions.Recipes.GardenSizeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.GardenUpgradeResult;
@@ -155,6 +156,9 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 						RecipeResult result = null;
 						if (resultArgs[0].startsWith("gear")) {
 							result = new GearResult(resultArgs);
+						}
+						else if (resultArgs[0].startsWith("essence")) {
+							result = new EssenceResult(resultArgs);
 						}
 						else if (resultArgs[0].startsWith("food")) {
 							result = new FoodResult(resultArgs);
