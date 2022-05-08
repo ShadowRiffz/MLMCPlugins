@@ -3,15 +3,13 @@ package me.neoblade298.neomythicextension.mechanics;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 import me.neoblade298.neoresearch.Research;
 
@@ -23,6 +21,11 @@ public class ResearchPointsChanceMechanic implements ITargetedEntitySkill {
 	protected final Random rand;
 	protected final Research nr;
 	protected final String alias;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ResearchPointsChanceMechanic(MythicLineConfig config) {
 		this.level = config.getInteger("l", 0);
@@ -54,25 +57,20 @@ public class ResearchPointsChanceMechanic implements ITargetedEntitySkill {
 				Player p = (Player) target.getBukkitEntity();
 				int dropType = 0;
 				ResearchPointsChanceMechanic cfg = this;
-				final String fmob = mob;
-				new BukkitRunnable() {
-					public void run() {
-						MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
-						Bukkit.getPluginManager().callEvent(e);
-						double moddedChance = e.getChance();
-						int moddedDrop = e.getDropType();
-			
-						// Check for successful drop
-						if (rand <= moddedChance) {
-							if (moddedDrop == 1 && rand >= cfg.basechance) {
-								nr.giveResearchPoints(p, cfg.amount, fmob, level, true, "Research Augment");
-							}
-							else {
-								nr.giveResearchPoints(p, cfg.amount, fmob, level, true, null);
-							}
-						}
+				MythicResearchPointsChanceEvent e = new MythicResearchPointsChanceEvent(p, chance, dropType);
+				Bukkit.getPluginManager().callEvent(e);
+				double moddedChance = e.getChance();
+				int moddedDrop = e.getDropType();
+	
+				// Check for successful drop
+				if (rand <= moddedChance) {
+					if (moddedDrop == 1 && rand >= cfg.basechance) {
+						nr.giveResearchPoints(p, cfg.amount, mob, level, true, "Research Augment");
 					}
-				}.runTask(MythicExt.inst);
+					else {
+						nr.giveResearchPoints(p, cfg.amount, mob, level, true, null);
+					}
+				}
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

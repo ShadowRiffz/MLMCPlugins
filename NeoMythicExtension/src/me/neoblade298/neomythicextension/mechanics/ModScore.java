@@ -7,6 +7,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.neoblade298.neomythicextension.MythicExt;
 
 public class ModScore implements ITargetedEntitySkill {
@@ -14,6 +15,11 @@ public class ModScore implements ITargetedEntitySkill {
 	protected final String operation;
 	protected final int value;
 	MythicExt nme;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ModScore(MythicLineConfig config, MythicExt nme) {
         this.nme = nme;

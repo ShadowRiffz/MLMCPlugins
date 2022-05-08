@@ -10,10 +10,16 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 
 public class GiveStoredItemMechanic implements ITargetedEntitySkill {
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	protected final int amount;
 	protected final int id;

@@ -5,10 +5,16 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 
 public class ScaleHealMechanic implements ITargetedEntitySkill {
 
 	protected final int amount;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ScaleHealMechanic(MythicLineConfig config) {
         this.amount = config.getInteger(new String[] {"a", "amount"}, 5);

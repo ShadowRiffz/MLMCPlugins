@@ -5,6 +5,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neobossinstances.BossInstances;
@@ -13,6 +14,11 @@ public class ScaleToLevelMechanic implements ITargetedEntitySkill {
 	protected final String boss;
 	protected final double exlevel, exhealth, xlevel, xhealth;
 	protected BossInstances nbi;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ScaleToLevelMechanic(MythicLineConfig config, BossInstances nbi) {
         this.nbi = nbi;

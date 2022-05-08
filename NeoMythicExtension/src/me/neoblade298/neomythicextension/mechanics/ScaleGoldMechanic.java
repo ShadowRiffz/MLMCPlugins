@@ -7,6 +7,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.INoTargetSkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neomythicextension.MythicExt;
 
@@ -16,6 +17,11 @@ public class ScaleGoldMechanic implements INoTargetSkill {
 	protected final int max;
 	protected final String boss;
 	protected final BossInstances nbi;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ScaleGoldMechanic(MythicLineConfig config, BossInstances nbi) {
         this.min = config.getInteger("min", 0);

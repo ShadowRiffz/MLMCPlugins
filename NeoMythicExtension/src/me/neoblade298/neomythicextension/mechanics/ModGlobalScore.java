@@ -4,6 +4,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.INoTargetSkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.neoblade298.neomythicextension.MythicExt;
 
 public class ModGlobalScore implements INoTargetSkill {
@@ -11,6 +12,11 @@ public class ModGlobalScore implements INoTargetSkill {
 	protected final String operation;
 	protected final int value;
 	MythicExt nme;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ModGlobalScore(MythicLineConfig config, MythicExt nme) {
         this.nme = nme;

@@ -9,6 +9,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 
 public class WarnMechanic implements ITargetedEntitySkill {
@@ -22,6 +23,11 @@ public class WarnMechanic implements ITargetedEntitySkill {
         this.msg = msg.substring(1, msg.length() - 1);
         this.warnTarget = config.getBoolean(new String[] {"warntarget", "wt"}, false);
 	}
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 	
 	@Override
     public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {

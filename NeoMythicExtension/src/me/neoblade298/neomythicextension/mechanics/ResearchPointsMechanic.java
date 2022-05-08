@@ -2,17 +2,15 @@ package me.neoblade298.neomythicextension.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neoresearch.Research;
 
 public class ResearchPointsMechanic implements ITargetedEntitySkill {
@@ -22,6 +20,11 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 	protected final String alias;
 	protected final Research nr;
 	protected String display;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ResearchPointsMechanic(MythicLineConfig config) {
         this.level = config.getInteger("l", 0);
@@ -39,27 +42,22 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 				if (data.getCaster().getLevel() <= 0) {
 					return SkillResult.CONDITION_FAILED;
 				}
-				final String fmob = this.alias;
+				String mob = this.alias;
 				Player p = (Player) target.getBukkitEntity();
 				ResearchPointsMechanic cfg = this;
-				new BukkitRunnable() {
-					public void run() {
-						String mob = fmob;
-						if (cfg.alias.equals("default")) {
-							ActiveMob amob = (ActiveMob) data.getCaster();
-							mob = amob.getType().getInternalName();
-							level = (int) amob.getLevel();
-							nr.giveResearchPoints(p, cfg.amount, mob, level, false, null);
-						}
-						else {
-							MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-							if (mm != null) {
-								display = mm.getDisplayName().get();
-							}
-							nr.giveResearchPointsAlias(p, cfg.amount, mob, level, display, false);
-						}
+				if (cfg.alias.equals("default")) {
+					ActiveMob amob = (ActiveMob) data.getCaster();
+					mob = amob.getType().getInternalName();
+					level = (int) amob.getLevel();
+					nr.giveResearchPoints(p, cfg.amount, mob, level, false, null);
+				}
+				else {
+					MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
+					if (mm != null) {
+						display = mm.getDisplayName().get();
 					}
-				}.runTask(MythicExt.inst);
+					nr.giveResearchPointsAlias(p, cfg.amount, mob, level, display, false);
+				}
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

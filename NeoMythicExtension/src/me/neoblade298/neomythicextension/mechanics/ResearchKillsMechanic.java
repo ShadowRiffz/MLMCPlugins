@@ -8,6 +8,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neoresearch.Research;
 
@@ -16,6 +17,11 @@ public class ResearchKillsMechanic implements ITargetedEntitySkill {
 	protected final int amount;
 	protected final Research nr;
 	protected final String alias;
+
+    @Override
+    public ThreadSafetyLevel getThreadSafetyLevel() {
+        return ThreadSafetyLevel.SYNC_ONLY;
+    }
 
 	public ResearchKillsMechanic(MythicLineConfig config) {
         this.amount = config.getInteger("a");
