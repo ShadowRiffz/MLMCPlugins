@@ -79,34 +79,34 @@ public class Professions extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this); // Repairs
 		getServer().getPluginManager().registerEvents(new AugmentManager(this), this); // Working augments
-		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
-			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
-		}
+		getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
+		
+		// StorageManager works in instances
+		sm = new StorageManager(this);
+		getServer().getPluginManager().registerEvents(sm, this);
+		managers.add(sm);
+		IOListeners.addComponent(sm);
 			
 		if (!isInstance) {
 			// Managers and listeners
 			cm = new CurrencyManager(this);
 			pm = new ProfessionManager(this);
-			sm = new StorageManager(this);
 			rm = new RecipeManager(this);
 			mim = new MinigameManager(this);
 			gm = new GardenManager(this);
 			
 			managers.add(cm);
 			managers.add(pm);
-			managers.add(sm);
 			managers.add(rm);
 			managers.add(mim);
 			managers.add(gm);
 			io = new IOListeners(this);
 			getServer().getPluginManager().registerEvents(cm, this);
-			getServer().getPluginManager().registerEvents(sm, this);
 			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(mim, this);
 			getServer().getPluginManager().registerEvents(io, this);
 			IOListeners.addComponent(cm);
 			IOListeners.addComponent(pm);
-			IOListeners.addComponent(sm);
 			IOListeners.addComponent(rm);
 			IOListeners.addComponent(gm);
 	
