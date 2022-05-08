@@ -249,7 +249,6 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	public static void addSource(int id, String source, boolean isMob) {
 		if (itemsLoaded) {
 			if (items.containsKey(id)) {
-				System.out.println("Loaded Adding source " + source + " " + isMob);
 				items.get(id).addSource(source, isMob);
 			}
 			else {
@@ -259,7 +258,6 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		else {
 			ArrayList<StoredItemSource> idSources = preloadedSources.getOrDefault(id, new ArrayList<StoredItemSource>());
 			idSources.add(new StoredItemSource(source, isMob));
-			System.out.println("Adding source " + source + " " + isMob);
 			preloadedSources.put(id, idSources);
 		}
 	}
