@@ -11,7 +11,7 @@ import me.blackvein.quests.CustomReward;
 public class EssenceReward extends CustomReward {
 	// Construct the reward
 	public EssenceReward() {
-		this.setName("Class Exp Reward");
+		this.setName("Essence Reward");
 		this.setAuthor("Neoblade298");
 		this.setDisplay("Essence");
 		this.addStringPrompt("Amount", "How much essence to give", 5);
