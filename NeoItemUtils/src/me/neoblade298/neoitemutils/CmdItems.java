@@ -38,12 +38,14 @@ public class CmdItems implements CommandExecutor{
 				p.sendMessage("§c/nitem name set/get");
 				p.sendMessage("§c/nitem model set/get");
 				p.sendMessage("§c/nitem nbt set/get [int/double/string] [key] [value]");
+				p.sendMessage("§c/nitem nbt getkeys");
 			}
 			else if (args[0].equalsIgnoreCase("nbt")) {
 				NBTItem nbti = new NBTItem(item);
 				if (args.length == 1) {
 					p.sendMessage("§c/nitem nbt set [int/double/string] [key] [value]");
 					p.sendMessage("§c/nitem nbt get [int/double/string] [key]");
+					p.sendMessage("§c/nitem nbt getkeys");
 				}
 				else {
 					if (args[1].equalsIgnoreCase("set")) {
@@ -72,6 +74,11 @@ public class CmdItems implements CommandExecutor{
 						}
 						else if (args[2].equalsIgnoreCase("string")) {
 							p.sendMessage(nbti.getString(args[3]));
+						}
+					}
+					else if (args[1].equalsIgnoreCase("getkeys")) {
+						for (String key : nbti.getKeys()) {
+							p.sendMessage(key);
 						}
 					}
 				}
