@@ -23,7 +23,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
+import me.Neoblade298.NeoProfessions.Inventories.CreateSlotInventory;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+import me.Neoblade298.NeoProfessions.Objects.ScaleSet;
 import me.neoblade298.neogear.Gear;
 import net.md_5.bungee.api.ChatColor;
 
@@ -42,8 +44,8 @@ public class GearConfig {
 	public int slotsMax;
 	public int version;
 	public HashMap<String, AttributeSet> attributes;
-	public HashMap<String, RarityBonuses> rarities;
-	public double price;
+	public HashMap<Rarity, RarityBonuses> rarities;
+	public double configPrice, value;
 	
 	private static HashMap<String, String> rarityUpgrades = new HashMap<String, String>();
 	
@@ -56,7 +58,7 @@ public class GearConfig {
 	
 	public GearConfig(String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
-			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
+			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<Rarity, RarityBonuses> rarities, int slotsMax,
 			int startingSlotsBase, int startingSlotsRange, double price, int version, ArrayList<String> lore) {
 		
 		// Add color codes to all strings necessary
@@ -86,7 +88,7 @@ public class GearConfig {
 		this.enchantmentMin = enchantmentMin;
 		this.attributes = attributes;
 		this.rarities = rarities;
-		this.price = price;
+		this.configPrice = price;
 		this.slotsMax = slotsMax;
 		this.startingSlotsBase = startingSlotsBase;
 		this.startingSlotsRange = startingSlotsRange;
@@ -94,8 +96,46 @@ public class GearConfig {
 		this.lore = lore;
 	}
 	
-	public ItemStack generateItem(String rarity, int level) {
+	public double calculatePrice(ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		if (this.configPrice == -1) {
+			int level = nbti.getInteger("level");
+			Rarity rarity = Gear.getRarities().get(nbti.getString("rarity"));
+			double price = level * rarity.priceModifier;
+			
+			int slotsCreated = nbti.getInteger("slotsCreated");
+			for (int i = 1; i <= slotsCreated; i++) {
+				ScaleSet set = CreateSlotInventory.getGoldPrices().get(i);
+				int augLevel = nbti.getInteger("slot" + i + "Level");
+				price += set.getResult(level) * 0.2;
+				price += set.getResult(augLevel) * 0.3;
+				price += CreateSlotInventory.getEssencePrices().get(i) * level * 5;
+			}
+			return price;
+		}
+		else {
+			return this.configPrice;
+		}
+	}
+	
+	public double calculatePrice(int level, Rarity rarity, int slotsCreated) {
+		if (this.configPrice == -1) {
+			double price = level * rarity.priceModifier;
+			for (int i = 1; i <= slotsCreated; i++) {
+				ScaleSet set = CreateSlotInventory.getGoldPrices().get(i);
+				price += set.getResult(level) * 0.2;
+				price += CreateSlotInventory.getEssencePrices().get(i) * level * 5;
+			}
+			return price;
+		}
+		else {
+			return this.configPrice;
+		}
+	}
+	
+	public ItemStack generateItem(String rarityString, int level) {
 		ItemStack item = new ItemStack(material);
+		Rarity rarity = Gear.getRarities().get(rarityString);
 		if (rarities.get(rarity).material != null) {
 			item = new ItemStack(rarities.get(rarity).material);
 		}
@@ -127,12 +167,12 @@ public class GearConfig {
 			meta.setDisplayName((prefix + display).replaceAll("&", "§"));
 		}
 		else {
-			meta.setDisplayName(Gear.getRarities().get(rarity).colorCode + prefix + display);
+			meta.setDisplayName(rarity.colorCode + prefix + display);
 		}
 		
 		
 		// Add required enchantments
-		if (Gear.getRarities().get(rarity).isEnchanted) {
+		if (rarity.isEnchanted) {
 			meta.addEnchant(Enchantment.LUCK, 1, true);
 		}
 		for (Enchant enchant : requiredEnchants) {
@@ -184,7 +224,7 @@ public class GearConfig {
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
 		lore.add("§7Type: " + this.type);
-		lore.add("§7Rarity: " + Gear.getRarities().get(rarity).displayName);
+		lore.add("§7Rarity: " + rarity.displayName);
 		lore.add("§7Level: " + level);
 		lore.add("§7Max Slots: " + maxSlots);
 		for (String loreLine : this.lore) {
@@ -250,13 +290,13 @@ public class GearConfig {
 		
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
-		double price = this.price * Gear.getRarities().get(rarity).priceModifier;
+		double price = this.configPrice == -1 ? calculatePrice(level, rarity, currentSlot) : this.configPrice * rarity.priceModifier;
 		nbti.setDouble("value", price);
 		nbti.setString("gear", id);
 		nbti.setInteger("version", version);
 		nbti.setInteger("slotsMax", Math.max(currentSlot, maxSlots));
 		nbti.setInteger("level", level);
-		nbti.setString("rarity", rarity.toLowerCase());
+		nbti.setString("rarity", rarity.key);
 		nbti.setInteger("slotsCreated", currentSlot);
 		for (String key : nbtIntegers.keySet()) {
 			nbti.setInteger(key, nbtIntegers.get(key));
@@ -356,8 +396,16 @@ public class GearConfig {
 		if (!nbti.hasKey("version")) {
 			return;
 		}
-		String rarity = nbti.getString("rarity");
+		Rarity rarity = Gear.getRarities().get(nbti.getString("rarity"));
 		int level = nbti.getInteger("level");
+		boolean hasChanged = false;
+		
+		// Update value if needed
+		if (nbti.getDouble("value") != calculatePrice(item)) {
+			nbti.setDouble("value", calculatePrice(item));
+			hasChanged = true;
+		}
+		nbti.applyNBT(item);
 		
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
@@ -369,7 +417,6 @@ public class GearConfig {
 		}
 		
 		String line = loreIter.next();
-		boolean hasChanged = false;
 		for (String key : Gear.attributeOrder.keySet()) {
 			String format = Gear.attributeOrder.get(key);
 			int formatIndex = format.indexOf('+');

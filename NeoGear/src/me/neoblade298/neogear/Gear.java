@@ -176,7 +176,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				String type = gearCfg.getString("type");
 				String title = gearCfg.getString("title");
 				Material material = Material.getMaterial(gearCfg.getString("material").toUpperCase());
-				double price = gearCfg.getDouble("price");
+				double price = gearCfg.getDouble("price", -1);
 				int version = gearCfg.getInt("version");
 
 				ConfigurationSection nameSec = gearCfg.getConfigurationSection("display-name");
@@ -203,7 +203,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ArrayList<String> reqAugmentList = (ArrayList<String>) augSec.getStringList("required");
 
 				ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
-				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
+				HashMap<Rarity, RarityBonuses> rarities = new HashMap<Rarity, RarityBonuses>();
 				// Load in rarities
 				for (String rarity : Gear.rarities.keySet()) {
 					ConfigurationSection specificRareSec = null;
@@ -211,7 +211,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 						specificRareSec = rareSec.getConfigurationSection(rarity);
 					}
 					if (specificRareSec != null) {
-						rarities.put(rarity,
+						rarities.put(Gear.rarities.get(rarity),
 								new RarityBonuses(parseAttributes(specificRareSec),
 										specificRareSec.getInt("added-durability"),
 										(ArrayList<String>) specificRareSec.getStringList("prefix"),
@@ -220,7 +220,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 										specificRareSec.getInt("starting-slots-range")));
 					}
 					else {
-						rarities.put(rarity, new RarityBonuses());
+						rarities.put(Gear.rarities.get(rarity), new RarityBonuses());
 					}
 				}
 
@@ -332,9 +332,9 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			conf.material = material;
 		}
 
-		double price = sec.getDouble("price", -1);
-		if (price != -1) {
-			conf.price = price;
+		double price = sec.getDouble("price", -2);
+		if (price != -2) {
+			conf.configPrice = price;
 		}
 
 		ConfigurationSection nameSec = sec.getConfigurationSection("display-name");
@@ -395,7 +395,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			for (String rarity : rarities.keySet()) {
 				ConfigurationSection raritySec = raresSec.getConfigurationSection(rarity);
 				if (raritySec != null) {
-					conf.rarities.put(rarity, overrideRarities(conf.rarities.get(rarity), raritySec));
+					conf.rarities.put(Gear.rarities.get(rarity), overrideRarities(conf.rarities.get(Gear.rarities.get(rarity)), raritySec));
 				}
 			}
 		}
