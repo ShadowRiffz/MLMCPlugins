@@ -36,6 +36,7 @@ import me.Neoblade298.NeoProfessions.Augments.*;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
+import me.Neoblade298.NeoProfessions.Inventories.ConfirmShardInventory;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
@@ -170,7 +171,7 @@ public class AugmentManager implements Listener, Manager {
 	}
 	
 	@EventHandler
-	public void onAugmentSlot(InventoryClickEvent e) {
+	public void onDragItemOnOtherItem(InventoryClickEvent e) {
 		if (!e.isLeftClick()) {
 			return;
 		}
@@ -181,32 +182,38 @@ public class AugmentManager implements Listener, Manager {
 			return;
 		}
 		
+		if (!trySlotAugment(e)) { // Only tryUseShard is trySlotAugment failed
+			tryUseShard(e);
+		}
+	}
+	
+	private boolean trySlotAugment(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		ItemStack augment = e.getCursor();
 		ItemStack item = e.getCurrentItem();
 
 		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
-			return;
+			return false;
 		}
 		if (augment == null || augment.getType().isAir() || !augment.hasItemMeta() || !augment.getItemMeta().hasDisplayName()) {
-			return;
+			return false;
 		}
 		
 		NBTItem nbti = new NBTItem(item);
 		NBTItem nbtaug = new NBTItem(augment);
 		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
-			return;
+			return false;
 		}
 		if (!AugmentManager.isAugment(augment)) {
-			return;
+			return false;
 		}
 		if (nbti.getInteger("version") <= 0) {
 			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
-			return;
+			return false;
 		}
 		if (nbti.getInteger("slotsCreated") <= 0) {
 			Util.sendMessage(p, "&cNo slots available on this item!");
-			return;
+			return false;
 		}
 		if (!nbtaug.getString("level").isBlank() && nbtaug.getInteger("level") == 0) {
 			nbtaug.setInteger("level", Integer.parseInt(nbtaug.getString("level")));
@@ -214,7 +221,7 @@ public class AugmentManager implements Listener, Manager {
 		}
 		if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
-			return;
+			return false;
 		}
 		else {
 			ItemStack clone = augment.clone();
@@ -222,6 +229,63 @@ public class AugmentManager implements Listener, Manager {
 			e.setCancelled(true);
 			p.getOpenInventory().close();
 			new ConfirmAugmentInventory(main, p, item, clone);
+			return true;
+		}
+	}
+	
+	private boolean tryUseShard(InventoryClickEvent e) {
+		if (!e.isLeftClick()) {
+			return false;
+		}
+		if (e.getCursor() == null) {
+			return false;
+		}
+		if (e.getCurrentItem() == null) {
+			return false;
+		}
+		
+		Player p = (Player) e.getWhoClicked();
+		ItemStack shard = e.getCursor();
+		ItemStack item = e.getCurrentItem();
+
+		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return false;
+		}
+		if (shard == null || shard.getType().isAir() || !shard.hasItemMeta() || !shard.getItemMeta().hasDisplayName()) {
+			return false;
+		}
+		
+		NBTItem nbti = new NBTItem(item);
+		NBTItem nbts = new NBTItem(shard);
+		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
+			return false;
+		}
+		if (!nbts.hasKey("shard")) {
+			return false;
+		}
+		if (nbti.getInteger("version") <= 0) {
+			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			return false;
+		}
+		if (!nbts.getString("level").isBlank() && nbts.getInteger("level") == 0) {
+			nbts.setInteger("level", Integer.parseInt(nbts.getString("level")));
+			nbts.applyNBT(shard);
+		}
+		if (nbti.getInteger("level") > nbts.getInteger("level")) {
+			Util.sendMessage(p, "&cItem level must be less than or equal to shard level!");
+			return false;
+		}
+		if (nbts.hasKey("rarity") && !(nbts.getString("rarity").equals(nbti.getString("rarity")))) {
+			Util.sendMessage(p, "&cItem rarity must be equal to shard rarity upgrade!");
+			return false;
+		}
+		else {
+			ItemStack clone = shard.clone();
+			clone.setAmount(1);
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+			new ConfirmShardInventory(main, p, item, clone);
+			return true;
 		}
 	}
 	

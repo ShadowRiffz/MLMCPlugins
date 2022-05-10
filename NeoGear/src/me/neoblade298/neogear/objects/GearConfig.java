@@ -28,7 +28,6 @@ import me.neoblade298.neogear.Gear;
 import net.md_5.bungee.api.ChatColor;
 
 public class GearConfig {
-	private Gear main;
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	public static final String DURAPREFIX = "§7Durability ";
 	public String id, type, title;
@@ -55,7 +54,7 @@ public class GearConfig {
 		rarityUpgrades.put("epic", "legendary");
 	}
 	
-	public GearConfig(Gear main, String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
+	public GearConfig(String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
 			int enchantmentMin, int enchantmentMax, HashMap<String, AttributeSet> attributes, HashMap<String, RarityBonuses> rarities, int slotsMax,
 			int startingSlotsBase, int startingSlotsRange, double price, int version, ArrayList<String> lore) {
@@ -68,7 +67,6 @@ public class GearConfig {
 			displayName = displayName.replaceAll("&", "§");
 		}
 		
-		this.main = main;
 		this.id = id;
 		if (title == null) {
 			this.title = "§7Standard " + type;
@@ -129,12 +127,12 @@ public class GearConfig {
 			meta.setDisplayName((prefix + display).replaceAll("&", "§"));
 		}
 		else {
-			meta.setDisplayName(main.rarities.get(rarity).colorCode + prefix + display);
+			meta.setDisplayName(Gear.getRarities().get(rarity).colorCode + prefix + display);
 		}
 		
 		
 		// Add required enchantments
-		if (main.rarities.get(rarity).isEnchanted) {
+		if (Gear.getRarities().get(rarity).isEnchanted) {
 			meta.addEnchant(Enchantment.LUCK, 1, true);
 		}
 		for (Enchant enchant : requiredEnchants) {
@@ -186,7 +184,7 @@ public class GearConfig {
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
 		lore.add("§7Type: " + this.type);
-		lore.add("§7Rarity: " + main.rarities.get(rarity).displayName);
+		lore.add("§7Rarity: " + Gear.getRarities().get(rarity).displayName);
 		lore.add("§7Level: " + level);
 		lore.add("§7Max Slots: " + maxSlots);
 		for (String loreLine : this.lore) {
@@ -252,7 +250,7 @@ public class GearConfig {
 		
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
-		double price = this.price * main.rarities.get(rarity).priceModifier;
+		double price = this.price * Gear.getRarities().get(rarity).priceModifier;
 		nbti.setDouble("value", price);
 		nbti.setString("gear", id);
 		nbti.setInteger("version", version);
@@ -297,6 +295,7 @@ public class GearConfig {
 			return "cannot upgrade legendary! Must be artifacted at /warp artifactupgrade";
 		}
 		String newRarity = rarityUpgrades.get(oldRarity);
+		String rarityDisplay = Gear.getRarities().get(newRarity).displayName;
 		nbti.setString("rarity", newRarity);
 		
 		// Add slots if rarity increased to rare+
@@ -307,16 +306,16 @@ public class GearConfig {
 		if (addSlot) {
 			nbti.setInteger("slotMax",  slotsMaxNew);
 		}
-		
-		ItemStack newItem = nbti.getItem();
-		ItemMeta meta = newItem.getItemMeta();
+		nbti.applyNBT(item);
+		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
+		lore.set(2, "§7Rarity: " + rarityDisplay);
 		lore.set(4, "§7Max Slots: " + slotsMaxNew);
 		meta.setLore(lore);
-		newItem.setItemMeta(meta);
+		item.setItemMeta(meta);
 		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
-		p.sendMessage("§4[§c§lMLMC§4] §7" + item.getItemMeta().getDisplayName() + "§7's rarity has been increased to §e" + newRarity + "§7!");
-		updateStats(p, newItem, false);
+		p.sendMessage("§4[§c§lMLMC§4] §7" + item.getItemMeta().getDisplayName() + "§7's rarity has been increased to " + rarityDisplay + "§7!");
+		updateStats(p, item, false);
 		return null;
 	}
 	
@@ -345,9 +344,10 @@ public class GearConfig {
 			return "new level is beyond the game bounds!";
 		}
 		nbti.setInteger("level", newLevel);
+		nbti.applyNBT(item);
 		p.sendMessage("§4[§c§lMLMC§4] §7" + item.getItemMeta().getDisplayName() + "§7's level has been increased to §e" + newLevel + "§7!");
 		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
-		updateStats(p, nbti.getItem(), false);
+		updateStats(p, item, false);
 		return null;
 	}
 	

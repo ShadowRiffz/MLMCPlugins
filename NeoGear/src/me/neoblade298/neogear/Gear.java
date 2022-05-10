@@ -38,8 +38,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
-import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
@@ -50,15 +48,15 @@ import me.neoblade298.neogear.objects.RarityBonuses;
 import net.milkbowl.vault.economy.Economy;
 
 public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
-	public static HashMap<String, HashMap<Integer, GearConfig>> settings;
+	static HashMap<String, HashMap<Integer, GearConfig>> settings;
 	public static LinkedHashMap<String, String> attributeOrder = new LinkedHashMap<String, String>();
 	private YamlConfiguration cfg;
 	public static int lvlMax;
 	public static int lvlInterval;
-	public HashMap<String, Rarity> rarities; // Color codes within
-	public HashMap<String, ArrayList<String>> raritySets;
-	public HashMap<String, ItemSet> itemSets;
-	public HashMap<String, String> typeConverter;
+	private static HashMap<String, Rarity> rarities; // Color codes within
+	HashMap<String, ArrayList<String>> raritySets;
+	HashMap<String, ItemSet> itemSets;
+	private HashMap<String, String> typeConverter;
 	public static Random gen = new Random();
 	private static Economy econ = null;
 
@@ -131,14 +129,14 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Gear.lvlMax = this.cfg.getInt("lvl-max");
 
 		// Rarities and color codes
-		this.rarities = new HashMap<String, Rarity>();
+		rarities = new HashMap<String, Rarity>();
 		ConfigurationSection raritySec = this.cfg.getConfigurationSection("rarities");
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
 			Rarity rarityObj = new Rarity(rarity, specificRarity.getString("color-code"),
 					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"),
 					specificRarity.getBoolean("is-enchanted"), specificRarity.getInt("priority"));
-			this.rarities.put(rarity, rarityObj);
+			rarities.put(rarity, rarityObj);
 		}
 
 		// Rarity sets
@@ -207,7 +205,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection rareSec = gearCfg.getConfigurationSection("rarity");
 				HashMap<String, RarityBonuses> rarities = new HashMap<String, RarityBonuses>();
 				// Load in rarities
-				for (String rarity : this.rarities.keySet()) {
+				for (String rarity : Gear.rarities.keySet()) {
 					ConfigurationSection specificRareSec = null;
 					if (rareSec != null) {
 						specificRareSec = rareSec.getConfigurationSection(rarity);
@@ -237,7 +235,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ConfigurationSection overrideSec = gearCfg.getConfigurationSection("lvl-overrides");
 				HashMap<Integer, GearConfig> gearLvli = new HashMap<Integer, GearConfig>();
 				for (int i = 0; i <= Gear.lvlMax; i += Gear.lvlInterval) {
-					GearConfig gearConf = new GearConfig(this, id, type, title, material, prefixes, displayNames,
+					GearConfig gearConf = new GearConfig(id, type, title, material, prefixes, displayNames,
 							duraMinBase, reqEnchList, optEnchList, reqAugmentList, enchMin, enchMax, attributes,
 							rarities, slotsMax, startingSlotsBase, startingSlotsRange, price, version, lore);
 
@@ -394,7 +392,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		ConfigurationSection raresSec = sec.getConfigurationSection("rarity");
 		// Load in rarities
 		if (raresSec != null) {
-			for (String rarity : this.rarities.keySet()) {
+			for (String rarity : rarities.keySet()) {
 				ConfigurationSection raritySec = raresSec.getConfigurationSection(rarity);
 				if (raritySec != null) {
 					conf.rarities.put(rarity, overrideRarities(conf.rarities.get(rarity), raritySec));
@@ -647,5 +645,13 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public HashMap<String, HashMap<Integer, GearConfig>> getSettings() {
 		return settings;
+	}
+	
+	public static GearConfig getGearConfig(String type, int level) {
+		return settings.get(type).get(level);
+	}
+	
+	public static HashMap<String, Rarity> getRarities() {
+		return rarities;
 	}
 }

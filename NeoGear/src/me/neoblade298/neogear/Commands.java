@@ -9,9 +9,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neogear.listeners.DurabilityListener;
+import me.neoblade298.neogear.objects.Shards;
 
 
 public class Commands implements CommandExecutor{
@@ -47,12 +50,12 @@ public class Commands implements CommandExecutor{
 					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: level");
 					return true;
 				}
-				int failures = p.getInventory().addItem(Gear.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+				int failures = p.getInventory().addItem(Gear.getGearConfig(type, lvl).generateItem(rarity, lvl)).size();
 				if (failures > 0) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cFailed to get " + rarity + " " + type + " to " + p.getName() + ", inventory full");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Failed to get " + rarity + " " + type + " to " + p.getName() + ", inventory full");
 				}
 				else {
-					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully spawned " + rarity + " " + type + " for " + p.getName());
+					Bukkit.getLogger().log(Level.INFO, "[NeoGear] Successfully spawned " + rarity + " " + type + " for " + p.getName());
 				}
 			}
 
@@ -82,17 +85,47 @@ public class Commands implements CommandExecutor{
 				
 				int failures = 1;
 				try {
-					failures = p.getInventory().addItem(Gear.settings.get(type).get(lvl).generateItem(rarity, lvl)).size();
+					failures = p.getInventory().addItem(Gear.getGearConfig(type, lvl).generateItem(rarity, lvl)).size();
 				}
 				catch (Exception e) {
 					Bukkit.getLogger().log(Level.WARNING,
 							"[NeoGear] Failed to generate item with command: " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4]);
 				}
 				if (failures > 0) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cFailed to give " + rarity + " " + type + " to " + p.getName() + ", inventory full");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Failed to get " + rarity + " " + type + " to " + p.getName() + ", inventory full");
 				}
 				else {
-					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully spawned " + rarity + " " + type + " for " + p.getName());
+					Bukkit.getLogger().log(Level.INFO, "[NeoGear] Successfully spawned " + rarity + " " + type + " for " + p.getName());
+				}
+			}
+			// /gear get/giveshard {player} [type] --rarity:[rarity] --level:[level]
+			else if (args.length == 4 && (args[0].equalsIgnoreCase("getshard") || args[0].equalsIgnoreCase("giveshard"))) {
+				Player p = (Player) sender;
+				int offset = 0;
+				if (Bukkit.getPlayer(args[1]) != null) {
+					offset++;
+					p = Bukkit.getPlayer(args[1]);
+				}
+				String type = args[1 + offset];
+				String rarity = "common";
+				int level = 5;
+				for (int i = 2 + offset; i < args.length; i++) {
+					if (args[i].startsWith("--rarity:")) {
+						rarity = args[i].substring(args[i].indexOf(":") + 1);
+					}
+					else if (args[i].startsWith("--level:")) {
+						level = Integer.parseInt(args[i].substring(args[i].indexOf(":") + 1));
+					}
+				}
+				
+				ItemStack item = type.equalsIgnoreCase("rarity") ? Shards.getRarityShard(Gear.getRarities().get(rarity), level) :
+					Shards.getLevelShard(level);
+				int failures = p.getInventory().addItem(item).size();
+				if (failures > 0) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Failed to get " + rarity + " " + type + " upgrade shard to " + p.getName() + ", inventory full");
+				}
+				else {
+					Bukkit.getLogger().log(Level.INFO, "[NeoGear] Successfully spawned " + rarity + " " + level + " " + type + " upgrade shard for " + p.getName());
 				}
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
@@ -106,11 +139,11 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear get {rarity/set} {type/set/auto} {lvl/auto/range} §7- Spawns you gear");
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear give [player] {rarity/set} {type/set} {lvl/auto/range} §7- Spawns a player gear");
-				sender.sendMessage("§4[§c§lMLMC§4] §7{auto} gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
-				sender.sendMessage("§4[§c§lMLMC§4] §7Add :lvl to {auto} if you want to set a max level to the gear (auto:30)");
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear repair [player] §7- Repairs a player's mainhand");
+				sender.sendMessage("§4[§c§lMLMC§4] §c/gear get/give {player} [rarity/set] [type/set/auto] [lvl/auto/range] §7- Spawns you gear");
+				sender.sendMessage("§4[§c§lMLMC§4] §c/gear getshard/giveshard {player} [rarity/level] --rarity:[rarity] --level:[level] §7- Spawns a shard");
+				sender.sendMessage("§4[§c§lMLMC§4] §7[auto] gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
+				sender.sendMessage("§4[§c§lMLMC§4] §7Add :lvl to [auto] if you want to set a max level to the gear (auto:30)");
+				sender.sendMessage("§4[§c§lMLMC§4] §c/gear repair {player} §7- Repairs a player's mainhand");
 				sender.sendMessage("§4[§c§lMLMC§4] §c/gear reload §7- Reloads config");
 			}
 		}
@@ -131,7 +164,7 @@ public class Commands implements CommandExecutor{
 				}
 			}
 		}
-		else if (main.rarities.containsKey(param)) {
+		else if (Gear.getRarities().containsKey(param)) {
 			return param;
 		}
 		return null;

@@ -33,12 +33,12 @@ public class GearResult implements RecipeResult {
 			}
 		}
 		
-		display = Gear.settings.get(type).get(level).generateItem(rarity, level).getItemMeta().getDisplayName();
+		display = Gear.getGearConfig(type, level).generateItem(rarity, level).getItemMeta().getDisplayName();
 	}
 
 	@Override
 	public void giveResult(Player p, int amount) {
-		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Gear.settings.get(type).get(level).generateItem(rarity, level));
+		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(Gear.getGearConfig(type, level).generateItem(rarity, level));
 		for (Integer i : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(i));
 		}
@@ -46,7 +46,7 @@ public class GearResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = Gear.settings.get(type).get(level).generateItem(rarity, level);
+		ItemStack item = Gear.getGearConfig(type, level).generateItem(rarity, level);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
@@ -59,6 +59,6 @@ public class GearResult implements RecipeResult {
 	}
 	
 	public GearConfig getConfig() {
-		return Gear.settings.get(type).get(level);
+		return Gear.getGearConfig(type, level);
 	}
 }
