@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -45,7 +47,9 @@ import com.sucy.skill.api.player.PlayerData;
 
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.bukkit.utils.numbers.RandomInt;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
@@ -148,7 +152,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			int cooldown = bossSection.getInt("Cooldown");
 			String cmd = bossSection.getString("Command");
 			String displayName = bossSection.getString("Display-Name");
-			boolean isRaid = bossSection.getBoolean("Is-Raid");
+			BossType type = BossType.valueOf(bossSection.getString("Type", "BOSS").toUpperCase());
 			int timeLimit = bossSection.getInt("Time-Limit");
 			String permission = bossSection.getString("Permission");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
@@ -156,8 +160,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
 			settings.addSetting(boss, 1);
 
-			if (isRaid) {
-				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, isRaid, timeLimit, permission, placeholder, mythicmobs);
+			if (type.equals(BossType.BOSS)) {
+				bossInfo.put(boss, new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
+			}
+			else {
+				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, permission, placeholder, mythicmobs);
 				
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
@@ -171,10 +178,15 @@ public class BossInstances extends JavaPlugin implements Listener {
 					}
 					info.setRaidBosses(raidBossList);
 				}
+				if (bossSection.contains("Spawners")) {
+					ConfigurationSection spawnerSec = bossSection.getConfigurationSection("Spawners");
+					ArrayList<SpawnerSet> spawners = new ArrayList<SpawnerSet>();
+					for (String key : spawnerSec.getKeys(false)) {
+						spawners.add(new SpawnerSet(key, spawnerSec.getInt(key)));
+					}
+					info.setSpawners(spawners);
+				}
 				bossInfo.put(boss, info);
-			}
-			else {
-				bossInfo.put(boss, new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
 			}
 		}
 		
@@ -351,22 +363,37 @@ public class BossInstances extends JavaPlugin implements Listener {
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
 				if (!activeBosses.contains(boss)) {
-					if (b.isRaid()) {
-						scheduleTimer(bossInfo.get(boss).getTimeLimit(), boss);
-						activeBosses.add(boss);
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
-						// Reset raid bosses fought
-						for (RaidBoss raidBoss : bossInfo.get(boss).getRaidBosses()) {
-							raidBossesFought.remove(raidBoss.getName());
-						}
-					}
-					else {
+					activeBosses.add(boss);
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), b.getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+					if (b.getBossType().equals(BossType.BOSS)) {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
-						activeBosses.add(boss);
 						for (Player target : activeFights.get(boss)) {
 							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
 						}
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), bossInfo.get(boss).getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+					}
+					else if (b.getBossType().equals(BossType.RAID)) {
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " started raid " + boss + ".");
+						scheduleTimer(b.getTimeLimit(), boss);
+						// Reset raid bosses fought
+						for (RaidBoss raidBoss : b.getRaidBosses()) {
+							raidBossesFought.remove(raidBoss.getName());
+						}
+					}
+					else if (b.getBossType().equals(BossType.DUNGEON)) {
+						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " started dungeon " + boss + ".");
+						scheduleTimer(b.getTimeLimit(), boss);
+						for (SpawnerSet spawner : b.getSpawners()) {
+							for (int i = 1; i <= spawner.getMax(); i++) {
+								MythicSpawner ms = MythicBukkit.inst().getSpawnerManager().getSpawnerByName(spawner.getInternal() + i);
+								if (ms != null) {
+									ms.setMobLevel(new RandomInt(bossMultiplier.get(boss).toString()));
+									ms.setRemainingCooldownSeconds(0L);
+								}
+								else {
+									Bukkit.getLogger().log(Level.WARNING, "[NeoBossInstances] Failed to load spawner " + spawner.getInternal() + i);
+								}
+							}
+						}
 					}
 				}
 			}

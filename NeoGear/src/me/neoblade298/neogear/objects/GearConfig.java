@@ -257,6 +257,8 @@ public class GearConfig {
 		return nbti.getItem();
 	}
 	
+	public void 
+	
 	public void updateStats(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("version")) {

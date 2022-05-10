@@ -10,12 +10,13 @@ public class Boss {
 	private String cmd = null;
 	private int cooldown = 0;
 	private String displayName = null;
-	private boolean isRaid = false;
+	private BossType type = BossType.BOSS;
 	private int timeLimit = 0;
 	private String permission = null;
 	private ArrayList<RaidBoss> raidBosses = null;
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
+	private ArrayList<SpawnerSet> spawners = null;
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
@@ -28,19 +29,34 @@ public class Boss {
 		this.mythicmobs = mythicmobs;
 	}
 
-	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, boolean isRaid, int timeLimit,
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
 			String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
-		this.isRaid = isRaid;
+		this.type = type;
 		this.timeLimit = timeLimit;
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
+	}
+
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
+			String permission, String placeholder, ArrayList<String> mythicmobs, ArrayList<SpawnerSet> spawners) {
+		this.name = name;
+		this.coords = coords;
+		this.cmd = cmd;
+		this.cooldown = cooldown;
+		this.displayName = displayName;
+		this.type = type;
+		this.timeLimit = timeLimit;
+		this.permission = permission;
+		this.raidBosses = new ArrayList<RaidBoss>();
+		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
+		this.spawners = spawners;
 	}
 
 	public String getName() {
@@ -51,12 +67,8 @@ public class Boss {
 		this.name = name;
 	}
 
-	public boolean isRaid() {
-		return isRaid;
-	}
-
-	public void setRaid(boolean isRaid) {
-		this.isRaid = isRaid;
+	public BossType getBossType() {
+		return type;
 	}
 
 	public int getTimeLimit() {
@@ -129,5 +141,13 @@ public class Boss {
 	
 	public void setMythicMobs(ArrayList<String> mythicmobs) {
 		this.mythicmobs = mythicmobs;
+	}
+	
+	public void setSpawners(ArrayList<SpawnerSet> spawners) {
+		this.spawners = spawners;
+	}
+	
+	public ArrayList<SpawnerSet> getSpawners() {
+		return spawners;
 	}
 }

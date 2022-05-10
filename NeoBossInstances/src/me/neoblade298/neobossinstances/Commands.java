@@ -61,8 +61,8 @@ public class Commands implements CommandExecutor {
 					e.printStackTrace();
 				}
 
-				// Only give cooldown if they've beaten the boss before or it's a raid
-				if (main.bossInfo.get(boss).isRaid() || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+				// Only give cooldown if they've beaten the boss before or it's not a boss
+				if (!main.bossInfo.get(boss).getBossType().equals(BossType.BOSS) || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 				}
 				if (main.mainSpawn.getWorld() == null) {
@@ -172,7 +172,7 @@ public class Commands implements CommandExecutor {
 					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + target.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
-					if (main.bossInfo.get(boss).isRaid() || target.hasPermission(main.bossInfo.get(boss).getPermission())) {
+					if (!main.bossInfo.get(boss).getBossType().equals(BossType.BOSS) || target.hasPermission(main.bossInfo.get(boss).getPermission())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
 
