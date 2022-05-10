@@ -24,4 +24,8 @@ public class ScaleSet {
 	public void setScale(int scale) {
 		this.scale = scale;
 	}
+	
+	public int getResult(int level) {
+		return base + (scale * (level - 1));
+	}
 }

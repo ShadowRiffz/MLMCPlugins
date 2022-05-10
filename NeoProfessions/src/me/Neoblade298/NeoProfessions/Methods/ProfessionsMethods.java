@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.Gear;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import net.md_5.bungee.api.ChatColor;
 
@@ -72,6 +73,7 @@ public class ProfessionsMethods {
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
+		Gear.getGearConfig(nbti.getString("gear"), nbti.getInteger("level")).updateStats(p, item, false);
 		return true;
 	}
 	

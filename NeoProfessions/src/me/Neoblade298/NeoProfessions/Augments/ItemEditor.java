@@ -17,6 +17,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.MasonUtils;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neogear.Gear;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 
 public class ItemEditor {
@@ -84,6 +85,7 @@ public class ItemEditor {
 		nbti.removeKey("slot" + i + "Augment");
 		nbti.removeKey("slot" + i + "Level");
 		nbti.applyNBT(item);
+		Gear.getGearConfig(nbti.getString("gear"), nbti.getInteger("level")).updateStats(p, item, false);
 		return null;
 	}
 	
@@ -116,6 +118,7 @@ public class ItemEditor {
 		nbti.setString("slot" + i + "Augment", aug.getName());
 		nbti.setInteger("slot" + i + "Level", aug.getLevel());
 		nbti.applyNBT(item);
+		Gear.getGearConfig(nbti.getString("gear"), nbti.getInteger("level")).updateStats(p, item, false);
 		return null;
 	}
 	

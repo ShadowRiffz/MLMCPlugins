@@ -54,8 +54,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 		int nextSlot = new NBTItem(item).getInteger("slotsCreated") + 1;
 		inv = Bukkit.createInventory(p, 9, "§cAdd slot " + nextSlot + "?");
 		
-		ScaleSet costSet = goldPrices.get(nextSlot);
-		goldCost = costSet.getBase() + (costSet.getScale() * (level - 1));
+		goldCost = goldPrices.get(nextSlot).getResult(level);
 		essenceCost = essencePrices.get(nextSlot);
 		
 		ItemStack[] contents = inv.getContents();
@@ -122,5 +121,13 @@ public class CreateSlotInventory extends ProfessionInventory {
 		for (Integer num : failed.keySet()) {
 			p.getWorld().dropItem(p.getLocation(), failed.get(num));
 		}
+	}
+	
+	public static HashMap<Integer, ScaleSet> getGoldPrices() {
+		return goldPrices;
+	}
+	
+	public static HashMap<Integer, Integer> getEssencePrices() {
+		return essencePrices;
 	}
 }
