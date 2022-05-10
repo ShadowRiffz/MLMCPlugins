@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
@@ -42,6 +45,15 @@ public class GearConfig {
 	public HashMap<String, AttributeSet> attributes;
 	public HashMap<String, RarityBonuses> rarities;
 	public double price;
+	
+	private static HashMap<String, String> rarityUpgrades = new HashMap<String, String>();
+	
+	static {
+		rarityUpgrades.put("common", "uncommon");
+		rarityUpgrades.put("uncommon", "rare");
+		rarityUpgrades.put("rare", "epic");
+		rarityUpgrades.put("epic", "legendary");
+	}
 	
 	public GearConfig(Gear main, String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
 			int duraBase, ArrayList<Enchant> requiredEnchants, ArrayList<Enchant> optionalEnchants, ArrayList<String> requiredAugments,
@@ -257,9 +269,89 @@ public class GearConfig {
 		return nbti.getItem();
 	}
 	
-	public void 
+	public String increaseRarity(Player p, ItemStack item) {
+		NBTItem nbti = new NBTItem(item);
+		if (!item.hasItemMeta()) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s item rarity, it has no meta.");
+			return "item is not a quest item!";
+		}
+		if (!nbti.hasKey("version")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" rarity, it has no version.");
+			return "item is outdated! Try /prof convert?";
+		}
+		if (!nbti.hasKey("level")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" rarity, it has no level.");
+			return "item doesn't have level! Is it outdated?";
+		}
+		if (!nbti.hasKey("rarity")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" rarity, it has no rarity.");
+			return "item doesn't have rarity! Is it outdated?";
+		}
+		String oldRarity = nbti.getString("rarity");
+		if (oldRarity.equalsIgnoreCase("legendary")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" rarity, its rarity is already legendary.");
+			return "cannot upgrade legendary! Must be artifacted at /warp artifactupgrade";
+		}
+		String newRarity = rarityUpgrades.get(oldRarity);
+		nbti.setString("rarity", newRarity);
+		
+		// Add slots if rarity increased to rare+
+		String type = item.getType().name();
+		boolean addSlot = !newRarity.equalsIgnoreCase("uncommon") && !type.endsWith("BOOTS") && !type.endsWith("HELMET");
+		int slotsMaxOld = nbti.getInteger("slotsMax");
+		int slotsMaxNew = slotsMaxOld + 1;
+		if (addSlot) {
+			nbti.setInteger("slotMax",  slotsMaxNew);
+		}
+		
+		ItemStack newItem = nbti.getItem();
+		ItemMeta meta = newItem.getItemMeta();
+		List<String> lore = meta.getLore();
+		lore.set(4, "§7Max Slots: " + slotsMaxNew);
+		meta.setLore(lore);
+		newItem.setItemMeta(meta);
+		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+		p.sendMessage("§4[§c§lMLMC§4] §7" + item.getItemMeta().getDisplayName() + "§7's rarity has been increased to §e" + newRarity + "§7!");
+		updateStats(p, newItem, false);
+		return null;
+	}
 	
-	public void updateStats(Player p, ItemStack item) {
+	public String increaseLevel(Player p, ItemStack item, int increase) {
+		NBTItem nbti = new NBTItem(item);
+		if (!item.hasItemMeta()) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s item level, it has no meta.");
+			return "item is not a quest item!";
+		}
+		if (!nbti.hasKey("version")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" level, it has no version.");
+			return "item is outdated! Try /prof convert?";
+		}
+		if (!nbti.hasKey("level")) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" level, it has no level.");
+			return "item has no level! Seems outdated?";
+		}
+		int oldLevel = nbti.getInteger("level");
+		int newLevel = oldLevel + increase;
+		newLevel -= newLevel % 5;
+		if (newLevel < 5 || newLevel > 60) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoGear] Could not increase " + p.getName() + "'s " + item.getItemMeta().getDisplayName() +
+					" level, its new level would be " + newLevel + ".");
+			return "new level is beyond the game bounds!";
+		}
+		nbti.setInteger("level", newLevel);
+		p.sendMessage("§4[§c§lMLMC§4] §7" + item.getItemMeta().getDisplayName() + "§7's level has been increased to §e" + newLevel + "§7!");
+		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+		updateStats(p, nbti.getItem(), false);
+		return null;
+	}
+	
+	public void updateStats(Player p, ItemStack item, boolean announceChanges) {
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("version")) {
 			return;
@@ -384,7 +476,7 @@ public class GearConfig {
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		if (hasChanged) {
+		if (hasChanged && announceChanges) {
 			p.sendMessage("§4[§c§lMLMC§4] §7Your item's stats have been changed due to server balancing.");
 		}
 	}
