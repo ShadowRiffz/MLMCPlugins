@@ -1,5 +1,7 @@
 package me.neoblade298.neomythicextension.mechanics;
 
+import java.util.Optional;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -52,9 +54,9 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 					nr.giveResearchPoints(p, cfg.amount, mob, level, false, null);
 				}
 				else {
-					MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-					if (mm != null) {
-						display = mm.getDisplayName().get();
+					Optional<MythicMob> mm = MythicBukkit.inst().getMobManager().getMythicMob(mob);
+					if (mm.isPresent()) {
+						display = mm.get().getDisplayName().get();
 					}
 					nr.giveResearchPointsAlias(p, cfg.amount, mob, level, display, false);
 				}
