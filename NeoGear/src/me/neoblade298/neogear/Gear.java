@@ -38,12 +38,16 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
 import me.neoblade298.neogear.objects.ItemSet;
 import me.neoblade298.neogear.objects.Rarity;
+import me.neoblade298.neogear.objects.RarityBefore;
 import me.neoblade298.neogear.objects.RarityBonuses;
 import net.milkbowl.vault.economy.Economy;
 
@@ -53,7 +57,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	private YamlConfiguration cfg;
 	public static int lvlMax;
 	public static int lvlInterval;
-	public HashMap<String, Rarity> rarities; // Color codes within
+	public HashMap<String, RarityBefore> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
 	public HashMap<String, ItemSet> itemSets;
 	public HashMap<String, String> typeConverter;
@@ -129,11 +133,11 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Gear.lvlMax = this.cfg.getInt("lvl-max");
 
 		// Rarities and color codes
-		this.rarities = new HashMap<String, Rarity>();
+		this.rarities = new HashMap<String, RarityBefore>();
 		ConfigurationSection raritySec = this.cfg.getConfigurationSection("rarities");
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
-			Rarity rarityObj = new Rarity(specificRarity.getString("color-code"),
+			RarityBefore rarityObj = new RarityBefore(specificRarity.getString("color-code"),
 					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"),
 					specificRarity.getBoolean("is-enchanted"));
 			this.rarities.put(rarity, rarityObj);
@@ -505,6 +509,68 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
+		// Basically just check if the event is already cancelled,
+		// don't do applyShard if it is
+		if (!disableEquipArmor(e)) {
+			applyShard(e);
+		}
+	}
+	
+	private void applyShard(InventoryClickEvent e) {
+		if (!e.isLeftClick()) {
+			return;
+		}
+		if (e.getCursor() == null) {
+			return;
+		}
+		if (e.getCurrentItem() == null) {
+			return;
+		}
+		
+		Player p = (Player) e.getWhoClicked();
+		ItemStack shard = e.getCursor();
+		ItemStack item = e.getCurrentItem();
+
+		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		if (shard == null || shard.getType().isAir() || !shard.hasItemMeta() || !shard.getItemMeta().hasDisplayName()) {
+			return;
+		}
+		
+		NBTItem nbti = new NBTItem(item);
+		NBTItem nbts = new NBTItem(shard);
+		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
+			return;
+		}
+		if (!AugmentManager.isAugment(shard)) {
+			return;
+		}
+		if (nbti.getInteger("version") <= 0) {
+			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
+			return;
+		}
+		if (nbti.getInteger("slotsCreated") <= 0) {
+			Util.sendMessage(p, "&cNo slots available on this item!");
+			return;
+		}
+		if (!nbts.getString("level").isBlank() && nbts.getInteger("level") == 0) {
+			nbts.setInteger("level", Integer.parseInt(nbts.getString("level")));
+			nbts.applyNBT(shard);
+		}
+		if (nbti.getInteger("level") < nbts.getInteger("level")) {
+			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
+			return;
+		}
+		else {
+			ItemStack clone = shard.clone();
+			clone.setAmount(1);
+			e.setCancelled(true);
+			p.getOpenInventory().close();
+		}
+	}
+	
+	private boolean disableEquipArmor(InventoryClickEvent e) {
 		String world = e.getView().getPlayer().getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			PlayerInventory inv = (PlayerInventory) e.getView().getBottomInventory();
@@ -517,25 +583,25 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				if (item.getType().toString().endsWith("HELMET")) {
 					if (inv.getContents()[39] == null && isQuestGear(item)) {
 						e.setCancelled(true);
-						return;
+						return true;
 					}
 				}
 				else if (item.getType().toString().endsWith("CHESTPLATE")) {
 					if (inv.getContents()[38] == null && isQuestGear(item)) {
 						e.setCancelled(true);
-						return;
+						return true;
 					}
 				}
 				else if (item.getType().toString().endsWith("LEGGINGS")) {
 					if (inv.getContents()[37] == null && isQuestGear(item)) {
 						e.setCancelled(true);
-						return;
+						return true;
 					}
 				}
 				else if (item.getType().toString().endsWith("BOOTS")) {
 					if (inv.getContents()[36] == null && isQuestGear(item)) {
 						e.setCancelled(true);
-						return;
+						return true;
 					}
 				}
 			}
@@ -545,7 +611,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ItemStack item = inv.getContents()[e.getHotbarButton()];
 				if (isQuestGear(item)) {
 					e.setCancelled(true);
-					return;
+					return true;
 				}
 			}
 
@@ -554,7 +620,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 					|| action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
 				if (e.getSlotType().equals(SlotType.ARMOR) && isQuestGear(e.getCursor())) {
 					e.setCancelled(true);
-					return;
+					return true;
 				}
 			}
 		}
@@ -565,8 +631,10 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (isQuestGear(smith.getContents()[0]) && e.getSlot() == 2) {
 				e.setCancelled(true);
 				e.getView().getPlayer().sendMessage("§c[§4§lMLMC§4] §cYou cannot apply netherite to quest gear!");
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public boolean isQuestGear(ItemStack item) {
