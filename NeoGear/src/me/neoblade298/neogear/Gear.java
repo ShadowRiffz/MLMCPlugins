@@ -38,7 +38,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
@@ -47,7 +46,6 @@ import me.neoblade298.neogear.objects.Enchant;
 import me.neoblade298.neogear.objects.GearConfig;
 import me.neoblade298.neogear.objects.ItemSet;
 import me.neoblade298.neogear.objects.Rarity;
-import me.neoblade298.neogear.objects.RarityBefore;
 import me.neoblade298.neogear.objects.RarityBonuses;
 import net.milkbowl.vault.economy.Economy;
 
@@ -57,7 +55,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	private YamlConfiguration cfg;
 	public static int lvlMax;
 	public static int lvlInterval;
-	public HashMap<String, RarityBefore> rarities; // Color codes within
+	public HashMap<String, Rarity> rarities; // Color codes within
 	public HashMap<String, ArrayList<String>> raritySets;
 	public HashMap<String, ItemSet> itemSets;
 	public HashMap<String, String> typeConverter;
@@ -133,13 +131,13 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		Gear.lvlMax = this.cfg.getInt("lvl-max");
 
 		// Rarities and color codes
-		this.rarities = new HashMap<String, RarityBefore>();
+		this.rarities = new HashMap<String, Rarity>();
 		ConfigurationSection raritySec = this.cfg.getConfigurationSection("rarities");
 		for (String rarity : raritySec.getKeys(false)) {
 			ConfigurationSection specificRarity = raritySec.getConfigurationSection(rarity);
-			RarityBefore rarityObj = new RarityBefore(specificRarity.getString("color-code"),
+			Rarity rarityObj = new Rarity(rarity, specificRarity.getString("color-code"),
 					specificRarity.getString("display-name"), specificRarity.getDouble("price-modifier"),
-					specificRarity.getBoolean("is-enchanted"));
+					specificRarity.getBoolean("is-enchanted"), specificRarity.getInt("priority"));
 			this.rarities.put(rarity, rarityObj);
 		}
 
@@ -509,65 +507,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
-		// Basically just check if the event is already cancelled,
-		// don't do applyShard if it is
-		if (!disableEquipArmor(e)) {
-			applyShard(e);
-		}
-	}
-	
-	private void applyShard(InventoryClickEvent e) {
-		if (!e.isLeftClick()) {
-			return;
-		}
-		if (e.getCursor() == null) {
-			return;
-		}
-		if (e.getCurrentItem() == null) {
-			return;
-		}
-		
-		Player p = (Player) e.getWhoClicked();
-		ItemStack shard = e.getCursor();
-		ItemStack item = e.getCurrentItem();
-
-		if (item == null || item.getType().isAir() || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
-			return;
-		}
-		if (shard == null || shard.getType().isAir() || !shard.hasItemMeta() || !shard.getItemMeta().hasDisplayName()) {
-			return;
-		}
-		
-		NBTItem nbti = new NBTItem(item);
-		NBTItem nbts = new NBTItem(shard);
-		if (!Util.isWeapon(item) && !Util.isArmor(item)) {
-			return;
-		}
-		if (!AugmentManager.isAugment(shard)) {
-			return;
-		}
-		if (nbti.getInteger("version") <= 0) {
-			Util.sendMessage(p, "&cUnsupported item version, update with /prof convert!");
-			return;
-		}
-		if (nbti.getInteger("slotsCreated") <= 0) {
-			Util.sendMessage(p, "&cNo slots available on this item!");
-			return;
-		}
-		if (!nbts.getString("level").isBlank() && nbts.getInteger("level") == 0) {
-			nbts.setInteger("level", Integer.parseInt(nbts.getString("level")));
-			nbts.applyNBT(shard);
-		}
-		if (nbti.getInteger("level") < nbts.getInteger("level")) {
-			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
-			return;
-		}
-		else {
-			ItemStack clone = shard.clone();
-			clone.setAmount(1);
-			e.setCancelled(true);
-			p.getOpenInventory().close();
-		}
+		disableEquipArmor(e);
 	}
 	
 	private boolean disableEquipArmor(InventoryClickEvent e) {

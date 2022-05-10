@@ -4,9 +4,9 @@
 	<classpathentry kind="lib" path="src/SkillAPI.jar"/>
 	<classpathentry kind="lib" path="src/NeoGear.jar"/>
 	<classpathentry kind="lib" path="src/Vault.jar"/>
-	<classpathentry kind="lib" path="src/spigot-api-1.16.4-R0.1-20201118.232026-23-shaded.jar"/>
 	<classpathentry kind="lib" path="src/item-nbt-api-plugin-2.8.0.jar"/>
 	<classpathentry kind="lib" path="src/NeoProfessions.jar"/>
+	<classpathentry kind="lib" path="src/spigot-api-1.17.1-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
