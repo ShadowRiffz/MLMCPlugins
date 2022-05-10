@@ -43,6 +43,7 @@ import me.Neoblade298.NeoProfessions.Recipes.Recipe;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.RecipeResult;
 import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
+import me.Neoblade298.NeoProfessions.Recipes.ShardResult;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
@@ -156,6 +157,9 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 						RecipeResult result = null;
 						if (resultArgs[0].startsWith("gear")) {
 							result = new GearResult(resultArgs);
+						}
+						else if (resultArgs[0].startsWith("essence")) {
+							result = new ShardResult(resultArgs);
 						}
 						else if (resultArgs[0].startsWith("essence")) {
 							result = new EssenceResult(resultArgs);
