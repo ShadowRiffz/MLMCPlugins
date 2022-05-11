@@ -547,7 +547,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 							Player fighter = fighters.next();
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
-								fighters.remove();
 							}
 							fighters.remove();
 						}
