@@ -321,7 +321,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		}
 		
 		ChestConsumable cc = new ChestConsumable(this, display, key, stages, initSound);
-		cc.generateLore();
 		generatableConsumables.add(key);
 		return cc;
 	}

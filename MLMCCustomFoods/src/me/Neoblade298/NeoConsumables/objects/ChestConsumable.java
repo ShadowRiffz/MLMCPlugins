@@ -27,7 +27,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	private static Random gen = new Random();
 	private LinkedList<ChestStage> stages;
 	private Sound sound;
-	private ArrayList<String> lore;
+	private ArrayList<String> lore = null;
 	private String display;
 	private static HashMap<Integer, ChatColor> stageToColor = new HashMap<Integer, ChatColor>();
 	private static HashMap<Integer, Character> stageToLetter = new HashMap<Integer, Character>();
@@ -178,7 +178,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 		return;
 	}
 	
-	public void generateLore() {
+	private void generateLore() {
 		lore = new ArrayList<String>();
 		lore.add("§7§oUp to 1 item per letter tier");
 		lore.add("§7[§ePotential Rewards§7]");
@@ -200,6 +200,9 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	
 	@Override
 	public ItemStack getItem(int amount) {
+		if (lore == null) {
+			generateLore();
+		}
 		ItemStack item = new ItemStack(Material.CHEST);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(display);
