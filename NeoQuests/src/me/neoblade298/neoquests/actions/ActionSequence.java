@@ -10,7 +10,7 @@ import me.neoblade298.neoquests.NeoQuests;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
-	int count = 0;
+	int nextStage = -1;
 	ActionSet curr = new ActionSet(0); // Delay 0 for first set always
 	
 	public ActionSequence(List<String> list) {
@@ -30,6 +30,10 @@ public class ActionSequence {
 	}
 	
 	public void run(Player p) {
+		run(p, 0);
+	}
+	
+	public void run(Player p, int delay) {
 		for (ActionSet set : sets) {
 			BukkitRunnable task = new BukkitRunnable() {
 				public void run() {
@@ -40,8 +44,16 @@ public class ActionSequence {
 				task.runTask(NeoQuests.inst());
 			}
 			else {
-				task.runTaskLater(NeoQuests.inst(), set.getDelay() * 20);
+				task.runTaskLater(NeoQuests.inst(), (set.getDelay() * 20) + (delay * 20));
 			}
 		}
+	}
+	
+	public int getRuntime() {
+		return sets.get(sets.size() - 1).getDelay();
+	}
+	
+	public int changeStage() {
+		return nextStage;
 	}
 }

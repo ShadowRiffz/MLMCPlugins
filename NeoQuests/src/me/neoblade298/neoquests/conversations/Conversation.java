@@ -7,5 +7,4 @@ import me.neoblade298.neoquests.conditions.Condition;
 public class Conversation {
 	private String key;
 	private ArrayList<Condition> conditions;
-	private int priority;
 }
