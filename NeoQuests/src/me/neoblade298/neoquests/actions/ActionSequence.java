@@ -13,38 +13,42 @@ public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
 	int nextStage = -1;
 	ActionSet curr = new ActionSet(0); // Delay 0 for first set always
+	int runtime = 0;
 	
 	public ActionSequence(List<String> list) {
-		int delay = 0;
+		int delay = 0, prevDelay = 0;
 		for (String line : list) {
 			LineConfig cfg = new LineConfig(line);
 			
 			Action action = Action.getNew(cfg);
-			if (action instanceof Action) { // DelayAction
-				delay += 0;
+			if (action instanceof DelayableAction) {
+				delay += ((DelayableAction) action).getDelay();
 			}
-			else {
-				addAction(action, delay);
+			
+			if (!(action instanceof EmptyAction)) { // DelayAction is empty
+				addAction(action, delay, prevDelay);
 			}
 		}
-	}
-
-	private void addAction(Action action) {
-		if (action instanceof DialogueAction) {
-			addAction(action, ((DialogueAction) action).getDelay());
+		
+		if (!curr.isEmpty()) {
+			sets.add(curr);
 		}
-		curr.addAction(action);
+		runtime = delay;
 	}
 	
-	private void addAction(Action action, int seconds) {
+	private void addAction(Action action, int delay, int prevDelay) {
+		if (delay != prevDelay) {
+			if (!curr.isEmpty()) {
+				sets.add(curr);
+			}
+			curr = new ActionSet(delay);
+		}
 		curr.addAction(action);
-		sets.add(curr);
-		curr = new ActionSet(seconds);
 	}
 	
 	public int run(Player p) {
 		run(p, 0);
-		return getRuntime();
+		return runtime;
 	}
 	
 	public int run(Player p, int delay) {
@@ -54,18 +58,13 @@ public class ActionSequence {
 					set.run(p);
 				}
 			};
-			if (set.getDelay() == 0) {
-				task.runTask(NeoQuests.inst());
-			}
-			else {
-				task.runTaskLater(NeoQuests.inst(), (set.getDelay() * 20) + (delay * 20));
-			}
+			task.runTaskLater(NeoQuests.inst(), (set.getDelay() + delay) * 20);
 		}
-		return getRuntime();
+		return runtime;
 	}
 	
 	private int getRuntime() {
-		return sets.get(sets.size() - 1).getDelay();
+		return runtime;
 	}
 	
 	public int changeStage() {

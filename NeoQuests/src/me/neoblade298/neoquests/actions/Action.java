@@ -9,16 +9,13 @@ import me.neoblade298.neoquests.util.LineConfig;
 public interface Action {
 	static HashMap<String, Action> actions = new HashMap<String, Action>();
 	static HashMap<String, DialogueAction> dialogueActions = new HashMap<String, DialogueAction>();
-	public void run(Player p);
+	public default void run(Player p) {};
 	public Action newInstance(LineConfig cfg);
-	
-	public static void register(String key, Action action, boolean isDialogue) {
-		actions.put(key, action);
-		if (isDialogue) dialogueActions.put(key, (DialogueAction) action);
-	}
+	public String getKey();
 	
 	public static void register(String key, Action action) {
-		register(key, action, false);
+		actions.put(key, action);
+		if (action instanceof DialogueAction) dialogueActions.put(key, (DialogueAction) action);
 	}
 	
 	public static void clear() {

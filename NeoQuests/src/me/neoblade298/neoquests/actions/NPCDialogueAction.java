@@ -4,12 +4,15 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.util.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
+import net.md_5.bungee.api.ChatColor;
 
 public class NPCDialogueAction implements Action, DialogueAction {
+	private static final String key;
 	private String dialogue;
 	
 	static { 
-		Action.register("npc", new NPCDialogueAction(), true);
+		key = "npc";
+		Action.register(key, new NPCDialogueAction());
 	}
 	
 	public NPCDialogueAction() {}
@@ -30,14 +33,18 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	
 	@Override
 	public String parseDialogue(LineConfig cfg) {
-		String name = CitizensAPI.getNPCRegistry().getById(cfg.getInt("id")).getFullName();
+		String name = CitizensAPI.getNPCRegistry().getById(cfg.getInt("id", -1)).getFullName();
 		String text = cfg.getLine().replaceAll("&", "§");
 		return name + "§7: " + text;
 	}
 	
 	@Override
 	public int getDelay() {
-		return this.dialogue.length() / 20;
+		return ChatColor.stripColor(this.dialogue).length() / 20;
 	}
 	
+	@Override
+	public String getKey() {
+		return key;
+	}
 }

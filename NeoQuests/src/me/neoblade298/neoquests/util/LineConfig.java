@@ -3,9 +3,10 @@ package me.neoblade298.neoquests.util;
 import java.util.HashMap;
 
 public class LineConfig {
-	private String key, line;
+	private String key, line, fullLine;
 	private HashMap<String, String> args;
 	public LineConfig(String line) {
+		fullLine = line;
 		int keyIndex = line.indexOf(' ');
 		int lineIndex = line.indexOf('>');
 		String argLine;
@@ -21,7 +22,9 @@ public class LineConfig {
 		String[] argEntries = argLine.split(" ");
 		for (String entry : argEntries) {
 			String[] arg = entry.split(":");
-			args.put(arg[0], arg[1]);
+			if (arg.length == 2) {
+				args.put(arg[0], arg[1]);
+			}
 		}
 	}
 	
@@ -33,11 +36,18 @@ public class LineConfig {
 		return line;
 	}
 	
-	public String getString(String key) {
-		return args.get(key);
+	public String getFullLine() {
+		return fullLine;
 	}
 	
-	public int getInt(String key) {
-		return Integer.parseInt(args.get(key));
+	public String getString(String key, String def) {
+		return args.getOrDefault(key, def);
+	}
+	
+	public int getInt(String key, int def) {
+		if (args.containsKey(key)) {
+			return Integer.parseInt(args.get(key));
+		}
+		return def;
 	}
 }
