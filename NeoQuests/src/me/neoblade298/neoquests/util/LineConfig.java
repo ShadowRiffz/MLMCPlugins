@@ -44,6 +44,13 @@ public class LineConfig {
 		return args.getOrDefault(key, def);
 	}
 	
+	public boolean getBool(String key, boolean def) {
+		if (args.containsKey(key)) {
+			return args.get(key).equalsIgnoreCase("true");
+		}
+		return def;
+	}
+	
 	public int getInt(String key, int def) {
 		if (args.containsKey(key)) {
 			return Integer.parseInt(args.get(key));

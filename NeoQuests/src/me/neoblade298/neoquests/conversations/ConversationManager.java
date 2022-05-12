@@ -42,6 +42,13 @@ public class ConversationManager implements Reloadable, Listener {
 		}
 	}
 	
+	public static void endConversation(Player p, boolean runEndActions) {
+		if (activeConvs.containsKey(p)) {
+			activeConvs.get(p).endConversation(runEndActions);
+			activeConvs.remove(p);
+		}
+	}
+	
 	public static void startConversation(Player p, String key, boolean ignoreConditions) {
 		Conversation conv = convs.get(key);
 		if (conv == null) return;

@@ -3,6 +3,7 @@ package me.neoblade298.neoquests.conversations;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.events.ConversationEvent;
 
 public class ConversationInstance {
@@ -14,11 +15,19 @@ public class ConversationInstance {
 		this.p = p;
 		this.conv = conv;
 		
-		this.conv.getStage(0).run(p);
+		ActionSequence start = conv.getStartActions();
+		start.run(p);
+		conv.getStage(0).run(p, start.getRuntime());
 	}
 	
 	public void show() {
 		this.conv.getStage(stage).show(p);
+	}
+	
+	public void endConversation(boolean runActions) {
+		if (runActions) {
+			conv.getEndActions().run(p);
+		}
 	}
 	
 	public boolean chooseResponse(int num) {

@@ -27,6 +27,8 @@ public class ConversationStage {
 		else {
 			this.text = text;
 		}
+		
+		actions = new ActionSequence(cfg.getStringList("actions"));
 	}
 	
 	public int getNumber() {
@@ -66,5 +68,6 @@ public class ConversationStage {
 				num++;
 			}
 		}
+		// Add an exit conversation response
 	}
 }

@@ -32,7 +32,7 @@ public class ClassLevelCondition implements Condition {
 	@Override
 	public boolean passes(Player p) {
 		PlayerData data = SkillAPI.getPlayerData(p);
-		if (data != null) return false;
+		if (data == null) return false;
 		
 		PlayerClass cls = data.getClass("class");
 		if (cls == null) return false;
@@ -43,14 +43,20 @@ public class ClassLevelCondition implements Condition {
 
 	@Override
 	public String getExplanation(Player p) {
-		// TODO Auto-generated method stub
-		return null;
+		if (min != -1 && max == 999) {
+			return "You must be at least level §e" + min;
+		}
+		else if (max != 999 && min == -1) {
+			return "You must be at most level §e" + max;
+		}
+		else {
+			return "You must be between level §e" + min + " §fand §e" + max;
+		}
 	}
 
 	@Override
 	public Condition newInstance(LineConfig cfg) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ClassLevelCondition(cfg);
 	}
 
 }

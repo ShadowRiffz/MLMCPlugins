@@ -1,5 +1,7 @@
 package me.neoblade298.neoquests;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -8,6 +10,7 @@ import me.neoblade298.neoquests.listeners.PlayerListener;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static NeoQuests inst;
+	public static Random rand = new Random();
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");

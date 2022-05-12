@@ -6,10 +6,11 @@ import org.bukkit.entity.Player;
 
 public class ActionSet {
 	private ArrayList<Action> actions = new ArrayList<Action>();
-	private int delay;
+	private int postDelay = 0;
+	private boolean needsInstance = false;
 	
-	public ActionSet(int delay) {
-		this.delay = delay;
+	public ArrayList<Action> getActions() {
+		return actions;
 	}
 	
 	public void run(Player p) {
@@ -22,11 +23,19 @@ public class ActionSet {
 		actions.add(action);
 	}
 	
-	public int getDelay() {
-		return delay;
-	}
-	
 	public boolean isEmpty() {
 		return actions.isEmpty();
+	}
+	
+	public boolean needsInstance() {
+		return needsInstance;
+	}
+	
+	public void setPostDelay(int postDelay) {
+		this.postDelay = postDelay;
+	}
+	
+	public int getPostDelay() {
+		return postDelay;
 	}
 }

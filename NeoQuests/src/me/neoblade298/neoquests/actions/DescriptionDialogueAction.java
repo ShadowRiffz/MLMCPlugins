@@ -3,7 +3,6 @@ package me.neoblade298.neoquests.actions;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.util.LineConfig;
-import net.citizensnpcs.api.CitizensAPI;
 import net.md_5.bungee.api.ChatColor;
 
 public class DescriptionDialogueAction implements Action, DialogueAction {
@@ -17,8 +16,8 @@ public class DescriptionDialogueAction implements Action, DialogueAction {
 	
 	public DescriptionDialogueAction() {}
 	
-	public DescriptionDialogueAction(String dialogue) {
-		this.dialogue = dialogue;
+	public DescriptionDialogueAction(LineConfig cfg) {
+		this.dialogue = parseDialogue(cfg);
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class DescriptionDialogueAction implements Action, DialogueAction {
 
 	@Override
 	public Action newInstance(LineConfig cfg) {
-		return new DescriptionDialogueAction(parseDialogue(cfg));
+		return new DescriptionDialogueAction(cfg);
 	}
 	
 	@Override

@@ -17,8 +17,8 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	
 	public NPCDialogueAction() {}
 	
-	public NPCDialogueAction(String dialogue) {
-		this.dialogue = dialogue;
+	public NPCDialogueAction(LineConfig cfg) {
+		this.dialogue = parseDialogue(cfg);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class NPCDialogueAction implements Action, DialogueAction {
 
 	@Override
 	public Action newInstance(LineConfig cfg) {
-		return new NPCDialogueAction(parseDialogue(cfg));
+		return new NPCDialogueAction(cfg);
 	}
 	
 	@Override

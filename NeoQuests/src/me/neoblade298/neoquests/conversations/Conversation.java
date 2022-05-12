@@ -24,11 +24,23 @@ public class Conversation {
 		}
 	}
 	
+	public String getKey() {
+		return key;
+	}
+	
 	public ConversationStage getStage(int num) {
 		return stages.get(num);
 	}
 	
 	public ArrayList<Condition> getConditions() {
 		return conditions;
+	}
+	
+	public ActionSequence getStartActions() {
+		return startActions;
+	}
+	
+	public ActionSequence getEndActions() {
+		return endActions;
 	}
 }
