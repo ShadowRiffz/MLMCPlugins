@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.util.LineConfig;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
@@ -14,26 +15,39 @@ public class ActionSequence {
 	ActionSet curr = new ActionSet(0); // Delay 0 for first set always
 	
 	public ActionSequence(List<String> list) {
-		// Parse list of actions
+		int delay = 0;
+		for (String line : list) {
+			LineConfig cfg = new LineConfig(line);
+			
+			Action action = Action.getNew(cfg);
+			if (action instanceof Action) { // DelayAction
+				delay += 0;
+			}
+			else {
+				addAction(action, delay);
+			}
+		}
 	}
 
 	private void addAction(Action action) {
+		if (action instanceof DialogueAction) {
+			addAction(action, ((DialogueAction) action).getDelay());
+		}
 		curr.addAction(action);
 	}
 	
 	private void addAction(Action action, int seconds) {
-		if (!curr.isEmpty()) {
-			sets.add(curr);
-		}
-		curr = new ActionSet(seconds);
 		curr.addAction(action);
+		sets.add(curr);
+		curr = new ActionSet(seconds);
 	}
 	
-	public void run(Player p) {
+	public int run(Player p) {
 		run(p, 0);
+		return getRuntime();
 	}
 	
-	public void run(Player p, int delay) {
+	public int run(Player p, int delay) {
 		for (ActionSet set : sets) {
 			BukkitRunnable task = new BukkitRunnable() {
 				public void run() {
@@ -47,13 +61,18 @@ public class ActionSequence {
 				task.runTaskLater(NeoQuests.inst(), (set.getDelay() * 20) + (delay * 20));
 			}
 		}
+		return getRuntime();
 	}
 	
-	public int getRuntime() {
+	private int getRuntime() {
 		return sets.get(sets.size() - 1).getDelay();
 	}
 	
 	public int changeStage() {
 		return nextStage;
+	}
+	
+	public boolean isEmpty() {
+		return sets.isEmpty();
 	}
 }

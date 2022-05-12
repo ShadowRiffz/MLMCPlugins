@@ -3,13 +3,19 @@ package me.neoblade298.neoquests;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.neoblade298.neoquests.conversations.ConversationManager;
+import me.neoblade298.neoquests.listeners.PlayerListener;
+
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static NeoQuests inst;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");
-		getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 	    this.getCommand("cmd").setExecutor(new Commands(this));
+	    
+	    // Managers
+	    new ConversationManager();
 	}
 	
 	public void onDisable() {
