@@ -1,10 +1,11 @@
 package me.neoblade298.neoquests.conversations;
 
 import java.util.ArrayList;
-
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.actions.ActionSequence;
+import me.neoblade298.neoquests.actions.EndConversationAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionResult;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -16,6 +17,19 @@ public class ConversationResponse {
 	private String text;
 	private ArrayList<Condition> conditions;
 	private ActionSequence startActions;
+	int next = -1;
+	
+	public ConversationResponse(ConfigurationSection cfg) {
+		this.text = cfg.getString("text").replaceAll("&", "§");
+		this.startActions = new ActionSequence(cfg.getStringList("actions"));
+		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
+		this.next = cfg.getInt("next");
+	}
+	
+	public ConversationResponse() {
+		this.text = "§7[End Conversation]";
+		this.startActions = new ActionSequence(new EndConversationAction());
+	}
 	
 	// True if number should be incremented
 	public boolean showResponse(Player p, int num) {
@@ -60,7 +74,19 @@ public class ConversationResponse {
 		}
 	}
 	
+	public int getNext() {
+		return next;
+	}
+	
 	public ActionSequence getActions() {
 		return startActions;
+	}
+	
+	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) {
+		ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
+		for (String key : cfg.getKeys(false)) {
+			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));
+		}
+		return responses;
 	}
 }

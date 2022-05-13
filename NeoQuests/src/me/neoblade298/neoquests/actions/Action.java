@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public interface Action {
 	static HashMap<String, Action> actions = new HashMap<String, Action>();

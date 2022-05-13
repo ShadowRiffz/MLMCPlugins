@@ -13,11 +13,25 @@ import org.bukkit.event.Listener;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.conditions.Condition;
+import me.neoblade298.neoquests.io.FileLoader;
+import me.neoblade298.neoquests.io.FileReader;
 
 public class ConversationManager implements Reloadable, Listener {
 	private static HashMap<Integer, ArrayList<Conversation>> npcConvs = new HashMap<Integer, ArrayList<Conversation>>();
 	private static HashMap<String, Conversation> convs = new HashMap<String, Conversation>();
 	private static HashMap<Player, ConversationInstance> activeConvs = new HashMap<Player, ConversationInstance>();
+	private static FileLoader<String, Conversation> convLoader;
+	private static FileLoader<Integer, ArrayList<Conversation>> npcLoader;
+	
+	static {
+		convLoader = (cfg, map) -> {
+			for (String key : cfg.getKeys(false)) {
+				map.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
+			}
+		};
+		
+		
+	}
 	
 	public ConversationManager() {
 		// Load convs folder
@@ -25,10 +39,28 @@ public class ConversationManager implements Reloadable, Listener {
 	}
 	
 	public void reload() {
-		loadConversations(new File(NeoQuests.inst().getDataFolder(), "conversations"));
+		FileReader.load("conversations", convs, convLoader);
+		loadNpcMappings(new File(NeoQuests.inst().getDataFolder(), "npcs"));
 	}
 	
-	private void loadConversations(File dir) {
+	private void loadNpcMappings(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				loadConversations(file);
+			}
+			else {
+				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				for (String key : cfg.getKeys(false)) {
+					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
+				}
+			}
+		}
+		FileLoader fl = (a, b) -> System.out.println("Test");
+	}
+	
+	private void loadConversations() {
+		FileLoader loader = (map, )
+		FileReader.load("conversations", convs, null);
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
 				loadConversations(file);

@@ -6,13 +6,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
-	int nextStage = -1;
 	ActionSet curr = new ActionSet();
 	int runtime;
+	
+	// Only used for endconversation response
+	public ActionSequence(Action action) {
+		curr.addAction(action);
+		sets.add(curr);
+		runtime = 0;
+	}
 	
 	public ActionSequence(List<String> list) {
 		int delay = 0;
@@ -64,10 +70,6 @@ public class ActionSequence {
 			tick += set.getPostDelay();
 		}
 		return tick;
-	}
-	
-	public int changeStage() {
-		return nextStage;
 	}
 	
 	public boolean isEmpty() {

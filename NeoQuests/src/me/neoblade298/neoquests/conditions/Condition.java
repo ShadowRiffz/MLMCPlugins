@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public interface Condition {
 	static HashMap<String, Condition> conditions = new HashMap<String, Condition>();
@@ -15,9 +15,7 @@ public interface Condition {
 	public boolean passes(Player p);
 	public String getExplanation(Player p);
 	public Condition newInstance(LineConfig cfg);
-	public default ConditionResult getResult() {
-		return ConditionResult.INVISIBLE;
-	}
+	public ConditionResult getResult();
 	
 	public static void register(String key, Condition cond) {
 		conditions.put(key, cond);

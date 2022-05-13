@@ -32,6 +32,10 @@ public class Conversation {
 		return stages.get(num);
 	}
 	
+	public int getTotalStages() {
+		return stages.size();
+	}
+	
 	public ArrayList<Condition> getConditions() {
 		return conditions;
 	}

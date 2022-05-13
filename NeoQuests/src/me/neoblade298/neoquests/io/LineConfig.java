@@ -1,4 +1,4 @@
-package me.neoblade298.neoquests.util;
+package me.neoblade298.neoquests.io;
 
 import java.util.HashMap;
 

@@ -38,10 +38,10 @@ public class ConversationInstance {
 				Bukkit.getPluginManager().callEvent(new ConversationEvent(conv, conv.getStage(stage), resp));
 				int runtime = resp.getActions().run(p);
 				
-				if (resp.getActions().changeStage() != -1) {
-					stage = resp.getActions().changeStage();
+				if (resp.getNext() != -1) {
+					stage = resp.getNext();
 				}
-				else {
+				else if (stage + 1 < conv.getTotalStages()) {
 					stage++;
 				}
 				conv.getStage(stage).run(p, runtime);

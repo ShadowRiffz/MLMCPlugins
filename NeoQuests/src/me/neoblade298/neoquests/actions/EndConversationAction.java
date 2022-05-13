@@ -3,7 +3,7 @@ package me.neoblade298.neoquests.actions;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.conversations.ConversationManager;
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public class EndConversationAction implements Action {
 	private static final String key;

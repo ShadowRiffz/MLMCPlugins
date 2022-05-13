@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.ActionSequence;
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public class ConversationStage {
 	private int num;
@@ -29,6 +29,11 @@ public class ConversationStage {
 		}
 		
 		actions = new ActionSequence(cfg.getStringList("actions"));
+
+		for (String key : cfg.getKeys(false)) {
+			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));
+		}
+		responses.add(new ConversationResponse());
 	}
 	
 	public int getNumber() {
@@ -68,6 +73,5 @@ public class ConversationStage {
 				num++;
 			}
 		}
-		// Add an exit conversation response
 	}
 }

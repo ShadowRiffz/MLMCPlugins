@@ -6,10 +6,11 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 
 public class ClassLevelCondition implements Condition {
 	private static final String key;
+	private ConditionResult result;
 	private int min, max;
 	
 	static {
@@ -22,6 +23,7 @@ public class ClassLevelCondition implements Condition {
 	public ClassLevelCondition(LineConfig cfg) {
 		min = cfg.getInt("min", -1);
 		max = cfg.getInt("max", 999);
+		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
 	}
 
 	@Override
@@ -59,4 +61,8 @@ public class ClassLevelCondition implements Condition {
 		return new ClassLevelCondition(cfg);
 	}
 
+	@Override
+	public ConditionResult getResult() {
+		return result;
+	}
 }

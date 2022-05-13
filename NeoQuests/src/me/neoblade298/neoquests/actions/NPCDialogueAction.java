@@ -2,7 +2,7 @@ package me.neoblade298.neoquests.actions;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.util.LineConfig;
+import me.neoblade298.neoquests.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
 import net.md_5.bungee.api.ChatColor;
 
