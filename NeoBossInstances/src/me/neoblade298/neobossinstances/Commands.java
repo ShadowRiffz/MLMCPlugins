@@ -50,11 +50,11 @@ public class Commands implements CommandExecutor {
 
 					if (main.isDebug) {
 						Bukkit.getLogger().log(Level.INFO,
-								"Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','"
+								"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','"
 								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					}
 					stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
-					stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
+					stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
 							+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					con.close();
 				} catch (SQLException e) {
@@ -159,11 +159,11 @@ public class Commands implements CommandExecutor {
 
 						if (main.isDebug) {
 							Bukkit.getLogger().log(Level.INFO,
-									"Bosses Debug: INSERT INTO neobossinstances_fights VALUES ('"
+									"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('"
 									+ uuid + "','" + boss + "','" + instance + "'," + level + ");");
 						}
 						// Add boss level here
-						stmt.executeUpdate("INSERT INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
+						stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
 								+ "','" + instance + "'," + level + ");");
 						con.close();
 					} catch (Exception e) {
