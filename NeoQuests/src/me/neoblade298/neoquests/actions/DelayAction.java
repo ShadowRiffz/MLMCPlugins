@@ -1,14 +1,15 @@
 package me.neoblade298.neoquests.actions;
 
+import java.util.HashMap;
+
 import me.neoblade298.neoquests.io.LineConfig;
 
 public class DelayAction implements DelayableAction, EmptyAction {
-	private static final String key;
+	private static final String key = "delay";
 	private int delay = 0;
 	
-	static { 
-		key = "delay";
-		Action.register(key, new DelayAction());
+	public static void register(HashMap<String, Action> actions) {
+		actions.put(key, new DelayAction());
 	}
 	
 	public DelayAction() {}

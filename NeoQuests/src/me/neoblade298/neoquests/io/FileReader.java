@@ -1,35 +1,43 @@
 package me.neoblade298.neoquests.io;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.conversations.Conversation;
 
 public class FileReader {
-	public static <A, B> void load(String name, HashMap<A, B> map, FileLoader<A, B> loader) {
+	public static  void load(String name, FileLoader loader, CommandSender s) {
 		for (File file : new File(NeoQuests.inst().getDataFolder(), name).listFiles()) {
 			if (file.isDirectory()) {
-				loadDirectory(file, map, loader);
+				loadDirectory(file, loader, s);
 			}
 			else {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				loader.load(cfg, map);
+				try {
+					YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+					loader.load(s, cfg);
+				}
+				catch (Exception e) {
+					NeoQuests.showWarning(s, "Failed to parse yaml for file " + file.getParent() + "/" + file.getName(), e);
+				}
 			}
 		}
 	}
 	
-	private static <A, B> void loadDirectory(File dir, HashMap<A, B> map, FileLoader<A, B> loader) {
+	private static void loadDirectory(File dir, FileLoader loader, CommandSender s) {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
-				loadDirectory(file, map, loader);
+				loadDirectory(file, loader, s);
 			}
 			else {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				loader.load(cfg, map);
+				try {
+					YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+					loader.load(s, cfg);
+				}
+				catch (Exception e) {
+					NeoQuests.showWarning(s, "Failed to parse yaml for file " + file.getParent() + "/" + file.getName(), e);
+				}
 			}
 		}
 	}

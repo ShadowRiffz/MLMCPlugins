@@ -1,5 +1,7 @@
 package me.neoblade298.neoquests.actions;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.io.LineConfig;
@@ -7,12 +9,12 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.md_5.bungee.api.ChatColor;
 
 public class NPCDialogueAction implements Action, DialogueAction {
-	private static final String key;
+	private static final String key = "npc";
 	private String dialogue;
 	
-	static { 
-		key = "npc";
-		Action.register(key, new NPCDialogueAction());
+	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
+		actions.put(key, new NPCDialogueAction());
+		dialogueActions.put(key, new NPCDialogueAction());
 	}
 	
 	public NPCDialogueAction() {}
@@ -34,7 +36,7 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	@Override
 	public String parseDialogue(LineConfig cfg) {
 		String name = CitizensAPI.getNPCRegistry().getById(cfg.getInt("id", -1)).getFullName();
-		String text = cfg.getLine().replaceAll("&", "§");
+		String text = cfg.getLine();
 		return name + "§7: " + text;
 	}
 	

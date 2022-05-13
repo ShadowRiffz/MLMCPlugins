@@ -7,18 +7,18 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neoquests.io.LineConfig;
 import net.md_5.bungee.api.ChatColor;
 
-public class PlayerDialogueAction implements Action, DialogueAction {
-	private static final String key = "player";
+public class MessageDialogueAction implements Action, DialogueAction {
+	private static final String key = "message";
 	private String dialogue;
 
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
-		actions.put(key, new PlayerDialogueAction());
-		dialogueActions.put(key, new NPCDialogueAction());
+		actions.put(key, new MessageDialogueAction());
+		dialogueActions.put(key, new MessageDialogueAction());
 	}
 	
-	public PlayerDialogueAction() {}
+	public MessageDialogueAction() {}
 	
-	public PlayerDialogueAction(LineConfig cfg) {
+	public MessageDialogueAction(LineConfig cfg) {
 		this.dialogue = parseDialogue(cfg);
 	}
 
@@ -29,12 +29,12 @@ public class PlayerDialogueAction implements Action, DialogueAction {
 
 	@Override
 	public Action newInstance(LineConfig cfg) {
-		return new PlayerDialogueAction(cfg);
+		return new MessageDialogueAction(cfg);
 	}
 	
 	@Override
 	public String parseDialogue(LineConfig cfg) {
-		return "§7§o" + cfg.getLine();
+		return cfg.getLine();
 	}
 	
 	@Override

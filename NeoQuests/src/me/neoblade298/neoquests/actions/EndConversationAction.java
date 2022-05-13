@@ -1,17 +1,18 @@
 package me.neoblade298.neoquests.actions;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.io.LineConfig;
 
 public class EndConversationAction implements Action {
-	private static final String key;
+	private static final String key = "end";
 	private boolean runEndActions;
 	
-	static {
-		key = "end-conversation";
-		Action.register(key, new EndConversationAction());
+	public static void register(HashMap<String, Action> actions) {
+		actions.put(key, new EndConversationAction());
 	}
 	
 	public EndConversationAction() {}

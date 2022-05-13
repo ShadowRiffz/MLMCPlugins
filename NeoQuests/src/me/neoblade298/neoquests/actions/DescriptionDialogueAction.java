@@ -1,17 +1,19 @@
 package me.neoblade298.neoquests.actions;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.io.LineConfig;
 import net.md_5.bungee.api.ChatColor;
 
 public class DescriptionDialogueAction implements Action, DialogueAction {
-	private static final String key;
+	private static final String key = "player";
 	private String dialogue;
 	
-	static { 
-		key = "player";
-		Action.register(key, new DescriptionDialogueAction());
+	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
+		actions.put(key, new DescriptionDialogueAction());
+		dialogueActions.put(key, new DescriptionDialogueAction());
 	}
 	
 	public DescriptionDialogueAction() {}

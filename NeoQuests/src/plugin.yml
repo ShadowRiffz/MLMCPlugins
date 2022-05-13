@@ -7,6 +7,5 @@ version: 1.0
 api-version: 1.18
 commands:
    quests:
-      description: This command allows you to disenchant item in hand
-      usage: /disenchant
-      permission: disenchant.true
+      description: Quest command
+      usage: /quests

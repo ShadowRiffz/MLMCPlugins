@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -20,58 +20,45 @@ public class ConversationManager implements Reloadable, Listener {
 	private static HashMap<Integer, ArrayList<Conversation>> npcConvs = new HashMap<Integer, ArrayList<Conversation>>();
 	private static HashMap<String, Conversation> convs = new HashMap<String, Conversation>();
 	private static HashMap<Player, ConversationInstance> activeConvs = new HashMap<Player, ConversationInstance>();
-	private static FileLoader<String, Conversation> convLoader;
-	private static FileLoader<Integer, ArrayList<Conversation>> npcLoader;
+	private static FileLoader convLoader, npcLoader;
 	
 	static {
-		convLoader = (cfg, map) -> {
+		convLoader = (s, cfg) -> {
 			for (String key : cfg.getKeys(false)) {
-				map.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
+				try {
+					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
+				}
+				catch (Exception e) {
+					NeoQuests.showWarning(s, "Failed to load conversation " + key, e);
+				}
 			}
 		};
 		
-		
+		npcLoader = (s, cfg) -> {
+			for (String key : cfg.getKeys(false)) {
+				try {
+					ArrayList<Conversation> clist = new ArrayList<Conversation>();
+					int npcid = Integer.parseInt(key);
+					for (String line : cfg.getStringList(key)) {
+						clist.add(convs.get(line));
+					}
+					npcConvs.put(npcid, clist);
+				}
+				catch (Exception e) {
+					NeoQuests.showWarning(s, "Failed to load conversation " + key, e);
+				}
+			}
+		};
 	}
 	
 	public ConversationManager() {
 		// Load convs folder
-		reload();
+		reload(null);
 	}
 	
-	public void reload() {
-		FileReader.load("conversations", convs, convLoader);
-		loadNpcMappings(new File(NeoQuests.inst().getDataFolder(), "npcs"));
-	}
-	
-	private void loadNpcMappings(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadConversations(file);
-			}
-			else {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				for (String key : cfg.getKeys(false)) {
-					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
-				}
-			}
-		}
-		FileLoader fl = (a, b) -> System.out.println("Test");
-	}
-	
-	private void loadConversations() {
-		FileLoader loader = (map, )
-		FileReader.load("conversations", convs, null);
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadConversations(file);
-			}
-			else {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				for (String key : cfg.getKeys(false)) {
-					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
-				}
-			}
-		}
+	public void reload(CommandSender s) {
+		FileReader.load("conversations", convLoader, s);
+		FileReader.load("npcs", npcLoader, s);
 	}
 	
 	public static void endConversation(Player p, boolean runEndActions) {

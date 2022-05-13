@@ -9,15 +9,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.ActionSequence;
+import me.neoblade298.neoquests.io.ConversationLoadException;
 import me.neoblade298.neoquests.io.LineConfig;
 
 public class ConversationStage {
 	private int num;
 	private String text;
 	private ActionSequence actions;
-	private ArrayList<ConversationResponse> responses;
+	private ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 	
-	public ConversationStage(ConfigurationSection cfg, int num) {
+	public ConversationStage(ConfigurationSection cfg, int num) throws ConversationLoadException {
 		this.num = num;
 		String text = cfg.getString("text");
 		LineConfig tcfg = new LineConfig(text);
@@ -30,8 +31,9 @@ public class ConversationStage {
 		
 		actions = new ActionSequence(cfg.getStringList("actions"));
 
-		for (String key : cfg.getKeys(false)) {
-			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));
+		ConfigurationSection rcfg = cfg.getConfigurationSection("responses");
+		for (String key : rcfg.getKeys(false)) {
+			responses.add(new ConversationResponse(rcfg.getConfigurationSection(key)));
 		}
 		responses.add(new ConversationResponse());
 	}

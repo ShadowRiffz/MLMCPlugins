@@ -16,8 +16,12 @@ public class ConversationInstance {
 		this.conv = conv;
 		
 		ActionSequence start = conv.getStartActions();
-		start.run(p);
-		conv.getStage(0).run(p, start.getRuntime());
+		int runtime = 0;
+		if (start != null) {
+			start.run(p);
+			runtime = start.getRuntime();
+		}
+		conv.getStage(0).run(p, runtime);
 	}
 	
 	public void show() {

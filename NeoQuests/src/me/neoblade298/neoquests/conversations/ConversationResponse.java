@@ -8,6 +8,7 @@ import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.actions.EndConversationAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionResult;
+import me.neoblade298.neoquests.io.ConversationLoadException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,11 +16,11 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class ConversationResponse {
 	private String text;
-	private ArrayList<Condition> conditions;
+	private ArrayList<Condition> conditions = new ArrayList<Condition>();
 	private ActionSequence startActions;
 	int next = -1;
 	
-	public ConversationResponse(ConfigurationSection cfg) {
+	public ConversationResponse(ConfigurationSection cfg) throws ConversationLoadException {
 		this.text = cfg.getString("text").replaceAll("&", "§");
 		this.startActions = new ActionSequence(cfg.getStringList("actions"));
 		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
@@ -82,7 +83,7 @@ public class ConversationResponse {
 		return startActions;
 	}
 	
-	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) {
+	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws ConversationLoadException {
 		ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 		for (String key : cfg.getKeys(false)) {
 			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));

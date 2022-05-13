@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.io.ConversationLoadException;
 import me.neoblade298.neoquests.io.LineConfig;
 
 public class ActionSequence {
@@ -20,11 +21,11 @@ public class ActionSequence {
 		runtime = 0;
 	}
 	
-	public ActionSequence(List<String> list) {
+	public ActionSequence(List<String> list) throws ConversationLoadException {
 		int delay = 0;
 		for (String line : list) {
 			LineConfig cfg = new LineConfig(line);
-
+			
 			Action action = Action.getNew(cfg);
 			
 			if (!(action instanceof EmptyAction)) { // DelayAction is empty

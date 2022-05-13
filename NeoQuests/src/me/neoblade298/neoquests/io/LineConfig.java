@@ -2,9 +2,11 @@ package me.neoblade298.neoquests.io;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+
 public class LineConfig {
 	private String key, line, fullLine;
-	private HashMap<String, String> args;
+	private HashMap<String, String> args = new HashMap<String, String>();
 	public LineConfig(String line) {
 		fullLine = line;
 		int keyIndex = line.indexOf(' ');
@@ -12,7 +14,7 @@ public class LineConfig {
 		String argLine;
 		key = line.substring(0, keyIndex).toLowerCase();
 		if (lineIndex != -1) {
-			this.line = line.substring(lineIndex).trim();
+			this.line = line.substring(lineIndex).trim().replaceAll("&", "§");
 			argLine = line.substring(keyIndex, lineIndex).trim().toLowerCase();
 		}
 		else {
