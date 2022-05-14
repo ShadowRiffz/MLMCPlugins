@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.io.ConversationLoadException;
 import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neoquests.io.QuestsConfigException;
 
 public interface Action {
 	static HashMap<String, Action> actions = new HashMap<String, Action>();
@@ -19,11 +19,16 @@ public interface Action {
 		dialogueActions.clear();
 	}
 	
-	public static Action getNew(LineConfig cfg) throws ConversationLoadException {
+	public static Action getNew(LineConfig cfg) throws QuestsConfigException {
 		if (!actions.containsKey(cfg.getKey())) {
-			throw new ConversationLoadException("Invalid action: " + cfg.getKey());
+			throw new QuestsConfigException("Invalid action: " + cfg.getKey());
 		}
-		return actions.get(cfg.getKey()).newInstance(cfg);
+		try {
+			return actions.get(cfg.getKey()).newInstance(cfg);
+		}
+		catch (Exception e) {
+			throw new QuestsConfigException("Failed to load action: " + cfg.getKey());
+		}
 	}
 	
 	public static String parseDialogue(LineConfig cfg) {

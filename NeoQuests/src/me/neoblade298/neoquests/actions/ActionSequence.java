@@ -6,22 +6,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.io.ConversationLoadException;
+import me.neoblade298.neoquests.io.QuestsConfigException;
 import me.neoblade298.neoquests.io.LineConfig;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
 	ActionSet curr = new ActionSet();
-	int runtime;
+	int runtime = 0;
 	
-	// Only used for endconversation response
-	public ActionSequence(Action action) {
-		curr.addAction(action);
-		sets.add(curr);
-		runtime = 0;
-	}
+	// Used to avoid having to look for nulls
+	public ActionSequence() {}
 	
-	public ActionSequence(List<String> list) throws ConversationLoadException {
+	public void load(List<String> list) throws QuestsConfigException {
 		int delay = 0;
 		for (String line : list) {
 			LineConfig cfg = new LineConfig(line);
@@ -34,7 +30,9 @@ public class ActionSequence {
 			}
 			
 			if (action instanceof DelayableAction) { // Delay is always after action
-				runtime += ((DelayableAction) action).getDelay();
+				int dl = ((DelayableAction) action).getDelay();
+				runtime += dl;
+				delay += dl;
 			}
 		}
 		
@@ -60,13 +58,13 @@ public class ActionSequence {
 	public int run(Player p, int delay) {
 		int tick = delay;
 		for (ActionSet set : sets) {
-			if (set.isEmpty()) {
+			if (!set.isEmpty()) {
 				BukkitRunnable task = new BukkitRunnable() {
 					public void run() {
 						set.run(p);
 					}
 				};
-				task.runTaskLater(NeoQuests.inst(), tick * 20);
+				task.runTaskLater(NeoQuests.inst(), tick);
 			}
 			tick += set.getPostDelay();
 		}

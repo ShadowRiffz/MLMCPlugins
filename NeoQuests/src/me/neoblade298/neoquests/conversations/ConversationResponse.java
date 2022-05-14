@@ -5,10 +5,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.actions.ActionSequence;
-import me.neoblade298.neoquests.actions.EndConversationAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionResult;
-import me.neoblade298.neoquests.io.ConversationLoadException;
+import me.neoblade298.neoquests.io.QuestsConfigException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -17,19 +16,19 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class ConversationResponse {
 	private String text;
 	private ArrayList<Condition> conditions = new ArrayList<Condition>();
-	private ActionSequence startActions;
+	private ActionSequence startActions = new ActionSequence();
 	int next = -1;
 	
-	public ConversationResponse(ConfigurationSection cfg) throws ConversationLoadException {
+	public ConversationResponse(ConfigurationSection cfg) throws QuestsConfigException {
 		this.text = cfg.getString("text").replaceAll("&", "§");
-		this.startActions = new ActionSequence(cfg.getStringList("actions"));
+		this.startActions.load(cfg.getStringList("actions"));
 		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
-		this.next = cfg.getInt("next");
+		this.next = cfg.getInt("next", -3);
 	}
 	
 	public ConversationResponse() {
 		this.text = "§7[End Conversation]";
-		this.startActions = new ActionSequence(new EndConversationAction());
+		this.next = -1;
 	}
 	
 	// True if number should be incremented
@@ -41,7 +40,7 @@ public class ConversationResponse {
 				for (Condition failedCond : failed) {
 					failHover.append("\n- " + failedCond.getExplanation(p));
 				}
-				ComponentBuilder builder = new ComponentBuilder("§c§o[" + num + "] " + text)
+				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] " + text)
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(failHover.toString())));
 				p.spigot().sendMessage(builder.create());
 				return true;
@@ -51,8 +50,8 @@ public class ConversationResponse {
 			}
 		}
 		else { // Visible and passes conditions
-			ComponentBuilder builder = new ComponentBuilder("§c§o[" + num + "] §7" + text)
-			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select this response!")))
+			ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text)
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num)))
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
 			p.spigot().sendMessage(builder.create());
 			return true;
@@ -83,7 +82,7 @@ public class ConversationResponse {
 		return startActions;
 	}
 	
-	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws ConversationLoadException {
+	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws QuestsConfigException {
 		ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 		for (String key : cfg.getKeys(false)) {
 			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));

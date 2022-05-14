@@ -6,15 +6,15 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.conditions.Condition;
-import me.neoblade298.neoquests.io.ConversationLoadException;
+import me.neoblade298.neoquests.io.QuestsConfigException;
 
 public class Conversation {
 	private String key;
 	private ArrayList<Condition> conditions;
 	private ArrayList<ConversationStage> stages;
-	private ActionSequence startActions, endActions;
+	private ActionSequence startActions = new ActionSequence(), endActions = new ActionSequence();
 	
-	public Conversation(String key, ConfigurationSection cfg) throws ConversationLoadException {
+	public Conversation(String key, ConfigurationSection cfg) throws QuestsConfigException {
 		this.key = key;
 		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
 		stages = new ArrayList<ConversationStage>();
@@ -23,6 +23,9 @@ public class Conversation {
 			int num = Integer.parseInt(stageNum);
 			stages.add(new ConversationStage(scfg.getConfigurationSection(stageNum), num));
 		}
+		
+		this.startActions.load(cfg.getStringList("start-actions"));
+		this.endActions.load(cfg.getStringList("end-actions"));
 	}
 	
 	public String getKey() {

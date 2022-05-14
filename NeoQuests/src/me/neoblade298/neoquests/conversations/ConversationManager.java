@@ -1,6 +1,5 @@
 package me.neoblade298.neoquests.conversations;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -97,6 +96,10 @@ public class ConversationManager implements Reloadable, Listener {
 		if (conv != null) {
 			startConversation(p, conv);
 		}
+	}
+	
+	public static ConversationInstance getConversation(Player p) {
+		return activeConvs.get(p);
 	}
 	
 	private static void startConversation(Player p, Conversation conv) {

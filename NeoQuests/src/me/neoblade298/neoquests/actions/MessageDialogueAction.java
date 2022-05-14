@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.io.LineConfig;
-import net.md_5.bungee.api.ChatColor;
 
 public class MessageDialogueAction implements Action, DialogueAction {
 	private static final String key = "message";
@@ -39,7 +38,7 @@ public class MessageDialogueAction implements Action, DialogueAction {
 	
 	@Override
 	public int getDelay() {
-		return ChatColor.stripColor(this.dialogue).length() / 20;
+		return DialogueAction.getDelay(this.dialogue);
 	}
 	
 	@Override

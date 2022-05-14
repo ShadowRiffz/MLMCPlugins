@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
-import net.md_5.bungee.api.ChatColor;
 
 public class NPCDialogueAction implements Action, DialogueAction {
 	private static final String key = "npc";
@@ -42,7 +41,7 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	
 	@Override
 	public int getDelay() {
-		return ChatColor.stripColor(this.dialogue).length() / 20;
+		return DialogueAction.getDelay(this.dialogue);
 	}
 	
 	@Override

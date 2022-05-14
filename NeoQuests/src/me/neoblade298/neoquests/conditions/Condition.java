@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neoquests.io.QuestsConfigException;
 
 public interface Condition {
 	static HashMap<String, Condition> conditions = new HashMap<String, Condition>();
@@ -29,10 +30,15 @@ public interface Condition {
 		return conditions.get(cfg.getKey()).newInstance(cfg);
 	}
 	
-	public static ArrayList<Condition> parseConditions(List<String> conditionLines) {
+	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws QuestsConfigException {
 		ArrayList<Condition> conditions = new ArrayList<Condition>(conditionLines.size());
 		for (String line : conditionLines) {
-			conditions.add(getNew(new LineConfig(line)));
+			try {
+				conditions.add(getNew(new LineConfig(line)));
+			}
+			catch (Exception e) {
+				throw new QuestsConfigException("Failed to load condition line: " + line);
+			}
 		}
 		return conditions;
 	}
