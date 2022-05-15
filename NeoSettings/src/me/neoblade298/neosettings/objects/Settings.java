@@ -1,6 +1,5 @@
 package me.neoblade298.neosettings.objects;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -91,7 +90,7 @@ public class Settings {
 	}
 	
 	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
-	public void save(Connection con, Statement stmt, UUID uuid) {
+	public void save(Statement stmt, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
 			if (main.debug) {
@@ -153,12 +152,11 @@ public class Settings {
 		}
 	}
 	
-	public void load(Connection con, UUID uuid) {
+	public void load(Statement stmt, UUID uuid) {
 		HashMap<String, Value> pSettings = new HashMap<String, Value>();
 		this.values.put(uuid, pSettings);
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
-			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neosettings_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
 			while (rs.next()) {
 				String subsetting = rs.getString(3);

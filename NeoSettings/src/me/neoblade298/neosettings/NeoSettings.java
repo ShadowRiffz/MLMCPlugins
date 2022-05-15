@@ -1,30 +1,23 @@
 package me.neoblade298.neosettings;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.sucy.skill.api.event.PlayerSaveEvent;
-
+import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neosettings.objects.Settings;
 
-public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener {
+public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
 	private HashMap<String, Settings> settings;
 	// SQL
 	public String url, user, pass;
@@ -42,7 +35,6 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	public void onDisable() {
-	    saveAll();
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoSettings Disabled");
 	    super.onDisable();
 	}
@@ -148,82 +140,29 @@ public class NeoSettings extends JavaPlugin implements org.bukkit.event.Listener
 		return settings;
 	}
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		BukkitRunnable load = new BukkitRunnable() {
-			public void run() {
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(url, user, pass);
-					for (String key : settings.keySet()) {
-						settings.get(key).load(con, e.getPlayer().getUniqueId());
-					}
-					con.close();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		};
-		load.runTaskLaterAsynchronously(this, 60L);
-	}
-	
-	
-	public void handleSave(UUID uuid) {
-		if (lastSave.containsKey(uuid)) {
-			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
-				// If saved less than 10 seconds ago, don't save again
-				return;
-			}
-		}
-		
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(url, user, pass);
-					Statement stmt = con.createStatement();
-					for (String key : settings.keySet()) {
-						settings.get(key).save(con, stmt, uuid);
-					}
-					stmt.executeBatch();
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		save.runTaskAsynchronously(this);
-	}
-	
-	private void saveAll() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, user, pass);
-			Statement stmt = con.createStatement();
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				for (String key : settings.keySet()) {
-					settings.get(key).save(con, stmt, p.getUniqueId());
-				}
-			}
-			stmt.executeBatch();
-			con.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+	@Override
+	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+		for (String key : settings.keySet()) {
+			settings.get(key).load(stmt, p.getUniqueId());
 		}
 	}
 	
-	@EventHandler
-	public void onSave(PlayerSaveEvent e) {
-		handleSave(e.getUUID());
-	}
-	
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		handleSave(e.getPlayer().getUniqueId());
+	@Override
+	public void savePlayer(Player p, Statement stmt) {
+		for (String key : settings.keySet()) {
+			settings.get(key).save(stmt, p.getUniqueId());
+		}
 	}
 
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleSave(e.getPlayer().getUniqueId());
+	@Override
+	public void cleanup(Statement stmt) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			savePlayer(p, stmt);
+		}
+	}
+
+	@Override
+	public String getKey() {
+		return "SettingsManager";
 	}
 }

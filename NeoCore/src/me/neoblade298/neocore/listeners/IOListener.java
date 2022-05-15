@@ -118,7 +118,7 @@ public class IOListener implements Listener {
 		load.runTaskAsynchronously(NeoCore.inst());
 	}
 	
-	public void handleDisable() {
+	public static void handleDisable() {
 		try {
 			Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
 			Statement stmt = con.createStatement();

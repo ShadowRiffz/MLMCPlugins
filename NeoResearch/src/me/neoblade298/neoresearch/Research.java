@@ -22,14 +22,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neoresearch.ResearchItem;
 import me.neoblade298.neoresearch.inventories.InventoryListeners;
 import me.neoblade298.neoresearch.inventories.ResearchInventory;
@@ -38,15 +39,13 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
-import com.sucy.skill.api.event.PlayerSaveEvent;
-
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class Research extends JavaPlugin implements org.bukkit.event.Listener {
+public class Research extends JavaPlugin implements Listener, IOComponent {
 	// SQL
 	private static String url, user, pass;
 	public static HashMap<Player, ResearchInventory> viewingInventory = new HashMap<Player, ResearchInventory>();
@@ -75,12 +74,12 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
 		enabledWorlds.add("Argyll");
+		IOListener.register(this, this);
 
 		loadConfig();
 	}
 
 	public void onDisable() {
-		saveAll();
 		org.bukkit.Bukkit.getServer().getLogger().info("NeoResearch Disabled");
 		super.onDisable();
 	}
@@ -189,15 +188,10 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 			converter.put(perm, mobValues);
 		}
-		
-		
-		// Finally, load in all online players
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			loadPlayer(p);
-		}
 	}
 	
-	private void loadPlayer(OfflinePlayer p) {
+	@Override
+	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		
 		// Add them to attrs
@@ -293,51 +287,19 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 		};
 		load.runTaskAsynchronously(this);
 	}
-
-	private void handleLeave(UUID uuid) {
-		if (lastSave.containsKey(uuid)) {
-			if (lastSave.get(uuid) + 10000 >= System.currentTimeMillis()) {
-				// If saved less than 10 seconds ago, don't save again
-				return;
-			}
-		}
-
-		lastSave.put(uuid, System.currentTimeMillis());
-		BukkitRunnable save = new BukkitRunnable() {
-			public void run() {
-				if (playerStats.containsKey(uuid)) {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						Connection con = DriverManager.getConnection(url, user, pass);
-						Statement stmt = con.createStatement();
-
-						// Save account
-						save(uuid, con, stmt, true);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		};
-		save.runTaskAsynchronously(this);
-	}
 	
-	private void saveAll() {
+	public void cleanup(Statement stmt) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, user, pass);
-			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				save(p.getUniqueId(), con, stmt, false);
+				savePlayer(p, stmt);
 			}
-			stmt.executeBatch();
-			con.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public void save(UUID uuid, Connection con, Statement stmt, boolean save) {
+	public void savePlayer(Player p, Statement stmt) {
+		UUID uuid = p.getUniqueId();
 		try {
 			PlayerStats stats = playerStats.get(uuid);
 			if (playerStats.containsKey(uuid)) {
@@ -371,11 +333,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 					}
 				}
 				playerAttrs.remove(uuid);
-				
-				// Set to false if you're saving several accounts at once
-				if (save) {
-					stmt.executeBatch();
-				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -748,11 +705,6 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	@EventHandler
-	public void onSaveSQL(PlayerSaveEvent e) {
-		handleLeave(e.getUUID());
-	}
-	
-	@EventHandler
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
 		updateBonuses(e.getPlayer());
 	}
@@ -761,20 +713,9 @@ public class Research extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		resetBonuses(e.getPlayer());
 	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
 
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		OfflinePlayer p = Bukkit.getOfflinePlayer(e.getUniqueId());
-		loadPlayer(p);
+	@Override
+	public String getKey() {
+		return "ResearchManager";
 	}
 }
