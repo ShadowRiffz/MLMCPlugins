@@ -7,7 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.listeners.IOListener;
 
 public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
@@ -32,6 +34,11 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		properties.setProperty("user", sqlUser);
 		properties.setProperty("password", sqlPass);
 		
+		new BukkitRunnable() {
+			public void run() {
+				Bukkit.getPluginManager().callEvent(new NeoCoreInitEvent());
+			}
+		}.runTask(this);
 	}
 	
 	public void onDisable() {

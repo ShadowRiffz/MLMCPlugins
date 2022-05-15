@@ -63,7 +63,7 @@ public class IOListener implements Listener {
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
 				try {
-					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.sqlUser, NeoCore.sqlPass);
+					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
 					Statement stmt = con.createStatement();
 
 					// Save account
@@ -89,7 +89,7 @@ public class IOListener implements Listener {
 		BukkitRunnable load = new BukkitRunnable() {
 			public void run() {
 				try {
-					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.sqlUser, NeoCore.sqlPass);
+					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
 					Statement stmt = con.createStatement();
 
 					// Save account
@@ -112,7 +112,7 @@ public class IOListener implements Listener {
 	
 	public void handleDisable() {
 		try {
-			Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.sqlUser, NeoCore.sqlPass);
+			Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
 			Statement stmt = con.createStatement();
 
 			// Save account
