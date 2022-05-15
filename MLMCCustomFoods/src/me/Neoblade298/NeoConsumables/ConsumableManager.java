@@ -21,6 +21,7 @@ import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.PlayerCooldowns;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.listeners.IOListener;
 
 public class ConsumableManager implements Listener, IOComponent {
 	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
@@ -29,6 +30,7 @@ public class ConsumableManager implements Listener, IOComponent {
 	
 	public ConsumableManager(Consumables main) {
 		ConsumableManager.main = main;
+		IOListener.register(main, this);
 	}
 
 	@Override
