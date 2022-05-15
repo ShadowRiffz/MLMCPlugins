@@ -110,24 +110,31 @@ public class Recipe {
 	}
 	
 	public ItemStack getReqsIcon(Player p, boolean canCraft) {
-		ItemStack item = result.getResultItem(p, canCraft);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(result.getResultItem(p, canCraft).getItemMeta().getDisplayName());
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§6Requirements§7:");
-		for (RecipeRequirement req : reqs) {
-			lore.add(req.getLoreString(p));
+		try {
+			ItemStack item = result.getResultItem(p, canCraft);
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(result.getResultItem(p, canCraft).getItemMeta().getDisplayName());
+			ArrayList<String> lore = new ArrayList<String>();
+			lore.add("§6Requirements§7:");
+			for (RecipeRequirement req : reqs) {
+				lore.add(req.getLoreString(p));
+			}
+			lore.add("§6Components§7:");
+			for (StoredItemInstance component : components) {
+				int playerHas = StorageManager.getAmount(p, component.getItem().getId());
+				String line = playerHas >= component.getAmount() ? "§a" : "§c";
+				line += "- " + playerHas + " / " + component.getAmount() + " " + ChatColor.stripColor(component.getItem().getDisplay());
+				lore.add(line);
+			}
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			return item;
 		}
-		lore.add("§6Components§7:");
-		for (StoredItemInstance component : components) {
-			int playerHas = StorageManager.getAmount(p, component.getItem().getId());
-			String line = playerHas >= component.getAmount() ? "§a" : "§c";
-			line += "- " + playerHas + " / " + component.getAmount() + " " + ChatColor.stripColor(component.getItem().getDisplay());
-			lore.add(line);
+		catch (Exception e) {
+			Bukkit.getLogger().warning("[NeoProfessions] Failed to load requirement icon for recipe: " + this.key);
+			e.printStackTrace();
 		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		return item;
+		return null;
 	}
 	
 	public boolean canCraft(Player p) {
