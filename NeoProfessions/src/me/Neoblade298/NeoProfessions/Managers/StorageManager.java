@@ -24,10 +24,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neosettings.NeoSettings;
 import me.neoblade298.neosettings.objects.Settings;
 
@@ -196,6 +196,11 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	@Override
 	public void cleanup(Statement stmt) {
 		try {
+			if (!Professions.isInstance) {
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					savePlayer(p, stmt);
+				}
+			}
 			stmt.addBatch("DELETE FROM professions_items WHERE amount <= 0");
 		}
 		catch (Exception e) {

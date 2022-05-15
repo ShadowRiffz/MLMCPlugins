@@ -114,25 +114,11 @@ public class IOListener implements Listener {
 		try {
 			Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
 			Statement stmt = con.createStatement();
-
-			// Save account
-			for (IOComponent component : components) {
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					try {
-						component.savePlayer(p, stmt);
-						stmt.executeBatch();
-					}
-					catch (Exception ex) {
-						Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle disable for component " + component.getComponentName());
-						ex.printStackTrace();
-					}
-				}
-			}
 			
 			// Any final cleanup
 			for (IOComponent component : components) {
 				try {
-					
+					component.cleanup(stmt);
 				}
 				catch (Exception ex) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + component.getComponentName());

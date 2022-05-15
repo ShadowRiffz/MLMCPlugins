@@ -27,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Recipes.AugmentResult;
@@ -46,12 +45,108 @@ import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.ShardResult;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.io.FileReader;
+import me.neoblade298.neocore.io.IOComponent;
 
 public class RecipeManager implements IOComponent, Listener, Manager {
 	Professions main;
 	private static HashMap<UUID, HashSet<String>> knowledge = new HashMap<UUID, HashSet<String>>();
 	private static HashMap<String, List<String>> recipeLists = new HashMap<String, List<String>>();
 	private static HashMap<String, Recipe> recipes = new HashMap<String, Recipe>();
+	private static FileLoader recipeLoader;
+	
+	static  {
+		recipeLoader = yaml -> {
+			for (String key : yaml.getKeys(false)) {
+				try {
+					ConfigurationSection sec = yaml.getConfigurationSection(key);
+					
+					// Components
+					ArrayList<String> storedItemLines = (ArrayList<String>) sec.getStringList("components");
+					ArrayList<StoredItemInstance> components = new ArrayList<StoredItemInstance>();
+					for (String line : storedItemLines) {
+						String[] args = line.split(" ");
+						int id = 0;
+						int amount = 1;
+						for (String arg : args) {
+							if (arg.startsWith("id")) {
+								id = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
+							}
+							else if (arg.startsWith("amount")) {
+								amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
+							}
+						}
+						StoredItemInstance si = new StoredItemInstance(StorageManager.getItem(id), amount);
+						si.getItem().addRelevantRecipe(key);
+						components.add(si);
+					}
+					
+					// Requirements
+					ArrayList<String> stringReqs = (ArrayList<String>) sec.getStringList("requirements");
+					ArrayList<RecipeRequirement> reqs = new ArrayList<RecipeRequirement>();
+					for (String line : stringReqs) {
+						String[] args = line.split(" ");
+						if (args[0].equalsIgnoreCase("knowledge")) {
+							reqs.add(new KnowledgeRequirement(args));
+						}
+						else if (args[0].equalsIgnoreCase("essence")) {
+							reqs.add(new EssenceRequirement(args));
+						}
+						else if (args[0].equalsIgnoreCase("rgoal")) {
+							reqs.add(new ResearchRequirement(args));
+						}
+						else if (args[0].equalsIgnoreCase("level")) {
+							reqs.add(new LevelRequirement(args));
+						}
+						else if (args[0].equalsIgnoreCase("garden-size")) {
+							reqs.add(new GardenSizeRequirement(args));
+						}
+					}
+					
+					int level = sec.getInt("level");
+					if (level != 0) {
+						reqs.add(new LevelRequirement(ProfessionType.CRAFTER, level));
+					}
+					
+					// Results
+					String[] resultArgs = sec.getString("result").split(" ");
+					RecipeResult result = null;
+					if (resultArgs[0].startsWith("gear")) {
+						result = new GearResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("essence")) {
+						result = new ShardResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("essence")) {
+						result = new EssenceResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("food")) {
+						result = new FoodResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("storeditem")) {
+						result = new StoredItemResult(key, resultArgs);
+					}
+					else if (resultArgs[0].startsWith("augment")) {
+						result = new AugmentResult(resultArgs);
+					}
+					else if (resultArgs[0].startsWith("garden-upgrade")) {
+						result = new GardenUpgradeResult(resultArgs);
+					}
+					
+					String display = sec.getString("display");
+					int exp = sec.getInt("exp", -1);
+					boolean canMulticraft = sec.getBoolean("can-multicraft");
+					recipes.put(key, new Recipe(key, display, exp, level, reqs, components, result, canMulticraft));
+				}
+				catch (Exception e) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load Recipe: " + key);
+					e.printStackTrace();
+				}
+			}
+		};
+	}
 	
 	public RecipeManager(Professions main) {
 		this.main = main;
@@ -63,7 +158,11 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	public void reload() {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Recipe manager...");
 		recipes.clear();
-		loadRecipes(new File(main.getDataFolder(), "recipes"));
+		try {
+			FileReader.loadRecursive(new File(main.getDataFolder(), "recipes"), recipeLoader);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
+		}
 		
 		recipeLists.clear();
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(main.getDataFolder(), "recipe-lists.yml"));
@@ -92,103 +191,6 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 			allList.add(recipe);
 		}
 		recipeLists.put("all", allList);
-	}
-	
-	private void loadRecipes(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadRecipes(file);
-			}
-			else {
-				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-				for (String key : yaml.getKeys(false)) {
-					try {
-						ConfigurationSection sec = yaml.getConfigurationSection(key);
-						
-						// Components
-						ArrayList<String> storedItemLines = (ArrayList<String>) sec.getStringList("components");
-						ArrayList<StoredItemInstance> components = new ArrayList<StoredItemInstance>();
-						for (String line : storedItemLines) {
-							String[] args = line.split(" ");
-							int id = 0;
-							int amount = 1;
-							for (String arg : args) {
-								if (arg.startsWith("id")) {
-									id = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
-								}
-								else if (arg.startsWith("amount")) {
-									amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
-								}
-							}
-							StoredItemInstance si = new StoredItemInstance(StorageManager.getItem(id), amount);
-							si.getItem().addRelevantRecipe(key);
-							components.add(si);
-						}
-						
-						// Requirements
-						ArrayList<String> stringReqs = (ArrayList<String>) sec.getStringList("requirements");
-						ArrayList<RecipeRequirement> reqs = new ArrayList<RecipeRequirement>();
-						for (String line : stringReqs) {
-							String[] args = line.split(" ");
-							if (args[0].equalsIgnoreCase("knowledge")) {
-								reqs.add(new KnowledgeRequirement(args));
-							}
-							else if (args[0].equalsIgnoreCase("essence")) {
-								reqs.add(new EssenceRequirement(args));
-							}
-							else if (args[0].equalsIgnoreCase("rgoal")) {
-								reqs.add(new ResearchRequirement(args));
-							}
-							else if (args[0].equalsIgnoreCase("level")) {
-								reqs.add(new LevelRequirement(args));
-							}
-							else if (args[0].equalsIgnoreCase("garden-size")) {
-								reqs.add(new GardenSizeRequirement(args));
-							}
-						}
-						
-						int level = sec.getInt("level");
-						if (level != 0) {
-							reqs.add(new LevelRequirement(ProfessionType.CRAFTER, level));
-						}
-						
-						// Results
-						String[] resultArgs = sec.getString("result").split(" ");
-						RecipeResult result = null;
-						if (resultArgs[0].startsWith("gear")) {
-							result = new GearResult(resultArgs);
-						}
-						else if (resultArgs[0].startsWith("essence")) {
-							result = new ShardResult(resultArgs);
-						}
-						else if (resultArgs[0].startsWith("essence")) {
-							result = new EssenceResult(resultArgs);
-						}
-						else if (resultArgs[0].startsWith("food")) {
-							result = new FoodResult(resultArgs);
-						}
-						else if (resultArgs[0].startsWith("storeditem")) {
-							result = new StoredItemResult(key, resultArgs);
-						}
-						else if (resultArgs[0].startsWith("augment")) {
-							result = new AugmentResult(resultArgs);
-						}
-						else if (resultArgs[0].startsWith("garden-upgrade")) {
-							result = new GardenUpgradeResult(resultArgs);
-						}
-						
-						String display = sec.getString("display");
-						int exp = sec.getInt("exp", -1);
-						boolean canMulticraft = sec.getBoolean("can-multicraft");
-						recipes.put(key, new Recipe(key, display, exp, level, reqs, components, result, canMulticraft));
-					}
-					catch (Exception e) {
-						Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Failed to load Recipe: " + key);
-						e.printStackTrace();
-					}
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -244,7 +246,11 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 
 	@Override
 	public void cleanup(Statement stmt) {
-
+		if (!Professions.isInstance) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				savePlayer(p, stmt);
+			}
+		}
 	}
 	
 	public static HashSet<String> getKnowledge(Player p) {

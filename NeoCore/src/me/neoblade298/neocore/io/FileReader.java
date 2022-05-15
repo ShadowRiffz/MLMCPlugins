@@ -7,10 +7,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 
 public class FileReader {
-	public static  void load(File dir, FileLoader loader) throws NeoIOException {
+	public static  void loadRecursive(File dir, FileLoader loader) throws NeoIOException {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
-				load(file, loader);
+				loadRecursive(file, loader);
 			}
 			else {
 				try {

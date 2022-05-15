@@ -8,7 +8,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,12 +42,15 @@ import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
+import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
 	private static HashMap<String, Augment> augmentMap = new HashMap<String, Augment>();
+	private static FileLoader droptableLoader;
 	
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
 	private static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>(); // Don't use, caches by level
@@ -63,6 +65,11 @@ public class AugmentManager implements Listener, Manager {
 		enabledWorlds.add("Argyll");
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
+		droptableLoader = (cfg) -> {
+			for (String table : cfg.getKeys(false)) {
+				AugmentManager.droptables.put(table, (ArrayList<String>) cfg.getStringList(table));
+			}
+		};
 	}
 	
 	public AugmentManager(Professions main) {
@@ -144,20 +151,11 @@ public class AugmentManager implements Listener, Manager {
 	public void reload() {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 		AugmentManager.droptables.clear();
-		loadDroptables(new File(main.getDataFolder(), "droptables"));
-	}
-	
-	private void loadDroptables(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadDroptables(dir);
-			}
-			else {
-				YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-				for (String table : yml.getKeys(false)) {
-					AugmentManager.droptables.put(table, (ArrayList<String>) yml.getStringList(table));
-				}
-			}
+		try {
+			FileReader.loadRecursive(new File(main.getDataFolder(), "droptables"), droptableLoader);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

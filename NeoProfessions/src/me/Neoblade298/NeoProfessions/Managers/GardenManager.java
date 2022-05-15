@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -21,16 +20,42 @@ import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.io.FileReader;
+import me.neoblade298.neocore.io.IOComponent;
 
 public class GardenManager implements IOComponent, Manager {
 	public static Professions main;
 	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	private static HashMap<UUID, ArrayList<BukkitTask>> gardenMsgs = new HashMap<UUID, ArrayList<BukkitTask>>();
+	private static FileLoader fertilizerLoader;
+	
+	static {
+		fertilizerLoader = yaml -> {
+			for (String key : yaml.getKeys(false)) {
+				ConfigurationSection cfg = yaml.getConfigurationSection(key);
+				int id = Integer.parseInt(key);
+				double timeMult = cfg.getDouble("time-multiplier", 1);
+				double amountMult = cfg.getDouble("amount-multiplier", 1);
+				
+				HashMap<Rarity, Double> rarityWeightMults = new HashMap<Rarity, Double>();
+				ConfigurationSection rwcfg = cfg.getConfigurationSection("rarity-weight-multipliers");
+				if (rwcfg != null) {
+					for (String rar : rwcfg.getKeys(false)) {
+						rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
+					}
+				}
+				MinigameParameters params = new MinigameParameters(amountMult, rarityWeightMults);
+				fertilizers.put(id, new Fertilizer(id, params, timeMult));
+			}
+		};
+	}
+	
 	public GardenManager(Professions main) {
 		GardenManager.main = main;
 		reload();
@@ -40,33 +65,10 @@ public class GardenManager implements IOComponent, Manager {
 	public void reload() {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Garden manager...");
 		fertilizers.clear();
-		loadFertilizers(new File(main.getDataFolder(), "fertilizers"));
-	}
-	
-	private void loadFertilizers(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadFertilizers(file);
-			}
-			else {
-				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-				for (String key : yaml.getKeys(false)) {
-					ConfigurationSection cfg = yaml.getConfigurationSection(key);
-					int id = Integer.parseInt(key);
-					double timeMult = cfg.getDouble("time-multiplier", 1);
-					double amountMult = cfg.getDouble("amount-multiplier", 1);
-					
-					HashMap<Rarity, Double> rarityWeightMults = new HashMap<Rarity, Double>();
-					ConfigurationSection rwcfg = cfg.getConfigurationSection("rarity-weight-multipliers");
-					if (rwcfg != null) {
-						for (String rar : rwcfg.getKeys(false)) {
-							rarityWeightMults.put(Rarity.valueOf(rar.toUpperCase()), rwcfg.getDouble(rar));
-						}
-					}
-					MinigameParameters params = new MinigameParameters(amountMult, rarityWeightMults);
-					fertilizers.put(id, new Fertilizer(id, params, timeMult));
-				}
-			}
+		try {
+			FileReader.loadRecursive(new File(main.getDataFolder(), "fertilizers"), fertilizerLoader);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -190,7 +192,11 @@ public class GardenManager implements IOComponent, Manager {
 	
 	@Override
 	public void cleanup(Statement stmt) {
-		
+		if (!Professions.isInstance) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				savePlayer(p, stmt);
+			}
+		}
 	}
 	
 	public static Garden getGarden(Player p, ProfessionType type) {

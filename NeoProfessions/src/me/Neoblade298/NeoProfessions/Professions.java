@@ -3,7 +3,6 @@ package me.Neoblade298.NeoProfessions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -16,29 +15,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.*;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
-import me.Neoblade298.NeoProfessions.Listeners.IOListeners;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import me.neoblade298.neocore.listeners.IOListener;
 import net.milkbowl.vault.economy.Economy;
 
 public class Professions extends JavaPlugin implements Listener {
 	public boolean debug = false;
 	public static Random gen = new Random();
-	public boolean isInstance = false;
+	public static boolean isInstance = false;
 
 	public static Economy econ;
 	public static YamlConfiguration cfg;
 	
 	public static String lvlupMsg;
-
-	public static String sqlUser;
-	public static String sqlPass;
-	public static String connection;
-	public static Properties properties = new Properties();
 	
 	public static CurrencyManager cm;
 	public static ProfessionManager pm;
@@ -46,7 +40,6 @@ public class Professions extends JavaPlugin implements Listener {
 	public static StorageManager sm;
 	public static MinigameManager mim;
 	public static RecipeManager rm;
-	public static IOListeners io;
 	
 	public me.neoblade298.neogear.Gear neogear;
 	
@@ -87,7 +80,7 @@ public class Professions extends JavaPlugin implements Listener {
 		sm = new StorageManager(this);
 		getServer().getPluginManager().registerEvents(sm, this);
 		managers.add(sm);
-		IOListeners.addComponent(sm);
+		IOListener.addComponent(sm);
 			
 		if (!isInstance) {
 			// Managers and listeners
@@ -102,15 +95,13 @@ public class Professions extends JavaPlugin implements Listener {
 			managers.add(rm);
 			managers.add(mim);
 			managers.add(gm);
-			io = new IOListeners(this);
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(mim, this);
-			getServer().getPluginManager().registerEvents(io, this);
-			IOListeners.addComponent(cm);
-			IOListeners.addComponent(pm);
-			IOListeners.addComponent(rm);
-			IOListeners.addComponent(gm);
+			IOListener.addComponent(cm);
+			IOListener.addComponent(pm);
+			IOListener.addComponent(rm);
+			IOListener.addComponent(gm);
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));
@@ -126,25 +117,12 @@ public class Professions extends JavaPlugin implements Listener {
 			this.getCommand("craft").setExecutor(new CraftCommand(this));
 			this.getCommand("inv").setExecutor(new InvCommand(this));
 		}
-		
-		// SQL
-		properties.setProperty("useSSL", "false");
-		properties.setProperty("user", sqlUser);
-		properties.setProperty("password", sqlPass);
-		properties.setProperty("useSSL", "false");
 	}
 	
 	public void loadConfig() {
 		if (new File(getDataFolder(), "instance").exists()) {
 			isInstance = true;
 		}
-		
-		// sql
-		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
-				sql.getString("db") + sql.getString("flags");
-		sqlUser = sql.getString("username");
-		sqlPass = sql.getString("password");
 		
 		// general
 		lvlupMsg = cfg.getString("levelup").replaceAll("&", "§");
@@ -176,9 +154,6 @@ public class Professions extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		super.onDisable();
-		if (!isInstance && io != null) {
-			io.handleDisable();
-		}
 		Bukkit.getServer().getLogger().info("NeoProfessions Disabled");
 	}
 

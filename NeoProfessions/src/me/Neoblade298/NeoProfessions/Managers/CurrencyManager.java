@@ -23,9 +23,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neocore.io.IOComponent;
 
 public class CurrencyManager implements IOComponent, Listener, Manager {
 	// UUID, essence/oretype, amount
@@ -93,6 +93,11 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	@Override
 	public void cleanup(Statement stmt) {
 		try {
+			if (!Professions.isInstance) {
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					savePlayer(p, stmt);
+				}
+			}
 			stmt.addBatch("DELETE FROM professions_essence WHERE amount <= 0");
 		}
 		catch (Exception e) {

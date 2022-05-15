@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,12 +28,89 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.io.FileReader;
 
 public class MinigameManager implements Listener, Manager {
 	public static Professions main;
 	private static HashMap<Location, Integer> gameLocations = new HashMap<Location, Integer>();
 	private static HashMap<Integer, Minigame> games = new HashMap<Integer, Minigame>();
 	private static HashMap<UUID, HashMap<Location, Long>> playerCooldowns = new HashMap<UUID, HashMap<Location, Long>>();
+	private static FileLoader minigameLoader;
+	
+	static {
+		minigameLoader = yaml -> {
+			for (String key : yaml.getKeys(false)) {
+				int id = Integer.parseInt(key);
+				ConfigurationSection itemCfg = yaml.getConfigurationSection(key);
+				String display = itemCfg.getString("display");
+				ProfessionType type = ProfessionType.valueOf(itemCfg.getString("type").toUpperCase());
+				int numDrops = itemCfg.getInt("num-drops");
+				int difficulty = itemCfg.getInt("difficulty");
+				int level = StorageManager.getItem(id).getLevel();
+				int cooldown = itemCfg.getInt("cooldown");
+				// Hardcode level 5 minimum
+				if (level <= 5) {
+					level = 1;
+				}
+				
+				// Parse locations
+				ArrayList<String> locs = (ArrayList<String>) itemCfg.getStringList("locations");
+				for (String loc : locs) {
+					String[] args = loc.split(" ");
+					gameLocations.put(new Location(Bukkit.getWorld(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
+							Integer.parseInt(args[3])), id);
+				}
+				
+				// Parse drops
+				ArrayList<String> drops = (ArrayList<String>) itemCfg.getStringList("drops");
+				ArrayList<MinigameDrops> parsed = new ArrayList<MinigameDrops>();
+				for (String line : drops) {
+					String[] lineArgs = line.split(" ");
+					// defaults
+					int itemId = 0;
+					int minAmt = 1;
+					int maxAmt = 1;
+					int weight = -1;
+					int exp = -1;
+					
+					for (String lineArg : lineArgs) {
+						String[] args = lineArg.split(":");
+						switch (args[0]) {
+						case "id":
+							itemId = Integer.parseInt(args[1]);
+							break;
+						case "amount":
+							String[] amts = args[1].split("-");
+							minAmt = Integer.parseInt(amts[0]);
+							maxAmt = amts.length == 2 ? Integer.parseInt(amts[1]) : minAmt;
+							break;
+						case "weight":
+							weight = Integer.parseInt(args[1]);
+							break;
+						case "exp":
+							exp = Integer.parseInt(args[1]);
+							break;
+						}
+					}
+					
+					// Post-processing (auto-generate exp)
+					StoredItem sitem = StorageManager.getItem(itemId);
+					sitem.addSource(display, false);
+					if (exp == -1) {
+						exp = sitem.getDefaultExp();
+					}
+					if (weight == -1) {
+						weight = Professions.getDefaultWeight(sitem.getRarity());
+					}
+					
+					parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
+				}
+				games.put(id, new Minigame(display, type, parsed, numDrops, difficulty, level, cooldown));
+			}
+		};
+	}
 	
 	public MinigameManager(Professions main) {
 		MinigameManager.main = main;
@@ -46,85 +122,10 @@ public class MinigameManager implements Listener, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Minigame manager...");
 		games.clear();
 		gameLocations.clear();
-		loadMinigames(new File(main.getDataFolder(), "minigames"));
-	}
-	
-	private void loadMinigames(File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				loadMinigames(file);
-			}
-			else {
-				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-				for (String key : yaml.getKeys(false)) {
-					int id = Integer.parseInt(key);
-					ConfigurationSection itemCfg = yaml.getConfigurationSection(key);
-					String display = itemCfg.getString("display");
-					ProfessionType type = ProfessionType.valueOf(itemCfg.getString("type").toUpperCase());
-					int numDrops = itemCfg.getInt("num-drops");
-					int difficulty = itemCfg.getInt("difficulty");
-					int level = StorageManager.getItem(id).getLevel();
-					int cooldown = itemCfg.getInt("cooldown");
-					// Hardcode level 5 minimum
-					if (level <= 5) {
-						level = 1;
-					}
-					
-					// Parse locations
-					ArrayList<String> locs = (ArrayList<String>) itemCfg.getStringList("locations");
-					for (String loc : locs) {
-						String[] args = loc.split(" ");
-						gameLocations.put(new Location(Bukkit.getWorld(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
-								Integer.parseInt(args[3])), id);
-					}
-					
-					// Parse drops
-					ArrayList<String> drops = (ArrayList<String>) itemCfg.getStringList("drops");
-					ArrayList<MinigameDrops> parsed = new ArrayList<MinigameDrops>();
-					for (String line : drops) {
-						String[] lineArgs = line.split(" ");
-						// defaults
-						int itemId = 0;
-						int minAmt = 1;
-						int maxAmt = 1;
-						int weight = -1;
-						int exp = -1;
-						
-						for (String lineArg : lineArgs) {
-							String[] args = lineArg.split(":");
-							switch (args[0]) {
-							case "id":
-								itemId = Integer.parseInt(args[1]);
-								break;
-							case "amount":
-								String[] amts = args[1].split("-");
-								minAmt = Integer.parseInt(amts[0]);
-								maxAmt = amts.length == 2 ? Integer.parseInt(amts[1]) : minAmt;
-								break;
-							case "weight":
-								weight = Integer.parseInt(args[1]);
-								break;
-							case "exp":
-								exp = Integer.parseInt(args[1]);
-								break;
-							}
-						}
-						
-						// Post-processing (auto-generate exp)
-						StoredItem sitem = StorageManager.getItem(itemId);
-						sitem.addSource(display, false);
-						if (exp == -1) {
-							exp = sitem.getDefaultExp();
-						}
-						if (weight == -1) {
-							weight = Professions.getDefaultWeight(sitem.getRarity());
-						}
-						
-						parsed.add(new MinigameDrops(sitem, minAmt, maxAmt, weight, exp));
-					}
-					games.put(id, new Minigame(display, type, parsed, numDrops, difficulty, level, cooldown));
-				}
-			}
+		try {
+			FileReader.loadRecursive(new File(main.getDataFolder(), "minigames"), minigameLoader);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
 		}
 	}
 	

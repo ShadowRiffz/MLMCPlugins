@@ -11,10 +11,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import me.Neoblade298.NeoProfessions.Professions;
-import me.Neoblade298.NeoProfessions.Objects.IOComponent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.Profession;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import me.neoblade298.neocore.io.IOComponent;
 
 public class ProfessionManager implements IOComponent, Manager {
 	static Professions main;
@@ -102,7 +102,11 @@ public class ProfessionManager implements IOComponent, Manager {
 
 	@Override
 	public void cleanup(Statement stmt) {
-		
+		if (!Professions.isInstance) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				savePlayer(p, stmt);
+			}
+		}
 	}
 	
 	public static HashMap<ProfessionType, Profession> getAccount(UUID uuid) {
