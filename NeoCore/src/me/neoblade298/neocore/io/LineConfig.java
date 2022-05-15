@@ -9,8 +9,15 @@ public class LineConfig {
 		fullLine = line;
 		int keyIndex = line.indexOf(' ');
 		int lineIndex = line.indexOf('>');
+		
 		String argLine;
 		key = line.substring(0, keyIndex).toLowerCase();
+		if (key.indexOf(':') != -1) {
+			key = key.substring(0, key.indexOf(':'));
+			keyIndex = 0; // If there's a :, there's no key, use keyless system
+		}
+		
+		
 		if (lineIndex != -1) {
 			this.line = line.substring(lineIndex + 1).trim().replaceAll("&", "§");
 			argLine = line.substring(keyIndex, lineIndex).trim().toLowerCase();
