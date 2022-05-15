@@ -104,6 +104,7 @@ public class IOListener implements Listener {
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
 							entry.getValue().loadPlayer(p, stmt);
+							stmt.executeBatch();
 						}
 						catch (Exception ex) {
 							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
@@ -126,7 +127,9 @@ public class IOListener implements Listener {
 			// Any final cleanup
 			for (Entry<String, IOComponent> entry : components.entrySet()) {
 				try {
+					Bukkit.getLogger().info("[NeoCore] Cleaning up component " + entry.getKey());
 					entry.getValue().cleanup(stmt);
+					stmt.executeBatch();
 				}
 				catch (Exception ex) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
