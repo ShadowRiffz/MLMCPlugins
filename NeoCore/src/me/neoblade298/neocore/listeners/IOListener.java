@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.api.event.PlayerSaveEvent;
+
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
 
@@ -45,6 +47,11 @@ public class IOListener implements Listener {
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onSAPISave(PlayerSaveEvent e) {
 		handleLeave(e.getPlayer());
 	}
 
