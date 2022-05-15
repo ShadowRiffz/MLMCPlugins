@@ -40,10 +40,10 @@ import me.neoblade298.neosapiaddons.conditions.AbsorptionCondition;
 import me.neoblade298.neosapiaddons.conditions.AttackChargeCondition;
 import me.neoblade298.neosapiaddons.conditions.BlockingCondition;
 import me.neoblade298.neosapiaddons.conditions.ManaNameCondition;
-import me.neoblade298.neosapiaddons.mechanics.AddAbsorptionMechanic;
 import me.neoblade298.neosapiaddons.mechanics.AddShieldsMechanic;
 import me.neoblade298.neosapiaddons.mechanics.IncreasePotionMechanic;
 import me.neoblade298.neosapiaddons.mechanics.SpawnMythicmobMechanic;
+import me.neoblade298.neosapiaddons.mechanics.SudoSkillMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueAttackSpeedMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueMaxMechanic;
 import me.neoblade298.neosapiaddons.mechanics.ValueSkillLevelMechanic;
@@ -266,7 +266,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
         return ImmutableList.of(
             new ValueMaxMechanic(),
             new SpawnMythicmobMechanic(),
-            new AddAbsorptionMechanic(),
+            new SudoSkillMechanic(),
             new AddShieldsMechanic(),
             new IncreasePotionMechanic(),
             new ValueAttackSpeedMechanic(),
