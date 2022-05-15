@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.io.LineConfig;
 
 public class MessageDialogueAction implements Action, DialogueAction {
-	private static final String key = "message";
+	private static final String key = "msg";
 	private String dialogue;
 
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {

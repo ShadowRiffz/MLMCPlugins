@@ -9,10 +9,15 @@ import me.neoblade298.neoquests.NeoQuests;
 
 public class ActionManager {
 	private static LineConfigManager<Action> mngr;
-	private static HashSet<String> dialogueActions;
+	private static HashSet<String> dialogueActions = new HashSet<String>();
 	
 	public ActionManager() {
 		mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");
+		
+		dialogueActions.add("npc");
+		dialogueActions.add("player");
+		dialogueActions.add("desc");
+		dialogueActions.add("msg");
 		
 		mngr.register(new DelayAction());
 		mngr.register(new DescriptionDialogueAction());
@@ -26,6 +31,6 @@ public class ActionManager {
 	}
 	
 	public static boolean isDialogueAction(String key) {
-		return dialogueActions.contains(key);
+		return dialogueActions.contains(key.toLowerCase());
 	}
 }
