@@ -1,7 +1,7 @@
 package me.neoblade298.neoquests;
 
-import org.bukkit.command.CommandSender;
+import me.neoblade298.neocore.exceptions.NeoIOException;
 
 public interface Reloadable {
-	public void reload(CommandSender s);
+	public void reload() throws NeoIOException;
 }

@@ -1,6 +1,6 @@
 package me.neoblade298.neocore.io;
 
-public interface LineConfigParser {
-	public LineConfigParser create(LineConfig cfg);
+public interface LineConfigParser<A> {
+	public A create(LineConfig cfg);
 	public String getKey();
 }

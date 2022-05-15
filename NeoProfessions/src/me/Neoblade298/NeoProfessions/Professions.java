@@ -80,7 +80,7 @@ public class Professions extends JavaPlugin implements Listener {
 		sm = new StorageManager(this);
 		getServer().getPluginManager().registerEvents(sm, this);
 		managers.add(sm);
-		IOListener.addComponent(sm);
+		IOListener.register(this, sm);
 			
 		if (!isInstance) {
 			// Managers and listeners
@@ -98,10 +98,10 @@ public class Professions extends JavaPlugin implements Listener {
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(mim, this);
-			IOListener.addComponent(cm);
-			IOListener.addComponent(pm);
-			IOListener.addComponent(rm);
-			IOListener.addComponent(gm);
+			IOListener.register(this, cm);
+			IOListener.register(this, pm);
+			IOListener.register(this, rm);
+			IOListener.register(this, gm);
 	
 			// Command listeners for all classes
 			this.getCommand("value").setExecutor(new ValueCommand(this));

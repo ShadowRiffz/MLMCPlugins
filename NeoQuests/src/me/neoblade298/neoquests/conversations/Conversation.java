@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.conditions.Condition;
-import me.neoblade298.neoquests.io.QuestsConfigException;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class Conversation {
 	private String key;
@@ -14,9 +15,9 @@ public class Conversation {
 	private ArrayList<ConversationStage> stages;
 	private ActionSequence startActions = new ActionSequence(), endActions = new ActionSequence();
 	
-	public Conversation(String key, ConfigurationSection cfg) throws QuestsConfigException {
+	public Conversation(String key, ConfigurationSection cfg) throws NeoIOException {
 		this.key = key;
-		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
+		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		stages = new ArrayList<ConversationStage>();
 		ConfigurationSection scfg = cfg.getConfigurationSection("stages");
 		for (String stageNum : scfg.getKeys(false)) {

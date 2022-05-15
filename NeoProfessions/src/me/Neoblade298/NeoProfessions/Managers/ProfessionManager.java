@@ -114,7 +114,7 @@ public class ProfessionManager implements IOComponent, Manager {
 	}
 	
 	@Override
-	public String getComponentName() {
+	public String getKey() {
 		return "ProfessionManager";
 	}
 	

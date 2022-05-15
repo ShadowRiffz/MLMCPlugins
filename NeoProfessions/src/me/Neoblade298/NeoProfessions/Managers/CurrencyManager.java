@@ -210,7 +210,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	}
 	
 	@Override
-	public String getComponentName() {
+	public String getKey() {
 		return "CurrencyManager";
 	}
 	

@@ -1,6 +1,5 @@
 package me.neoblade298.neoquests.actions;
-
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neocore.io.LineConfig;
 import net.md_5.bungee.api.ChatColor;
 
 public interface DialogueAction extends Action, DelayableAction {

@@ -1,19 +1,21 @@
 package me.neoblade298.neoquests.conversations;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.conditions.Condition;
-import me.neoblade298.neoquests.io.FileLoader;
-import me.neoblade298.neoquests.io.FileReader;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class ConversationManager implements Reloadable, Listener {
 	private static HashMap<Integer, ArrayList<Conversation>> npcConvs = new HashMap<Integer, ArrayList<Conversation>>();
@@ -22,18 +24,18 @@ public class ConversationManager implements Reloadable, Listener {
 	private static FileLoader convLoader, npcLoader;
 	
 	static {
-		convLoader = (s, cfg) -> {
+		convLoader = (cfg) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning(s, "Failed to load conversation " + key, e);
+					NeoQuests.showWarning("Failed to load conversation " + key, e);
 				}
 			}
 		};
 		
-		npcLoader = (s, cfg) -> {
+		npcLoader = (cfg) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					ArrayList<Conversation> clist = new ArrayList<Conversation>();
@@ -44,20 +46,22 @@ public class ConversationManager implements Reloadable, Listener {
 					npcConvs.put(npcid, clist);
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning(s, "Failed to load conversation " + key, e);
+					NeoQuests.showWarning("Failed to load conversation " + key, e);
 				}
 			}
 		};
 	}
 	
-	public ConversationManager() {
+	public ConversationManager() throws NeoIOException {
 		// Load convs folder
-		reload(null);
+		reload();
 	}
 	
-	public void reload(CommandSender s) {
-		FileReader.load("conversations", convLoader, s);
-		FileReader.load("npcs", npcLoader, s);
+	public void reload() throws NeoIOException {
+		convs.clear();
+		npcConvs.clear();
+		FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "conversations"), convLoader);
+		FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "npcs"), npcLoader);
 	}
 	
 	public static void endConversation(Player p, boolean runEndActions) {
@@ -71,7 +75,7 @@ public class ConversationManager implements Reloadable, Listener {
 		Conversation conv = convs.get(key);
 		if (conv == null) return;
 		if (!ignoreConditions) {
-			Condition block = Condition.getBlockingCondition(p, conv.getConditions());
+			Condition block = ConditionManager.getBlockingCondition(p, conv.getConditions());
 			if (block != null) {
 				Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", key " + key + ". Failed condition " + block.getKey());
 				return;
@@ -86,7 +90,7 @@ public class ConversationManager implements Reloadable, Listener {
 
 		Conversation conv = null;
 		for (Conversation c : npcConvs.get(npcid)) {
-			Condition block = Condition.getBlockingCondition(p, c.getConditions());
+			Condition block = ConditionManager.getBlockingCondition(p, c.getConditions());
 			if (block == null) {
 				conv = c;
 				break;

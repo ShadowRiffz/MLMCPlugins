@@ -5,9 +5,9 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.io.QuestsConfigException;
-import me.neoblade298.neoquests.io.LineConfig;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
@@ -17,12 +17,12 @@ public class ActionSequence {
 	// Used to avoid having to look for nulls
 	public ActionSequence() {}
 	
-	public void load(List<String> list) throws QuestsConfigException {
+	public void load(List<String> list) throws NeoIOException {
 		int delay = 0;
 		for (String line : list) {
 			LineConfig cfg = new LineConfig(line);
 			
-			Action action = Action.getNew(cfg);
+			Action action = ActionManager.get(cfg);
 			
 			if (!(action instanceof EmptyAction)) { // DelayAction is empty
 				addAction(action, runtime);

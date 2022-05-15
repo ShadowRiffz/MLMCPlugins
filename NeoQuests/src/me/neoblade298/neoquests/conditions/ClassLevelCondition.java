@@ -6,7 +6,7 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neocore.io.LineConfig;
 
 public class ClassLevelCondition implements Condition {
 	private static final String key;
@@ -15,7 +15,6 @@ public class ClassLevelCondition implements Condition {
 	
 	static {
 		key = "class-level";
-		Condition.register(key, new ClassLevelCondition());
 	}
 	
 	public ClassLevelCondition() {}
@@ -57,7 +56,7 @@ public class ClassLevelCondition implements Condition {
 	}
 
 	@Override
-	public Condition newInstance(LineConfig cfg) {
+	public Condition create(LineConfig cfg) {
 		return new ClassLevelCondition(cfg);
 	}
 

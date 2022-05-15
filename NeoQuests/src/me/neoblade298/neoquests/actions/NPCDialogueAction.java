@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neocore.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class NPCDialogueAction implements Action, DialogueAction {
@@ -28,7 +28,7 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	}
 
 	@Override
-	public Action newInstance(LineConfig cfg) {
+	public Action create(LineConfig cfg) {
 		return new NPCDialogueAction(cfg);
 	}
 	

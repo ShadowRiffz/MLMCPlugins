@@ -6,11 +6,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.actions.Action;
+import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.ActionSequence;
-import me.neoblade298.neoquests.io.QuestsConfigException;
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neoquests.actions.DialogueAction;
 
 public class ConversationStage {
 	private int num;
@@ -18,12 +19,12 @@ public class ConversationStage {
 	private ActionSequence actions = new ActionSequence();
 	private ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 	
-	public ConversationStage(ConfigurationSection cfg, int num) throws QuestsConfigException {
+	public ConversationStage(ConfigurationSection cfg, int num) throws NeoIOException {
 		this.num = num;
 		String text = cfg.getString("text");
 		LineConfig tcfg = new LineConfig(text);
-		if (Action.dialogueActions.containsKey(tcfg.getKey())) {
-			this.text = Action.parseDialogue(tcfg);
+		if (ActionManager.isDialogueAction(tcfg.getKey())) {
+			this.text = ((DialogueAction) ActionManager.get(tcfg)).parseDialogue(tcfg);
 		}
 		else {
 			this.text = text;

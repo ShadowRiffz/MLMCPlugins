@@ -208,7 +208,7 @@ public class GardenManager implements IOComponent, Manager {
 	}
 	
 	@Override
-	public String getComponentName() {
+	public String getKey() {
 		return "GardenManager";
 	}
 }

@@ -247,7 +247,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	}
 	
 	@Override
-	public String getComponentName() {
+	public String getKey() {
 		return "StorageManager";
 	}
 	

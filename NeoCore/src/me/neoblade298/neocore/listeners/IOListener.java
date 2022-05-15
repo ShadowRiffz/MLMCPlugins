@@ -3,8 +3,8 @@ package me.neoblade298.neocore.listeners;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -16,14 +16,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class IOListener implements Listener {
-	static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
-	static ArrayList<IOComponent> components = new ArrayList<IOComponent>();
+	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
+	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
 	
 	public IOListener() {
 		try {
@@ -33,8 +34,8 @@ public class IOListener implements Listener {
 		}
 	}
 	
-	public static void addComponent(IOComponent component) {
-		components.add(component);
+	public static void register(JavaPlugin plugin, IOComponent component) {
+		components.put(plugin.getName() + "-" + component.getKey(), component);
 	}
 	
 	@EventHandler
@@ -67,13 +68,13 @@ public class IOListener implements Listener {
 					Statement stmt = con.createStatement();
 
 					// Save account
-					for (IOComponent component : components) {
+					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
-							component.savePlayer(p, stmt);
+							entry.getValue().savePlayer(p, stmt);
 							stmt.executeBatch();
 						}
 						catch (Exception ex) {
-							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + component.getComponentName());
+							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
 							ex.printStackTrace();
 						}
 					}
@@ -93,12 +94,12 @@ public class IOListener implements Listener {
 					Statement stmt = con.createStatement();
 
 					// Save account
-					for (IOComponent component : components) {
+					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
-							component.loadPlayer(p, stmt);
+							entry.getValue().loadPlayer(p, stmt);
 						}
 						catch (Exception ex) {
-							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + component.getComponentName());
+							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
 							ex.printStackTrace();
 						}
 					}
@@ -116,12 +117,12 @@ public class IOListener implements Listener {
 			Statement stmt = con.createStatement();
 			
 			// Any final cleanup
-			for (IOComponent component : components) {
+			for (Entry<String, IOComponent> entry : components.entrySet()) {
 				try {
-					component.cleanup(stmt);
+					entry.getValue().cleanup(stmt);
 				}
 				catch (Exception ex) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + component.getComponentName());
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
 					ex.printStackTrace();
 				}
 			}

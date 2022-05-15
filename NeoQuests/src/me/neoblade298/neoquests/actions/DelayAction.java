@@ -2,7 +2,7 @@ package me.neoblade298.neoquests.actions;
 
 import java.util.HashMap;
 
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neocore.io.LineConfig;
 
 public class DelayAction implements DelayableAction, EmptyAction {
 	private static final String key = "delay";
@@ -19,7 +19,7 @@ public class DelayAction implements DelayableAction, EmptyAction {
 	}
 
 	@Override
-	public Action newInstance(LineConfig cfg) {
+	public Action create(LineConfig cfg) {
 		return new DelayAction(cfg);
 	}
 

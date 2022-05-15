@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neoquests.io.LineConfig;
+import me.neoblade298.neocore.io.LineConfig;
 
 public class MessageDialogueAction implements Action, DialogueAction {
 	private static final String key = "message";
@@ -27,7 +27,7 @@ public class MessageDialogueAction implements Action, DialogueAction {
 	}
 
 	@Override
-	public Action newInstance(LineConfig cfg) {
+	public Action create(LineConfig cfg) {
 		return new MessageDialogueAction(cfg);
 	}
 	

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.conditions.Condition;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
-import me.neoblade298.neoquests.io.QuestsConfigException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -19,10 +20,10 @@ public class ConversationResponse {
 	private ActionSequence startActions = new ActionSequence();
 	int next = -1;
 	
-	public ConversationResponse(ConfigurationSection cfg) throws QuestsConfigException {
+	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
 		this.text = cfg.getString("text").replaceAll("&", "§");
 		this.startActions.load(cfg.getStringList("actions"));
-		this.conditions = Condition.parseConditions(cfg.getStringList("conditions"));
+		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.next = cfg.getInt("next", -3);
 	}
 	
@@ -33,7 +34,7 @@ public class ConversationResponse {
 	
 	// True if number should be incremented
 	public boolean showResponse(Player p, int num) {
-		ArrayList<Condition> failed = Condition.getFailedConditions(p, conditions); // Pos 0 is blocking condition
+		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking condition
 		if (!failed.isEmpty()) {
 			if (failed.get(0).getResult().equals(ConditionResult.UNCLICKABLE)) { // Unclickable
 				StringBuilder failHover = new StringBuilder("§c§oCannot be selected:");
@@ -60,7 +61,7 @@ public class ConversationResponse {
 	
 	// Returns next stage
 	public boolean tryResponse(Player p) {
-		ArrayList<Condition> failed = Condition.getFailedConditions(p, conditions); // Pos 0 is blocking condition
+		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking condition
 		if (!failed.isEmpty()) {
 			StringBuilder failExpl = new StringBuilder("§c§oCannot be selected:");
 			for (Condition failedCond : failed) {
@@ -82,7 +83,7 @@ public class ConversationResponse {
 		return startActions;
 	}
 	
-	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws QuestsConfigException {
+	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws NeoIOException {
 		ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 		for (String key : cfg.getKeys(false)) {
 			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));
