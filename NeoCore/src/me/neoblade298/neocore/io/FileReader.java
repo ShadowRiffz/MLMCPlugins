@@ -2,7 +2,6 @@ package me.neoblade298.neocore.io;
 
 import java.io.File;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
