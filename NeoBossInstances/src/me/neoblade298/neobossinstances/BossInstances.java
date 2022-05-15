@@ -364,7 +364,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 			public void run() {
 				if (!activeBosses.contains(boss)) {
 					activeBosses.add(boss);
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), b.getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+					if (b.getCmd() != null) {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), b.getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+					}
 					if (b.getBossType().equals(BossType.BOSS)) {
 						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						for (Player target : activeFights.get(boss)) {
