@@ -56,7 +56,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
-	public boolean isInstance = false;
+	public static boolean isInstance = false;
 	public Settings settings;
 	public Settings hiddenSettings;
 	
@@ -103,8 +103,6 @@ public class Consumables extends JavaPlugin implements Listener {
 	}
 	
 	public void onDisable() {
-		ConsumableManager.saveAll();
-		ConsumableManager.handleDisable();
 		org.bukkit.Bukkit.getServer().getLogger().info("NeoConsumables Disabled");
 		super.onDisable();
 	}

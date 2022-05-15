@@ -160,7 +160,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 
 	@Override
 	public boolean canUse(Player p, ItemStack item) {
-		if (main.isInstance) {
+		if (Consumables.isInstance) {
 			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "§"));
 			return false;
 		}

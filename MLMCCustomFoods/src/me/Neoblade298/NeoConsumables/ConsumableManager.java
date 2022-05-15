@@ -1,7 +1,5 @@
 package me.Neoblade298.NeoConsumables;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -10,24 +8,21 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
-import com.sucy.skill.api.event.PlayerSaveEvent;
-
 import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.PlayerCooldowns;
+import me.neoblade298.neocore.io.IOComponent;
 
-public class ConsumableManager implements Listener {
+public class ConsumableManager implements Listener, IOComponent {
 	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
 	public static HashMap<UUID, DurationEffects> effects = new HashMap<UUID, DurationEffects>();
 	private static Consumables main;
@@ -36,7 +31,9 @@ public class ConsumableManager implements Listener {
 		ConsumableManager.main = main;
 	}
 
-	public static void save(UUID uuid, Connection con, Statement stmt, boolean savingMultiple) {
+	@Override
+	public void savePlayer(Player p, Statement stmt) {
+		UUID uuid = p.getUniqueId();
 		DurationEffects eff = ConsumableManager.effects.get(uuid);
 		if (eff != null) {
 			if (!eff.isRelevant()) {
@@ -51,11 +48,6 @@ public class ConsumableManager implements Listener {
 				else {
 					stmt.addBatch("DELETE FROM consumables_effects WHERE uuid = '" + uuid + "';");
 				}
-				
-				// Set to true if you're saving several accounts at once
-				if (!savingMultiple) {
-					stmt.executeBatch();
-				}
 			} catch (Exception e) {
 				Bukkit.getLogger().log(Level.WARNING, "Consumables failed to save effects for " + uuid);
 				e.printStackTrace();
@@ -63,31 +55,27 @@ public class ConsumableManager implements Listener {
 		}
 	}
 	
-	public static void saveAll() {
+	public void cleanup(Statement stmt) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
-			Statement stmt = con.createStatement();
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				save(p.getUniqueId(), con, stmt, true);
+				savePlayer(p, stmt);
 			}
+			long previousDay = System.currentTimeMillis() - 86400000L;
+			stmt.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
 			stmt.executeBatch();
-			con.close();
 		} catch (Exception ex) {
-			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to save-all");
+			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to cleanup");
 			ex.printStackTrace();
 		}
 	}
 
-	public static void loadPlayer(UUID uuid) {
+	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+		UUID uuid = p.getUniqueId();
 		ConsumableManager.effects.remove(uuid);
 		if (Consumables.debug) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Loading UUID " + uuid);
 		}
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
-			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM consumables_effects WHERE uuid = '" + uuid + "';");
 			if (rs.next()) {
 				FoodConsumable cons = (FoodConsumable) Consumables.getConsumable(rs.getString(2));
@@ -110,20 +98,6 @@ public class ConsumableManager implements Listener {
 			e.printStackTrace();
 		}
 	}
-
-	
-	private void handleLeave(UUID uuid) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
-			Statement stmt = con.createStatement();
-			ConsumableManager.save(uuid, con, stmt, false);
-		}
-		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle leave for " + uuid);
-			e.printStackTrace();
-		}
-	}
 	
 	private void endEffects(UUID uuid) {
 		DurationEffects effs = ConsumableManager.effects.get(uuid);
@@ -142,25 +116,6 @@ public class ConsumableManager implements Listener {
 		}
 	}
 	
-	public static void handleDisable() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(Consumables.connection, Consumables.properties);
-			Statement stmt = con.createStatement();
-			long previousDay = System.currentTimeMillis() - 86400000L;
-			stmt.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
-		}
-		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to handle disable");
-			e.printStackTrace();
-		}
-	}
-
-	@EventHandler
-	public void onSaveSQL(PlayerSaveEvent e) {
-		handleLeave(e.getUUID());
-	}
-	
 	@EventHandler
 	public void onSQLLoad(PlayerLoadCompleteEvent e) {
 		startEffects(e.getPlayer().getUniqueId());
@@ -175,19 +130,9 @@ public class ConsumableManager implements Listener {
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		endEffects(e.getPlayer().getUniqueId());
 	}
-	
-	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer().getUniqueId());
-	}
 
-	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		loadPlayer(e.getUniqueId());
+	@Override
+	public String getKey() {
+		return "ConsumableManager";
 	}
 }
