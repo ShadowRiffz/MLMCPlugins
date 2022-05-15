@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -61,10 +60,6 @@ public class Consumables extends JavaPlugin implements Listener {
 	public Settings hiddenSettings;
 	
 	public static boolean debug = false;
-	public static String sqlUser;
-	public static String sqlPass;
-	public static String connection;
-	public static Properties properties = new Properties();
 	
 	static {
 		defaultWorlds.add("Argyll");
@@ -81,18 +76,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		settings.addSetting("InventoryUse", false);
 		hiddenSettings = nsettings.createSettings("Tokens", this, true);
 		hiddenSettings.addSetting("Boss", false);
-
-		// SQL
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
-		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
-				sql.getString("db") + sql.getString("flags");
-		sqlUser = sql.getString("username");
-		sqlPass = sql.getString("password");
-		properties.setProperty("useSSL", "false");
-		properties.setProperty("user", sqlUser);
-		properties.setProperty("password", sqlPass);
-		properties.setProperty("useSSL", "false");
 
 		// Load consumables and boss chests
 		reload();
