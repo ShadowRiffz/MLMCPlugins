@@ -26,7 +26,7 @@ public class GiveStoredItemMechanic implements ITargetedEntitySkill {
 	protected final String mob;
 
 	public GiveStoredItemMechanic(MythicLineConfig config) {
-        this.mob = config.getString(new String[] {"mob", "m"}, "Ratface");
+        this.mob = config.getString(new String[] {"mob", "m"}, null);
         this.id = config.getInteger(new String[] {"id", "i"}, 0);
         this.amount = config.getInteger(new String[] {"amount", "a"}, 1);
         
@@ -35,7 +35,9 @@ public class GiveStoredItemMechanic implements ITargetedEntitySkill {
             	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
             	return;
             }
-            StorageManager.addSource(this.id, this.mob, true);
+            if (this.mob != null) {
+                StorageManager.addSource(this.id, this.mob, true);
+            }
         }
         catch (Exception e) {
         	e.printStackTrace();
