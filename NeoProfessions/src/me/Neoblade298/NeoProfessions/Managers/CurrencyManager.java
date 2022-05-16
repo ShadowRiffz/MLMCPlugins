@@ -163,7 +163,15 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		}
 		
 		CurrencyManager.subtract(p, level, amount);
-		p.getInventory().addItem(getVoucher(level, amount));
+		while (amount > 0) {
+			int subtract = amount > 64 ? 64 : amount;
+			amount -= subtract;
+			HashMap<Integer, ItemStack> failed = p.getInventory().addItem(getVoucher(level, amount));
+			for (Integer i : failed.keySet()) {
+				ItemStack item = failed.get(i);
+				p.getWorld().dropItem(p.getLocation(), item);
+			}
+		}
 		return true;
 	}
 	
@@ -173,10 +181,11 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		meta.setDisplayName("§6[Lv " + level + "] §7Essence §fx" + amount);
 		meta.setLore(voucherLore);
 		item.setItemMeta(meta);
+		item.setAmount(amount);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "essence");
 		nbti.setInteger("level", level);
-		nbti.setInteger("amount", amount);
+		nbti.setInteger("amount", 1);
 		return nbti.getItem();
 	}
 	
@@ -196,15 +205,13 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		}
 
 		Player p = e.getPlayer();
-		ItemStack clone = item.clone();
-		clone.setAmount(1);
-		NBTItem nbti = new NBTItem(clone);
+		NBTItem nbti = new NBTItem(item);
 		if (nbti.getString("type").equals("essence")) {
 			int level = nbti.getInteger("level");
 			int amount = nbti.getInteger("amount");
-			p.getInventory().removeItem(clone);
+			p.getInventory().removeItem(item);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + amount + " §6Lv " + level + "§7 Essence!");
+			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + (amount * item.getAmount()) + " §6Lv " + level + "§7 Essence!");
 			CurrencyManager.add(p, level, amount);
 		}
 	}
