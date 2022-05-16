@@ -338,27 +338,18 @@ public class Commands implements CommandExecutor {
 
 		if (args.length == 0) {
 			sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
-			sender.sendMessage("§c/boss instances [boss] §7- Shows instances for boss");
 			sender.sendMessage("§c/boss instances §7- Shows all players in instances");
 			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
 				sender.sendMessage("§4/boss send [player] [boss] [max] [radius]§7- Send all nearby players to boss");
 				sender.sendMessage("§4/boss tp [name] [boss] [instance]§7- Ignores disabled fights");
 				sender.sendMessage("§4/boss mini [name] [boss] [miniboss]§7- Teleports player to open miniboss");
-				sender.sendMessage("§4/boss showstats [boss] [displayname] §7- Shows stats and clears them");
-				sender.sendMessage("§4/boss debugstats [boss] [displayname] §7- Shows stats to sender, no clear");
-				sender.sendMessage("§4/boss save [name] §7- Manually saves a player");
-				sender.sendMessage("§4/boss resetcd [player] [boss]§7- Resets a player cooldown for a boss");
-				sender.sendMessage("§4/boss resetcds [player] §7- Resets a player cooldown for all bosses");
-				sender.sendMessage("§4/boss resetallcds §7- Resets all player cooldowns");
-				sender.sendMessage("§4/boss resetinstances §7- Resets all instances");
+				sender.sendMessage("§4/boss showstats/debugstats [boss] [displayname] §7- Shows stats, clears them if not debug");
+				sender.sendMessage("§4/boss resetcd/s/allcds [player] [boss]");
+				sender.sendMessage("§4/boss resetinstances §7- Resets all instances (live)");
 				sender.sendMessage("§4/boss addtoboss [player] [boss] §7- Add player to active fight");
-				sender.sendMessage("§4/boss return {player} §7- Returns player or command user to main server");
 				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
-				sender.sendMessage(
-						"§4/boss active §7- Debug, returns list of who's in what fights (ONLY INSTANCE)");
-				sender.sendMessage(
-						"§4/boss resetactive §7- Resets local active fights");
+				sender.sendMessage("§4/boss active/resetactive §7- Instance only");
 			}
 			return true;
 		}
