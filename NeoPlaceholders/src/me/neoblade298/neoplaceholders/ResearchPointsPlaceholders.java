@@ -1,6 +1,7 @@
 package me.neoblade298.neoplaceholders;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -56,11 +57,11 @@ public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 		
 		if (args.length != 1) return "Invalid placeholder";
 		String mob = args[0];
-		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-		if (mm == null) {
+		Optional<MythicMob> mm = MythicBukkit.inst().getMobManager().getMythicMob(mob);
+		if (mm.isEmpty()) {
 			return "Invalid placeholder";
 		}
-		String name = mm.getDisplayName().get();
+		String name = mm.get().getDisplayName().get();
 		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
 		if (researchPoints.containsKey(mob)) {
 			int points = researchPoints.get(mob);
