@@ -66,6 +66,11 @@ public class Main extends JavaPlugin implements Listener {
 		sounds.put("Harp", Sound.BLOCK_NOTE_BLOCK_PLING);
 		sounds.put("Snare", Sound.BLOCK_NOTE_BLOCK_SNARE);
 		sounds.put("Double", Sound.BLOCK_NOTE_BLOCK_BASS);
+		sounds.put("Banjo", Sound.BLOCK_NOTE_BLOCK_BANJO);
+		sounds.put("Didgeridoo", Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+		sounds.put("Cow Bell", Sound.BLOCK_NOTE_BLOCK_COW_BELL);
+		sounds.put("Iron Xylophone", Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE);
+		sounds.put("Musical Device", Sound.BLOCK_NOTE_BLOCK_BIT);
 		
 		// Set up pitches hashmap
 		pitches.put(".", 0F);
@@ -124,8 +129,9 @@ public class Main extends JavaPlugin implements Listener {
 				
 				if (lore.get(0).contains("Instrument")) {
 					lore.set(0, ChatColor.stripColor(lore.get(0)));
-					String[] temp = lore.get(0).split(" ");
-					instrument.put(p, temp[0]);
+					int tempSplit = lore.get(0).lastIndexOf(" ");
+					String temp = lore.get(0).substring(0, tempSplit);
+					instrument.put(p, temp);
 
 					ItemStack offHandItem = p.getInventory().getItemInOffHand();
 					if ((offHandItem != null) && (offHandItem.getType() == Material.WRITTEN_BOOK)
