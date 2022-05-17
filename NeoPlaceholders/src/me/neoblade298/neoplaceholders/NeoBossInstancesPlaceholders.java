@@ -12,7 +12,9 @@ import org.bukkit.plugin.Plugin;
 import com.sucy.skill.api.util.FlagManager;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neobossinstances.Boss;
 import me.neoblade298.neobossinstances.BossInstances;
+import me.neoblade298.neobossinstances.BossType;
 
 public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	private BossInstances plugin;
@@ -134,6 +136,15 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			// Boss timer only, no raid timer
 			long bossTimer = plugin.getBossTimer(p);
 			long raidTimer = plugin.getRaidTimer(p);
+			Boss b = plugin.getBoss(p);
+			if (b != null && b.getBossType().equals(BossType.DUNGEON)) {
+				if ((System.currentTimeMillis() & 8191) > 4096) {
+					return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
+				}
+				else {
+					return "§8§l> §c§lDungeon Timer: §c" + formatter.format(System.currentTimeMillis() - bossTimer);
+				}
+			}
 			if (bossTimer != -1 && raidTimer == -1) {
 				return "§8§l> §c§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
 			}
