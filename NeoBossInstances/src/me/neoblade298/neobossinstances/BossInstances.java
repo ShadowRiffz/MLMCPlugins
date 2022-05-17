@@ -551,7 +551,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (!fightingBoss.containsKey(uuid)) return;
 			String boss = fightingBoss.remove(uuid);
 			statTimers.remove(boss);
-			bossRunnableTimers.remove(boss);
 			if (activeFights.get(boss).contains(p)) {
 				spectatingBoss.put(uuid, bossInfo.get(boss));
 				activeFights.get(boss).remove(p);
