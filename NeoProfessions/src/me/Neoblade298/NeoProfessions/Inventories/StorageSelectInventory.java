@@ -22,7 +22,8 @@ public class StorageSelectInventory extends ProfessionInventory {
 		contents[1] = createItem(Material.OAK_LOG, "§9Logging Items", 1000, 1999);
 		contents[2] = createItem(Material.IRON_ORE, "§9Stonecutting Items", 2000, 2999);
 		contents[3] = createItem(Material.ROTTEN_FLESH, "§9Mob Drops", 3000, 3999);
-		contents[4] = createItem(Material.CHEST, "§9All Items", -1, 1);
+		contents[4] = createItem(Material.SKELETON_SKULL, "§9Dungeon Drops", 4100, 4199);
+		contents[5] = createItem(Material.CHEST, "§9All Items", -1, 1);
 		contents[8] = createItem(Material.CRAFTING_TABLE, "§9/craft", -1, 1);
 		inv.setContents(contents);
 
