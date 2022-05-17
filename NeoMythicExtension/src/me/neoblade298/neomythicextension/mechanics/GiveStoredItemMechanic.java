@@ -31,12 +31,13 @@ public class GiveStoredItemMechanic implements ITargetedEntitySkill {
         this.amount = config.getInteger(new String[] {"amount", "a"}, 1);
         
         try {
-            if (MythicBukkit.inst().getMobManager().getMythicMob(this.mob) == null) {
-            	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
-            	return;
-            }
             if (this.mob != null) {
-                StorageManager.addSource(this.id, this.mob, true);
+                if (MythicBukkit.inst().getMobManager().getMythicMob(this.mob).isEmpty()) {
+                	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
+                }
+                else {
+                    StorageManager.addSource(this.id, this.mob, true);
+                }
             }
         }
         catch (Exception e) {

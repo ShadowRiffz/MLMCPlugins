@@ -18,15 +18,18 @@ public class StoredItemDrop implements IIntangibleDrop {
 	protected final String mob;
 
 	public StoredItemDrop(MythicLineConfig config) {
-        this.mob = config.getString(new String[] {"mob", "m"}, "Ratface");
+        this.mob = config.getString(new String[] {"mob", "m"});
         this.id = config.getInteger(new String[] {"id", "i"}, 0);
         
         try {
-            if (MythicBukkit.inst().getMobManager().getMythicMob(this.mob) == null) {
-            	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
-            	return;
+            if (this.mob != null) {
+                if (MythicBukkit.inst().getMobManager().getMythicMob(this.mob).isEmpty()) {
+                	Bukkit.getLogger().log(Level.WARNING, "[NeoMythicExtension] Failed to load mob " + this.mob + " for GiveStoredItem " + this.id);
+                }
+                else {
+                    StorageManager.addSource(this.id, this.mob, true);
+                }
             }
-            StorageManager.addSource(this.id, this.mob, true);
         }
         catch (Exception e) {
         	e.printStackTrace();

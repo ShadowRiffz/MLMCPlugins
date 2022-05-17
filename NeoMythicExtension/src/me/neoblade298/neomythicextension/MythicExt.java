@@ -121,7 +121,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
-	public void onMythicTargeterLoad(MythicDropLoadEvent event) {
+	public void onMythicDropLoad(MythicDropLoadEvent event) {
 		String name = event.getDropName();
 		if (name.equalsIgnoreCase("storeditem")) {
 			event.register(new StoredItemDrop(event.getConfig()));
