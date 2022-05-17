@@ -337,18 +337,23 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMythicmobKill(MythicMobDeathEvent e) {
-		if (!(e.getKiller() instanceof Player)) return;
-		
-		Player p = (Player) e.getKiller();
-		Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
-		if (b.getBossType().equals(BossType.DUNGEON)) {
-			for (SpawnerSet spawner : b.getSpawners()) {
-				String s = spawner.getInternal();
-				if (s.startsWith(e.getMobType().getInternalName())) {
-					b.incrementSpawnersKilled();
-					break;
+		try {
+			if (e.getKiller() != null && !(e.getKiller() instanceof Player)) return;
+			
+			Player p = (Player) e.getKiller();
+			Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
+			if (b.getBossType().equals(BossType.DUNGEON)) {
+				for (SpawnerSet spawner : b.getSpawners()) {
+					String s = spawner.getInternal();
+					if (s.startsWith(e.getMobType().getInternalName())) {
+						b.incrementSpawnersKilled();
+						break;
+					}
 				}
 			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
