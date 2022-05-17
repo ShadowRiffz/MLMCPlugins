@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.sql.*;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,7 +67,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
-	public void viewPlayer(Player viewer, String user, boolean creatingPPR) {
+	public void viewPlayer(CommandSender s, String user, boolean creatingPPR) {
 		boolean noError = false;
 		try{
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
@@ -110,27 +110,27 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 					rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
 					while (rs.next()) {
 						PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-						temp.show(viewer);
+						temp.show(s);
 						noError = true;
 					}
 				}
 			}
 			else {
 				if (!creatingPPR) {
-					viewer.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
+					s.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
 					noError = true;
 				}
 			}
 			if (!noError) {
 				if (!creatingPPR) {
-					viewer.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
+					s.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
 				}
 			}
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			viewer.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	

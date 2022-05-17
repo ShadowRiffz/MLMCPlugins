@@ -11,7 +11,6 @@ import java.util.Date;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class PPR {
 	private int id;
@@ -103,52 +102,52 @@ public class PPR {
 		return user != null && offense != null && action != null && description != null;
 	}
 	
-	public void preview(Player p) {
-		p.sendMessage("§7-- §c" + user + " §7--");
+	public void preview(CommandSender s) {
+		s.sendMessage("§7-- §c" + user + " §7--");
 		if (offense == null) {
-			p.sendMessage("§cOffense§7: Not set");
+			s.sendMessage("§cOffense§7: Not set");
 		}
 		else {
-			p.sendMessage("§cOffense§7: " + getOffense());
+			s.sendMessage("§cOffense§7: " + getOffense());
 		}
 		if (action == null) {
-			p.sendMessage("§cAction§7: Not set");
+			s.sendMessage("§cAction§7: Not set");
 		}
 		else {
-			p.sendMessage("§cAction§7: " + getAction());
+			s.sendMessage("§cAction§7: " + getAction());
 		}
 		if (description == null) {
-			p.sendMessage("§cDescription§7: Not set");
+			s.sendMessage("§cDescription§7: Not set");
 		}
 		else {
-			p.sendMessage("§cDescription§7: " + getDescription());
+			s.sendMessage("§cDescription§7: " + getDescription());
 		}
 	}
 	
-	public void show(Player p) {
-		p.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
+	public void show(CommandSender s) {
+		s.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
 		if (offense == null) {
-			p.sendMessage("§cOffense§7: Not set");
+			s.sendMessage("§cOffense§7: Not set");
 		}
 		else {
-			p.sendMessage("§cOffense§7: " + getOffense());
+			s.sendMessage("§cOffense§7: " + getOffense());
 		}
 		if (action == null) {
-			p.sendMessage("§cAction§7: Not set");
+			s.sendMessage("§cAction§7: Not set");
 		}
 		else {
-			p.sendMessage("§cAction§7: " + getAction());
+			s.sendMessage("§cAction§7: " + getAction());
 		}
 		if (description == null) {
-			p.sendMessage("§cDescription§7: Not set");
+			s.sendMessage("§cDescription§7: Not set");
 		}
 		else {
-			p.sendMessage("§cDescription§7: " + getDescription());
+			s.sendMessage("§cDescription§7: " + getDescription());
 		}
-		p.sendMessage("§7§m----------");
+		s.sendMessage("§7§m----------");
 	}
 	
-	public void post(Player p) {
+	public void post(CommandSender s) {
 		try{  
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
@@ -164,20 +163,20 @@ public class PPR {
 			}
 			
 			// Show all relevant PPRs
-			p.sendMessage("§7§m----------");
+			s.sendMessage("§7§m----------");
 			for (String account : accounts) {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
 				while (rs.next()) {
 					PPR temp = new PPR(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-					temp.show(p);
+					temp.show(s);
 				}
 			}
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+			s.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	public void postConsole(CommandSender s) {
@@ -202,19 +201,19 @@ public class PPR {
 			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
-	public void modify(Player p) {
+	public void modify(CommandSender s) {
 		try{  
 			Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
 			Statement stmt = con.createStatement();
 			// Post the PPR to SQL
 			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', uuid = '" + uuid + "', offense = '" + offense + "', action = '" + action + "', description = '"
 			+ description + "' WHERE id = " + id + ";");
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully modified PPR!");
+			s.sendMessage("§4[§c§lMLMC§4] §7Successfully modified PPR!");
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 }
