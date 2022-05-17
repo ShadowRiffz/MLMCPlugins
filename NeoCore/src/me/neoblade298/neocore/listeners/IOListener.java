@@ -116,7 +116,7 @@ public class IOListener implements Listener {
 				}
 			}
 		};
-		load.runTaskAsynchronously(NeoCore.inst());
+		load.runTaskLaterAsynchronously(NeoCore.inst(), 60L);
 	}
 	
 	public static void handleDisable() {
