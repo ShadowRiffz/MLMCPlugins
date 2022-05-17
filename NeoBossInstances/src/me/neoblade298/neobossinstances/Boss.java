@@ -164,4 +164,8 @@ public class Boss {
 	public void incrementSpawnersKilled() {
 		spawnersKilled++;
 	}
+	
+	public int getSpawnersKilled() {
+		return spawnersKilled;
+	}
 }

@@ -47,6 +47,7 @@ import com.sucy.skill.api.player.PlayerData;
 
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.bukkit.utils.numbers.RandomInt;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
@@ -68,14 +69,15 @@ public class BossInstances extends JavaPlugin implements Listener {
 	Location instanceSpawn = null;
 	boolean isDebug = false;
 	boolean disableFights = false;
-	
+
 	// SQL
 	static String sqlUser = "neoblade298";
 	static String sqlPass = "7H56480g09&Z01pz";
 	static String connection = "jdbc:mysql://66.70.180.136:3306/MLMC?useSSL=false";
 
 	// Databases
-	// Cooldowns: Key is boss name, payload is ConcurrentHashMap where key is playername and
+	// Cooldowns: Key is boss name, payload is ConcurrentHashMap where key is
+	// playername and
 	// payload is last fought
 	public ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>>();
 	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
@@ -101,14 +103,14 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("boss").setExecutor(new Commands(this));
+		this.getCommand("boss").setExecutor(new Commands(this));
 
-	    loadConfig();
+		loadConfig();
 
 		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
-		
+
 	}
-	
+
 	public void loadConfig() {
 		// Clear existing databases
 		cooldowns.clear();
@@ -117,18 +119,17 @@ public class BossInstances extends JavaPlugin implements Listener {
 		activeFights.clear();
 		playerStats.clear();
 		bossMultiplier.clear();
-		
+
 		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
 		settings = nsettings.createSettings("BossMultipliers", this, false);
-		
-		
+
 		// See if this is an instance
 		File instanceFile = new File(getDataFolder(), "instance.yml");
 		isInstance = instanceFile.exists();
 		if (isInstance) {
 			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name", "").replaceAll("&", "§");
 		}
-		
+
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
 		if (!file.exists()) {
@@ -161,11 +162,13 @@ public class BossInstances extends JavaPlugin implements Listener {
 			settings.addSetting(boss, 1);
 
 			if (type.equals(BossType.BOSS)) {
-				bossInfo.put(boss, new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
+				bossInfo.put(boss,
+						new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
 			}
 			else {
-				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, permission, placeholder, mythicmobs);
-				
+				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, permission, placeholder,
+						mythicmobs);
+
 				// If the raid has extra bosses within it, add them to the boss info
 				if (bossSection.contains("Bosses")) {
 					ConfigurationSection raidBosses = bossSection.getConfigurationSection("Bosses");
@@ -189,14 +192,15 @@ public class BossInstances extends JavaPlugin implements Listener {
 				bossInfo.put(boss, info);
 			}
 		}
-		
+
 		// If not an instance, set up player cooldowns
 		if (!isInstance) {
 			try {
-				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+						BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				ResultSet rs;
-				
+
 				for (String boss : bosses.getKeys(false)) {
 					ConcurrentHashMap<UUID, Long> cds = new ConcurrentHashMap<UUID, Long>();
 					cooldowns.put(boss, cds);
@@ -205,8 +209,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 						cds.put(UUID.fromString(rs.getString(1)), rs.getLong(3));
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -217,12 +220,13 @@ public class BossInstances extends JavaPlugin implements Listener {
 		// Only save cooldowns that still matter (still on cooldown)
 		if (!isInstance) {
 			try {
-				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+						BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
-				
+
 				// First clear all the cooldowns on the SQL currently
 				stmt.executeUpdate("delete from neobossinstances_cds;");
-				
+
 				// Then add the cooldowns from the ConcurrentHashMap into SQL
 				for (String boss : cooldowns.keySet()) {
 					int cooldown = bossInfo.get(boss).getCooldown();
@@ -230,22 +234,23 @@ public class BossInstances extends JavaPlugin implements Listener {
 					for (UUID uuid : lastFought.keySet()) {
 						// Only add to the cooldown list if it's still relevant
 						if ((System.currentTimeMillis() - lastFought.get(uuid)) < (cooldown * 1000)) {
-							stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + boss + "'," + lastFought.get(uuid) + ")");
+							stmt.executeUpdate("INSERT INTO neobossinstances_cds VALUES ('" + uuid + "','" + boss + "',"
+									+ lastFought.get(uuid) + ")");
 						}
 					}
 				}
-				
+
 				int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] Cleared " + deleted + " fights from NeoBossInstances");
+				Bukkit.getServer().getLogger()
+						.info("[NeoBossInstances] Cleared " + deleted + " fights from NeoBossInstances");
 				con.close();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Disabled");
 	}
-	
+
 	public Location parseLocation(String toParse) {
 		String[] sloc = toParse.split(" ");
 		double x = Double.parseDouble(sloc[0]);
@@ -256,7 +261,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		World world = Bukkit.getServer().getWorld("Argyll");
 		return new Location(world, x, y, z, yaw, pitch);
 	}
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		// If instance, check where to send a player
@@ -264,20 +269,21 @@ public class BossInstances extends JavaPlugin implements Listener {
 			Player p = e.getPlayer();
 			String uuid = p.getUniqueId().toString();
 			joiningPlayers.add(p.getName());
-			
+
 			if (p.isDead()) {
 				p.spigot().respawn();
 			}
 			for (PotionEffect pe : p.getActivePotionEffects()) {
 				p.removePotionEffect(pe.getType());
 			}
-			
+
 			// Connect
 			try {
-				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+						BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				ResultSet rs;
-			
+
 				// Check where the player should be, teleport them there
 				rs = stmt.executeQuery("SELECT *, COUNT(*) FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 				rs.next();
@@ -287,13 +293,14 @@ public class BossInstances extends JavaPlugin implements Listener {
 					p.teleport(instanceSpawn);
 					return;
 				}
-				
+
 				Boss b = bossInfo.get(boss);
 				p.teleport(b.getCoords());
 				con.close();
-				
+
 				// Set up databases
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
+				Bukkit.getServer().getLogger()
+						.info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
 				bossMultiplier.put(boss, multiplier);
 				if (!activeFights.containsKey(boss)) {
 					ArrayList<Player> activeFightsPlayers = new ArrayList<Player>();
@@ -308,7 +315,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 					inBoss.get(boss).add(p);
 				}
 				fightingBoss.put(p.getUniqueId(), boss);
-				
+
 				// Recalculate everyone's health bars every time someone joins
 				for (Player partyMember : activeFights.get(boss)) {
 					ArrayList<String> healthList = new ArrayList<String>();
@@ -320,12 +327,27 @@ public class BossInstances extends JavaPlugin implements Listener {
 					}
 					Collections.sort(healthList);
 				}
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
-			}
-			finally {
+			} finally {
 				joiningPlayers.remove(p.getName());
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onMythicmobKill(MythicMobDeathEvent e) {
+		if (!(e.getKiller() instanceof Player)) return;
+		
+		Player p = (Player) e.getKiller();
+		Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
+		if (b.getBossType().equals(BossType.DUNGEON)) {
+			for (SpawnerSet spawner : b.getSpawners()) {
+				String s = spawner.getInternal();
+				if (s.startsWith(e.getMobType().getInternalName())) {
+					b.incrementSpawnersKilled();
+					break;
+				}
 			}
 		}
 	}
@@ -333,48 +355,51 @@ public class BossInstances extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
-		
+
 		// Full health and mana
 		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		PlayerData pd = SkillAPI.getPlayerData(p);
 		if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
 			pd.setMana(pd.getMaxMana());
 		}
-		
+
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
 		String boss = fightingBoss.get(p.getUniqueId());
-		
+
 		Boss b = bossInfo.get(boss);
 		for (Player fighter : activeFights.get(boss)) {
 			if (!SkillAPI.isLoaded(fighter)) {
 				return;
 			}
 		}
-		
+
 		// Double check that they're teleported
 		double px = p.getLocation().getX();
 		double pz = p.getLocation().getZ();
 		if (px >= 1555 && px <= 1570 && pz >= -725 && pz <= -709) {
 			p.teleport(b.getCoords());
 		}
-		
+
 		// Wait 3 seconds so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
 				if (!activeBosses.contains(boss)) {
 					activeBosses.add(boss);
 					if (b.getCmd() != null) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), b.getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								b.getCmd().replaceAll("<multiplier>", "" + bossMultiplier.get(boss)));
 					}
 					if (b.getBossType().equals(BossType.BOSS)) {
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
+						Bukkit.getServer().getLogger()
+								.info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						for (Player target : activeFights.get(boss)) {
 							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
 						}
 					}
 					else if (b.getBossType().equals(BossType.RAID)) {
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " started raid " + boss + ".");
+						Bukkit.getServer().getLogger()
+								.info("[NeoBossInstances] " + p.getName() + " started raid " + boss + ".");
 						scheduleTimer(b.getTimeLimit(), boss);
 						// Reset raid bosses fought
 						for (RaidBoss raidBoss : b.getRaidBosses()) {
@@ -382,33 +407,39 @@ public class BossInstances extends JavaPlugin implements Listener {
 						}
 					}
 					else if (b.getBossType().equals(BossType.DUNGEON)) {
-						Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " started dungeon " + boss + ".");
+						Bukkit.getServer().getLogger()
+								.info("[NeoBossInstances] " + p.getName() + " started dungeon " + boss + ".");
 						scheduleTimer(b.getTimeLimit(), boss);
+						int total = 0;
 						for (SpawnerSet spawner : b.getSpawners()) {
 							for (int i = 1; i <= spawner.getMax(); i++) {
-								MythicSpawner ms = MythicBukkit.inst().getSpawnerManager().getSpawnerByName(spawner.getInternal() + i);
+								MythicSpawner ms = MythicBukkit.inst().getSpawnerManager()
+										.getSpawnerByName(spawner.getInternal() + i);
 								if (ms != null) {
+									total++;
 									ms.setMobLevel(new RandomInt(bossMultiplier.get(boss).toString()));
 									ms.setRemainingCooldownSeconds(0L);
 								}
 								else {
-									Bukkit.getLogger().log(Level.WARNING, "[NeoBossInstances] Failed to load spawner " + spawner.getInternal() + i);
+									Bukkit.getLogger().log(Level.WARNING,
+											"[NeoBossInstances] Failed to load spawner " + spawner.getInternal() + i);
 								}
 							}
 						}
+						b.setTotalSpawners(total);
 					}
 				}
 			}
 		};
 		spawnBoss.runTaskLater(this, 60L);
 	}
-	
+
 	public void scheduleTimer(int time, String boss) {
 		int ticks = time * 20;
-		
+
 		// Set up raid timer for lordboard
 		bossRunnableTimers.put(boss, System.currentTimeMillis() + (time * 1000));
-		
+
 		// 30 minute warning
 		if (time > 1800) {
 			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
@@ -425,9 +456,10 @@ public class BossInstances extends JavaPlugin implements Listener {
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {
 				if (activeFights.containsKey(boss)) {
-    				for (Player p : activeFights.get(boss)) {
-    					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
-    				}
+					for (Player p : activeFights.get(boss)) {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								returnCommand.replaceAll("%player%", p.getName()));
+					}
 				}
 			}
 		};
@@ -441,14 +473,14 @@ public class BossInstances extends JavaPlugin implements Listener {
 			bossRunnables.put(boss, list);
 		}
 	}
-	
+
 	public void scheduleWarning(int ticks, int timeToWarn, String time, String boss) {
 		BukkitRunnable warnPlayer = new BukkitRunnable() {
 			public void run() {
 				if (activeFights.containsKey(boss)) {
-    				for (Player p : activeFights.get(boss)) {
-    					p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
-    				}
+					for (Player p : activeFights.get(boss)) {
+						p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
+					}
 				}
 			}
 		};
@@ -462,35 +494,36 @@ public class BossInstances extends JavaPlugin implements Listener {
 			bossRunnables.put(boss, list);
 		}
 	}
-	
+
 	public String findInstance(String boss) {
 		try {
-			Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
+			Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+					BossInstances.sqlPass);
 			Statement stmt = con.createStatement();
 			ResultSet rs;
 			ArrayList<String> instanceNamesCopy = new ArrayList<String>(instanceNames);
 			Collections.shuffle(instanceNamesCopy);
 			for (String instance : instanceNamesCopy) {
-				rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + boss + "' AND instance = '" + instance + "';");
+				rs = stmt.executeQuery("SELECT * FROM neobossinstances_fights WHERE boss = '" + boss
+						+ "' AND instance = '" + instance + "';");
 				if (!rs.next()) {
 					return instance;
 				}
 			}
 			return "Not found";
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "Failed to connect";
 	}
-	
+
 	public void handleLeave(Player p) {
 		// Remove player from all fights locally
 		handleLeaveFight(p);
 		// Remove spectator mode
 		handleLeaveSpectator(p);
 	}
-	
+
 	public void handleLeaveSpectator(Player p) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " off");
 		p.setInvulnerable(false);
@@ -505,7 +538,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
+
 	// For when a player dies and goes into spectate mode
 	public void handleLeaveFight(Player p) {
 		if (p != null) {
@@ -519,13 +552,15 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (activeFights.get(boss).contains(p)) {
 				spectatingBoss.put(uuid, bossInfo.get(boss));
 				activeFights.get(boss).remove(p);
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
+				Bukkit.getServer().getLogger()
+						.info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ".");
 				for (Player player : activeFights.get(boss)) {
 					healthbars.get(player.getName()).remove(p.getName());
 				}
 			}
 			if (activeFights.get(boss).size() == 0) {
-				Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
+				Bukkit.getServer().getLogger().info(
+						"[NeoBossInstances] " + p.getName() + " removed from boss " + boss + ", removed from list.");
 				activeFights.remove(boss);
 				activeBosses.remove(boss);
 				bossMultiplier.remove(boss);
@@ -538,7 +573,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 					}
 					bossRunnables.remove(boss);
 				}
-				
+
 				// Send every spectator back, then remove from inBoss
 				p.spigot().respawn();
 				p.teleport(instanceSpawn);
@@ -556,22 +591,21 @@ public class BossInstances extends JavaPlugin implements Listener {
 				};
 				sendAllBack.runTaskLater(main, 20L);
 			}
-	    	// Delete player from all fights in sql
+			// Delete player from all fights in sql
 			try {
-				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+						BossInstances.sqlPass);
 				Statement stmt = con.createStatement();
 				stmt.executeUpdate("delete from neobossinstances_fights WHERE uuid = '" + uuid + "';");
-				
+
 				con.close();
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 			leavingPlayers.remove(p.getName());
 		}
 	}
-	
-	
+
 	public String getCooldown(String name, Player p) {
 		if (cooldowns.containsKey(name)) {
 			int cooldown = bossInfo.get(name).getCooldown() * 1000;
@@ -588,7 +622,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 		return "§c0";
 	}
-	
+
 	public String getBossName(String boss, Player p) {
 		Boss b = bossInfo.get(boss);
 		if (p.hasPermission(b.getPermission())) {
@@ -596,7 +630,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 		return null;
 	}
-	
+
 	public int getBossCooldown(String boss, Player p) {
 		if (cooldowns.containsKey(boss)) {
 			// This is covered by getBossName so essentially is not used
@@ -610,15 +644,16 @@ public class BossInstances extends JavaPlugin implements Listener {
 				return (int) ((lastUse + cooldown - currTime) / 1000);
 			}
 			else {
-    			return 0;
+				return 0;
 			}
 		}
 		return -1;
 	}
-	
+
 	public ConcurrentHashMap<String, ArrayList<Player>> getActiveFights() {
 		return activeFights;
 	}
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		if (isInstance) {
@@ -626,7 +661,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			handleLeaveFight(p);
 		}
 	}
-	
+
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		if (isInstance) {
@@ -634,8 +669,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 				public void run() {
 					Player p = e.getPlayer();
 					if (joiningPlayers.contains(p.getName())) return; // If a player logged in already dead
-					if (leavingPlayers.contains(p.getName())) return; // Don't let a newly respawned player spectate an empty boss
-					
+					if (leavingPlayers.contains(p.getName())) return; // Don't let a newly respawned player spectate an
+																		// empty boss
+
 					// If everyone in the fight is dead, return everyone
 					if (spectatingBoss.containsKey(p.getUniqueId())) {
 						p.teleport(spectatingBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
@@ -645,7 +681,8 @@ public class BossInstances extends JavaPlugin implements Listener {
 						PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
 						spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
 						SkillAPI.getPlayerAccountData(p).setAccount(13);
-						p.sendMessage("§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+						p.sendMessage(
+								"§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
 					}
 					else {
 						p.teleport(instanceSpawn);
@@ -655,7 +692,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			respawn.runTaskLater(this, 20L);
 		}
 	}
-	
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		if (isInstance) {
@@ -663,12 +700,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
 			}
-			
+
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
 	}
-	
+
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
 		if (isInstance) {
@@ -676,12 +713,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
 				SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
 			}
-			
+
 			SkillAPI.saveSingle(p);
 			handleLeave(p);
 		}
 	}
-	
+
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
 		if (isInstance) {
@@ -699,14 +736,14 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void multiplyMobDamage(EntityDamageByEntityEvent e) {
 		// For now, this only matters in instances
 		if (!isInstance) {
 			return;
 		}
 		BukkitAPIHelper api = MythicBukkit.inst().getAPIHelper();
-		
+
 		// If a mob is damaging a player
 		if (api.isMythicMob(e.getDamager()) && e.getEntity() instanceof Player) {
 			// Anything above 50k is probably some sort of instakill, don't multiply it
@@ -718,21 +755,21 @@ public class BossInstances extends JavaPlugin implements Listener {
 				else if (am.getLevel() > 6) {
 					e.setDamage(e.getDamage() * (1 + (0.3 * (am.getLevel() - 1))));
 				}
-				else if (am.getLevel() >= -99){
+				else if (am.getLevel() >= -99) {
 					e.setDamage(e.getDamage() * (1 + (0.01 * (am.getLevel()))));
 				}
 			}
 		}
 	}
-	
-	@EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void monitorPlayerDamage(EntityDamageByEntityEvent e) {
 		// For now, this only matters in instances
 		if (!isInstance) {
 			return;
 		}
 		BukkitAPIHelper api = MythicBukkit.inst().getAPIHelper();
-		
+
 		// If the player is dealing damage
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
@@ -740,12 +777,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 				e.setCancelled(true);
 				return;
 			}
-			
+
 			// Make sure their stats are currently being counted
 			if (!playerStats.containsKey(p.getName())) {
 				return;
 			}
-			
+
 			// Make sure self-damage isn't counted in stats
 			if (!(e.getEntity() instanceof Player)) {
 				if (!fightingBoss.containsKey(p.getUniqueId())) {
@@ -755,7 +792,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 				stats.addDamageDealt(e.getFinalDamage());
 			}
 		}
-		
+
 		// If the player is taking damage
 		else if (e.getEntity() instanceof Player) {
 			// Make sure self-damage isn't counted
@@ -784,11 +821,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 					e.setCancelled(true);
 					return;
 				}
-				
+
 				if (!fightingBoss.containsKey(p.getUniqueId())) {
 					return;
 				}
-				
+
 				if (!playerStats.containsKey(p.getName())) {
 					return;
 				}
@@ -798,17 +835,17 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onSkillHeal(SkillHealEvent e) {
 		if (!isInstance) {
 			return;
 		}
-		
+
 		String pName = e.getHealer().getName();
-		if(playerStats.containsKey(pName)) {
+		if (playerStats.containsKey(pName)) {
 			PlayerStat stats = playerStats.get(pName);
 			// Self healing
-			if(pName.equalsIgnoreCase(e.getTarget().getName())) {
+			if (pName.equalsIgnoreCase(e.getTarget().getName())) {
 				stats.addSelfHeal(e.getEffectiveHeal());
 			}
 			// Ally healing
@@ -817,11 +854,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
+
 	public ArrayList<String> getHealthBars(Player p) {
 		return healthbars.get(p.getName());
 	}
-	
+
 	public void returnToMain(Player p) {
 		if (spectatingBoss.containsKey(p.getUniqueId())) {
 			p.teleport(instanceSpawn);
@@ -830,36 +867,35 @@ public class BossInstances extends JavaPlugin implements Listener {
 			}
 			handleLeaveSpectator(p);
 		}
-		
+
 		SkillAPI.saveSingle(p);
 		p.sendMessage("§4[§c§lBosses§4] §7Sending you back in 3 seconds...");
 		BukkitRunnable sendBack = new BukkitRunnable() {
 			public void run() {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-						returnCommand.replaceAll("%player%", p.getName()));
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));
 			}
 		};
 		sendBack.runTaskLater(main, 60L);
 	}
-	
+
 	public long getBossTimer(Player p) {
 		if (fightingBoss.containsKey(p.getUniqueId())) {
 			return statTimers.getOrDefault(fightingBoss.get(p.getUniqueId()), -1L);
 		}
 		return -1;
 	}
-	
+
 	public long getRaidTimer(Player p) {
 		if (fightingBoss.containsKey(p.getUniqueId())) {
 			return bossRunnableTimers.getOrDefault(fightingBoss.get(p.getUniqueId()), -1L);
 		}
 		return -1;
 	}
-	
+
 	public Boss getBoss(Player p) {
 		return bossInfo.get(fightingBoss.get(p.getUniqueId()));
 	}
-	
+
 	public static Set<UUID> getSpectators() {
 		return spectatingBoss.keySet();
 	}
