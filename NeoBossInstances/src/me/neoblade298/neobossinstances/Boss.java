@@ -17,6 +17,8 @@ public class Boss {
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
 	private ArrayList<SpawnerSet> spawners = null;
+	private int totalSpawners = 0;
+	private int spawnersKilled = 0;
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
@@ -149,5 +151,17 @@ public class Boss {
 	
 	public ArrayList<SpawnerSet> getSpawners() {
 		return spawners;
+	}
+	
+	public void setTotalSpawners(int total) {
+		this.totalSpawners = total;
+	}
+	
+	public int getTotalSpawners() {
+		return totalSpawners;
+	}
+	
+	public void incrementSpawnersKilled() {
+		spawnersKilled++;
 	}
 }
