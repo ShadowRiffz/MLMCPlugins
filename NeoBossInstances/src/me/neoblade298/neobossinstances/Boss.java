@@ -1,6 +1,7 @@
 package me.neoblade298.neobossinstances;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 
@@ -16,9 +17,9 @@ public class Boss {
 	private ArrayList<RaidBoss> raidBosses = null;
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
-	private ArrayList<SpawnerSet> spawners = null;
+	private ArrayList<SpawnerSet> spawnersets = null;
+	private HashSet<String> spawnersAlive = null;
 	private int totalSpawners = 0;
-	private int spawnersKilled = 0;
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
@@ -58,7 +59,7 @@ public class Boss {
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
-		this.spawners = spawners;
+		this.spawnersets = spawners;
 	}
 
 	public String getName() {
@@ -145,12 +146,12 @@ public class Boss {
 		this.mythicmobs = mythicmobs;
 	}
 	
-	public void setSpawners(ArrayList<SpawnerSet> spawners) {
-		this.spawners = spawners;
+	public void setSpawners(ArrayList<SpawnerSet> spawnersets) {
+		this.spawnersets = spawnersets;
 	}
 	
 	public ArrayList<SpawnerSet> getSpawners() {
-		return spawners;
+		return spawnersets;
 	}
 	
 	public void setTotalSpawners(int total) {
@@ -161,11 +162,15 @@ public class Boss {
 		return totalSpawners;
 	}
 	
-	public void incrementSpawnersKilled() {
-		spawnersKilled++;
+	public void checkSpawnerKill(String name) {
+		spawnersAlive.remove(name);
+	}
+	
+	public void setSpawnersAlive(HashSet<String> spawnersAlive) {
+		this.spawnersAlive = spawnersAlive;
 	}
 	
 	public int getSpawnersKilled() {
-		return spawnersKilled;
+		return totalSpawners - spawnersAlive.size();
 	}
 }

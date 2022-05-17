@@ -344,13 +344,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			Player p = (Player) e.getKiller();
 			Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
 			if (b.getBossType().equals(BossType.DUNGEON)) {
-				for (SpawnerSet spawner : b.getSpawners()) {
-					String s = spawner.getInternal();
-					if (s.startsWith(e.getMobType().getInternalName())) {
-						b.incrementSpawnersKilled();
-						break;
-					}
-				}
+				b.checkSpawnerKill(e.getMobType().getInternalName());
 			}
 		}
 		catch (Exception ex) {
@@ -417,6 +411,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 								.info("[NeoBossInstances] " + p.getName() + " started dungeon " + boss + ".");
 						scheduleTimer(b.getTimeLimit(), boss);
 						int total = 0;
+						HashSet<String> spawnersAlive = new HashSet<String>();
 						for (SpawnerSet spawner : b.getSpawners()) {
 							for (int i = 1; i <= spawner.getMax(); i++) {
 								MythicSpawner ms = MythicBukkit.inst().getSpawnerManager()
@@ -425,6 +420,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 									total++;
 									ms.setMobLevel(new RandomInt(bossMultiplier.get(boss).toString()));
 									ms.setRemainingCooldownSeconds(0L);
+									spawnersAlive.add(ms.getInternalName());
 								}
 								else {
 									Bukkit.getLogger().log(Level.WARNING,
@@ -433,6 +429,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 							}
 						}
 						b.setTotalSpawners(total);
+						b.setSpawnersAlive(spawnersAlive);
 					}
 				}
 			}
