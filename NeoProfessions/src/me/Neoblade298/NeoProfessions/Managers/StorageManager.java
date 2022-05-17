@@ -153,15 +153,9 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	
 	@Override
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
-		// Check if player exists already
-		if (storages.containsKey(p.getUniqueId())) {
-			return;
-		}
-
 		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>();
 		storages.put(p.getUniqueId(), items);
 		
-		// Check if player exists on SQL
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM professions_items WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
