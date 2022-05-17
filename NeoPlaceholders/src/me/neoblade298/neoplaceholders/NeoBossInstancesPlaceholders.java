@@ -132,7 +132,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			
 			return color + partyMember.getName() + " " + bar;
 		}
-		else if (args[0].equalsIgnoreCase("timers")) {
+		else if (args[0].equalsIgnoreCase("timers") && p != null) {
 			// Boss timer only, no raid timer
 			long bossTimer = plugin.getBossTimer(p);
 			long raidTimer = plugin.getRaidTimer(p);
