@@ -338,6 +338,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMythicmobKill(MythicMobDeathEvent e) {
 		try {
+			if (!isInstance) return;
 			if (e.getKiller() != null && !(e.getKiller() instanceof Player)) return;
 			
 			Player p = (Player) e.getKiller();
