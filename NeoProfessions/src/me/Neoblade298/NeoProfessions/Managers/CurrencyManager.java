@@ -164,13 +164,13 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		
 		CurrencyManager.subtract(p, level, amount);
 		while (amount > 0) {
-			int subtract = amount > 64 ? 64 : amount;
-			amount -= subtract;
 			HashMap<Integer, ItemStack> failed = p.getInventory().addItem(getVoucher(level, amount));
 			for (Integer i : failed.keySet()) {
 				ItemStack item = failed.get(i);
 				p.getWorld().dropItem(p.getLocation(), item);
 			}
+			int subtract = amount > 64 ? 64 : amount;
+			amount -= subtract;
 		}
 		return true;
 	}
