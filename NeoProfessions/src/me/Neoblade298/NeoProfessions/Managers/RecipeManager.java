@@ -116,7 +116,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 					if (resultArgs[0].startsWith("gear")) {
 						result = new GearResult(resultArgs);
 					}
-					else if (resultArgs[0].startsWith("essence")) {
+					else if (resultArgs[0].startsWith("shard")) {
 						result = new ShardResult(resultArgs);
 					}
 					else if (resultArgs[0].startsWith("essence")) {
