@@ -81,7 +81,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			int total = storage.getOrDefault(id, 0) + amount;
 			storage.put(id, total);
 			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
-			Bukkit.getPluginManager().callEvent(new ReceiveStoredItemEvent(p, items.get(id)));
+			Bukkit.getPluginManager().callEvent(new ReceiveStoredItemEvent(p, id));
 			return true;
 		}
 		return false;

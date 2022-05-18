@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.io.LineConfigParser;
 
 public interface Condition extends LineConfigParser<Condition> {
-	public String getKey();
 	public boolean passes(Player p);
 	public String getExplanation(Player p);
 	public ConditionResult getResult();

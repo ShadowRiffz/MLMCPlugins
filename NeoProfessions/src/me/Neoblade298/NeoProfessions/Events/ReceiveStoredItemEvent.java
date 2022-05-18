@@ -4,21 +4,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.Neoblade298.NeoProfessions.Storage.StoredItem;
-
 public class ReceiveStoredItemEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 	private Player p;
-	private StoredItem item;
-	public ReceiveStoredItemEvent(Player p, StoredItem item) {
+	private int id;
+	public ReceiveStoredItemEvent(Player p, int id) {
 		this.p = p;
-		this.item = item;
+		this.id = id;
 	}
 	public Player getPlayer() {
 		return p;
 	}
-	public StoredItem getItem() {
-		return item;
+	public int getId() {
+		return id;
 	}
 
 	@Override

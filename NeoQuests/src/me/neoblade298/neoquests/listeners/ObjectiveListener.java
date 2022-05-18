@@ -1,5 +1,9 @@
 package me.neoblade298.neoquests.listeners;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,21 +12,40 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileReader;
+import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.conversations.ConversationInstance;
 import me.neoblade298.neoquests.conversations.ConversationManager;
+import me.neoblade298.neoquests.objectives.InteractNpcObjective;
+import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import net.citizensnpcs.api.CitizensAPI;
 
-public class PlayerListener implements Listener {
+public class ObjectiveListener implements Listener {
+	
+	private static HashMap<ObjectiveEvent, ArrayList<Objective>> objs = new HashMap<ObjectiveEvent, ArrayList<Objective>>();
+	
+	public static void clearObjectives() {
+		for (ArrayList<Objective> list : objs.values()) {
+			list.clear();
+		}
+	}
+	
+	public static void addObjective(Objective o) {
+		objs.get(o.getType()).add(o);
+	}
+	
 	@EventHandler
 	public void onInteractNPC(PlayerInteractEntityEvent e) {
 		Player p = e.getPlayer();
 		if (!e.getHand().equals(EquipmentSlot.HAND)) return;
 		if (!e.getRightClicked().hasMetadata("NPC")) return;
-		
-		// Quests logic first
-		
-		// Conversations
-		ConversationManager.startConversation(p, CitizensAPI.getNPCRegistry().getNPC(e.getRightClicked()).getId());
+
+		for (Objective o : objs.get(ObjectiveEvent.INTERACT_NPC)) {
+			((InteractNpcObjective) o).checkEvent(e);
+		}
 	}
 	
 	@EventHandler
