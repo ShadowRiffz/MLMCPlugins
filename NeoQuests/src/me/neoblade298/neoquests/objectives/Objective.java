@@ -27,24 +27,9 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	public void setSet(ObjectiveSet set) {
 		this.set = set;
 	}
-	public int getCount() {
-		return count;
-	}
-	public void setCount(int count) {
-		this.count = count;
-	}
 	public int getNeeded() {
 		return needed;
 	}
-	public void incrementCount() {
-		this.count++;
-		set.check();
-	}
-	public boolean isComplete() {
-		updateCount();
-		return count >= needed;
-	}
-	public void updateCount() {}
 	
 	public abstract String getKey();
 }

@@ -7,10 +7,11 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveSet;
 
 public class QuestStage {
 	private Quest quest;
-	private ArrayList<Objective> objectives;
+	private ArrayList<ObjectiveSet> objectives;
 	private int next;
 	private ActionSequence actions;
 	
@@ -21,5 +22,9 @@ public class QuestStage {
 	
 	public int getNext() {
 		return next;
+	}
+	
+	public ArrayList<ObjectiveSet> getObjectives() {
+		return objectives;
 	}
 }

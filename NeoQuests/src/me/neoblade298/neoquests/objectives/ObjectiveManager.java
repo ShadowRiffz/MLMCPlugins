@@ -15,13 +15,13 @@ public class ObjectiveManager {
 	public ObjectiveManager() {
 		mngr = new LineConfigManager<Objective>(NeoQuests.inst(), "objectives");
 		
-		register(new StoredItemObjective());
+		register(new InteractNpcObjective());
 	}
 	
-	public static ArrayList<ObjectiveSet> parseObjectives(ConfigurationSection cfg) {
+	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {
 		ArrayList<ObjectiveSet> objs = new ArrayList<ObjectiveSet>();
 		for (String key : cfg.getKeys(false)) {
-			ObjectiveSet set = new ObjectiveSet(cfg.getStringList(key));
+			ObjectiveSet set = new ObjectiveSet(cfg.getConfigurationSection(key));
 			if (set != null) {
 				objs.add(set);
 			}

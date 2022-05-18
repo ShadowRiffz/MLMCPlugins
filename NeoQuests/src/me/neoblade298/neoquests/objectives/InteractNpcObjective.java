@@ -1,6 +1,5 @@
 package me.neoblade298.neoquests.objectives;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import me.neoblade298.neocore.io.LineConfig;

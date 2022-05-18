@@ -12,6 +12,7 @@ import me.neoblade298.neocore.io.IOComponent;
 
 public class QuestsManager implements IOComponent {
 	private HashMap<Player, Quester> questers;
+	private HashMap<String, Quest> quests;
 
 	public QuestsManager() {
 		// IOListener.register(NeoQuests.inst(), this);

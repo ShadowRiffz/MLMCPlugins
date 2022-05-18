@@ -1,5 +1,5 @@
 package me.neoblade298.neoquests.actions;
 
-public interface RewardAction {
-
+public interface RewardAction extends Action {
+	public String getMessage();
 }
