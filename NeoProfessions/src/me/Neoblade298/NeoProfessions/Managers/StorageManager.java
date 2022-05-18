@@ -24,6 +24,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
@@ -80,6 +81,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			int total = storage.getOrDefault(id, 0) + amount;
 			storage.put(id, total);
 			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
+			Bukkit.getPluginManager().callEvent(new ReceiveStoredItemEvent(p, items.get(id)));
 			return true;
 		}
 		return false;
