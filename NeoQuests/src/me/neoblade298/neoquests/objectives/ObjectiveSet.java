@@ -20,6 +20,10 @@ public class ObjectiveSet {
 		for (String line : cfg.getStringList("objectives")) {
 			ObjectiveManager.get(new LineConfig(line));
 		}
+		if (cfg.getKeys(false).contains("random-objectives")) {
+			int min = cfg.getInt("random-min");
+			int max = cfg.getInt("random-max");
+		}
 	}
 	
 	public int getNext() {
