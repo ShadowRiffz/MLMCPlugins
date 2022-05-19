@@ -142,7 +142,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 					return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
 				}
 				else {
-					return "§8§l> §c§lDungeon Timer: §c" + formatter.format(System.currentTimeMillis() - bossTimer);
+					return "§8§l> §c§lDungeon Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
 				}
 			}
 			if (bossTimer != -1 && raidTimer == -1) {
