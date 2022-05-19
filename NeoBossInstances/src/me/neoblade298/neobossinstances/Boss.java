@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 import org.bukkit.Location;
 
+import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
+
 public class Boss {
 	private Location coords = null;
 	private String name = null;
@@ -162,8 +164,8 @@ public class Boss {
 		return totalSpawners;
 	}
 	
-	public void checkSpawnerKill(String name) {
-		spawnersAlive.remove(name);
+	public void checkSpawnerKill(MythicSpawner spawner) {
+		spawnersAlive.remove(spawner.getInternalName());
 	}
 	
 	public void setSpawnersAlive(HashSet<String> spawnersAlive) {

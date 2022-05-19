@@ -344,7 +344,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 			Player p = (Player) e.getKiller();
 			Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
 			if (b.getBossType().equals(BossType.DUNGEON)) {
-				b.checkSpawnerKill(e.getMobType().getInternalName());
+				if (e.getMob().getSpawner() != null) {
+					b.checkSpawnerKill(e.getMob().getSpawner());
+				}
 			}
 		}
 		catch (Exception ex) {
