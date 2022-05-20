@@ -128,6 +128,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			}
 			else {
 				YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+				int baseid = -1, max = -1;
 				for (String id : yaml.getKeys(false)) {
 					ConfigurationSection itemCfg = yaml.getConfigurationSection(id);
 					String name = itemCfg.getString("name");
@@ -145,9 +146,14 @@ public class StorageManager implements IOComponent, Listener, Manager {
 					items.put(intid, item);
 					
 					// Set the limits for each category
-					int key = intid / 1000;
-					limits.put(key * 1000, Math.max(limits.getOrDefault(key, -1), intid));
+					if (baseid == -1) {
+						baseid = intid;
+					}
+					if (max < intid) {
+						max = intid;
+					}
 				}
+				limits.put(baseid, max);
 			}
 		}
 		itemsLoaded = true;
