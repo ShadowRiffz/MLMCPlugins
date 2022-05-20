@@ -156,6 +156,10 @@ public class Boss {
 		return spawnersets;
 	}
 	
+	public HashSet<String> getSpawnersAlive() {
+		return spawnersAlive;
+	}
+	
 	public void setTotalSpawners(int total) {
 		this.totalSpawners = total;
 	}

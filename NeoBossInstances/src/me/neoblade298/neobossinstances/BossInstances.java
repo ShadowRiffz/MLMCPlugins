@@ -100,6 +100,8 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public HashSet<String> leavingPlayers = new HashSet<String>();
 	public Settings settings;
 	public static String color;
+	
+	private static BossInstances inst;
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -108,7 +110,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		loadConfig();
 
 		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
-
+		inst = this;
 	}
 
 	public void loadConfig() {
@@ -347,11 +349,36 @@ public class BossInstances extends JavaPlugin implements Listener {
 				if (e.getMob().getSpawner() != null) {
 					b.checkSpawnerKill(e.getMob().getSpawner());
 				}
+				
+				if (b.getSpawnersAlive().size() == 0) {
+					finishDungeon(b);
+				}
 			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	private void finishDungeon(Boss b) {
+		ArrayList<Player> fighters = inBoss.get(b.getName());
+		for (Player fighter : fighters) {
+			fighter.sendMessage("§4[§c§lMLMC§4] §7The dungeon has been cleared!");
+		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				Commands.showStats(b.getName(), b.getDisplayName());
+			}
+		}.runTaskLater(this, 60L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (Player fighter : fighters) {
+					Commands.returnPlayer(fighter);
+				}
+			}
+		}.runTaskLater(this, 120L);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -413,6 +440,14 @@ public class BossInstances extends JavaPlugin implements Listener {
 								.info("[NeoBossInstances] " + p.getName() + " started dungeon " + boss + ".");
 						scheduleTimer(b.getTimeLimit(), boss);
 						int total = 0;
+						
+						// Start stats
+						statTimers.put(boss, System.currentTimeMillis());
+						for (Player p : activeFights.get(boss)) {
+							playerStats.put(p.getName(), new PlayerStat(boss));
+						}
+						
+						// Reset spawners
 						HashSet<String> spawnersAlive = new HashSet<String>();
 						for (SpawnerSet spawner : b.getSpawners()) {
 							for (int i = 1; i <= spawner.getMax(); i++) {
@@ -902,5 +937,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 	public static Set<UUID> getSpectators() {
 		return spectatingBoss.keySet();
+	}
+	
+	public static BossInstances inst() {
+		return inst;
 	}
 }
