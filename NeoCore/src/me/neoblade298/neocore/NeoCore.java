@@ -21,6 +21,7 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	public static String sqlUser, sqlPass, connection;
 	public static Properties properties = new Properties();
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
+	private static String instName = null;
 	
 	public void onEnable() {
 		inst = this;
@@ -38,6 +39,12 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		properties.setProperty("useSSL", "false");
 		properties.setProperty("user", sqlUser);
 		properties.setProperty("password", sqlPass);
+		
+		File instancecfg = new File(this.getDataFolder(), "instance.yml");
+		if (instancecfg.exists()) {
+			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
+			instName = icfg.getString("name");
+		}
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -72,4 +79,11 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
+	public static boolean isInstance() {
+		return instName != null;
+	}
+	
+	public static String getInstanceName() {
+		return instName;
+	}
 }
