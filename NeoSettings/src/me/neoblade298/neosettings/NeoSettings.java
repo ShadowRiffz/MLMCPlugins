@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neosettings.objects.Settings;
 
 public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
@@ -30,6 +31,7 @@ public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
 	    this.getCommand("settings").setExecutor(new Commands(this));
 	    this.debug = false;
 	    
+	    IOListener.register(this, this);
 	    loadConfig();
 	    loadBuiltinSettings();
 	}
@@ -142,6 +144,7 @@ public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
 
 	@Override
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+		settings.get(key)
 		for (String key : settings.keySet()) {
 			settings.get(key).load(stmt, p.getUniqueId());
 		}
