@@ -144,7 +144,6 @@ public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
 
 	@Override
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
-		settings.get(key)
 		for (String key : settings.keySet()) {
 			settings.get(key).load(stmt, p.getUniqueId());
 		}
