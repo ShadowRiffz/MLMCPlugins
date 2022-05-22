@@ -20,7 +20,7 @@ public class Boss {
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
 	private ArrayList<SpawnerSet> spawnersets = null;
-	private HashSet<String> spawnersAlive = null;
+	private HashSet<String> spawnersAlive = new HashSet<String>();
 	private int totalSpawners = 0;
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
