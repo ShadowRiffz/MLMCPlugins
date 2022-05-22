@@ -470,6 +470,7 @@ public class Commands implements CommandExecutor {
 			else {
 				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
 				returnPlayer(Bukkit.getPlayer(args[1]));
+				return true;
 			}
 		}
 		// /boss instances
@@ -618,8 +619,10 @@ public class Commands implements CommandExecutor {
 		SkillAPI.saveSingle(p);
 		BukkitRunnable sendBack = new BukkitRunnable() {
 			public void run() {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-						BossInstances.inst().returnCommand.replaceAll("%player%", p.getName()));
+				if (p != null) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+							BossInstances.inst().returnCommand.replaceAll("%player%", p.getName()));
+				}
 			}
 		};
 		sendBack.runTaskLater(BossInstances.inst(), 60L);

@@ -9,6 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.util.FlagManager;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -134,6 +135,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 		}
 		else if (args[0].equalsIgnoreCase("timers") && p != null) {
 			// Boss timer only, no raid timer
+			if (SkillAPI.isLoaded(p)) return "";
 			long bossTimer = plugin.getBossTimer(p);
 			long raidTimer = plugin.getRaidTimer(p);
 			Boss b = plugin.getBoss(p);

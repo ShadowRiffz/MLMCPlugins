@@ -341,7 +341,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onMythicmobKill(MythicMobDeathEvent e) {
 		try {
 			if (!isInstance) return;
-			if (e.getKiller() != null && !(e.getKiller() instanceof Player)) return;
+			if (e.getKiller() == null || !(e.getKiller() instanceof Player)) return;
 			
 			Player p = (Player) e.getKiller();
 			Boss b = bossInfo.get(fightingBoss.get(p.getUniqueId()));
@@ -624,7 +624,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 							if (fighter.isOnline()) {
 								returnToMain(fighter);
 							}
-							fighters.remove();
 						}
 					}
 				};
