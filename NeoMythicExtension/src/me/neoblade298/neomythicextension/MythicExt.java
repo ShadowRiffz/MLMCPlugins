@@ -114,12 +114,12 @@ public class MythicExt extends JavaPlugin implements Listener {
 			event.register(condition);
 		}
 
-		else if (event.getConditionName().equalsIgnoreCase("fightingboss")) {
+		else if (name.equalsIgnoreCase("fightingboss")) {
 			FightingBossCondition condition = new FightingBossCondition(event.getConfig());
 			event.register(condition);
 		}
 
-		else if (event.getConditionName().equalsIgnoreCase("isinstance")) {
+		else if (name.equalsIgnoreCase("isinstance")) {
 			IsInstanceCondition condition = new IsInstanceCondition(event.getConfig());
 			event.register(condition);
 		}
