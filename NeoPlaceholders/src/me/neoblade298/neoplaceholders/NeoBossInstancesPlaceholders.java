@@ -135,7 +135,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 		}
 		else if (args[0].equalsIgnoreCase("timers") && p != null) {
 			// Boss timer only, no raid timer
-			if (SkillAPI.isLoaded(p)) return "";
+			if (!SkillAPI.isLoaded(p)) return "";
 			long bossTimer = plugin.getBossTimer(p);
 			long raidTimer = plugin.getRaidTimer(p);
 			Boss b = plugin.getBoss(p);
