@@ -25,4 +25,8 @@ public class Quester {
 			qi.cleanup();
 		}
 	}
+	
+	public void startQuest(Quest q) {
+		activeQuests.put(q.getKey(), new QuestInstance(this, q));
+	}
 }

@@ -29,10 +29,10 @@ public class InteractNpcObjective extends Objective {
 		return "interact-npc";
 	}
 
-	public boolean checkEvent(PlayerInteractEntityEvent e) {
+	public boolean checkEvent(PlayerInteractEntityEvent e, ObjectiveInstance o) {
 		int id = CitizensAPI.getNPCRegistry().getNPC(e.getRightClicked()).getId();
-		if (id == npcid && this.needed > this.count) {
-			this.count++;
+		if (id == npcid && o.getCount() == 0) {
+			o.incrementCount();
 			return true;
 		}
 		return false;

@@ -8,13 +8,12 @@ import me.neoblade298.neocore.io.LineConfigParser;
 public abstract class Objective implements LineConfigParser<Objective> {
 	protected ObjectiveEvent type;
 	protected ObjectiveSet set;
-	protected int count, needed;
+	protected int needed;
 	
 	public Objective() {}
 	
 	public Objective(ObjectiveEvent type, LineConfig cfg) {
 		this.type = type;
-		this.count = 0;
 		this.needed = cfg.getInt("needed", 1);
 	}
 	

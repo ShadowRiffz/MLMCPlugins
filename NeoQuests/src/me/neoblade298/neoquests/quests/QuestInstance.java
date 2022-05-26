@@ -14,6 +14,28 @@ public class QuestInstance {
 	private int stage;
 	private ArrayList<ObjectiveSetInstance> sets;
 	
+	public QuestInstance(Quester quester, Quest quest) {
+		this(quester, quest, 0);
+	}
+	
+	public QuestInstance(Quester quester, Quest quest, int stage) {
+		this.q = quester;
+		this.quest = quest;
+		this.stage = stage;
+		this.sets = new ArrayList<ObjectiveSetInstance>();
+		setupObjectiveSet();
+	}
+	
+	private void setupObjectiveSet() {
+		for (ObjectiveSetInstance i : sets) {
+			i.cleanup();
+		}
+		sets.clear();
+		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
+			sets.add(new ObjectiveSetInstance(q.getPlayer(), this, set));
+		}
+	}
+	
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		if (set.getNext() == -1 || set.getNext() == -2) {
 			endQuest(set, set.getNext() == -1, stage);
@@ -26,15 +48,8 @@ public class QuestInstance {
 			stage = set.getNext();
 		}
 		
-		for (ObjectiveSetInstance i : sets) {
-			i.cleanup();
-		}
-		
 		// Setup new stage
-		sets.clear();
-		for (ObjectiveSet os : quest.getStages().get(stage).getObjectives()) {
-			sets.add(new ObjectiveSetInstance(q.getPlayer(), this, os));
-		}
+		setupObjectiveSet();
 	}
 	
 	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
@@ -49,7 +64,7 @@ public class QuestInstance {
 				p.sendMessage("§6Rewards:");
 				for (RewardAction r : rewards) {
 					r.run(p);
-					p.sendMessage("§7- " + r.getMessage());
+					p.sendMessage("§7- " + r.getDisplay());
 				}
 			}
 		}

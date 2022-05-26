@@ -25,7 +25,11 @@ public class Quest {
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.rewards = ActionManager.parseRewards(cfg.getStringList("rewards"));
 		
-		this.stages = QuestStage.parseQuestStages(cfg.getConfigurationSection("stages"));
+		this.stages = QuestStage.parseQuestStages(cfg.getConfigurationSection("stages"), this);
+	}
+	
+	public String getKey() {
+		return key;
 	}
 	
 	public String getName() {
@@ -44,4 +48,7 @@ public class Quest {
 		return rewards;
 	}
 	
+	public ArrayList<Condition> getConditions() {
+		return conditions;
+	}
 }

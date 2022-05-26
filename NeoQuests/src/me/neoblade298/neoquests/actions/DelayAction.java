@@ -2,6 +2,8 @@ package me.neoblade298.neoquests.actions;
 
 import java.util.HashMap;
 
+import org.bukkit.entity.Player;
+
 import me.neoblade298.neocore.io.LineConfig;
 
 public class DelayAction implements DelayableAction, EmptyAction {
@@ -32,4 +34,7 @@ public class DelayAction implements DelayableAction, EmptyAction {
 	public String getKey() {
 		return key;
 	}
+
+	@Override
+	public void run(Player p) {}
 }

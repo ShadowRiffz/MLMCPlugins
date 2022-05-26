@@ -18,23 +18,25 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 
 public class QuestsManager implements IOComponent, Reloadable {
-	private HashMap<Player, Quester> questers = new HashMap<Player, Quester>();
-	private HashMap<String, Quest> quests = new HashMap<String, Quest>();
+	private static HashMap<Player, Quester> questers = new HashMap<Player, Quester>();
+	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static FileLoader questsLoader;
 	
 	static {
 		questsLoader = (cfg) -> {
-			
+			for (String key : cfg.getKeys(false)) {
+				try {
+					quests.put(key.toUpperCase(), new Quest(key, cfg.getConfigurationSection(key)));
+				} catch (NeoIOException e) {
+					e.printStackTrace();
+				}
+			}
 		};
 	}
 
-	public QuestsManager() {
+	public QuestsManager() throws NeoIOException {
 		// IOListener.register(NeoQuests.inst(), this);
-		try {
-			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
-		} catch (NeoIOException e) {
-			e.printStackTrace();
-		}
+		reload();
 	}
 	
 	@Override
@@ -72,5 +74,22 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public String getKey() {
 		return "QuestsManager";
+	}
+
+	@Override
+	public void reload() throws NeoIOException {
+		try {
+			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void startQuest(Player p, String quest) {
+		Quest q = quests.get(quest.toUpperCase());
+		if (q == null) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to start quest " + quest + " for player " + p.getName() + ", quest doesn't exist.");
+			return;
+		}
 	}
 }

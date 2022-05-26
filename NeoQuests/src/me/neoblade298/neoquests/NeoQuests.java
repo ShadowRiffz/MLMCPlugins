@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.NpcListener;
+import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
@@ -27,6 +28,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		try {
 		    new ActionManager();
 		    new ConversationManager();
+		    new ObjectiveManager();
 		    new QuestsManager();
 		}
 		catch (Exception e) {

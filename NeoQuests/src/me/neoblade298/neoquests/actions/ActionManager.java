@@ -27,6 +27,7 @@ public class ActionManager {
 		mngr.register(new MessageDialogueAction());
 		mngr.register(new NPCDialogueAction());
 		mngr.register(new PlayerDialogueAction());
+		mngr.register(new GiveStoredItemAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {

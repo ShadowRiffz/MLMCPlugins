@@ -20,10 +20,6 @@ public class ObjectiveSet {
 		for (String line : cfg.getStringList("objectives")) {
 			ObjectiveManager.get(new LineConfig(line));
 		}
-		if (cfg.getKeys(false).contains("random-objectives")) {
-			int min = cfg.getInt("random-min");
-			int max = cfg.getInt("random-max");
-		}
 	}
 	
 	public int getNext() {
@@ -40,5 +36,13 @@ public class ObjectiveSet {
 	
 	public ArrayList<Objective> getObjectives() {
 		return objs;
+	}
+	
+	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {
+		ArrayList<ObjectiveSet> objectives = new ArrayList<ObjectiveSet>();
+		for (String key : cfg.getKeys(false)) {
+			objectives.add(new ObjectiveSet(cfg.getConfigurationSection(key)));
+		}
+		return objectives;
 	}
 }

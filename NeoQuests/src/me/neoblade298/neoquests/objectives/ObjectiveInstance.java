@@ -22,8 +22,8 @@ public class ObjectiveInstance {
 		return obj;
 	}
 
-	public boolean samePlayer(Player p) {
-		return this.p.equals(p);
+	public Player getPlayer() {
+		return p;
 	}
 
 	public int getCount() {

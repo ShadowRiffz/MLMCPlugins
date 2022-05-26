@@ -16,6 +16,7 @@ public class ObjectiveManager {
 		mngr = new LineConfigManager<Objective>(NeoQuests.inst(), "objectives");
 		
 		register(new InteractNpcObjective());
+		register(new GetStoredItemObjective());
 	}
 	
 	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {
