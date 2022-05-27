@@ -107,9 +107,8 @@ public class GearConfig {
 			for (int i = 1; i <= slotsCreated; i++) {
 				ScaleSet set = CreateSlotInventory.getGoldPrices().get(i);
 				int augLevel = nbti.getInteger("slot" + i + "Level");
-				price += set.getResult(level) * 0.2;
-				price += set.getResult(augLevel) * 0.3;
-				price += CreateSlotInventory.getEssencePrices().get(i) * level * 5;
+				price += set.getResult(level) * 0.1;
+				price += set.getResult(augLevel) * 0.05;
 			}
 			return price;
 		}
