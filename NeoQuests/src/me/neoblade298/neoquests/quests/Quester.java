@@ -1,16 +1,22 @@
 package me.neoblade298.neoquests.quests;
 
 import java.util.HashMap;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Quester {
-	private Player p;
-	private HashMap<String, CompletedQuest> completedQuests;
-	private HashMap<String, QuestInstance> activeQuests;
+	private UUID uuid;
+	private HashMap<String, CompletedQuest> completedQuests = new HashMap<String, CompletedQuest>();
+	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();;
+	
+	public Quester(UUID uuid) {
+		this.uuid = uuid;
+	}
 	
 	public Player getPlayer() {
-		return p;
+		return Bukkit.getPlayer(uuid);
 	}
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {

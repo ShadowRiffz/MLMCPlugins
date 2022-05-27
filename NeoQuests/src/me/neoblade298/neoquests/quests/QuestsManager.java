@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 
 public class QuestsManager implements IOComponent, Reloadable {
-	private static HashMap<Player, Quester> questers = new HashMap<Player, Quester>();
+	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static FileLoader questsLoader;
 	
@@ -43,8 +44,24 @@ public class QuestsManager implements IOComponent, Reloadable {
 	public void loadPlayer(OfflinePlayer p, Statement stmt) {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_users WHERE UUID = '" + p.getUniqueId() + "';");
+			Quester quester = new Quester(p.getUniqueId());
+			questers.put(p.getUniqueId(), quester);
+			HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();
 			while (rs.next()) {
-				// TODO: Set up user
+				String qname = rs.getString(2);
+				int stage = rs.getInt(3);
+				String set = rs.getString(4);
+				
+				// Parse counts
+				String[] scounts = rs.getString(5).split(",");
+				int[] counts = new int[scounts.length];
+				for (int i = 0; i < scounts.length; i++) {
+					counts[i] = Integer.parseInt(scounts[i]);
+				}
+				
+				Quest quest = quests.get(rs.getString(2));
+				QuestInstance qi = activeQuests.getOrDefault(qname, new QuestInstance(quester, quest, stage));
+				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 		}
 		catch (Exception e) {

@@ -13,9 +13,12 @@ import me.neoblade298.neoquests.quests.QuestStage;
 public class ObjectiveSet {
 	private ArrayList<Objective> objs = new ArrayList<Objective>();
 	private ArrayList<RewardAction> alternateRewards;
+	private String key, display;
 	private int next;
 	
 	public ObjectiveSet(ConfigurationSection cfg) throws NeoIOException {
+		key = cfg.getName();
+		display = cfg.getString("display", "Objectives").replaceAll("&", "§");
 		next = cfg.getInt("next", -3);
 		for (String line : cfg.getStringList("objectives")) {
 			ObjectiveManager.get(new LineConfig(line));
@@ -44,5 +47,13 @@ public class ObjectiveSet {
 			objectives.add(new ObjectiveSet(cfg.getConfigurationSection(key)));
 		}
 		return objectives;
+	}
+	
+	public String getDisplay() {
+		return display;
+	}
+	
+	public String getKey() {
+		return key;
 	}
 }

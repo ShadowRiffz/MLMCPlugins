@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.quests;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -12,7 +13,7 @@ public class QuestInstance {
 	private Quester q;
 	private Quest quest;
 	private int stage;
-	private ArrayList<ObjectiveSetInstance> sets;
+	private HashMap<String, ObjectiveSetInstance> sets;
 	
 	public QuestInstance(Quester quester, Quest quest) {
 		this(quester, quest, 0);
@@ -22,17 +23,18 @@ public class QuestInstance {
 		this.q = quester;
 		this.quest = quest;
 		this.stage = stage;
-		this.sets = new ArrayList<ObjectiveSetInstance>();
+		this.sets = new HashMap<String, ObjectiveSetInstance>();
 		setupObjectiveSet();
 	}
 	
+	// Used anytime new objectives show up
 	private void setupObjectiveSet() {
-		for (ObjectiveSetInstance i : sets) {
+		for (ObjectiveSetInstance i : sets.values()) {
 			i.cleanup();
 		}
 		sets.clear();
 		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
-			sets.add(new ObjectiveSetInstance(q.getPlayer(), this, set));
+			sets.put(set.getKey(), new ObjectiveSetInstance(q.getPlayer(), this, set));
 		}
 	}
 	
@@ -78,8 +80,12 @@ public class QuestInstance {
 	}
 	
 	public void cleanup() {
-		for (ObjectiveSetInstance si : sets) {
+		for (ObjectiveSetInstance si : sets.values()) {
 			si.cleanup();
 		}
+	}
+	
+	public ObjectiveSetInstance getObjectiveSetInstance(String key) {
+		return sets.get(key);
 	}
 }
