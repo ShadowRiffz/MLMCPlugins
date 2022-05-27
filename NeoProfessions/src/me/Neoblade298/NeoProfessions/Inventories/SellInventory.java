@@ -137,6 +137,7 @@ public class SellInventory extends ProfessionInventory {
 		sold = true;
 		main.getEconomy().depositPlayer(p, totalSell);
 		p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
+		Bukkit.getLogger().info("[NeoProfessions] Player " + p.getName() + " sold " + numSold + " items for " + totalSell);
 		p.sendMessage("§4[§c§lMLMC§4] §7Successfully sold §e" + numSold + " §7items for §a" + totalSell + "g§7.");
 	}
 }
