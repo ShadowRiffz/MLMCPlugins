@@ -8,11 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class NeoCommands implements CommandExecutor {
+public class CommandManager implements CommandExecutor {
 	private HashMap<String, Subcommand> handlers = new HashMap<String, Subcommand>();
 	private String base;
 	
-	public NeoCommands(String base) {
+	public CommandManager(String base) {
 		this.base = base;
 	}
 	
@@ -42,9 +42,8 @@ public class NeoCommands implements CommandExecutor {
 			return false;
 		}
 
-		if ((cmd.getRunner() == SubcommandRunner.PLAYER_ONLY && s instanceof Player) ||
-				(cmd.getRunner() == SubcommandRunner.CONSOLE_ONLY && s instanceof ConsoleCommandSender) ||
-				cmd.getRunner() == SubcommandRunner.BOTH) {
+		if ((cmd.getRunner() == SubcommandRunner.PLAYER_ONLY && !(s instanceof Player)) ||
+				(cmd.getRunner() == SubcommandRunner.CONSOLE_ONLY && !(s instanceof ConsoleCommandSender))) {
 			s.sendMessage("§cYou are the wrong type of user for this command!");
 			return false;
 		}
