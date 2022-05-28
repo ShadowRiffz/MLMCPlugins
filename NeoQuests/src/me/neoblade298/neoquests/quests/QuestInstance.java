@@ -88,4 +88,8 @@ public class QuestInstance {
 	public ObjectiveSetInstance getObjectiveSetInstance(String key) {
 		return sets.get(key);
 	}
+	
+	public HashMap<String, ObjectiveSetInstance> getObjectiveSetInstances() {
+		return sets;
+	}
 }

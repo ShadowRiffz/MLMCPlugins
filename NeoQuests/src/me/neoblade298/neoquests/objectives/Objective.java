@@ -1,7 +1,5 @@
 package me.neoblade298.neoquests.objectives;
 
-import org.bukkit.event.Event;
-
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigParser;
 
@@ -31,4 +29,5 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	}
 	
 	public abstract String getKey();
+	public abstract String getDisplay();
 }

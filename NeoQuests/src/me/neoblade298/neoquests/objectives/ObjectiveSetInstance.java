@@ -85,4 +85,8 @@ public class ObjectiveSetInstance {
 			oi.setCount(i++);
 		}
 	}
+	
+	public ArrayList<ObjectiveInstance> getObjectives() {
+		return objs;
+	}
 }
