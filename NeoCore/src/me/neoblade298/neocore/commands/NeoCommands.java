@@ -37,7 +37,7 @@ public class NeoCommands implements CommandExecutor {
 	}
 	
 	private boolean check(Subcommand cmd, CommandSender s) {
-		if (cmd.getPermission() == null || s.hasPermission(cmd.getPermission())) {
+		if (cmd.getPermission() != null && s.hasPermission(cmd.getPermission())) {
 			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
 			return false;
 		}
