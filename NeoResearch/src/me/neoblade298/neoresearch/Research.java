@@ -189,9 +189,12 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			converter.put(perm, mobValues);
 		}
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		
 		// Add them to attrs
