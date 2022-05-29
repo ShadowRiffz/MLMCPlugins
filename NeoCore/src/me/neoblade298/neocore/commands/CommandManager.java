@@ -32,7 +32,7 @@ public class CommandManager implements CommandExecutor {
 	private void runCommand(String key, CommandSender s, String[] args) {
 		Subcommand sc = handlers.get(key);
 		if (check(sc, s)) {
-			handlers.get("").run(s, args);
+			sc.run(s, args);
 		}
 	}
 	

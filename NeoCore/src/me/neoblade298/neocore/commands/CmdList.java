@@ -37,12 +37,12 @@ public class CmdList implements Subcommand {
 				continue;
 			}
 			
-			String line = "§7- " + base;
+			String line = sc.getColor() + base;
 			if (cmd.length() != 0) {
 				line += " " + cmd;
 			}
 			if (sc.getDescription() != null) {
-				line += " - " + sc.getDescription();
+				line += "§7 - " + sc.getDescription();
 				s.sendMessage(line);
 			}
 		}
