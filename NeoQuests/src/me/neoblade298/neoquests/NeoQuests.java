@@ -36,10 +36,10 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	    
 	    // Managers
 		try {
-		    reloadables.add(new ConversationManager());
 		    new ActionManager();
-		    reloadables.add(new QuestsManager());
 		    new ObjectiveManager();
+		    reloadables.add(new ConversationManager());
+		    reloadables.add(new QuestsManager());
 		    NeoCore.registerIOComponent(this, new QuestsManager());
 		}
 		catch (Exception e) {

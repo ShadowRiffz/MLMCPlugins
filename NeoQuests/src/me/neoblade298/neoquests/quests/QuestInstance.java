@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.quests;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.bukkit.entity.Player;
 
@@ -13,7 +14,7 @@ public class QuestInstance {
 	private Quester q;
 	private Quest quest;
 	private int stage;
-	private HashMap<String, ObjectiveSetInstance> sets;
+	private LinkedHashMap<String, ObjectiveSetInstance> sets;
 	
 	public QuestInstance(Quester quester, Quest quest) {
 		this(quester, quest, 0);
@@ -23,7 +24,7 @@ public class QuestInstance {
 		this.q = quester;
 		this.quest = quest;
 		this.stage = stage;
-		this.sets = new HashMap<String, ObjectiveSetInstance>();
+		this.sets = new LinkedHashMap<String, ObjectiveSetInstance>();
 		setupObjectiveSet();
 	}
 	

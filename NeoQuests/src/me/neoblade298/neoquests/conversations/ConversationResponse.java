@@ -18,30 +18,30 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class ConversationResponse {
 	private String text;
 	private ArrayList<Condition> conditions = new ArrayList<Condition>();
-	private ActionSequence startActions = new ActionSequence();
+	private ActionSequence actions = new ActionSequence();
 	int next = -1;
-	
+
 	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
 		this.text = cfg.getString("text").replaceAll("&", "§");
-		this.startActions.load(cfg.getStringList("actions"));
+		this.actions.load(cfg.getStringList("actions"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.next = cfg.getInt("next", -3);
-		
-		if (startActions.getQuest() != null) {
-			for (Condition cond : startActions.getQuest().getConditions()) {
+
+		if (actions.getQuest() != null) {
+			for (Condition cond : actions.getQuest().getConditions()) {
 				this.conditions.add(cond);
 			}
 		}
 	}
-	
+
 	public ConversationResponse() {
 		this.text = "§7[End Conversation]";
 		this.next = -1;
 	}
-	
+
 	// True if number should be incremented
 	public boolean showResponse(Player p, int num) {
-		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking condition
+		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
 		if (!failed.isEmpty()) {
 			if (failed.get(0).getResult().equals(ConditionResult.UNCLICKABLE)) { // Unclickable
 				StringBuilder failHover = new StringBuilder("§c§oCannot be selected:");
@@ -49,7 +49,7 @@ public class ConversationResponse {
 					failHover.append("\n- " + failedCond.getExplanation(p));
 				}
 				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] " + text)
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(failHover.toString())));
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(failHover.toString())));
 				p.spigot().sendMessage(builder.create());
 				return true;
 			}
@@ -58,18 +58,28 @@ public class ConversationResponse {
 			}
 		}
 		else { // Visible and passes conditions
-			Quest q = startActions.getQuest();
-			ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
-			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num + "\nThis starts the quest " + q.getName())))
-			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
-			p.spigot().sendMessage(builder.create());
+			Quest q = actions.getQuest();
+			if (q != null) {
+				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new Text("§oClick to select " + num + "\n§oThis starts the quest §6" + q.getName())))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
+				p.spigot().sendMessage(builder.create());
+			}
+			else {
+				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text)
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num)))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
+				p.spigot().sendMessage(builder.create());
+			}
 			return true;
 		}
 	}
-	
+
 	// Returns next stage
 	public boolean tryResponse(Player p) {
-		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking condition
+		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
+																							// condition
 		if (!failed.isEmpty()) {
 			StringBuilder failExpl = new StringBuilder("§c§oCannot be selected:");
 			for (Condition failedCond : failed) {
@@ -82,15 +92,15 @@ public class ConversationResponse {
 			return true;
 		}
 	}
-	
+
 	public int getNext() {
 		return next;
 	}
-	
+
 	public ActionSequence getActions() {
-		return startActions;
+		return actions;
 	}
-	
+
 	public static ArrayList<ConversationResponse> parseResponses(ConfigurationSection cfg) throws NeoIOException {
 		ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 		for (String key : cfg.getKeys(false)) {

@@ -75,8 +75,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public void savePlayer(Player p, Statement stmt) {
 		try {
-			Quester quester = questers.get(p);
-			quester.hashCode();
+			Quester quester = questers.get(p.getUniqueId());
 			// TODO: Save user
 			stmt.addBatch("REPLACE INTO quests_quests "
 					+ "VALUES ()");
@@ -110,6 +109,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 			Bukkit.getLogger().warning("[NeoQuests] Failed to start quest " + quest + " for player " + p.getName() + ", quest doesn't exist.");
 			return;
 		}
+		questers.get(p.getUniqueId()).startQuest(q);
 	}
 	
 	public static Quester getQuester(Player p) {
@@ -117,6 +117,6 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 	
 	public static Quest getQuest(String quest) {
-		return quests.get(quest);
+		return quests.get(quest.toUpperCase());
 	}
 }

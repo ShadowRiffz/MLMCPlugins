@@ -24,6 +24,7 @@ public class ObjectiveSetInstance {
 		for (Objective o : set.getObjectives()) {
 			objs.add(new ObjectiveInstance(p, o, this));
 		}
+		System.out.println("Setting up objectives 1 " + objs.size());
 	}
 	
 	public ObjectiveSetInstance(Player p, QuestInstance quest, ObjectiveSet set, ObjectiveInstance insts) {
@@ -36,6 +37,7 @@ public class ObjectiveSetInstance {
 		for (Objective o : set.getObjectives()) {
 			objs.add(new ObjectiveInstance(p, o, this));
 		}
+		System.out.println("Setting up objectives 2 " + objs.size());
 	}
 	
 	public String getKey() {

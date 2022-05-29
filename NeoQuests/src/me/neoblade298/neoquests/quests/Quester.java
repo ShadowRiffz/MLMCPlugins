@@ -51,11 +51,11 @@ public class Quester {
 			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances().values()) {
 				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
 				for (ObjectiveInstance oi : osi.getObjectives()) {
-					s.sendMessage("§e" + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
+					s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
 				}
 			}
 		}
-		ComponentBuilder builder = new ComponentBuilder("§e<Click to see what you should do next!>")
+		ComponentBuilder builder = new ComponentBuilder("§e<Click for recommended quest!>")
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
 		s.spigot().sendMessage(builder.create());
 	}

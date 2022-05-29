@@ -11,12 +11,10 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.conditions.Condition;
 
 public class ActionManager {
-	private static LineConfigManager<Action> mngr;
+	private static LineConfigManager<Action> mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");;
 	private static HashSet<String> dialogueActions = new HashSet<String>();
 	
 	public ActionManager() {
-		mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");
-		
 		dialogueActions.add("npc");
 		dialogueActions.add("player");
 		dialogueActions.add("desc");
@@ -28,6 +26,7 @@ public class ActionManager {
 		mngr.register(new NPCDialogueAction());
 		mngr.register(new PlayerDialogueAction());
 		mngr.register(new GiveStoredItemAction());
+		mngr.register(new StartQuestAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {

@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.actions.DialogueAction;
@@ -16,6 +17,7 @@ import me.neoblade298.neoquests.actions.DialogueAction;
 public class ConversationStage {
 	private int num;
 	private String text;
+	private DialogueAction textAction;
 	private ActionSequence actions = new ActionSequence();
 	private ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 	
@@ -24,7 +26,7 @@ public class ConversationStage {
 		String text = cfg.getString("text");
 		LineConfig tcfg = new LineConfig(text);
 		if (ActionManager.isDialogueAction(tcfg.getKey())) {
-			this.text = ((DialogueAction) ActionManager.get(tcfg)).parseDialogue(tcfg);
+			this.textAction = (DialogueAction) ActionManager.get(tcfg);
 		}
 		else {
 			this.text = text;
@@ -51,10 +53,6 @@ public class ConversationStage {
 		return actions;
 	}
 	
-	public String getText() {
-		return this.text;
-	}
-	
 	public void run(Player p) {
 		run(p, 0);
 	}
@@ -69,7 +67,12 @@ public class ConversationStage {
 	}
 	
 	public void show(Player p) {
-		p.sendMessage(text);
+		if (textAction != null) {
+			textAction.run(p);
+		}
+		else {
+			p.sendMessage(text);
+		}
 		int num = 1;
 		for (ConversationResponse resp : responses) {
 			if (resp.showResponse(p, num)) {

@@ -18,7 +18,7 @@ public class MessageDialogueAction implements Action, DialogueAction {
 	public MessageDialogueAction() {}
 	
 	public MessageDialogueAction(LineConfig cfg) {
-		this.dialogue = parseDialogue(cfg);
+		this.dialogue = cfg.getLine();
 	}
 
 	@Override
@@ -29,11 +29,6 @@ public class MessageDialogueAction implements Action, DialogueAction {
 	@Override
 	public Action create(LineConfig cfg) {
 		return new MessageDialogueAction(cfg);
-	}
-	
-	@Override
-	public String parseDialogue(LineConfig cfg) {
-		return cfg.getLine();
 	}
 	
 	@Override

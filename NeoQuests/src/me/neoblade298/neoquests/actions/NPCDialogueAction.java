@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPCRegistry;
 
 public class NPCDialogueAction implements Action, DialogueAction {
 	private static final String key = "npc";
-	private String dialogue;
+	private String dialogue, npcname;
+	private int npcid;
 	
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
 		actions.put(key, new NPCDialogueAction());
@@ -19,24 +21,21 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	public NPCDialogueAction() {}
 	
 	public NPCDialogueAction(LineConfig cfg) {
-		this.dialogue = parseDialogue(cfg);
+		this.npcid = cfg.getInt("id", 0);
+		this.dialogue = "§7: " + cfg.getLine();
 	}
 
 	@Override
 	public void run(Player p) {
-		p.sendMessage(this.dialogue);
+		if (npcname == null) {
+			npcname = CitizensAPI.getNPCRegistry().getById(npcid).getFullName();
+		}
+		p.sendMessage(npcname + this.dialogue);
 	}
 
 	@Override
 	public Action create(LineConfig cfg) {
 		return new NPCDialogueAction(cfg);
-	}
-	
-	@Override
-	public String parseDialogue(LineConfig cfg) {
-		String name = CitizensAPI.getNPCRegistry().getById(cfg.getInt("id", -1)).getFullName();
-		String text = cfg.getLine();
-		return name + "§7: " + text;
 	}
 	
 	@Override

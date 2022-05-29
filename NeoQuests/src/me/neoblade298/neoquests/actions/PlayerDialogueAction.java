@@ -18,22 +18,17 @@ public class PlayerDialogueAction implements Action, DialogueAction {
 	public PlayerDialogueAction() {}
 	
 	public PlayerDialogueAction(LineConfig cfg) {
-		this.dialogue = parseDialogue(cfg);
+		this.dialogue = "§7: " + cfg.getLine();
 	}
 
 	@Override
 	public void run(Player p) {
-		p.sendMessage(this.dialogue);
+		p.sendMessage("§e" + p.getName() + this.dialogue);
 	}
 
 	@Override
 	public Action create(LineConfig cfg) {
 		return new PlayerDialogueAction(cfg);
-	}
-	
-	@Override
-	public String parseDialogue(LineConfig cfg) {
-		return "§7§o" + cfg.getLine();
 	}
 	
 	@Override

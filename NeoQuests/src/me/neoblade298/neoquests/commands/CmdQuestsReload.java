@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -38,9 +39,8 @@ public class CmdQuestsReload implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		Player p = (Player) s;
-		Quester q = QuestsManager.getQuester(p);
-		q.displayQuests(s);
+		NeoQuests.reloadAll();
+		s.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
 	}
 
 }

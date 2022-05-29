@@ -9,12 +9,13 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.quests.Quest;
+import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
-	ActionSet curr = new ActionSet();
-	int runtime = 0;
-	Quest quest = null;
+	private ActionSet curr = new ActionSet();
+	private int runtime = 0;
+	private String quest = null;
 	
 	// Used to avoid having to look for nulls
 	public ActionSequence() {}
@@ -25,6 +26,10 @@ public class ActionSequence {
 			LineConfig cfg = new LineConfig(line);
 			
 			Action action = ActionManager.get(cfg);
+			
+			if (action instanceof StartQuestAction) {
+				quest = ((StartQuestAction) action).getQuest();
+			}
 			
 			if (!(action instanceof EmptyAction)) { // DelayAction is empty
 				addAction(action, runtime);
@@ -37,9 +42,6 @@ public class ActionSequence {
 				delay += dl;
 			}
 			
-			if (action instanceof StartQuestAction) {
-				quest = ((StartQuestAction) action).getQuest();
-			}
 		}
 		
 		if (!curr.isEmpty()) {
@@ -86,6 +88,16 @@ public class ActionSequence {
 	}
 	
 	public Quest getQuest() {
-		return quest;
+		return quest == null ? null : QuestsManager.getQuest(quest);
+	}
+	
+	public String toString() {
+		String ts = "";
+		for (ActionSet set : sets) {
+			for (Action action : set.getActions()) {
+				ts += action.getKey() + " ";
+			}
+		}
+		return ts;
 	}
 }

@@ -42,7 +42,7 @@ public class ConversationManager implements Reloadable, Listener {
 					int npcid = Integer.parseInt(key);
 					for (String line : cfg.getStringList(key)) {
 						if (!convs.containsKey(line)) {
-							NeoQuests.showWarning("Failed to load conversation for NPC " + npcid + ": " + key);
+							NeoQuests.showWarning("Failed to load conversation for NPC " + key + ": " + line);
 							continue;
 						}
 						clist.add(convs.get(line));

@@ -21,7 +21,7 @@ public class ObjectiveSet {
 		display = cfg.getString("display", "Objectives").replaceAll("&", "§");
 		next = cfg.getInt("next", -3);
 		for (String line : cfg.getStringList("objectives")) {
-			ObjectiveManager.get(new LineConfig(line));
+			objs.add(ObjectiveManager.get(new LineConfig(line)));
 		}
 	}
 	
