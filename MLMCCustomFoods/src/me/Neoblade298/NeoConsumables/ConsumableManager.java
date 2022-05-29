@@ -71,7 +71,7 @@ public class ConsumableManager implements Listener, IOComponent {
 		}
 	}
 
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		ConsumableManager.effects.remove(uuid);
 		if (Consumables.debug) {
@@ -137,4 +137,7 @@ public class ConsumableManager implements Listener, IOComponent {
 	public String getKey() {
 		return "ConsumableManager";
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) { }
 }
