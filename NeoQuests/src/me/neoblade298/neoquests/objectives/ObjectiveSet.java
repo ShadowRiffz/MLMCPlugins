@@ -1,14 +1,11 @@
 package me.neoblade298.neoquests.objectives;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.actions.RewardAction;
-import me.neoblade298.neoquests.quests.QuestStage;
 
 public class ObjectiveSet {
 	private ArrayList<Objective> objs = new ArrayList<Objective>();

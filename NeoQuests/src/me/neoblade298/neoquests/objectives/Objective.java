@@ -27,6 +27,7 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	public int getNeeded() {
 		return needed;
 	}
+	public void initialize(ObjectiveInstance oi) {	} // For things that must be checked on quest startup, like get stored item
 	
 	public abstract String getKey();
 	public abstract String getDisplay();

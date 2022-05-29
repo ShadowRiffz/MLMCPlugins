@@ -22,22 +22,10 @@ public class ObjectiveSetInstance {
 		
 		objs = new ArrayList<ObjectiveInstance>();
 		for (Objective o : set.getObjectives()) {
-			objs.add(new ObjectiveInstance(p, o, this));
+			ObjectiveInstance oi = new ObjectiveInstance(p, o, this);
+			objs.add(oi);
+			o.initialize(oi);
 		}
-		System.out.println("Setting up objectives 1 " + objs.size());
-	}
-	
-	public ObjectiveSetInstance(Player p, QuestInstance quest, ObjectiveSet set, ObjectiveInstance insts) {
-		this.p = p;
-		this.quest = quest;
-		this.set = set;
-		this.key = set.getKey();
-		
-		objs = new ArrayList<ObjectiveInstance>();
-		for (Objective o : set.getObjectives()) {
-			objs.add(new ObjectiveInstance(p, o, this));
-		}
-		System.out.println("Setting up objectives 2 " + objs.size());
 	}
 	
 	public String getKey() {

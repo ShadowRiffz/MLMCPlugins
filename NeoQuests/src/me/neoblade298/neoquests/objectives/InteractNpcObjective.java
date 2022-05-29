@@ -1,9 +1,8 @@
 package me.neoblade298.neoquests.objectives;
 
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-
 import me.neoblade298.neocore.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class InteractNpcObjective extends Objective {
 	private int npcid;
@@ -30,8 +29,8 @@ public class InteractNpcObjective extends Objective {
 		return "interact-npc";
 	}
 
-	public boolean checkEvent(PlayerInteractEntityEvent e, ObjectiveInstance o) {
-		int id = CitizensAPI.getNPCRegistry().getNPC(e.getRightClicked()).getId();
+	public boolean checkEvent(NPCRightClickEvent e, ObjectiveInstance o) {
+		int id = e.getNPC().getId();
 		if (id == npcid && o.getCount() == 0) {
 			o.incrementCount();
 			return true;

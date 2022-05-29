@@ -6,14 +6,12 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.EquipmentSlot;
-
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neoquests.objectives.GetStoredItemObjective;
 import me.neoblade298.neoquests.objectives.InteractNpcObjective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class ObjectiveListener implements Listener {
 	
@@ -23,6 +21,7 @@ public class ObjectiveListener implements Listener {
 		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap = getPlayerInstances(o.getPlayer());
 		ObjectiveEvent event = o.getObjective().getType();
 		ArrayList<ObjectiveInstance> insts = pmap.getOrDefault(event, new ArrayList<ObjectiveInstance>());
+		insts.add(o);
 		pmap.put(event, insts);
 	}
 	
@@ -43,10 +42,8 @@ public class ObjectiveListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInteractNPC(PlayerInteractEntityEvent e) {
-		if (!e.getHand().equals(EquipmentSlot.HAND)) return;
-		if (!e.getRightClicked().hasMetadata("NPC")) return;
-		Player p = e.getPlayer();
+	public void onInteractNPC(NPCRightClickEvent e) {
+		Player p = e.getClicker();
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.INTERACT_NPC);
 		if (insts != null) {
@@ -57,7 +54,7 @@ public class ObjectiveListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInteractNPC(ReceiveStoredItemEvent e) {
+	public void onReceiveStoredItem(ReceiveStoredItemEvent e) {
 		Player p = e.getPlayer();
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.RECEIVE_STORED_ITEM);

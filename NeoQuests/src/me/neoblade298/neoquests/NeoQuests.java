@@ -16,6 +16,7 @@ import me.neoblade298.neoquests.commands.CmdQuestBase;
 import me.neoblade298.neoquests.commands.CmdQuestsReload;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.NpcListener;
+import me.neoblade298.neoquests.listeners.ObjectiveListener;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -31,6 +32,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");
 		
 		getServer().getPluginManager().registerEvents(new NpcListener(), this);
+		getServer().getPluginManager().registerEvents(new ObjectiveListener(), this);
 		
 		initCommands();
 	    

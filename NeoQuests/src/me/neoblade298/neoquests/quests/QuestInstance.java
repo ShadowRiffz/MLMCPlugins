@@ -58,6 +58,7 @@ public class QuestInstance {
 	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
 		Player p = q.getPlayer();
 		if (success) {
+			q.completeQuest(this, stage, success);
 			ArrayList<RewardAction> rewards = quest.getRewards();
 			if (si.getSet().hasAlternateRewards()) {
 				rewards = si.getSet().getAlternateRewards();
@@ -66,12 +67,15 @@ public class QuestInstance {
 			if (rewards.size() > 0) {
 				p.sendMessage("§6Rewards:");
 				for (RewardAction r : rewards) {
-					r.run(p);
 					p.sendMessage("§7- " + r.getDisplay());
+				}
+				for (RewardAction r : rewards) {
+					r.run(p);
 				}
 			}
 		}
 		else {
+			q.cancelQuest(quest.getKey());
 			p.sendMessage("§cYou failed §e" + quest.getName() + "§c!");
 		}
 	}

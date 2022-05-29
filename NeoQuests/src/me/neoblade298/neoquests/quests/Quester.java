@@ -29,17 +29,21 @@ public class Quester {
 		qi.cleanup();
 		activeQuests.remove(qi.getQuest().getName());
 		completedQuests.put(qi.getQuest().getName(), new CompletedQuest(qi.getQuest(), stage, success));
+		getPlayer().sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
 	}
 	
 	public void cancelQuest(String name) {
 		if (activeQuests.containsKey(name.toUpperCase())) {
 			QuestInstance qi = activeQuests.remove(name.toUpperCase());
 			qi.cleanup();
+			getPlayer().sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getName(), 10, 70, 10);
 		}
 	}
 	
 	public void startQuest(Quest q) {
 		activeQuests.put(q.getKey(), new QuestInstance(this, q));
+		getPlayer().sendTitle("§fQuest Started", "§6" + q.getName(), 10, 70, 10);
+		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
 	}
 	
 	public void displayQuests(CommandSender s) {

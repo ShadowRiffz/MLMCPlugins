@@ -44,5 +44,10 @@ public class GetStoredItemObjective extends Objective {
 		}
 		return "Get " + itemname;
 	}
+	
+	@Override
+	public void initialize(ObjectiveInstance oi) {
+		oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
+	}
 
 }
