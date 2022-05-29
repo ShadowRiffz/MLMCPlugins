@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,8 +62,13 @@ public class IOListener implements Listener {
 	}
 
 	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent e) {
-		handleLoad(Bukkit.getOfflinePlayer(e.getUniqueId()));
+	public void onPrejoin(AsyncPlayerPreLoginEvent e) {
+		handlePreload(Bukkit.getOfflinePlayer(e.getUniqueId()));
+	}
+
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		handleLoad(e.getPlayer());
 	}
 	
 	private void handleLeave(Player p) {
@@ -98,8 +104,33 @@ public class IOListener implements Listener {
 		save.runTaskAsynchronously(NeoCore.inst());
 	}
 	
-	private void handleLoad(OfflinePlayer p) {
-		BukkitRunnable load = new BukkitRunnable() {
+	private void handlePreload(OfflinePlayer p) {
+		new BukkitRunnable() {
+			public void run() {
+				try {
+					Connection con = DriverManager.getConnection(connection, properties);
+					Statement stmt = con.createStatement();
+
+					// Save account
+					for (Entry<String, IOComponent> entry : components.entrySet()) {
+						try {
+							entry.getValue().preloadPlayer(p, stmt);
+							stmt.executeBatch();
+						}
+						catch (Exception ex) {
+							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + entry.getKey());
+							ex.printStackTrace();
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}.runTaskAsynchronously(NeoCore.inst());
+	}
+	
+	private void handleLoad(Player p) {
+		new BukkitRunnable() {
 			public void run() {
 				try {
 					Connection con = DriverManager.getConnection(connection, properties);
@@ -120,8 +151,7 @@ public class IOListener implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		};
-		load.runTaskLaterAsynchronously(NeoCore.inst(), 60L);
+		}.runTaskLaterAsynchronously(NeoCore.inst(), 60L);
 	}
 	
 	public static void handleDisable() {
