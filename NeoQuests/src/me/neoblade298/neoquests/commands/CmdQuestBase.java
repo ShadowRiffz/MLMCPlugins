@@ -8,7 +8,7 @@ import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class QuestBase implements Subcommand {
+public class CmdQuestBase implements Subcommand {
 
 	@Override
 	public String getDescription() {

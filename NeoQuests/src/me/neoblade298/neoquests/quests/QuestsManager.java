@@ -36,7 +36,6 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 
 	public QuestsManager() throws NeoIOException {
-		// IOListener.register(NeoQuests.inst(), this);
 		reload();
 	}
 	
