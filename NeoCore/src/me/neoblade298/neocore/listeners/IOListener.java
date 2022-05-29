@@ -79,7 +79,7 @@ public class IOListener implements Listener {
 		}
 		lastSave.put(uuid, System.currentTimeMillis());
 		
-		BukkitRunnable save = new BukkitRunnable() {
+		new BukkitRunnable() {
 			public void run() {
 				try {
 					Connection con = DriverManager.getConnection(connection, properties);
@@ -100,8 +100,7 @@ public class IOListener implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		};
-		save.runTaskAsynchronously(NeoCore.inst());
+		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
 	private void handlePreload(OfflinePlayer p) {
