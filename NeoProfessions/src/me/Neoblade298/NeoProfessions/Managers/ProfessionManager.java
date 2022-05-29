@@ -50,9 +50,12 @@ public class ProfessionManager implements IOComponent, Manager {
 		}
 		return -1;
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		// Check if player exists already
 		if (accounts.containsKey(p.getUniqueId())) {
 			return;

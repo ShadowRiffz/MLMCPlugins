@@ -71,9 +71,12 @@ public class GardenManager implements IOComponent, Manager {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		// Check if player exists already
 		if (gardens.containsKey(p.getUniqueId())) {
 			return;

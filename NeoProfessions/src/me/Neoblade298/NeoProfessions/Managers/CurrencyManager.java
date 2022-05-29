@@ -49,7 +49,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		// Check if player exists already
 		if (essence.containsKey(p.getUniqueId())) {
 			return;
@@ -234,4 +234,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 }

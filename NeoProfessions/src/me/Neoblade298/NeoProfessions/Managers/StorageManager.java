@@ -158,9 +158,12 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		}
 		itemsLoaded = true;
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>();
 		storages.put(p.getUniqueId(), items);
 		

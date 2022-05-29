@@ -192,9 +192,12 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 		}
 		recipeLists.put("all", allList);
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		// Check if player exists already
 		if (knowledge.containsKey(p.getUniqueId())) {
 			return;
