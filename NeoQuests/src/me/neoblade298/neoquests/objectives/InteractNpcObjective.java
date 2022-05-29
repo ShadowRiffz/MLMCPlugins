@@ -7,6 +7,7 @@ import net.citizensnpcs.api.CitizensAPI;
 
 public class InteractNpcObjective extends Objective {
 	private int npcid;
+	private String npcname;
 	
 	public InteractNpcObjective() {
 		super();
@@ -36,6 +37,14 @@ public class InteractNpcObjective extends Objective {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public String getDisplay() {
+		if (npcname == null) {
+			npcname = CitizensAPI.getNPCRegistry().getById(npcid).getFullName();
+		}
+		return "Talk to NPC " + npcname;
 	}
 
 }

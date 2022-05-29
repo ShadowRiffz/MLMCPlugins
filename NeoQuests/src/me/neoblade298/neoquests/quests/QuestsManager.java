@@ -109,4 +109,8 @@ public class QuestsManager implements IOComponent, Reloadable {
 			return;
 		}
 	}
+	
+	public static Quester getQuester(Player p) {
+		return questers.get(p.getUniqueId());
+	}
 }

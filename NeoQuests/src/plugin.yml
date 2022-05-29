@@ -6,6 +6,6 @@ softdepend: [SkillAPI]
 version: 1.0
 api-version: 1.18
 commands:
-   quests:
+   quest:
       description: Quest command
-      usage: /quests
+      usage: /quest

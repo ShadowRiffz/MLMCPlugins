@@ -1,14 +1,12 @@
 package me.neoblade298.neoquests.objectives;
 
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
-import net.citizensnpcs.api.CitizensAPI;
 
 public class GetStoredItemObjective extends Objective {
 	private int id;
+	private String itemname;
 	
 	public GetStoredItemObjective() {
 		super();
@@ -37,6 +35,14 @@ public class GetStoredItemObjective extends Objective {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public String getDisplay() {
+		if (itemname == null) {
+			itemname = StorageManager.getItem(id).getDisplay();
+		}
+		return "Get " + itemname;
 	}
 
 }
