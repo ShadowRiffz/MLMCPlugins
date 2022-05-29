@@ -14,12 +14,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
+import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.listeners.IOListener;
 
 public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	private static NeoCore inst;
-	public static String sqlUser, sqlPass, connection;
-	public static Properties properties = new Properties();
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
 	private static String instName = null;
 	
@@ -27,18 +26,17 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		inst = this;
 		Bukkit.getServer().getLogger().info("NeoCore Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-		getServer().getPluginManager().registerEvents(new IOListener(), this);
 		
 		// SQL
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
 		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
+		String connection = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
 				sql.getString("db") + sql.getString("flags");
-		sqlUser = sql.getString("username");
-		sqlPass = sql.getString("password");
+		Properties properties = new Properties();
 		properties.setProperty("useSSL", "false");
-		properties.setProperty("user", sqlUser);
-		properties.setProperty("password", sqlPass);
+		properties.setProperty("user",  sql.getString("username"));
+		properties.setProperty("password", sql.getString("password"));
+		getServer().getPluginManager().registerEvents(new IOListener(connection, properties), this);
 		
 		File instancecfg = new File(this.getDataFolder(), "instance.yml");
 		if (instancecfg.exists()) {
@@ -85,5 +83,9 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static String getInstanceName() {
 		return instName;
+	}
+	
+	public static void registerIOComponent(JavaPlugin plugin, IOComponent component) {
+		IOListener.register(plugin, component);
 	}
 }

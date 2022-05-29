@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -25,15 +26,19 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class IOListener implements Listener {
+	private static String connection;
+	private static Properties properties;
 	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
 	
-	public IOListener() {
+	public IOListener(String connection, Properties properties) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		IOListener.connection = connection;
+		IOListener.properties = properties;
 	}
 	
 	public static void register(JavaPlugin plugin, IOComponent component) {
@@ -71,7 +76,7 @@ public class IOListener implements Listener {
 		BukkitRunnable save = new BukkitRunnable() {
 			public void run() {
 				try {
-					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
+					Connection con = DriverManager.getConnection(connection, properties);
 					Statement stmt = con.createStatement();
 
 					// Save account
@@ -97,7 +102,7 @@ public class IOListener implements Listener {
 		BukkitRunnable load = new BukkitRunnable() {
 			public void run() {
 				try {
-					Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
+					Connection con = DriverManager.getConnection(connection, properties);
 					Statement stmt = con.createStatement();
 
 					// Save account
@@ -121,7 +126,7 @@ public class IOListener implements Listener {
 	
 	public static void handleDisable() {
 		try {
-			Connection con = DriverManager.getConnection(NeoCore.connection, NeoCore.properties);
+			Connection con = DriverManager.getConnection(connection, properties);
 			Statement stmt = con.createStatement();
 			
 			// Any final cleanup
