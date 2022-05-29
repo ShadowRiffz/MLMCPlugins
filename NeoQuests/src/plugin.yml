@@ -9,3 +9,6 @@ commands:
    quest:
       description: Quest command
       usage: /quest
+   quests:
+      description: Quests command
+      usage: /quests

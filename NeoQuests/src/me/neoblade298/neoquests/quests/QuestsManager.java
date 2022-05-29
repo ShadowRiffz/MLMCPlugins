@@ -38,9 +38,12 @@ public class QuestsManager implements IOComponent, Reloadable {
 	public QuestsManager() throws NeoIOException {
 		reload();
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_users WHERE UUID = '" + p.getUniqueId() + "';");
 			Quester quester = new Quester(p.getUniqueId());
@@ -111,5 +114,9 @@ public class QuestsManager implements IOComponent, Reloadable {
 	
 	public static Quester getQuester(Player p) {
 		return questers.get(p.getUniqueId());
+	}
+	
+	public static Quest getQuest(String quest) {
+		return quests.get(quest);
 	}
 }

@@ -8,11 +8,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.quests.Quest;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
 	ActionSet curr = new ActionSet();
 	int runtime = 0;
+	Quest quest = null;
 	
 	// Used to avoid having to look for nulls
 	public ActionSequence() {}
@@ -33,6 +35,10 @@ public class ActionSequence {
 				int dl = ((DelayableAction) action).getDelay();
 				runtime += dl;
 				delay += dl;
+			}
+			
+			if (action instanceof StartQuestAction) {
+				quest = ((StartQuestAction) action).getQuest();
 			}
 		}
 		
@@ -77,5 +83,9 @@ public class ActionSequence {
 	
 	public int getRuntime() {
 		return runtime;
+	}
+	
+	public Quest getQuest() {
+		return quest;
 	}
 }

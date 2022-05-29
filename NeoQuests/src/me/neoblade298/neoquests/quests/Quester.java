@@ -54,9 +54,9 @@ public class Quester {
 					s.sendMessage("§e" + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
 				}
 			}
-			builder = new ComponentBuilder("§e<Click to see what you should do next!>")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
-			s.spigot().sendMessage(builder.create());
 		}
+		ComponentBuilder builder = new ComponentBuilder("§e<Click to see what you should do next!>")
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
+		s.spigot().sendMessage(builder.create());
 	}
 }

@@ -116,4 +116,8 @@ public class ConversationManager implements Reloadable, Listener {
 			activeConvs.put(p, ci);
 		}
 	}
+	
+	public String getKey() {
+		return "ConversationManager";
+	}
 }

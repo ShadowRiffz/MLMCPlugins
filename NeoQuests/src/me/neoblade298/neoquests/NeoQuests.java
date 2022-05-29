@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -9,17 +10,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.commands.CmdQuestBase;
+import me.neoblade298.neoquests.commands.CmdQuestsReload;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.NpcListener;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
-	private static NeoQuests inst;
 	public static Random rand = new Random();
-	public static HashSet<Player> debuggers = new HashSet<Player>();
+	
+	private static NeoQuests inst;
+	private static HashSet<Player> debuggers = new HashSet<Player>();
+	private static ArrayList<Reloadable> reloadables = new ArrayList<Reloadable>();
 	
 	public void onEnable() {
 		inst = this;
@@ -31,8 +36,9 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	    
 	    // Managers
 		try {
+		    reloadables.add(new ConversationManager());
 		    new ActionManager();
-		    new ConversationManager();
+		    reloadables.add(new QuestsManager());
 		    new ObjectiveManager();
 		    NeoCore.registerIOComponent(this, new QuestsManager());
 		}
@@ -45,6 +51,11 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		CommandManager quest = new CommandManager("quest");
 		quest.register(new CmdQuestBase());
 	    this.getCommand("quest").setExecutor(quest);
+
+		CommandManager quests = new CommandManager("quests");
+		quests.registerCommandList("");
+		quests.register(new CmdQuestsReload());
+	    this.getCommand("quests").setExecutor(quests);
 	}
 	
 	public void onDisable() {
@@ -71,5 +82,15 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 			p.sendMessage(e.getMessage());
 		}
 		e.printStackTrace();
+	}
+	
+	public static void reloadAll() {
+		for (Reloadable rld : reloadables) {
+			try {
+				rld.reload();
+			} catch (NeoIOException e) {
+				showWarning("Failed to reload module " + rld.getKey(), e);
+			}
+		}
 	}
 }

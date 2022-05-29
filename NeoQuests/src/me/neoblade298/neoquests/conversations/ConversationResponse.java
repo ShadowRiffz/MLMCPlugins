@@ -9,6 +9,7 @@ import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
+import me.neoblade298.neoquests.quests.Quest;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,6 +26,12 @@ public class ConversationResponse {
 		this.startActions.load(cfg.getStringList("actions"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.next = cfg.getInt("next", -3);
+		
+		if (startActions.getQuest() != null) {
+			for (Condition cond : startActions.getQuest().getConditions()) {
+				this.conditions.add(cond);
+			}
+		}
 	}
 	
 	public ConversationResponse() {
@@ -51,8 +58,9 @@ public class ConversationResponse {
 			}
 		}
 		else { // Visible and passes conditions
-			ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text)
-			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num)))
+			Quest q = startActions.getQuest();
+			ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num + "\nThis starts the quest " + q.getName())))
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
 			p.spigot().sendMessage(builder.create());
 			return true;
