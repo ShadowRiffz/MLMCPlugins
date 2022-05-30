@@ -24,7 +24,6 @@ public class ObjectiveSetInstance {
 		for (Objective o : set.getObjectives()) {
 			ObjectiveInstance oi = new ObjectiveInstance(p, o, this);
 			objs.add(oi);
-			o.initialize(oi);
 		}
 	}
 	
@@ -78,5 +77,14 @@ public class ObjectiveSetInstance {
 	
 	public ArrayList<ObjectiveInstance> getObjectives() {
 		return objs;
+	}
+	
+	public boolean initialize() {
+		for (ObjectiveInstance obj : objs) {
+			if (obj.getObjective().initialize(obj)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

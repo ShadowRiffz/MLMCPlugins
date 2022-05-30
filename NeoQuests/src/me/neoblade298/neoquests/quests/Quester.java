@@ -27,9 +27,10 @@ public class Quester {
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {
 		qi.cleanup();
-		activeQuests.remove(qi.getQuest().getName());
-		completedQuests.put(qi.getQuest().getName(), new CompletedQuest(qi.getQuest(), stage, success));
+		activeQuests.remove(qi.getQuest().getKey());
+		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
 		getPlayer().sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
+		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getName() + "§7!");
 	}
 	
 	public void cancelQuest(String name) {
@@ -41,9 +42,11 @@ public class Quester {
 	}
 	
 	public void startQuest(Quest q) {
-		activeQuests.put(q.getKey(), new QuestInstance(this, q));
 		getPlayer().sendTitle("§fQuest Started", "§6" + q.getName(), 10, 70, 10);
 		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
+		QuestInstance qi = new QuestInstance(this, q);
+		activeQuests.put(q.getKey(), qi);
+		qi.initialize();
 	}
 	
 	public void displayQuests(CommandSender s) {

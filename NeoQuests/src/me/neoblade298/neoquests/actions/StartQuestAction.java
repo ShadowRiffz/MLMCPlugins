@@ -33,7 +33,6 @@ public class StartQuestAction implements Action {
 
 	@Override
 	public void run(Player p) {
-		System.out.println("Starting quest");
 		QuestsManager.startQuest(p, quest);
 	}
 	

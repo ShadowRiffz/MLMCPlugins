@@ -30,20 +30,24 @@ public class ObjectiveInstance {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public boolean setCount(int count) {
 		this.count = Math.min(obj.getNeeded(), count);
 		if (isComplete()) {
 			set.checkCompletion();
+			return true;
 		}
+		return false;
 	}
 
-	public void incrementCount() {
+	public boolean incrementCount() {
 		if (this.count < obj.getNeeded()) {
 			this.count++;
 		}
 		if (isComplete()) {
 			set.checkCompletion();
+			return true;
 		}
+		return false;
 	}
 
 	public boolean isComplete() {

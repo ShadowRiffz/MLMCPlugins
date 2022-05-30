@@ -63,7 +63,6 @@ public class QuestInstance {
 			if (si.getSet().hasAlternateRewards()) {
 				rewards = si.getSet().getAlternateRewards();
 			}
-			p.sendMessage("§7You completed §e" + quest.getName() + "§7!");
 			if (rewards.size() > 0) {
 				p.sendMessage("§6Rewards:");
 				for (RewardAction r : rewards) {
@@ -76,7 +75,7 @@ public class QuestInstance {
 		}
 		else {
 			q.cancelQuest(quest.getKey());
-			p.sendMessage("§cYou failed §e" + quest.getName() + "§c!");
+			p.sendMessage("§c[§4§lMLMC§4] §cYou failed §6" + quest.getName() + "§c!");
 		}
 	}
 	
@@ -96,5 +95,14 @@ public class QuestInstance {
 	
 	public HashMap<String, ObjectiveSetInstance> getObjectiveSetInstances() {
 		return sets;
+	}
+	
+	public boolean initialize() {
+		for (ObjectiveSetInstance osi : sets.values()) {
+			if (osi.initialize()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
