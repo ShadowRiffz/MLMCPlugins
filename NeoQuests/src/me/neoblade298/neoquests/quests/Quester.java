@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.quests;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class Quester {
 			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getName()));
 			s.spigot().sendMessage(builder.append(quitquest.create()).create());
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances().values()) {
+			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
 				for (ObjectiveInstance oi : osi.getObjectives()) {
 					s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
@@ -65,5 +66,9 @@ public class Quester {
 		ComponentBuilder builder = new ComponentBuilder("§e<Click for recommended quest!>")
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
 		s.spigot().sendMessage(builder.create());
+	}
+	
+	public Collection<QuestInstance> getActiveQuests() {
+		return activeQuests.values();
 	}
 }

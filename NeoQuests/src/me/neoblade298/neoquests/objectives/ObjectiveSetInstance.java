@@ -87,4 +87,16 @@ public class ObjectiveSetInstance {
 		}
 		return false;
 	}
+	
+	public String serializeCounts() {
+		String counts = "";
+		for (int i = 0; i < objs.size(); i++) {
+			if (i == 0) {
+				counts += objs.get(0).getCount();
+				continue;
+			}
+			counts += " " + objs.get(i).getCount();
+		}
+		return counts;
+	}
 }

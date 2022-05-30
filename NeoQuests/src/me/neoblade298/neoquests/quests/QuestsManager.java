@@ -17,6 +17,7 @@ import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
+import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class QuestsManager implements IOComponent, Reloadable {
 	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();
@@ -27,7 +28,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 		questsLoader = (cfg) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
-					quests.put(key.toUpperCase(), new Quest(key, cfg.getConfigurationSection(key)));
+					quests.put(key.toUpperCase(), new Quest(key.toUpperCase(), cfg.getConfigurationSection(key)));
 				} catch (NeoIOException e) {
 					e.printStackTrace();
 				}
@@ -76,9 +77,18 @@ public class QuestsManager implements IOComponent, Reloadable {
 	public void savePlayer(Player p, Statement stmt) {
 		try {
 			Quester quester = questers.get(p.getUniqueId());
-			// TODO: Save user
-			stmt.addBatch("REPLACE INTO quests_quests "
-					+ "VALUES ()");
+
+			// Save user
+			for (QuestInstance qi : quester.getActiveQuests()) {
+				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+					stmt.addBatch("REPLACE INTO quests_users "
+							+ "VALUES ('" + p.getUniqueId() + "','" + qi.getQuest().getKey() + "'," + qi.getStage()
+							+ ",'" + osi.getKey() + "','" + osi.serializeCounts() + "');");
+				}
+			}
+			
+			// Save completed quests
+			// TODO: Save completed quests
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Quests failed to save quest data for user " + p.getName());

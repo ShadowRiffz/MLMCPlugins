@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.quests;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -93,8 +94,8 @@ public class QuestInstance {
 		return sets.get(key);
 	}
 	
-	public HashMap<String, ObjectiveSetInstance> getObjectiveSetInstances() {
-		return sets;
+	public Collection<ObjectiveSetInstance> getObjectiveSetInstances() {
+		return sets.values();
 	}
 	
 	public boolean initialize() {
@@ -104,5 +105,9 @@ public class QuestInstance {
 			}
 		}
 		return false;
+	}
+	
+	public int getStage() {
+		return stage;
 	}
 }
