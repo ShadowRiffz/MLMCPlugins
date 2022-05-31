@@ -10,6 +10,7 @@ import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
+import me.neoblade298.neoquests.conditions.QuestNotCompletedCondition;
 
 public class Quest {
 	private String key, name;
@@ -26,6 +27,9 @@ public class Quest {
 		this.rewards = ActionManager.parseRewards(cfg.getStringList("rewards"));
 		
 		this.stages = QuestStage.parseQuestStages(cfg.getConfigurationSection("stages"), this);
+		if (cfg.getBoolean("repeatable", false)) {
+			this.conditions.add(new QuestNotCompletedCondition());
+		}
 	}
 	
 	public String getKey() {

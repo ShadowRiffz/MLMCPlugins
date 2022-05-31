@@ -70,8 +70,9 @@ public class ObjectiveSetInstance {
 			}
 		}
 		
+		i = 0;
 		for (ObjectiveInstance oi : objs) {
-			oi.setCount(i++);
+			oi.setCount(counts[i++]);
 		}
 	}
 	

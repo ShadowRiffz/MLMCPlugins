@@ -65,6 +65,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 				Quest quest = quests.get(rs.getString(2));
 				QuestInstance qi = activeQuests.getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
+				quester.resumeQuest(qi);
 			}
 		}
 		catch (Exception e) {
@@ -88,7 +89,11 @@ public class QuestsManager implements IOComponent, Reloadable {
 			}
 			
 			// Save completed quests
-			// TODO: Save completed quests
+			for (CompletedQuest cq : quester.getCompletedQuests()) {
+				stmt.addBatch("REPLACE INTO quests_completed "
+						+ "VALUES ('" + p.getUniqueId() + "','" + cq.getQuest().getKey() + "'," + cq.getStage()
+						+ ",'" + (cq.isSuccess() ? "1" : "0") + "');");
+			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Quests failed to save quest data for user " + p.getName());

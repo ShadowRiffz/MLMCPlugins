@@ -17,6 +17,8 @@ public class ConditionManager {
 		mngr = new LineConfigManager<Condition>(NeoQuests.inst(), "conditions");
 		
 		mngr.register(new ClassLevelCondition());
+		mngr.register(new QuestCompletedCondition());
+		mngr.register(new QuestNotCompletedCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {

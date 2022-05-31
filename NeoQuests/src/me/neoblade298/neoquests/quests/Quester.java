@@ -71,4 +71,16 @@ public class Quester {
 	public Collection<QuestInstance> getActiveQuests() {
 		return activeQuests.values();
 	}
+	
+	public void resumeQuest(QuestInstance qi) {
+		activeQuests.put(qi.getQuest().getKey(), qi);
+	}
+	
+	public CompletedQuest getCompletedQuest(String quest) {
+		return completedQuests.get(quest);
+	}
+	
+	public Collection<CompletedQuest> getCompletedQuests() {
+		return completedQuests.values();
+	}
 }
