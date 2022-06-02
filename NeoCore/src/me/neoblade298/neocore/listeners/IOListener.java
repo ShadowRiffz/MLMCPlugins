@@ -178,4 +178,14 @@ public class IOListener implements Listener {
 			ex.printStackTrace();
 		}
 	}
+	
+	public static Statement getStatement() {
+		try {
+			Connection con = DriverManager.getConnection(connection, properties);
+			return con.createStatement();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 }

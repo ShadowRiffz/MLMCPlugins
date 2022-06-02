@@ -1,6 +1,7 @@
 package me.neoblade298.neocore;
 
 import java.io.File;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -87,5 +88,9 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static void registerIOComponent(JavaPlugin plugin, IOComponent component) {
 		IOListener.register(plugin, component);
+	}
+	
+	public static Statement getStatement() {
+		return IOListener.getStatement();
 	}
 }
