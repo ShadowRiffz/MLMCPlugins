@@ -83,13 +83,15 @@ public class IOListener implements Listener {
 			public void run() {
 				try {
 					Connection con = DriverManager.getConnection(connection, properties);
-					Statement stmt = con.createStatement();
+					Statement insert = con.createStatement();
+					Statement delete = con.createStatement();
 
 					// Save account
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
-							entry.getValue().savePlayer(p, stmt);
-							stmt.executeBatch();
+							entry.getValue().savePlayer(p, insert, delete);
+							delete.executeBatch();
+							insert.executeBatch();
 						}
 						catch (Exception ex) {
 							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
@@ -108,13 +110,15 @@ public class IOListener implements Listener {
 			public void run() {
 				try {
 					Connection con = DriverManager.getConnection(connection, properties);
-					Statement stmt = con.createStatement();
+					Statement insert = con.createStatement();
+					Statement delete = con.createStatement();
 
 					// Save account
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
-							entry.getValue().preloadPlayer(p, stmt);
-							stmt.executeBatch();
+							entry.getValue().preloadPlayer(p, insert, delete);
+							delete.executeBatch();
+							insert.executeBatch();
 						}
 						catch (Exception ex) {
 							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + entry.getKey());
@@ -133,13 +137,15 @@ public class IOListener implements Listener {
 			public void run() {
 				try {
 					Connection con = DriverManager.getConnection(connection, properties);
-					Statement stmt = con.createStatement();
+					Statement insert = con.createStatement();
+					Statement delete = con.createStatement();
 
 					// Save account
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
 						try {
-							entry.getValue().loadPlayer(p, stmt);
-							stmt.executeBatch();
+							entry.getValue().loadPlayer(p, insert, delete);
+							delete.executeBatch();
+							insert.executeBatch();
 						}
 						catch (Exception ex) {
 							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
@@ -156,14 +162,16 @@ public class IOListener implements Listener {
 	public static void handleDisable() {
 		try {
 			Connection con = DriverManager.getConnection(connection, properties);
-			Statement stmt = con.createStatement();
+			Statement insert = con.createStatement();
+			Statement delete = con.createStatement();
 			
 			// Any final cleanup
 			for (Entry<String, IOComponent> entry : components.entrySet()) {
 				try {
 					Bukkit.getLogger().info("[NeoCore] Cleaning up component " + entry.getKey());
-					entry.getValue().cleanup(stmt);
-					stmt.executeBatch();
+					entry.getValue().cleanup(insert, delete);
+					delete.executeBatch();
+					insert.executeBatch();
 				}
 				catch (Exception ex) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
