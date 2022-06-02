@@ -134,14 +134,14 @@ public class GardenManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		HashMap<ProfessionType, Garden> pgardens = gardens.get(uuid);
 		try {
 			for (ProfessionType type : pgardens.keySet()) {
 				Garden garden = pgardens.get(type);
 				// Save garden size
-				stmt.addBatch("REPLACE INTO professions_gardens "
+				insert.addBatch("REPLACE INTO professions_gardens "
 						+ "VALUES ('" + uuid + "', '" + type + "', " + pgardens.get(type).getSize() + ");");
 				
 				// Save garden slots
@@ -149,12 +149,12 @@ public class GardenManager implements IOComponent, Manager {
 					GardenSlot gslot = garden.getSlots().get(slot);
 					if (gslot != null) {
 						int fid = gslot.getFertilizer() != null ? gslot.getFertilizer().getId() : -1;
-						stmt.addBatch("REPLACE INTO professions_gardenslots "
+						insert.addBatch("REPLACE INTO professions_gardenslots "
 								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + "," + gslot.getId() + "," +
 								gslot.getEndTime() + "," + fid +");");
 					}
 					else {
-						stmt.addBatch("REPLACE INTO professions_gardenslots "
+						insert.addBatch("REPLACE INTO professions_gardenslots "
 								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + ",-1,-1,-1);");
 					}
 				}
@@ -194,10 +194,10 @@ public class GardenManager implements IOComponent, Manager {
 	}
 	
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}

@@ -83,7 +83,7 @@ public class ProfessionManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		if (!accounts.containsKey(p.getUniqueId())) {
 			return;
@@ -92,7 +92,7 @@ public class ProfessionManager implements IOComponent, Manager {
 		try {
 			for (Entry<ProfessionType, Profession> entry : accounts.get(uuid).entrySet()) {
 				Profession prof = entry.getValue();
-				stmt.addBatch("REPLACE INTO professions_accounts "
+				insert.addBatch("REPLACE INTO professions_accounts "
 						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
 						prof.getExp()  +");");
 			}
@@ -104,10 +104,10 @@ public class ProfessionManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}

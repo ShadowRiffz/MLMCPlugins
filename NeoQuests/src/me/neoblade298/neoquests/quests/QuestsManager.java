@@ -75,14 +75,14 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		try {
 			Quester quester = questers.get(p.getUniqueId());
 
 			// Save user
 			for (QuestInstance qi : quester.getActiveQuests()) {
 				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-					stmt.addBatch("REPLACE INTO quests_users "
+					insert.addBatch("REPLACE INTO quests_users "
 							+ "VALUES ('" + p.getUniqueId() + "','" + qi.getQuest().getKey() + "'," + qi.getStage()
 							+ ",'" + osi.getKey() + "','" + osi.serializeCounts() + "');");
 				}
@@ -90,7 +90,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 			
 			// Save completed quests
 			for (CompletedQuest cq : quester.getCompletedQuests()) {
-				stmt.addBatch("REPLACE INTO quests_completed "
+				insert.addBatch("REPLACE INTO quests_completed "
 						+ "VALUES ('" + p.getUniqueId() + "','" + cq.getQuest().getKey() + "'," + cq.getStage()
 						+ ",'" + (cq.isSuccess() ? "1" : "0") + "');");
 			}
@@ -102,7 +102,11 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 	
 	@Override
-	public void cleanup(Statement stmt) {}
+	public void cleanup(Statement insert, Statement delete) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			savePlayer(p, insert, delete);
+		}
+	}
 
 	@Override
 	public String getKey() {

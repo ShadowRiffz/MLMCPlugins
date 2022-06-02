@@ -153,16 +153,16 @@ public class NeoSettings extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		for (String key : settings.keySet()) {
-			settings.get(key).save(stmt, p.getUniqueId());
+			settings.get(key).save(insert, p.getUniqueId());
 		}
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			savePlayer(p, stmt);
+			savePlayer(p, insert, delete);
 		}
 	}
 

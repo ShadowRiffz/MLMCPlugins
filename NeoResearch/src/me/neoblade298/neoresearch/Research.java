@@ -291,47 +291,49 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		load.runTaskAsynchronously(this);
 	}
 	
-	public void cleanup(Statement stmt) {
+	@Override
+	public void cleanup(Statement insert, Statement delete) {
 		try {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public void savePlayer(Player p, Statement stmt) {
+	@Override
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			PlayerStats stats = playerStats.get(uuid);
 			if (playerStats.containsKey(uuid)) {
 	
 				// Save account
-				stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+				insert.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
 				+ "','" + stats.getExp() + "');");
 	
 				// Save research points
 	
 				HashMap<String, Integer> mobKills = stats.getMobKills();
 				for (String mob : mobKills.keySet()) {
-					stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+					insert.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
 				}
 				HashMap<String, Integer> researchPoints = stats.getResearchPoints();
 				for (String mob : researchPoints.keySet()) {
-					stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
+					insert.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
 				}
 	
 				for (Entry<String, ResearchItem> entry : stats.getCompletedResearchItems().entrySet()) {
 					String name = entry.getValue().getId();
-					stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + name + "');");
+					insert.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + name + "');");
 				}
 			
 				// Save attrs
 				for (Integer key : playerAttrs.get(uuid).keySet()) {
 					StoredAttributes pAttrs = playerAttrs.get(uuid).get(key);
 					for (String attr : StoredAttributes.attrs) {
-						stmt.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
+						insert.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
 								key + ");");
 					}
 				}

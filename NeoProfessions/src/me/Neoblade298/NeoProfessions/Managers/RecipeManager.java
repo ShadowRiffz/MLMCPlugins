@@ -233,11 +233,11 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			for (String key : knowledge.get(uuid)) {
-				stmt.addBatch("REPLACE INTO professions_knowledge "
+				insert.addBatch("REPLACE INTO professions_knowledge "
 						+ "VALUES ('" + uuid + "', '" + key + "');");
 			}
 		}
@@ -248,10 +248,10 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}

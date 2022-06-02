@@ -72,7 +72,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		if (!essence.containsKey(p.getUniqueId())) {
 			return;
@@ -80,7 +80,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		
 		try {
 			for (Entry<Integer, Integer> entry : essence.get(uuid).entrySet()) {
-				stmt.addBatch("REPLACE INTO professions_essence "
+				insert.addBatch("REPLACE INTO professions_essence "
 						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
 			}
 		}
@@ -91,14 +91,14 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		try {
 			if (!Professions.isInstance) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
-					savePlayer(p, stmt);
+					savePlayer(p, insert, delete);
 				}
 			}
-			stmt.addBatch("DELETE FROM professions_essence WHERE amount <= 0");
+			insert.addBatch("DELETE FROM professions_essence WHERE amount <= 0");
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to cleanup currency");

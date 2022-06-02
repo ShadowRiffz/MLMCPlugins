@@ -34,7 +34,7 @@ public class ConsumableManager implements Listener, IOComponent {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		DurationEffects eff = ConsumableManager.effects.get(uuid);
 		if (eff != null) {
@@ -44,11 +44,11 @@ public class ConsumableManager implements Listener, IOComponent {
 			
 			try {
 				if (eff.isRelevant()) {
-					stmt.addBatch("REPLACE INTO consumables_effects VALUES ('" + uuid + "','" + eff.getCons().getKey()
+					insert.addBatch("REPLACE INTO consumables_effects VALUES ('" + uuid + "','" + eff.getCons().getKey()
 							+ "'," + eff.getStartTime() + ");");
 				}
 				else {
-					stmt.addBatch("DELETE FROM consumables_effects WHERE uuid = '" + uuid + "';");
+					delete.addBatch("DELETE FROM consumables_effects WHERE uuid = '" + uuid + "';");
 				}
 			} catch (Exception e) {
 				Bukkit.getLogger().log(Level.WARNING, "Consumables failed to save effects for " + uuid);
@@ -57,20 +57,21 @@ public class ConsumableManager implements Listener, IOComponent {
 		}
 	}
 	
-	public void cleanup(Statement stmt) {
+	@Override
+	public void cleanup(Statement insert, Statement delete) {
 		try {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 			long previousDay = System.currentTimeMillis() - 86400000L;
-			stmt.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
-			stmt.executeBatch();
+			delete.executeUpdate("DELETE FROM consumables_effects WHERE startTime < " + previousDay);
 		} catch (Exception ex) {
 			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to cleanup");
 			ex.printStackTrace();
 		}
 	}
 
+	@Override
 	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		ConsumableManager.effects.remove(uuid);
