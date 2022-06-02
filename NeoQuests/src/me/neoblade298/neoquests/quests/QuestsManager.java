@@ -81,7 +81,10 @@ public class QuestsManager implements IOComponent, Reloadable {
 
 			// Save user
 			for (QuestInstance qi : quester.getActiveQuests()) {
+				// Delete existing active quests
+				delete.addBatch("DELETE FROM quests_users WHERE uuid = '" + p.getUniqueId() + "';"); 
 				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+					// Replace with new ones
 					insert.addBatch("REPLACE INTO quests_users "
 							+ "VALUES ('" + p.getUniqueId() + "','" + qi.getQuest().getKey() + "'," + qi.getStage()
 							+ ",'" + osi.getKey() + "','" + osi.serializeCounts() + "');");
@@ -102,11 +105,8 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 	
 	@Override
-	public void cleanup(Statement insert, Statement delete) {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			savePlayer(p, insert, delete);
-		}
-	}
+	// No save-all needed, it happens on player logout anyway
+	public void cleanup(Statement insert, Statement delete) {	}
 
 	@Override
 	public String getKey() {
