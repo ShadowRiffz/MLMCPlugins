@@ -11,6 +11,7 @@ import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.QuestNotCompletedCondition;
+import me.neoblade298.neoquests.conversations.Conversation;
 
 public class Quest {
 	private String key, name, startConv;
@@ -78,5 +79,9 @@ public class Quest {
 	
 	public Questline getQuestline() {
 		return ql;
+	}
+	
+	public Conversation getStartConversation() {
+		return startConv;
 	}
 }

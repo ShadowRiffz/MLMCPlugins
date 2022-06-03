@@ -75,17 +75,26 @@ public class ConversationManager implements Reloadable, Listener {
 		}
 	}
 	
-	public static void startConversation(Player p, String key, boolean ignoreConditions) {
-		Conversation conv = convs.get(key);
-		if (conv == null) return;
+	public static void startConversation(Player p, Conversation conv, boolean ignoreConditions) {
+		if (conv == null) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", conv was null.");
+		}
 		if (!ignoreConditions) {
 			Condition block = ConditionManager.getBlockingCondition(p, conv.getConditions());
 			if (block != null) {
-				Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", key " + key + ". Failed condition " + block.getKey());
+				Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", key " + conv.getKey() + ". Failed condition " + block.getKey());
 				return;
 			}
 		}
 		startConversation(p, conv);
+	}
+	
+	public static void startConversation(Player p, String key, boolean ignoreConditions) {
+		Conversation conv = convs.get(key);
+		if (conv == null) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", key " + key + ", no conv found.");
+		}
+		startConversation(p, conv, ignoreConditions);
 	}
 	
 	public static void startConversation(Player p, int npcid) {

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
 
-public class Questline implements Comparator {
+public class Questline implements Comparator<Questline> {
 	private String key, display;
 	private ArrayList<Quest> quests;
 
@@ -66,12 +66,7 @@ public class Questline implements Comparator {
 	}
 
 	@Override
-	public int compare(Object o1, Object o2) {
-		if (o1 instanceof Questline && o2 instanceof Questline) {
-			Questline q1 = (Questline) o1;
-			Questline q2 = (Questline) o2;
-			return q1.getKey().compareTo(q2.getKey());
-		}
-		return 0;
+	public int compare(Questline q1, Questline q2) {
+		return q1.getKey().compareTo(q2.getKey());
 	}
 }
