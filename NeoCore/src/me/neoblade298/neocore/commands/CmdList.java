@@ -31,6 +31,7 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
+		s.sendMessage("§7List of commands: [] = Required, {} = Optional");
 		for (String cmd : cmds.keySet()) {
 			Subcommand sc = cmds.get(cmd);
 			if (sc.isHidden()) {
@@ -38,9 +39,17 @@ public class CmdList implements Subcommand {
 			}
 			
 			String line = sc.getColor() + base;
+			// Add subcommand name
 			if (cmd.length() != 0) {
 				line += " " + cmd;
 			}
+			
+			// Add args
+			if (sc.getArgs() != null) {
+				line += " " + sc.getArgs();
+			}
+			
+			// Add description
 			if (sc.getDescription() != null) {
 				line += "§7 - " + sc.getDescription();
 				s.sendMessage(line);
@@ -56,5 +65,10 @@ public class CmdList implements Subcommand {
 	@Override
 	public ChatColor getColor() {
 		return ChatColor.GRAY;
+	}
+
+	@Override
+	public String getArgs() {
+		return null;
 	}
 }
