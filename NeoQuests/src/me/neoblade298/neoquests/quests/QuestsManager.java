@@ -16,6 +16,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
@@ -25,13 +26,35 @@ public class QuestsManager implements IOComponent, Reloadable {
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static HashMap<String, Questline> questlines = new HashMap<String, Questline>();
 	private static ArrayList<QuestRecommendation> recommendations = new ArrayList<QuestRecommendation>();
-	private static FileLoader questsLoader;
+	private static FileLoader questsLoader, questlinesLoader, recommendationsLoader;
 	
 	static {
 		questsLoader = (cfg) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					quests.put(key.toUpperCase(), new Quest(key.toUpperCase(), cfg.getConfigurationSection(key)));
+				} catch (NeoIOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		questlinesLoader = (cfg) -> {
+			for (String key : cfg.getKeys(false)) {
+				try {
+					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key)));
+				} catch (NeoIOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		recommendationsLoader = (cfg) -> {
+			for (String key : cfg.getKeys(false)) {
+				try {
+					for (String line : cfg.getStringList(key)) {
+						recommendations.add(new QuestRecommendation(new LineConfig(line)));
+					}
 				} catch (NeoIOException e) {
 					e.printStackTrace();
 				}
@@ -140,6 +163,8 @@ public class QuestsManager implements IOComponent, Reloadable {
 	public void reload() throws NeoIOException {
 		try {
 			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
+			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "questlines"), questlinesLoader);
+			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "recommendations.yml"), recommendationsLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
