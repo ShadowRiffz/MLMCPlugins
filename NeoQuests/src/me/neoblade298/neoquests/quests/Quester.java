@@ -2,6 +2,9 @@ package me.neoblade298.neoquests.quests;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,6 +20,7 @@ public class Quester {
 	private UUID uuid;
 	private HashMap<String, CompletedQuest> completedQuests = new HashMap<String, CompletedQuest>();
 	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();;
+	private TreeMap<String, Questline> activeQuestlines = new TreeMap<String, Questline>();
 	
 	public Quester(UUID uuid) {
 		this.uuid = uuid;
@@ -30,6 +34,8 @@ public class Quester {
 		qi.cleanup();
 		activeQuests.remove(qi.getQuest().getKey());
 		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
+		Questline ql = qi.getQuest().getQuestline();
+		if (ql != null && ql.getLastQuest().equals(qi.getQuest().getKey())) activeQuestlines.remove(ql);
 		getPlayer().sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
 		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getName() + "§7!");
 	}
@@ -47,6 +53,7 @@ public class Quester {
 		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey(), qi);
+		if (q.getQuestline() != null) activeQuestlines.add(q.getQuestline());
 		qi.initialize();
 	}
 	
@@ -82,5 +89,17 @@ public class Quester {
 	
 	public Collection<CompletedQuest> getCompletedQuests() {
 		return completedQuests.values();
+	}
+	
+	public void addQuestline(Questline ql) {
+		this.activeQuestlines.put(ql.getKey(), ql);
+	}
+	
+	public void addCompletedQuest(CompletedQuest cq) {
+		this.completedQuests.put(cq.getQuest().getKey(), cq);
+	}
+	
+	public Collection<Questline> getActiveQuestlines() {
+		return activeQuestlines.values();
 	}
 }

@@ -1,9 +1,9 @@
 package me.neoblade298.neoquests.quests;
 
 public class CompletedQuest {
-	Quest q;
-	int stage;
-	boolean success;
+	private Quest q;
+	private int stage;
+	private boolean success;
 	public CompletedQuest(Quest q, int stage, boolean success) {
 		this.q = q;
 		this.stage = stage;

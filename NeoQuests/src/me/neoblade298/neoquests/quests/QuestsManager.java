@@ -3,6 +3,7 @@ package me.neoblade298.neoquests.quests;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -22,6 +23,8 @@ import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 public class QuestsManager implements IOComponent, Reloadable {
 	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
+	private static HashMap<String, Questline> questlines = new HashMap<String, Questline>();
+	private static ArrayList<QuestRecommendation> recommendations = new ArrayList<QuestRecommendation>();
 	private static FileLoader questsLoader;
 	
 	static {
@@ -46,9 +49,11 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_users WHERE UUID = '" + p.getUniqueId() + "';");
 			Quester quester = new Quester(p.getUniqueId());
 			questers.put(p.getUniqueId(), quester);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
+			
+			// Active quests
 			HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();
 			while (rs.next()) {
 				String qname = rs.getString(2);
@@ -67,6 +72,18 @@ public class QuestsManager implements IOComponent, Reloadable {
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 				quester.resumeQuest(qi);
 			}
+			
+			// Completed quests
+			rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
+			while (rs.next()) {
+				quester.addCompletedQuest(new CompletedQuest(quests.get(rs.getString(2)), rs.getInt(3), rs.getBoolean(4)));
+			}
+			
+			// Active questlines
+			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE UUID = '" + p.getUniqueId() + "';");
+			while (rs.next()) {
+				quester.addQuestline(questlines.get(rs.getString(2)));
+			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Quests failed to load or init quest data for user " + p.getName());
@@ -82,20 +99,26 @@ public class QuestsManager implements IOComponent, Reloadable {
 			// Save user
 			for (QuestInstance qi : quester.getActiveQuests()) {
 				// Delete existing active quests
-				delete.addBatch("DELETE FROM quests_users WHERE uuid = '" + p.getUniqueId() + "';"); 
+				delete.addBatch("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';"); 
 				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 					// Replace with new ones
-					insert.addBatch("REPLACE INTO quests_users "
-							+ "VALUES ('" + p.getUniqueId() + "','" + qi.getQuest().getKey() + "'," + qi.getStage()
+					insert.addBatch("REPLACE INTO quests_quests VALUES('"
+							+ p.getUniqueId() + "','" + qi.getQuest().getKey() + "'," + qi.getStage()
 							+ ",'" + osi.getKey() + "','" + osi.serializeCounts() + "');");
 				}
 			}
 			
 			// Save completed quests
 			for (CompletedQuest cq : quester.getCompletedQuests()) {
-				insert.addBatch("REPLACE INTO quests_completed "
-						+ "VALUES ('" + p.getUniqueId() + "','" + cq.getQuest().getKey() + "'," + cq.getStage()
+				insert.addBatch("REPLACE INTO quests_completed VALUES('"
+						+ p.getUniqueId() + "','" + cq.getQuest().getKey() + "'," + cq.getStage()
 						+ ",'" + (cq.isSuccess() ? "1" : "0") + "');");
+			}
+			
+			// Save active questlines
+			for (Questline ql : quester.getActiveQuestlines()) {
+				insert.addBatch("REPLACE INTO quests_questlines VALUES ('"
+						+ p.getUniqueId() + "','" + ql.getKey() + "');");
 			}
 		}
 		catch (Exception e) {
