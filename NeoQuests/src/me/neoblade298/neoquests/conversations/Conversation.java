@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.conversations;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,13 +11,14 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class Conversation {
-	private String key;
+	private String key, fileLocation;
 	private ArrayList<Condition> conditions;
 	private ArrayList<ConversationStage> stages;
 	private ActionSequence startActions = new ActionSequence(), endActions = new ActionSequence();
 	
-	public Conversation(String key, ConfigurationSection cfg) throws NeoIOException {
+	public Conversation(String key, File file, ConfigurationSection cfg) throws NeoIOException {
 		this.key = key;
+		this.fileLocation = file.getPath() + "/" + file.getName();
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		stages = new ArrayList<ConversationStage>();
 		ConfigurationSection scfg = cfg.getConfigurationSection("stages");
@@ -51,5 +53,9 @@ public class Conversation {
 	
 	public ActionSequence getEndActions() {
 		return endActions;
+	}
+	
+	public String getFileLocation() {
+		return fileLocation;
 	}
 }

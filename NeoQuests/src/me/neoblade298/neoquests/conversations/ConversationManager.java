@@ -27,10 +27,13 @@ public class ConversationManager implements Reloadable, Listener {
 		convLoader = (cfg) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
+					if (convs.containsKey(key)) {
+						NeoQuests.showWarning("Duplicate conversation " + key + ", ");
+					}
 					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning("Failed to load conversation " + key, e);
+					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + cfg.get);
 				}
 			}
 		};
