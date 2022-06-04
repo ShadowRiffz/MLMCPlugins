@@ -22,16 +22,20 @@ public class CommandManager implements CommandExecutor {
 			runCommand("", sender, args);
 			return true;
 		}
-		else if (handlers.containsKey(args[0])) {
+		else if (handlers.containsKey(args[0].toUpperCase())) {
 			runCommand(args[0], sender, args);
 			return true;
 		}
 		return false;
 	}
 	
-	private void runCommand(String key, CommandSender s, String[] args) {
-		Subcommand sc = handlers.get(key);
-		if (check(sc, s)) {
+	public void runCommand(String key, CommandSender s, String[] args) {
+		runCommand(key, s, args, false);
+	}
+	
+	public void runCommand(String key, CommandSender s, String[] args, boolean shouldCheck) {
+		Subcommand sc = handlers.get(key.toUpperCase());
+		if (!shouldCheck || check(sc, s)) {
 			sc.run(s, args);
 		}
 	}
@@ -52,10 +56,14 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	public void register(Subcommand sc) {
-		handlers.put(sc.getKey(), sc);
+		handlers.put(sc.getKey().toUpperCase(), sc);
 	}
 	
 	public void registerCommandList(String key) {
-		handlers.put(key, new CmdList(key, base, handlers));
+		handlers.put(key.toUpperCase(), new CmdList(key.toUpperCase(), base, handlers));
+	}
+	
+	public Subcommand getCommand(String key) {
+		return handlers.get(key.toUpperCase());
 	}
 }
