@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
@@ -16,7 +17,7 @@ import me.neoblade298.neoquests.quests.QuestRecommendation;
 import me.neoblade298.neoquests.quests.Questline;
 
 public class NavigationManager implements Reloadable {
-	private static HashMap<Player, Pathway> activePathways = new HashMap<Player, Pathway>();
+	private static HashMap<Player, BukkitTask> activePathways = new HashMap<Player, BukkitTask>();
 	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
 	private static FileLoader pathwaysLoader;
 	
@@ -47,10 +48,13 @@ public class NavigationManager implements Reloadable {
 	}
 	
 	public static boolean startNavigation(Player p, String pathway) {
-		return true;
+		if (!pathways.containsKey(pathway)) {
+			return false;
+		}
+		return NavigationManager.startNavigation(p, pathways.get(pathway));
 	}
 	
 	public static boolean startNavigation(Player p, Pathway pathway) {
-		return true;
+		return pathway.start(p);
 	}
 }

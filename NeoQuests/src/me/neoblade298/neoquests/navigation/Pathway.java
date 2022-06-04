@@ -9,16 +9,19 @@ import java.util.ListIterator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class Pathway {
-	private String key;
+	private String key, startDisplay, endDisplay;
+	private World w;
 	private LinkedList<Location> points = new LinkedList<Location>();
 	private ArrayList<Condition> conditions;
 	
@@ -30,6 +33,8 @@ public class Pathway {
 	
 	public Pathway(ConfigurationSection cfg) throws NeoIOException {
 		key = cfg.getName().toUpperCase();
+		display = cfg.getString("display");
+		this.w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		parsePoints(cfg.getStringList("points"));
 	}
@@ -37,10 +42,10 @@ public class Pathway {
 	private void parsePoints(List<String> list) throws NeoIOException {
 		for (String line : list) {
 			String args[] = line.split(" ");
-			int x = Integer.parseInt(args[1]);
-			int y = Integer.parseInt(args[2]);
-			int z = Integer.parseInt(args[3]);
-			points.add(new Location(Bukkit.getWorld(args[0]), x, y, z));
+			int x = Integer.parseInt(args[0]);
+			int y = Integer.parseInt(args[1]);
+			int z = Integer.parseInt(args[2]);
+			points.add(new Location(w, x, y, z));
 		}
 		
 		if (points.size() <= 1) {
@@ -48,8 +53,14 @@ public class Pathway {
 		}
 	}
 	
-	public void start(Player p) {
+	public boolean start(Player p) {
+		Condition c = ConditionManager.getBlockingCondition(p, conditions);
+		if (c != null) {
+			Util.sendMessage(p, "§cCould not start navigation from " + startDisplay + " to " + endDisplay + ", " + c.getExplanation(p));
+			return false;
+		}
 		
+		return true;
 	}
 	
 	public void show(Player p) {
