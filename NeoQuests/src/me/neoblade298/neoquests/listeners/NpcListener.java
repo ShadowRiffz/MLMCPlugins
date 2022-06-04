@@ -30,7 +30,7 @@ public class NpcListener implements Listener {
 		String msg = e.getMessage();
 		if (msg.length() > 2 || !StringUtils.isNumeric(msg)) return; // Only allow short messages
 		
-		ConversationInstance ci = ConversationManager.getConversation(p);
+		ConversationInstance ci = ConversationManager.getActiveConversation(p);
 		if (msg.length() > 2 || !StringUtils.isNumeric(msg)) return; // Only allow short messages
 		if (ci != null) {
 			if (ci.chooseResponse(Integer.parseInt(msg) - 1)) {

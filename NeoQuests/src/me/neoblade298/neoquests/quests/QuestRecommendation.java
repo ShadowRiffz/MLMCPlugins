@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.quests;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
@@ -22,7 +23,14 @@ public class QuestRecommendation {
 	}
 	
 	public boolean isRelevant(Player p) {
-		int level = SkillAPI.getPlayerData(p).getClass("class").getLevel();
+		int level = 1;
+		try {
+			level = SkillAPI.getPlayerData(p).getClass("class").getLevel();
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().info("[NeoQuests] Failed to check if recommendation was relevant, " + e.getMessage());
+			return false;
+		}
 		return level >= min && level <= max;
 	}
 	

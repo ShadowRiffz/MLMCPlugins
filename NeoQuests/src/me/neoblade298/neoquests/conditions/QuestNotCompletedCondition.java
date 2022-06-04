@@ -14,6 +14,8 @@ public class QuestNotCompletedCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private String questname;
+	private boolean success;
+	private int stage;
 	
 	static {
 		key = "quest-not-completed";
@@ -21,14 +23,18 @@ public class QuestNotCompletedCondition implements Condition {
 	
 	public QuestNotCompletedCondition() {}
 	
-	public QuestNotCompletedCondition(String questname) {
+	public QuestNotCompletedCondition(String questname, int stage, boolean success, ConditionResult result) {
 		this.questname = questname;
-		this.result = ConditionResult.UNCLICKABLE;
+		this.stage = stage;
+		this.success = success;
+		this.result = result;
 	}
 	
 	public QuestNotCompletedCondition(LineConfig cfg) {
 		questname = cfg.getString("quest", "N/A").toUpperCase();
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		stage = cfg.getInt("stage", -1);
+		success = cfg.getBool("success", false); // If boolean matches, pass condition
 	}
 
 	@Override
@@ -38,7 +44,16 @@ public class QuestNotCompletedCondition implements Condition {
 
 	@Override
 	public boolean passes(Player p) {
-		return QuestsManager.getQuester(p).getCompletedQuest(questname) == null;
+		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
+		if (cq == null) {
+			return true;
+		}
+		if (stage == -1) {
+			return cq.isSuccess() == success;
+		}
+		else {
+			return cq.isSuccess() == success && stage == cq.getStage();
+		}
 	}
 
 	@Override

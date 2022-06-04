@@ -72,7 +72,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
 		try {
-			Quester quester = new Quester(p.getUniqueId());
+			Quester quester = new Quester(p);
 			questers.put(p.getUniqueId(), quester);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
 			

@@ -11,24 +11,30 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neoquests.conditions.Condition;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.HoverEvent.Action;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class Quester {
-	private UUID uuid;
+	private Player p;
 	private HashMap<String, CompletedQuest> completedQuests = new HashMap<String, CompletedQuest>();
 	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();;
 	private TreeMap<String, Questline> activeQuestlines = new TreeMap<String, Questline>();
 	
-	public Quester(UUID uuid) {
-		this.uuid = uuid;
+	public Quester(Player p) {
+		this.p = p;
 	}
 	
 	public Player getPlayer() {
-		return Bukkit.getPlayer(uuid);
+		return p;
 	}
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {
@@ -37,25 +43,29 @@ public class Quester {
 		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
 		if (ql != null && ql.getLastQuest().equals(qi.getQuest().getKey())) activeQuestlines.remove(ql.getKey());
-		getPlayer().sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
-		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getName() + "§7!");
-		ConversationManager.startConversation(getPlayer(), ql.getNextQuest(getPlayer()).getStartConversation(), false);
+		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
+		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getName() + "§7!");
+		ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 	}
 	
 	public void cancelQuest(String name) {
 		if (activeQuests.containsKey(name.toUpperCase())) {
 			QuestInstance qi = activeQuests.remove(name.toUpperCase());
 			qi.cleanup();
-			getPlayer().sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getName(), 10, 70, 10);
+			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getName(), 10, 70, 10);
 		}
 	}
 	
 	public void startQuest(Quest q) {
-		getPlayer().sendTitle("§fQuest Started", "§6" + q.getName(), 10, 70, 10);
-		getPlayer().sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
+		Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
+		if (c != null) {
+			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getName() + "§c, " + c.getExplanation(p));
+		}
+		p.sendTitle("§fQuest Started", "§6" + q.getName(), 10, 70, 10);
+		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey(), qi);
-		if (q.getQuestline() != null) activeQuestlines.add(q.getQuestline());
+		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
 		qi.initialize();
 	}
 	
@@ -73,6 +83,7 @@ public class Quester {
 			}
 		}
 		ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
+				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
 		s.spigot().sendMessage(builder.create());
 	}
@@ -81,7 +92,7 @@ public class Quester {
 		for (QuestInstance qi : activeQuests.values()) {
 			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getName() + "]- ");
 			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getName()));
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
 			s.spigot().sendMessage(builder.append(quitquest.create()).create());
 			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
@@ -93,7 +104,7 @@ public class Quester {
 		if (activeQuestlines.size() > 0) {
 			s.sendMessage("§eActive Questlines:");
 			for (Questline ql : activeQuestlines.values()) {
-				Quest next = ql.getNextQuest(getPlayer());
+				Quest next = ql.getNextQuest(p);
 				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getName() + "§7) ");
 				ComponentBuilder takequest = new ComponentBuilder("§e<Click to Accept Quest>")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + next.getKey()));
@@ -101,8 +112,10 @@ public class Quester {
 			}
 		}
 		ComponentBuilder rec = new ComponentBuilder("§e<Click to show other recommended quests!>")
+				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended"));
 		ComponentBuilder side = new ComponentBuilder("§e<Click to show challenging sidequests!>")
+				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges"));
 		s.spigot().sendMessage(rec.create());
 		s.spigot().sendMessage(side.create());

@@ -10,8 +10,10 @@ import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
+import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.conditions.QuestNotCompletedCondition;
 import me.neoblade298.neoquests.conversations.Conversation;
+import me.neoblade298.neoquests.conversations.ConversationManager;
 
 public class Quest {
 	private String key, name, startConv;
@@ -31,11 +33,12 @@ public class Quest {
 		this.startConv = cfg.getString("start-conversation");
 		
 		this.stages = QuestStage.parseQuestStages(cfg.getConfigurationSection("stages"), this);
-		if (cfg.getBoolean("repeatable", false)) {
-			canRepeat = true;
-			this.conditions.add(new QuestNotCompletedCondition());
+		this.canRepeat = cfg.getBoolean("repeatable", false);
+		this.canRetry = cfg.getBoolean("retryable", false);
+		
+		if (canRetry) {
+			this.conditions.add(new QuestNotCompletedCondition(this.key, -1, false, ConditionResult.UNCLICKABLE));
 		}
-		canRetry = cfg.getBoolean("retryable", false);
 	}
 	
 	public String getKey() {
@@ -67,7 +70,7 @@ public class Quest {
 	}
 	
 	public boolean canRetry() {
-		return canRepeat;
+		return canRetry;
 	}
 	
 	public void setQuestline(Questline ql) throws NeoIOException {
@@ -82,6 +85,6 @@ public class Quest {
 	}
 	
 	public Conversation getStartConversation() {
-		return startConv;
+		return ConversationManager.getConversation(startConv);
 	}
 }

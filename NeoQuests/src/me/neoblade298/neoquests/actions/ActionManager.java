@@ -8,7 +8,6 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.conditions.Condition;
 
 public class ActionManager {
 	private static LineConfigManager<Action> mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");;

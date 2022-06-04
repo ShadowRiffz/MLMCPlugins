@@ -115,7 +115,11 @@ public class ConversationManager implements Reloadable, Listener {
 		}
 	}
 	
-	public static ConversationInstance getConversation(Player p) {
+	public static Conversation getConversation(String conv) {
+		return convs.get(conv);
+	}
+	
+	public static ConversationInstance getActiveConversation(Player p) {
 		return activeConvs.get(p);
 	}
 	

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
-import net.citizensnpcs.api.CitizensAPI;
 
 public class DescriptionDialogueAction implements Action, DialogueAction {
 	private static final String key = "player";
