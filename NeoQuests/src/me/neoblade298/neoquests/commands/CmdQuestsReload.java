@@ -2,13 +2,9 @@ package me.neoblade298.neoquests.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.quests.Quester;
-import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsReload implements Subcommand {
 
@@ -39,8 +35,12 @@ public class CmdQuestsReload implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		NeoQuests.reloadAll();
-		s.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+		if (NeoQuests.reloadAll()) {
+			s.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+		}
+		else {
+			s.sendMessage("§4[§c§lMLMC§4] §cReload failed! Check the error messages!");
+		}
 	}
 
 }

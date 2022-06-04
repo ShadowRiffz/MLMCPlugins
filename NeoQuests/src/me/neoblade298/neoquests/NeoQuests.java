@@ -13,6 +13,7 @@ import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.commands.CmdQuestBase;
+import me.neoblade298.neoquests.commands.CmdQuestsQuit;
 import me.neoblade298.neoquests.commands.CmdQuestsReload;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.GeneralListener;
@@ -59,6 +60,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		CommandManager quests = new CommandManager("quests");
 		quests.registerCommandList("");
 		quests.register(new CmdQuestsReload());
+		quests.register(new CmdQuestsQuit());
 	    this.getCommand("quests").setExecutor(quests);
 	}
 	
@@ -88,14 +90,16 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		e.printStackTrace();
 	}
 	
-	public static void reloadAll() {
+	public static boolean reloadAll() {
 		for (Reloadable rld : reloadables) {
 			try {
 				rld.reload();
 			} catch (NeoIOException e) {
 				showWarning("Failed to reload module " + rld.getKey(), e);
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	public static void addDebugger(Player p) {

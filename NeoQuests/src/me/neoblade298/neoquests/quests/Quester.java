@@ -38,8 +38,7 @@ public class Quester {
 	}
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {
-		qi.cleanup();
-		activeQuests.remove(qi.getQuest().getKey());
+		cleanupQuest(qi.getQuest().getKey());
 		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
 		if (ql != null && ql.getLastQuest().equals(qi.getQuest().getKey())) activeQuestlines.remove(ql.getKey());
@@ -48,12 +47,26 @@ public class Quester {
 		ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 	}
 	
-	public void cancelQuest(String name) {
-		if (activeQuests.containsKey(name.toUpperCase())) {
-			QuestInstance qi = activeQuests.remove(name.toUpperCase());
-			qi.cleanup();
+	public void cancelQuest(String key) {
+		if (activeQuests.containsKey(key.toUpperCase())) {
+			QuestInstance qi = cleanupQuest(key.toUpperCase());
+			
+			// If cancelling the first quest in a questline, that questline is no longer active
+			if (qi.getQuest().getQuestline() != null) {
+				Questline ql = qi.getQuest().getQuestline();
+				if (ql.getFirstQuest().getKey().equals(qi.getQuest().getKey())) {
+					activeQuestlines.remove(ql.getKey());
+				}
+			}
+			
 			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getName(), 10, 70, 10);
 		}
+	}
+	
+	private QuestInstance cleanupQuest(String key) {
+		QuestInstance qi = activeQuests.remove(key.toUpperCase());
+		qi.cleanup();
+		return qi;
 	}
 	
 	public void startQuest(Quest q) {
@@ -70,17 +83,22 @@ public class Quester {
 	}
 	
 	public void displayQuests(CommandSender s) {
-		for (QuestInstance qi : activeQuests.values()) {
-			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getName() + "]- ");
-			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
-			s.spigot().sendMessage(builder.append(quitquest.create()).create());
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
-				for (ObjectiveInstance oi : osi.getObjectives()) {
-					s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
+		if (activeQuests.size() > 0) {
+			for (QuestInstance qi : activeQuests.values()) {
+				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getName() + "]- ");
+				ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
+				s.spigot().sendMessage(builder.append(quitquest.create()).create());
+				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+					s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
+					for (ObjectiveInstance oi : osi.getObjectives()) {
+						s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
+					}
 				}
 			}
+		}
+		else {
+			s.sendMessage("§7You have no active quests!");
 		}
 		ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))

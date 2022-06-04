@@ -34,6 +34,10 @@ public class Questline implements Comparator<Questline> {
 		}
 		return canTakeQuest(cq);
 	}
+	
+	public Quest getFirstQuest() {
+		return quests.get(0);
+	}
 
 	public Quest getNextQuest(Player p) {
 		Quester q = QuestsManager.getQuester(p);
