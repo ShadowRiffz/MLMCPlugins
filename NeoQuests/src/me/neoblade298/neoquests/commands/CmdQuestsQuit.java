@@ -39,7 +39,7 @@ public class CmdQuestsQuit implements Subcommand {
 		// /quests quit
 		if (args.length == 1) {
 			if (q.getActiveQuests().size() > 1) {
-				new CmdQuestBase().run(s, new String[0]);
+				NeoQuests.getCommands().get("quest").runCommand("", s, new String[0]);
 			}
 			else if (q.getActiveQuests().size() == 1) {
 				q.cancelQuest(args[1]);

@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -28,6 +29,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static NeoQuests inst;
 	private static HashSet<Player> debuggers = new HashSet<Player>();
 	private static ArrayList<Reloadable> reloadables = new ArrayList<Reloadable>();
+	private static HashMap<String, CommandManager> commands = new HashMap<String, CommandManager>();
 	
 	public void onEnable() {
 		inst = this;
@@ -56,12 +58,14 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		CommandManager quest = new CommandManager("quest");
 		quest.register(new CmdQuestBase());
 	    this.getCommand("quest").setExecutor(quest);
+	    commands.put("quest", quest);
 
 		CommandManager quests = new CommandManager("quests");
 		quests.registerCommandList("");
 		quests.register(new CmdQuestsReload());
 		quests.register(new CmdQuestsQuit());
 	    this.getCommand("quests").setExecutor(quests);
+	    commands.put("quests", quests);
 	}
 	
 	public void onDisable() {
@@ -104,5 +108,9 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static void addDebugger(Player p) {
 		debuggers.add(p);
+	}
+	
+	public static HashMap<String, CommandManager> getCommands() {
+		return commands;
 	}
 }
