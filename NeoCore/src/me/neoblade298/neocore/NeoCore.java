@@ -15,6 +15,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.listeners.IOListener;
 
@@ -92,5 +94,27 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static Statement getStatement() {
 		return IOListener.getStatement();
+	}
+	
+	public static void loadFiles(File load, FileLoader loader) throws NeoIOException {
+		if (!load.exists()) {
+			throw new NeoIOException("Failed to load file, doesn't exist: " + load.getParent() + "/" + load.getName());
+		}
+		
+		if (load.isDirectory()) {
+			for (File file : load.listFiles()) {
+				loadFiles(file, loader);
+			}
+		}
+		else {
+			try {
+				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(load);
+				loader.load(cfg, load);
+			}
+			catch (Exception e) {
+				Bukkit.getLogger().warning(e.getMessage());
+				throw new NeoIOException("Failed to parse yaml for file " + load.getParent() + "/" + load.getName());
+			}
+		}
 	}
 }
