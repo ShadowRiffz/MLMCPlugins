@@ -38,4 +38,9 @@ public class CmdQuestsGuide implements Subcommand {
 		q.displayQuests(s);
 	}
 
+	@Override
+	public String getArgs() {
+		return null;
+	}
+
 }

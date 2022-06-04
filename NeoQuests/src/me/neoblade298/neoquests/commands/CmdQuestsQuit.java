@@ -53,4 +53,9 @@ public class CmdQuestsQuit implements Subcommand {
 		}
 	}
 
+	@Override
+	public String getArgs() {
+		return null;
+	}
+
 }

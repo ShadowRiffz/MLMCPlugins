@@ -43,4 +43,9 @@ public class CmdQuestsReload implements Subcommand {
 		}
 	}
 
+	@Override
+	public String getArgs() {
+		return null;
+	}
+
 }
