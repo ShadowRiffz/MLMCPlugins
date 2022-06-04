@@ -42,8 +42,8 @@ import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neobossrelics.NeoBossRelics;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
@@ -65,7 +65,7 @@ public class AugmentManager implements Listener, Manager {
 		enabledWorlds.add("Argyll");
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
-		droptableLoader = (cfg) -> {
+		droptableLoader = (cfg, file) -> {
 			for (String table : cfg.getKeys(false)) {
 				AugmentManager.droptables.put(table, (ArrayList<String>) cfg.getStringList(table));
 			}
@@ -152,7 +152,7 @@ public class AugmentManager implements Listener, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 		AugmentManager.droptables.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "droptables"), droptableLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

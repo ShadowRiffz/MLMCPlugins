@@ -28,9 +28,9 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 
 public class MinigameManager implements Listener, Manager {
 	public static Professions main;
@@ -40,7 +40,7 @@ public class MinigameManager implements Listener, Manager {
 	private static FileLoader minigameLoader;
 	
 	static {
-		minigameLoader = yaml -> {
+		minigameLoader = (yaml, file) -> {
 			for (String key : yaml.getKeys(false)) {
 				int id = Integer.parseInt(key);
 				ConfigurationSection itemCfg = yaml.getConfigurationSection(key);
@@ -123,7 +123,7 @@ public class MinigameManager implements Listener, Manager {
 		games.clear();
 		gameLocations.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "minigames"), minigameLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "minigames"), minigameLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}

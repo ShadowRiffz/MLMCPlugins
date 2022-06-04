@@ -23,9 +23,9 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class GardenManager implements IOComponent, Manager {
@@ -36,7 +36,7 @@ public class GardenManager implements IOComponent, Manager {
 	private static FileLoader fertilizerLoader;
 	
 	static {
-		fertilizerLoader = yaml -> {
+		fertilizerLoader = (yaml, file) -> {
 			for (String key : yaml.getKeys(false)) {
 				ConfigurationSection cfg = yaml.getConfigurationSection(key);
 				int id = Integer.parseInt(key);
@@ -66,7 +66,7 @@ public class GardenManager implements IOComponent, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Garden manager...");
 		fertilizers.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "fertilizers"), fertilizerLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "fertilizers"), fertilizerLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}

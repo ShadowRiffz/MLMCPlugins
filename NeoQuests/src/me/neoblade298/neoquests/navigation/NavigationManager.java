@@ -39,7 +39,7 @@ public class NavigationManager implements Reloadable {
 	
 	@Override
 	public void reload() throws NeoIOException {
-		FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "pathways"), pathwaysLoader);
+		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "pathways"), pathwaysLoader);
 	}
 	
 	@Override

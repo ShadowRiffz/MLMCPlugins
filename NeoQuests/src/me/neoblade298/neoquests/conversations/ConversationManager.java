@@ -67,8 +67,8 @@ public class ConversationManager implements Reloadable, Listener {
 	public void reload() throws NeoIOException {
 		convs.clear();
 		npcConvs.clear();
-		FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "conversations"), convLoader);
-		FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "npcs"), npcLoader);
+		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "conversations"), convLoader);
+		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "npcs"), npcLoader);
 	}
 	
 	public static void endConversation(Player p, boolean runEndActions) {

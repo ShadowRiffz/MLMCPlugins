@@ -162,9 +162,9 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public void reload() throws NeoIOException {
 		try {
-			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
-			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "questlines"), questlinesLoader);
-			FileReader.loadRecursive(new File(NeoQuests.inst().getDataFolder(), "recommendations.yml"), recommendationsLoader);
+			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
+			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "questlines"), questlinesLoader);
+			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "recommendations.yml"), recommendationsLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}

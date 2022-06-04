@@ -45,9 +45,9 @@ import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.ShardResult;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class RecipeManager implements IOComponent, Listener, Manager {
@@ -58,7 +58,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	private static FileLoader recipeLoader;
 	
 	static  {
-		recipeLoader = yaml -> {
+		recipeLoader = (yaml, file) -> {
 			for (String key : yaml.getKeys(false)) {
 				try {
 					ConfigurationSection sec = yaml.getConfigurationSection(key);
@@ -159,7 +159,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Recipe manager...");
 		recipes.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "recipes"), recipeLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "recipes"), recipeLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
