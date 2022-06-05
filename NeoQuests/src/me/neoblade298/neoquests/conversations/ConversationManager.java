@@ -9,9 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.conditions.Condition;
@@ -24,21 +24,23 @@ public class ConversationManager implements Reloadable, Listener {
 	private static FileLoader convLoader, npcLoader;
 	
 	static {
-		convLoader = (cfg) -> {
+		convLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (convs.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate conversation " + key + ", ");
+						NeoQuests.showWarning("Duplicate conversation " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+								"the loaded conversation with this key is in " + convs.get(key).getFileLocation());
+						continue;
 					}
-					convs.put(key, new Conversation(key, cfg.getConfigurationSection(key)));
+					convs.put(key, new Conversation(file, cfg.getConfigurationSection(key)));
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + cfg.get);
+					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + cfg);
 				}
 			}
 		};
 		
-		npcLoader = (cfg) -> {
+		npcLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					ArrayList<Conversation> clist = new ArrayList<Conversation>();

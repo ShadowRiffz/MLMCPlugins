@@ -2,10 +2,6 @@ package me.neoblade298.neoquests.conditions;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerClass;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.QuestsManager;

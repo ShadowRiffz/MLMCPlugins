@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPCRegistry;
 
 public class NPCDialogueAction implements Action, DialogueAction {
 	private static final String key = "npc";

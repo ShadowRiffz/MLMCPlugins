@@ -9,7 +9,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.actions.DialogueAction;

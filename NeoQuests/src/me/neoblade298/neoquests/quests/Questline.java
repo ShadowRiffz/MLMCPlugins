@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.quests;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -10,11 +11,12 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 
 public class Questline implements Comparator<Questline> {
-	private String key, display;
+	private String key, display, fileLocation;
 	private ArrayList<Quest> quests;
 
-	public Questline(ConfigurationSection cfg) throws NeoIOException {
+	public Questline(ConfigurationSection cfg, File file) throws NeoIOException {
 		key = cfg.getName().toUpperCase();
+		fileLocation = file.getAbsolutePath();
 		display = cfg.getString("display");
 		
 		List<String> recs = cfg.getStringList("recommendations");
@@ -72,5 +74,9 @@ public class Questline implements Comparator<Questline> {
 	@Override
 	public int compare(Questline q1, Questline q2) {
 		return q1.getKey().compareTo(q2.getKey());
+	}
+	
+	public String getFileLocation() {
+		return fileLocation;
 	}
 }

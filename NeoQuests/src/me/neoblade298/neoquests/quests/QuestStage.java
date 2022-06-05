@@ -37,4 +37,8 @@ public class QuestStage {
 		}
 		return stages;
 	}
+	
+	public Quest getQuest() {
+		return quest;
+	}
 }

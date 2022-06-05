@@ -2,12 +2,7 @@ package me.neoblade298.neoquests.quests;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,7 +11,6 @@ import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;

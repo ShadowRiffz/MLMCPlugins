@@ -2,7 +2,6 @@ package me.neoblade298.neoquests.quests;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.bukkit.entity.Player;

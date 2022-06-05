@@ -12,9 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
@@ -29,27 +29,37 @@ public class QuestsManager implements IOComponent, Reloadable {
 	private static FileLoader questsLoader, questlinesLoader, recommendationsLoader;
 	
 	static {
-		questsLoader = (cfg) -> {
+		questsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
-					quests.put(key.toUpperCase(), new Quest(key.toUpperCase(), cfg.getConfigurationSection(key)));
+					if (quests.containsKey(key)) {
+						NeoQuests.showWarning("Duplicate quest " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+								"the loaded quest with this key is in " + quests.get(key).getFileLocation());
+						continue;
+					}
+					quests.put(key.toUpperCase(), new Quest(cfg.getConfigurationSection(key), file));
 				} catch (NeoIOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
 		
-		questlinesLoader = (cfg) -> {
+		questlinesLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
-					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key)));
+					if (questlines.containsKey(key)) {
+						NeoQuests.showWarning("Duplicate questline " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+								"the loaded questline with this key is in " + questlines.get(key).getFileLocation());
+						continue;
+					}
+					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key), file));
 				} catch (NeoIOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
 		
-		recommendationsLoader = (cfg) -> {
+		recommendationsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					for (String line : cfg.getStringList(key)) {

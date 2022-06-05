@@ -20,6 +20,7 @@ import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.GeneralListener;
 import me.neoblade298.neoquests.listeners.NpcListener;
 import me.neoblade298.neoquests.listeners.ObjectiveListener;
+import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -46,8 +47,10 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		    new ActionManager();
 		    new ObjectiveManager();
 		    reloadables.add(new ConversationManager());
-		    reloadables.add(new QuestsManager());
-		    NeoCore.registerIOComponent(this, new QuestsManager());
+		    QuestsManager qm = new QuestsManager();
+		    reloadables.add(qm);
+		    reloadables.add(new NavigationManager());
+		    NeoCore.registerIOComponent(this, qm);
 		}
 		catch (Exception e) {
 			showWarning("Failed to enable managers on startup", e);
@@ -66,6 +69,12 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		quests.register(new CmdQuestsQuit());
 	    this.getCommand("quests").setExecutor(quests);
 	    commands.put("quests", quests);
+
+		CommandManager navigation = new CommandManager("navigation");
+		quests.registerCommandList("");
+		quests.register(new CmdQuestsReload());
+	    this.getCommand("navigation").setExecutor(navigation);
+	    commands.put("navigation", navigation);
 	}
 	
 	public void onDisable() {

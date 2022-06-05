@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.quests;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,7 +17,7 @@ import me.neoblade298.neoquests.conversations.Conversation;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 
 public class Quest {
-	private String key, name, startConv;
+	private String key, name, startConv, fileLocation;
 	private ArrayList<Condition> conditions;
 	private ArrayList<RewardAction> rewards;
 	private ArrayList<QuestStage> stages;
@@ -24,8 +25,9 @@ public class Quest {
 	private boolean canRepeat = false, canRetry = false;
 	private int stage;
 	
-	public Quest(String key, ConfigurationSection cfg) throws NeoIOException {
-		this.key = key;
+	public Quest(ConfigurationSection cfg, File file) throws NeoIOException {
+		this.key = cfg.getName().toUpperCase();
+		this.fileLocation = file.getAbsolutePath();
 		
 		this.name = cfg.getString("name");
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
@@ -86,5 +88,9 @@ public class Quest {
 	
 	public Conversation getStartConversation() {
 		return ConversationManager.getConversation(startConv);
+	}
+	
+	public String getFileLocation() {
+		return fileLocation;
 	}
 }
