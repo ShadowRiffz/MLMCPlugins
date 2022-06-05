@@ -63,6 +63,10 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 		}
 		return type;
 	}
+	
+	public PathwayPointType getType() {
+		return type;
+	}
 
 	@Override
 	public PathwayPoint create(LineConfig cfg) {

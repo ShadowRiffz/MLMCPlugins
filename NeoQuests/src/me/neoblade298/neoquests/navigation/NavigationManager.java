@@ -174,7 +174,7 @@ public class NavigationManager implements Reloadable {
 	}
 	
 	public static void addPoint(PathwayPoint point) {
-		Chunk c = Chunk.getChunk(point.getLocation());
+		Chunk c = Chunk.getOrCreateChunk(point.getLocation());
 		ArrayList<PathwayPoint> list = pointMap.getOrDefault(c, new ArrayList<PathwayPoint>());
 		list.add(point);
 		pointMap.put(c, list);

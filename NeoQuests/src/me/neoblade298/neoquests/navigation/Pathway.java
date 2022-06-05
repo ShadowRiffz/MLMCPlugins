@@ -64,6 +64,16 @@ public class Pathway {
 			}
 			points.add(point);
 		}
+
+		ListIterator<PathwayPoint> iter = points.listIterator();
+		PathwayPoint l1 = null;
+		PathwayPoint l2 = iter.next();
+		while (iter.hasNext()) {
+			l1 = l2;
+			l2 = iter.next();
+			l1.addConnection();
+			l2.addConnection();
+		}
 	}
 	
 	public PathwayInstance start(Player p) {
@@ -113,14 +123,23 @@ public class Pathway {
 		ListIterator<PathwayPoint> iter = points.listIterator();
 		PathwayPoint l1 = null;
 		PathwayPoint l2 = iter.next();
+		if (l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
+			l2.spawnParticle(p);
+		}
 		while (iter.hasNext()) {
 			l1 = l2;
 			l2 = iter.next();
-			l1.spawnParticle(p);
-			if (l1.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
-				ParticleUtils.drawLine(p, l1.getLocation(), l2.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
+			boolean dist1 = l1.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
+			boolean dist2 = l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
+			if (dist2) {
+				l2.spawnParticle(p);
 			}
 			
+			if (dist1 || dist2) {
+				if (l1.getType() != PathwayPointType.PORTAL || l2.getType() != PathwayPointType.PORTAL) {
+					ParticleUtils.drawLine(p, l1.getLocation(), l2.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
+				}
+			}
 		}
 	}
 	
