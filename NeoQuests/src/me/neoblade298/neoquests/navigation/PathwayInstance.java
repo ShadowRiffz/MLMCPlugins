@@ -9,7 +9,8 @@ public class PathwayInstance {
 	private Player p;
 	private Pathway pathway;
 	private BukkitTask task;
-	public PathwayInstance(Pathway pathway) {
+	public PathwayInstance(Player p, Pathway pathway) {
+		this.p = p;
 		this.pathway = pathway;
 	}
 	public Pathway getPathway() {
@@ -22,15 +23,14 @@ public class PathwayInstance {
 		return task;
 	}
 	
-	public void stop(boolean success) {
-		if (success) {
-			task.cancel();
-			Util.sendMessage(p, "§7Navigation from §6" + pathway.getStartDisplay() + " §7to §6" + pathway.getEndDisplay() + " §7was successful!");
-		}
-		else {
-			task.cancel();
-			Util.sendMessage(p, "§cNavigation from §6" + pathway.getStartDisplay() + " §cto §6" + pathway.getEndDisplay() + " §cwas cancelled.");
-		}
+	public void stop() {
+		task.cancel();
+		Util.sendMessage(p, "§7Navigation from §6" + pathway.getStartDisplay() + " §7to §6" + pathway.getEndDisplay() + " §7was successful!");
+	}
+	
+	public void cancel(String reason) {
+		task.cancel();
+		Util.sendMessage(p, "§cNavigation from §6" + pathway.getStartDisplay() + " §cto §6" + pathway.getEndDisplay() + " §cwas cancelled, " + reason);
 	}
 }
 

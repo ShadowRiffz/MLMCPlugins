@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -25,15 +27,19 @@ import me.neoblade298.neoquests.conditions.ConditionManager;
 public class Pathway {
 	private String key, startDisplay, endDisplay, fileLocation;
 	private World w;
-	private LinkedList<Location> points = new LinkedList<Location>();
+	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
 	private ArrayList<Condition> conditions;
 	
 	private static final int BLOCKS_PER_PARTICLE = 2;
 	private static final int PARTICLES_PER_POINT = 20;
-	private static final int PARTICLE_OFFSET = 1;
+	private static final double PARTICLE_OFFSET = 0.1;
+	private static final int PARTICLE_SPEED = 0;
 	private static final int END_RADIUS_SQ = 100;
 	
-	private static final double DISTANCE_SHOWABLE = 1024;
+	private static final double DISTANCE_SHOWABLE = 5000;
+	private static final DustOptions PARTICLE_DATA = new DustOptions(Color.RED, 1.0F);
+	
+	public Pathway() {}
 	
 	public Pathway(ConfigurationSection cfg, File file) throws NeoIOException {
 		key = cfg.getName().toUpperCase();
@@ -50,12 +56,12 @@ public class Pathway {
 			throw new NeoIOException("Pathway " + this.key + " has <= 1 points, invalid!");
 		}
 		
+		// Redo to parse lin
 		for (String line : list) {
 			String args[] = line.split(" ");
 			double x = Double.parseDouble(args[0]);
 			double y = Double.parseDouble(args[1]);
 			double z = Double.parseDouble(args[2]);
-			points.add(new Location(w, x, y, z));
 		}
 	}
 	
@@ -66,7 +72,7 @@ public class Pathway {
 			return null;
 		}
 
-		PathwayInstance pwi = new PathwayInstance(this);
+		PathwayInstance pwi = new PathwayInstance(p, this);
 		BukkitTask task = new BukkitRunnable() {
 			public void run() {
 				if (p == null) {
@@ -76,54 +82,61 @@ public class Pathway {
 				
 				// Check if in different world
 				if (!p.getWorld().equals(w)) {
-					pwi.stop(false);
+					pwi.cancel("no longer in same world.");
 					return;
 				}
 				
 				// Check if location reached
 				if (p.getLocation().distanceSquared(getEndLocation()) <= END_RADIUS_SQ) {
-					pwi.stop(true);
+					pwi.stop();
 					return;
 				}
 				
 				show(p);
 			}
-		}.runTaskTimer(NeoQuests.inst(), 60L, 0L);
+		}.runTaskTimer(NeoQuests.inst(), 0L, 20L);
 
 		pwi.setTask(task);
-		Util.sendMessage(p, "§7started navigation from §6" + startDisplay + " to §6" + endDisplay + "§7!");
+		Util.sendMessage(p, "§7Started navigation from §6" + startDisplay + " to §6" + endDisplay + "§7!");
 		return pwi;
 	}
 	
 	public void show(Player p) {
-		ListIterator<Location> iter = points.listIterator();
-		Location l1 = iter.next();
-		Location l2 = iter.next();
+		showLines(p, this.points);
+	}
+	
+	public static void showLines(Player p, LinkedList<PathwayPoint> points) {
+		ListIterator<PathwayPoint> iter = points.listIterator();
+		PathwayPoint l1 = null;
+		PathwayPoint l2 = iter.next();
 		while (iter.hasNext()) {
-			if (l1.distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
+			l1 = l2;
+			l2 = iter.next();
+			l1.spawnParticle(p);
+			if (l1.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
 				drawLine(p, l1, l2);
 			}
 			
-			l1 = l2;
-			l2 = iter.next();
 		}
 	}
 	
-	private void drawLine(Player p, Location l1, Location l2) {
-		Location start = l1.clone();
-		Location end = l2.clone();
+	private static void drawLine(Player p, PathwayPoint l1, PathwayPoint l2) {
+		Location start = l1.getLocation();
+		Location end = l2.getLocation();
+	    
 		Vector v = end.subtract(start).toVector();
-		for (double i = 0; i < v.length() / BLOCKS_PER_PARTICLE; i += BLOCKS_PER_PARTICLE) {
-		    v.multiply(i);
-		    start.add(v);
-		    p.spawnParticle(Particle.REDSTONE, start.getX(), start.getY(), start.getZ(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET);
-		    start.subtract(v);
+		int iterations = (int) (v.length() / BLOCKS_PER_PARTICLE);
+		for (int i = BLOCKS_PER_PARTICLE; i < iterations; i++) {
 		    v.normalize();
+		    v.multiply(i * 2);
+		    start.add(v);
+		    p.spawnParticle(Particle.REDSTONE, start, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
+			start.subtract(v);
 		}
 	}
 	
 	public Location getEndLocation() {
-		return points.get(points.size() - 1);
+		return points.get(points.size() - 1).getLocation();
 	}
 	
 	public String getFileLocation() {

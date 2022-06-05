@@ -10,7 +10,7 @@ import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
 
 public class ActionManager {
-	private static LineConfigManager<Action> mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");;
+	private static LineConfigManager<Action> mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");
 	private static HashSet<String> dialogueActions = new HashSet<String>();
 	
 	public ActionManager() {
