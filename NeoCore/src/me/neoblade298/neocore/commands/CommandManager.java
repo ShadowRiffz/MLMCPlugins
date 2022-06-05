@@ -18,9 +18,14 @@ public class CommandManager implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if (args.length == 0 && handlers.containsKey("")) {
-			runCommand("", sender, args);
-			return true;
+		if (args.length == 0) {
+			if (handlers.containsKey("") ) {
+				runCommand("", sender, args);
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else if (handlers.containsKey(args[0].toUpperCase())) {
 			runCommand(args[0], sender, args);
