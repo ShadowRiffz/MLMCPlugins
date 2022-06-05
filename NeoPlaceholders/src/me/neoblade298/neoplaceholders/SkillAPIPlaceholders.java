@@ -124,6 +124,9 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 				if (data.getAttributePoints() > 0) {
 					return "§cYou have " + data.getAttributePoints() + " unspent /attr!";
 				}
+				if (data.getClass("class") == null) {
+					return "§cYou have no class! /warp advance!";
+				}
 			}
 			return "§8§m-|-------------|-";
 		}
