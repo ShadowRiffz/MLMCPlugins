@@ -13,7 +13,7 @@ public class LineConfig {
 		String argLine;
 		key = line.substring(0, keyIndex).toLowerCase();
 		if (key.indexOf(':') != -1) {
-			key = key.substring(0, key.indexOf(':'));
+			key = "";
 			keyIndex = 0; // If there's a :, there's no key, use keyless system
 		}
 		
