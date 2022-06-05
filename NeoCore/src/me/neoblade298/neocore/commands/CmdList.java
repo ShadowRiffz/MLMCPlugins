@@ -38,10 +38,10 @@ public class CmdList implements Subcommand {
 				continue;
 			}
 			
-			String line = sc.getColor() + base;
+			String line = sc.getColor() + "/" + base;
 			// Add subcommand name
 			if (cmd.length() != 0) {
-				line += " " + cmd;
+				line += " " + sc.getKey();
 			}
 			
 			// Add args
@@ -64,7 +64,7 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public ChatColor getColor() {
-		return ChatColor.GRAY;
+		return ChatColor.RED;
 	}
 
 	@Override
