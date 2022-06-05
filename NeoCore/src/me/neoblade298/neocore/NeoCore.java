@@ -64,10 +64,11 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		return inst;
 	}
 	
-	public static void addDependant(String msg, Dependant d) {
+	public static Dependant addDependant(String msg, Dependant d) {
 		ArrayList<Dependant> list = dependants.getOrDefault(msg, new ArrayList<Dependant>());
 		list.add(d);
 		dependants.put(msg, list);
+		return d;
 	}
 	
 	@EventHandler
@@ -88,8 +89,9 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		return instName;
 	}
 	
-	public static void registerIOComponent(JavaPlugin plugin, IOComponent component) {
+	public static IOComponent registerIOComponent(JavaPlugin plugin, IOComponent component) {
 		IOListener.register(plugin, component);
+		return component;
 	}
 	
 	public static Statement getStatement() {
