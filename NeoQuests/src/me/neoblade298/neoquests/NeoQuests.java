@@ -72,7 +72,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		navigation.registerCommandList("");
 		navigation.register(new CmdNavigationStart());
 		navigation.register(new CmdNavigationSave());
-		navigation.register(new CmdNavigationNew());
+		navigation.register(new CmdNavigationCreate());
+		navigation.register(new CmdNavigationExit());
 	    this.getCommand("navigation").setExecutor(navigation);
 	    commands.put("navigation", navigation);
 	}

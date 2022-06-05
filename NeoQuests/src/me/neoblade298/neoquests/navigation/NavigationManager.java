@@ -119,6 +119,15 @@ public class NavigationManager implements Reloadable {
 		pathwayEditors.put(p, new PathwayEditor(p, name, file));
 	}
 	
+	public static void exitPathwayEditor(Player p) {
+		if (pathwayEditors.remove(p) != null) {
+			Util.msg(p, "Successfully exited pathway editor");
+		}
+		else {
+			Util.msg(p, "&cYou aren't in a pathway editor!");
+		}
+	}
+	
 	public static void addPathway(Pathway pw) {
 		pathways.put(pw.getKey().toUpperCase(), pw);
 	}
@@ -126,7 +135,7 @@ public class NavigationManager implements Reloadable {
 	public static void savePoints() throws IOException {
 		LinkedList<String> serialized = new LinkedList<String>();
 		for (PathwayPoint point : points) {
-			serialized.add(point.serialize());
+			serialized.add(point.serializeAsPoint());
 		}
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.set("points", serialized);
@@ -137,7 +146,7 @@ public class NavigationManager implements Reloadable {
 		for (Chunk c : Chunk.getSurroundingChunks(p.getLocation())) {
 			if (pointMap.containsKey(c)) {
 				for (PathwayPoint point : pointMap.get(c)) {
-					point.spawnParticle(p);
+					point.spawnParticle(p, false);
 				}
 			}
 		}
@@ -177,27 +186,29 @@ public class NavigationManager implements Reloadable {
 		Chunk c = Chunk.getOrCreateChunk(point.getLocation());
 		ArrayList<PathwayPoint> list = pointMap.getOrDefault(c, new ArrayList<PathwayPoint>());
 		list.add(point);
+		point.setChunk(c);
 		pointMap.put(c, list);
 		points.add(point);
 	}
 	
-	public static boolean deletePoint(Location loc) {
-		if (Chunk.containsKey(loc)) {
-			Chunk c = Chunk.getChunk(loc);
-			if (pointMap.containsKey(c)) {
-				PathwayPoint toDelete = null;
-				for (PathwayPoint point : pointMap.get(c)) {
-					if (point.getLocation().equals(loc)) {
-						toDelete = point;
-						break;
-					}
-				}
-				if (toDelete != null) {
-					pointMap.get(c).remove(toDelete);
-					return true;
-				}
+	public static boolean deletePoint(PathwayPoint toDelete) {
+		Chunk c = toDelete.getChunk();
+		PathwayPoint found = null;
+		for (PathwayPoint point : pointMap.get(c)) {
+			if (point.getLocation().equals(toDelete.getLocation())) {
+				found = point;
+				break;
 			}
 		}
+		if (found != null) {
+			if (found.isConnected()) {
+				Bukkit.getLogger().warning("[NeoQuests] Failed to delete nav point, it's still connected");
+				return false;
+			}
+			pointMap.get(c).remove(found);
+			return true;
+		}
+		Bukkit.getLogger().warning("[NeoQuests] Failed to delete nav point, could not find point");
 		return false;
 	}
 }

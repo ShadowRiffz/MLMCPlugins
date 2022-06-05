@@ -39,7 +39,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 					}
 					quests.put(key.toUpperCase(), new Quest(cfg.getConfigurationSection(key), file));
 				} catch (NeoIOException e) {
-					e.printStackTrace();
+					NeoQuests.showWarning("Failed to load quest " + key, e);
 				}
 			}
 		};
@@ -54,7 +54,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 					}
 					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key), file));
 				} catch (NeoIOException e) {
-					e.printStackTrace();
+					NeoQuests.showWarning("Failed to load questline " + key, e);
 				}
 			}
 		};

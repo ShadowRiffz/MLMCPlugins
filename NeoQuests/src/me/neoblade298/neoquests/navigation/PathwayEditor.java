@@ -23,8 +23,8 @@ public class PathwayEditor {
 	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
 	private PathwayPoint selected;
 
-	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.GREEN, 2.0F);
-	private static final DustOptions PARTICLE_OPTIONS = new DustOptions(Color.GREEN, 1.0F);
+	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.YELLOW, 2.0F);
+	private static final DustOptions PARTICLE_OPTIONS = new DustOptions(Color.YELLOW, 1.0F);
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
@@ -41,26 +41,12 @@ public class PathwayEditor {
 	
 	public void show() {
 		NavigationManager.showNearbyPoints(p);
-		Pathway.showLines(p, points);
+		Pathway.showLines(p, points, false);
 		showSelectedPoint();
 	}
 	
-	public PathwayPoint getOrCreatePoint(Location loc) {
-		Util.msg(p, "Successfully created new point!");
-		return NavigationManager.getOrCreatePoint(loc);
-	}
-	
-	public PathwayPoint getPoint(Location loc) {
-		for (PathwayPoint point : points) {
-			if (point.getLocation().equals(loc)) {
-				return point;
-			}
-		}
-		return null;
-	}
-	
 	public boolean isSelected(PathwayPoint point) {
-		return selected.getLocation().equals(point.getLocation());
+		return selected != null && selected.getLocation().equals(point.getLocation());
 	}
 	
 	public void deselect() {
@@ -70,7 +56,7 @@ public class PathwayEditor {
 	
 	public void selectOrConnectPoints(PathwayPoint point) {
 		if (selected == null) {
-			point = selected;
+			selected = point;
 			Util.msg(p, "§7Successfully selected point!");
 		}
 		else {
@@ -80,31 +66,32 @@ public class PathwayEditor {
 			
 			if (points.size() == 0) {
 				points.add(selected);
-				selected.addConnection();
+				selected.addConnection(this.name);
 			}
 			points.add(point);
-			point.addConnection();
-			Util.msg(p, "§7Successfully connected points!");
+			point.addConnection(this.name);
+			selected = point;
+			Util.msg(p, "§7Successfully connected points and selected point!");
 		}
 	}
 	
 	private void showSelectedPoint() {
 		if (selected != null) {
-		    p.spawnParticle(Particle.REDSTONE, selected.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
-		    ParticleUtils.drawLine(p, selected.getLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
+		    p.spawnParticle(Particle.REDSTONE, selected.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
+		    ParticleUtils.drawLine(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
 		}
 	}
 	
 	public void undoConnection() {
 		if (points.size() > 2) {
 			PathwayPoint point = points.removeLast();
-			point.removeConnection();
-			points.getLast().removeConnection();
+			point.removeConnection(this.name);
+			points.getLast().removeConnection(this.name);
 			Util.msg(p, "Successfully undid last connection!");
 		}
 		else if (points.size() == 2) {
 			for (PathwayPoint point : points) {
-				point.removeConnection();
+				point.removeConnection(this.name);
 			}
 			points.clear();
 			Util.msg(p, "Successfully undid last connection!");
@@ -129,16 +116,41 @@ public class PathwayEditor {
 			sec.set("world", points.getFirst().getLocation().getWorld().getName());
 			ArrayList<String> serialized = new ArrayList<String>(points.size());
 			for (PathwayPoint point : points) {
-				serialized.add(point.serialize());
+				serialized.add(point.serializeAsPath());
 			}
 			sec.set("points", serialized);
 			cfg.save(file);
-			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
 			NavigationManager.addPathway(new Pathway(cfg, file));
+			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
 			return true;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			throw new NeoIOException("Failed to save pathway editor " + name + ", " + e.getMessage());
+		}
+	}
+	
+	public void deletePoint(Location loc) {
+		PathwayPoint point = NavigationManager.getPoint(loc);
+		if (point == null) {
+			return;
+		}
+		if (point.isConnected()) {
+			Util.msg(p, "§cCannot delete point! It is still connected to the following pathways:");
+			for (String key : point.getPathwaysUsing()) {
+				Util.msg(p, "&7- &6" + key, false);
+			}
+			return;
+		}
+		
+		if (!NavigationManager.deletePoint(point)) {
+			Util.msg(p, "§cFailed to delete point!");
+		}
+		else {
+			if (isSelected(point)) {
+				deselect();
+			}
+			Util.msg(p, "Successfully deleted point");
 		}
 	}
 }

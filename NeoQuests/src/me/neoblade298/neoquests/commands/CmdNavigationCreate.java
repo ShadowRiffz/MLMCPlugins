@@ -9,7 +9,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
-public class CmdNavigationNew implements Subcommand {
+public class CmdNavigationCreate implements Subcommand {
 
 	@Override
 	public String getDescription() {
@@ -18,7 +18,7 @@ public class CmdNavigationNew implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "new";
+		return "create";
 	}
 
 	@Override

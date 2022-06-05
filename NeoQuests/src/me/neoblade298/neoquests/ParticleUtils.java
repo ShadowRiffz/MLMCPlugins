@@ -14,9 +14,9 @@ public class ParticleUtils {
 	    
 		Vector v = end.subtract(start).toVector();
 		int iterations = (int) (v.length() / BLOCKS_PER_PARTICLE);
-		for (int i = BLOCKS_PER_PARTICLE; i < iterations; i++) {
+		for (int i = 1; i < iterations; i++) {
 		    v.normalize();
-		    v.multiply(i * 2);
+		    v.multiply(i * BLOCKS_PER_PARTICLE);
 		    start.add(v);
 		    p.spawnParticle(Particle.REDSTONE, start, perPoint, offset, offset, offset, speed, options);
 			start.subtract(v);

@@ -1,10 +1,10 @@
 package me.neoblade298.neoquests.navigation;
 
+import java.util.HashSet;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,11 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
-	private Location loc;
-	private Location displayLoc;
+	private Chunk chunk;
+	private Location loc, groundLoc, displayLoc;
 	private PathwayPointType type;
 	private LineConfig cfg;
-	private int connections = 0;
+	private HashSet<String> connections = new HashSet<String>();
 	
 	public PathwayPoint() {}
 	
@@ -30,13 +30,18 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	
 	public PathwayPoint(Location loc, PathwayPointType type) {
 		this.loc = loc;
-		this.displayLoc = loc.clone();
-		displayLoc.add(0, 1, 0);
+		this.groundLoc = loc.clone().add(0, 1, 0);
+		this.displayLoc = loc.clone().add(0, 2, 0);
 		this.type = type;
 	}
 
-	public void spawnParticle(Player p) {
-	    p.spawnParticle(Particle.REDSTONE, displayLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
+	public void spawnParticle(Player p, boolean useDisplayLocation) {
+		if (useDisplayLocation) {
+		    p.spawnParticle(Particle.REDSTONE, displayLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
+		}
+		else {
+		    p.spawnParticle(Particle.REDSTONE, groundLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
+		}
 	}
 
 	public Location getLocation() {
@@ -47,7 +52,11 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 		return displayLoc;
 	}
 
-	public String serialize() {
+	public Location getGroundLocation() {
+		return displayLoc;
+	}
+
+	public String serializeAsPoint() {
 		if (cfg != null) {
 			return cfg.getFullLine();
 		}
@@ -59,6 +68,10 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 			serialized += " world:" + loc.getWorld().getName();
 			return serialized;
 		}
+	}
+	
+	public String serializeAsPath() {
+		return loc.getX() + " " + loc.getY() + " " + loc.getZ();
 	}
 	
 	public PathwayPointType toggleType() {
@@ -91,16 +104,27 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 		return ""; // Keyless system
 	}
 	
-	public void addConnection() {
-		connections += 1;
+	public void addConnection(String key) {
+		connections.add(key);
 	}
 	
-	public void removeConnection() {
-		connections -= 1;
+	public void removeConnection(String key) {
+		connections.remove(key);
 	}
 	
 	public boolean isConnected() {
-		return connections > 0;
+		return connections.size() > 0;
 	}
 
+	public HashSet<String> getPathwaysUsing() {
+		return connections;
+	}
+	
+	public void setChunk(Chunk chunk) {
+		this.chunk = chunk;
+	}
+	
+	public Chunk getChunk() {
+		return chunk;
+	}
 }

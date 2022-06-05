@@ -43,27 +43,28 @@ public class NavigationListener implements Listener {
 	}
 	
 	private void createOrTogglePoint(Player p, PathwayEditor editor, Location loc) {
-		PathwayPoint point = editor.getOrCreatePoint(loc);
+		PathwayPoint point = NavigationManager.getOrCreatePoint(loc);
 		if (point != null) {
 			PathwayPointType type = point.toggleType();
 			Util.msg(p, "Successfully toggled point to be type &6" + type + "&7!");
 		}
-	}
-	
-	private void deletePoint(Player p, PathwayEditor editor, Location loc) {
-		if (NavigationManager.deletePoint(loc)) {
-			Util.msg(p, "Successfully deleted point!");
+		else {
+			Util.msg(p, "Successfully created point!");
 		}
 	}
 	
+	private void deletePoint(Player p, PathwayEditor editor, Location loc) {
+		editor.deletePoint(loc);
+	}
+	
 	private void selectPoint(Player p, PathwayEditor editor, Location loc) {
-		PathwayPoint point = editor.getPoint(loc);
+		PathwayPoint point = NavigationManager.getPoint(loc);
 		if (point != null) {
 			if (editor.isSelected(point)) {
 				editor.deselect();
 				return;
 			}
-			
+
 			editor.selectOrConnectPoints(point);
 		}
 	}

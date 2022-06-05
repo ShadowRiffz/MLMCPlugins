@@ -71,8 +71,8 @@ public class Pathway {
 		while (iter.hasNext()) {
 			l1 = l2;
 			l2 = iter.next();
-			l1.addConnection();
-			l2.addConnection();
+			l1.addConnection(this.key);
+			l2.addConnection(this.key);
 		}
 	}
 	
@@ -113,10 +113,10 @@ public class Pathway {
 	}
 	
 	public void show(Player p) {
-		showLines(p, this.points);
+		showLines(p, this.points, true);
 	}
 	
-	public static void showLines(Player p, LinkedList<PathwayPoint> points) {
+	public static void showLines(Player p, LinkedList<PathwayPoint> points, boolean useDisplayLocation) {
 		if (points.size() < 2) {
 			return;
 		}
@@ -124,7 +124,7 @@ public class Pathway {
 		PathwayPoint l1 = null;
 		PathwayPoint l2 = iter.next();
 		if (l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
-			l2.spawnParticle(p);
+			l2.spawnParticle(p, useDisplayLocation);
 		}
 		while (iter.hasNext()) {
 			l1 = l2;
@@ -132,12 +132,13 @@ public class Pathway {
 			boolean dist1 = l1.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
 			boolean dist2 = l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
 			if (dist2) {
-				l2.spawnParticle(p);
+				l2.spawnParticle(p, useDisplayLocation);
 			}
 			
 			if (dist1 || dist2) {
 				if (l1.getType() != PathwayPointType.PORTAL || l2.getType() != PathwayPointType.PORTAL) {
-					ParticleUtils.drawLine(p, l1.getDisplayLocation(), l2.getDisplayLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
+					ParticleUtils.drawLine(p, useDisplayLocation ? l1.getDisplayLocation() : l1.getGroundLocation(),
+							useDisplayLocation ? l2.getDisplayLocation() : l2.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
 				}
 			}
 		}
