@@ -13,9 +13,10 @@ import me.neoblade298.neocore.io.LineConfigParser;
 
 public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	private static final int PARTICLES_PER_POINT = 20;
-	private static final double PARTICLE_OFFSET = 0.2;
+	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
 	private Location loc;
+	private Location displayLoc;
 	private PathwayPointType type;
 	private LineConfig cfg;
 	private int connections = 0;
@@ -29,15 +30,21 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	
 	public PathwayPoint(Location loc, PathwayPointType type) {
 		this.loc = loc;
+		this.displayLoc = loc.clone();
+		displayLoc.add(0, 1, 0);
 		this.type = type;
 	}
 
 	public void spawnParticle(Player p) {
-	    p.spawnParticle(Particle.REDSTONE, loc, PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, type.getDustOptions());
+	    p.spawnParticle(Particle.REDSTONE, displayLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
 	}
 
 	public Location getLocation() {
 		return loc;
+	}
+
+	public Location getDisplayLocation() {
+		return displayLoc;
 	}
 
 	public String serialize() {

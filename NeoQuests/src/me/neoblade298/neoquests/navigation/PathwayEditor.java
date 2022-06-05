@@ -46,7 +46,7 @@ public class PathwayEditor {
 	}
 	
 	public PathwayPoint getOrCreatePoint(Location loc) {
-		Util.msg(p, "Successfully created and selected new point!");
+		Util.msg(p, "Successfully created new point!");
 		return NavigationManager.getOrCreatePoint(loc);
 	}
 	

@@ -137,7 +137,7 @@ public class Pathway {
 			
 			if (dist1 || dist2) {
 				if (l1.getType() != PathwayPointType.PORTAL || l2.getType() != PathwayPointType.PORTAL) {
-					ParticleUtils.drawLine(p, l1.getLocation(), l2.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
+					ParticleUtils.drawLine(p, l1.getDisplayLocation(), l2.getDisplayLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
 				}
 			}
 		}

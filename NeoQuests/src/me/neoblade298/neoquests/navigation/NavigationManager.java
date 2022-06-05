@@ -152,7 +152,7 @@ public class NavigationManager implements Reloadable {
 		if (point == null) {
 			point = new PathwayPoint(loc, PathwayPointType.POINT);
 			addPoint(point);
-			return point;
+			return null;
 		}
 		else {
 			return point;
@@ -194,6 +194,7 @@ public class NavigationManager implements Reloadable {
 				}
 				if (toDelete != null) {
 					pointMap.get(c).remove(toDelete);
+					return true;
 				}
 			}
 		}

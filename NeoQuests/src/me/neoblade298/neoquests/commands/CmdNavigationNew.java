@@ -35,7 +35,7 @@ public class CmdNavigationNew implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		try {
-			NavigationManager.startPathwayEditor(p, args[0]);
+			NavigationManager.startPathwayEditor(p, args[1]);
 		} catch (NeoIOException e) {
 			NeoQuests.showWarning("Failed to start pathway editor", e);
 		}

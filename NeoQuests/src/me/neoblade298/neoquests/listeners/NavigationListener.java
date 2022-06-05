@@ -24,7 +24,7 @@ public class NavigationListener implements Listener {
 		if (e.getItem() == null || !e.getItem().getType().equals(Material.STICK)) return;
 		
 		if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-			Location loc = e.getClickedBlock().getLocation();
+			Location loc = e.getClickedBlock().getLocation().add(0.5, 0, 0.5);
 			if (p.isSneaking()) {
 				deletePoint(p, editor, loc);
 			}
@@ -33,7 +33,7 @@ public class NavigationListener implements Listener {
 			}
 		}
 		else if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !p.isSneaking()) {
-			selectPoint(p, editor, e.getClickedBlock().getLocation());
+			selectPoint(p, editor, e.getClickedBlock().getLocation().add(0.5, 0, 0.5));
 		}
 		else if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (p.isSneaking()) {
@@ -46,7 +46,7 @@ public class NavigationListener implements Listener {
 		PathwayPoint point = editor.getOrCreatePoint(loc);
 		if (point != null) {
 			PathwayPointType type = point.toggleType();
-			Util.msg(p, "Successfully toggled point to be type " + type + "!");
+			Util.msg(p, "Successfully toggled point to be type &6" + type + "&7!");
 		}
 	}
 	
