@@ -1,7 +1,7 @@
 name: NeoQuests
 main: me.neoblade298.neoquests.NeoQuests
 author: [Neoblade298]
-depend: [Citizens, NeoCore, Multiverse-core]
+depend: [Citizens, NeoCore, Multiverse-Core]
 softdepend: [SkillAPI]
 version: 1.0
 api-version: 1.18
@@ -9,6 +9,11 @@ commands:
    quest:
       description: Quest command
       usage: /quest
+      aliases: q
    quests:
       description: Quests command
       usage: /quests
+   navigation:
+      description: Navigation command
+      usage: /navigation
+      aliases: nav

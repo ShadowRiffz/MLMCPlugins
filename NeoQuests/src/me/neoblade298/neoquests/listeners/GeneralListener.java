@@ -7,6 +7,7 @@ import me.neoblade298.neoquests.NeoQuests;
 public class GeneralListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		System.out.println("Player joined " + e.getPlayer());
 		if (e.getPlayer().hasPermission("neoquests.admin")) {
 			NeoQuests.addDebugger(e.getPlayer());
 		}

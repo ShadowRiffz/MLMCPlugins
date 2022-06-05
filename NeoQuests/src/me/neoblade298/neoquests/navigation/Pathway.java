@@ -52,9 +52,9 @@ public class Pathway {
 		
 		for (String line : list) {
 			String args[] = line.split(" ");
-			int x = Integer.parseInt(args[0]);
-			int y = Integer.parseInt(args[1]);
-			int z = Integer.parseInt(args[2]);
+			double x = Double.parseDouble(args[0]);
+			double y = Double.parseDouble(args[1]);
+			double z = Double.parseDouble(args[2]);
 			points.add(new Location(w, x, y, z));
 		}
 	}
