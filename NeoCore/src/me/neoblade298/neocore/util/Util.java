@@ -11,6 +11,13 @@ public class Util {
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	
 	public static void msg(CommandSender s, String msg) {
+		msg(s, msg, true);
+	}
+	
+	public static void msg(CommandSender s, String msg, boolean hasPrefix) {
+		if (hasPrefix) {
+			msg = "&c[&4&lMLMC&c] &7" + msg;
+		}
 		s.sendMessage(translateColors(msg));
 	}
 
