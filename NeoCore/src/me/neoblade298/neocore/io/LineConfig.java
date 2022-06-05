@@ -64,4 +64,11 @@ public class LineConfig {
 		}
 		return def;
 	}
+	
+	public double getDouble(String key, double def) {
+		if (args.containsKey(key)) {
+			return Double.parseDouble(args.get(key));
+		}
+		return def;
+	}
 }
