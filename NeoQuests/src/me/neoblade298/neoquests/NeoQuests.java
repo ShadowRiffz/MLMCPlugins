@@ -13,10 +13,7 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionManager;
-import me.neoblade298.neoquests.commands.CmdNavigationStart;
-import me.neoblade298.neoquests.commands.CmdQuestBase;
-import me.neoblade298.neoquests.commands.CmdQuestsQuit;
-import me.neoblade298.neoquests.commands.CmdQuestsReload;
+import me.neoblade298.neoquests.commands.*;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.GeneralListener;
 import me.neoblade298.neoquests.listeners.NpcListener;
@@ -73,6 +70,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		CommandManager navigation = new CommandManager("navigation");
 		navigation.registerCommandList("");
 		navigation.register(new CmdNavigationStart());
+		navigation.register(new CmdNavigationSave());
+		navigation.register(new CmdNavigationNew());
 	    this.getCommand("navigation").setExecutor(navigation);
 	    commands.put("navigation", navigation);
 	}

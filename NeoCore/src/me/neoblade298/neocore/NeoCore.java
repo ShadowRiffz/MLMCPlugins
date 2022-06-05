@@ -114,7 +114,7 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 				loader.load(cfg, load);
 			}
 			catch (Exception e) {
-				Bukkit.getLogger().warning(e.getMessage());
+				e.printStackTrace();
 				throw new NeoIOException("Failed to parse yaml for file " + load.getParent() + "/" + load.getName());
 			}
 		}

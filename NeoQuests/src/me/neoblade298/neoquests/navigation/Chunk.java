@@ -30,10 +30,20 @@ public class Chunk {
 		return z;
 	}
 	
-	public static Chunk getChunk(double x, double z) {
+	public static Chunk getChunk(Location loc) {
 		// First convert coords to chunk
-		int xc = (int) x;
-		int zc = (int) z;
+		int xc = (int) loc.getX();
+		int zc = (int) loc.getZ();
+		xc /= 16;
+		zc /= 16;
+		
+		return chunkMap.get(xc).get(zc);
+	}
+	
+	public static Chunk getOrCreateChunk(Location loc) {
+		// First convert coords to chunk
+		int xc = (int) loc.getX();
+		int zc = (int) loc.getZ();
 		xc /= 16;
 		zc /= 16;
 		
@@ -46,6 +56,19 @@ public class Chunk {
 			xchunkMap.put(zc, chunk);
 		}
 		return xchunkMap.get(zc);
+	}
+	
+	public static boolean containsKey(Location loc) {
+		// First convert coords to chunk
+		int xc = (int) loc.getX();
+		int zc = (int) loc.getZ();
+		xc /= 16;
+		zc /= 16;
+		
+		if (chunkMap.containsKey(xc)) {
+			return chunkMap.get(xc).containsKey(zc);
+		}
+		return false;
 	}
 	
 	private static boolean containsKey(int x, int z) {

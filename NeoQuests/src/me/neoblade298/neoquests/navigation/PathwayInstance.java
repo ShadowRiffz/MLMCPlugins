@@ -3,7 +3,8 @@ package me.neoblade298.neoquests.navigation;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.Neoblade298.NeoProfessions.Utilities.Util;
+import me.neoblade298.neocore.util.Util;
+
 
 public class PathwayInstance {
 	private Player p;
@@ -25,12 +26,12 @@ public class PathwayInstance {
 	
 	public void stop() {
 		task.cancel();
-		Util.sendMessage(p, "§7Navigation from §6" + pathway.getStartDisplay() + " §7to §6" + pathway.getEndDisplay() + " §7was successful!");
+		Util.msg(p, "§7Navigation from §6" + pathway.getStartDisplay() + " §7to §6" + pathway.getEndDisplay() + " §7was successful!");
 	}
 	
 	public void cancel(String reason) {
 		task.cancel();
-		Util.sendMessage(p, "§cNavigation from §6" + pathway.getStartDisplay() + " §cto §6" + pathway.getEndDisplay() + " §cwas cancelled, " + reason);
+		Util.msg(p, "§cNavigation from §6" + pathway.getStartDisplay() + " §cto §6" + pathway.getEndDisplay() + " §cwas cancelled, " + reason);
 	}
 }
 

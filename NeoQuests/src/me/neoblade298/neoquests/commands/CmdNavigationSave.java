@@ -5,26 +5,26 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.quests.Quester;
-import me.neoblade298.neoquests.quests.QuestsManager;
+import me.neoblade298.neoquests.navigation.NavigationManager;
 
-public class CmdQuestsQuit implements Subcommand {
+public class CmdNavigationSave implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Quits the specified quest";
+		return "Saves your pathway editor";
 	}
 
 	@Override
 	public String getKey() {
-		return "quit";
+		return "save";
 	}
 
 	@Override
 	public String getPermission() {
-		return null;
+		return "neoquests.admin";
 	}
 
 	@Override
@@ -35,21 +35,13 @@ public class CmdQuestsQuit implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		Quester q = QuestsManager.getQuester(p);
-		// /quests quit
-		if (args.length == 1) {
-			if (q.getActiveQuests().size() > 1) {
-				NeoQuests.getCommands().get("quest").runCommand("", s, new String[0]);
-			}
-			else if (q.getActiveQuests().size() == 1) {
-				q.cancelQuest(args[1]);
-			}
-			else {
-				Util.msg(p, "§cYou don't have any active quests!");
-			}
+		if (NavigationManager.getEditor(p) == null) {
+			Util.msg(p, "§cYou aren't in a pathway editor!");
 		}
-		else {
-			q.cancelQuest(args[1]);
+		try {
+			NavigationManager.getEditor(p).save();
+		} catch (NeoIOException e) {
+			NeoQuests.showWarning("Failed to save pathway editor", e);
 		}
 	}
 
