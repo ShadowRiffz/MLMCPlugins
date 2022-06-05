@@ -4,6 +4,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
@@ -15,6 +16,7 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	private static final double PARTICLE_OFFSET = 0.2;
 	private static final int PARTICLE_SPEED = 0;
 	private Location loc;
+	private PathwayPointType type;
 	
 	public PathwayPoint() {}
 	
@@ -36,14 +38,14 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	}
 
 	@Override
-	public PathwayPoint create(LineConfig arg0) {
-		// TODO Auto-generated method stub
+	public PathwayPoint create(LineConfig cfg) {
+		Location loc = new Location(cfg.getint)
 		return null;
 	}
 
 	@Override
 	public String getKey() {
-		return "point";
+		return ""; // Keyless system
 	}
 
 }
