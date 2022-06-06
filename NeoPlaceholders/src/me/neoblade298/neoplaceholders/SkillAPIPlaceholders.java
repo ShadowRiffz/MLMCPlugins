@@ -1,6 +1,7 @@
 package me.neoblade298.neoplaceholders;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
@@ -10,6 +11,14 @@ import com.sucy.skill.api.player.PlayerData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class SkillAPIPlaceholders extends PlaceholderExpansion {
+	private static int QUEST_X_BOUND_1 = -1578;
+	private static int QUEST_X_BOUND_2 = -1168;
+	private static int QUEST_Z_BOUND_1 = 1243;
+	private static int QUEST_Z_BOUND_2 = 1805;
+	private static int TOWNY_X_BOUND_1 = -1638;
+	private static int TOWNY_X_BOUND_2 = -1468;
+	private static int TOWNY_Z_BOUND_1 = 764;
+	private static int TOWNY_Z_BOUND_2 = 1034;
 
     @Override
     public boolean canRegister(){
@@ -124,12 +133,31 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 				if (data.getAttributePoints() > 0) {
 					return "§cYou have " + data.getAttributePoints() + " unspent /attr!";
 				}
-				if (data.getClass("class") == null) {
+				if (data.getClass("class") == null && !isInTutorial(p)) {
 					return "§cYou have no class! /warp advance!";
 				}
 			}
 			return "§8§m-|-------------|-";
 		}
 	 	return "Invalid placeholder";
+	}
+	
+	private boolean isInTutorial(Player p) {
+		if (p.getWorld().getName().equalsIgnoreCase("Argyll")) {
+			Location loc = p.getLocation();
+			double x = loc.getX();
+			double z = loc.getZ();
+			if (QUEST_X_BOUND_1 < x && x < QUEST_X_BOUND_2) {
+				if (QUEST_Z_BOUND_1 < z && z < QUEST_Z_BOUND_2) {
+					return true;
+				}
+			}
+			if (TOWNY_X_BOUND_1 < x && x < TOWNY_X_BOUND_2) {
+				if (TOWNY_Z_BOUND_2 < z && z < TOWNY_Z_BOUND_2) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
