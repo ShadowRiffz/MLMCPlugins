@@ -10,6 +10,7 @@ public class CmdList implements Subcommand {
 	private HashMap<String, Subcommand> cmds;
 	
 	public CmdList(String key, String base, HashMap<String, Subcommand> cmds) {
+		this.key = key;
 		this.base = base;
 		this.cmds = cmds;
 	}
