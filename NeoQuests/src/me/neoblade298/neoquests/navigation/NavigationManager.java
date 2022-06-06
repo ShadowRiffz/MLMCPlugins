@@ -16,14 +16,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.Reloadable;
 
-public class NavigationManager implements Reloadable {
+public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
 	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
 	private static HashMap<Chunk, ArrayList<PathwayPoint>> pointMap = new HashMap<Chunk, ArrayList<PathwayPoint>>();
@@ -95,14 +95,19 @@ public class NavigationManager implements Reloadable {
 	}
 	
 	@Override
-	public void reload() throws NeoIOException {
-		NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
-		NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
-		NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
-		for (PathwayPoint point : points) {
-			if (!point.isConnected()) {
-				NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
+	public void reload() {
+		try {
+			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
+			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
+			NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
+			for (PathwayPoint point : points) {
+				if (!point.isConnected()) {
+					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
+				}
 			}
+		}
+		catch (Exception e) {
+			NeoQuests.showWarning("Failed to reload NavigationManager", e);
 		}
 	}
 	
@@ -125,6 +130,13 @@ public class NavigationManager implements Reloadable {
 		}
 		
 		return pathway.start(p) != null;
+	}
+	
+	public static void stopNavigation(Player p) {
+		if (activePathways.containsKey(p)) {
+			activePathways.remove(p).cancel("cancelled by player.");
+		}
+		Util.msg(p, "&cYou're not currently navigating anywhere!");
 	}
 	
 	public static void startPathwayEditor(Player p, String name) throws NeoIOException {
@@ -239,4 +251,7 @@ public class NavigationManager implements Reloadable {
 	public static File getDataFolder() {
 		return data;
 	}
+
+	@Override
+	public void cleanup() {	}
 }

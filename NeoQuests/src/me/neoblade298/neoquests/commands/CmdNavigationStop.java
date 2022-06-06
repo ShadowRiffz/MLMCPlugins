@@ -9,21 +9,21 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
-public class CmdNavigationExit implements Subcommand {
+public class CmdNavigationStop implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Creates a new pathway editor";
+		return "Ends the current navigation guide";
 	}
 
 	@Override
 	public String getKey() {
-		return "exit";
+		return "stop";
 	}
 
 	@Override
 	public String getPermission() {
-		return "neoquests.admin";
+		return null;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class CmdNavigationExit implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		NavigationManager.exitPathwayEditor(p);
+		NavigationManager.stopNavigation(p);
 	}
 
 	@Override

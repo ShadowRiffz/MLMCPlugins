@@ -14,14 +14,14 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
-public class QuestsManager implements IOComponent, Reloadable {
+public class QuestsManager implements IOComponent, Manager {
 	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static HashMap<String, Questline> questlines = new HashMap<String, Questline>();
@@ -171,13 +171,13 @@ public class QuestsManager implements IOComponent, Reloadable {
 	}
 
 	@Override
-	public void reload() throws NeoIOException {
+	public void reload() {
 		try {
 			NeoCore.loadFiles(new File(data, "quests"), questsLoader);
 			NeoCore.loadFiles(new File(data, "questlines"), questlinesLoader);
 			NeoCore.loadFiles(new File(data, "recommendations.yml"), recommendationsLoader);
-		} catch (NeoIOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			NeoQuests.showWarning("Failed to reload QuestsManager", e);
 		}
 	}
 	
@@ -201,4 +201,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 	public static File getDataFolder() {
 		return data;
 	}
+
+	@Override
+	public void cleanup() {	}
 }

@@ -17,8 +17,8 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
-	private static final int PARTICLES_PER_ENDPOINT = 50;
-	private static final double ENDPOINT_SPEED = 0.1;
+	private static final int PARTICLES_PER_ENDPOINT = 20;
+	private static final double ENDPOINT_SPEED = 0.05;
 	private Chunk chunk;
 	private Location loc, groundLoc, displayLoc;
 	private PathwayPointType type;
@@ -54,7 +54,7 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 		}
 		else {
 			if (isEndpoint) {
-			    p.spawnParticle(Particle.VILLAGER_HAPPY, groundLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
+			    p.spawnParticle(Particle.END_ROD, groundLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
 			}
 		    p.spawnParticle(Particle.REDSTONE, groundLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
 		}

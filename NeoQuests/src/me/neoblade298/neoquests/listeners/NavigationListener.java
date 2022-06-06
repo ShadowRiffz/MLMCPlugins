@@ -52,7 +52,7 @@ public class NavigationListener implements Listener {
 		if (editor == null) return;
 		if (!e.getItemDrop().getItemStack().getType().equals(Material.STICK)) return;
 		
-		editEndpoint(p, editor, e.getPlayer().getTargetBlock(null, 5).getLocation(), e);
+		editEndpoint(p, editor, e.getPlayer().getTargetBlock(null, 5).getLocation().add(0.5, 0, 0.5), e);
 	}
 	
 	@EventHandler
@@ -71,6 +71,7 @@ public class NavigationListener implements Listener {
 		else if (point.getDisplay() == null) {
 			point.setDisplay(Util.translateColors(e.getMessage()));
 			point.setFile(editor.getEndpointFile());
+			point.setIsEndpoint(true);
 			Util.msg(p, "Endpoint successfully created!");
 		}
 	}
@@ -107,7 +108,7 @@ public class NavigationListener implements Listener {
 	}
 	
 	private void editEndpoint(Player p, PathwayEditor editor, Location loc, PlayerDropItemEvent e) {
-		PathwayPoint point = NavigationManager.getOrCreatePoint(loc);
+		PathwayPoint point = NavigationManager.getPoint(loc);
 		if (point != null) {
 			e.setCancelled(true);
 			if (point.isEndpoint()) {

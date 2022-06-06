@@ -11,13 +11,13 @@ import org.bukkit.event.Listener;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.Reloadable;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 
-public class ConversationManager implements Reloadable, Listener {
+public class ConversationManager implements Manager, Listener {
 	private static HashMap<Integer, ArrayList<Conversation>> npcConvs = new HashMap<Integer, ArrayList<Conversation>>();
 	private static HashMap<String, Conversation> convs = new HashMap<String, Conversation>();
 	private static HashMap<Player, ConversationInstance> activeConvs = new HashMap<Player, ConversationInstance>();
@@ -67,11 +67,17 @@ public class ConversationManager implements Reloadable, Listener {
 		reload();
 	}
 	
-	public void reload() throws NeoIOException {
+	@Override
+	public void reload() {
 		convs.clear();
 		npcConvs.clear();
-		NeoCore.loadFiles(new File(data, "conversations"), convLoader);
-		NeoCore.loadFiles(new File(data, "npcs"), npcLoader);
+		try {
+			NeoCore.loadFiles(new File(data, "conversations"), convLoader);
+			NeoCore.loadFiles(new File(data, "npcs"), npcLoader);
+		}
+		catch (Exception e) {
+			NeoQuests.showWarning("Failed to reload ConversationManager", e);
+		}
 	}
 	
 	public static void endConversation(Player p, boolean runEndActions) {
@@ -147,4 +153,7 @@ public class ConversationManager implements Reloadable, Listener {
 	public static File getDataFolder() {
 		return data;
 	}
+
+	@Override
+	public void cleanup() {}
 }
