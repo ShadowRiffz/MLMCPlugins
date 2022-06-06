@@ -108,7 +108,7 @@ public class Pathway {
 		}.runTaskTimer(NeoQuests.inst(), 0L, 20L);
 
 		pwi.setTask(task);
-		Util.msg(p, "§7Started navigation from §6" + startDisplay + " to §6" + endDisplay + "§7!");
+		Util.msg(p, "§7Started navigation from &6" + startDisplay + "&7 to &6" + endDisplay + "§7!");
 		return pwi;
 	}
 	

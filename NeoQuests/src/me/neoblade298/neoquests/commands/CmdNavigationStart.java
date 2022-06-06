@@ -32,7 +32,7 @@ public class CmdNavigationStart implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		NavigationManager.startNavigation(p, "testpathway");
+		NavigationManager.startNavigation(p, args[1]);
 	}
 
 	@Override

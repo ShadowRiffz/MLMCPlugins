@@ -120,13 +120,15 @@ public class PathwayEditor {
 			}
 			sec.set("points", serialized);
 			cfg.save(file);
-			NavigationManager.addPathway(new Pathway(cfg, file));
+			NavigationManager.addPathway(new Pathway(sec, file));
+			NavigationManager.savePoints();
 			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
+			NavigationManager.exitPathwayEditor(p);
 			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new NeoIOException("Failed to save pathway editor " + name + ", " + e.getMessage());
+			throw new NeoIOException("Failed to save pathway editor " + name);
 		}
 	}
 	
