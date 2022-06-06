@@ -48,7 +48,7 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	public void spawnParticle(Player p, boolean useDisplayLocation) {
 		if (useDisplayLocation) {
 			if (isEndpoint) {
-			    p.spawnParticle(Particle.VILLAGER_HAPPY, groundLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
+			    p.spawnParticle(Particle.END_ROD, displayLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
 			}
 		    p.spawnParticle(Particle.REDSTONE, displayLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
 		}

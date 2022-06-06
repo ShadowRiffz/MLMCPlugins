@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,7 +27,7 @@ public class NavigationManager implements Reloadable {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
 	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
 	private static HashMap<Chunk, ArrayList<PathwayPoint>> pointMap = new HashMap<Chunk, ArrayList<PathwayPoint>>();
-	private static LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
+	private static HashSet<PathwayPoint> points = new HashSet<PathwayPoint>();
 	private static HashMap<String, PathwayPoint> endpoints = new HashMap<String, PathwayPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pathwaysLoader, pointLoader, endpointsLoader;
@@ -68,13 +70,14 @@ public class NavigationManager implements Reloadable {
 							"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
 					continue;
 				}
-				World w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
-				String[] args = cfg.getString("location").split(" ");
+				ConfigurationSection sec = cfg.getConfigurationSection(key);
+				World w = Bukkit.getWorld(sec.getString("world", "Argyll"));
+				String[] args = sec.getString("location").split(" ");
 				double x = Double.parseDouble(args[0]);
 				double y = Double.parseDouble(args[1]);
 				double z = Double.parseDouble(args[2]);
 				PathwayPoint point = getPoint(new Location(w, x, y, z));
-				point.setEndpointFields(key.toUpperCase(), Util.translateColors(cfg.getString("display", key)), file);
+				point.setEndpointFields(key.toUpperCase(), Util.translateColors(sec.getString("display", key)), file);
 				endpoints.put(key.toUpperCase(), point);
 			}
 		};
@@ -137,7 +140,7 @@ public class NavigationManager implements Reloadable {
 		}
 
 		Util.msg(p, "Successfully started pathway editor for name: " + name);
-		pathwayEditors.put(p, new PathwayEditor(p, name, file));
+		pathwayEditors.put(p, new PathwayEditor(p, name));
 	}
 	
 	public static void exitPathwayEditor(Player p) {

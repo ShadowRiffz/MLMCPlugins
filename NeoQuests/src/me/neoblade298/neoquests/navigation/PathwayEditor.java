@@ -198,4 +198,12 @@ public class PathwayEditor {
 			throw new NeoIOException("Failed to save endpoints for new pathway");
 		}
 	}
+	
+	public File getEndpointFile() {
+		return endpointFile;
+	}
+	
+	public File getPathwayFile() {
+		return pathwayFile;
+	}
 }

@@ -23,7 +23,7 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class Pathway {
-	private String key, startDisplay, endDisplay, fileLocation;
+	private String key, fileLocation;
 	private World w;
 	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
 	private ArrayList<Condition> conditions;
@@ -40,8 +40,6 @@ public class Pathway {
 	
 	public Pathway(ConfigurationSection cfg, File file) throws NeoIOException {
 		key = cfg.getName().toUpperCase();
-		startDisplay = cfg.getString("start");
-		endDisplay = cfg.getString("end");
 		fileLocation = file.getPath() + "/" + file.getName();
 		this.w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
@@ -83,10 +81,18 @@ public class Pathway {
 		}
 	}
 	
+	public String getStartPoint() {
+		return points.getFirst().getDisplay();
+	}
+	
+	public String getEndPoint() {
+		return points.getLast().getDisplay();
+	}
+	
 	public PathwayInstance start(Player p) {
 		Condition c = ConditionManager.getBlockingCondition(p, conditions);
 		if (c != null) {
-			Util.msg(p, "§cCould not start navigation from §6" + startDisplay + " to §6" + endDisplay + "§c, " + c.getExplanation(p));
+			Util.msg(p, "§cCould not start navigation from §6" + getStartPoint() + " to §6" + getEndPoint() + "§c, " + c.getExplanation(p));
 			return null;
 		}
 
@@ -115,7 +121,7 @@ public class Pathway {
 		}.runTaskTimer(NeoQuests.inst(), 0L, 20L);
 
 		pwi.setTask(task);
-		Util.msg(p, "§7Started navigation from &6" + startDisplay + "&7 to &6" + endDisplay + "§7!");
+		Util.msg(p, "§7Started navigation from &6" + getStartPoint() + "&7 to &6" + getEndPoint() + "§7!");
 		return pwi;
 	}
 	
@@ -157,14 +163,6 @@ public class Pathway {
 	
 	public String getFileLocation() {
 		return fileLocation;
-	}
-	
-	public String getStartDisplay() {
-		return startDisplay;
-	}
-	
-	public String getEndDisplay() {
-		return endDisplay;
 	}
 	
 	public String getKey() {

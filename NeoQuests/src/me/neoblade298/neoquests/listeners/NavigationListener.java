@@ -70,7 +70,7 @@ public class NavigationListener implements Listener {
 		}
 		else if (point.getDisplay() == null) {
 			point.setDisplay(Util.translateColors(e.getMessage()));
-			point.setFile(editor);
+			point.setFile(editor.getEndpointFile());
 			Util.msg(p, "Endpoint successfully created!");
 		}
 	}
