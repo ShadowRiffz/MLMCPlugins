@@ -1,6 +1,6 @@
 package me.neoblade298.neocore.commands;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,7 +9,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandManager implements CommandExecutor {
-	private HashMap<String, Subcommand> handlers = new HashMap<String, Subcommand>();
+	private TreeMap<String, Subcommand> handlers = new TreeMap<String, Subcommand>();
 	private String base;
 	
 	public CommandManager(String base) {
@@ -65,7 +65,7 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	public void registerCommandList(String key) {
-		handlers.put(key.toUpperCase(), new CmdList(key.toUpperCase(), base, handlers));
+		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers));
 	}
 	
 	public Subcommand getCommand(String key) {
