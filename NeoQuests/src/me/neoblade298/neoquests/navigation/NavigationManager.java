@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,9 +26,10 @@ public class NavigationManager implements Reloadable {
 	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
 	private static HashMap<Chunk, ArrayList<PathwayPoint>> pointMap = new HashMap<Chunk, ArrayList<PathwayPoint>>();
 	private static LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
+	private static HashMap<String, PathwayPoint> endpoints = new HashMap<String, PathwayPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
-	private static FileLoader pathwaysLoader, pointLoader;
-	private static File pointFile = new File(NeoQuests.inst().getDataFolder(), "points.yml");
+	private static FileLoader pathwaysLoader, pointLoader, endpointsLoader;
+	private static File data = new File(NeoQuests.inst().getDataFolder(), "navigation");
 	
 	private static LineConfigManager<PathwayPoint> mngr = new LineConfigManager<PathwayPoint>(NeoQuests.inst(), "points");
 	
@@ -58,6 +60,24 @@ public class NavigationManager implements Reloadable {
 				}
 			}
 		};
+		
+		endpointsLoader = (cfg, file) -> {
+			for (String key : cfg.getKeys(false)) {
+				if (endpoints.containsKey(key)) {
+					NeoQuests.showWarning("Duplicate endpoint " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+							"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
+					continue;
+				}
+				World w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
+				String[] args = cfg.getString("location").split(" ");
+				double x = Double.parseDouble(args[0]);
+				double y = Double.parseDouble(args[1]);
+				double z = Double.parseDouble(args[2]);
+				PathwayPoint point = getPoint(new Location(w, x, y, z));
+				point.setEndpointFields(key.toUpperCase(), Util.translateColors(cfg.getString("display", key)), file);
+				endpoints.put(key.toUpperCase(), point);
+			}
+		};
 	}
 
 	public NavigationManager() throws NeoIOException {
@@ -73,8 +93,9 @@ public class NavigationManager implements Reloadable {
 	
 	@Override
 	public void reload() throws NeoIOException {
-		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "points.yml"), pointLoader);
-		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "pathways"), pathwaysLoader);
+		NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
+		NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
+		NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
 		for (PathwayPoint point : points) {
 			if (!point.isConnected()) {
 				NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
@@ -139,7 +160,7 @@ public class NavigationManager implements Reloadable {
 		}
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.set("points", serialized);
-		cfg.save(pointFile);
+		cfg.save(new File(data, "points.yml"));
 	}
 	
 	public static void showNearbyPoints(Player p) {
@@ -210,5 +231,9 @@ public class NavigationManager implements Reloadable {
 		}
 		Bukkit.getLogger().warning("[NeoQuests] Failed to delete nav point, could not find point");
 		return false;
+	}
+	
+	public static File getDataFolder() {
+		return data;
 	}
 }

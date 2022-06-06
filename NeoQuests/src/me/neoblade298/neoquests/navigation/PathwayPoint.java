@@ -1,5 +1,7 @@
 package me.neoblade298.neoquests.navigation;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
@@ -15,11 +17,19 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
+	private static final int PARTICLES_PER_ENDPOINT = 50;
+	private static final double ENDPOINT_SPEED = 0.1;
 	private Chunk chunk;
 	private Location loc, groundLoc, displayLoc;
 	private PathwayPointType type;
 	private LineConfig cfg;
 	private HashSet<String> connections = new HashSet<String>();
+	
+	// Endpoint specific
+	private String key, display;
+	private File file;
+	private boolean isEndpoint;
+	private HashMap<PathwayPoint, Pathway> endpointsFrom = new HashMap<PathwayPoint, Pathway>(), endpointsTo = new HashMap<PathwayPoint, Pathway>();
 	
 	public PathwayPoint() {}
 	
@@ -37,9 +47,15 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 
 	public void spawnParticle(Player p, boolean useDisplayLocation) {
 		if (useDisplayLocation) {
+			if (isEndpoint) {
+			    p.spawnParticle(Particle.VILLAGER_HAPPY, groundLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
+			}
 		    p.spawnParticle(Particle.REDSTONE, displayLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
 		}
 		else {
+			if (isEndpoint) {
+			    p.spawnParticle(Particle.VILLAGER_HAPPY, groundLoc, PARTICLES_PER_ENDPOINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, ENDPOINT_SPEED);
+			}
 		    p.spawnParticle(Particle.REDSTONE, groundLoc, PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_OFFSET, PARTICLE_SPEED, type.getDustOptions());
 		}
 	}
@@ -126,5 +142,70 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	
 	public Chunk getChunk() {
 		return chunk;
+	}
+	
+	public void setIsEndpoint(boolean isEndpoint) {
+		this.isEndpoint = isEndpoint;
+	}
+	
+	public boolean isEndpoint() {
+		return this.isEndpoint;
+	}
+	
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+	
+	public String getEndpointKey() {
+		return this.key;
+	}
+	
+	public String getDisplay() {
+		return this.display;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	public File getFile() {
+		return this.file;
+	}
+	
+	public void addEndpointFrom(PathwayPoint point, Pathway pw) {
+		if (!point.isEndpoint) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to add from-endpoint to " + this.key + ", point " + point.getEndpointKey() + " is not an endpoint");
+		}
+		endpointsFrom.put(point, pw);
+	}
+	
+	public void addEndpointTo(PathwayPoint point, Pathway pw) {
+		if (!point.isEndpoint) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to add to-endpoint to " + this.key + ", point " + point.getEndpointKey() + " is not an endpoint");
+		}
+		endpointsTo.put(point, pw);
+	}
+	
+	public HashMap<PathwayPoint, Pathway> getFromEndpoints() {
+		return endpointsFrom;
+	}
+	
+	public HashMap<PathwayPoint, Pathway> getToEndpoints() {
+		return endpointsTo;
+	}
+	
+	public void setEndpointFields(String key, String display, File file) {
+		isEndpoint = true;
+		this.key = key;
+		this.display = display;
+		this.file = file;
+	}
+	
+	public String serializeLocation() {
+		return loc.getX() + " " + loc.getY() + " "+ loc.getZ();
 	}
 }

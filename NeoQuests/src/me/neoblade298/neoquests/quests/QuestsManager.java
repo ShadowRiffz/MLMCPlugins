@@ -26,6 +26,7 @@ public class QuestsManager implements IOComponent, Reloadable {
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static HashMap<String, Questline> questlines = new HashMap<String, Questline>();
 	private static ArrayList<QuestRecommendation> recommendations = new ArrayList<QuestRecommendation>();
+	private static File data = new File(NeoQuests.inst().getDataFolder(), "quests");
 	private static FileLoader questsLoader, questlinesLoader, recommendationsLoader;
 	
 	static {
@@ -172,9 +173,9 @@ public class QuestsManager implements IOComponent, Reloadable {
 	@Override
 	public void reload() throws NeoIOException {
 		try {
-			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "quests"), questsLoader);
-			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "questlines"), questlinesLoader);
-			NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "recommendations.yml"), recommendationsLoader);
+			NeoCore.loadFiles(new File(data, "quests"), questsLoader);
+			NeoCore.loadFiles(new File(data, "questlines"), questlinesLoader);
+			NeoCore.loadFiles(new File(data, "recommendations.yml"), recommendationsLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
@@ -195,5 +196,9 @@ public class QuestsManager implements IOComponent, Reloadable {
 	
 	public static Quest getQuest(String quest) {
 		return quests.get(quest.toUpperCase());
+	}
+	
+	public static File getDataFolder() {
+		return data;
 	}
 }

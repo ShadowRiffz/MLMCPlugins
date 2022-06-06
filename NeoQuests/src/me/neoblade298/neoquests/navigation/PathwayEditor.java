@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.navigation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -18,10 +19,10 @@ import me.neoblade298.neoquests.ParticleUtils;
 
 public class PathwayEditor {
 	private Player p;
-	private File file;
 	private String name;
 	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
 	private PathwayPoint selected;
+	private File pathwayFile, endpointFile;
 
 	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.YELLOW, 2.0F);
 	private static final DustOptions PARTICLE_OPTIONS = new DustOptions(Color.YELLOW, 1.0F);
@@ -29,10 +30,14 @@ public class PathwayEditor {
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
 	
-	public PathwayEditor(Player p, String name, File file) throws NeoIOException {
+	private PathwayPoint endpointEditor;
+	
+	public PathwayEditor(Player p, String name) throws NeoIOException {
 		this.p = p;
 		this.name = name;
-		this.file = file;
+		
+		pathwayFile = new File(NavigationManager.getDataFolder(), "pathways/" + name + ".yml");
+		endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/" + name + ".yml");
 	}
 	
 	public String getName() {
@@ -106,10 +111,15 @@ public class PathwayEditor {
 			Util.msg(p, "No points have been connected yet!");
 			return false;
 		}
+
+		if (!points.getFirst().isEndpoint() || !points.getLast().isEndpoint()) {
+			Util.msg(p, "&cEither the start or finish point is not an endpoint! Drop a stick while "
+					+ "pointing at the point to make it an endpoint!");
+			return false;
+		}
 		
 		try {
-			this.file.createNewFile();
-			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(pathwayFile);
 			ConfigurationSection sec = cfg.createSection(name);
 			sec.set("start", "Start Placeholder");
 			sec.set("end", "End Placeholder");
@@ -119,11 +129,12 @@ public class PathwayEditor {
 				serialized.add(point.serializeAsPath());
 			}
 			sec.set("points", serialized);
-			cfg.save(file);
-			NavigationManager.addPathway(new Pathway(sec, file));
+			cfg.save(pathwayFile);
+			NavigationManager.addPathway(new Pathway(sec, pathwayFile));
 			NavigationManager.savePoints();
 			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
 			NavigationManager.exitPathwayEditor(p);
+			saveEndpoints();
 			return true;
 		}
 		catch (Exception e) {
@@ -153,6 +164,38 @@ public class PathwayEditor {
 				deselect();
 			}
 			Util.msg(p, "Successfully deleted point");
+		}
+	}
+	
+	public void editEndpoint(PathwayPoint point) {
+		this.endpointEditor = point;
+	}
+	
+	public void stopEditingEndpoint() {
+		this.endpointEditor = null;
+	}
+	
+	public boolean editingEndpoint() {
+		return endpointEditor != null;
+	}
+	
+	public PathwayPoint getEditingEndpoint() {
+		return endpointEditor;
+	}
+	
+	private void saveEndpoints() throws NeoIOException {
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(endpointFile);
+		for (PathwayPoint point : new PathwayPoint[] { points.getFirst(), points.getLast() }) {
+			ConfigurationSection sec = cfg.createSection(point.getEndpointKey());
+			sec.set("display", point.getDisplay());
+			sec.set("location", point.serializeLocation());
+			sec.set("world", point.getLocation().getWorld().getName());
+		}
+		try {
+			cfg.save(endpointFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new NeoIOException("Failed to save endpoints for new pathway");
 		}
 	}
 }

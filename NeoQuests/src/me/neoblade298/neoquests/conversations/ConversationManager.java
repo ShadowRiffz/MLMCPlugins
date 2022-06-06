@@ -21,6 +21,7 @@ public class ConversationManager implements Reloadable, Listener {
 	private static HashMap<Integer, ArrayList<Conversation>> npcConvs = new HashMap<Integer, ArrayList<Conversation>>();
 	private static HashMap<String, Conversation> convs = new HashMap<String, Conversation>();
 	private static HashMap<Player, ConversationInstance> activeConvs = new HashMap<Player, ConversationInstance>();
+	private static File data = new File(NeoQuests.inst().getDataFolder(), "conversations");
 	private static FileLoader convLoader, npcLoader;
 	
 	static {
@@ -69,8 +70,8 @@ public class ConversationManager implements Reloadable, Listener {
 	public void reload() throws NeoIOException {
 		convs.clear();
 		npcConvs.clear();
-		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "conversations"), convLoader);
-		NeoCore.loadFiles(new File(NeoQuests.inst().getDataFolder(), "npcs"), npcLoader);
+		NeoCore.loadFiles(new File(data, "conversations"), convLoader);
+		NeoCore.loadFiles(new File(data, "npcs"), npcLoader);
 	}
 	
 	public static void endConversation(Player p, boolean runEndActions) {
@@ -141,5 +142,9 @@ public class ConversationManager implements Reloadable, Listener {
 	
 	public String getKey() {
 		return "ConversationManager";
+	}
+	
+	public static File getDataFolder() {
+		return data;
 	}
 }

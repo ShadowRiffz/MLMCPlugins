@@ -65,6 +65,13 @@ public class Pathway {
 			points.add(point);
 		}
 
+		if (!points.getFirst().isEndpoint() || !points.getLast().isEndpoint()) {
+			throw new NeoIOException("Pathway " + this.key + " does not have a start or finish endpoint");
+		}
+		
+		// Passed validation
+		points.getFirst().addEndpointTo(points.getLast(), this);
+		points.getLast().addEndpointFrom(points.getFirst(), this);
 		ListIterator<PathwayPoint> iter = points.listIterator();
 		PathwayPoint l1 = null;
 		PathwayPoint l2 = iter.next();
