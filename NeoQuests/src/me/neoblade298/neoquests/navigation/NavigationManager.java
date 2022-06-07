@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,7 +27,7 @@ public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
 	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
 	private static HashMap<Chunk, ArrayList<PathwayPoint>> pointMap = new HashMap<Chunk, ArrayList<PathwayPoint>>();
-	private static HashSet<PathwayPoint> points = new HashSet<PathwayPoint>();
+	private static TreeSet<PathwayPoint> points = new TreeSet<PathwayPoint>();
 	private static HashMap<String, PathwayPoint> endpoints = new HashMap<String, PathwayPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pathwaysLoader, pointLoader, endpointsLoader;

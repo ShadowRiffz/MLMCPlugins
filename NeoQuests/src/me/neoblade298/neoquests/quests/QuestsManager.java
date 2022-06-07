@@ -1,13 +1,10 @@
 package me.neoblade298.neoquests.quests;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -19,7 +16,6 @@ import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class QuestsManager implements IOComponent, Manager {
 	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();

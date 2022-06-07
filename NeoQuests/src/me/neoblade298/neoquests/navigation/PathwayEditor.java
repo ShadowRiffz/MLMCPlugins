@@ -127,7 +127,7 @@ public class PathwayEditor {
 				serialized.add(point.serializeAsPath());
 			}
 			sec.set("points", serialized);
-			sec.set("bidirectional", false);
+			sec.set("bidirectional", true);
 			cfg.save(pathwayFile);
 			NavigationManager.addPathway(new Pathway(sec, pathwayFile));
 			NavigationManager.savePoints();

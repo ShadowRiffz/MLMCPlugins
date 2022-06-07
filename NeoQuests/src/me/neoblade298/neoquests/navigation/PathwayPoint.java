@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigParser;
 
-public class PathwayPoint implements LineConfigParser<PathwayPoint> {
+public class PathwayPoint implements LineConfigParser<PathwayPoint>, Comparable<PathwayPoint> {
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
@@ -207,5 +207,35 @@ public class PathwayPoint implements LineConfigParser<PathwayPoint> {
 	
 	public String serializeLocation() {
 		return loc.getX() + " " + loc.getY() + " "+ loc.getZ();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof PathwayPoint)) return false;
+		
+		PathwayPoint p = (PathwayPoint) o;
+		
+		return this.getLocation().equals(p.getLocation()) && this.type == p.getType();
+	}
+
+	@Override
+	public int compareTo(PathwayPoint o) {
+		Location l1 = this.getLocation();
+		Location l2 = o.getLocation();
+		int compare = (int) (l1.getX() - l2.getX());
+		if (compare != 0) return compare;
+		
+		compare = (int) (l1.getZ() - l2.getZ());
+		if (compare != 0) return compare;
+
+		compare = (int) (l1.getY() - l2.getY());
+		if (compare != 0) return compare;
+
+		compare = l1.getWorld().getName().compareTo(l2.getWorld().getName());
+		if (compare != 0) return compare;
+		
+		int t1 = this.type == PathwayPointType.POINT ? 1 : 0;
+		int t2 = o.type == PathwayPointType.POINT ? 1 : 0;
+		return t1 - t2;
 	}
 }

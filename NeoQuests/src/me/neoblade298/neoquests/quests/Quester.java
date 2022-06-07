@@ -86,7 +86,16 @@ public class Quester {
 				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 					s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
 					for (ObjectiveInstance oi : osi.getObjectives()) {
-						s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
+						String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+						if (oi.getObjective().getPathway() != null) {
+							builder = new ComponentBuilder(msg);
+							ComponentBuilder nav = new ComponentBuilder("§e<Click for Navigation>")
+									.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getPathway()));
+							s.spigot().sendMessage(builder.append(nav.create()).create());
+						}
+						else {
+							s.sendMessage(msg);
+						}
 					}
 				}
 			}
