@@ -7,7 +7,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.NeoCore;
@@ -23,7 +22,6 @@ import me.neoblade298.neoquests.listeners.ObjectiveListener;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
-import net.milkbowl.vault.economy.Economy;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static Random rand = new Random();
@@ -41,10 +39,6 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		getServer().getPluginManager().registerEvents(new ObjectiveListener(), this);
 		getServer().getPluginManager().registerEvents(new GeneralListener(), this);
 		getServer().getPluginManager().registerEvents(new NavigationListener(), this);
-
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        econ = rsp.getProvider();
-        return econ != null;
 		
 		initCommands();
 	    

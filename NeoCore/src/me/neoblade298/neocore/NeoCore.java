@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,11 +20,13 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.listeners.IOListener;
+import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	private static NeoCore inst;
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
 	private static String instName = null;
+	private static Economy econ;
 	
 	public void onEnable() {
 		inst = this;
@@ -46,6 +49,9 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
 			instName = icfg.getString("name");
 		}
+		
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        econ = rsp.getProvider();
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -118,5 +124,9 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 				throw new NeoIOException("Failed to parse yaml for file " + load.getParent() + "/" + load.getName());
 			}
 		}
+	}
+	
+	public static Economy getEconomy() {
+		return econ;
 	}
 }
