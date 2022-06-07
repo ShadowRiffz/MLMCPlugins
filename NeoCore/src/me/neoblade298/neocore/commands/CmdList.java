@@ -10,13 +10,19 @@ import me.neoblade298.neocore.util.Util;
 
 public class CmdList implements Subcommand {
 	private String base, key;
+	private ChatColor color;
 	private TreeMap<String, Subcommand> cmds;
 	private static final int CMDS_PER_PAGE = 10;
 	
 	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds) {
+		this(key, base, cmds, ChatColor.RED);
+	}
+	
+	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor color) {
 		this.key = key;
 		this.base = base;
 		this.cmds = cmds;
+		this.color = color;
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public ChatColor getColor() {
-		return ChatColor.RED;
+		return color;
 	}
 
 	@Override

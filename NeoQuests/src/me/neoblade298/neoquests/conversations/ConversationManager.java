@@ -29,7 +29,7 @@ public class ConversationManager implements Manager, Listener {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (convs.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate conversation " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+						NeoQuests.showWarning("Duplicate conversation " + key + "in file " + file.getPath() + ", " +
 								"the loaded conversation with this key is in " + convs.get(key).getFileLocation());
 						continue;
 					}

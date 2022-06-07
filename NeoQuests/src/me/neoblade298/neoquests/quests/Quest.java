@@ -27,7 +27,7 @@ public class Quest {
 	
 	public Quest(ConfigurationSection cfg, File file) throws NeoIOException {
 		this.key = cfg.getName().toUpperCase();
-		this.fileLocation = file.getAbsolutePath();
+		this.fileLocation = file.getPath();
 		
 		this.name = cfg.getString("name");
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));

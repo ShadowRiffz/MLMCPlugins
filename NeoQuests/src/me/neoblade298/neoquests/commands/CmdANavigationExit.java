@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,4 +41,8 @@ public class CmdANavigationExit implements Subcommand {
 		return null;
 	}
 
+	@Override
+	public ChatColor getColor() {
+		return ChatColor.DARK_RED;
+	}
 }

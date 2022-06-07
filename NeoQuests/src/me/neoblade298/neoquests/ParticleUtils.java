@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 public class ParticleUtils {
 	private static final int BLOCKS_PER_PARTICLE = 2;
-	private static final double[] arrowRotations = new double[] {0.175, -0.35}; // -20 to cancel out the +10
+	private static final double[] arrowRotations = new double[] {0.1, -0.2}; // -20 to cancel out the +10
 
 	public static void drawLine(Player p, Location l1, Location l2, int perPoint, double offset, double speed, DustOptions options, double blocksPerParticle) { 
 		Location start = l1.clone();

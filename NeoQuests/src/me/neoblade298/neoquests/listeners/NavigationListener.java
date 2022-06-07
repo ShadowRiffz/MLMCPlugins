@@ -26,6 +26,7 @@ public class NavigationListener implements Listener {
 		if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (e.getItem() == null || !e.getItem().getType().equals(Material.STICK)) return;
 		
+		e.setCancelled(true);
 		if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			Location loc = e.getClickedBlock().getLocation().add(0.5, 0, 0.5);
 			if (p.isSneaking()) {
@@ -51,7 +52,8 @@ public class NavigationListener implements Listener {
 		PathwayEditor editor = NavigationManager.getEditor(p);
 		if (editor == null) return;
 		if (!e.getItemDrop().getItemStack().getType().equals(Material.STICK)) return;
-		
+
+		e.setCancelled(true);
 		editEndpoint(p, editor, e.getPlayer().getTargetBlock(null, 5).getLocation().add(0.5, 0, 0.5), e);
 	}
 	
@@ -110,7 +112,6 @@ public class NavigationListener implements Listener {
 	private void editEndpoint(Player p, PathwayEditor editor, Location loc, PlayerDropItemEvent e) {
 		PathwayPoint point = NavigationManager.getPoint(loc);
 		if (point != null) {
-			e.setCancelled(true);
 			if (point.isEndpoint()) {
 				// Only able to remove endpoints if existing path is only connector
 				if (point.getFromEndpoints().size() == 0 && point.getToEndpoints().size() == 0) {

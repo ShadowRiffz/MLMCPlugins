@@ -18,7 +18,7 @@ public class Conversation {
 	
 	public Conversation(File file, ConfigurationSection cfg) throws NeoIOException {
 		this.key = cfg.getName().toUpperCase();
-		this.fileLocation = file.getPath() + "/" + file.getName();
+		this.fileLocation = file.getPath();
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		stages = new ArrayList<ConversationStage>();
 		ConfigurationSection scfg = cfg.getConfigurationSection("stages");

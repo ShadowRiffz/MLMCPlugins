@@ -52,7 +52,7 @@ public class NavigationManager implements Manager {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (pathways.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate pathway " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+						NeoQuests.showWarning("Duplicate pathway " + key + "in file " + file.getPath() + ", " +
 								"the loaded pathway with this key is in " + pathways.get(key).getFileLocation());
 						continue;
 					}
@@ -71,7 +71,7 @@ public class NavigationManager implements Manager {
 		endpointsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				if (endpoints.containsKey(key)) {
-					NeoQuests.showWarning("Duplicate endpoint " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+					NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
 							"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
 					continue;
 				}
@@ -122,9 +122,9 @@ public class NavigationManager implements Manager {
 	}
 	
 	public static boolean startNavigation(Player p, String pathway) {
-		Util.msg(p, "&cThat pathway doesn't exist!");
 		if (!pathways.containsKey(pathway.toUpperCase())) {
 			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway " + pathway + " for player " + p.getName() + ", pathway doesn't exist");
+			Util.msg(p, "&cThat pathway doesn't exist!");
 			return false;
 		}
 		return NavigationManager.startNavigation(p, pathways.get(pathway.toUpperCase()));
@@ -158,6 +158,10 @@ public class NavigationManager implements Manager {
 		}
 
 		Util.msg(p, "Successfully started pathway editor for name: " + name);
+		Util.msg(p, "&oMake sure you're holding a stick!");
+		Util.msg(p, "&cLeft Click&7: Place Point, &cShift-Left Click&7: Delete Point");
+		Util.msg(p, "&cRight Click&7: Select/Connect Points, &cShift-Right Click&7: Undo Last Connection");
+		Util.msg(p, "&cThrow Stick&7: Create endpoint");
 		pathwayEditors.put(p, new PathwayEditor(p, name));
 	}
 	

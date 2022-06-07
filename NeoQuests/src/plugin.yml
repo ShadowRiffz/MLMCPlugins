@@ -8,11 +8,11 @@ api-version: 1.18
 commands:
    quest:
       description: Quest command
-      usage: /quest
-      aliases: q
+      usage: /nquest
+      aliases: nq
    quests:
       description: Quests command
-      usage: /quests
+      usage: /nquests
    navigation:
       description: Navigation command
       usage: /navigation

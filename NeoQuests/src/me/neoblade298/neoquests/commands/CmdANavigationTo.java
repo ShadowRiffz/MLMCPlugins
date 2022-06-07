@@ -16,17 +16,19 @@ import me.neoblade298.neoquests.navigation.Pathway;
 import me.neoblade298.neoquests.navigation.PathwayPoint;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class CmdNavigationAFrom implements Subcommand {
+public class CmdANavigationTo implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Starts navigation for a player from an endpoint";
+		return "Starts navigation for a player to an endpoint";
 	}
 
 	@Override
 	public String getKey() {
-		return "from";
+		return "to";
 	}
 
 	@Override
@@ -54,13 +56,13 @@ public class CmdNavigationAFrom implements Subcommand {
 		}
 		
 		PathwayPoint point = NavigationManager.getEndpoint(args[1]);
-		Util.msg(p, "Starting navigation to &6" + point.getDisplay() + ". Choose a starting point:");
-		for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
+		Util.msg(p, "Setting destination to &6" + point.getDisplay() + "&7. Choose a start point:");
+		for (Entry<PathwayPoint, Pathway> ent : point.getFromEndpoints().entrySet()) {
 			ComponentBuilder entry = new ComponentBuilder("§7- §6" + ent.getKey().getDisplay())
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()));
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + ent.getKey().getDisplay())));
 			p.spigot().sendMessage(entry.create());
 		}
-		NavigationManager.startNavigation(p, args[1]);
 	}
 
 	@Override

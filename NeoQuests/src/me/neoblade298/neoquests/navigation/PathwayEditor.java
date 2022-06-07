@@ -36,8 +36,8 @@ public class PathwayEditor {
 		this.p = p;
 		this.name = name;
 		
-		pathwayFile = new File(NavigationManager.getDataFolder(), "pathways/" + name + ".yml");
-		endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/" + name + ".yml");
+		pathwayFile = new File(NavigationManager.getDataFolder(), "pathways/New Pathways.yml");
+		endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
 	}
 	
 	public String getName() {
@@ -83,7 +83,7 @@ public class PathwayEditor {
 	private void showSelectedPoint() {
 		if (selected != null) {
 		    p.spawnParticle(Particle.REDSTONE, selected.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
-		    ParticleUtils.drawArrow(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
+		    ParticleUtils.drawLine(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
 		}
 	}
 	
@@ -121,8 +121,6 @@ public class PathwayEditor {
 		try {
 			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(pathwayFile);
 			ConfigurationSection sec = cfg.createSection(name);
-			sec.set("start", "Start Placeholder");
-			sec.set("end", "End Placeholder");
 			sec.set("world", points.getFirst().getLocation().getWorld().getName());
 			ArrayList<String> serialized = new ArrayList<String>(points.size());
 			for (PathwayPoint point : points) {

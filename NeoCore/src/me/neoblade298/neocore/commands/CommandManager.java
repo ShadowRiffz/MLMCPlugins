@@ -2,6 +2,7 @@ package me.neoblade298.neocore.commands;
 
 import java.util.TreeMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,6 +63,10 @@ public class CommandManager implements CommandExecutor {
 	
 	public void register(Subcommand sc) {
 		handlers.put(sc.getKey().toUpperCase(), sc);
+	}
+	
+	public void registerCommandList(String key, ChatColor color) {
+		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, color));
 	}
 	
 	public void registerCommandList(String key) {

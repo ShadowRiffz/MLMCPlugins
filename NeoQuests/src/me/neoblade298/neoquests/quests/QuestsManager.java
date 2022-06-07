@@ -34,7 +34,7 @@ public class QuestsManager implements IOComponent, Manager {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (quests.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate quest " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+						NeoQuests.showWarning("Duplicate quest " + key + "in file " + file.getPath() + ", " +
 								"the loaded quest with this key is in " + quests.get(key).getFileLocation());
 						continue;
 					}
@@ -49,7 +49,7 @@ public class QuestsManager implements IOComponent, Manager {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (questlines.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate questline " + key + "in file " + file.getPath() + "/" + file.getName() + ", " +
+						NeoQuests.showWarning("Duplicate questline " + key + "in file " + file.getPath() + ", " +
 								"the loaded questline with this key is in " + questlines.get(key).getFileLocation());
 						continue;
 					}
@@ -82,6 +82,7 @@ public class QuestsManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
+		/*
 		try {
 			Quester quester = new Quester(p);
 			questers.put(p.getUniqueId(), quester);
@@ -123,10 +124,12 @@ public class QuestsManager implements IOComponent, Manager {
 			Bukkit.getLogger().log(Level.WARNING, "Quests failed to load or init quest data for user " + p.getName());
 			e.printStackTrace();
 		}
+		*/
 	}
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
+		/*
 		try {
 			Quester quester = questers.get(p.getUniqueId());
 
@@ -159,6 +162,7 @@ public class QuestsManager implements IOComponent, Manager {
 			Bukkit.getLogger().log(Level.WARNING, "Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 	@Override
