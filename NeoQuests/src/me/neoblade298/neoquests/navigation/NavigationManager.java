@@ -56,7 +56,12 @@ public class NavigationManager implements Manager {
 								"the loaded pathway with this key is in " + pathways.get(key).getFileLocation());
 						continue;
 					}
-					pathways.put(key.toUpperCase(), new Pathway(cfg.getConfigurationSection(key), file));
+					Pathway pw = new Pathway(cfg.getConfigurationSection(key), file);
+					pathways.put(key.toUpperCase(), pw);
+					if (pw.isBidirectional()) {
+						Pathway reverse = new Pathway(pw);
+						pathways.put(reverse.getKey().toUpperCase(), reverse);
+					}
 				} catch (NeoIOException e) {
 					e.printStackTrace();
 				}
@@ -117,6 +122,7 @@ public class NavigationManager implements Manager {
 	}
 	
 	public static boolean startNavigation(Player p, String pathway) {
+		Util.msg(p, "&cThat pathway doesn't exist!");
 		if (!pathways.containsKey(pathway.toUpperCase())) {
 			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway " + pathway + " for player " + p.getName() + ", pathway doesn't exist");
 			return false;
@@ -182,7 +188,7 @@ public class NavigationManager implements Manager {
 		for (Chunk c : Chunk.getSurroundingChunks(p.getLocation())) {
 			if (pointMap.containsKey(c)) {
 				for (PathwayPoint point : pointMap.get(c)) {
-					point.spawnParticle(p, false);
+					point.spawnParticle(p, false, false);
 				}
 			}
 		}
@@ -246,6 +252,10 @@ public class NavigationManager implements Manager {
 		}
 		Bukkit.getLogger().warning("[NeoQuests] Failed to delete nav point, could not find point");
 		return false;
+	}
+	
+	public static PathwayPoint getEndpoint(String key) {
+		return endpoints.get(key.toUpperCase());
 	}
 	
 	public static File getDataFolder() {

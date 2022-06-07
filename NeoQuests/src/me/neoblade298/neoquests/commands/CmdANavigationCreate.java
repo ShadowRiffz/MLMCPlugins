@@ -9,7 +9,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
-public class CmdNavigationCreate implements Subcommand {
+public class CmdANavigationCreate implements Subcommand {
 
 	@Override
 	public String getDescription() {

@@ -2,6 +2,8 @@ package me.neoblade298.neoquests.navigation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -27,6 +29,7 @@ public class Pathway {
 	private World w;
 	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
 	private ArrayList<Condition> conditions;
+	private boolean bidirectional;
 	
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
@@ -43,7 +46,18 @@ public class Pathway {
 		fileLocation = file.getPath() + "/" + file.getName();
 		this.w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
+		this.bidirectional = cfg.getBoolean("bidirectional", false);
 		parsePoints(cfg.getStringList("points"));
+	}
+	
+	public Pathway(Pathway pw) {
+		this.key = "REVERSE_" + pw.getKey();
+		this.fileLocation = pw.getFileLocation();
+		this.w = pw.getWorld();
+		this.conditions = pw.getConditions();
+		this.bidirectional = true;
+		this.points = reversePoints(pw.getPoints());
+		setupPoints();
 	}
 	
 	private void parsePoints(List<String> list) throws NeoIOException {
@@ -68,6 +82,19 @@ public class Pathway {
 		}
 		
 		// Passed validation
+		setupPoints();
+	}
+	
+	private LinkedList<PathwayPoint> reversePoints(LinkedList<PathwayPoint> original) {
+		LinkedList<PathwayPoint> list = new LinkedList<PathwayPoint>();
+		Iterator<PathwayPoint> iter = original.descendingIterator();
+		while (iter.hasNext()) {
+			list.add(iter.next());
+		}
+		return list;
+	}
+	
+	private void setupPoints() {
 		points.getFirst().addEndpointTo(points.getLast(), this);
 		points.getLast().addEndpointFrom(points.getFirst(), this);
 		ListIterator<PathwayPoint> iter = points.listIterator();
@@ -137,7 +164,7 @@ public class Pathway {
 		PathwayPoint l1 = null;
 		PathwayPoint l2 = iter.next();
 		if (l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE) {
-			l2.spawnParticle(p, useDisplayLocation);
+			l2.spawnParticle(p, useDisplayLocation, false);
 		}
 		while (iter.hasNext()) {
 			l1 = l2;
@@ -145,12 +172,12 @@ public class Pathway {
 			boolean dist1 = l1.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
 			boolean dist2 = l2.getLocation().distanceSquared(p.getLocation()) < DISTANCE_SHOWABLE;
 			if (dist2) {
-				l2.spawnParticle(p, useDisplayLocation);
+				l2.spawnParticle(p, useDisplayLocation, !iter.hasNext()); // Spawn end particle at last point only
 			}
 			
 			if (dist1 || dist2) {
 				if (l1.getType() != PathwayPointType.PORTAL || l2.getType() != PathwayPointType.PORTAL) {
-					ParticleUtils.drawLine(p, useDisplayLocation ? l1.getDisplayLocation() : l1.getGroundLocation(),
+					ParticleUtils.drawArrow(p, useDisplayLocation ? l1.getDisplayLocation() : l1.getGroundLocation(),
 							useDisplayLocation ? l2.getDisplayLocation() : l2.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_DATA);
 				}
 			}
@@ -167,5 +194,21 @@ public class Pathway {
 	
 	public String getKey() {
 		return key;
+	}
+	
+	public boolean isBidirectional() {
+		return bidirectional;
+	}
+	
+	public World getWorld() {
+		return w;
+	}
+	
+	public ArrayList<Condition> getConditions() {
+		return conditions;
+	}
+	
+	public LinkedList<PathwayPoint> getPoints() {
+		return points;
 	}
 }

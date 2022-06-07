@@ -17,3 +17,7 @@ commands:
       description: Navigation command
       usage: /navigation
       aliases: nav
+   adminnavigation:
+      description: Admin Navigation command
+      usage: /adminnavigation
+      aliases: [anav, anavigation]

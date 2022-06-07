@@ -83,7 +83,7 @@ public class PathwayEditor {
 	private void showSelectedPoint() {
 		if (selected != null) {
 		    p.spawnParticle(Particle.REDSTONE, selected.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
-		    ParticleUtils.drawLine(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
+		    ParticleUtils.drawArrow(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
 		}
 	}
 	
@@ -129,6 +129,7 @@ public class PathwayEditor {
 				serialized.add(point.serializeAsPath());
 			}
 			sec.set("points", serialized);
+			sec.set("bidirectional", false);
 			cfg.save(pathwayFile);
 			NavigationManager.addPathway(new Pathway(sec, pathwayFile));
 			NavigationManager.savePoints();

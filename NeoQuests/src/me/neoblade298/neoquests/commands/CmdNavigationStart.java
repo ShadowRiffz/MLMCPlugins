@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,7 +12,7 @@ public class CmdNavigationStart implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Starts navigation, dev test command";
+		return "Starts navigation";
 	}
 
 	@Override
@@ -37,7 +38,16 @@ public class CmdNavigationStart implements Subcommand {
 
 	@Override
 	public String getArgs() {
-		return null;
+		return "[pathway] {player}";
+	}
+	
+	@Override
+	public ChatColor getColor() {
+		return ChatColor.DARK_RED;
 	}
 
+	@Override
+	public boolean isHidden() {
+		return true;
+	}
 }
