@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -56,12 +55,17 @@ public class CmdANavigationFrom implements Subcommand {
 		}
 		
 		PathwayPoint point = NavigationManager.getEndpoint(args[1]);
-		Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
-		for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
-			ComponentBuilder entry = new ComponentBuilder("§7- §6" + ent.getKey().getDisplay())
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + ent.getKey().getDisplay())));
-			p.spigot().sendMessage(entry.create());
+		if (point.getToEndpoints().size() > 0) {
+			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
+			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
+				ComponentBuilder entry = new ComponentBuilder("§7- §6" + ent.getKey().getDisplay())
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + ent.getKey().getDisplay())));
+				p.spigot().sendMessage(entry.create());
+			}
+		}
+		else {
+			Util.msg(p, "&cThis start point is not connected to any destinations!");
 		}
 	}
 

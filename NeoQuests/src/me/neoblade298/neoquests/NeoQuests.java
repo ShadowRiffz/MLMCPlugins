@@ -56,26 +56,30 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	}
 	
 	private void initCommands() {
-		CommandManager quest = new CommandManager("quest");
+		String cmd = "nquest";
+		CommandManager quest = new CommandManager(cmd);
 		quest.register(new CmdQuestBase());
-	    this.getCommand("quest").setExecutor(quest);
-	    commands.put("quest", quest);
+	    this.getCommand(cmd).setExecutor(quest);
+	    commands.put(cmd, quest);
 
-		CommandManager quests = new CommandManager("quests");
+	    cmd = "nquests";
+		CommandManager quests = new CommandManager(cmd);
 		quests.registerCommandList("");
 		quests.register(new CmdQuestsReload());
 		quests.register(new CmdQuestsQuit());
-	    this.getCommand("quests").setExecutor(quests);
-	    commands.put("quests", quests);
+	    this.getCommand(cmd).setExecutor(quests);
+	    commands.put(cmd, quests);
 
-		CommandManager navigation = new CommandManager("navigation");
+	    cmd = "navigation";
+		CommandManager navigation = new CommandManager(cmd);
 		navigation.registerCommandList("");
 		navigation.register(new CmdNavigationStart());
 		navigation.register(new CmdNavigationStop());
-	    this.getCommand("navigation").setExecutor(navigation);
-	    commands.put("navigation", navigation);
+	    this.getCommand(cmd).setExecutor(navigation);
+	    commands.put(cmd, navigation);
 
-		CommandManager anavigation = new CommandManager("adminnavigation");
+	    cmd = "adminnavigation";
+		CommandManager anavigation = new CommandManager(cmd);
 		anavigation.registerCommandList("");
 		anavigation.register(new CmdANavigationSave());
 		anavigation.register(new CmdANavigationStart());
@@ -83,8 +87,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		anavigation.register(new CmdANavigationExit());
 		anavigation.register(new CmdANavigationTo());
 		anavigation.register(new CmdANavigationFrom());
-	    this.getCommand("adminnavigation").setExecutor(anavigation);
-	    commands.put("adminnavigation", anavigation);
+	    this.getCommand(cmd).setExecutor(anavigation);
+	    commands.put(cmd, anavigation);
 	}
 	
 	public void onDisable() {

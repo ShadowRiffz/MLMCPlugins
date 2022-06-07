@@ -6,11 +6,11 @@ softdepend: [SkillAPI]
 version: 1.0
 api-version: 1.18
 commands:
-   quest:
+   nquest:
       description: Quest command
       usage: /nquest
       aliases: nq
-   quests:
+   nquests:
       description: Quests command
       usage: /nquests
    navigation:

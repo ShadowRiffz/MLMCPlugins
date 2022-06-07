@@ -82,6 +82,10 @@ public class NavigationManager implements Manager {
 				double y = Double.parseDouble(args[1]);
 				double z = Double.parseDouble(args[2]);
 				PathwayPoint point = getPoint(new Location(w, x, y, z));
+				if (point == null) {
+					NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
+					continue;
+				}
 				point.setEndpointFields(key.toUpperCase(), Util.translateColors(sec.getString("display", key)), file);
 				endpoints.put(key.toUpperCase(), point);
 			}
@@ -102,6 +106,14 @@ public class NavigationManager implements Manager {
 	@Override
 	public void reload() {
 		try {
+			points.clear();
+			endpoints.clear();
+			pathways.clear();
+			pointMap.clear();
+			for (PathwayInstance pi : activePathways.values()) {
+				pi.cancel("navigation reloaded.");
+			}
+			activePathways.clear();
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
 			NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
@@ -134,8 +146,12 @@ public class NavigationManager implements Manager {
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
-		
-		return pathway.start(p) != null;
+		PathwayInstance pi = pathway.start(p);
+		if (pi != null) {
+			activePathways.put(p, pi);
+			return true;
+		}
+		return false;
 	}
 	
 	public static void stopNavigation(Player p) {
@@ -252,6 +268,7 @@ public class NavigationManager implements Manager {
 				return false;
 			}
 			pointMap.get(c).remove(found);
+			points.remove(toDelete);
 			return true;
 		}
 		Bukkit.getLogger().warning("[NeoQuests] Failed to delete nav point, could not find point");
@@ -264,6 +281,14 @@ public class NavigationManager implements Manager {
 	
 	public static File getDataFolder() {
 		return data;
+	}
+	
+	public static void addEndpoint(PathwayPoint point) {
+		endpoints.put(point.getEndpointKey().toUpperCase(), point);
+	}
+	
+	public static void removeEndpoint(PathwayPoint point) {
+		endpoints.remove(point.getEndpointKey().toUpperCase());
 	}
 
 	@Override

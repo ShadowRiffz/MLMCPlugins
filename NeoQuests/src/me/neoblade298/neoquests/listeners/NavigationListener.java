@@ -74,6 +74,7 @@ public class NavigationListener implements Listener {
 			point.setDisplay(Util.translateColors(e.getMessage()));
 			point.setFile(editor.getEndpointFile());
 			point.setIsEndpoint(true);
+			NavigationManager.addEndpoint(point);
 			Util.msg(p, "Endpoint successfully created!");
 		}
 	}
@@ -125,6 +126,7 @@ public class NavigationListener implements Listener {
 					return;
 				}
 				point.setIsEndpoint(false);
+				NavigationManager.removeEndpoint(point);
 				Util.msg(p, "Successfully removed endpoint!");
 			}
 			else {

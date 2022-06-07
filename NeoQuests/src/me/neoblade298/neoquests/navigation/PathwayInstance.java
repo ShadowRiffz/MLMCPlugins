@@ -26,12 +26,12 @@ public class PathwayInstance {
 	
 	public void stop() {
 		task.cancel();
-		Util.msg(p, "§7Navigation from §6" + pathway.getStartPoint() + " §7to §6" + pathway.getEndPoint() + " §7was successful!");
+		Util.msg(p, "Navigation from &6" + pathway.getStartPoint() + " &7to &6" + pathway.getEndPoint() + " &7was successful!");
 	}
 	
 	public void cancel(String reason) {
 		task.cancel();
-		Util.msg(p, "§cNavigation from §6" + pathway.getStartPoint() + " §cto §6" + pathway.getEndPoint() + " §cwas cancelled, " + reason);
+		Util.msg(p, "Navigation from &6" + pathway.getStartPoint() + "&7 to &6" + pathway.getEndPoint() + "&7 was cancelled, " + reason);
 	}
 }
 
