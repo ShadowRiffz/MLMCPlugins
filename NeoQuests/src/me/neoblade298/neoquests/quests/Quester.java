@@ -3,6 +3,8 @@ package me.neoblade298.neoquests.quests;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,8 +22,9 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class Quester {
 	private Player p;
 	private HashMap<String, CompletedQuest> completedQuests = new HashMap<String, CompletedQuest>();
-	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();;
+	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();
 	private TreeMap<String, Questline> activeQuestlines = new TreeMap<String, Questline>();
+	private Location loc;
 	
 	public Quester(Player p) {
 		this.p = p;
@@ -172,5 +175,21 @@ public class Quester {
 	
 	public Collection<Questline> getActiveQuestlines() {
 		return activeQuestlines.values();
+	}
+	
+	public void setActiveQuests(HashMap<String, QuestInstance> activeQuests) {
+		this.activeQuests = activeQuests;
+	}
+	
+	public HashMap<String, QuestInstance> getActiveQuestsHashMap() {
+		return activeQuests;
+	}
+	
+	public Location getLocation() {
+		return loc;
+	}
+	
+	public void setLocation(Location loc) {
+		this.loc = loc;
 	}
 }
