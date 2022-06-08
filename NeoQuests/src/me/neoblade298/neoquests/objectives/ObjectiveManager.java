@@ -17,6 +17,8 @@ public class ObjectiveManager {
 		
 		register(new InteractNpcObjective());
 		register(new GetStoredItemObjective());
+		register(new KillMythicmobObjective());
+		register(new ReachLocationObjective());
 	}
 	
 	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {

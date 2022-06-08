@@ -5,12 +5,13 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
-import me.neoblade298.neoquests.objectives.GetStoredItemObjective;
-import me.neoblade298.neoquests.objectives.InteractNpcObjective;
-import me.neoblade298.neoquests.objectives.ObjectiveEvent;
-import me.neoblade298.neoquests.objectives.ObjectiveInstance;
+import me.neoblade298.neoquests.objectives.*;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class ObjectiveListener implements Listener {
@@ -41,7 +42,7 @@ public class ObjectiveListener implements Listener {
 		return pmap;
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void onInteractNPC(NPCRightClickEvent e) {
 		Player p = e.getClicker();
 
@@ -49,6 +50,7 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((InteractNpcObjective) o.getObjective()).checkEvent(e, o);
+				e.setCancelled(true);
 			}
 		}
 	}
@@ -61,6 +63,33 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((GetStoredItemObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onKillMythicMob(MythicMobDeathEvent e) {
+		if (e.getKiller() == null || !(e.getKiller() instanceof Player)) {
+			return;
+		}
+		Player p = (Player) e.getKiller();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.RECEIVE_STORED_ITEM);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((KillMythicmobObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onKillMythicMob(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.MOVE);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((ReachLocationObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}

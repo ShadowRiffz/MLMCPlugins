@@ -25,7 +25,7 @@ public class CmdNavigationTo implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "from";
+		return "to";
 	}
 
 	@Override

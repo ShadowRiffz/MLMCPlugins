@@ -66,7 +66,9 @@ public class QuestInstance {
 			if (rewards.size() > 0) {
 				p.sendMessage("§6Rewards:");
 				for (RewardAction r : rewards) {
-					p.sendMessage("§7- " + r.getDisplay());
+					if (r.getDisplay() != null) {
+						p.sendMessage("§7- " + r.getDisplay());
+					}
 				}
 				for (RewardAction r : rewards) {
 					r.run(p);

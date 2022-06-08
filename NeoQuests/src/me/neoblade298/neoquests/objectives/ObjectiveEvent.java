@@ -1,7 +1,7 @@
 package me.neoblade298.neoquests.objectives;
 
 public enum ObjectiveEvent {
-	KILL_MYTHIC_MOB,
+	KILL_MYTHICMOB,
 	RECEIVE_STORED_ITEM,
 	MOVE,
 	INTERACT_NPC,

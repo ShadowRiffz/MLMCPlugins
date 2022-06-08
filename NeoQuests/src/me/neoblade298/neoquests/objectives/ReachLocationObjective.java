@@ -1,0 +1,52 @@
+package me.neoblade298.neoquests.objectives;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+import me.neoblade298.neocore.io.LineConfig;
+
+public class ReachLocationObjective extends Objective {
+	private Location loc;
+	private double radiusSq;
+	private String display;
+	
+	public ReachLocationObjective() {
+		super();
+	}
+
+	public ReachLocationObjective(LineConfig cfg) {
+		super(ObjectiveEvent.INTERACT_NPC, cfg);
+		this.needed = 1;
+
+		double x = cfg.getDouble("x", 0.0);
+		double y = cfg.getDouble("y", 0.0);
+		double z = cfg.getDouble("z", 0.0);
+		World w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
+		loc = new Location(w, x, y, z);
+		radiusSq = cfg.getDouble("radius", 5);
+		radiusSq *= radiusSq;
+		display = cfg.getString("display", "Location").replaceAll("_", " ");
+	}
+
+	@Override
+	public Objective create(LineConfig cfg) {
+		return new ReachLocationObjective(cfg);
+	}
+
+	@Override
+	public String getKey() {
+		return "reach-location";
+	}
+
+	public boolean checkEvent(PlayerMoveEvent e, ObjectiveInstance o) {
+		return e.getTo().distanceSquared(loc) < radiusSq;
+	}
+
+	@Override
+	public String getDisplay() {
+		return "Reach " + display;
+	}
+
+}

@@ -1,5 +1,7 @@
 package me.neoblade298.neoquests.objectives;
 
+import org.bukkit.entity.Player;
+
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
@@ -7,6 +9,7 @@ import me.neoblade298.neocore.io.LineConfig;
 public class GetStoredItemObjective extends Objective {
 	private int id;
 	private String itemname;
+	private boolean keep;
 	
 	public GetStoredItemObjective() {
 		super();
@@ -15,6 +18,7 @@ public class GetStoredItemObjective extends Objective {
 	public GetStoredItemObjective(LineConfig cfg) {
 		super(ObjectiveEvent.RECEIVE_STORED_ITEM, cfg);
 		this.needed = cfg.getInt("amount", 1);
+		this.keep = cfg.getBool("keep", false);
 		
 		id = cfg.getInt("id", 0);
 	}
@@ -50,4 +54,10 @@ public class GetStoredItemObjective extends Objective {
 		return oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
 	}
 
+	@Override
+	public void cleanup(Player p) {
+		if (!keep) {
+			StorageManager.takePlayer(p, id, needed);
+		}
+	}
 }

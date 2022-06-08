@@ -1,8 +1,8 @@
 name: NeoQuests
 main: me.neoblade298.neoquests.NeoQuests
 author: [Neoblade298]
-depend: [Citizens, NeoCore, Multiverse-Core]
-softdepend: [SkillAPI]
+depend: [NeoCore, Multiverse-Core, Vault]
+softdepend: [SkillAPI, Citizens, MythicMobs]
 version: 1.0
 api-version: 1.18
 commands:

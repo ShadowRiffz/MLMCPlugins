@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.quests;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class QuestsManager implements IOComponent, Manager {
 	private static HashMap<UUID, Quester> questers = new HashMap<UUID, Quester>();
@@ -78,7 +80,6 @@ public class QuestsManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		/*
 		try {
 			Quester quester = new Quester(p);
 			questers.put(p.getUniqueId(), quester);
@@ -117,15 +118,13 @@ public class QuestsManager implements IOComponent, Manager {
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Quests failed to load or init quest data for user " + p.getName());
+			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
 			e.printStackTrace();
 		}
-		*/
 	}
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
-		/*
 		try {
 			Quester quester = questers.get(p.getUniqueId());
 
@@ -155,10 +154,9 @@ public class QuestsManager implements IOComponent, Manager {
 			}
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().log(Level.WARNING, "Quests failed to save quest data for user " + p.getName());
+			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
-		*/
 	}
 	
 	@Override

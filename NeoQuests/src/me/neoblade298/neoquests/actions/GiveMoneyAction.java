@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.LineConfig;
 
 public class GiveMoneyAction implements RewardAction {
@@ -38,7 +39,7 @@ public class GiveMoneyAction implements RewardAction {
 
 	@Override
 	public void run(Player p) {
-		StorageManager.givePlayer(p, id, amount);
+		NeoCore.getEconomy().depositPlayer(p, amount);
 	}
 
 }

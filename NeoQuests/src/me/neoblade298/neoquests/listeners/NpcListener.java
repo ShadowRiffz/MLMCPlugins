@@ -13,7 +13,7 @@ import me.neoblade298.neoquests.conversations.ConversationManager;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class NpcListener implements Listener {
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInteractNPC(PlayerInteractEntityEvent e) {
 		Player p = e.getPlayer();
 		if (!e.getHand().equals(EquipmentSlot.HAND)) return;

@@ -56,6 +56,7 @@ public class ObjectiveInstance {
 	}
 	
 	public void cleanup() {
+		obj.cleanup(p);
 		ObjectiveListener.removeObjective(this);
 	}
 
