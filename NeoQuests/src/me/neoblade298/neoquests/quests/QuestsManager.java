@@ -108,7 +108,7 @@ public class QuestsManager implements IOComponent, Manager {
 					counts[i] = Integer.parseInt(scounts[i]);
 				}
 				
-				Quest quest = quests.get(rs.getString(2));
+				Quest quest = quests.get(qname);
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 				quester.resumeQuest(qi);
@@ -118,14 +118,14 @@ public class QuestsManager implements IOComponent, Manager {
 			rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				quester.addCompletedQuest(new CompletedQuest(quests.get(rs.getString(2)), rs.getInt(3), rs.getBoolean(4)));
+				quester.addCompletedQuest(new CompletedQuest(quests.get(rs.getString(3)), rs.getInt(4), rs.getBoolean(5)));
 			}
 			
 			// Active questlines
 			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				quester.addQuestline(questlines.get(rs.getString(2)));
+				quester.addQuestline(questlines.get(rs.getString(3)));
 			}
 			
 			// Account info
