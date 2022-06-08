@@ -147,6 +147,11 @@ public class QuestsManager implements IOComponent, Manager {
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
+		// Save player location if they're in quest world
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) {
+			initializeOrGetQuester(p).setLocation(p.getLocation());
+		}
+		
 		try {
 			for (int acct : questers.get(p.getUniqueId()).keySet()) {
 				Quester quester = questers.get(p.getUniqueId()).get(acct);
@@ -192,6 +197,10 @@ public class QuestsManager implements IOComponent, Manager {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
+	}
+	
+	public static Quester initializeOrGetQuester(Player p) {
+		return initializeOrGetQuester(p, SkillAPI.getPlayerAccountData(p).getActiveId());
 	}
 	
 	public static Quester initializeOrGetQuester(Player p, int acct) {
