@@ -2,6 +2,7 @@ package me.neoblade298.neocore.commands;
 
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +30,12 @@ public class CommandManager implements CommandExecutor {
 			}
 		}
 		else if (handlers.containsKey(args[0].toUpperCase())) {
-			runCommand(args[0], sender, args);
+			if (StringUtils.isNumeric(args[1]) && handlers.get("") != null && handlers.get("") instanceof CmdList) {
+				runCommand("", sender, args);
+			}
+			else {
+				runCommand(args[0], sender, args);
+			}
 			return true;
 		}
 		return false;

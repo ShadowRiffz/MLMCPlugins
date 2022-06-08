@@ -47,8 +47,26 @@ public class LineConfig {
 		return fullLine;
 	}
 	
+	public String getString(String[] keys, String def) {
+		for (String key : keys) {
+			if (args.containsKey(key)) {
+				return args.get(key);
+			}
+		}
+		return def;
+	}
+	
 	public String getString(String key, String def) {
 		return args.getOrDefault(key, def);
+	}
+	
+	public boolean getBool(String[] keys, boolean def) {
+		for (String key : keys) {
+			if (args.containsKey(key)) {
+				return args.get(key).equalsIgnoreCase("true");
+			}
+		}
+		return def;
 	}
 	
 	public boolean getBool(String key, boolean def) {
@@ -58,9 +76,27 @@ public class LineConfig {
 		return def;
 	}
 	
+	public int getInt(String[] keys, int def) {
+		for (String key : keys) {
+			if (args.containsKey(key)) {
+				return Integer.parseInt(args.get(key));
+			}
+		}
+		return def;
+	}
+	
 	public int getInt(String key, int def) {
 		if (args.containsKey(key)) {
 			return Integer.parseInt(args.get(key));
+		}
+		return def;
+	}
+	
+	public double getDouble(String[] keys, double def) {
+		for (String key : keys) {
+			if (args.containsKey(key)) {
+				return Double.parseDouble(args.get(key));
+			}
 		}
 		return def;
 	}
