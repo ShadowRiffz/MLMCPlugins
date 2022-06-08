@@ -6,8 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
-import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.LineConfig;
 
 public class CommandAction implements RewardAction {

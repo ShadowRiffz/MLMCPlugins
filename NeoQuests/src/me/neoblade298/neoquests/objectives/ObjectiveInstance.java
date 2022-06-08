@@ -56,8 +56,11 @@ public class ObjectiveInstance {
 	}
 	
 	public void cleanup() {
-		obj.cleanup(p);
 		ObjectiveListener.removeObjective(this);
+	}
+	
+	public void finalize(Player p) {
+		obj.finalize(p);
 	}
 
 	public void updateCount() {}

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -82,7 +83,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 
 	    cmd = "adminnavigation";
 		CommandManager anavigation = new CommandManager(cmd);
-		anavigation.registerCommandList("");
+		anavigation.registerCommandList("", ChatColor.DARK_RED);
 		anavigation.register(new CmdANavigationSave());
 		anavigation.register(new CmdANavigationStart());
 		anavigation.register(new CmdANavigationCreate());

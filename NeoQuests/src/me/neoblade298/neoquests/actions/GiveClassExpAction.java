@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ExpSource;
 
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
-import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.LineConfig;
 
 public class GiveClassExpAction implements RewardAction {

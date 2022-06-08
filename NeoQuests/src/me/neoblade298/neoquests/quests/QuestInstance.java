@@ -40,6 +40,7 @@ public class QuestInstance {
 	}
 	
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
+		set.finalizeObjectives();
 		if (set.getNext() == -1 || set.getNext() == -2) {
 			endQuest(set, set.getNext() == -1, stage);
 			return;

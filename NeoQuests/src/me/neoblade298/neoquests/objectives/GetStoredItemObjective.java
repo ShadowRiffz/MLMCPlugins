@@ -55,7 +55,7 @@ public class GetStoredItemObjective extends Objective {
 	}
 
 	@Override
-	public void cleanup(Player p) {
+	public void finalize(Player p) {
 		if (!keep) {
 			StorageManager.takePlayer(p, id, needed);
 		}

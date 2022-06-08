@@ -50,6 +50,12 @@ public class ObjectiveSetInstance {
 		}
 	}
 	
+	public void finalizeObjectives() {
+		for (ObjectiveInstance o : objs) {
+			o.finalize(p);
+		}
+	}
+	
 	public ObjectiveSet getSet() {
 		return set;
 	}
