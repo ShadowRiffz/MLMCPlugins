@@ -4,6 +4,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+
 public class PaginatedList<E> {
 	private static final int DEFAULT_PAGE_SIZE = 10;
 	private LinkedList<LinkedList<E>> pages = new LinkedList<LinkedList<E>>();
@@ -109,5 +116,20 @@ public class PaginatedList<E> {
 	
 	public void clear() {
 		pages.clear();
+	}
+	
+	public void displayFooter(Player p, int page, String nextCmd, String prevCmd) {
+		ComponentBuilder prev = new ComponentBuilder("§7« ");
+		if (page > 0) {
+			prev.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, prevCmd))
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to previous page!")));
+		}
+		ComponentBuilder main = new ComponentBuilder("Page §f" + (page + 1) + " §7/ " + pages.size());
+		ComponentBuilder next = new ComponentBuilder(" »");
+		if (page < pages.size() - 1) {
+			next.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextCmd))
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to next page!")));
+		}
+		p.spigot().sendMessage(prev.append(main.append(next.create()).create()).create());
 	}
 }

@@ -62,7 +62,9 @@ public class CmdQuestsLog implements Subcommand {
 			msg += cq.getQuest().getDisplay();
 			Util.msg(s, msg, false);
 		}
-		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ " + list.size(), false);
+		String nextCmd = "/quests log " + (page + 2);
+		String prevCmd = "/quests log " + page;
+		list.displayFooter((Player) s, page, nextCmd, prevCmd);
 	}
 
 	@Override

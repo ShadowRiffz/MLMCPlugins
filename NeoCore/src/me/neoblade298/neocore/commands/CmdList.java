@@ -4,6 +4,7 @@ import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
@@ -100,6 +101,13 @@ public class CmdList implements Subcommand {
 				s.sendMessage(line);
 			}
 		}
-		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ &f" + pages.size(), false);
+		if (s instanceof Player) {
+			String nextCmd = "/" + this.base + " " + (this.key.length() == 0 ? "" : this.key + " ") + (page + 2);
+			String prevCmd = "/" + this.base + " " + (this.key.length() == 0 ? "" : this.key + " ") + page;
+			pages.displayFooter((Player) s, page, nextCmd, prevCmd);
+		}
+		else {
+			Util.msg(s, "&7Page &f" + (page + 1) + " &7/ &f" + pages.size(), false);
+		}
 	}
 }
