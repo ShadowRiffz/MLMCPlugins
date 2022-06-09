@@ -20,11 +20,11 @@ public class LineConfig {
 		
 		if (lineIndex != -1) {
 			this.line = line.substring(lineIndex + 1).trim().replaceAll("&", "§");
-			argLine = line.substring(keyIndex, lineIndex).trim().toLowerCase();
+			argLine = line.substring(keyIndex, lineIndex).trim();
 		}
 		else {
 			this.line = "";
-			argLine = line.substring(keyIndex).trim().toLowerCase();
+			argLine = line.substring(keyIndex).trim();
 		}
 		String[] argEntries = argLine.split(" ");
 		for (String entry : argEntries) {

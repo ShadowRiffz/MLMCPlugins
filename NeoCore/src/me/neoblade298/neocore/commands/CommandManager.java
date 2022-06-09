@@ -29,13 +29,12 @@ public class CommandManager implements CommandExecutor {
 				return false;
 			}
 		}
+		else if (StringUtils.isNumeric(args[0]) && handlers.get("") != null && handlers.get("") instanceof CmdList) {
+			runCommand("", sender, args);
+			return true;
+		}
 		else if (handlers.containsKey(args[0].toUpperCase())) {
-			if (StringUtils.isNumeric(args[1]) && handlers.get("") != null && handlers.get("") instanceof CmdList) {
-				runCommand("", sender, args);
-			}
-			else {
-				runCommand(args[0], sender, args);
-			}
+			runCommand(args[0], sender, args);
 			return true;
 		}
 		return false;

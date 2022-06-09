@@ -42,7 +42,6 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		s.sendMessage("§7List of commands: [] = Required, {} = Optional");
 		int offset = key.length() == 0 ? 0 : 1;
 		if (pages == null) {
 			pages = new PaginatedList<Subcommand>(cmds.values());
@@ -72,11 +71,13 @@ public class CmdList implements Subcommand {
 	}
 	
 	private void showPage(CommandSender s, int page) {
-		if (page > pages.getTotalPages() || page < 1) {
+		page = page - 1;
+		if (page >= pages.getTotalPages() || page < 0) {
 			Util.msg(s, "&cPage is out of bounds!");
 			return;
 		}
 
+		s.sendMessage("§7List of commands: [] = Required, {} = Optional");
 		for (Subcommand sc : pages.getPage(page)) {
 			if (sc.isHidden()) {
 				continue;
@@ -99,6 +100,6 @@ public class CmdList implements Subcommand {
 				s.sendMessage(line);
 			}
 		}
-		Util.msg(s, "&7Page &f" + page + " &7/ &f" + pages.getTotalPages(), false);
+		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ &f" + pages.getTotalPages(), false);
 	}
 }

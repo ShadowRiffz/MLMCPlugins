@@ -29,11 +29,11 @@ public class PaginatedList<E> {
 		this(col, DEFAULT_PAGE_SIZE);
 	}
 	
-	public int getTotalPages() {
+	public int size() {
 		return pages.size();
 	}
 	
-	public LinkedList<E> getPage(int page) {
+	public LinkedList<E> get(int page) {
 		return pages.get(page);
 	}
 	
@@ -97,13 +97,17 @@ public class PaginatedList<E> {
 		}
 	}
 	
-	public void addFirst(E item) {
+	public void push(E item) {
 		pages.getLast().push(item);
 		trickleDown(0);
 	}
 	
-	public void addLast(E item) {
+	public void add(E item) {
 		pages.getLast().add(item);
 		trickleDown(pages.size() - 1);
+	}
+	
+	public void clear() {
+		pages.clear();
 	}
 }
