@@ -10,6 +10,8 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.quests.Quest;
+import me.neoblade298.neoquests.quests.QuestsManager;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -19,19 +21,14 @@ public class ConversationResponse {
 	private String text;
 	private ArrayList<Condition> conditions = new ArrayList<Condition>();
 	private ActionSequence actions = new ActionSequence();
-	int next = -1;
+	private boolean isFirstRun = true;
+	private int next = -1;
 
 	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
 		this.text = cfg.getString("text").replaceAll("&", "§");
 		this.actions.load(cfg.getStringList("actions"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.next = cfg.getInt("next", -3);
-
-		if (actions.getQuest() != null) {
-			for (Condition cond : actions.getQuest().getConditions()) {
-				this.conditions.add(cond);
-			}
-		}
 	}
 
 	public ConversationResponse() {
@@ -41,14 +38,24 @@ public class ConversationResponse {
 
 	// True if number should be incremented
 	public boolean showResponse(Player p, int num) {
+		if (isFirstRun) {
+			isFirstRun = false;
+			if (actions.getQuest() != null) {
+				for (Condition cond : QuestsManager.getQuest(actions.getQuest()).getConditions()) {
+					this.conditions.add(cond);
+				}
+			}
+		}
+		
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
+		System.out.println("Failed cond responses: " + failed);
 		if (!failed.isEmpty()) {
 			if (failed.get(0).getResult().equals(ConditionResult.UNCLICKABLE)) { // Unclickable
 				StringBuilder failHover = new StringBuilder("§c§oCannot be selected:");
 				for (Condition failedCond : failed) {
 					failHover.append("\n- " + failedCond.getExplanation(p));
 				}
-				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] " + text)
+				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7§m" + ChatColor.stripColor(text))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(failHover.toString())));
 				p.spigot().sendMessage(builder.create());
 				return true;
@@ -58,7 +65,10 @@ public class ConversationResponse {
 			}
 		}
 		else { // Visible and passes conditions
-			Quest q = actions.getQuest();
+			Quest q = null;
+			if (actions.getQuest() != null) {
+				q = QuestsManager.getQuest(actions.getQuest());
+			}
 			if (q != null) {
 				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,

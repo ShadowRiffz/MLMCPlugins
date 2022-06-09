@@ -16,13 +16,15 @@ public class QuesterListener implements Listener {
 	public void onAccountChange(PlayerAccountChangeEvent e) {
 		Player p = e.getAccountData().getPlayer();
 		QuestsManager.getQuester(p, e.getPreviousId()).setLocation(p.getLocation());
-		Quester quester = QuestsManager.initializeOrGetQuester(p, e.getNewID());
-		if (quester.getLocation() != null) {
-			p.teleport(quester.getLocation());
-		}
+		Quester newAcc = QuestsManager.initializeOrGetQuester(p, e.getNewID());
+		Quester oldAcc = QuestsManager.getQuester(p, e.getPreviousId());
 		
-		QuestsManager.getQuester(p, e.getPreviousId()).stopListening();
-		quester.startListening();
+		oldAcc.setLocation(p.getLocation());
+		oldAcc.stopListening();
+		if (newAcc.getLocation() != null) {
+			p.teleport(newAcc.getLocation());
+		}
+		newAcc.startListening();
 	}
 	
 	@EventHandler

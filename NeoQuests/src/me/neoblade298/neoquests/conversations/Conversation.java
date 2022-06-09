@@ -58,4 +58,8 @@ public class Conversation {
 	public String getFileLocation() {
 		return fileLocation;
 	}
+	
+	public ArrayList<ConversationStage> getStages() {
+		return stages;
+	}
 }

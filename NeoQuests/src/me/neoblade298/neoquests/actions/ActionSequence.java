@@ -8,8 +8,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.quests.Quest;
-import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
@@ -87,8 +85,8 @@ public class ActionSequence {
 		return runtime;
 	}
 	
-	public Quest getQuest() {
-		return quest == null ? null : QuestsManager.getQuest(quest);
+	public String getQuest() {
+		return quest;
 	}
 	
 	public String toString() {

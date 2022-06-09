@@ -73,7 +73,8 @@ public class Quester {
 	public void startQuest(Quest q) {
 		Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
 		if (c != null) {
-			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c, " + c.getExplanation(p));
+			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c: " + c.getExplanation(p));
+			return;
 		}
 		p.sendTitle("§fQuest Started", "§6" + q.getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");
@@ -87,8 +88,8 @@ public class Quester {
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
 			for (QuestInstance qi : activeQuests.values()) {
-				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
-				ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
+				ComponentBuilder builder = new ComponentBuilder("§6§l-[" + qi.getQuest().getDisplay() + "]- ");
+				ComponentBuilder quitquest = new ComponentBuilder("§7§o[Click to Quit]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
 				s.spigot().sendMessage(builder.append(quitquest.create()).create());
 				qi.displayObjectives(s);

@@ -82,7 +82,7 @@ public class QuestInstance {
 				String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
 				if (oi.getObjective().getEndpoint() != null) {
 					ComponentBuilder builder = new ComponentBuilder(msg);
-					ComponentBuilder nav = new ComponentBuilder(" §e<Click for Navigation>")
+					ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
 							.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
 					s.spigot().sendMessage(builder.append(nav.create()).create());
 				}

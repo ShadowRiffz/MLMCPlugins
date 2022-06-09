@@ -48,6 +48,10 @@ public class ConversationStage {
 		return responses.size() > num ? responses.get(num) : null;
 	}
 	
+	public ArrayList<ConversationResponse> getResponses() {
+		return responses;
+	}
+	
 	public ActionSequence getActions() {
 		return actions;
 	}

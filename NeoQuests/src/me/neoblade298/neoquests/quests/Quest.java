@@ -36,7 +36,7 @@ public class Quest {
 		this.canRepeat = cfg.getBoolean("repeatable", false);
 		this.canRetry = cfg.getBoolean("retryable", false);
 		
-		if (canRetry) {
+		if (!canRetry) {
 			this.conditions.add(new QuestNotCompletedCondition(this.key, -1, false, ConditionResult.UNCLICKABLE));
 		}
 	}
