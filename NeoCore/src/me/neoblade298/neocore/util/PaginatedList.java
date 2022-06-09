@@ -124,8 +124,8 @@ public class PaginatedList<E> {
 			prev.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, prevCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to previous page!")));
 		}
-		ComponentBuilder main = new ComponentBuilder("Page §f" + (page + 1) + " §7/ " + pages.size());
-		ComponentBuilder next = new ComponentBuilder(" »");
+		ComponentBuilder main = new ComponentBuilder("§7Page §f" + (page + 1) + " §7/ " + pages.size());
+		ComponentBuilder next = new ComponentBuilder("§7 »");
 		if (page < pages.size() - 1) {
 			next.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to next page!")));
