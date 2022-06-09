@@ -89,7 +89,8 @@ public class QuestsManager implements IOComponent, Manager {
 		}
 		
 		HashMap<Integer, Quester> accts = new HashMap<Integer, Quester>();
-		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p));
+		int active = SkillAPI.getPlayerAccountData(p).getActiveId();
+		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p, active));
 		questers.put(p.getUniqueId(), accts);
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
@@ -112,7 +113,7 @@ public class QuestsManager implements IOComponent, Manager {
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
 				qi.setupInstances();
-				if (rs.getInt(2) == SkillAPI.getPlayerAccountData(p).getActiveId()) {
+				if (rs.getInt(2) == active) {
 					qi.initialize();
 				}
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
@@ -209,7 +210,7 @@ public class QuestsManager implements IOComponent, Manager {
 	
 	public static Quester initializeOrGetQuester(Player p, int acct) {
 		HashMap<Integer, Quester> accts = questers.get(p.getUniqueId());
-		Quester quester = accts.getOrDefault(acct, new Quester(p));
+		Quester quester = accts.getOrDefault(acct, new Quester(p, acct));
 		accts.putIfAbsent(acct, quester);
 		return quester;
 	}

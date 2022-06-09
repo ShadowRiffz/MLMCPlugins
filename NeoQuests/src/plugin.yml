@@ -6,13 +6,13 @@ softdepend: [SkillAPI, Citizens, MythicMobs]
 version: 1.0
 api-version: 1.18
 commands:
-   nquest:
+   quest:
       description: Quest command
-      usage: /nquest
+      usage: /quest
       aliases: nq
-   nquests:
+   quests:
       description: Quests command
-      usage: /nquests
+      usage: /quests
    navigation:
       description: Navigation command
       usage: /navigation

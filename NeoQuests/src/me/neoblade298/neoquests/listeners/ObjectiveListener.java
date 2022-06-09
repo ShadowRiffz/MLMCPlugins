@@ -18,31 +18,25 @@ public class ObjectiveListener implements Listener {
 	
 	private static HashMap<Player, HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>> objs = new HashMap<Player, HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>>();
 	
-	public static void addObjective(ObjectiveInstance o) {
+	public static void startListening(ObjectiveInstance o) {
 		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap = getPlayerInstances(o.getPlayer());
 		ObjectiveEvent event = o.getObjective().getType();
 		ArrayList<ObjectiveInstance> insts = pmap.getOrDefault(event, new ArrayList<ObjectiveInstance>());
 		insts.add(o);
-		pmap.put(event, insts);
+		pmap.putIfAbsent(event, insts);
 	}
 	
-	public static void removeObjective(ObjectiveInstance o) {
-		getPlayerInstances(o.getPlayer()).remove(o.getObjective().getType());
-	}
-	
-	public static void removePlayer(Player p) {
+	public static void stopListening(Player p) {
 		objs.remove(p);
 	}
 	
+	public static void stopListening(ObjectiveInstance o) {
+		getPlayerInstances(o.getPlayer()).remove(o.getObjective().getType());
+	}
+
 	private static HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> getPlayerInstances(Player p) {
-		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap;
-		if (!objs.containsKey(p)) {
-			pmap = new HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>();
-			objs.put(p, pmap);
-		}
-		else {
-			pmap = objs.get(p);
-		}
+		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap = objs.getOrDefault(p, new HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>());
+		objs.putIfAbsent(p, pmap);
 		return pmap;
 	}
 	
@@ -52,7 +46,6 @@ public class ObjectiveListener implements Listener {
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.INTERACT_NPC);
 		if (insts != null) {
-			System.out.println(insts);
 			e.setCancelled(true);
 			for (ObjectiveInstance o : insts) {
 				((InteractNpcObjective) o.getObjective()).checkEvent(e, o);
@@ -81,7 +74,6 @@ public class ObjectiveListener implements Listener {
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.KILL_MYTHICMOB);
 		if (insts != null) {
-			System.out.println(insts);
 			for (ObjectiveInstance o : insts) {
 				((KillMythicmobObjective) o.getObjective()).checkEvent(e, o);
 			}
@@ -89,7 +81,7 @@ public class ObjectiveListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onKillMythicMob(PlayerMoveEvent e) {
+	public void onMove(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.MOVE);

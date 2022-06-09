@@ -21,7 +21,6 @@ public class ObjectiveSetInstance {
 		this.key = set.getKey();
 		
 		objs = new ArrayList<ObjectiveInstance>();
-		System.out.println(set.getObjectives());
 		for (Objective o : set.getObjectives()) {
 			objs.add(new ObjectiveInstance(p, o, this));
 		}
@@ -37,7 +36,6 @@ public class ObjectiveSetInstance {
 				return;
 			}
 		}
-		System.out.println("CheckCompletion");
 		quest.completeObjectiveSet(this);
 	}
 	
@@ -45,9 +43,15 @@ public class ObjectiveSetInstance {
 		return set.getNext();
 	}
 	
-	public void cleanup() {
+	public void startListening() {
 		for (ObjectiveInstance o : objs) {
-			o.cleanup();
+			o.startListening();
+		}
+	}
+	
+	public void stopListening() {
+		for (ObjectiveInstance o : objs) {
+			o.stopListening();
 		}
 	}
 	
@@ -89,7 +93,7 @@ public class ObjectiveSetInstance {
 	
 	public void initialize() {
 		for (ObjectiveInstance obj : objs) {
-			obj.beginListening(p);
+			obj.startListening();
 			obj.getObjective().initialize(obj);
 		}
 	}

@@ -20,6 +20,9 @@ public class QuesterListener implements Listener {
 		if (quester.getLocation() != null) {
 			p.teleport(quester.getLocation());
 		}
+		
+		QuestsManager.getQuester(p, e.getPreviousId()).stopListening();
+		quester.startListening();
 	}
 	
 	@EventHandler

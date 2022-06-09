@@ -49,7 +49,7 @@ public class CmdQuestsLog implements Subcommand {
 		}
 		
 		PaginatedList<CompletedQuest> list = new PaginatedList<CompletedQuest>(quester.getCompletedQuests());
-		int page = args.length == 1 ? Integer.parseInt(args[1]) - 1 : 0;
+		int page = args.length == 2 ? Integer.parseInt(args[1]) - 1 : 0;
 		if (page < 0 || page >= list.size()) {
 			Util.msg(s, "&cInvalid page number! Max page is " + list.size());
 			return;

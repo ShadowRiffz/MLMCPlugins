@@ -53,16 +53,16 @@ public class ObjectiveInstance {
 		return count >= obj.getNeeded();
 	}
 	
-	public void cleanup() {
-		ObjectiveListener.removeObjective(this);
-	}
-	
 	public void finalize(Player p) {
 		obj.finalize(p);
 	}
 	
-	public void beginListening(Player p) {
-		ObjectiveListener.addObjective(this);
+	public void stopListening() {
+		ObjectiveListener.stopListening(this);
+	}
+	
+	public void startListening() {
+		ObjectiveListener.startListening(this);
 	}
 
 	public void updateCount() {}

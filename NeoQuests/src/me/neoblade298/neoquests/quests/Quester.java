@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
+import me.neoblade298.neoquests.listeners.ObjectiveListener;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -21,13 +22,15 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class Quester {
 	private Player p;
+	private int acct;
 	private HashMap<String, CompletedQuest> completedQuests = new HashMap<String, CompletedQuest>();
 	private HashMap<String, QuestInstance> activeQuests = new HashMap<String, QuestInstance>();
 	private TreeMap<String, Questline> activeQuestlines = new TreeMap<String, Questline>();
 	private Location loc;
 	
-	public Quester(Player p) {
+	public Quester(Player p, int acct) {
 		this.p = p;
+		this.acct = acct;
 	}
 	
 	public Player getPlayer() {
@@ -63,9 +66,8 @@ public class Quester {
 	}
 	
 	private QuestInstance cleanupQuest(String key) {
-		System.out.println(activeQuests + " " + key);
 		QuestInstance qi = activeQuests.remove(key.toUpperCase());
-		qi.cleanup();
+		qi.stopListening();
 		return qi;
 	}
 	
@@ -156,6 +158,17 @@ public class Quester {
 		}
 	}
 	
+	// Call when switching to another quest account
+	public void stopListening() {
+		ObjectiveListener.stopListening(p);
+	}
+	
+	public void startListening() {
+		for (QuestInstance qi : activeQuests.values()) {
+			qi.initialize();
+		}
+	}
+	
 	public Collection<QuestInstance> getActiveQuests() {
 		return activeQuests.values();
 	}
@@ -206,7 +219,7 @@ public class Quester {
 		this.loc = loc;
 	}
 	
-	public void cleanup() {
-		
+	public int getAccount() {
+		return acct;
 	}
 }

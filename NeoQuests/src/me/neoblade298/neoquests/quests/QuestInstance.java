@@ -30,7 +30,7 @@ public class QuestInstance {
 	// Used anytime new objectives show up
 	public void cleanupInstances() {
 		for (ObjectiveSetInstance i : sets.values()) {
-			i.cleanup();
+			i.stopListening();
 		}
 		sets.clear();
 	}
@@ -40,12 +40,12 @@ public class QuestInstance {
 		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
 			ObjectiveSetInstance osi = new ObjectiveSetInstance(q.getPlayer(), this, set);
 			sets.put(set.getKey(), osi);
+			osi.startListening();
 		}
 	}
 	
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		set.finalizeObjectives();
-		System.out.println("CompleteObjectiveSet");
 		if (set.getNext() == -1 || set.getNext() == -2) {
 			endQuest(set, set.getNext() == -1, stage);
 			return;
@@ -92,9 +92,9 @@ public class QuestInstance {
 		return quest;
 	}
 	
-	public void cleanup() {
+	public void stopListening() {
 		for (ObjectiveSetInstance si : sets.values()) {
-			si.cleanup();
+			si.stopListening();
 		}
 	}
 	
@@ -106,13 +106,10 @@ public class QuestInstance {
 		return sets.values();
 	}
 	
-	public boolean initialize() {
+	public void initialize() {
 		for (ObjectiveSetInstance osi : sets.values()) {
-			if (osi.initialize()) {
-				return true;
-			}
+			osi.initialize();
 		}
-		return false;
 	}
 	
 	public int getStage() {
