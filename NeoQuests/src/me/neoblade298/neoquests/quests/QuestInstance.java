@@ -78,7 +78,7 @@ public class QuestInstance {
 		}
 		else {
 			q.cancelQuest(quest.getKey());
-			p.sendMessage("§c[§4§lMLMC§4] §cYou failed §6" + quest.getName() + "§c!");
+			p.sendMessage("§c[§4§lMLMC§4] §cYou failed §6" + quest.getDisplay() + "§c!");
 		}
 	}
 	

@@ -15,7 +15,7 @@ public class Questline implements Comparator<Questline> {
 	private ArrayList<Quest> quests;
 
 	public Questline(ConfigurationSection cfg, File file) throws NeoIOException {
-		key = cfg.getName().toUpperCase();
+		key = cfg.getName();
 		fileLocation = file.getPath();
 		display = cfg.getString("display");
 		

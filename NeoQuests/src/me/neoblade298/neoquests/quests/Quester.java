@@ -38,8 +38,8 @@ public class Quester {
 		cleanupQuest(qi.getQuest().getKey());
 		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
-		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getName(), 10, 70, 10);
-		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getName() + "§7!");
+		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
+		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getDisplay() + "§7!");
 		if (ql != null && ql.getLastQuest().equals(qi.getQuest().getKey())) {
 			activeQuestlines.remove(ql.getKey());
 			ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
@@ -58,7 +58,7 @@ public class Quester {
 				}
 			}
 			
-			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getName(), 10, 70, 10);
+			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		}
 	}
 	
@@ -71,10 +71,10 @@ public class Quester {
 	public void startQuest(Quest q) {
 		Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
 		if (c != null) {
-			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getName() + "§c, " + c.getExplanation(p));
+			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c, " + c.getExplanation(p));
 		}
-		p.sendTitle("§fQuest Started", "§6" + q.getName(), 10, 70, 10);
-		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getName() + "§7! Type §c/quest§7!");
+		p.sendTitle("§fQuest Started", "§6" + q.getDisplay(), 10, 70, 10);
+		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey(), qi);
 		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
@@ -84,7 +84,7 @@ public class Quester {
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
 			for (QuestInstance qi : activeQuests.values()) {
-				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getName() + "]- ");
+				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
 				ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
 				s.spigot().sendMessage(builder.append(quitquest.create()).create());
@@ -116,7 +116,7 @@ public class Quester {
 	
 	public void displayGuide(CommandSender s) {
 		for (QuestInstance qi : activeQuests.values()) {
-			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getName() + "]- ");
+			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
 			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()))
 					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests quit")));
@@ -132,7 +132,7 @@ public class Quester {
 			s.sendMessage("§eActive Questlines:");
 			for (Questline ql : activeQuestlines.values()) {
 				Quest next = ql.getNextQuest(p);
-				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getName() + "§7) ");
+				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getDisplay() + "§7) ");
 				ComponentBuilder takequest = new ComponentBuilder("§e<Click to Accept Quest>")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + next.getKey()))
 						.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests take")));

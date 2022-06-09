@@ -62,7 +62,7 @@ public class ConversationResponse {
 			if (q != null) {
 				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new Text("§oClick to select " + num + "\n§oThis starts the quest §6" + q.getName())))
+								new Text("§oClick to select " + num + "\n§oThis starts the quest §6" + q.getDisplay())))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
 				p.spigot().sendMessage(builder.create());
 			}

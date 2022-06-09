@@ -41,7 +41,7 @@ public class Pathway {
 	public Pathway() {}
 	
 	public Pathway(ConfigurationSection cfg, File file) throws NeoIOException {
-		key = cfg.getName().toUpperCase();
+		key = cfg.getName();
 		fileLocation = file.getPath();
 		this.w = Bukkit.getWorld(cfg.getString("world", "Argyll"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));

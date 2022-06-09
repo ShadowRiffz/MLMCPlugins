@@ -70,6 +70,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		quests.registerCommandList("");
 		quests.register(new CmdQuestsReload());
 		quests.register(new CmdQuestsQuit());
+		quests.register(new CmdQuestsTake());
+		quests.register(new CmdQuestsLog());
 	    this.getCommand(cmd).setExecutor(quests);
 	    commands.put(cmd, quests);
 

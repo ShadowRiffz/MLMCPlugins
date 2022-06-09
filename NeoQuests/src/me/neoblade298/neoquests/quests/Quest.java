@@ -17,7 +17,7 @@ import me.neoblade298.neoquests.conversations.Conversation;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 
 public class Quest {
-	private String key, name, startConv, fileLocation;
+	private String key, display, startConv, fileLocation;
 	private ArrayList<Condition> conditions;
 	private ArrayList<RewardAction> rewards;
 	private ArrayList<QuestStage> stages;
@@ -29,7 +29,7 @@ public class Quest {
 		this.key = cfg.getName().toUpperCase();
 		this.fileLocation = file.getPath();
 		
-		this.name = cfg.getString("name");
+		this.display = cfg.getString("display");
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.rewards = ActionManager.parseRewards(cfg.getStringList("rewards"));
 		this.startConv = cfg.getString("start-conversation");
@@ -47,8 +47,8 @@ public class Quest {
 		return key;
 	}
 	
-	public String getName() {
-		return name;
+	public String getDisplay() {
+		return display;
 	}
 	
 	public void completeStage(Player p) {
