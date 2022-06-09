@@ -72,13 +72,13 @@ public class CmdList implements Subcommand {
 	
 	private void showPage(CommandSender s, int page) {
 		page = page - 1;
-		if (page >= pages.getTotalPages() || page < 0) {
+		if (page >= pages.size() || page < 0) {
 			Util.msg(s, "&cPage is out of bounds!");
 			return;
 		}
 
 		s.sendMessage("§7List of commands: [] = Required, {} = Optional");
-		for (Subcommand sc : pages.getPage(page)) {
+		for (Subcommand sc : pages.get(page)) {
 			if (sc.isHidden()) {
 				continue;
 			}
@@ -100,6 +100,6 @@ public class CmdList implements Subcommand {
 				s.sendMessage(line);
 			}
 		}
-		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ &f" + pages.getTotalPages(), false);
+		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ &f" + pages.size(), false);
 	}
 }
