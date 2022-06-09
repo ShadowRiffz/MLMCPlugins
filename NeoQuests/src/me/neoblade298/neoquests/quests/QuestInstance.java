@@ -25,17 +25,21 @@ public class QuestInstance {
 		this.quest = quest;
 		this.stage = stage;
 		this.sets = new LinkedHashMap<String, ObjectiveSetInstance>();
-		setupObjectiveSet();
 	}
 	
 	// Used anytime new objectives show up
-	private void setupObjectiveSet() {
+	public void cleanupInstances() {
 		for (ObjectiveSetInstance i : sets.values()) {
 			i.cleanup();
 		}
 		sets.clear();
+	}
+	
+	public void setupInstances() {
+		cleanupInstances();
 		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
-			sets.put(set.getKey(), new ObjectiveSetInstance(q.getPlayer(), this, set));
+			ObjectiveSetInstance osi = new ObjectiveSetInstance(q.getPlayer(), this, set);
+			sets.put(set.getKey(), osi);
 		}
 	}
 	
@@ -54,7 +58,8 @@ public class QuestInstance {
 		}
 		
 		// Setup new stage
-		setupObjectiveSet();
+		setupInstances();
+		initialize();
 		q.displayObjectives(q.getPlayer());
 	}
 	

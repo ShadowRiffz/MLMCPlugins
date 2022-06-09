@@ -79,6 +79,7 @@ public class Quester {
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey(), qi);
 		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
+		qi.setupInstances();
 		qi.initialize();
 		displayObjectives(p);
 	}
@@ -159,7 +160,13 @@ public class Quester {
 		return activeQuests.values();
 	}
 	
-	public void resumeQuest(QuestInstance qi) {
+	public void startActiveQuests() {
+		for (QuestInstance qi : activeQuests.values()) {
+			qi.setupInstances();
+		}
+	}
+	
+	public void addActiveQuest(QuestInstance qi) {
 		activeQuests.put(qi.getQuest().getKey(), qi);
 	}
 	
@@ -197,5 +204,9 @@ public class Quester {
 	
 	public void setLocation(Location loc) {
 		this.loc = loc;
+	}
+	
+	public void cleanup() {
+		
 	}
 }

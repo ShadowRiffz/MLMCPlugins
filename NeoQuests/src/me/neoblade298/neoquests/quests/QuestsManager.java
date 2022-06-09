@@ -111,7 +111,8 @@ public class QuestsManager implements IOComponent, Manager {
 				Quest quest = quests.get(qname);
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
-				quester.resumeQuest(qi);
+				quester.addActiveQuest(qi);
+				qi.setupInstances();
 			}
 			
 			// Completed quests

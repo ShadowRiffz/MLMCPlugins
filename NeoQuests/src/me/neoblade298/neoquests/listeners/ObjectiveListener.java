@@ -30,6 +30,10 @@ public class ObjectiveListener implements Listener {
 		getPlayerInstances(o.getPlayer()).remove(o.getObjective().getType());
 	}
 	
+	public static void removePlayer(Player p) {
+		objs.remove(p);
+	}
+	
 	private static HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> getPlayerInstances(Player p) {
 		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap;
 		if (!objs.containsKey(p)) {
