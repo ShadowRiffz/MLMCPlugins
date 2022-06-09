@@ -13,8 +13,6 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.conditions.QuestNotCompletedCondition;
-import me.neoblade298.neoquests.conversations.Conversation;
-import me.neoblade298.neoquests.conversations.ConversationManager;
 
 public class Quest {
 	private String key, display, startConv, fileLocation;
