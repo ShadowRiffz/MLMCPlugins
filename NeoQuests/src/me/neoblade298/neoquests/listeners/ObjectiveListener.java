@@ -19,7 +19,6 @@ public class ObjectiveListener implements Listener {
 	private static HashMap<Player, HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>> objs = new HashMap<Player, HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>>>();
 	
 	public static void startListening(ObjectiveInstance o) {
-		System.out.println("Started listening to " + o.getObjective().getDisplay());
 		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap = getPlayerInstances(o.getPlayer());
 		ObjectiveEvent event = o.getObjective().getType();
 		ArrayList<ObjectiveInstance> insts = pmap.getOrDefault(event, new ArrayList<ObjectiveInstance>());
@@ -28,12 +27,10 @@ public class ObjectiveListener implements Listener {
 	}
 	
 	public static void stopListening(Player p) {
-		System.out.println("Stopped listening to " + p.getName());
 		objs.remove(p);
 	}
 	
 	public static void stopListening(ObjectiveInstance o) {
-		System.out.println("Stopped listening to " + o.getObjective().getDisplay());
 		getPlayerInstances(o.getPlayer()).remove(o.getObjective().getType());
 	}
 

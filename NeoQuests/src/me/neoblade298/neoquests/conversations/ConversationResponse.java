@@ -48,7 +48,6 @@ public class ConversationResponse {
 		}
 		
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
-		System.out.println("Failed cond responses: " + failed);
 		if (!failed.isEmpty()) {
 			if (failed.get(0).getResult().equals(ConditionResult.UNCLICKABLE)) { // Unclickable
 				StringBuilder failHover = new StringBuilder("§c§oCannot be selected:");

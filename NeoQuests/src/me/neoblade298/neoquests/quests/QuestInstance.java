@@ -75,7 +75,6 @@ public class QuestInstance {
 	}
 	
 	public void displayObjectives(CommandSender s) {
-		System.out.println("Displaying objectives");
 		for (ObjectiveSetInstance osi : sets.values()) {
 			s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
 			for (ObjectiveInstance oi : osi.getObjectives()) {
