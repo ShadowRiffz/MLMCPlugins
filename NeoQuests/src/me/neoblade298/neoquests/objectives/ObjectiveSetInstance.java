@@ -23,8 +23,7 @@ public class ObjectiveSetInstance {
 		objs = new ArrayList<ObjectiveInstance>();
 		System.out.println(set.getObjectives());
 		for (Objective o : set.getObjectives()) {
-			ObjectiveInstance oi = new ObjectiveInstance(p, o, this);
-			objs.add(oi);
+			objs.add(new ObjectiveInstance(p, o, this));
 		}
 	}
 	
@@ -88,13 +87,11 @@ public class ObjectiveSetInstance {
 		return objs;
 	}
 	
-	public boolean initialize() {
+	public void initialize() {
 		for (ObjectiveInstance obj : objs) {
-			if (obj.getObjective().initialize(obj)) {
-				return true;
-			}
+			obj.beginListening(p);
+			obj.getObjective().initialize(obj);
 		}
-		return false;
 	}
 	
 	public String serializeCounts() {

@@ -59,7 +59,6 @@ public class QuestInstance {
 		
 		// Setup new stage
 		setupInstances();
-		initialize();
 		q.displayObjectives(q.getPlayer());
 	}
 	

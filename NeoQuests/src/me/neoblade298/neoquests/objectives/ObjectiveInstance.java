@@ -14,8 +14,6 @@ public class ObjectiveInstance {
 		this.p = p;
 		this.obj = obj;
 		this.set = set;
-		
-		ObjectiveListener.addObjective(this);
 	}
 
 	public Objective getObjective() {
@@ -61,6 +59,10 @@ public class ObjectiveInstance {
 	
 	public void finalize(Player p) {
 		obj.finalize(p);
+	}
+	
+	public void beginListening(Player p) {
+		ObjectiveListener.addObjective(this);
 	}
 
 	public void updateCount() {}

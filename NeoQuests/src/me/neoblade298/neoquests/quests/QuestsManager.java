@@ -110,9 +110,12 @@ public class QuestsManager implements IOComponent, Manager {
 				
 				Quest quest = quests.get(qname);
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
-				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 				quester.addActiveQuest(qi);
 				qi.setupInstances();
+				if (rs.getInt(2) == SkillAPI.getPlayerAccountData(p).getActiveId()) {
+					qi.initialize();
+				}
+				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 			
 			// Completed quests
@@ -190,7 +193,7 @@ public class QuestsManager implements IOComponent, Manager {
 					double z = Math.round(loc.getZ() * 100) / 100;
 					String w = loc.getWorld().getName();
 					insert.addBatch("REPLACE INTO quests_accounts VALUES ('"
-							+ p.getUniqueId() + "'," + x + "," + y + "," + z + ",'" + w + "');");
+							+ p.getUniqueId() + "'," + acct + "," + x + "," + y + "," + z + ",'" + w + "');");
 				}
 			}
 		}
