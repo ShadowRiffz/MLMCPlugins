@@ -12,8 +12,6 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.ObjectiveListener;
-import me.neoblade298.neoquests.objectives.ObjectiveInstance;
-import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -60,7 +58,8 @@ public class Quester {
 					activeQuestlines.remove(ql.getKey());
 				}
 			}
-			
+
+			p.sendMessage("§4[§c§lMLMC§4] §7You cancelled quest: §6" + qi.getQuest().getDisplay() + "§7!");
 			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		}
 	}
@@ -81,14 +80,20 @@ public class Quester {
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey(), qi);
 		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
-		qi.setupInstances();
-		qi.initialize();
-		displayObjectives(p);
+		qi.setupInstances(true);
+		qi.displayObjectives(p);
 	}
 	
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
-			displayObjectives(s);
+			for (QuestInstance qi : activeQuests.values()) {
+				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
+				ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
+				s.spigot().sendMessage(builder.append(quitquest.create()).create());
+				qi.displayObjectives(s);
+			}
+			s.sendMessage("§7=====");
 		}
 		else {
 			s.sendMessage("§7You have no active quests!");
@@ -100,19 +105,6 @@ public class Quester {
 	}
 	
 	public void displayGuide(CommandSender s) {
-		for (QuestInstance qi : activeQuests.values()) {
-			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
-			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()))
-					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests quit")));
-			s.spigot().sendMessage(builder.append(quitquest.create()).create());
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
-				for (ObjectiveInstance oi : osi.getObjectives()) {
-					s.sendMessage("§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded());
-				}
-			}
-		}
 		if (activeQuestlines.size() > 0) {
 			s.sendMessage("§eActive Questlines:");
 			for (Questline ql : activeQuestlines.values()) {
@@ -134,30 +126,6 @@ public class Quester {
 		s.spigot().sendMessage(side.create());
 	}
 	
-	public void displayObjectives(CommandSender s) {
-		for (QuestInstance qi : activeQuests.values()) {
-			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
-			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
-			s.spigot().sendMessage(builder.append(quitquest.create()).create());
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
-				for (ObjectiveInstance oi : osi.getObjectives()) {
-					String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
-					if (oi.getObjective().getEndpoint() != null) {
-						builder = new ComponentBuilder(msg);
-						ComponentBuilder nav = new ComponentBuilder(" §e<Click for Navigation>")
-								.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
-						s.spigot().sendMessage(builder.append(nav.create()).create());
-					}
-					else {
-						s.sendMessage(msg);
-					}
-				}
-			}
-		}
-	}
-	
 	// Call when switching to another quest account
 	public void stopListening() {
 		ObjectiveListener.stopListening(p);
@@ -165,18 +133,12 @@ public class Quester {
 	
 	public void startListening() {
 		for (QuestInstance qi : activeQuests.values()) {
-			qi.initialize();
+			qi.startListening();
 		}
 	}
 	
 	public Collection<QuestInstance> getActiveQuests() {
 		return activeQuests.values();
-	}
-	
-	public void startActiveQuests() {
-		for (QuestInstance qi : activeQuests.values()) {
-			qi.setupInstances();
-		}
 	}
 	
 	public void addActiveQuest(QuestInstance qi) {

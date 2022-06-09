@@ -46,6 +46,7 @@ public class ObjectiveSetInstance {
 	public void startListening() {
 		for (ObjectiveInstance o : objs) {
 			o.startListening();
+			o.getObjective().initialize(o);
 		}
 	}
 	
@@ -89,13 +90,6 @@ public class ObjectiveSetInstance {
 	
 	public ArrayList<ObjectiveInstance> getObjectives() {
 		return objs;
-	}
-	
-	public void initialize() {
-		for (ObjectiveInstance obj : objs) {
-			obj.startListening();
-			obj.getObjective().initialize(obj);
-		}
 	}
 	
 	public String serializeCounts() {

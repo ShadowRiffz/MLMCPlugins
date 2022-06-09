@@ -28,15 +28,16 @@ public class QuestsManager implements IOComponent, Manager {
 	private static HashMap<String, Quest> quests = new HashMap<String, Quest>();
 	private static HashMap<String, Questline> questlines = new HashMap<String, Questline>();
 	private static ArrayList<QuestRecommendation> recommendations = new ArrayList<QuestRecommendation>();
+	private static ArrayList<QuestRecommendation> challenges = new ArrayList<QuestRecommendation>();
 	private static File data = new File(NeoQuests.inst().getDataFolder(), "quests");
-	private static FileLoader questsLoader, questlinesLoader, recommendationsLoader;
+	private static FileLoader questsLoader, questlinesLoader, recommendationsLoader, challengesLoader;
 	
 	static {
 		questsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (quests.containsKey(key.toUpperCase())) {
-						NeoQuests.showWarning("Duplicate quest " + key.toUpperCase() + "in file " + file.getPath() + ", " +
+						NeoQuests.showWarning("Duplicate quest " + key + " in file " + file.getPath() + ", " +
 								"the loaded quest with this key is in " + quests.get(key.toUpperCase()).getFileLocation());
 						continue;
 					}
@@ -51,7 +52,7 @@ public class QuestsManager implements IOComponent, Manager {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (questlines.containsKey(key.toUpperCase())) {
-						NeoQuests.showWarning("Duplicate questline " + key.toUpperCase() + "in file " + file.getPath() + ", " +
+						NeoQuests.showWarning("Duplicate questline " + key + " in file " + file.getPath() + ", " +
 								"the loaded questline with this key is in " + questlines.get(key.toUpperCase()).getFileLocation());
 						continue;
 					}
@@ -67,6 +68,18 @@ public class QuestsManager implements IOComponent, Manager {
 				try {
 					for (String line : cfg.getStringList(key)) {
 						recommendations.add(new QuestRecommendation(new LineConfig(line)));
+					}
+				} catch (NeoIOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		challengesLoader = (cfg, file) -> {
+			for (String key : cfg.getKeys(false)) {
+				try {
+					for (String line : cfg.getStringList(key)) {
+						challenges.add(new QuestRecommendation(new LineConfig(line)));
 					}
 				} catch (NeoIOException e) {
 					e.printStackTrace();
@@ -112,9 +125,9 @@ public class QuestsManager implements IOComponent, Manager {
 				Quest quest = quests.get(qname);
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
-				qi.setupInstances();
+				qi.setupInstances(false);
 				if (rs.getInt(2) == active) {
-					qi.initialize();
+					qi.startListening();
 				}
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
@@ -227,9 +240,13 @@ public class QuestsManager implements IOComponent, Manager {
 	@Override
 	public void reload() {
 		try {
+			quests.clear();
+			questlines.clear();
+			recommendations.clear();
 			NeoCore.loadFiles(new File(data, "quests"), questsLoader);
 			NeoCore.loadFiles(new File(data, "questlines"), questlinesLoader);
 			NeoCore.loadFiles(new File(data, "recommendations.yml"), recommendationsLoader);
+			NeoCore.loadFiles(new File(data, "challenges.yml"), challengesLoader);
 		} catch (Exception e) {
 			NeoQuests.showWarning("Failed to reload QuestsManager", e);
 		}

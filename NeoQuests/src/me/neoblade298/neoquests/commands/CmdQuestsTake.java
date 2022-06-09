@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neoquests.conversations.Conversation;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -34,8 +33,8 @@ public class CmdQuestsTake implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		Conversation conv = QuestsManager.getQuest(args[0]).getStartConversation();
-		ConversationManager.startConversation(p, conv);
+		String conv = QuestsManager.getQuest(args[1]).getStartConversation();
+		ConversationManager.startConversation(p, conv, false);
 	}
 
 	@Override

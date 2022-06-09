@@ -86,8 +86,8 @@ public class Quest {
 		return ql;
 	}
 	
-	public Conversation getStartConversation() {
-		return ConversationManager.getConversation(startConv);
+	public String getStartConversation() {
+		return startConv;
 	}
 	
 	public String getFileLocation() {

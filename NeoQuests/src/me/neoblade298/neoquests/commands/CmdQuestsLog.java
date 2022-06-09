@@ -55,13 +55,14 @@ public class CmdQuestsLog implements Subcommand {
 			return;
 		}
 		
+		Util.msg(s, "&6-[Quest Log]-", false);
 		for (CompletedQuest cq : list.get(page)) {
 			String msg = "&7- ";
 			msg += cq.isSuccess() ? "&a" : "&c";
 			msg += cq.getQuest().getDisplay();
-			Util.msg(s, msg);
+			Util.msg(s, msg, false);
 		}
-		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ " + list.size());
+		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ " + list.size(), false);
 	}
 
 	@Override

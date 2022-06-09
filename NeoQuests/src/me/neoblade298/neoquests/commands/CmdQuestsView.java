@@ -33,7 +33,7 @@ public class CmdQuestsView implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		if (args.length != 1) {
+		if (args.length != 2) {
 			Util.msg(s, "&cInvalid number of arguments!");
 			return;
 		}

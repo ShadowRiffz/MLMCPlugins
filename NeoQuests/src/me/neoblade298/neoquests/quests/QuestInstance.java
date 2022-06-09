@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neoquests.actions.RewardAction;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class QuestInstance {
 	private Quester q;
@@ -35,11 +39,19 @@ public class QuestInstance {
 		sets.clear();
 	}
 	
-	public void setupInstances() {
+	public void setupInstances(boolean startListening) {
 		cleanupInstances();
 		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
 			ObjectiveSetInstance osi = new ObjectiveSetInstance(q.getPlayer(), this, set);
 			sets.put(set.getKey(), osi);
+			if (startListening) {
+				osi.startListening();
+			}
+		}
+	}
+	
+	public void startListening() {
+		for (ObjectiveSetInstance osi : sets.values()) {
 			osi.startListening();
 		}
 	}
@@ -58,8 +70,27 @@ public class QuestInstance {
 		}
 		
 		// Setup new stage
-		setupInstances();
-		q.displayObjectives(q.getPlayer());
+		setupInstances(true);
+		displayObjectives(q.getPlayer());
+	}
+	
+	public void displayObjectives(CommandSender s) {
+		System.out.println("Displaying objectives");
+		for (ObjectiveSetInstance osi : sets.values()) {
+			s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
+			for (ObjectiveInstance oi : osi.getObjectives()) {
+				String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+				if (oi.getObjective().getEndpoint() != null) {
+					ComponentBuilder builder = new ComponentBuilder(msg);
+					ComponentBuilder nav = new ComponentBuilder(" §e<Click for Navigation>")
+							.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
+					s.spigot().sendMessage(builder.append(nav.create()).create());
+				}
+				else {
+					s.sendMessage(msg);
+				}
+			}
+		}
 	}
 	
 	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
@@ -104,12 +135,6 @@ public class QuestInstance {
 	
 	public Collection<ObjectiveSetInstance> getObjectiveSetInstances() {
 		return sets.values();
-	}
-	
-	public void initialize() {
-		for (ObjectiveSetInstance osi : sets.values()) {
-			osi.initialize();
-		}
 	}
 	
 	public int getStage() {
