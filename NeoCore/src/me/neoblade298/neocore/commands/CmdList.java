@@ -1,6 +1,5 @@
 package me.neoblade298.neocore.commands;
 
-import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
@@ -13,7 +12,6 @@ public class CmdList implements Subcommand {
 	private String base, key;
 	private ChatColor color;
 	private TreeMap<String, Subcommand> cmds;
-	private static final int CMDS_PER_PAGE = 10;
 	private PaginatedList<Subcommand> pages = null;
 	
 	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds) {
