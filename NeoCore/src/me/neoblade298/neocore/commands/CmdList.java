@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
 
 public class CmdList implements Subcommand {
@@ -13,6 +14,7 @@ public class CmdList implements Subcommand {
 	private ChatColor color;
 	private TreeMap<String, Subcommand> cmds;
 	private static final int CMDS_PER_PAGE = 10;
+	private PaginatedList<Subcommand> pages = null;
 	
 	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds) {
 		this(key, base, cmds, ChatColor.RED);
@@ -44,6 +46,10 @@ public class CmdList implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		s.sendMessage("§7List of commands: [] = Required, {} = Optional");
 		int offset = key.length() == 0 ? 0 : 1;
+		if (pages == null) {
+			pages = new PaginatedList<Subcommand>(cmds.values());
+		}
+		
 		if (args.length == offset) {
 			showPage(s, 1);
 		}
@@ -68,19 +74,12 @@ public class CmdList implements Subcommand {
 	}
 	
 	private void showPage(CommandSender s, int page) {
-		int totalPages = ((cmds.size() - 1) / CMDS_PER_PAGE) + 1;
-		if (page > totalPages || page < 1) {
+		if (page > pages.getTotalPages() || page < 1) {
 			Util.msg(s, "&cPage is out of bounds!");
 			return;
 		}
-		
-		Iterator<Subcommand> iter = cmds.values().iterator();
-		for (int i = 1; i < (page - 1) * CMDS_PER_PAGE; i++) {
-			iter.next();
-		}
 
-		for (int i = 0; i < CMDS_PER_PAGE && iter.hasNext(); i++) {
-			Subcommand sc = iter.next();
+		for (Subcommand sc : pages.getPage(page)) {
 			if (sc.isHidden()) {
 				continue;
 			}
@@ -102,6 +101,6 @@ public class CmdList implements Subcommand {
 				s.sendMessage(line);
 			}
 		}
-		Util.msg(s, "&7Page &f" + page + " &7/ &f" + totalPages, false);
+		Util.msg(s, "&7Page &f" + page + " &7/ &f" + pages.getTotalPages(), false);
 	}
 }
