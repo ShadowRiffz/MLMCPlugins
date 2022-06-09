@@ -135,15 +135,21 @@ public class ConversationManager implements Manager, Listener {
 		return activeConvs.get(p);
 	}
 	
-	private static void startConversation(Player p, Conversation conv) {
+	public static void startConversation(Player p, Conversation conv) {
 		if (activeConvs.containsKey(p)) {
 			p.sendMessage("§cYou're still in the middle of another conversation!");
 			activeConvs.get(p).show();
+			return;
 		}
-		else {
-			ConversationInstance ci = new ConversationInstance(p, conv);
-			activeConvs.put(p, ci);
+		
+		Condition cond = ConditionManager.getBlockingCondition(p, conv.getConditions());
+		if (cond != null) {
+			p.sendMessage("§cYou can't start this conversation: " + cond.getExplanation(p));
+			return;
 		}
+		
+		ConversationInstance ci = new ConversationInstance(p, conv);
+		activeConvs.put(p, ci);
 	}
 	
 	public String getKey() {
