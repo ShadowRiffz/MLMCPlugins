@@ -48,9 +48,10 @@ public class ObjectiveListener implements Listener {
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.INTERACT_NPC);
 		if (insts != null) {
+			System.out.println(insts);
+			e.setCancelled(true);
 			for (ObjectiveInstance o : insts) {
 				((InteractNpcObjective) o.getObjective()).checkEvent(e, o);
-				e.setCancelled(true);
 			}
 		}
 	}
@@ -74,8 +75,9 @@ public class ObjectiveListener implements Listener {
 		}
 		Player p = (Player) e.getKiller();
 
-		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.RECEIVE_STORED_ITEM);
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.KILL_MYTHICMOB);
 		if (insts != null) {
+			System.out.println(insts);
 			for (ObjectiveInstance o : insts) {
 				((KillMythicmobObjective) o.getObjective()).checkEvent(e, o);
 			}

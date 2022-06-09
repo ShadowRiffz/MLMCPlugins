@@ -21,6 +21,7 @@ public class ObjectiveSetInstance {
 		this.key = set.getKey();
 		
 		objs = new ArrayList<ObjectiveInstance>();
+		System.out.println(set.getObjectives());
 		for (Objective o : set.getObjectives()) {
 			ObjectiveInstance oi = new ObjectiveInstance(p, o, this);
 			objs.add(oi);
@@ -37,6 +38,7 @@ public class ObjectiveSetInstance {
 				return;
 			}
 		}
+		System.out.println("CheckCompletion");
 		quest.completeObjectiveSet(this);
 	}
 	

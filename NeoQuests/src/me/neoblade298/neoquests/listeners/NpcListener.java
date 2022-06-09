@@ -3,6 +3,7 @@ package me.neoblade298.neoquests.listeners;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -13,7 +14,7 @@ import me.neoblade298.neoquests.conversations.ConversationManager;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class NpcListener implements Listener {
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
 	public void onInteractNPC(PlayerInteractEntityEvent e) {
 		Player p = e.getPlayer();
 		if (!e.getHand().equals(EquipmentSlot.HAND)) return;

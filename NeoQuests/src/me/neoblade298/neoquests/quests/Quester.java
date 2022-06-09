@@ -63,6 +63,7 @@ public class Quester {
 	}
 	
 	private QuestInstance cleanupQuest(String key) {
+		System.out.println(activeQuests + " " + key);
 		QuestInstance qi = activeQuests.remove(key.toUpperCase());
 		qi.cleanup();
 		return qi;
@@ -79,31 +80,12 @@ public class Quester {
 		activeQuests.put(q.getKey(), qi);
 		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
 		qi.initialize();
+		displayObjectives(p);
 	}
 	
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
-			for (QuestInstance qi : activeQuests.values()) {
-				ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
-				ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
-				s.spigot().sendMessage(builder.append(quitquest.create()).create());
-				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-					s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
-					for (ObjectiveInstance oi : osi.getObjectives()) {
-						String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
-						if (oi.getObjective().getEndpoint() != null) {
-							builder = new ComponentBuilder(msg);
-							ComponentBuilder nav = new ComponentBuilder(" §e<Click for Navigation>")
-									.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
-							s.spigot().sendMessage(builder.append(nav.create()).create());
-						}
-						else {
-							s.sendMessage(msg);
-						}
-					}
-				}
-			}
+			displayObjectives(s);
 		}
 		else {
 			s.sendMessage("§7You have no active quests!");
@@ -147,6 +129,30 @@ public class Quester {
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges"));
 		s.spigot().sendMessage(rec.create());
 		s.spigot().sendMessage(side.create());
+	}
+	
+	public void displayObjectives(CommandSender s) {
+		for (QuestInstance qi : activeQuests.values()) {
+			ComponentBuilder builder = new ComponentBuilder("§6-[" + qi.getQuest().getDisplay() + "]- ");
+			ComponentBuilder quitquest = new ComponentBuilder("§e<Click to Quit Quest>")
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
+			s.spigot().sendMessage(builder.append(quitquest.create()).create());
+			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+				s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
+				for (ObjectiveInstance oi : osi.getObjectives()) {
+					String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+					if (oi.getObjective().getEndpoint() != null) {
+						builder = new ComponentBuilder(msg);
+						ComponentBuilder nav = new ComponentBuilder(" §e<Click for Navigation>")
+								.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
+						s.spigot().sendMessage(builder.append(nav.create()).create());
+					}
+					else {
+						s.sendMessage(msg);
+					}
+				}
+			}
+		}
 	}
 	
 	public Collection<QuestInstance> getActiveQuests() {

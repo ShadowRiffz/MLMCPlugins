@@ -8,9 +8,6 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
-import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.conversations.Conversation;
-import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
@@ -52,19 +49,19 @@ public class CmdQuestsLog implements Subcommand {
 		}
 		
 		PaginatedList<CompletedQuest> list = new PaginatedList<CompletedQuest>(quester.getCompletedQuests());
-		int page = args.length == 1 ? Integer.parseInt(args[0]) - 1 : 0;
-		if (page < 0 || page >= list.getTotalPages()) {
-			Util.msg(s, "&cInvalid page number! Max page is " + list.getTotalPages());
+		int page = args.length == 1 ? Integer.parseInt(args[1]) - 1 : 0;
+		if (page < 0 || page >= list.size()) {
+			Util.msg(s, "&cInvalid page number! Max page is " + list.size());
 			return;
 		}
 		
-		for (CompletedQuest cq : list.getPage(page)) {
+		for (CompletedQuest cq : list.get(page)) {
 			String msg = "&7- ";
 			msg += cq.isSuccess() ? "&a" : "&c";
 			msg += cq.getQuest().getDisplay();
 			Util.msg(s, msg);
 		}
-		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ " + list.getTotalPages());
+		Util.msg(s, "&7Page &f" + (page + 1) + " &7/ " + list.size());
 	}
 
 	@Override

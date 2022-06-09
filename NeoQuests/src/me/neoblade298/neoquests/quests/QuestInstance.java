@@ -41,6 +41,7 @@ public class QuestInstance {
 	
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		set.finalizeObjectives();
+		System.out.println("CompleteObjectiveSet");
 		if (set.getNext() == -1 || set.getNext() == -2) {
 			endQuest(set, set.getNext() == -1, stage);
 			return;
@@ -54,6 +55,7 @@ public class QuestInstance {
 		
 		// Setup new stage
 		setupObjectiveSet();
+		q.displayObjectives(q.getPlayer());
 	}
 	
 	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
