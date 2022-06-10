@@ -83,12 +83,12 @@ public class CommandManager implements CommandExecutor {
 		if (cmd.getArgs() != null) {
 			CommandArguments cargs = cmd.getArgs();
 			if (args.length < cargs.getMin()) {
-				s.sendMessage("§cThis command requires at least " + cargs.getMin() + " but received " + args.length + ".");
+				s.sendMessage("§cThis command requires at least " + cargs.getMin() + " args but received " + args.length + ".");
 				return false;
 			}
 			
 			if (args.length > cargs.getMax()) {
-				s.sendMessage("§cThis command requires at most " + cargs.getMax() + " but received " + args.length + ".");
+				s.sendMessage("§cThis command requires at most " + cargs.getMax() + " args but received " + args.length + ".");
 				return false;
 			}
 		}
