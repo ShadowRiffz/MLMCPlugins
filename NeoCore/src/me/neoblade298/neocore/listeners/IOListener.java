@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.neoblade298.neocore.NeoCore;
@@ -67,7 +68,7 @@ public class IOListener implements Listener {
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
+	public void onSkillAPILoad(PlayerLoadCompleteEvent e) {
 		handleLoad(e.getPlayer());
 	}
 	
@@ -152,7 +153,7 @@ public class IOListener implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		}.runTaskLaterAsynchronously(NeoCore.inst(), 60L);
+		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
 	public static void handleDisable() {
