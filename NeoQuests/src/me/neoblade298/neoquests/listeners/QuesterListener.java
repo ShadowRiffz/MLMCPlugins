@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ import me.neoblade298.neoquests.quests.QuestsManager;
 public class QuesterListener implements Listener {
 	@EventHandler
 	public void onAccountChange(PlayerAccountChangeEvent e) {
-		Player p = e.getAccountData().getPlayer();
+		Player p = e.getNewAccount().getPlayer();
 		QuestsManager.getQuester(p, e.getPreviousId()).setLocation(p.getLocation());
 		Quester newAcc = QuestsManager.initializeOrGetQuester(p, e.getNewID());
 		Quester oldAcc = QuestsManager.getQuester(p, e.getPreviousId());
@@ -22,7 +23,9 @@ public class QuesterListener implements Listener {
 		oldAcc.setLocation(p.getLocation());
 		oldAcc.stopListening();
 		if (newAcc.getLocation() != null) {
-			p.teleport(newAcc.getLocation());
+			if (p.teleport(newAcc.getLocation())) {
+				Bukkit.getLogger().warning("[NeoQuests] Failed to teleport player on class acccount change!");
+			}
 		}
 		newAcc.startListening();
 	}
