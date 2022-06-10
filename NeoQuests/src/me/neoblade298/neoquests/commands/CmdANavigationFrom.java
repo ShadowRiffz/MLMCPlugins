@@ -73,25 +73,10 @@ public class CmdANavigationFrom implements Subcommand {
 			Util.msg(p, "&cThis start point is not connected to any destinations!");
 		}
 	}
-	
-	@Override
-	public int getMinArgs() {
-		return 1;
-	}
-	
-	@Override
-	public int getMaxArgs() {
-		return 2;
-	}
 
 	@Override
-	public String getArgs() {
-		return "[endpoint] {player}";
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.DARK_RED;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 }

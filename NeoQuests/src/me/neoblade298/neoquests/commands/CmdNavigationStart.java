@@ -40,17 +40,12 @@ public class CmdNavigationStart implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		NavigationManager.startNavigation(p, args[1]);
+		NavigationManager.startNavigation(p, args[0]);
 	}
 
 	@Override
-	public String getArgs() {
-		return "[pathway] {player}";
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.DARK_RED;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 	@Override

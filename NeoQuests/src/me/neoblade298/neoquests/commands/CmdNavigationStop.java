@@ -41,8 +41,8 @@ public class CmdNavigationStop implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return null;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 }

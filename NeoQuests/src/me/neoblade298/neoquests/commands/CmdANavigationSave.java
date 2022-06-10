@@ -54,13 +54,8 @@ public class CmdANavigationSave implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return null;
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.DARK_RED;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 }

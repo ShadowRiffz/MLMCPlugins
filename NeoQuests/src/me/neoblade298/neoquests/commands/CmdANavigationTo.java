@@ -47,18 +47,18 @@ public class CmdANavigationTo implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = null;
-		if (args.length == 2) {
+		if (args.length == 1) {
 			p = (Player) s;
 		}
 		else {
-			p = (Bukkit.getPlayer(args[2]));
+			p = (Bukkit.getPlayer(args[1]));
 		}
 		
 		if (p == null) {
 			Util.msg(s, "&cPlayer is not online!");
 		}
 		
-		PathwayPoint point = NavigationManager.getEndpoint(args[1]);
+		PathwayPoint point = NavigationManager.getEndpoint(args[0]);
 		if (point.getToEndpoints().size() > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
 			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
@@ -74,13 +74,8 @@ public class CmdANavigationTo implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return "[endpoint]";
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.DARK_RED;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 }

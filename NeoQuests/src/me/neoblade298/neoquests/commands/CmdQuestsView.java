@@ -1,15 +1,20 @@
 package me.neoblade298.neoquests.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.commands.CommandArgument;
+import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsView implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player")));
 
 	@Override
 	public String getDescription() {
@@ -33,11 +38,7 @@ public class CmdQuestsView implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		if (args.length != 2) {
-			Util.msg(s, "&cInvalid number of arguments!");
-			return;
-		}
-		Player p = Bukkit.getPlayer(args[1]);
+		Player p = Bukkit.getPlayer(args[0]);
 		if (p == null) {
 			Util.msg(s, "&cThat player is not online!");
 			return;
@@ -47,7 +48,7 @@ public class CmdQuestsView implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return "[player]";
+	public CommandArguments getArgs() {
+		return args;
 	}
 }

@@ -46,7 +46,7 @@ public class CmdNavigationTo implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		
-		PathwayPoint point = NavigationManager.getEndpoint(args[1]);
+		PathwayPoint point = NavigationManager.getEndpoint(args[0]);
 		if (point.getToEndpoints().size() > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
 			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
@@ -62,8 +62,8 @@ public class CmdNavigationTo implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return "[endpoint]";
+	public CommandArguments getArgs() {
+		return args;
 	}
 	
 	@Override

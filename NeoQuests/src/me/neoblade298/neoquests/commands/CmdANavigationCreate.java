@@ -51,9 +51,4 @@ public class CmdANavigationCreate implements Subcommand {
 	public CommandArguments getArgs() {
 		return args;
 	}
-
-	@Override
-	public net.md_5.bungee.api.ChatColor getColor() {
-		return ChatColor.DARK_RED;
-	}
 }

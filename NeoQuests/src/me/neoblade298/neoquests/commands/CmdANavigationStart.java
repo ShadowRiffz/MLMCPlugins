@@ -45,33 +45,18 @@ public class CmdANavigationStart implements Subcommand {
 			p = (Player) s;
 		}
 		else {
-			p = (Bukkit.getPlayer(args[2]));
+			p = (Bukkit.getPlayer(args[1]));
 		}
 		
 		if (p == null) {
 			Util.msg(s, "&cPlayer is not online!");
 		}
-		NavigationManager.startNavigation(p, args[1]);
-	}
-	
-	@Override
-	public int getMinArgs() {
-		return 1;
-	}
-	
-	@Override
-	public int getMaxArgs() {
-		return 2;
+		NavigationManager.startNavigation(p, args[0]);
 	}
 
 	@Override
-	public String getArgs() {
-		return "[pathway] {player}";
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.DARK_RED;
+	public CommandArguments getArgs() {
+		return args;
 	}
 
 }
