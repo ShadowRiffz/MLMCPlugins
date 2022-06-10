@@ -132,4 +132,8 @@ public class PaginatedList<E> {
 		}
 		p.spigot().sendMessage(prev.append(main.append(next.create()).create()).create());
 	}
+	
+	public void displayFooter(Player p, int page) {
+		Util.msg(p, "&7Page &f" + (page + 1) + " &7/ " + pages.size());
+	}
 }
