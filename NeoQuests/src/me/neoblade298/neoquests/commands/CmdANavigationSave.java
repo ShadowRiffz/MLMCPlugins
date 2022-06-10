@@ -1,9 +1,14 @@
 package me.neoblade298.neoquests.commands;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+
+import java.util.Arrays;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.commands.CommandArgument;
+import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.exceptions.NeoIOException;
@@ -12,6 +17,7 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
 public class CmdANavigationSave implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList());
 
 	@Override
 	public String getDescription() {
@@ -50,16 +56,6 @@ public class CmdANavigationSave implements Subcommand {
 	@Override
 	public String getArgs() {
 		return null;
-	}
-	
-	@Override
-	public int getMinArgs() {
-		return 0;
-	}
-	
-	@Override
-	public int getMaxArgs() {
-		return 0;
 	}
 	
 	@Override

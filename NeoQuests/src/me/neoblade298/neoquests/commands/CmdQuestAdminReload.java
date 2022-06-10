@@ -1,12 +1,19 @@
 package me.neoblade298.neoquests.commands;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+
+import java.util.Arrays;
+
 import org.bukkit.command.CommandSender;
+
+import me.neoblade298.neocore.commands.CommandArgument;
+import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neoquests.NeoQuests;
 
 public class CmdQuestAdminReload implements Subcommand {
+	private static final CommandArguments args = new CommandArguments();
 
 	@Override
 	public String getDescription() {

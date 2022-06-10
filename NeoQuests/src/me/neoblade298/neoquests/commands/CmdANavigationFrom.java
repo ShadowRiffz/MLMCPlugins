@@ -1,12 +1,15 @@
 package me.neoblade298.neoquests.commands;
 
+import java.util.Arrays;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.commands.CommandArgument;
+import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
@@ -19,6 +22,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class CmdANavigationFrom implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("endpoint"),
+			new CommandArgument("player", false)));
 
 	@Override
 	public String getDescription() {

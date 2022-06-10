@@ -2,7 +2,7 @@ package me.neoblade298.neoquests.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,7 +53,7 @@ public class CmdANavigationCreate implements Subcommand {
 	}
 
 	@Override
-	public ChatColor getColor() {
+	public net.md_5.bungee.api.ChatColor getColor() {
 		return ChatColor.DARK_RED;
 	}
 }
