@@ -38,6 +38,7 @@ public class CmdQuestAdminStart implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
+		System.out.println("Running command");
 		Player p = null;
 		if (args.length == 2) {
 			p = Bukkit.getPlayer(args[1]);

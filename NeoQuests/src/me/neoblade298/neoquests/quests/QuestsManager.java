@@ -98,10 +98,6 @@ public class QuestsManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		if (questers.containsKey(p.getUniqueId())) {
-			return;
-		}
-		
 		HashMap<Integer, Quester> accts = new HashMap<Integer, Quester>();
 		int active = SkillAPI.getPlayerAccountData(p).getActiveId();
 		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p, active));
@@ -167,15 +163,15 @@ public class QuestsManager implements IOComponent, Manager {
 				quester.addActiveQuest(qi);
 				qi.setupInstances(false);
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
-				if (rs.getInt(2) == active) {
-					System.out.println("Starting listening of " + qi.getQuest().getKey());
-					qi.startListening();
-				}
 			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
 			e.printStackTrace();
+		}
+		// Regardless of if we load in from sql, we need to initialize the proper quests
+		finally {
+			QuestsManager.initializeOrGetQuester(p).startListening();
 		}
 	}
 
@@ -226,6 +222,7 @@ public class QuestsManager implements IOComponent, Manager {
 							+ p.getUniqueId() + "'," + acct + "," + x + "," + y + "," + z + ",'" + w + "');");
 				}
 			}
+			questers.remove(p.getUniqueId());
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());

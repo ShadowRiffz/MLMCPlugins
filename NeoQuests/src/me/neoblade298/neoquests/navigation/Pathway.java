@@ -129,7 +129,7 @@ public class Pathway {
 					this.cancel();
 					return;
 				}
-				
+
 				// Check if in different world
 				if (!p.getWorld().equals(w)) {
 					pwi.cancel("no longer in same world.");
