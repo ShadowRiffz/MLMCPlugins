@@ -9,10 +9,15 @@ commands:
    quest:
       description: Quest command
       usage: /quest
-      aliases: nq
+      aliases: q
    quests:
       description: Quests command
       usage: /quests
+      aliases: qs
+   questadmin:
+      description: Questadmin command
+      usage: /questadmin
+      aliases: qa
    navigation:
       description: Navigation command
       usage: /navigation

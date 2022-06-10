@@ -6,7 +6,7 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neoquests.NeoQuests;
 
-public class CmdQuestsReload implements Subcommand {
+public class CmdQuestAdminReload implements Subcommand {
 
 	@Override
 	public String getDescription() {
