@@ -1,10 +1,12 @@
 package me.neoblade298.neoquests.objectives;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.NeoQuests;
 
 public class GetStoredItemObjective extends Objective {
 	private int id;
@@ -50,8 +52,12 @@ public class GetStoredItemObjective extends Objective {
 	}
 	
 	@Override
-	public boolean initialize(ObjectiveInstance oi) {
-		return oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
+	public void initialize(ObjectiveInstance oi) {
+		new BukkitRunnable() {
+			public void run() {
+				oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
+			}
+		}.runTaskLater(NeoQuests.inst(), 20L);
 	}
 
 	@Override

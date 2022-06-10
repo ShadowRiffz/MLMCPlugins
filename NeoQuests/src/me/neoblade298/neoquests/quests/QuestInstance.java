@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
@@ -39,7 +40,7 @@ public class QuestInstance {
 		sets.clear();
 	}
 	
-	public void setupInstances(boolean startListening) {
+	public boolean setupInstances(boolean startListening) {
 		cleanupInstances();
 		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
 			ObjectiveSetInstance osi = new ObjectiveSetInstance(q.getPlayer(), this, set);
@@ -48,6 +49,7 @@ public class QuestInstance {
 				osi.startListening();
 			}
 		}
+		return false;
 	}
 	
 	public void startListening() {
@@ -100,6 +102,7 @@ public class QuestInstance {
 			if (si.getSet().hasAlternateRewards()) {
 				rewards = si.getSet().getAlternateRewards();
 			}
+			final ArrayList<RewardAction> fRewards = rewards;
 			if (rewards.size() > 0) {
 				p.sendMessage("§6Rewards:");
 				for (RewardAction r : rewards) {
@@ -107,9 +110,15 @@ public class QuestInstance {
 						p.sendMessage("§7- " + r.getDisplay());
 					}
 				}
-				for (RewardAction r : rewards) {
-					r.run(p);
-				}
+				
+				// Must be synchronous (specifically for GiveStoredItemEvent)
+				new BukkitRunnable() {
+					public void run() {
+						for (RewardAction r : fRewards) {
+							r.run(p);
+						}
+					}
+				}.run();
 			}
 		}
 		else {

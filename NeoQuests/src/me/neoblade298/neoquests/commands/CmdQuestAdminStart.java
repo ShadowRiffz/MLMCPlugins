@@ -45,7 +45,7 @@ public class CmdQuestAdminStart implements Subcommand {
 		else {
 			p = (Player) s;
 		}
-		QuestsManager.startQuest(p, args[0]);
+		QuestsManager.startQuest(p, args[0], true);
 	}
 
 	@Override

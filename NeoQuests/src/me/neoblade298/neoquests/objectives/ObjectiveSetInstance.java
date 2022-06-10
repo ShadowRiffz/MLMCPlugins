@@ -43,12 +43,11 @@ public class ObjectiveSetInstance {
 		return set.getNext();
 	}
 	
+	// Returns true if quest is ended with initialize
 	public void startListening() {
 		for (ObjectiveInstance o : objs) {
 			o.startListening();
-			if (o.getObjective().initialize(o)) {
-				return;
-			}
+			o.getObjective().initialize(o);
 		}
 	}
 	

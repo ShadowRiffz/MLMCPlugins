@@ -1,6 +1,5 @@
 package me.neoblade298.neoquests.commands;
 
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 
@@ -20,7 +19,7 @@ import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestAdminReset implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"),
-			new CommandArgument("account #", false))));
+			new CommandArgument("account #", false)));
 
 	@Override
 	public String getDescription() {

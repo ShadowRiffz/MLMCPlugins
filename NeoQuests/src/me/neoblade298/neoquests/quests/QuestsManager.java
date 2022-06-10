@@ -168,6 +168,7 @@ public class QuestsManager implements IOComponent, Manager {
 				qi.setupInstances(false);
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 				if (rs.getInt(2) == active) {
+					System.out.println("Starting listening of " + qi.getQuest().getKey());
 					qi.startListening();
 				}
 			}
