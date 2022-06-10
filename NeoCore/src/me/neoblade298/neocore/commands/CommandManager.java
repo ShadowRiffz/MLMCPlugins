@@ -4,19 +4,26 @@ import java.util.Arrays;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class CommandManager implements CommandExecutor {
 	private TreeMap<String, Subcommand> handlers = new TreeMap<String, Subcommand>();
 	private String base;
+	private ChatColor color;
 	
 	public CommandManager(String base) {
+		this(base, ChatColor.RED);
+	}
+	
+	public CommandManager(String base, ChatColor color) {
 		this.base = base;
+		this.color = color;
 	}
 	
 	@Override
@@ -90,11 +97,11 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	public void registerCommandList(String key, ChatColor color) {
-		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, color));
+		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, this.color, color));
 	}
 	
 	public void registerCommandList(String key) {
-		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers));
+		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, this.color));
 	}
 	
 	public Subcommand getCommand(String key) {

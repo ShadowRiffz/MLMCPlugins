@@ -2,31 +2,32 @@ package me.neoblade298.neocore.commands;
 
 import java.util.TreeMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
+import net.md_5.bungee.api.ChatColor;
 
 public class CmdList implements Subcommand {
 	private String base, key;
-	private ChatColor color;
+	private ChatColor baseColor, cmdColor;
 	private TreeMap<String, Subcommand> cmds;
 	private PaginatedList<Subcommand> pages = null;
 	
 	private static CommandArguments args = new CommandArguments(new CommandArgument[] {
 			new CommandArgument("page", false) });
 	
-	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds) {
-		this(key, base, cmds, ChatColor.RED);
-	}
-	
-	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor color) {
+	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor baseColor) {
 		this.key = key;
 		this.base = base;
 		this.cmds = cmds;
-		this.color = color;
+		this.baseColor = baseColor;
+	}
+	
+	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor baseColor, ChatColor cmdColor) {
+		this(key, base, cmds, baseColor);
+		this.cmdColor = cmdColor;
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public ChatColor getColor() {
-		return color;
+		return cmdColor;
 	}
 
 	@Override
@@ -87,7 +88,14 @@ public class CmdList implements Subcommand {
 				continue;
 			}
 			
-			String line = sc.getColor() + "/" + base;
+			String line = "";
+			if (sc.getColor() == null) {
+				line += baseColor + "/" + base;
+			}
+			else {
+				line += sc.getColor() + "/" + base;
+			}
+			
 			// Add subcommand name
 			if (sc.getKey().length() != 0) {
 				line += " " + sc.getKey();
