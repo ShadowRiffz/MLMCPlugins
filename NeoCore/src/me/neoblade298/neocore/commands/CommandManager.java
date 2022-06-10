@@ -58,7 +58,11 @@ public class CommandManager implements CommandExecutor {
 	
 	public void runCommand(String key, CommandSender s, String[] args, boolean shouldCheck) {
 		Subcommand sc = handlers.get(key.toUpperCase());
-		String[] reducedArgs = Arrays.copyOfRange(args, 1, args.length);
+		String[] reducedArgs = args;
+		if (args.length > 0) {
+			reducedArgs = Arrays.copyOfRange(args, 1, args.length);
+		}
+		
 		if (!shouldCheck || check(sc, s, reducedArgs)) {
 			sc.run(s, reducedArgs);
 		}
