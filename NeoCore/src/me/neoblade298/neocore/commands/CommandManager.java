@@ -28,10 +28,10 @@ public class CommandManager implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		return handleCommand(sender, cmd, args);
+		return handleCommand(sender, args);
 	}
 	
-	public boolean handleCommand(CommandSender sender, Command cmd, String[] args) {
+	public boolean handleCommand(CommandSender sender, String[] args) {
 		if (args.length == 0) {
 			if (handlers.containsKey("") ) {
 				runCommand("", sender, args);
