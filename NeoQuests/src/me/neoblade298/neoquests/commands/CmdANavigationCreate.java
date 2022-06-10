@@ -36,10 +36,20 @@ public class CmdANavigationCreate implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		try {
-			NavigationManager.startPathwayEditor(p, args[1]);
+			NavigationManager.startPathwayEditor(p, args[0]);
 		} catch (NeoIOException e) {
 			NeoQuests.showWarning("Failed to start pathway editor", e);
 		}
+	}
+	
+	@Override
+	public int getMinArgs() {
+		return 1;
+	}
+	
+	@Override
+	public int getMaxArgs() {
+		return 1;
 	}
 
 	@Override

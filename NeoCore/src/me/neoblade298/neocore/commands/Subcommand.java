@@ -8,8 +8,9 @@ public interface Subcommand {
 	public SubcommandRunner getRunner();
 	public String getKey();
 	public String getDescription();
-	public String getArgs();
 	public default ChatColor getColor() { return ChatColor.RED; }
+	public default CommandArguments getArgs() { return null; }
+	public default String getArgOverride() { return null; }
 	public default boolean isHidden() { return false; }
 	
 	public void run(CommandSender s, String[] args);

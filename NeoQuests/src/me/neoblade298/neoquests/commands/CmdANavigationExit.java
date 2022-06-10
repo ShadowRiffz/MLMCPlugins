@@ -40,6 +40,16 @@ public class CmdANavigationExit implements Subcommand {
 	public String getArgs() {
 		return null;
 	}
+	
+	@Override
+	public int getMinArgs() {
+		return 0;
+	}
+	
+	@Override
+	public int getMaxArgs() {
+		return 0;
+	}
 
 	@Override
 	public ChatColor getColor() {

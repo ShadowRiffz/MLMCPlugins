@@ -53,6 +53,16 @@ public class CmdANavigationSave implements Subcommand {
 	}
 	
 	@Override
+	public int getMinArgs() {
+		return 0;
+	}
+	
+	@Override
+	public int getMaxArgs() {
+		return 0;
+	}
+	
+	@Override
 	public ChatColor getColor() {
 		return ChatColor.DARK_RED;
 	}

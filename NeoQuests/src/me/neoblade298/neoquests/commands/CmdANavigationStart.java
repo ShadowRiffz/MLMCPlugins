@@ -47,6 +47,16 @@ public class CmdANavigationStart implements Subcommand {
 		}
 		NavigationManager.startNavigation(p, args[1]);
 	}
+	
+	@Override
+	public int getMinArgs() {
+		return 1;
+	}
+	
+	@Override
+	public int getMaxArgs() {
+		return 2;
+	}
 
 	@Override
 	public String getArgs() {

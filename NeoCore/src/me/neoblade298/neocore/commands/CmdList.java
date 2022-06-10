@@ -15,6 +15,9 @@ public class CmdList implements Subcommand {
 	private TreeMap<String, Subcommand> cmds;
 	private PaginatedList<Subcommand> pages = null;
 	
+	private static CommandArguments args = new CommandArguments(new CommandArgument[] {
+			new CommandArgument("page", false) });
+	
 	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds) {
 		this(key, base, cmds, ChatColor.RED);
 	}
@@ -67,8 +70,8 @@ public class CmdList implements Subcommand {
 	}
 
 	@Override
-	public String getArgs() {
-		return "{page}";
+	public CommandArguments getArgs() {
+		return args;
 	}
 	
 	private void showPage(CommandSender s, int page) {
@@ -91,8 +94,11 @@ public class CmdList implements Subcommand {
 			}
 			
 			// Add args
-			if (sc.getArgs() != null) {
-				line += " " + sc.getArgs();
+			if (sc.getArgOverride() != null) {
+				line += " " + sc.getArgOverride();
+			}
+			else if (sc.getArgs() != null) {
+				line += " " + sc.getArgs().getDisplay();
 			}
 			
 			// Add description
