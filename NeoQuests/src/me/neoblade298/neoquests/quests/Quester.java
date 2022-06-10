@@ -71,10 +71,16 @@ public class Quester {
 	}
 	
 	public void startQuest(Quest q) {
-		Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
-		if (c != null) {
-			p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c: " + c.getExplanation(p));
-			return;
+		startQuest(q, false);
+	}
+	
+	public void startQuest(Quest q, boolean ignoreConditions) {
+		if (!ignoreConditions) {
+			Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
+			if (c != null) {
+				p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c: " + c.getExplanation(p));
+				return;
+			}
 		}
 		p.sendTitle("§fQuest Started", "§6" + q.getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");

@@ -1,7 +1,5 @@
 package me.neoblade298.neoquests.commands;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.command.CommandSender;
 
 import me.neoblade298.neocore.commands.CommandArguments;
@@ -30,11 +28,6 @@ public class CmdQuestAdminReload implements Subcommand {
 	@Override
 	public SubcommandRunner getRunner() {
 		return SubcommandRunner.BOTH;
-	}
-	
-	@Override
-	public ChatColor getColor() {
-		return ChatColor.RED;
 	}
 
 	@Override

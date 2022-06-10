@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.commands;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -9,21 +10,20 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neocore.exceptions.NeoIOException;
-import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.navigation.NavigationManager;
+import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class CmdANavigationCreate implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("name", true)));
+public class CmdQuestAdminStart implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("key"),
+			new CommandArgument("player", false)));
 
 	@Override
 	public String getDescription() {
-		return "Creates a new pathway editor";
+		return "Instantly starts a quest, ignoring all conditions";
 	}
 
 	@Override
 	public String getKey() {
-		return "create";
+		return "start";
 	}
 
 	@Override
@@ -33,21 +33,24 @@ public class CmdANavigationCreate implements Subcommand {
 
 	@Override
 	public SubcommandRunner getRunner() {
-		return SubcommandRunner.PLAYER_ONLY;
+		return SubcommandRunner.BOTH;
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		Player p = (Player) s;
-		try {
-			NavigationManager.startPathwayEditor(p, args[0]);
-		} catch (NeoIOException e) {
-			NeoQuests.showWarning("Failed to start pathway editor", e);
+		Player p = null;
+		if (args.length == 2) {
+			p = Bukkit.getPlayer(args[1]);
 		}
+		else {
+			p = (Player) s;
+		}
+		QuestsManager.startQuest(p, args[0]);
 	}
 
 	@Override
 	public CommandArguments getArgs() {
 		return args;
 	}
+
 }

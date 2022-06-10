@@ -34,7 +34,7 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	public String getEndpoint() {
 		return endpoint;
 	}
-	// Sets up obj count on quest startup, can instantly complete quest
+	// Sets up obj count on quest startup, returns true if quest complete
 	public boolean initialize(ObjectiveInstance oi) {	return false;	}
 	// Done after stage ends, basically just for GetStoredItem
 	public void finalize(Player p) { } 

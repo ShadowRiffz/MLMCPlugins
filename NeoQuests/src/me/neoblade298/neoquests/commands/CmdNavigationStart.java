@@ -1,7 +1,5 @@
 package me.neoblade298.neoquests.commands;
 
-import net.md_5.bungee.api.ChatColor;
-
 import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;

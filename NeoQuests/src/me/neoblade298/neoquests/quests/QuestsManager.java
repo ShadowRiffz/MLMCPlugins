@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -106,38 +107,8 @@ public class QuestsManager implements IOComponent, Manager {
 		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p, active));
 		questers.put(p.getUniqueId(), accts);
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
-			
-			while (rs.next()) {
-				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				
-				String qname = rs.getString(3);
-				int stage = rs.getInt(4);
-				String set = rs.getString(5);
-				
-				// Parse counts
-				String[] scounts = rs.getString(6).split(",");
-				int[] counts = new int[scounts.length];
-				for (int i = 0; i < scounts.length; i++) {
-					counts[i] = Integer.parseInt(scounts[i]);
-				}
-				
-				Quest quest = quests.get(qname);
-				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname);
-					continue;
-				}
-				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
-				quester.addActiveQuest(qi);
-				qi.setupInstances(false);
-				if (rs.getInt(2) == active) {
-					qi.startListening();
-				}
-				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
-			}
-			
 			// Completed quests
-			rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
 				Quest quest = quests.get(rs.getString(3));
@@ -169,6 +140,36 @@ public class QuestsManager implements IOComponent, Manager {
 				double z = rs.getDouble(5);
 				World w = Bukkit.getWorld(rs.getString(6));
 				quester.setLocation(new Location(w, x, y, z));
+			}
+			
+			// Active quests
+			rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
+			while (rs.next()) {
+				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
+				
+				String qname = rs.getString(3);
+				int stage = rs.getInt(4);
+				String set = rs.getString(5);
+				
+				// Parse counts
+				String[] scounts = rs.getString(6).split(",");
+				int[] counts = new int[scounts.length];
+				for (int i = 0; i < scounts.length; i++) {
+					counts[i] = Integer.parseInt(scounts[i]);
+				}
+				
+				Quest quest = quests.get(qname);
+				if (quest == null) {
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname);
+					continue;
+				}
+				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
+				quester.addActiveQuest(qi);
+				qi.setupInstances(false);
+				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
+				if (rs.getInt(2) == active) {
+					qi.startListening();
+				}
 			}
 		}
 		catch (Exception e) {
@@ -267,12 +268,20 @@ public class QuestsManager implements IOComponent, Manager {
 	}
 	
 	public static void startQuest(Player p, String quest) {
+		startQuest(p, quest, false);
+	}
+	
+	public static void startQuest(Player p, String quest, boolean ignoreConditions) {
 		Quest q = quests.get(quest.toUpperCase());
 		if (q == null) {
 			Bukkit.getLogger().warning("[NeoQuests] Failed to start quest " + quest + " for player " + p.getName() + ", quest doesn't exist.");
 			return;
 		}
-		getQuester(p).startQuest(q);
+		getQuester(p).startQuest(q, ignoreConditions);
+	}
+	
+	public static Collection<Quester> getAllAccounts(Player p) {
+		return questers.get(p.getUniqueId()).values();
 	}
 	
 	public static Quester getQuester(Player p) {

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

@@ -76,9 +76,10 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	    commands.put(cmd, quests);
 
 	    cmd = "questadmin";
-		CommandManager questadmin = new CommandManager(cmd);
+		CommandManager questadmin = new CommandManager(cmd, ChatColor.DARK_RED);
 		questadmin.registerCommandList("");
 		questadmin.register(new CmdQuestAdminReload());
+		questadmin.register(new CmdQuestAdminStart());
 	    this.getCommand(cmd).setExecutor(questadmin);
 	    commands.put(cmd, questadmin);
 
@@ -93,8 +94,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	    commands.put(cmd, navigation);
 
 	    cmd = "adminnavigation";
-		CommandManager anavigation = new CommandManager(cmd);
-		anavigation.registerCommandList("", ChatColor.DARK_RED);
+		CommandManager anavigation = new CommandManager(cmd, ChatColor.DARK_RED);
+		anavigation.registerCommandList("");
 		anavigation.register(new CmdANavigationSave());
 		anavigation.register(new CmdANavigationStart());
 		anavigation.register(new CmdANavigationCreate());

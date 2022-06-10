@@ -17,7 +17,7 @@ import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsLog implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("page", false)));
 
 	@Override
 	public String getDescription() {
@@ -48,7 +48,7 @@ public class CmdQuestsLog implements Subcommand {
 			return;
 		}
 		
-		if (args.length > 0 && StringUtils.isNumeric(args[0])) {
+		if (args.length > 0 && !StringUtils.isNumeric(args[0])) {
 			Util.msg(s, "&cInvalid argument! Must be a page number.");
 			return;
 		}

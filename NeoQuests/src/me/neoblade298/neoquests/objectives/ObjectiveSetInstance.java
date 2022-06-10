@@ -46,7 +46,9 @@ public class ObjectiveSetInstance {
 	public void startListening() {
 		for (ObjectiveInstance o : objs) {
 			o.startListening();
-			o.getObjective().initialize(o);
+			if (o.getObjective().initialize(o)) {
+				return;
+			}
 		}
 	}
 	
