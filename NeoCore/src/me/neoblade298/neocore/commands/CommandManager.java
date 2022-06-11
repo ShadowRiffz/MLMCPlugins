@@ -96,8 +96,10 @@ public class CommandManager implements CommandExecutor {
 		return true;
 	}
 	
-	public void register(Subcommand sc) {
-		handlers.put(sc.getKey().toUpperCase(), sc);
+	public void register(Subcommand... cmds) {
+		for (Subcommand cmd : cmds) {
+			handlers.put(cmd.getKey().toUpperCase(), cmd);
+		}
 	}
 	
 	public void registerCommandList(String key, ChatColor color) {
