@@ -16,6 +16,15 @@ public class PaginatedList<E> {
 	private LinkedList<LinkedList<E>> pages = new LinkedList<LinkedList<E>>();
 	private int pageSize;
 	
+	public PaginatedList() {
+		this(DEFAULT_PAGE_SIZE);
+	}
+	
+	public PaginatedList(int pageSize) {
+		this.pageSize = pageSize;
+		pages.add(new LinkedList<E>());
+	}
+	
 	public PaginatedList(Collection<E> col, int pageSize) {
 		this.pageSize = pageSize;
 		Iterator<E> iter = col.iterator();
@@ -105,7 +114,7 @@ public class PaginatedList<E> {
 	}
 	
 	public void push(E item) {
-		pages.getLast().push(item);
+		pages.getFirst().push(item);
 		trickleDown(0);
 	}
 	
