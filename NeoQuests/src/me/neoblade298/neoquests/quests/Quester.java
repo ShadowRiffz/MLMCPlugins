@@ -170,6 +170,15 @@ public class Quester {
 		return completedQuests.values();
 	}
 	
+	public void addQuestline(String qlname) {
+		Questline ql = QuestsManager.getQuestline(qlname);
+		if (ql == null) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to add questline " + qlname + " to player " + p.getName() + ", questline doesn't exist.");
+			return;
+		}
+		this.activeQuestlines.put(ql.getKey().toUpperCase(), ql);
+	}
+	
 	public void addQuestline(Questline ql) {
 		this.activeQuestlines.put(ql.getKey().toUpperCase(), ql);
 	}

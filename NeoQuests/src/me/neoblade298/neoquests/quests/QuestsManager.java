@@ -308,6 +308,10 @@ public class QuestsManager implements IOComponent, Manager {
 	public static ArrayList<QuestRecommendation> getChallenges() {
 		return challenges;
 	}
+	
+	public static Questline getQuestline(String key) {
+		return questlines.get(key.toUpperCase());
+	}
 
 	@Override
 	public void cleanup() {	}

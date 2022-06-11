@@ -29,6 +29,7 @@ public class ActionManager {
 		mngr.register(new GiveMoneyAction());
 		mngr.register(new StartQuestAction());
 		mngr.register(new CommandAction());
+		mngr.register(new LeaveQuestlineAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {
