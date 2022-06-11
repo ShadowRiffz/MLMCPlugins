@@ -46,6 +46,10 @@ public class PaginatedList<E> {
 	}
 	
 	public int size() {
+		return ((pages.size() - 1) * pageSize) + pages.getLast().size();
+	}
+	
+	public int pages() {
 		return pages.size();
 	}
 	
