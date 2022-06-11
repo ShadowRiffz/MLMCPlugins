@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -36,6 +37,10 @@ public class CmdQuestBase implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		Quester q = QuestsManager.getQuester(p);
+		if (q == null) {
+			Util.msg(s, "&cYour account hasn't loaded in yet! Try again in a few seconds.");
+			return;
+		}
 		q.displayQuests(s);
 	}
 

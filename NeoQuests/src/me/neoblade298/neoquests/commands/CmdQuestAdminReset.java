@@ -49,7 +49,7 @@ public class CmdQuestAdminReset implements Subcommand {
 		Statement stmt = NeoCore.getStatement();
 		try {
 			if (args.length == 1) {
-				stmt.executeQuery("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "';");
+				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "';");
 				for (Quester quester : QuestsManager.getAllAccounts(p)) {
 					quester.getCompletedQuests().clear();
 				}
@@ -63,7 +63,7 @@ public class CmdQuestAdminReset implements Subcommand {
 				if (quester == null) {
 					Util.msg(s, "&cThis account doesn't exist!");
 				}
-				stmt.executeQuery("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
 				quester.getCompletedQuests().clear();
 			}
 		}

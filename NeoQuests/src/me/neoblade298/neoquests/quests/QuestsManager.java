@@ -287,6 +287,9 @@ public class QuestsManager implements IOComponent, Manager {
 	}
 	
 	public static Quester getQuester(Player p, int account) {
+		if (!questers.containsKey(p.getUniqueId())) {
+			return null;
+		}
 		return questers.get(p.getUniqueId()).get(account);
 	}
 	

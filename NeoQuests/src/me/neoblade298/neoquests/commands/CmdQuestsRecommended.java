@@ -58,20 +58,25 @@ public class CmdQuestsRecommended implements Subcommand {
 	public static void run(CommandSender s, String[] args, boolean challenges) {
 		Player p = (Player) s;
 		
-		if (args.length == 1 && !StringUtils.isNumeric(args[0])) {
-			Util.msg(s, "&cInvalid argument, must be a page number!");
-			return;
+		int page = 0;
+		if (args.length == 1) {
+			if (StringUtils.isNumeric(args[0])) {
+				page = Integer.parseInt(args[0]) - 1;
+			}
+			else {
+				Util.msg(s, "&cInvalid argument, must be a page number!");
+				return;
+			}
 		}
-		
+
 		Quester quester = QuestsManager.getQuester(p);
-		int page = Integer.parseInt(args[0]) - 1;
 		ArrayList<QuestRecommendation> recs = challenges ? QuestsManager.getChallenges() : QuestsManager.getRecommendations();
 		PaginatedList<QuestRecommendation> pages = new PaginatedList<QuestRecommendation>();
 		for (QuestRecommendation rec : recs) {
 			int min = rec.getMin(), max = rec.getMax(), level = SkillAPI.getPlayerData(p).getMainClass().getLevel();
-			if (min == -1 || min > level) return;
-			if (max == -1 || max < level) return;
-			if (quester.getCompletedQuest(rec.getQuest().getKey()) != null) return;
+			if (min == -1 || min > level) continue;
+			if (max == -1 || max < level) continue;
+			if (quester.getCompletedQuest(rec.getQuest().getKey()) != null) continue;
 
 			pages.add(rec);
 		}
@@ -81,11 +86,17 @@ public class CmdQuestsRecommended implements Subcommand {
 			return;
 		}
 		
+		if (pages.size() == 0) {
+			Util.msg(s, "&7No recommendations at this level! Try &c/quests challenges!");
+			return;
+		}
+		
 		for (QuestRecommendation rec : pages.get(page)) {
 			ComponentBuilder text = new ComponentBuilder("§7- §6" + rec.getQuest().getDisplay());
 			ComponentBuilder nav = new ComponentBuilder("§7§o[Click for GPS]")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + rec.getEndpoint()));
 			p.spigot().sendMessage(text.append(nav.create()).create());
 		}
+		pages.displayFooter(p, page, "/quests recommended " + (page + 2), "/quests recommended " + page);
 	}
 }

@@ -27,107 +27,107 @@ import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static Random rand = new Random();
-	
+
 	private static NeoQuests inst;
 	private static HashSet<Player> debuggers = new HashSet<Player>();
 	private static ArrayList<Manager> managers = new ArrayList<Manager>();
 	private static HashMap<String, CommandManager> commands = new HashMap<String, CommandManager>();
-	
+
 	public void onEnable() {
 		inst = this;
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");
-		
+
 		getServer().getPluginManager().registerEvents(new NpcListener(), this);
 		getServer().getPluginManager().registerEvents(new ObjectiveListener(), this);
 		getServer().getPluginManager().registerEvents(new GeneralListener(), this);
 		getServer().getPluginManager().registerEvents(new NavigationListener(), this);
 		getServer().getPluginManager().registerEvents(new QuesterListener(), this);
-		
+
 		initCommands();
-	    
-	    // Managers
+
+		// Managers
 		try {
-		    new ActionManager();
-		    new ObjectiveManager();
-		    managers.add(new ConversationManager());
-		    managers.add((Manager) NeoCore.registerIOComponent(this, new QuestsManager()));
-		    managers.add(new NavigationManager());
-		}
-		catch (Exception e) {
+			new ActionManager();
+			new ObjectiveManager();
+			managers.add(new ConversationManager());
+			managers.add((Manager) NeoCore.registerIOComponent(this, new QuestsManager()));
+			managers.add(new NavigationManager());
+		} catch (Exception e) {
 			showWarning("Failed to enable managers on startup", e);
 		}
 	}
-	
+
 	private void initCommands() {
 		String cmd = "quest";
 		CommandManager quest = new CommandManager(cmd);
 		quest.register(new CmdQuestBase());
-	    this.getCommand(cmd).setExecutor(quest);
-	    commands.put(cmd, quest);
+		this.getCommand(cmd).setExecutor(quest);
+		commands.put(cmd, quest);
 
-	    cmd = "quests";
+		cmd = "quests";
 		CommandManager quests = new CommandManager(cmd);
 		quests.registerCommandList("");
-		quests.register(new CmdQuestsQuit());
-		quests.register(new CmdQuestsTake());
-		quests.register(new CmdQuestsLog());
-		quests.register(new CmdQuestsView());
-		quests.register(new CmdQuestsRecommended());
-		quests.register(new CmdQuestsChallenges());
-	    this.getCommand(cmd).setExecutor(quests);
-	    commands.put(cmd, quests);
+		quests.register(new CmdQuestsQuit(),
+				new CmdQuestsTake(),
+				new CmdQuestsLog(),
+				new CmdQuestsView(),
+				new CmdQuestsGuide(),
+				new CmdQuestsRecommended(),
+				new CmdQuestsChallenges());
+		this.getCommand(cmd).setExecutor(quests);
+		commands.put(cmd, quests);
 
-	    cmd = "questadmin";
+		cmd = "questadmin";
 		CommandManager questadmin = new CommandManager(cmd, ChatColor.DARK_RED);
 		questadmin.registerCommandList("");
-		questadmin.register(new CmdQuestAdminReload());
-		questadmin.register(new CmdQuestAdminStart());
-		questadmin.register(new CmdQuestAdminReset());
-	    this.getCommand(cmd).setExecutor(questadmin);
-	    commands.put(cmd, questadmin);
+		questadmin.register(new CmdQuestAdminReload(),
+				new CmdQuestAdminStart(),
+				new CmdQuestAdminReset());
+		this.getCommand(cmd).setExecutor(questadmin);
+		commands.put(cmd, questadmin);
 
-	    cmd = "navigation";
+		cmd = "navigation";
 		CommandManager navigation = new CommandManager(cmd);
 		navigation.registerCommandList("");
-		navigation.register(new CmdNavigationTo());
-		navigation.register(new CmdNavigationFrom());
-		navigation.register(new CmdNavigationStart());
-		navigation.register(new CmdNavigationStop());
-	    this.getCommand(cmd).setExecutor(navigation);
-	    commands.put(cmd, navigation);
+		navigation.register(new CmdNavigationTo(),
+				new CmdNavigationFrom(),
+				new CmdNavigationStart(),
+				new CmdNavigationStop());
+		this.getCommand(cmd).setExecutor(navigation);
+		commands.put(cmd, navigation);
 
-	    cmd = "adminnavigation";
+		cmd = "adminnavigation";
 		CommandManager anavigation = new CommandManager(cmd, ChatColor.DARK_RED);
 		anavigation.registerCommandList("");
-		anavigation.register(new CmdANavigationSave());
-		anavigation.register(new CmdANavigationStart());
-		anavigation.register(new CmdANavigationCreate());
-		anavigation.register(new CmdANavigationExit());
-		anavigation.register(new CmdANavigationTo());
-		anavigation.register(new CmdANavigationFrom());
-	    this.getCommand(cmd).setExecutor(anavigation);
-	    commands.put(cmd, anavigation);
+		anavigation.register(new CmdANavigationSave(),
+				new CmdANavigationStart(),
+				new CmdANavigationCreate(),
+				new CmdANavigationExit(),
+				new CmdANavigationTo(),
+				new CmdANavigationFrom());
+		this.getCommand(cmd).setExecutor(anavigation);
+		commands.put(cmd, anavigation);
 	}
-	
+
 	public void onDisable() {
 		for (Manager mngr : managers) {
 			mngr.cleanup();
 		}
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoQuests Disabled");
-	    super.onDisable();
+		org.bukkit.Bukkit.getServer().getLogger().info("NeoQuests Disabled");
+		super.onDisable();
 	}
-	
+
 	public static NeoQuests inst() {
 		return inst;
 	}
-	
+
 	public static void showWarning(String warning) {
 		Bukkit.getLogger().warning("[NeoQuests] " + warning);
 		for (Player p : debuggers) {
 			p.sendMessage(warning);
 		}
 	}
-	
+
 	public static void showWarning(String warning, Exception e) {
 		Bukkit.getLogger().warning("[NeoQuests] " + warning);
 		Bukkit.getLogger().warning("[NeoQuests] " + e.getMessage());
@@ -137,18 +137,18 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		e.printStackTrace();
 	}
-	
+
 	public static boolean reloadAll() {
 		for (Manager mngr : managers) {
 			mngr.reload();
 		}
 		return true;
 	}
-	
+
 	public static void addDebugger(Player p) {
 		debuggers.add(p);
 	}
-	
+
 	public static HashMap<String, CommandManager> getCommands() {
 		return commands;
 	}
