@@ -37,8 +37,8 @@ public class Quester {
 	}
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {
-		cleanupQuest(qi.getQuest().getKey());
-		completedQuests.put(qi.getQuest().getKey(), new CompletedQuest(qi.getQuest(), stage, success));
+		cleanupQuest(qi.getQuest().getKey().toUpperCase());
+		completedQuests.put(qi.getQuest().getKey().toUpperCase(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
 		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getDisplay() + "§7!");
@@ -90,8 +90,8 @@ public class Quester {
 		p.sendTitle("§fQuest Started", "§6" + q.getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");
 		QuestInstance qi = new QuestInstance(this, q);
-		activeQuests.put(q.getKey(), qi);
-		if (q.getQuestline() != null) activeQuestlines.put(q.getKey(), q.getQuestline());
+		activeQuests.put(q.getKey().toUpperCase(), qi);
+		if (q.getQuestline() != null) activeQuestlines.put(q.getKey().toUpperCase(), q.getQuestline());
 		qi.setupInstances(true);
 		qi.displayObjectives(p);
 	}
@@ -159,7 +159,7 @@ public class Quester {
 	}
 	
 	public void addActiveQuest(QuestInstance qi) {
-		activeQuests.put(qi.getQuest().getKey(), qi);
+		activeQuests.put(qi.getQuest().getKey().toUpperCase(), qi);
 	}
 	
 	public CompletedQuest getCompletedQuest(String quest) {
@@ -171,11 +171,15 @@ public class Quester {
 	}
 	
 	public void addQuestline(Questline ql) {
-		this.activeQuestlines.put(ql.getKey(), ql);
+		this.activeQuestlines.put(ql.getKey().toUpperCase(), ql);
+	}
+	
+	public void removeQuestline(String ql) {
+		this.activeQuestlines.remove(ql.toUpperCase());
 	}
 	
 	public void addCompletedQuest(CompletedQuest cq) {
-		this.completedQuests.put(cq.getQuest().getKey(), cq);
+		this.completedQuests.put(cq.getQuest().getKey().toUpperCase(), cq);
 	}
 	
 	public Collection<Questline> getActiveQuestlines() {

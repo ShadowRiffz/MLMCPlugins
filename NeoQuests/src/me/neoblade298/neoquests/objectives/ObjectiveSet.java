@@ -5,11 +5,14 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.actions.ActionManager;
+import me.neoblade298.neoquests.actions.ActionSequence;
 import me.neoblade298.neoquests.actions.RewardAction;
 
 public class ObjectiveSet {
 	private ArrayList<Objective> objs = new ArrayList<Objective>();
 	private ArrayList<RewardAction> alternateRewards;
+	private ActionSequence actions;
 	private String key, display;
 	private int next;
 	
@@ -20,6 +23,8 @@ public class ObjectiveSet {
 		for (String line : cfg.getStringList("objectives")) {
 			objs.add(ObjectiveManager.get(new LineConfig(line)));
 		}
+		this.alternateRewards = ActionManager.parseRewards(cfg.getStringList("rewards"));
+		this.actions.load(cfg.getStringList("actions"));
 	}
 	
 	public int getNext() {
@@ -52,5 +57,9 @@ public class ObjectiveSet {
 	
 	public String getKey() {
 		return key;
+	}
+	
+	public ActionSequence getActions() {
+		return actions;
 	}
 }

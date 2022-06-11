@@ -12,7 +12,7 @@ import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
-import me.neoblade298.neoquests.conditions.QuestNotCompletedCondition;
+import me.neoblade298.neoquests.conditions.QuestCompletedCondition;
 
 public class Quest {
 	private String key, display, startConv, fileLocation;
@@ -37,7 +37,7 @@ public class Quest {
 		this.canRetry = cfg.getBoolean("retryable", false);
 		
 		if (!canRetry) {
-			this.conditions.add(new QuestNotCompletedCondition(this.key, -1, false, ConditionResult.UNCLICKABLE));
+			this.conditions.add(new QuestCompletedCondition(this.key, -1, false, ConditionResult.UNCLICKABLE));
 		}
 	}
 	

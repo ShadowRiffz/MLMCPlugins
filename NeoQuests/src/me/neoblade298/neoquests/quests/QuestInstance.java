@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
@@ -98,23 +99,29 @@ public class QuestInstance {
 		Player p = q.getPlayer();
 		if (success) {
 			q.completeQuest(this, stage, success);
+			si.getSet().getActions().run(p);
+			
 			ArrayList<RewardAction> rewards = quest.getRewards();
 			if (si.getSet().hasAlternateRewards()) {
 				rewards = si.getSet().getAlternateRewards();
 			}
 			final ArrayList<RewardAction> fRewards = rewards;
-			if (rewards.size() > 0) {
-				p.sendMessage("§6Rewards:");
-				for (RewardAction r : rewards) {
-					if (r.getDisplay() != null) {
-						p.sendMessage("§7- " + r.getDisplay());
+			new BukkitRunnable() {
+				public void run() {
+					if (fRewards.size() > 0) {
+						p.sendMessage("§6Rewards:");
+						for (RewardAction r : fRewards) {
+							if (r.getDisplay() != null) {
+								p.sendMessage("§7- " + r.getDisplay());
+							}
+						}
+
+						for (RewardAction r : fRewards) {
+							r.run(p);
+						}
 					}
 				}
-
-				for (RewardAction r : fRewards) {
-					r.run(p);
-				}
-			}
+			}.runTaskLater(NeoQuests.inst(), 20L);
 		}
 		else {
 			q.cancelQuest(quest.getKey());

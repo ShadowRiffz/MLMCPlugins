@@ -86,7 +86,7 @@ public class CmdQuestAdminReset implements Subcommand {
 				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
 				quester.reset();
 			}
-			Util.msg(s, "&7Successfully reset player.");
+			Util.msg(s, "&7Successfully reset player &6" + p.getName() + ".");
 		}
 		catch (Exception e) {
 			Util.msg(s, "&cCommand failed! Stack trace in console.");

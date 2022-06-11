@@ -12,6 +12,7 @@ public class ClassLevelCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private int min, max;
+	private boolean hide, negate;
 	
 	static {
 		key = "class-level";
@@ -20,9 +21,12 @@ public class ClassLevelCondition implements Condition {
 	public ClassLevelCondition() {}
 	
 	public ClassLevelCondition(LineConfig cfg) {
+		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		hide = cfg.getBool("hide", false);
+		negate = cfg.getBool("negate", false);
+		
 		min = cfg.getInt("min", -1);
 		max = cfg.getInt("max", 999);
-		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
 	}
 
 	@Override
@@ -39,19 +43,21 @@ public class ClassLevelCondition implements Condition {
 		if (cls == null) return false;
 		
 		int level = cls.getLevel();
-		return level >= min && level <= max;
+		boolean passes = level >= min && level <= max;
+		return passes ^ negate;
 	}
 
 	@Override
 	public String getExplanation(Player p) {
+		String prefix = negate ? "You must not be " : "You must be ";
 		if (min != -1 && max == 999) {
-			return "You must be at least level §e" + min;
+			return prefix + "at least level §e" + min;
 		}
 		else if (max != 999 && min == -1) {
-			return "You must be at most level §e" + max;
+			return prefix + "at most level §e" + max;
 		}
 		else {
-			return "You must be between level §e" + min + " §fand §e" + max;
+			return prefix + "between level §e" + min + " §fand §e" + max;
 		}
 	}
 
