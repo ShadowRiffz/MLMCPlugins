@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,9 +42,13 @@ public class Quester {
 		Questline ql = qi.getQuest().getQuestline();
 		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getDisplay() + "§7!");
-		if (ql != null && ql.getLastQuest().equals(qi.getQuest().getKey())) {
-			activeQuestlines.remove(ql.getKey());
-			ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
+		if (ql != null) {
+			if (ql.getLastQuest().equals(qi.getQuest().getKey())) {
+				activeQuestlines.remove(ql.getKey());
+			}
+			else {
+				ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
+			}
 		}
 	}
 	
@@ -116,8 +121,13 @@ public class Quester {
 			s.sendMessage("§eActive Questlines:");
 			for (Questline ql : activeQuestlines.values()) {
 				Quest next = ql.getNextQuest(p);
+				if (next == null) {
+					Bukkit.getLogger().warning("[NeoQuests] Player questline " + ql.getDisplay() + " returned null for next, this should never happen "
+							+ "as questlines are removed once the last quest is completed.");
+					continue;
+				}
 				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getDisplay() + "§7) ");
-				ComponentBuilder takequest = new ComponentBuilder("§e<Click to Accept Quest>")
+				ComponentBuilder takequest = new ComponentBuilder("§7§o[Click to Take]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + next.getKey()))
 						.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests take")));
 				s.spigot().sendMessage(builder.append(takequest.create()).create());
@@ -190,5 +200,15 @@ public class Quester {
 	
 	public int getAccount() {
 		return acct;
+	}
+	
+	public void reset() {
+		this.loc = null;
+		this.activeQuestlines.clear();
+		for (QuestInstance qi : activeQuests.values()) {
+			qi.cleanupInstances();
+		}
+		this.activeQuests.clear();
+		this.completedQuests.clear();
 	}
 }

@@ -58,7 +58,7 @@ public class QuestsManager implements IOComponent, Manager {
 						continue;
 					}
 					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key), file));
-				} catch (NeoIOException e) {
+				} catch (Exception e) {
 					NeoQuests.showWarning("Failed to load questline " + key, e);
 				}
 			}
@@ -119,12 +119,12 @@ public class QuestsManager implements IOComponent, Manager {
 			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				Questline ql = questlines.get(rs.getString(3));
+				Questline ql = questlines.get(rs.getString(3).toUpperCase());
 				if (ql == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3));
 					continue;
 				}
-				quester.addQuestline(questlines.get(rs.getString(3)));
+				quester.addQuestline(ql);
 			}
 			
 			// Account info

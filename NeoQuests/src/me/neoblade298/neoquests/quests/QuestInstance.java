@@ -110,15 +110,10 @@ public class QuestInstance {
 						p.sendMessage("§7- " + r.getDisplay());
 					}
 				}
-				
-				// Must be synchronous (specifically for GiveStoredItemEvent)
-				new BukkitRunnable() {
-					public void run() {
-						for (RewardAction r : fRewards) {
-							r.run(p);
-						}
-					}
-				}.run();
+
+				for (RewardAction r : fRewards) {
+					r.run(p);
+				}
 			}
 		}
 		else {

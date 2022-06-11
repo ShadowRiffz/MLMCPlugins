@@ -48,8 +48,8 @@ public class CmdNavigationTo implements Subcommand {
 		
 		PathwayPoint point = NavigationManager.getEndpoint(args[0]);
 		if (point.getToEndpoints().size() > 0) {
-			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
-			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
+			Util.msg(p, "Setting destination to &6" + point.getDisplay() + "&7. Choose a start point:");
+			for (Entry<PathwayPoint, Pathway> ent : point.getFromEndpoints().entrySet()) {
 				ComponentBuilder entry = new ComponentBuilder("§7- §6" + ent.getKey().getDisplay())
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + ent.getKey().getDisplay())));
@@ -57,7 +57,7 @@ public class CmdNavigationTo implements Subcommand {
 			}
 		}
 		else {
-			Util.msg(p, "&cThis start point is not connected to any destinations!");
+			Util.msg(p, "&cThis destination is not connected to any start points!");
 		}
 	}
 

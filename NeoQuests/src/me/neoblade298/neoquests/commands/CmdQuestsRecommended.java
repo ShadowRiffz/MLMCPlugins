@@ -15,7 +15,6 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
-import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.QuestRecommendation;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
@@ -91,9 +90,10 @@ public class CmdQuestsRecommended implements Subcommand {
 			return;
 		}
 		
+		Util.msg(s, "&7Recommended quests for you:");
 		for (QuestRecommendation rec : pages.get(page)) {
 			ComponentBuilder text = new ComponentBuilder("§7- §6" + rec.getQuest().getDisplay());
-			ComponentBuilder nav = new ComponentBuilder("§7§o[Click for GPS]")
+			ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + rec.getEndpoint()));
 			p.spigot().sendMessage(text.append(nav.create()).create());
 		}

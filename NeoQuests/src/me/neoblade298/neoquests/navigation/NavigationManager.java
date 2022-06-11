@@ -70,7 +70,7 @@ public class NavigationManager implements Manager {
 		
 		endpointsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
-				if (endpoints.containsKey(key)) {
+				if (endpoints.containsKey(key.toUpperCase())) {
 					NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
 							"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
 					continue;
@@ -86,7 +86,7 @@ public class NavigationManager implements Manager {
 					NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
 					continue;
 				}
-				point.setEndpointFields(key.toUpperCase(), Util.translateColors(sec.getString("display", key)), file);
+				point.setEndpointFields(key, Util.translateColors(sec.getString("display", key)), file);
 				endpoints.put(key.toUpperCase(), point);
 			}
 		};

@@ -75,7 +75,7 @@ public class NavigationListener implements Listener {
 			point.setFile(editor.getEndpointFile());
 			point.setIsEndpoint(true);
 			NavigationManager.addEndpoint(point);
-			Util.msg(p, "Endpoint successfully created!");
+			Util.msg(p, "Endpoint &6" + e.getMessage() + " &7successfully created!");
 		}
 	}
 	

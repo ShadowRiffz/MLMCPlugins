@@ -18,7 +18,7 @@ import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestAdminReset implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"),
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
 			new CommandArgument("account #", false)));
 
 	@Override
@@ -43,29 +43,50 @@ public class CmdQuestAdminReset implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		Player p = Bukkit.getPlayer(args[0]);
+		Player p = null;
+		int offset = 0;
+		if (args.length == 0) {
+			p = (Player) s;
+		}
+		else if (args.length == 1 && StringUtils.isNumeric(args[0])) {
+			p = (Player) s;
+		}
+		else if (Bukkit.getPlayer(args[0]) != null) {
+			p = Bukkit.getPlayer(args[0]);
+			offset = 1;
+		}
+		else {
+			Util.msg(s, "&cSomething's wrong with the command arguments!");
+		}
 		
 		// Reset entire player
 		Statement stmt = NeoCore.getStatement();
 		try {
-			if (args.length == 1) {
+			if (args.length == offset) {
 				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "';");
+				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + p.getUniqueId() + "';");
+				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + p.getUniqueId() + "';");
+				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';");
 				for (Quester quester : QuestsManager.getAllAccounts(p)) {
-					quester.getCompletedQuests().clear();
+					quester.reset();
 				}
 			}
 			else {
-				if (!StringUtils.isNumeric(args[1])) {
+				if (!StringUtils.isNumeric(args[offset])) {
 					Util.msg(s, "&cAccount must be a number!");
 				}
-				int acct = Integer.parseInt(args[1]);
+				int acct = Integer.parseInt(args[offset]);
 				Quester quester = QuestsManager.getQuester(p, acct);
 				if (quester == null) {
 					Util.msg(s, "&cThis account doesn't exist!");
 				}
 				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
-				quester.getCompletedQuests().clear();
+				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
+				quester.reset();
 			}
+			Util.msg(s, "&7Successfully reset player.");
 		}
 		catch (Exception e) {
 			Util.msg(s, "&cCommand failed! Stack trace in console.");

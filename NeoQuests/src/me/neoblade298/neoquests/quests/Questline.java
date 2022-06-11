@@ -19,7 +19,7 @@ public class Questline implements Comparator<Questline> {
 		fileLocation = file.getPath();
 		display = cfg.getString("display");
 		
-		List<String> recs = cfg.getStringList("recommendations");
+		List<String> recs = cfg.getStringList("quests");
 		quests = new ArrayList<Quest>(recs.size());
 		for (String line : recs) {
 			Quest q = QuestsManager.getQuest(line);
@@ -44,16 +44,17 @@ public class Questline implements Comparator<Questline> {
 	public Quest getNextQuest(Player p) {
 		Quester q = QuestsManager.getQuester(p);
 		for (Quest quest : quests) {
-			CompletedQuest cq = q.getCompletedQuest(quest.getKey());
-			if (cq == null) continue;
-			if (canTakeQuest(cq)) return quest;
+			if (canTakeQuest(q.getCompletedQuest(quest.getKey()))) return quest;
 		}
 		return null;
 	}
 
 	private boolean canTakeQuest(CompletedQuest cq) {
-		if (cq.isSuccess()) {
+		if (cq == null) {
 			return true;
+		}
+		if (cq.isSuccess()) {
+			return false;
 		}
 		Quest q = cq.getQuest();
 		return q.canRepeat() || q.canRetry();
