@@ -153,7 +153,7 @@ public class Quester {
 	}
 	
 	public CompletedQuest getCompletedQuest(String quest) {
-		return completedQuests.get(quest);
+		return completedQuests.get(quest.toUpperCase());
 	}
 	
 	public Collection<CompletedQuest> getCompletedQuests() {

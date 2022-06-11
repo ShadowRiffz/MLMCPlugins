@@ -11,10 +11,12 @@ import me.neoblade298.neocore.io.LineConfig;
 public class QuestRecommendation {
 	private int min, max;
 	private Quest quest;
+	private String endpoint;
 	
 	public QuestRecommendation(LineConfig cfg) throws NeoIOException {
 		this.min = cfg.getInt("min", 1);
 		this.max = cfg.getInt("max", 60);
+		this.endpoint = cfg.getString("endpoint", null);
 		this.quest = QuestsManager.getQuest(cfg.getString("quest", "N/A").toUpperCase());
 		
 		if (this.quest == null) {
@@ -36,5 +38,17 @@ public class QuestRecommendation {
 	
 	public Quest getQuest() {
 		return quest;
+	}
+	
+	public int getMin() {
+		return min;
+	}
+	
+	public int getMax() {
+		return max;
+	}
+	
+	public String getEndpoint() {
+		return endpoint;
 	}
 }

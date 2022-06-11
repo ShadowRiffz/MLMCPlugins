@@ -72,6 +72,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		quests.register(new CmdQuestsTake());
 		quests.register(new CmdQuestsLog());
 		quests.register(new CmdQuestsView());
+		quests.register(new CmdQuestsRecommended());
+		quests.register(new CmdQuestsChallenges());
 	    this.getCommand(cmd).setExecutor(quests);
 	    commands.put(cmd, quests);
 
@@ -80,6 +82,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		questadmin.registerCommandList("");
 		questadmin.register(new CmdQuestAdminReload());
 		questadmin.register(new CmdQuestAdminStart());
+		questadmin.register(new CmdQuestAdminReset());
 	    this.getCommand(cmd).setExecutor(questadmin);
 	    commands.put(cmd, questadmin);
 

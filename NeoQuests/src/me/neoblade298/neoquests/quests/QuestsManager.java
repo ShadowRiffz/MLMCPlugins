@@ -297,6 +297,14 @@ public class QuestsManager implements IOComponent, Manager {
 	public static File getDataFolder() {
 		return data;
 	}
+	
+	public static ArrayList<QuestRecommendation> getRecommendations() {
+		return recommendations;
+	}
+	
+	public static ArrayList<QuestRecommendation> getChallenges() {
+		return challenges;
+	}
 
 	@Override
 	public void cleanup() {	}
