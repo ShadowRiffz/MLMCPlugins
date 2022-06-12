@@ -21,6 +21,9 @@ public class ObjectiveListener implements Listener {
 	public static void startListening(ObjectiveInstance o) {
 		HashMap<ObjectiveEvent, ArrayList<ObjectiveInstance>> pmap = getPlayerInstances(o.getPlayer());
 		ObjectiveEvent event = o.getObjective().getType();
+		if (event == null) {
+			return; // Should only happen if an objective needs no listeners (Fake objective)
+		}
 		ArrayList<ObjectiveInstance> insts = pmap.getOrDefault(event, new ArrayList<ObjectiveInstance>());
 		insts.add(o);
 		pmap.putIfAbsent(event, insts);

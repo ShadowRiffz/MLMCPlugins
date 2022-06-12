@@ -6,17 +6,21 @@ import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigParser;
 
 public abstract class Objective implements LineConfigParser<Objective> {
+	protected LineConfig cfg;
 	protected ObjectiveEvent type;
 	protected ObjectiveSet set;
 	protected int needed;
 	protected String endpoint;
+	protected boolean hide;
 	
 	public Objective() {}
 	
 	public Objective(ObjectiveEvent type, LineConfig cfg) {
+		this.cfg = cfg;
 		this.type = type;
 		this.needed = cfg.getInt("needed", 1);
 		this.endpoint = cfg.getString("endpoint", null);
+		this.hide = cfg.getBool("hide", false);
 	}
 	
 	public ObjectiveEvent getType() {
@@ -33,6 +37,9 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	}
 	public String getEndpoint() {
 		return endpoint;
+	}
+	public boolean isHidden() {
+		return hide;
 	}
 	// Sets up obj count on quest startup, returns true if quest complete
 	public void initialize(ObjectiveInstance oi) {}

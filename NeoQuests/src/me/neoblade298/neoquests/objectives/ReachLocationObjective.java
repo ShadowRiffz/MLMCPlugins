@@ -18,7 +18,6 @@ public class ReachLocationObjective extends Objective {
 
 	public ReachLocationObjective(LineConfig cfg) {
 		super(ObjectiveEvent.INTERACT_NPC, cfg);
-		this.needed = 1;
 
 		double x = cfg.getDouble("x", 0.0);
 		double y = cfg.getDouble("y", 0.0);

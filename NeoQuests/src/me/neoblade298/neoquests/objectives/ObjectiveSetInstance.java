@@ -22,7 +22,12 @@ public class ObjectiveSetInstance {
 		
 		objs = new ArrayList<ObjectiveInstance>();
 		for (Objective o : set.getObjectives()) {
-			objs.add(new ObjectiveInstance(p, o, this));
+			if (o instanceof FakeObjective) {
+				objs.add(new FakeObjectiveInstance(p, o, this));
+			}
+			else {
+				objs.add(new ObjectiveInstance(p, o, this));
+			}
 		}
 	}
 	
@@ -100,8 +105,14 @@ public class ObjectiveSetInstance {
 				counts += objs.get(0).getCount();
 				continue;
 			}
-			counts += " " + objs.get(i).getCount();
+			counts += "," + objs.get(i).getCount();
 		}
 		return counts;
+	}
+	
+	public void reload() {
+		for (ObjectiveInstance oi : objs) {
+			oi.reload();
+		}
 	}
 }

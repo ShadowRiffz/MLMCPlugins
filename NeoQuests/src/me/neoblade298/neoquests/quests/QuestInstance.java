@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.RewardAction;
+import me.neoblade298.neoquests.objectives.FakeObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
@@ -81,7 +82,17 @@ public class QuestInstance {
 		for (ObjectiveSetInstance osi : sets.values()) {
 			s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
 			for (ObjectiveInstance oi : osi.getObjectives()) {
-				String msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+				// Special handling for fake objectives
+				String msg;
+				if (oi instanceof FakeObjectiveInstance) {
+					msg = "§7- " + ((FakeObjectiveInstance) oi).getDisplay();
+				}
+				else if (oi.getObjective().isHidden()) {
+					continue;
+				}
+				else {
+					msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+				}
 				if (oi.getObjective().getEndpoint() != null) {
 					ComponentBuilder builder = new ComponentBuilder(msg);
 					ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")

@@ -2,6 +2,8 @@ package me.neoblade298.neoquests.objectives;
 
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.listeners.ObjectiveListener;
 
 public class ObjectiveInstance {
@@ -63,6 +65,14 @@ public class ObjectiveInstance {
 	
 	public void startListening() {
 		ObjectiveListener.startListening(this);
+	}
+	
+	public void reload() {
+		try {
+			obj = ObjectiveManager.get(obj.cfg);
+		} catch (NeoIOException e) {
+			NeoQuests.showWarning("Failed to reload objective", e);
+		}
 	}
 
 	public void updateCount() {}

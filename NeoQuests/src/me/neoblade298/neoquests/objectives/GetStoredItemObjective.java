@@ -19,7 +19,6 @@ public class GetStoredItemObjective extends Objective {
 
 	public GetStoredItemObjective(LineConfig cfg) {
 		super(ObjectiveEvent.RECEIVE_STORED_ITEM, cfg);
-		this.needed = cfg.getInt("amount", 1);
 		this.keep = cfg.getBool("keep", false);
 		
 		id = cfg.getInt("id", 0);

@@ -16,7 +16,6 @@ public class KillMythicmobObjective extends Objective {
 
 	public KillMythicmobObjective(LineConfig cfg) {
 		super(ObjectiveEvent.KILL_MYTHICMOB, cfg);
-		this.needed = cfg.getInt("amount", 1);
 
 		type = cfg.getString("type", null);
 	}

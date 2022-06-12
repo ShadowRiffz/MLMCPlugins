@@ -14,7 +14,6 @@ public class InteractNpcObjective extends Objective {
 
 	public InteractNpcObjective(LineConfig cfg) {
 		super(ObjectiveEvent.INTERACT_NPC, cfg);
-		this.needed = 1;
 		
 		npcid = cfg.getInt("id", -1);
 	}

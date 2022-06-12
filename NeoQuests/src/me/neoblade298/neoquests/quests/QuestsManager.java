@@ -91,6 +91,16 @@ public class QuestsManager implements IOComponent, Manager {
 
 	public QuestsManager() throws NeoIOException {
 		reload();
+		
+		for (HashMap<Integer, Quester> pmap : questers.values()) {
+			for (Quester quester : pmap.values()) {
+				for (QuestInstance qi : quester.getActiveQuests()) {
+					for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+						osi.reload();
+					}
+				}
+			}
+		}
 	}
 
 	@Override
