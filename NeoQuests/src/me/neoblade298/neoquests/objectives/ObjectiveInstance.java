@@ -66,14 +66,6 @@ public class ObjectiveInstance {
 	public void startListening() {
 		ObjectiveListener.startListening(this);
 	}
-	
-	public void reload() {
-		try {
-			obj = ObjectiveManager.get(obj.cfg);
-		} catch (NeoIOException e) {
-			NeoQuests.showWarning("Failed to reload objective", e);
-		}
-	}
 
 	public void updateCount() {}
 }

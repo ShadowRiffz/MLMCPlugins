@@ -72,30 +72,38 @@ public class ObjectiveSetInstance {
 		return set;
 	}
 	
-	public void setObjectiveCounts(int[] counts) {
-		if (counts.length != objs.size()) {
+	public void setObjectiveCounts(ArrayList<Integer> counts) {
+		if (counts.size() != objs.size()) {
 			Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
-					"counts.length " + counts.length + " != objs.size " + objs.size());
+					"counts.length " + counts.size() + " != objs.size " + objs.size());
 			return;
 		}
 		
 		int i = 0;
 		for (ObjectiveInstance oi : objs) {
-			if (oi.getObjective().getNeeded() < counts[i++]) {
+			if (oi.getObjective().getNeeded() < counts.get(i++)) {
 				Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
-						"objective " + oi.getObjective().getKey() + " needed " + oi.getObjective().getNeeded() + " < counts[i] " + counts[i]);
+						"objective " + oi.getObjective().getKey() + " needed " + oi.getObjective().getNeeded() + " < counts[i] " + counts.get(i));
 				return;
 			}
 		}
 		
 		i = 0;
 		for (ObjectiveInstance oi : objs) {
-			oi.setCount(counts[i++]);
+			oi.setCount(counts.get(i++));
 		}
 	}
 	
 	public ArrayList<ObjectiveInstance> getObjectives() {
 		return objs;
+	}
+	
+	public ArrayList<Integer> getCounts() {
+		ArrayList<Integer> counts = new ArrayList<Integer>();
+		for (int i = 0; i < objs.size(); i++) {
+			counts.add(objs.get(i).getCount());
+		}
+		return counts;
 	}
 	
 	public String serializeCounts() {
@@ -108,11 +116,5 @@ public class ObjectiveSetInstance {
 			counts += "," + objs.get(i).getCount();
 		}
 		return counts;
-	}
-	
-	public void reload() {
-		for (ObjectiveInstance oi : objs) {
-			oi.reload();
-		}
 	}
 }

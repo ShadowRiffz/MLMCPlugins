@@ -91,16 +91,6 @@ public class QuestsManager implements IOComponent, Manager {
 
 	public QuestsManager() throws NeoIOException {
 		reload();
-		
-		for (HashMap<Integer, Quester> pmap : questers.values()) {
-			for (Quester quester : pmap.values()) {
-				for (QuestInstance qi : quester.getActiveQuests()) {
-					for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-						osi.reload();
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -159,9 +149,9 @@ public class QuestsManager implements IOComponent, Manager {
 				
 				// Parse counts
 				String[] scounts = rs.getString(6).split(",");
-				int[] counts = new int[scounts.length];
+				ArrayList<Integer> counts = new ArrayList<Integer>(scounts.length);
 				for (int i = 0; i < scounts.length; i++) {
-					counts[i] = Integer.parseInt(scounts[i]);
+					counts.add(Integer.parseInt(scounts[i]));
 				}
 				
 				Quest quest = quests.get(qname);
@@ -171,7 +161,7 @@ public class QuestsManager implements IOComponent, Manager {
 				}
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
-				qi.setupInstances(false);
+				qi.setupInstances(false); // Only start listening to the main account (in the finally clause)
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 		}
@@ -270,6 +260,12 @@ public class QuestsManager implements IOComponent, Manager {
 			NeoCore.loadFiles(new File(data, "questlines"), questlinesLoader);
 			NeoCore.loadFiles(new File(data, "recommendations.yml"), recommendationsLoader);
 			NeoCore.loadFiles(new File(data, "challenges.yml"), challengesLoader);
+			
+			for (HashMap<Integer, Quester> pmap : questers.values()) {
+				for (Quester quester : pmap.values()) {
+					quester.reloadQuests();
+				}
+			}
 		} catch (Exception e) {
 			NeoQuests.showWarning("Failed to reload QuestsManager", e);
 		}

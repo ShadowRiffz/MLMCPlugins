@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.quests;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -13,6 +14,7 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.ObjectiveListener;
+import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -225,5 +227,18 @@ public class Quester {
 		}
 		this.activeQuests.clear();
 		this.completedQuests.clear();
+	}
+	
+	public void reloadQuests() {
+		for (QuestInstance qi : activeQuests.values()) {
+			QuestInstance reloadedqi = new QuestInstance(this, QuestsManager.getQuest(qi.getQuest().getKey()), qi.getStage());
+			addActiveQuest(reloadedqi);
+			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+				reloadedqi.setupInstances(false);
+				reloadedqi.getObjectiveSetInstance(osi.getKey()).setObjectiveCounts(osi.getCounts());
+			}
+			qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
+		}
+		QuestsManager.initializeOrGetQuester(p).startListening();
 	}
 }
