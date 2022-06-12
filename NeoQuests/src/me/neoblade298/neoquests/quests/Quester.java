@@ -48,7 +48,6 @@ public class Quester {
 			}
 			// Only continue the questline if the player still has it
 			else if (activeQuestlines.containsKey(ql.getKey().toUpperCase())) {
-				System.out.println("complete quest start conv? " + ql.getKey().toUpperCase() + " " + activeQuestlines);
 				ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 			}
 		}

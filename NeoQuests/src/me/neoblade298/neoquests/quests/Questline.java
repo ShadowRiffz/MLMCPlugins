@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 
 public class Questline implements Comparator<Questline> {
 	private String key, display, fileLocation;
@@ -27,37 +28,18 @@ public class Questline implements Comparator<Questline> {
 			quests.add(q);
 		}
 	}
-
-	public boolean isCompleted(Player p) {
-		Quester q = QuestsManager.getQuester(p);
-		CompletedQuest cq = q.getCompletedQuest(quests.get(quests.size() - 1).getKey());
-		if (cq == null) {
-			return false;
-		}
-		return canTakeQuest(cq);
-	}
 	
 	public Quest getFirstQuest() {
 		return quests.get(0);
 	}
 
 	public Quest getNextQuest(Player p) {
-		Quester q = QuestsManager.getQuester(p);
 		for (Quest quest : quests) {
-			if (canTakeQuest(q.getCompletedQuest(quest.getKey()))) return quest;
+			if (ConditionManager.getBlockingCondition(p, quest.getConditions()) == null) {
+				return quest;
+			}
 		}
 		return null;
-	}
-
-	private boolean canTakeQuest(CompletedQuest cq) {
-		if (cq == null) {
-			return true;
-		}
-		if (cq.isSuccess()) {
-			return false;
-		}
-		Quest q = cq.getQuest();
-		return q.canRepeat() || q.canRetry();
 	}
 	
 	public String getKey() {

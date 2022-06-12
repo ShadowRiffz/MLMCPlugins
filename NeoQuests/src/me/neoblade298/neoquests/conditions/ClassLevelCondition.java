@@ -12,7 +12,7 @@ public class ClassLevelCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private int min, max;
-	private boolean hide, negate;
+	private boolean negate;
 	
 	static {
 		key = "class-level";
@@ -22,7 +22,6 @@ public class ClassLevelCondition implements Condition {
 	
 	public ClassLevelCondition(LineConfig cfg) {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
-		hide = cfg.getBool("hide", false);
 		negate = cfg.getBool("negate", false);
 		
 		min = cfg.getInt("min", -1);

@@ -11,8 +11,6 @@ import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
-import me.neoblade298.neoquests.conditions.ConditionResult;
-import me.neoblade298.neoquests.conditions.QuestCompletedCondition;
 
 public class Quest {
 	private String key, display, startConv, fileLocation;

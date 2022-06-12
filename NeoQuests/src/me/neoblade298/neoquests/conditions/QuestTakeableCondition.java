@@ -4,21 +4,22 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.quests.CompletedQuest;
+import me.neoblade298.neoquests.quests.Quest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class QuestCompletedCondition implements Condition {
+public class QuestTakeableCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private String questname;
 	private int stage;
 	
 	static {
-		key = "quest-completed";
+		key = "quest-takeable";
 	}
 	
-	public QuestCompletedCondition() {}
+	public QuestTakeableCondition() {}
 	
-	public QuestCompletedCondition(LineConfig cfg) {
+	public QuestTakeableCondition(LineConfig cfg) {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
@@ -33,32 +34,32 @@ public class QuestCompletedCondition implements Condition {
 	@Override
 	public boolean passes(Player p) {
 		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
-		if (cq != null) {
-			if (stage != -1) {
-				return cq.getStage() == stage;
-			}
+		if (cq == null) {
 			return true;
 		}
-		return false;
+		Quest q = cq.getQuest();
+		if (cq.isSuccess()) {
+			return q.canRepeat();
+		}
+		return q.canRetry() || q.canRepeat();
 	}
 
 	@Override
 	public String getExplanation(Player p) {
 		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
-		if (cq != null) {
-			if (stage != -1) {
-				return "You must complete quest " + cq.getQuest().getDisplay() + " in a different way!";
-			}
+		if (cq == null) {
 			return "Error";
 		}
-		else {
-			return "Quest " + QuestsManager.getQuest(questname).getDisplay() + " is not complete!";
+		Quest q = cq.getQuest();
+		if (cq.isSuccess()) {
+			return "You successfully completed this quest and it can't be repeated!";
 		}
+		return "You can't retry or repeat this quest!";
 	}
 
 	@Override
 	public Condition create(LineConfig cfg) {
-		return new QuestCompletedCondition(cfg);
+		return new QuestTakeableCondition(cfg);
 	}
 
 	@Override

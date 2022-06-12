@@ -10,7 +10,7 @@ public class QuestSuccessfulCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private String questname;
-	private boolean hide, negate;
+	private boolean negate;
 	private int stage;
 	
 	static {
@@ -21,7 +21,6 @@ public class QuestSuccessfulCondition implements Condition {
 	
 	public QuestSuccessfulCondition(LineConfig cfg) {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
-		hide = cfg.getBool("hide", false);
 		negate = cfg.getBool("negate", false);
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
@@ -62,7 +61,7 @@ public class QuestSuccessfulCondition implements Condition {
 		
 		if (!negate) {
 			if (cq == null) {
-				return "You have not completed quest " + cq.getQuest().getDisplay();
+				return "You have not completed quest " + QuestsManager.getQuest(questname).getDisplay();
 			}
 			
 			else if (cq.getStage() != stage && stage != -1) {
