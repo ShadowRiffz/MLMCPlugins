@@ -65,12 +65,16 @@ public class ActionSequence {
 		int tick = delay;
 		for (ActionSet set : sets) {
 			if (!set.isEmpty()) {
-				BukkitRunnable task = new BukkitRunnable() {
-					public void run() {
-						set.run(p);
-					}
-				};
-				task.runTaskLater(NeoQuests.inst(), tick);
+				if (delay != 0) {
+					new BukkitRunnable() {
+						public void run() {
+							set.run(p);
+						}
+					}.runTaskLater(NeoQuests.inst(), tick);
+				}
+				else {
+					set.run(p);
+				}
 			}
 			tick += set.getPostDelay();
 		}

@@ -90,6 +90,7 @@ public class ConversationManager implements Manager, Listener {
 	public static void startConversation(Player p, Conversation conv, boolean ignoreConditions) {
 		if (conv == null) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoQuests] Failed to start conversation with " + p.getName() + ", conv was null.");
+			return;
 		}
 		if (!ignoreConditions) {
 			Condition block = ConditionManager.getBlockingCondition(p, conv.getConditions());

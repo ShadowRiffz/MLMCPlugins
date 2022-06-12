@@ -14,6 +14,7 @@ import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -86,6 +87,7 @@ public class CmdQuestAdminReset implements Subcommand {
 				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
 				quester.reset();
 			}
+			ConversationManager.endConversation(p, false);
 			Util.msg(s, "&7Successfully reset player &6" + p.getName() + ".");
 		}
 		catch (Exception e) {

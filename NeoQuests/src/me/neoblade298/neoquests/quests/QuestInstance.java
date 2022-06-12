@@ -98,8 +98,9 @@ public class QuestInstance {
 	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
 		Player p = q.getPlayer();
 		if (success) {
-			q.completeQuest(this, stage, success);
+			// Run actions first in case we're switching to a new questline
 			si.getSet().getActions().run(p);
+			q.completeQuest(this, stage, success);
 			
 			ArrayList<RewardAction> rewards = quest.getRewards();
 			if (si.getSet().hasAlternateRewards()) {

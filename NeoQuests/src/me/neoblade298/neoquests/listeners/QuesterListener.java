@@ -23,7 +23,7 @@ public class QuesterListener implements Listener {
 		oldAcc.setLocation(p.getLocation());
 		oldAcc.stopListening();
 		if (newAcc.getLocation() != null) {
-			if (p.teleport(newAcc.getLocation())) {
+			if (!p.teleport(newAcc.getLocation())) {
 				Bukkit.getLogger().warning("[NeoQuests] Failed to teleport player on class acccount change!");
 			}
 		}

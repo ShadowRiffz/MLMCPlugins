@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.conversations.ConversationManager;
-import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class StartConversationAction implements Action {
 	private static String key = "start-conversation";

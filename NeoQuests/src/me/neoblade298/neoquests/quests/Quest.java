@@ -37,7 +37,7 @@ public class Quest {
 		this.canRetry = cfg.getBoolean("retryable", false);
 		
 		if (!canRetry) {
-			this.conditions.add(new QuestCompletedCondition(this.key, -1, false, ConditionResult.UNCLICKABLE));
+			// TODO: Add questtakeable condition, can use questline.nextquest as example
 		}
 	}
 	

@@ -37,16 +37,18 @@ public class Quester {
 	}
 	
 	public void completeQuest(QuestInstance qi, int stage, boolean success) {
-		cleanupQuest(qi.getQuest().getKey().toUpperCase());
+		cleanupQuest(qi.getQuest().getKey());
 		completedQuests.put(qi.getQuest().getKey().toUpperCase(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
 		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getDisplay() + "§7!");
 		if (ql != null) {
 			if (ql.getLastQuest().equals(qi.getQuest().getKey())) {
-				activeQuestlines.remove(ql.getKey());
+				activeQuestlines.remove(ql.getKey().toUpperCase());
 			}
-			else {
+			// Only continue the questline if the player still has it
+			else if (activeQuestlines.containsKey(ql.getKey().toUpperCase())) {
+				System.out.println("complete quest start conv? " + ql.getKey().toUpperCase() + " " + activeQuestlines);
 				ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 			}
 		}
@@ -91,7 +93,7 @@ public class Quester {
 		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey().toUpperCase(), qi);
-		if (q.getQuestline() != null) activeQuestlines.put(q.getKey().toUpperCase(), q.getQuestline());
+		if (q.getQuestline() != null) addQuestline(q.getQuestline());
 		qi.setupInstances(true);
 		qi.displayObjectives(p);
 	}
@@ -106,14 +108,15 @@ public class Quester {
 				qi.displayObjectives(s);
 			}
 			s.sendMessage("§7=====");
+			ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
+			s.spigot().sendMessage(builder.create());
 		}
 		else {
 			s.sendMessage("§7You have no active quests!");
+			displayGuide(s);
 		}
-		ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
-				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
-		s.spigot().sendMessage(builder.create());
 	}
 	
 	public void displayGuide(CommandSender s) {

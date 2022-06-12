@@ -12,7 +12,7 @@ import me.neoblade298.neoquests.actions.RewardAction;
 public class ObjectiveSet {
 	private ArrayList<Objective> objs = new ArrayList<Objective>();
 	private ArrayList<RewardAction> alternateRewards;
-	private ActionSequence actions;
+	private ActionSequence actions = new ActionSequence();
 	private String key, display;
 	private int next;
 	

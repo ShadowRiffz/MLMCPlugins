@@ -141,6 +141,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static boolean reloadAll() {
 		for (Manager mngr : managers) {
 			mngr.reload();
+			Bukkit.getLogger().info("[NeoQuests] Reloaded manager " + mngr.getKey());
 		}
 		return true;
 	}

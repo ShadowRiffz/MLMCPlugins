@@ -86,7 +86,12 @@ public class CmdQuestsRecommended implements Subcommand {
 		}
 		
 		if (pages.size() == 0) {
-			Util.msg(s, "&7No recommendations at this level! Try &c/quests challenges!");
+			if (challenges) {
+				Util.msg(s, "&7No challenges at this level! Try &c/quests list&7, this lists ANY quest you can take that you haven't finished!");
+			}
+			else {
+				Util.msg(s, "&7No recommendations at this level! Try &c/quests challenges&7!");
+			}
 			return;
 		}
 		
