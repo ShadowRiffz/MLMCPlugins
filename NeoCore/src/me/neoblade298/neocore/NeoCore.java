@@ -14,6 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
@@ -27,6 +28,7 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
 	private static String instName = null;
 	private static Economy econ;
+	
 	
 	public void onEnable() {
 		inst = this;
@@ -52,12 +54,23 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         econ = rsp.getProvider();
+        
+        initCommands();
 		
 		new BukkitRunnable() {
 			public void run() {
 				Bukkit.getPluginManager().callEvent(new NeoCoreInitEvent());
 			}
 		}.runTask(this);
+	}
+
+	private void initCommands() {
+		String cmd = "core";
+		CommandManager core = new CommandManager(cmd);
+		core.registerCommandList("");
+		core.register(new CmdCoreEnable());
+		core.register(new CmdCoreDisable());
+		this.getCommand(cmd).setExecutor(core);
 	}
 	
 	public void onDisable() {

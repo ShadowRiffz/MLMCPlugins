@@ -14,15 +14,24 @@ import net.md_5.bungee.api.ChatColor;
 
 public class CommandManager implements CommandExecutor {
 	private TreeMap<String, Subcommand> handlers = new TreeMap<String, Subcommand>();
-	private String base;
+	private String base, perm;
 	private ChatColor color;
 	
 	public CommandManager(String base) {
-		this(base, ChatColor.RED);
+		this(base, null, ChatColor.RED);
+	}
+	
+	public CommandManager(String base, String perm) {
+		this(base, perm, ChatColor.RED);
 	}
 	
 	public CommandManager(String base, ChatColor color) {
+		this(base, null, ChatColor.RED);
+	}
+	
+	public CommandManager(String base, String perm, ChatColor color) {
 		this.base = base;
+		this.perm = perm;
 		this.color = color;
 	}
 	
@@ -69,7 +78,12 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	private boolean check(Subcommand cmd, CommandSender s, String[] args) {
-		if ((cmd.getPermission() != null && !s.hasPermission(cmd.getPermission())) && !s.isOp()) {
+		if (((perm != null && perm.length() != 0) && !s.hasPermission(perm)) && !s.isOp()) {
+			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
+			return false;
+		}
+		
+		if (((cmd.getPermission() != null && cmd.getPermission().length() != 0) && !s.hasPermission(cmd.getPermission())) && !s.isOp()) {
 			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
 			return false;
 		}
@@ -102,12 +116,16 @@ public class CommandManager implements CommandExecutor {
 		}
 	}
 	
+	public void registerCommandList(String key, String perm, ChatColor color) {
+		handlers.put(key.toUpperCase(), new CmdList(key, base, perm, handlers, this.color, color));
+	}
+	
 	public void registerCommandList(String key, ChatColor color) {
-		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, this.color, color));
+		registerCommandList(key, null, color);
 	}
 	
 	public void registerCommandList(String key) {
-		handlers.put(key.toUpperCase(), new CmdList(key, base, handlers, this.color));
+		registerCommandList(key, null, null);
 	}
 	
 	public Subcommand getCommand(String key) {

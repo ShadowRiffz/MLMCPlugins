@@ -10,7 +10,7 @@ import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.ChatColor;
 
 public class CmdList implements Subcommand {
-	private String base, key;
+	private String base, key, perm;
 	private ChatColor baseColor, cmdColor;
 	private TreeMap<String, Subcommand> cmds;
 	private PaginatedList<Subcommand> pages = null;
@@ -18,21 +18,22 @@ public class CmdList implements Subcommand {
 	private static CommandArguments args = new CommandArguments(new CommandArgument[] {
 			new CommandArgument("page", false) });
 	
-	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor baseColor) {
+	public CmdList(String key, String base, String perm, TreeMap<String, Subcommand> cmds, ChatColor baseColor) {
 		this.key = key;
 		this.base = base;
 		this.cmds = cmds;
 		this.baseColor = baseColor;
+		this.perm = perm;
 	}
 	
-	public CmdList(String key, String base, TreeMap<String, Subcommand> cmds, ChatColor baseColor, ChatColor cmdColor) {
-		this(key, base, cmds, baseColor);
+	public CmdList(String key, String base, String perm, TreeMap<String, Subcommand> cmds, ChatColor baseColor, ChatColor cmdColor) {
+		this(key, base, perm, cmds, baseColor);
 		this.cmdColor = cmdColor;
 	}
 
 	@Override
 	public String getPermission() {
-		return null;
+		return perm;
 	}
 
 	@Override

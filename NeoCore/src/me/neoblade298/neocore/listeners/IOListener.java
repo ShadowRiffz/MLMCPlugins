@@ -31,6 +31,7 @@ public class IOListener implements Listener {
 	private static Properties properties;
 	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
+	private static boolean canSave = true, canLoad = true, canPreload = true, canCleanup = true;
 	
 	public IOListener(String connection, Properties properties) {
 		try {
@@ -48,30 +49,34 @@ public class IOListener implements Listener {
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-		handleLeave(e.getPlayer());
+		save(e.getPlayer());
 	}
 	
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		handleLeave(e.getPlayer());
+		save(e.getPlayer());
 	}
 	
 	@EventHandler
 	public void onSAPISave(PlayerSaveEvent e) {
-		handleLeave(e.getPlayer());
+		save(e.getPlayer());
 	}
 
 	@EventHandler
 	public void onPrejoin(AsyncPlayerPreLoginEvent e) {
-		handlePreload(Bukkit.getOfflinePlayer(e.getUniqueId()));
+		preload(Bukkit.getOfflinePlayer(e.getUniqueId()));
 	}
 
 	@EventHandler
 	public void onSkillAPILoad(PlayerLoadCompleteEvent e) {
-		handleLoad(e.getPlayer());
+		load(e.getPlayer());
 	}
 	
-	private void handleLeave(Player p) {
+	private void save(Player p) {
+		if (!canSave) {
+			return;
+		}
+		
 		UUID uuid = p.getUniqueId();
 		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
 			// If saved less than 10 seconds ago, don't save again
@@ -88,39 +93,16 @@ public class IOListener implements Listener {
 
 					// Save account
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						try {
-							entry.getValue().savePlayer(p, insert, delete);
-							delete.executeBatch();
-							insert.executeBatch();
-						}
-						catch (Exception ex) {
-							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
-							ex.printStackTrace();
-						}
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}.runTaskAsynchronously(NeoCore.inst());
-	}
-	
-	private void handlePreload(OfflinePlayer p) {
-		new BukkitRunnable() {
-			public void run() {
-				try {
-					Connection con = DriverManager.getConnection(connection, properties);
-					Statement stmt = con.createStatement();
-
-					// Save account
-					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						try {
-							entry.getValue().preloadPlayer(p, stmt);
-							stmt.executeBatch();
-						}
-						catch (Exception ex) {
-							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + entry.getKey());
-							ex.printStackTrace();
+						if (entry.getValue().canSave()) {
+							try {
+								entry.getValue().savePlayer(p, insert, delete);
+								delete.executeBatch();
+								insert.executeBatch();
+							}
+							catch (Exception ex) {
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
+								ex.printStackTrace();
+							}
 						}
 					}
 				} catch (Exception ex) {
@@ -130,7 +112,11 @@ public class IOListener implements Listener {
 		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
-	private void handleLoad(Player p) {
+	private void preload(OfflinePlayer p) {
+		if (!canPreload) {
+			return;
+		}
+		
 		new BukkitRunnable() {
 			public void run() {
 				try {
@@ -139,13 +125,46 @@ public class IOListener implements Listener {
 
 					// Save account
 					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						try {
-							entry.getValue().loadPlayer(p, stmt);
-							stmt.executeBatch();
+						if (entry.getValue().canPreload()) {
+							try {
+								entry.getValue().preloadPlayer(p, stmt);
+								stmt.executeBatch();
+							}
+							catch (Exception ex) {
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + entry.getKey());
+								ex.printStackTrace();
+							}
 						}
-						catch (Exception ex) {
-							Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
-							ex.printStackTrace();
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}.runTaskAsynchronously(NeoCore.inst());
+	}
+	
+	private void load(Player p) {
+		if (!canLoad) {
+			return;
+		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				try {
+					Connection con = DriverManager.getConnection(connection, properties);
+					Statement stmt = con.createStatement();
+
+					// Save account
+					for (Entry<String, IOComponent> entry : components.entrySet()) {
+						if (entry.getValue().canLoad()) {
+							try {
+								entry.getValue().loadPlayer(p, stmt);
+								stmt.executeBatch();
+							}
+							catch (Exception ex) {
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
+								ex.printStackTrace();
+							}
 						}
 					}
 				} catch (Exception ex) {
@@ -156,6 +175,10 @@ public class IOListener implements Listener {
 	}
 	
 	public static void handleDisable() {
+		if (!canCleanup) {
+			return;
+		}
+		
 		try {
 			Connection con = DriverManager.getConnection(connection, properties);
 			Statement insert = con.createStatement();
@@ -163,15 +186,20 @@ public class IOListener implements Listener {
 			
 			// Any final cleanup
 			for (Entry<String, IOComponent> entry : components.entrySet()) {
-				try {
-					Bukkit.getLogger().info("[NeoCore] Cleaning up component " + entry.getKey());
-					entry.getValue().cleanup(insert, delete);
-					delete.executeBatch();
-					insert.executeBatch();
+				if (entry.getValue().canCleanup()) {
+					try {
+						Bukkit.getLogger().info("[NeoCore] Cleaning up component " + entry.getKey());
+						entry.getValue().cleanup(insert, delete);
+						delete.executeBatch();
+						insert.executeBatch();
+					}
+					catch (Exception ex) {
+						Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
+						ex.printStackTrace();
+					}
 				}
-				catch (Exception ex) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
-					ex.printStackTrace();
+				else {
+					Bukkit.getLogger().info("[NeoCore] Skipping cleanup for component " + entry.getKey());
 				}
 			}
 		} catch (Exception ex) {
@@ -187,5 +215,21 @@ public class IOListener implements Listener {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static void setCanSave(boolean canSave) {
+		IOListener.canSave = canSave;
+	}
+	
+	public static void setCanLoad(boolean canLoad) {
+		IOListener.canLoad = canLoad;
+	}
+	
+	public static void setCanPreload(boolean canPreload) {
+		IOListener.canPreload = canPreload;
+	}
+	
+	public static void setCanCleanup(boolean canCleanup) {
+		IOListener.canCleanup = canCleanup;
 	}
 }
