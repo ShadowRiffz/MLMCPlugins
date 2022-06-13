@@ -66,108 +66,112 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args[0].equalsIgnoreCase("cd")) {
-			String boss = args[1];
-			String display = plugin.getBossName(boss, p);
-			int time = plugin.getBossCooldown(boss, p);
-			if (display == null) return "§c???";
-			else if (time <= 0) return display + "§7: " + "§aReady!";
-			else if (time > 0) {
-				int minutes = time / 60;
-				int seconds = time % 60;
-				return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
+		try {
+			if (args[0].equalsIgnoreCase("cd")) {
+				String boss = args[1];
+				String display = plugin.getBossName(boss, p);
+				int time = plugin.getBossCooldown(boss, p);
+				if (display == null) return "§c???";
+				else if (time <= 0) return display + "§7: " + "§aReady!";
+				else if (time > 0) {
+					int minutes = time / 60;
+					int seconds = time % 60;
+					return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
+				}
 			}
-		}
-		else if (args[0].equalsIgnoreCase("display")) {
-			String boss = args[1];
-			String display = plugin.getBossName(boss, p);
-			return display;
-		}
-		// %bosses_partyhealth_1-5%
-		else if (args[0].equalsIgnoreCase("partyhealth")) {
-			ArrayList<String> partyMembers = plugin.getHealthBars(p);
-			if (partyMembers == null) {
-				return "";
+			else if (args[0].equalsIgnoreCase("display")) {
+				String boss = args[1];
+				String display = plugin.getBossName(boss, p);
+				return display;
 			}
-			int num = Integer.parseInt(args[1]);
-			if (num >= partyMembers.size()) {
-				return "";
-			}
-			Player partyMember = Bukkit.getPlayer(partyMembers.get(num));
-			if (partyMember == null) {
-				return "";
-			}
-			
-			double percenthp = partyMember.getHealth() / partyMember.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-			percenthp *= 100;
-			int php = (int) percenthp;
-			String color = null;
+			// %bosses_partyhealth_1-5%
+			else if (args[0].equalsIgnoreCase("partyhealth")) {
+				ArrayList<String> partyMembers = plugin.getHealthBars(p);
+				if (partyMembers == null) {
+					return "";
+				}
+				int num = Integer.parseInt(args[1]);
+				if (num >= partyMembers.size()) {
+					return "";
+				}
+				Player partyMember = Bukkit.getPlayer(partyMembers.get(num));
+				if (partyMember == null) {
+					return "";
+				}
+				
+				double percenthp = partyMember.getHealth() / partyMember.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+				percenthp *= 100;
+				int php = (int) percenthp;
+				String color = null;
 
-			if (FlagManager.hasFlag(partyMember, "curse")) {
-				color = "§8";
-			}
-			else if (FlagManager.hasFlag(partyMember, "stun") || FlagManager.hasFlag(partyMember, "root") || FlagManager.hasFlag(partyMember, "silence")) {
-				color = "§b";
-			}
-			
-			if (color == null) {
-				color = "§a";
-				if (php < 50 && php >= 25) {
-					color = "§e";
+				if (FlagManager.hasFlag(partyMember, "curse")) {
+					color = "§8";
 				}
-				else if (php < 25) {
-					color = "§c";
+				else if (FlagManager.hasFlag(partyMember, "stun") || FlagManager.hasFlag(partyMember, "root") || FlagManager.hasFlag(partyMember, "silence")) {
+					color = "§b";
 				}
+				
+				if (color == null) {
+					color = "§a";
+					if (php < 50 && php >= 25) {
+						color = "§e";
+					}
+					else if (php < 25) {
+						color = "§c";
+					}
+				}
+				
+				String bar = "" + color;
+				// Add 5 so 25% is still 3/10 on the health bar
+				int phpmod = (php + 5) / 10;
+				for (int i = 0; i < phpmod; i++) {
+					bar += "|";
+				}
+				bar += "§7";
+				for (int i = 0; i < (10 - phpmod); i++) {
+					bar += "|";
+				}
+				
+				return color + partyMember.getName() + " " + bar;
 			}
-			
-			String bar = "" + color;
-			// Add 5 so 25% is still 3/10 on the health bar
-			int phpmod = (php + 5) / 10;
-			for (int i = 0; i < phpmod; i++) {
-				bar += "|";
+			else if (args[0].equalsIgnoreCase("timers") && p != null) {
+				// Boss timer only, no raid timer
+				if (!SkillAPI.isLoaded(p)) return "";
+				long bossTimer = plugin.getBossTimer(p);
+				long raidTimer = plugin.getRaidTimer(p);
+				Boss b = plugin.getBoss(p);
+				if (b != null && b.getBossType().equals(BossType.DUNGEON)) {
+					if ((System.currentTimeMillis() & 8191) > 4096) {
+						return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
+					}
+					else {
+						return "§8§l> §c§lDungeon Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
+					}
+				}
+				if (bossTimer != -1 && raidTimer == -1) {
+					return "§8§l> §c§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
+				}
+				// Raid timer only, no boss timer
+				else if (bossTimer == -1 && raidTimer != -1) {
+					return "§8§l> §c§lRaid Timer: " + formatter.format(raidTimer - System.currentTimeMillis());
+				}
+				// Both
+				else if (bossTimer != -1 && raidTimer != -1) {
+					if ((System.currentTimeMillis() & 8191) > 4096) {
+						return "§8§l> §c§lBoss Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
+					}
+					else {
+						return "§8§l> §c§lRaid Timer: §c" + formatter.format(System.currentTimeMillis() - bossTimer);
+					}
+				}
+				
+				// Neither
+				return "§8§l> §c§lTimer: §cN/A";
 			}
-			bar += "§7";
-			for (int i = 0; i < (10 - phpmod); i++) {
-				bar += "|";
-			}
-			
-			return color + partyMember.getName() + " " + bar;
 		}
-		else if (args[0].equalsIgnoreCase("timers") && p != null) {
-			// Boss timer only, no raid timer
-			if (!SkillAPI.isLoaded(p)) return "";
-			long bossTimer = plugin.getBossTimer(p);
-			long raidTimer = plugin.getRaidTimer(p);
-			Boss b = plugin.getBoss(p);
-			if (b != null && b.getBossType().equals(BossType.DUNGEON)) {
-				if ((System.currentTimeMillis() & 8191) > 4096) {
-					return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
-				}
-				else {
-					return "§8§l> §c§lDungeon Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
-				}
-			}
-			if (bossTimer != -1 && raidTimer == -1) {
-				return "§8§l> §c§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
-			}
-			// Raid timer only, no boss timer
-			else if (bossTimer == -1 && raidTimer != -1) {
-				return "§8§l> §c§lRaid Timer: " + formatter.format(raidTimer - System.currentTimeMillis());
-			}
-			// Both
-			else if (bossTimer != -1 && raidTimer != -1) {
-				if ((System.currentTimeMillis() & 8191) > 4096) {
-					return "§8§l> §c§lBoss Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
-				}
-				else {
-					return "§8§l> §c§lRaid Timer: §c" + formatter.format(System.currentTimeMillis() - bossTimer);
-				}
-			}
-			
-			// Neither
-			return "§8§l> §c§lTimer: §cN/A";
+		catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		return "Invalid Placeholder";
 	}
 }
