@@ -1,4 +1,4 @@
-package me.neoblade298.neoquests.actions;
+package me.neoblade298.neoquests.actions.builtin;
 
 import java.util.HashMap;
 
@@ -8,8 +8,11 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ExpSource;
 
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.actions.Action;
+import me.neoblade298.neoquests.actions.DialogueAction;
+import me.neoblade298.neoquests.actions.RewardAction;
 
-public class GiveClassExpAction implements RewardAction {
+public class GiveClassExpAction extends RewardAction {
 	private static String key = "give-class-exp";
 	private int amount;
 

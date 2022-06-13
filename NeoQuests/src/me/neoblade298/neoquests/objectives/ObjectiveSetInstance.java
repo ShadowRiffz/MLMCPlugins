@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.quests.QuestInstance;
 
 public class ObjectiveSetInstance {
@@ -48,12 +50,18 @@ public class ObjectiveSetInstance {
 		return set.getNext();
 	}
 	
-	// Returns true if quest is ended with initialize
 	public void startListening() {
 		for (ObjectiveInstance o : objs) {
 			o.startListening();
-			o.getObjective().initialize(o);
 		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (ObjectiveInstance o : objs) {
+					o.getObjective().initialize(o);
+				}
+			}
+		}.runTaskLater(NeoQuests.inst(), 20L);
 	}
 	
 	public void stopListening() {
@@ -76,6 +84,9 @@ public class ObjectiveSetInstance {
 		if (counts.size() != objs.size()) {
 			Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
 					"counts.length " + counts.size() + " != objs.size " + objs.size());
+			for (ObjectiveInstance oi : objs) {
+				oi.setCount(0);
+			}
 			return;
 		}
 		
@@ -84,6 +95,9 @@ public class ObjectiveSetInstance {
 			if (oi.getObjective().getNeeded() < counts.get(i++)) {
 				Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
 						"objective " + oi.getObjective().getKey() + " needed " + oi.getObjective().getNeeded() + " < counts[i] " + counts.get(i));
+				for (ObjectiveInstance obi : objs) {
+					obi.setCount(0);
+				}
 				return;
 			}
 		}

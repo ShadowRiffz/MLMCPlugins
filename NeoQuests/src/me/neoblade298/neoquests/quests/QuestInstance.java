@@ -123,7 +123,7 @@ public class QuestInstance {
 					if (fRewards.size() > 0) {
 						p.sendMessage("§6Rewards:");
 						for (RewardAction r : fRewards) {
-							if (r.getDisplay() != null) {
+							if (r.getDisplay() != null && !r.isHidden()) {
 								p.sendMessage("§7- " + r.getDisplay());
 							}
 						}

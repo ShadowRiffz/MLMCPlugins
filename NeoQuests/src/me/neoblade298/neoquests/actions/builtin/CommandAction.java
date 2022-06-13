@@ -1,4 +1,4 @@
-package me.neoblade298.neoquests.actions;
+package me.neoblade298.neoquests.actions.builtin;
 
 import java.util.HashMap;
 
@@ -7,8 +7,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.actions.Action;
+import me.neoblade298.neoquests.actions.DialogueAction;
+import me.neoblade298.neoquests.actions.RewardAction;
 
-public class CommandAction implements RewardAction {
+public class CommandAction extends RewardAction {
 	private static ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 	private static String key = "command";
 	private String command;
@@ -21,6 +24,7 @@ public class CommandAction implements RewardAction {
 	public CommandAction() {}
 	
 	public CommandAction(LineConfig cfg) {
+		super(cfg);
 		this.command = cfg.getLine();
 		this.isConsole = cfg.getBool("isConsole", true);
 	}

@@ -52,11 +52,7 @@ public class GetStoredItemObjective extends Objective {
 	
 	@Override
 	public void initialize(ObjectiveInstance oi) {
-		new BukkitRunnable() {
-			public void run() {
-				oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
-			}
-		}.runTaskLater(NeoQuests.inst(), 20L);
+		oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class ObjectiveSet {
 	}
 	
 	public boolean hasAlternateRewards() {
-		return alternateRewards != null;
+		return alternateRewards.size() > 0;
 	}
 	
 	public ArrayList<Objective> getObjectives() {

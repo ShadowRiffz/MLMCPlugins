@@ -8,6 +8,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.actions.builtin.*;
 
 public class ActionManager {
 	private static LineConfigManager<Action> mngr = new LineConfigManager<Action>(NeoQuests.inst(), "actions");
@@ -32,6 +33,7 @@ public class ActionManager {
 		mngr.register(new LeaveQuestlineAction());
 		mngr.register(new StartQuestlineAction());
 		mngr.register(new StartConversationAction());
+		mngr.register(new FakeAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {
