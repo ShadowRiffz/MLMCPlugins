@@ -20,6 +20,7 @@ public class FakeAction extends RewardAction {
 	public FakeAction() {}
 	
 	public FakeAction(LineConfig cfg) {
+		super(cfg);
 		this.display = cfg.getLine();
 	}
 

@@ -21,6 +21,7 @@ public class GiveMoneyAction extends RewardAction {
 	public GiveMoneyAction() {}
 	
 	public GiveMoneyAction(LineConfig cfg) {
+		super(cfg);
 		this.amount = cfg.getInt("amount", 1);
 	}
 

@@ -23,6 +23,7 @@ public class GiveClassExpAction extends RewardAction {
 	public GiveClassExpAction() {}
 	
 	public GiveClassExpAction(LineConfig cfg) {
+		super(cfg);
 		this.amount = cfg.getInt("amount", 1);
 	}
 

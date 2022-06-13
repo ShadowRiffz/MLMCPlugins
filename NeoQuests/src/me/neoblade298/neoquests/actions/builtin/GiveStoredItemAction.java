@@ -23,6 +23,7 @@ public class GiveStoredItemAction extends RewardAction {
 	public GiveStoredItemAction() {}
 	
 	public GiveStoredItemAction(LineConfig cfg) {
+		super(cfg);
 		this.id = cfg.getInt("id", 0);
 		this.amount = cfg.getInt("amount", 1);
 	}
