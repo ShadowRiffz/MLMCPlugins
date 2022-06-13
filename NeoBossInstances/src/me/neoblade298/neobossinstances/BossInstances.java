@@ -931,7 +931,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 	}
 
 	public Boss getBoss(Player p) {
-		return bossInfo.get(fightingBoss.get(p.getUniqueId()));
+		String boss = fightingBoss.get(p.getUniqueId());
+		if (boss != null) {
+			return bossInfo.get(fightingBoss.get(p.getUniqueId()));
+		}
+		return null;
 	}
 
 	public static Set<UUID> getSpectators() {
