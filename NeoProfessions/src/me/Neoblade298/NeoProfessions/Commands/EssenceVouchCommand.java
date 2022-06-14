@@ -23,7 +23,7 @@ public class EssenceVouchCommand implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if (args.length != 2) {
-			sender.sendMessage("§c/evouch [level] [amount]");
+			sender.sendMessage("Â§c/evouch [level] [amount]");
 		}
 		else {
 			// Normalize essence level

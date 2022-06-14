@@ -68,7 +68,7 @@ public class Profession {
 		int newExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it
-		p.sendMessage("งa+" + exp + " ง7(งf" + newExp + " / " + nextLv.get(this.level) + "ง7) ง6" + type.getDisplay() + " ง7exp");
+		p.sendMessage("ยงa+" + exp + " ยง7(ยงf" + newExp + " / " + nextLv.get(this.level) + "ยง7) ยง6" + type.getDisplay() + " ยง7exp");
 		boolean levelup = false;
 		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level) && this.level < MAX_LEVEL) {
 			newExp -= nextLv.get(this.level);

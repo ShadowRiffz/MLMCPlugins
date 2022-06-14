@@ -50,13 +50,13 @@ public class ClassLevelCondition implements Condition {
 	public String getExplanation(Player p) {
 		String prefix = negate ? "You must not be " : "You must be ";
 		if (min != -1 && max == 999) {
-			return prefix + "at least level §e" + min;
+			return prefix + "at least level Â§e" + min;
 		}
 		else if (max != 999 && min == -1) {
-			return prefix + "at most level §e" + max;
+			return prefix + "at most level Â§e" + max;
 		}
 		else {
-			return prefix + "between level §e" + min + " §fand §e" + max;
+			return prefix + "between level Â§e" + min + " Â§fand Â§e" + max;
 		}
 	}
 

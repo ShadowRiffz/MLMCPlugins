@@ -20,20 +20,20 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (args.length == 0 && sender.hasPermission("mycommand.staff")) {
-			sender.sendMessage("§c/relic debug - Toggle debug messages");
-			sender.sendMessage("§c/relic check [player] - Checks a player's set");
-			sender.sendMessage("§c/relic reload - Reloads config");
+			sender.sendMessage("Â§c/relic debug - Toggle debug messages");
+			sender.sendMessage("Â§c/relic check [player] - Checks a player's set");
+			sender.sendMessage("Â§c/relic reload - Reloads config");
 		}
 		
 		else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 			main.loadConfig();
-			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully reloaded config!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully reloaded config!");
 		}
 		
 		else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 			main.debug = !main.debug;
-			if (main.debug) sender.sendMessage("§4[§c§lMLMC§4] §7Toggled on debug mode!"); 
-			if (!main.debug) sender.sendMessage("§4[§c§lMLMC§4] §7Toggled off debug mode!"); 
+			if (main.debug) sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Toggled on debug mode!"); 
+			if (!main.debug) sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Toggled off debug mode!"); 
 		}
 		
 		else if (args.length == 1 && args[0].equalsIgnoreCase("check") && sender instanceof Player) {
@@ -42,10 +42,10 @@ public class Commands implements CommandExecutor{
 			if (main.playersets.containsKey(uuid)) {
 				String set = main.playersets.get(uuid).getSet().getName();
 				int num = main.playersets.get(uuid).getNumRelics();
-				p.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has set §e" + set + " §7with §e" + num + " §7relics."); 
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§e" + p.getName() + " Â§7has set Â§e" + set + " Â§7with Â§e" + num + " Â§7relics."); 
 			}
 			else {
-				p.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7doesn't have a set active."); 
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§e" + p.getName() + " Â§7doesn't have a set active."); 
 			}
 		}
 		
@@ -55,10 +55,10 @@ public class Commands implements CommandExecutor{
 			if (main.playersets.containsKey(uuid)) {
 				String set = main.playersets.get(uuid).getSet().getName();
 				int num = main.playersets.get(uuid).getNumRelics();
-				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has set §e" + set + " §7with §e" + num + " §7relics."); 
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§e" + p.getName() + " Â§7has set Â§e" + set + " Â§7with Â§e" + num + " Â§7relics."); 
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7doesn't have a set active."); 
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§e" + p.getName() + " Â§7doesn't have a set active."); 
 			}
 		}
 		return true;

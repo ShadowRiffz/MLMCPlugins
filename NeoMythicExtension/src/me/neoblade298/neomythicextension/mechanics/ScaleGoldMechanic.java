@@ -49,7 +49,7 @@ public class ScaleGoldMechanic implements INoTargetSkill {
 			// Give gold to each player
 			for (Player player : players) {
 				MythicExt.econ.depositPlayer(player, gold);
-				player.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + (int) gold + " §7gold!");
+				player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You gained Â§e" + (int) gold + " Â§7gold!");
 			}
 			return SkillResult.SUCCESS;
 		} catch (Exception e) {

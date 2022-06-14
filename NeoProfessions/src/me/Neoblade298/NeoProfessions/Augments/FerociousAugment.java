@@ -59,9 +59,9 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Decreases critical hit chance by งf" + formatPercentage(getCritChanceMult(user)) + "%,");
-		lore.add("ง7but lower active skill cooldowns by");
-		lore.add("งf" + formatDouble(this.cdr) + " ง7on critical hit.");
+		lore.add("ยง7Decreases critical hit chance by ยงf" + formatPercentage(getCritChanceMult(user)) + "%,");
+		lore.add("ยง7but lower active skill cooldowns by");
+		lore.add("ยงf" + formatDouble(this.cdr) + " ยง7on critical hit.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

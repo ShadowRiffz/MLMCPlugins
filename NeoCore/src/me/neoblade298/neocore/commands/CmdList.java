@@ -83,7 +83,7 @@ public class CmdList implements Subcommand {
 			return;
 		}
 
-		s.sendMessage("ง7List of commands: [] = Required, {} = Optional");
+		s.sendMessage("ยง7List of commands: [] = Required, {} = Optional");
 		for (Subcommand sc : pages.get(page)) {
 			if (sc.isHidden()) {
 				continue;
@@ -112,7 +112,7 @@ public class CmdList implements Subcommand {
 			
 			// Add description
 			if (sc.getDescription() != null) {
-				line += "ง7 - " + sc.getDescription();
+				line += "ยง7 - " + sc.getDescription();
 				s.sendMessage(line);
 			}
 		}

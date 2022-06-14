@@ -16,7 +16,7 @@ public class GardenSelectInventory extends ProfessionInventory {
 	private static final int HARVESTER_SLOT = 2, LOGGER_SLOT = 4, STONECUTTER_SLOT = 6;
 
 	public GardenSelectInventory(Player p) {
-		inv = Bukkit.createInventory(p, 9, "ง9Your Gardens");
+		inv = Bukkit.createInventory(p, 9, "ยง9Your Gardens");
 
 		ItemStack[] contents = inv.getContents();
 		contents[2] = createGarden(ProfessionType.HARVESTER);
@@ -32,15 +32,15 @@ public class GardenSelectInventory extends ProfessionInventory {
 		String name;
 		if (type.equals(ProfessionType.HARVESTER)) {
 			item = new ItemStack(Material.TALL_GRASS);
-			name = "ง9Harvester Garden";
+			name = "ยง9Harvester Garden";
 		}
 		else if (type.equals(ProfessionType.LOGGER)) {
 			item = new ItemStack(Material.OAK_LOG);
-			name = "ง9Logger Arbor";
+			name = "ยง9Logger Arbor";
 		}
 		else {
 			item = new ItemStack(Material.IRON_ORE);
-			name = "ง9Stonecutter Quarry";
+			name = "ยง9Stonecutter Quarry";
 		}
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(name);

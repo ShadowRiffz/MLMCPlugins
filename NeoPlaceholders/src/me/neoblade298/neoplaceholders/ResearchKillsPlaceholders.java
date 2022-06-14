@@ -64,8 +64,8 @@ public class ResearchKillsPlaceholders extends PlaceholderExpansion {
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(mob)) {
 			int kills = mobKills.get(mob);
-			return name + "ง7: งe" + kills;
+			return name + "ยง7: ยงe" + kills;
 		}
-    	return "งc???";
+    	return "ยงc???";
 	}
 }

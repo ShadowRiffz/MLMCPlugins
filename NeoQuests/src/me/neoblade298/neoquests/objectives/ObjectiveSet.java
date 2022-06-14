@@ -18,7 +18,7 @@ public class ObjectiveSet {
 	
 	public ObjectiveSet(ConfigurationSection cfg) throws NeoIOException {
 		key = cfg.getName();
-		display = cfg.getString("display", "Objectives").replaceAll("&", "ง");
+		display = cfg.getString("display", "Objectives").replaceAll("&", "ยง");
 		next = cfg.getInt("next", -3);
 		for (String line : cfg.getStringList("objectives")) {
 			objs.add(ObjectiveManager.get(new LineConfig(line)));

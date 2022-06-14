@@ -31,11 +31,11 @@ public class InfiniteWater extends JavaPlugin implements org.bukkit.event.Listen
 		UUID uuid = p.getUniqueId();
 		if (notUsing.contains(uuid)) {
 			notUsing.remove(uuid);
-			p.sendMessage("§4[§c§lMLMC§4] §7You toggled infinite water buckets §eon§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You toggled infinite water buckets Â§eonÂ§7!");
 		}
 		else {
 			notUsing.add(uuid);
-			p.sendMessage("§4[§c§lMLMC§4] §7You toggled infinite water buckets §eoff§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You toggled infinite water buckets Â§eoffÂ§7!");
 		}
 	}
 

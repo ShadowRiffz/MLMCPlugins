@@ -18,16 +18,16 @@ public class ReportCommand implements CommandExecutor {
 		if (sender.hasPermission("neoreports.user")) {
 			String author = sender.getName();
 			if(args.length == 0) {
-				sender.sendMessage("§7--- §cNeoReports §7---");
-				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
-				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use ONLY for catastrophic bugs (MUST be fixed in 1-2 days)");
-				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
+				sender.sendMessage("Â§7--- Â§cNeoReports Â§7---");
+				sender.sendMessage("Â§c/report bug [description] Â§7- Reports a bug to the staff");
+				sender.sendMessage("Â§c/report urgent [description] Â§7- Reports an urgent bug to the staff, use ONLY for catastrophic bugs (MUST be fixed in 1-2 days)");
+				sender.sendMessage("Â§c/reports list Â§7- Lists all reports made by you");
 				if (sender.hasPermission("neoreports.admin")) {
-					sender.sendMessage("§4/reports check §7- Simple message showing how many reports exist at the moment");
-					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
-					sender.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
-					sender.sendMessage("§4/reports unresolve [bug id] §7- Unresolves a bug");
-					sender.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
+					sender.sendMessage("Â§4/reports check Â§7- Simple message showing how many reports exist at the moment");
+					sender.sendMessage("Â§4/reports list [bug/urgent/resolved] <pg #> Â§7- Lists all bugs of a certain type");
+					sender.sendMessage("Â§4/reports resolve [bug id] [comment] <pg #> Â§7- Resolves a bug, marking it with the comment");
+					sender.sendMessage("Â§4/reports unresolve [bug id] Â§7- Unresolves a bug");
+					sender.sendMessage("Â§4/reports edit [bug id] [comment] Â§7- Edits an existing comment (only for resolved bugs)");
 				}
 				return true;
 			}
@@ -50,7 +50,7 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 			else {
-				sender.sendMessage("§c[§4§lMLMC§c] §7Invalid command!");
+				sender.sendMessage("Â§c[Â§4Â§lMLMCÂ§c] Â§7Invalid command!");
 				return true;
 			}
 		}

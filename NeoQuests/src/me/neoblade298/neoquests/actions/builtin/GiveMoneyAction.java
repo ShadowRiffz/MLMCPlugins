@@ -37,7 +37,7 @@ public class GiveMoneyAction extends RewardAction {
 
 	@Override
 	public String getDisplay() {
-		return "งf" + amount + " ง6Gold";
+		return "ยงf" + amount + " ยง6Gold";
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class VampiricAugment extends Augment implements ModCritSuccessAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Upon critical hit, gain งf" + this.healthGain + " ง7health.");
+		lore.add("ยง7Upon critical hit, gain ยงf" + this.healthGain + " ยง7health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

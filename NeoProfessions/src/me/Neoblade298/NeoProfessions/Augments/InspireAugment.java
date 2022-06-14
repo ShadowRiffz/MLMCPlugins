@@ -44,8 +44,8 @@ public class InspireAugment extends Augment implements ModBuffAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases duration of damage");
-		lore.add("ง7buffs by งf" + formatPercentage(getBuffTimeMult(user)) + "%ง7.");
+		lore.add("ยง7Increases duration of damage");
+		lore.add("ยง7buffs by ยงf" + formatPercentage(getBuffTimeMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

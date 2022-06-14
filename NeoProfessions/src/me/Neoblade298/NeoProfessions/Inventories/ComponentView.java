@@ -49,14 +49,14 @@ public class ComponentView extends ProfessionInventory {
 	public static final int PREVIOUS_BUTTON = 45;
 	
 	static {
-		info.add("§9§oLeft click §7§oto see relevant recipes");
-		info.add("§9§oPress 1 §7§ofor info mode (Current)");
-		info.add("§9§oPress 2 §7§ofor display mode");
+		info.add("Â§9Â§oLeft click Â§7Â§oto see relevant recipes");
+		info.add("Â§9Â§oPress 1 Â§7Â§ofor info mode (Current)");
+		info.add("Â§9Â§oPress 2 Â§7Â§ofor display mode");
 	}
 	
 	public ComponentView(Player p, Recipe recipe, String name, List<String> recipeList, String returnTo) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
+		this.inv = Bukkit.createInventory(p, 54, "Â§9Components View");
 		this.returnTo = returnTo;
 		this.name = name;
 		this.recipe = recipe;
@@ -127,7 +127,7 @@ public class ComponentView extends ProfessionInventory {
 	
 	public ComponentView(Player p, Recipe recipe, StoredItem base, int min, int max) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Components View");
+		this.inv = Bukkit.createInventory(p, 54, "Â§9Components View");
 		p.openInventory(inv);
 		this.min = min;
 		this.max = max;
@@ -221,13 +221,13 @@ public class ComponentView extends ProfessionInventory {
 	private ItemStack createInfoItem() {
 		ItemStack item = recipe.getResult().getResultItem(p, false);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Info");
+		meta.setDisplayName("Â§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Recipe: " + recipe.getResult().getResultItem(p, recipe.canCraft(p)).getItemMeta().getDisplayName());
-		lore.add("§7§oFor all items:");
-		lore.add("§9§oLeft click §7§oto see relevant recipes");
-		lore.add("§9§oPress 1 §7§ofor info mode");
-		lore.add("§9§oPress 2 §7§ofor display mode");
+		lore.add("Â§7Recipe: " + recipe.getResult().getResultItem(p, recipe.canCraft(p)).getItemMeta().getDisplayName());
+		lore.add("Â§7Â§oFor all items:");
+		lore.add("Â§9Â§oLeft click Â§7Â§oto see relevant recipes");
+		lore.add("Â§9Â§oPress 1 Â§7Â§ofor info mode");
+		lore.add("Â§9Â§oPress 2 Â§7Â§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -238,9 +238,9 @@ public class ComponentView extends ProfessionInventory {
 	private ItemStack createHomeItem() {
 		ItemStack item = SkullCreator.itemFromBase64(RecipeView.HOUSE_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Back");
+		meta.setDisplayName("Â§9Back");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oReturn to recipe view");
+		lore.add("Â§7Â§oReturn to recipe view");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -251,7 +251,7 @@ public class ComponentView extends ProfessionInventory {
 	private ItemStack createPreviousButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Previous Page");
+		meta.setDisplayName("Â§9Previous Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "previous");
@@ -261,7 +261,7 @@ public class ComponentView extends ProfessionInventory {
 	private ItemStack createNextButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.NEXT_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Next Page");
+		meta.setDisplayName("Â§9Next Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "next");

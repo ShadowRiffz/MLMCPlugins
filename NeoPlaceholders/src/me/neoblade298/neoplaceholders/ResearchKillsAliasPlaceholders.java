@@ -59,12 +59,12 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 		for (int i = 2; args.length > i; i++) {
 			name += args[i];
 		}
-		name = name.replaceAll("@", "ง");
+		name = name.replaceAll("@", "ยง");
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(mob)) {
 			int kills = mobKills.get(mob);
-			return name + "ง7: งe" + kills;
+			return name + "ยง7: ยงe" + kills;
 		}
-    	return "งc???";
+    	return "ยงc???";
 	}
 }

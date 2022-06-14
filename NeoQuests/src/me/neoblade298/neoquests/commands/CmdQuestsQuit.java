@@ -50,7 +50,7 @@ public class CmdQuestsQuit implements Subcommand {
 				q.cancelQuest(args[0]);
 			}
 			else {
-				Util.msg(p, "§cYou don't have any active quests!");
+				Util.msg(p, "Â§cYou don't have any active quests!");
 			}
 		}
 		else {

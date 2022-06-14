@@ -199,7 +199,7 @@ public class Game {
 
 	public void broadcast(String msg) {
 		for (GamePlayer gp : gameplayers) {
-			String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "ง");
+			String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "ยง");
 			gp.getPlayer().sendMessage(message);
 		}
 	}

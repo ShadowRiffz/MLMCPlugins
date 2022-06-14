@@ -31,7 +31,7 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 		this.item = item;
 		this.editor = new ItemEditor(item);
 		
-		inv = Bukkit.createInventory(p, 9, "§cReplace which slot?");
+		inv = Bukkit.createInventory(p, 9, "Â§cReplace which slot?");
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -45,10 +45,10 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 		for (int i = 9 - nbti.getInteger("slotsCreated"); i < 9; i++) {
 			Augment oldAug = editor.getAugment(j);
 			if (oldAug == null) {
-				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aAdd to Slot " + j, "§7Empty slot");
+				contents[i] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aAdd to Slot " + j, "Â§7Empty slot");
 			}
 			else {
-				contents[i] = createGuiItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Replace Slot " + j, true,
+				contents[i] = createGuiItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Â§9Replace Slot " + j, true,
 						oldAug.getLine(), oldAug.getItem(p).getItemMeta().getLore(), oldAug);
 			}
 			j++;
@@ -72,10 +72,10 @@ public class ConfirmAugmentInventory extends ProfessionInventory {
 		final ItemMeta meta = item.getItemMeta();
 		list.add(0, line);
 		if (isReplace) {
-			list.add(0, "§cCurrent augment will be destroyed!");
+			list.add(0, "Â§cCurrent augment will be destroyed!");
 		}
 		if (aug.isPermanent()) {
-			meta.setDisplayName("§cThis augment cannot be swapped");
+			meta.setDisplayName("Â§cThis augment cannot be swapped");
 			item.setType(Material.RED_STAINED_GLASS_PANE);
 		}
 		else {

@@ -45,8 +45,8 @@ public class SniperAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "% ง7when dealing");
-		lore.add("ง7damage further than 12 blocks away.");
+		lore.add("ยง7Increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "% ยง7when dealing");
+		lore.add("ยง7damage further than 12 blocks away.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

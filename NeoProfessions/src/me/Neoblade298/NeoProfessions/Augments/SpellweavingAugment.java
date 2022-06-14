@@ -49,9 +49,9 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Upon critical hit, gain งf" + this.manaGain + " ง7mana.");
-		lore.add("ง7Only works with mana.");
-		lore.add("ง7Has a 2 second cooldown.");
+		lore.add("ยง7Upon critical hit, gain ยงf" + this.manaGain + " ยง7mana.");
+		lore.add("ยง7Only works with mana.");
+		lore.add("ยง7Has a 2 second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -35,7 +35,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	private static ArrayList<String> voucherLore = new ArrayList<String>();
 	
 	static {
-		voucherLore.add("§7§oRight click to claim!");
+		voucherLore.add("Â§7Â§oRight click to claim!");
 	}
 	
 	public CurrencyManager(Professions main) {
@@ -126,14 +126,14 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 		HashMap<Integer, Integer> essences = essence.get(p.getUniqueId());
 		int newAmount = essences.getOrDefault(level, 0) + amount;
 		essences.put(level, newAmount);
-		Util.sendMessageNoPrefix(p, "&a+" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
+		Util.sendMessageNoPrefix(p, "&a+" + amount + " &7(Â§f" + newAmount + "Â§7) Â§6Lv " + level + " Â§7Essence.");
 	}
 	
 	public static void subtract(Player p, int level, int amount) {
 		HashMap<Integer, Integer> essences = essence.get(p.getUniqueId());
 		int newAmount = essences.getOrDefault(level, 0) - amount;
 		essences.put(level, newAmount);
-		Util.sendMessageNoPrefix(p, "&c-" + amount + " &7(§f" + newAmount + "§7) §6Lv " + level + " §7Essence.");
+		Util.sendMessageNoPrefix(p, "&c-" + amount + " &7(Â§f" + newAmount + "Â§7) Â§6Lv " + level + " Â§7Essence.");
 	}
 	
 	public static void set(Player p, int level, int amount) {
@@ -158,7 +158,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 
 	public static boolean giveVoucher(Player p, int level, int amount) {
 		if (!CurrencyManager.hasEnough(p, level, amount)) {
-			p.sendMessage("§4[§c§lMLMC§4] §cNot enough items to create the voucher!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cNot enough items to create the voucher!");
 			return false;
 		}
 		
@@ -178,7 +178,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	private static ItemStack getVoucher(int level, int amount) {
 		ItemStack item = new ItemStack(Material.PAPER);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§6[Lv " + level + "] §7Essence §fx" + amount);
+		meta.setDisplayName("Â§6[Lv " + level + "] Â§7Essence Â§fx" + amount);
 		meta.setLore(voucherLore);
 		item.setItemMeta(meta);
 		item.setAmount(amount);
@@ -211,7 +211,7 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 			int amount = nbti.getInteger("amount");
 			p.getInventory().removeItem(item);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + (amount * item.getAmount()) + " §6Lv " + level + "§7 Essence!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You claimed Â§f" + (amount * item.getAmount()) + " Â§6Lv " + level + "Â§7 Essence!");
 			CurrencyManager.add(p, level, amount);
 		}
 	}

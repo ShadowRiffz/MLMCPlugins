@@ -44,9 +44,9 @@ public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases resource regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
-		lore.add("§7above 50% resource.");
-		lore.add("§cDoesn't work with mana.");
+		lore.add("Â§7Increases resource regen by Â§f" + formatPercentage(getManaGainMult(user)) + "% Â§7when");
+		lore.add("Â§7above 50% resource.");
+		lore.add("Â§cDoesn't work with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

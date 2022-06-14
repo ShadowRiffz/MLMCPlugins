@@ -11,7 +11,6 @@ public class QuestTakeableCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private String questname;
-	private int stage;
 	
 	static {
 		key = "quest-takeable";
@@ -23,7 +22,6 @@ public class QuestTakeableCondition implements Condition {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
-		stage = cfg.getInt("stage", -1);
 	}
 
 	@Override
@@ -50,7 +48,6 @@ public class QuestTakeableCondition implements Condition {
 		if (cq == null) {
 			return "Error";
 		}
-		Quest q = cq.getQuest();
 		if (cq.isSuccess()) {
 			return "You successfully completed this quest and it can't be repeated!";
 		}

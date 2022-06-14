@@ -50,7 +50,7 @@ public class CmdNavigationFrom implements Subcommand {
 		if (point.getToEndpoints().size() > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
 			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
-				ComponentBuilder entry = new ComponentBuilder("ง7- ง6" + ent.getKey().getDisplay())
+				ComponentBuilder entry = new ComponentBuilder("ยง7- ยง6" + ent.getKey().getDisplay())
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + ent.getKey().getDisplay())));
 				p.spigot().sendMessage(entry.create());

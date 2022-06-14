@@ -145,9 +145,9 @@ public class Commands implements CommandExecutor{
 	}
 	
 	public void msg(CommandSender p, String msg) {
-		p.sendMessage(msg.replaceAll("&", "§"));
+		p.sendMessage(msg.replaceAll("&", "Â§"));
 	}
 	public void msgP(CommandSender p, String msg) {
-		p.sendMessage("§4[§c§lMLMC§4] " + msg.replaceAll("&", "§"));
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] " + msg.replaceAll("&", "Â§"));
 	}
 }

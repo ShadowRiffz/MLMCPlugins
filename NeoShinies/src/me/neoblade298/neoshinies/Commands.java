@@ -19,7 +19,7 @@ public class Commands
         message = message + args[i];
       }
       message = message + "&7!";
-      message = message.replaceAll("&", "ง");
+      message = message.replaceAll("&", "ยง");
       Bukkit.broadcastMessage(message);
       return true;
     }

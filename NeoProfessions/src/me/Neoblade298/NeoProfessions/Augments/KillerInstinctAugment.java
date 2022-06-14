@@ -57,17 +57,17 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 	
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7If you have 4 of these");
-		lore.add("ง7equipped, increase crit");
-		lore.add("ง7chance by งf100%ง7 when");
-		lore.add("ง7within งf4ง7 blocks of an enemy.");
+		lore.add("ยง7If you have 4 of these");
+		lore.add("ยง7equipped, increase crit");
+		lore.add("ยง7chance by ยงf100%ยง7 when");
+		lore.add("ยง7within ยงf4ยง7 blocks of an enemy.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

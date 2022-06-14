@@ -42,8 +42,8 @@ public class ResearchAugment extends Augment implements ModResearchPointsAugment
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases rate of research");
-		lore.add("ง7breakthroughs by งf" + formatPercentage(getRPChanceMult(user)) + "%ง7.");
+		lore.add("ยง7Increases rate of research");
+		lore.add("ยง7breakthroughs by ยงf" + formatPercentage(getRPChanceMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

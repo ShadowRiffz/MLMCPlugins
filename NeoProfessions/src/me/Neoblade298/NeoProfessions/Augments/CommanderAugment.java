@@ -44,8 +44,8 @@ public class CommanderAugment extends Augment implements ModBuffAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases effectiveness of damage");
-		lore.add("ง7buffs by งf" + formatPercentage(getBuffMult(user)) + "%ง7.");
+		lore.add("ยง7Increases effectiveness of damage");
+		lore.add("ยง7buffs by ยงf" + formatPercentage(getBuffMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

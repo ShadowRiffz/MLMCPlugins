@@ -29,11 +29,11 @@ public class GardenSizeRequirement implements RecipeRequirement {
 	}
 
 	public String failMessage(Player p) {
-		return "§4[§c§lMLMC§4] §cYour " + type.getDisplay() + " Garden is not large enough!";
+		return "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYour " + type.getDisplay() + " Garden is not large enough!";
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p, 1) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "Â§a" : "Â§c";
 		msg += "- " + type.getDisplay() + " Garden size of " + size;
 		return msg;
 	}

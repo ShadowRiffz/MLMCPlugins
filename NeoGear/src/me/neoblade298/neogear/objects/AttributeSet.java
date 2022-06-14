@@ -63,7 +63,7 @@ public class AttributeSet {
 	}
 	
 	public String format(double amount) {
-		return "ง9" + this.format.replaceAll("\\$amt\\$", df.format(amount));
+		return "ยง9" + this.format.replaceAll("\\$amt\\$", df.format(amount));
 	}
 	
 	public int generateAmount(int level) {

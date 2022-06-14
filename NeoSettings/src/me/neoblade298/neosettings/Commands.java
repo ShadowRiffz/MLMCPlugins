@@ -24,16 +24,16 @@ public class Commands implements CommandExecutor{
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
-				sender.sendMessage("§c/settings <player> set [setting] [subsetting] [value]");
-				sender.sendMessage("§c/settings <player> reset [setting] [subsetting]");
-				sender.sendMessage("§c/settings <player> get [setting] [subsetting]");
-				sender.sendMessage("§c/settings <player> list");
-				sender.sendMessage("§c/settings debug");
+				sender.sendMessage("Â§c/settings <player> set [setting] [subsetting] [value]");
+				sender.sendMessage("Â§c/settings <player> reset [setting] [subsetting]");
+				sender.sendMessage("Â§c/settings <player> get [setting] [subsetting]");
+				sender.sendMessage("Â§c/settings <player> list");
+				sender.sendMessage("Â§c/settings debug");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("debug") && p.hasPermission("mycommand.staff")) {
 				main.debug = !main.debug;
-				p.sendMessage("§4[§c§lMLMC§4] §7Debug set to §e" + main.debug + "§7!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Debug set to Â§e" + main.debug + "Â§7!");
 				return true;
 			}
 			else {
@@ -46,29 +46,29 @@ public class Commands implements CommandExecutor{
 				}
 				if (args[cmdArg].equalsIgnoreCase("set")) {
 					if (main.changeSetting(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId(), canAccessHidden(p))) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully changed!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Setting Â§e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " Â§7successfully changed!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cFailed to change setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("reset")) {
 					if (main.resetSetting(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId(), canAccessHidden(p))) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully reset!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Setting Â§e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " Â§7successfully reset!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to reset setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cFailed to reset setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("get")) {
 					Settings settings = main.getSettings(args[cmdArg + 1], canAccessHidden(p));
 					if (settings != null) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7set to: §e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Setting Â§e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " Â§7set to: Â§e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to get setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cFailed to get setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
@@ -78,7 +78,7 @@ public class Commands implements CommandExecutor{
 						Settings subsettings = settings.get(key);
 						if (!subsettings.isHidden() || canAccessHidden(p)) {
 							for (String subkey : settings.get(key).getAllKeys()) {
-								p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(target.getUniqueId(), subkey));
+								p.sendMessage("Â§7- Â§6" + key + "." + subkey + "Â§7: Â§e" + settings.get(key).getValue(target.getUniqueId(), subkey));
 							}
 						}
 					}

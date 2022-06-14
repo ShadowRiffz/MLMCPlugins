@@ -311,7 +311,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 			String display = nbti.getString("knowledge-display");
 			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You acquired knowledge of §f" + display + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You acquired knowledge of Â§f" + display + "Â§7!");
 			RecipeManager.giveKnowledge(p, key);
 		}
 	}

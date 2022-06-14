@@ -22,27 +22,27 @@ public class LobbyCommands {
 		String pname = sender.getName();
 		// Check if the name exists already, or player is already in a game
 		if (main.inlobby.containsKey(pname)) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a lobby!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're already in a lobby!");
 			return;
 		}
 		else if (main.ingame.containsKey(pname)) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're already in a game!");
 			return;
 		}
 		else if (main.lobbies.containsKey(name) || main.games.containsKey(name)) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat game name is taken!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat game name is taken!");
 			return;
 		}
 
 		Lobby lobby = new Lobby(pname, name);
 		main.inlobby.put(sender.getName(), lobby);
 		main.lobbies.put(name, lobby);
-		sender.sendMessage("§4[§c§lMLMC§4] §7Successfully created lobby §e" + lobby.getName() + "§7!");
+		sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully created lobby Â§e" + lobby.getName() + "Â§7!");
 	}
 
 	public void joinLobby(String name, Player sender) {
 		if (!main.lobbies.containsKey(name)) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat lobby doesn't exist!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat lobby doesn't exist!");
 			return;
 		}
 
@@ -51,18 +51,18 @@ public class LobbyCommands {
 		ArrayList<String> invited = lobby.getInvited();
 		if (invited.contains(pname)) {
 			if (lobby.getPlayers().size() <= 7) {
-				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully joined lobby §e" + lobby.getName() + "§7!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully joined lobby Â§e" + lobby.getName() + "Â§7!");
 				lobby.broadcast("&e" + sender.getName() + " &7has joined the lobby!");
 				lobby.getPlayers().add(pname);
 				lobby.getInvited().remove(pname);
 				main.inlobby.put(pname, lobby);
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §cThat lobby is full!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat lobby is full!");
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou aren't invited to that lobby!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou aren't invited to that lobby!");
 		}
 	}
 
@@ -79,7 +79,7 @@ public class LobbyCommands {
 		else {
 			lobby.getPlayers().remove(pname);
 			main.inlobby.remove(pname);
-			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully left lobby!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully left lobby!");
 			lobby.broadcast("&e" + sender.getName() + " &7has left the lobby!");
 		}
 	}
@@ -89,7 +89,7 @@ public class LobbyCommands {
 		if (lobby.getHost().equals(sender.getName())) {
 			lobby.getPlayers().remove(name);
 			if (Bukkit.getPlayer(name) != null) {
-				Bukkit.getPlayer(name).sendMessage("§7You were kicked from the lobby!");
+				Bukkit.getPlayer(name).sendMessage("Â§7You were kicked from the lobby!");
 				lobby.broadcast("&e" + Bukkit.getPlayer(name).getName() + "&7 has been kicked by the host!");
 			}
 			else {
@@ -97,7 +97,7 @@ public class LobbyCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can kick from lobby!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOnly hosts can kick from lobby!");
 		}
 	}
 
@@ -111,10 +111,10 @@ public class LobbyCommands {
 		if (lobby.getHost().equals(sname)) {
 			lobby.getInvited().add(invited.getName());
 			lobby.broadcast("&7Successfully invited &e" + invited.getName() + "&7!");
-			invited.sendMessage("§4[§c§lMLMC§4] §7You were invited to uno lobby §e" + lobby.getName() + "§7! Join with §c/uno join " + lobby.getName() + "§7.");
+			invited.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You were invited to uno lobby Â§e" + lobby.getName() + "Â§7! Join with Â§c/uno join " + lobby.getName() + "Â§7.");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can invite to lobby!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOnly hosts can invite to lobby!");
 		}
 	}
 
@@ -125,12 +125,12 @@ public class LobbyCommands {
 		try {
 			amount = Integer.parseInt(amt);
 		} catch (NumberFormatException e) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cInvalid number format!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInvalid number format!");
 			return;
 		}
 		
 		if (amount < 100 || amount > 100000) {
-			sender.sendMessage("§4[§c§lMLMC§4] §cAmount must be between 100 and 100000!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cAmount must be between 100 and 100000!");
 			return;
 		}
 
@@ -139,7 +139,7 @@ public class LobbyCommands {
 			lobby.broadcast("&7Successfully set points to win to &e" + amt + "!");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can change starting money!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOnly hosts can change starting money!");
 		}
 	}
 
@@ -161,11 +161,11 @@ public class LobbyCommands {
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §cOnly hosts can start the game!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOnly hosts can start the game!");
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThere must be at least 2 players to start!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThere must be at least 2 players to start!");
 		}
 	}
 	
@@ -181,11 +181,11 @@ public class LobbyCommands {
 				game.broadcast("&e" + gp + " &7is now spectating!");
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat game doesn't exist");
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're already in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're already in a game!");
 		}
 	}
 }

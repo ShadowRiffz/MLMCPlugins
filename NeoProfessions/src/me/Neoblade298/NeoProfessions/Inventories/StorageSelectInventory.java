@@ -15,16 +15,16 @@ public class StorageSelectInventory extends ProfessionInventory {
 
 	public StorageSelectInventory(Player p) {
 		this.p = p;
-		inv = Bukkit.createInventory(p, 9, "ง1Inventories");
+		inv = Bukkit.createInventory(p, 9, "ยง1Inventories");
 
 		ItemStack[] contents = inv.getContents();
-		contents[0] = createItem(Material.TALL_GRASS, "ง9Harvesting Items", 0, 999);
-		contents[1] = createItem(Material.OAK_LOG, "ง9Logging Items", 1000, 1999);
-		contents[2] = createItem(Material.IRON_ORE, "ง9Stonecutting Items", 2000, 2999);
-		contents[3] = createItem(Material.ROTTEN_FLESH, "ง9Mob Drops", 3000, 3999);
-		contents[4] = createItem(Material.SKELETON_SKULL, "ง9Dungeon Drops", 4100, 4199);
-		contents[5] = createItem(Material.CHEST, "ง9All Items", -1, 1);
-		contents[8] = createItem(Material.CRAFTING_TABLE, "ง9/craft", -1, 1);
+		contents[0] = createItem(Material.TALL_GRASS, "ยง9Harvesting Items", 0, 999);
+		contents[1] = createItem(Material.OAK_LOG, "ยง9Logging Items", 1000, 1999);
+		contents[2] = createItem(Material.IRON_ORE, "ยง9Stonecutting Items", 2000, 2999);
+		contents[3] = createItem(Material.ROTTEN_FLESH, "ยง9Mob Drops", 3000, 3999);
+		contents[4] = createItem(Material.SKELETON_SKULL, "ยง9Dungeon Drops", 4100, 4199);
+		contents[5] = createItem(Material.CHEST, "ยง9All Items", -1, 1);
+		contents[8] = createItem(Material.CRAFTING_TABLE, "ยง9/craft", -1, 1);
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

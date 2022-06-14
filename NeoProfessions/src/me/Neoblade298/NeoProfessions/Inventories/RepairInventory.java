@@ -48,17 +48,17 @@ public class RepairInventory extends ProfessionInventory {
 		this.item = p.getInventory().getItemInMainHand();
 		p.getInventory().removeItem(item);
 		level = new NBTItem(item).getInteger("level");
-		inv = Bukkit.createInventory(p, 9, "§cRepair this item?");
+		inv = Bukkit.createInventory(p, 9, "Â§cRepair this item?");
 		
 		ItemStack[] contents = inv.getContents();
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
 		for (int i = 2; i < REPAIR_ICON; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo",
-					"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "Â§cNo",
+					"Â§7Gold cost: Â§e" + goldCost.get(level) + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		}
-		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
-				"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aYes",
+				"Â§7Gold cost: Â§e" + goldCost.get(level) + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

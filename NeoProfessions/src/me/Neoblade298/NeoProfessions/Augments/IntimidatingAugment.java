@@ -46,8 +46,8 @@ public class IntimidatingAugment extends Augment implements ModDamageDealtAugmen
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases threat from damaging an");
-		lore.add("ง7enemy by งf" + formatPercentage(this.threatMult) + "%ง7.");
+		lore.add("ยง7Increases threat from damaging an");
+		lore.add("ยง7enemy by ยงf" + formatPercentage(this.threatMult) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

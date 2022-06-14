@@ -34,7 +34,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
         String key = config.getString("i", "mi_sewerzombie");
         this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(1);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 0.25);
-        this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "ง");
+        this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "ยง");
         this.boss = config.getString("boss", "Ratface");
         this.rand = new Random();
         
@@ -86,7 +86,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 					if (dropType == 2) localMsg += " via Boss Chest Token";
 					localMsg += "!";
 					p.sendMessage(localMsg);
-					String name = fitem.getItemMeta().getDisplayName().replaceAll("ง", "&");
+					String name = fitem.getItemMeta().getDisplayName().replaceAll("ยง", "&");
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
 				}
 				return SkillResult.SUCCESS;

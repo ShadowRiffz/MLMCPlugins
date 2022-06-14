@@ -18,21 +18,21 @@ public class TokenConsumable extends Consumable {
 	public boolean canUse(Player p, ItemStack item) {
 		NBTItem nbti = new NBTItem(item);
 		if (!p.getName().equals(nbti.getString("player"))) {
-			p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou cannot use this as you are not Â§e" + nbti.getString("player") + "Â§c!");
 			return false;
 		}
 		
 		long now = System.currentTimeMillis();
 		long usable = nbti.getLong("timestamp") + 86400000;
 		if (now > usable) {
-			p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThis token has already expired!");
 			p.getInventory().remove(item);
 			return false;
 		}
 		
 		for (SettingsChanger sc : this.settingsChangers) {
 			if (!sc.getOverwrite() && sc.exists(p.getUniqueId())) {
-				p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOne of these tokens is already active!");
 				return false;
 			}
 		}
@@ -44,7 +44,7 @@ public class TokenConsumable extends Consumable {
 
 		for (SettingsChanger sc : this.settingsChangers) {
 			if (!sc.changeSetting(uuid)) {
-				p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cFailed to change setting!");
 				return;
 			}
 		}
@@ -52,7 +52,7 @@ public class TokenConsumable extends Consumable {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
 
-		p.sendMessage("§4[§c§lMLMC§4] §7You used " + item.getItemMeta().getDisplayName() + "§7!");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You used " + item.getItemMeta().getDisplayName() + "Â§7!");
 		
 		item.setAmount(item.getAmount() - 1);
 	}

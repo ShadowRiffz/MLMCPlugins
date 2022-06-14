@@ -42,7 +42,7 @@ public class HolyAugment extends Augment implements ModFlagAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Reduces curse time by งf" + formatPercentage(getFlagTimeMult(user)) + "%ง7.");
+		lore.add("ยง7Reduces curse time by ยงf" + formatPercentage(getFlagTimeMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

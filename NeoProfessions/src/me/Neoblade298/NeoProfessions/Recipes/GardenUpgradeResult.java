@@ -40,7 +40,7 @@ public class GardenUpgradeResult implements RecipeResult {
 	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = SkullCreator.itemFromBase64(UPGRADE_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName((canCraft ? "§a" : "§c") + type.getDisplay() + " Garden Upgrade (" + newSize + ")");
+		meta.setDisplayName((canCraft ? "Â§a" : "Â§c") + type.getDisplay() + " Garden Upgrade (" + newSize + ")");
 		item.setItemMeta(meta);
 		return item;
 	}

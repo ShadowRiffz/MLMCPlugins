@@ -15,11 +15,11 @@ public class Shards {
 	public static ItemStack getRarityShard(Rarity rarityMax, int levelMax) {
 		ItemStack item = new ItemStack(Material.AMETHYST_SHARD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("ง6[" + levelMax + "] งc" + ChatColor.stripColor(rarityMax.displayName) + " Upgrade Shard");
+		meta.setDisplayName("ยง6[" + levelMax + "] ยงc" + ChatColor.stripColor(rarityMax.displayName) + " Upgrade Shard");
 		List<String> lore = new ArrayList<String>();
-		lore.add("ง7Increases rarity of quest equipment.");
-		lore.add("ง7Works on up to Lv " + levelMax + " " + rarityMax.displayName + " ง7gear");
-		lore.add("ง7Drag and drop onto item to use!");
+		lore.add("ยง7Increases rarity of quest equipment.");
+		lore.add("ยง7Works on up to Lv " + levelMax + " " + rarityMax.displayName + " ยง7gear");
+		lore.add("ยง7Drag and drop onto item to use!");
 		meta.setLore(lore);
 		meta.addEnchant(Enchantment.DURABILITY, 1, true);
 		item.setItemMeta(meta);
@@ -32,11 +32,11 @@ public class Shards {
 	public static ItemStack getLevelShard(int levelMax) {
 		ItemStack item = new ItemStack(Material.AMETHYST_SHARD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("ง6[" + levelMax + "] งcLevel Upgrade Shard");
+		meta.setDisplayName("ยง6[" + levelMax + "] ยงcLevel Upgrade Shard");
 		List<String> lore = new ArrayList<String>();
-		lore.add("ง7Increases level of quest equipment by 5.");
-		lore.add("ง7Works on up to ง6Lv " + levelMax + " ง7gear");
-		lore.add("ง7Drag and drop onto item to use!");
+		lore.add("ยง7Increases level of quest equipment by 5.");
+		lore.add("ยง7Works on up to ยง6Lv " + levelMax + " ยง7gear");
+		lore.add("ยง7Drag and drop onto item to use!");
 		meta.setLore(lore);
 		meta.addEnchant(Enchantment.DURABILITY, 1, true);
 		item.setItemMeta(meta);

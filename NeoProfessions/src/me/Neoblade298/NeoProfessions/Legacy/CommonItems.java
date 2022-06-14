@@ -15,11 +15,11 @@ public class CommonItems {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
 		level = roundUp ? level + ((level % 5 == 0 ? 0 : 5) - level % 5) : level - (level % 5);
-		meta.setDisplayName("§4[Lv " + level + "] §cEssence");
+		meta.setDisplayName("Â§4[Lv " + level + "] Â§cEssence");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level + " Essence§0");
-		lore.add("§7Item used for profession crafting");
+		lore.add("Â§7Level " + level + " EssenceÂ§0");
+		lore.add("Â§7Item used for profession crafting");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);

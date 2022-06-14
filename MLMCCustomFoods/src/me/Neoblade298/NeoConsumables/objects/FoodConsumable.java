@@ -83,7 +83,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 	public boolean canUse(Player p, ItemStack item) {
 		// Check world compatible
 		if (!worlds.contains(p.getWorld().getName())) {
-			String message = "§4[§c§lMLMC§4] §cYou cannot use this consumable in this world";
+			String message = "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou cannot use this consumable in this world";
 			p.sendMessage(message);
 			return false;
 		}
@@ -101,7 +101,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 				return true;
 			}
 			remaining /= 1000L;
-			p.sendMessage("§4[§c§lMLMC§4] §cInstant consumables cooldown: §e" + remaining + "s§7.");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInstant consumables cooldown: Â§e" + remaining + "sÂ§7.");
 			return false;
 		}
 		else {
@@ -110,7 +110,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 				return true;
 			}
 			remaining /= 1000L;
-			p.sendMessage("§4[§c§lMLMC§4] §cDuration consumables cooldown: §e" + remaining + "s§7.");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cDuration consumables cooldown: Â§e" + remaining + "sÂ§7.");
 			return false;
 		}
 	}
@@ -124,7 +124,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 		}
 		
 		// Sounds, commands
-		p.sendMessage("§4[§c§lMLMC§4] §7You ate " + item.getItemMeta().getDisplayName() + "§7!");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You ate " + item.getItemMeta().getDisplayName() + "Â§7!");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
@@ -148,7 +148,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				public void run() {
 					if (p != null) {
-						String message = "§4[§c§lMLMC§4] Instant consumables can be eaten again.";
+						String message = "Â§4[Â§cÂ§lMLMCÂ§4] Instant consumables can be eaten again.";
 						p.sendMessage(message);
 					}
 				}
@@ -263,69 +263,69 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 	}
 	
 	private String correctColors(String line) {
-		return line.replaceAll("\\\\&", "@").replaceAll("&", "§").replaceAll("@", "&");
+		return line.replaceAll("\\\\&", "@").replaceAll("&", "Â§").replaceAll("@", "&");
 	}
 	
 	public void generateLore() {
 		lore.clear();
 		String line = "";
 		
-		lore.add("§7Rarity: " + rarity.getDisplay());
+		lore.add("Â§7Rarity: " + rarity.getDisplay());
 		
 		// Health & mana
 		if (this.healthReps > 1) {
-			line = "§aHP +" + health + "/" + (healthPeriod == 0 ? healthPeriod + "s" : "s");
+			line = "Â§aHP +" + health + "/" + (healthPeriod == 0 ? healthPeriod + "s" : "s");
 			line += " [" + healthReps + "x]";
 		}
 		else if (this.health > 0) {
-			line = "§aHP +" + health;
+			line = "Â§aHP +" + health;
 		}
 		if (!line.isEmpty()) {
-			line += "§7, ";
+			line += "Â§7, ";
 		}
 		if (this.manaReps > 1) {
-			line += "§9MP +" + mana + "/" + (manaPeriod == 0 ? manaPeriod + "s" : "s");
+			line += "Â§9MP +" + mana + "/" + (manaPeriod == 0 ? manaPeriod + "s" : "s");
 			line += " [" + manaReps + "x]";
 		}
 		else if (this.mana > 0) {
-			line = "§aMP +" + mana;
+			line = "Â§aMP +" + mana;
 		}
 		if (!line.isEmpty()) {
 			lore.add(line);
 		}
 		// Hunger
 		if (hunger > 0) {
-			lore.add("§6Hunger +" + hunger + ", Saturation +" + saturation);
+			lore.add("Â§6Hunger +" + hunger + ", Saturation +" + saturation);
 		}
 		
 		// Potions
 		if (!potions.isEmpty()) {
-			lore.add("§9Potions:");
+			lore.add("Â§9Potions:");
 			for (PotionEffect pot : potions) {
 				// Only potions are in ticks because PotionEffect is a bukkit object
-				lore.add("§7- §9" + pot.getType().toString() + " " + pot.getAmplifier() + " [" + (pot.getDuration() / 20) + "s]");
+				lore.add("Â§7- Â§9" + pot.getType().toString() + " " + pot.getAmplifier() + " [" + (pot.getDuration() / 20) + "s]");
 			}
 		}
 		
 		// Buffs
 		if (!buffs.isEmpty()) {
 			for (BuffAction buff : buffs) {
-				lore.add("§7- §9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x [" : " [") + buff.getDuration() + "s]");
+				lore.add("Â§7- Â§9" + BuffAction.display.get(buff.getType()) + " " + buff.getValue() + (buff.isPercent() ? "x [" : " [") + buff.getDuration() + "s]");
 			}
 		}
 		
 		// Attributes
 		if (!attributes.isEmpty()) {
-			lore.add("§cAttributes [" + attributeTime + "s]:");
+			lore.add("Â§cAttributes [" + attributeTime + "s]:");
 			for (Entry<String, Integer> ent : attributes.getAttrs().entrySet()) {
-				lore.add("§c" + StringUtils.capitalize(ent.getKey()) + " +" + ent.getValue());
+				lore.add("Â§c" + StringUtils.capitalize(ent.getKey()) + " +" + ent.getValue());
 			}
 		}
 		
 		if (!desc.isEmpty()) {
-			lore.add("§2Desc:");
+			lore.add("Â§2Desc:");
 			for (String loreline : desc) {
-				lore.add(loreline.replaceAll("&", "§"));
+				lore.add(loreline.replaceAll("&", "Â§"));
 			}
 		}
 	}

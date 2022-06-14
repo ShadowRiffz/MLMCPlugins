@@ -43,8 +43,8 @@ public class ExperienceAugment extends Augment implements ModExpAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases exp gained from");
-		lore.add("ง7mobs and minibosses by งf" + formatPercentage(getExpMult(user)) + "%ง7.");
+		lore.add("ยง7Increases exp gained from");
+		lore.add("ยง7mobs and minibosses by ยงf" + formatPercentage(getExpMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

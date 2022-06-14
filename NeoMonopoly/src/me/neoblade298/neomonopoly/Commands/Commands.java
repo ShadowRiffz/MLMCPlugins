@@ -37,14 +37,14 @@ public class Commands implements CommandExecutor{
 		
 		if (!main.inlobby.containsKey(p) && !main.ingame.containsKey(p)) {
 			if (args.length == 0) {
-				p.sendMessage("§4[§c§lMonopoly§4]");
-				p.sendMessage("§c/mono create [name] §7- Create a lobby");
-				p.sendMessage("§c/mono join [name] §7- Join a lobby");
-				p.sendMessage("§c/mono spectate [name] §7- Spectate a game");
+				p.sendMessage("Â§4[Â§cÂ§lMonopolyÂ§4]");
+				p.sendMessage("Â§c/mono create [name] Â§7- Create a lobby");
+				p.sendMessage("Â§c/mono join [name] Â§7- Join a lobby");
+				p.sendMessage("Â§c/mono spectate [name] Â§7- Spectate a game");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono endgame [name] §7- End a game");
-					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono games §7- Lists all games and player");
+					p.sendMessage("Â§4/mono endgame [name] Â§7- End a game");
+					p.sendMessage("Â§4/mono forcequit [player] Â§7- Forces a player in the game to quit");
+					p.sendMessage("Â§4/mono games Â§7- Lists all games and player");
 				}
 				return true;
 			}
@@ -64,18 +64,18 @@ public class Commands implements CommandExecutor{
 		else if (main.inlobby.containsKey(p)) {
 			Lobby lobby = main.inlobby.get(p);
 			if (args.length == 0) {
-				p.sendMessage("§4[§c§lMonopoly§4]");
-				p.sendMessage("§7Lobby name: §e" + lobby.getName());
-				p.sendMessage("§7Players: §e" + lobby.getPlayerList());
-				p.sendMessage("§c/mono leave §7- Leave the lobby you're in");
-				p.sendMessage("§c/mono start §7- Start the game (host only)");
-				p.sendMessage("§c/mono invite [player] §7- Invite a player to the lobby (host only)");
-				p.sendMessage("§c/mono kick [player] §7- Kick player from lobby (host only)");
-				p.sendMessage("§c/mono set money [amt] §7- Set game starting money (host only)");
+				p.sendMessage("Â§4[Â§cÂ§lMonopolyÂ§4]");
+				p.sendMessage("Â§7Lobby name: Â§e" + lobby.getName());
+				p.sendMessage("Â§7Players: Â§e" + lobby.getPlayerList());
+				p.sendMessage("Â§c/mono leave Â§7- Leave the lobby you're in");
+				p.sendMessage("Â§c/mono start Â§7- Start the game (host only)");
+				p.sendMessage("Â§c/mono invite [player] Â§7- Invite a player to the lobby (host only)");
+				p.sendMessage("Â§c/mono kick [player] Â§7- Kick player from lobby (host only)");
+				p.sendMessage("Â§c/mono set money [amt] Â§7- Set game starting money (host only)");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono endgame [name] §7- End a game");
-					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono games §7- Lists all games and player");
+					p.sendMessage("Â§4/mono endgame [name] Â§7- End a game");
+					p.sendMessage("Â§4/mono forcequit [player] Â§7- Forces a player in the game to quit");
+					p.sendMessage("Â§4/mono games Â§7- Lists all games and player");
 				}
 				return true;
 			}
@@ -107,63 +107,63 @@ public class Commands implements CommandExecutor{
 			
 			// Help menus
 			if (args.length == 0) {
-				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
-				p.sendMessage("§7[] = Required, {} = Optional");
-				p.sendMessage("§c/mono roll §7- Rolls the dice");
-				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
-				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
-				p.sendMessage("§c/mono pos §7- Shows where every player is");
-				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono view [name] §7- View a property's info card");
-				p.sendMessage("§c/mono build/destroy [name]§7- Builds/destroys a house/hotel on a property");
-				p.sendMessage("§c/mono end {player} §7- Ends your turn");
-				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
+				p.sendMessage("Â§4[Â§cÂ§lMonopoly Â§7(1/2)Â§4]");
+				p.sendMessage("Â§7[] = Required, {} = Optional");
+				p.sendMessage("Â§c/mono roll Â§7- Rolls the dice");
+				p.sendMessage("Â§c/mono summary {player} Â§7- Summarize a player's properties");
+				p.sendMessage("Â§c/mono color [color] {player} Â§7- Shows monopoly requirements for color");
+				p.sendMessage("Â§c/mono pos Â§7- Shows where every player is");
+				p.sendMessage("Â§c/mono list {player} Â§7- Shows a list of owned properties");
+				p.sendMessage("Â§c/mono view [name] Â§7- View a property's info card");
+				p.sendMessage("Â§c/mono build/destroy [name]Â§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("Â§c/mono end {player} Â§7- Ends your turn");
+				p.sendMessage("Â§c/mono map {player} Â§7- Shows a map of the board");
 				if (p.hasPermission("neomonopoly.admin")) {
-					p.sendMessage("§4/mono endgame [name] §7- End a game");
-					p.sendMessage("§4/mono forcequit [player] §7- Forces a player in the game to quit");
-					p.sendMessage("§4/mono games §7- Lists all games and player");
+					p.sendMessage("Â§4/mono endgame [name] Â§7- End a game");
+					p.sendMessage("Â§4/mono forcequit [player] Â§7- Forces a player in the game to quit");
+					p.sendMessage("Â§4/mono games Â§7- Lists all games and player");
 				}
 				return true;
 			}
 			
 			else if (args.length == 1 && args[0].equals("1")) {
-				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
-				p.sendMessage("§7[] = Required, {} = Optional");
-				p.sendMessage("§c/mono roll §7- Rolls the dice");
-				p.sendMessage("§c/mono summary {player} §7- Summarize a player's properties");
-				p.sendMessage("§c/mono color [color] {player} §7- Shows monopoly requirements for color");
-				p.sendMessage("§c/mono pos §7- Shows where every player is");
-				p.sendMessage("§c/mono list {player} §7- Shows a list of owned properties");
-				p.sendMessage("§c/mono view [name] §7- View a property's info card");
-				p.sendMessage("§c/mono build/destroy [name]§7- Builds/destroys a house/hotel on a property");
-				p.sendMessage("§c/mono map {player} §7- Shows a map of the board");
-				p.sendMessage("§c/mono end {player} §7- Ends your turn");
+				p.sendMessage("Â§4[Â§cÂ§lMonopoly Â§7(1/2)Â§4]");
+				p.sendMessage("Â§7[] = Required, {} = Optional");
+				p.sendMessage("Â§c/mono roll Â§7- Rolls the dice");
+				p.sendMessage("Â§c/mono summary {player} Â§7- Summarize a player's properties");
+				p.sendMessage("Â§c/mono color [color] {player} Â§7- Shows monopoly requirements for color");
+				p.sendMessage("Â§c/mono pos Â§7- Shows where every player is");
+				p.sendMessage("Â§c/mono list {player} Â§7- Shows a list of owned properties");
+				p.sendMessage("Â§c/mono view [name] Â§7- View a property's info card");
+				p.sendMessage("Â§c/mono build/destroy [name]Â§7- Builds/destroys a house/hotel on a property");
+				p.sendMessage("Â§c/mono map {player} Â§7- Shows a map of the board");
+				p.sendMessage("Â§c/mono end {player} Â§7- Ends your turn");
 				return true;
 			}
 			
 			else if (args.length == 1 && args[0].equals("2")) {
-				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
-				p.sendMessage("§7[] = Required, {} = Optional");
-				p.sendMessage("§c/mono mortgage/unmortgage [name] §7- Mortgages/unmortgages a property");
-				p.sendMessage("§c/mono buy/auction §7- Buy/auction the unowned property you're on");
-				p.sendMessage("§c/mono bid [money] §7- Bid on an active auction");
-				p.sendMessage("§c/mono auction view/leave§7 - View or leave the auction");
-				p.sendMessage("§c/mono trade §7- Shows all commands related to trading");
-				p.sendMessage("§c/mono bankrupt §7- Give up everything, continue to spectate");
-				p.sendMessage("§c/mono quit §7- Exit the game completely");
+				p.sendMessage("Â§4[Â§cÂ§lMonopoly Â§7(1/2)Â§4]");
+				p.sendMessage("Â§7[] = Required, {} = Optional");
+				p.sendMessage("Â§c/mono mortgage/unmortgage [name] Â§7- Mortgages/unmortgages a property");
+				p.sendMessage("Â§c/mono buy/auction Â§7- Buy/auction the unowned property you're on");
+				p.sendMessage("Â§c/mono bid [money] Â§7- Bid on an active auction");
+				p.sendMessage("Â§c/mono auction view/leaveÂ§7 - View or leave the auction");
+				p.sendMessage("Â§c/mono trade Â§7- Shows all commands related to trading");
+				p.sendMessage("Â§c/mono bankrupt Â§7- Give up everything, continue to spectate");
+				p.sendMessage("Â§c/mono quit Â§7- Exit the game completely");
 				return true;
 			}
 			
 			else if (args.length == 1 && args[0].equalsIgnoreCase("trade")) {
-				p.sendMessage("§4[§c§lMonopoly §7(1/2)§4]");
-				p.sendMessage("§7[] = Required, {} = Optional");
-				p.sendMessage("§c/mono trade [player] §7- Starts a trade with a player");
-				p.sendMessage("§c/mono trade view §7- View your current trade");
-				p.sendMessage("§c/mono offer/request money [amt]");
-				p.sendMessage("§c/mono offer/request property [name]");
-				p.sendMessage("§c/mono offer/request jailfree [amt]");
-				p.sendMessage("§c/mono confirm/unconfirm §7- Confirm the trade");
-				p.sendMessage("§c/mono cancel §7- Cancel the trade");
+				p.sendMessage("Â§4[Â§cÂ§lMonopoly Â§7(1/2)Â§4]");
+				p.sendMessage("Â§7[] = Required, {} = Optional");
+				p.sendMessage("Â§c/mono trade [player] Â§7- Starts a trade with a player");
+				p.sendMessage("Â§c/mono trade view Â§7- View your current trade");
+				p.sendMessage("Â§c/mono offer/request money [amt]");
+				p.sendMessage("Â§c/mono offer/request property [name]");
+				p.sendMessage("Â§c/mono offer/request jailfree [amt]");
+				p.sendMessage("Â§c/mono confirm/unconfirm Â§7- Confirm the trade");
+				p.sendMessage("Â§c/mono cancel Â§7- Cancel the trade");
 				return true;
 			}
 			
@@ -418,7 +418,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		p.sendMessage("§4[§c§lMLMC§4] §7Unknown command!");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Unknown command!");
 		return true;
 	}
 }

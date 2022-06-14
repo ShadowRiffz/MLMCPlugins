@@ -39,7 +39,7 @@ public class GiveClassExpAction extends RewardAction {
 
 	@Override
 	public String getDisplay() {
-		return "งf" + amount + " ง6Class Exp";
+		return "ยงf" + amount + " ยง6Class Exp";
 	}
 
 	@Override

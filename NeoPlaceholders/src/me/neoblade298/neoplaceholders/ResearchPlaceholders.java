@@ -76,6 +76,6 @@ public class ResearchPlaceholders extends PlaceholderExpansion {
 		else if (args[0].equalsIgnoreCase("neededexp")) {
 			return "" + Research.getNextLevel().get(stats.getLevel());
 		}
-    	return "§c???";
+    	return "Â§c???";
 	}
 }

@@ -163,13 +163,13 @@ public class NavigationManager implements Manager {
 	
 	public static void startPathwayEditor(Player p, String name) throws NeoIOException {
 		if (pathwayEditors.containsKey(p)) {
-			Util.msg(p, "§cYou are already editing pathway: §6" + pathwayEditors.get(p).getName());
-			Util.msg(p, "§cType /nav exit to dispose of your edits if you want to start a new one!");
+			Util.msg(p, "Â§cYou are already editing pathway: Â§6" + pathwayEditors.get(p).getName());
+			Util.msg(p, "Â§cType /nav exit to dispose of your edits if you want to start a new one!");
 			return;
 		}
 		File file = new File(NeoQuests.inst().getDataFolder(), "pathways/" + name + ".yml");
 		if (file.exists()) {
-			Util.msg(p, "§cThe file name §6" + file.getName() + " already exists! Try another one! You can always rename it later.");
+			Util.msg(p, "Â§cThe file name Â§6" + file.getName() + " already exists! Try another one! You can always rename it later.");
 			return;
 		}
 

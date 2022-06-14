@@ -108,8 +108,8 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 
 		// General
 		ConfigurationSection general = cfg.getConfigurationSection("general");
-		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
-		levelup = general.getString("research_levelup").replaceAll("&", "§");
+		broadcast = general.getString("research_complete_command").replaceAll("&", "Â§");
+		levelup = general.getString("research_levelup").replaceAll("&", "Â§");
 		discovery = general.getString("discovery");
 
 		// Exp
@@ -362,7 +362,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			String display = main.getItemMeta().getLore().get(1);
 
 			if (!playerStats.containsKey(p.getUniqueId())) {
-				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError, player stats not found.");
 				return;
 			}
 			NBTItem nbti = new NBTItem(main);
@@ -374,7 +374,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			int pLevel = pStat.getLevel();
 			
 			if (level > pLevel) {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou are too low level to research this mob!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou are too low level to research this mob!");
 				return;
 			}
 			
@@ -389,7 +389,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			researchPoints.put(mob, points);
 			p.getInventory().removeItem(main);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
-			p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You gained Â§e" + amount + " Â§7research points for " + display + "Â§7!");
 			checkItemCompletion(mob, p, points, display);
 		}
 	}
@@ -501,7 +501,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			
 			// New discovery
 			if (!researchPoints.containsKey(mob)) {
-				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
+				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "Â§"));
 				researchPoints.put(mob, 0);
 			}
 			if (!mobKills.containsKey(mob)) {
@@ -518,10 +518,10 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 						msg += " &7via " + via;
 					}
 					msg += "&7!";
-					msg = msg.replaceAll("&", "§");
+					msg = msg.replaceAll("&", "Â§");
 					p.sendMessage(msg);
 				}
-				String msg = display + " - §e" + points + " Research Pts";
+				String msg = display + " - Â§e" + points + " Research Pts";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
@@ -538,7 +538,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			
 			// Discovery
 			if (!researchPoints.containsKey(mob)) {
-				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
+				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "Â§"));
 				researchPoints.put(mob, 0);
 			}
 			if (!mobKills.containsKey(mob)) {
@@ -550,15 +550,15 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 				researchPoints.put(mob, points);
 				if (announce) {
 					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-					msg = msg.replaceAll("&", "§");
+					msg = msg.replaceAll("&", "Â§");
 					p.sendMessage(msg);
 				}
-				String msg = display + " - §e" + points + " Research Pts";
+				String msg = display + " - Â§e" + points + " Research Pts";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
 			else {
-				String msg = display + " - §cResearch level too low!";
+				String msg = display + " - Â§cResearch level too low!";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 			}
 		}

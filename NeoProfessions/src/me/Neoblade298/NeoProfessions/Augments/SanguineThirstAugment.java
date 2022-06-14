@@ -32,7 +32,7 @@ public class SanguineThirstAugment extends Augment implements ModDamageDealtAugm
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	@Override
@@ -56,8 +56,8 @@ public class SanguineThirstAugment extends Augment implements ModDamageDealtAugm
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Dealing damage heals for งf2% ง7your");
-		lore.add("ง7max health. 10s cooldown.");
+		lore.add("ยง7Dealing damage heals for ยงf2% ยง7your");
+		lore.add("ยง7max health. 10s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

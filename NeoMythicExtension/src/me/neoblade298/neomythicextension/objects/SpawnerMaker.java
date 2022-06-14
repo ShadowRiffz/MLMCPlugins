@@ -20,23 +20,23 @@ public class SpawnerMaker {
 	}
 	
 	public void display(Player p) {
-		p.sendMessage("§8===[§4§lSpawner Maker§8]===");
+		p.sendMessage("Â§8===[Â§4Â§lSpawner MakerÂ§8]===");
 		if (loc1 != null) {
-			p.sendMessage("§7Location 1: " + loc1.getBlockX() + " " + loc1.getBlockY() + " " + loc1.getBlockZ());
+			p.sendMessage("Â§7Location 1: " + loc1.getBlockX() + " " + loc1.getBlockY() + " " + loc1.getBlockZ());
 		}
 		else {
-			p.sendMessage("§7Location 1: Not set");
+			p.sendMessage("Â§7Location 1: Not set");
 		}
 
 		if (loc2 != null) {
-			p.sendMessage("§7Location 2: " + loc2.getBlockX() + " " + loc2.getBlockY() + " " + loc2.getBlockZ());
+			p.sendMessage("Â§7Location 2: " + loc2.getBlockX() + " " + loc2.getBlockY() + " " + loc2.getBlockZ());
 		}
 		else {
-			p.sendMessage("§7Location 2: Not set");
+			p.sendMessage("Â§7Location 2: Not set");
 		}
 		
 		if (!definitions.isEmpty()) { 
-			p.sendMessage("§7Spawner Definitions:");
+			p.sendMessage("Â§7Spawner Definitions:");
 			int count = 0;
 			for (SpawnerDefinition def : definitions) {
 				def.display(p, count);
@@ -44,26 +44,26 @@ public class SpawnerMaker {
 			}
 		}
 		else {
-			p.sendMessage("§7Spawner Definitions: Not set");
+			p.sendMessage("Â§7Spawner Definitions: Not set");
 		}
 	}
 	
 	public boolean generate(Player p) {
 		if (loc1 == null) {
-			p.sendMessage("§4[§c§lMLMC§4] §cLocation 1 was not properly set!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cLocation 1 was not properly set!");
 			return false;
 		}
 		else if (loc2 == null) {
-			p.sendMessage("§4[§c§lMLMC§4] §cLocation 2 was not properly set!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cLocation 2 was not properly set!");
 			return false;
 		}
 		else if (definitions.isEmpty()) {
-			p.sendMessage("§4[§c§lMLMC§4] §cNo spawner definitions were added!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cNo spawner definitions were added!");
 			return false;
 		}
 		
 		// Start generation process, loc 1 is ALWAYS less than loc 2
-		p.sendMessage("§4[§c§lMLMC§4] §7Commencing spawner generation!");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Commencing spawner generation!");
 		Location loc = loc1.clone();
 		SpawnerManager mm = MythicBukkit.inst().getSpawnerManager();
 		for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
@@ -88,7 +88,7 @@ public class SpawnerMaker {
 			}
 			loc.add(1, 0, 0);
 		}
-		p.sendMessage("§4[§c§lMLMC§4] §7Spawner generation complete!");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Spawner generation complete!");
 		return true;
 	}
 	

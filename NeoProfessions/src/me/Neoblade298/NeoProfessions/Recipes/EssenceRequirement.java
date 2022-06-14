@@ -28,7 +28,7 @@ public class EssenceRequirement implements RecipeRequirement {
 	}
 
 	public String failMessage(Player p) {
-		return "§4[§c§lMLMC§4] §cYou don't have enough level " + level + " essence!";
+		return "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou don't have enough level " + level + " essence!";
 	}
 	
 	public void useReq(Player p, int amount) {
@@ -36,7 +36,7 @@ public class EssenceRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p, 1) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "Â§a" : "Â§c";
 		msg += "- " + amount + "x Lv " + level + " Essence";
 		return msg;
 	}

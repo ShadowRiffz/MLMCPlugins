@@ -129,7 +129,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		File instanceFile = new File(getDataFolder(), "instance.yml");
 		isInstance = instanceFile.exists();
 		if (isInstance) {
-			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name", "").replaceAll("&", "§");
+			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name", "").replaceAll("&", "Â§");
 		}
 
 		// Save config if doesn't exist
@@ -363,7 +363,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	private void finishDungeon(Boss b) {
 		ArrayList<Player> fighters = inBoss.get(b.getName());
 		for (Player fighter : fighters) {
-			fighter.sendMessage("§4[§c§lMLMC§4] §7The dungeon has been cleared!");
+			fighter.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The dungeon has been cleared!");
 		}
 		
 		new BukkitRunnable() {
@@ -423,7 +423,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 						Bukkit.getServer().getLogger()
 								.info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						for (Player target : activeFights.get(boss)) {
-							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
+							target.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The boss has been spawned!");
 						}
 					}
 					else if (b.getBossType().equals(BossType.RAID)) {
@@ -482,16 +482,16 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 		// 30 minute warning
 		if (time > 1800) {
-			scheduleWarning(ticks, 36000, "§e30 §cminutes", boss);
+			scheduleWarning(ticks, 36000, "Â§e30 Â§cminutes", boss);
 		}
 		// 15 minute warning
 		if (time > 900) {
-			scheduleWarning(ticks, 18000, "§e15 §cminutes", boss);
+			scheduleWarning(ticks, 18000, "Â§e15 Â§cminutes", boss);
 		}
-		scheduleWarning(ticks, 6000, "§e5 §cminutes", boss);
-		scheduleWarning(ticks, 3600, "§e3 §cminutes", boss);
-		scheduleWarning(ticks, 2400, "§e2 §cminutes", boss);
-		scheduleWarning(ticks, 1200, "§e1 §cminute", boss);
+		scheduleWarning(ticks, 6000, "Â§e5 Â§cminutes", boss);
+		scheduleWarning(ticks, 3600, "Â§e3 Â§cminutes", boss);
+		scheduleWarning(ticks, 2400, "Â§e2 Â§cminutes", boss);
+		scheduleWarning(ticks, 1200, "Â§e1 Â§cminute", boss);
 
 		BukkitRunnable kickPlayer = new BukkitRunnable() {
 			public void run() {
@@ -519,7 +519,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			public void run() {
 				if (activeFights.containsKey(boss)) {
 					for (Player p : activeFights.get(boss)) {
-						p.sendMessage("§4[§c§lMLMC§4] " + time + " remaining!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] " + time + " remaining!");
 					}
 				}
 			}
@@ -654,11 +654,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 					int time = (int) (((lastUse + cooldown) - currTime) / 1000);
 					int minutes = time / 60;
 					int seconds = time % 60;
-					if (time > 0) return String.format("§c%d:%02d", minutes, seconds);
+					if (time > 0) return String.format("Â§c%d:%02d", minutes, seconds);
 				}
 			}
 		}
-		return "§c0";
+		return "Â§c0";
 	}
 
 	public String getBossName(String boss, Player p) {
@@ -720,7 +720,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 						spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
 						SkillAPI.getPlayerAccountData(p).setAccount(13);
 						p.sendMessage(
-								"§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
+								"Â§4[Â§cÂ§lMLMCÂ§4] Â§7You died! You can now spectate, or leave with Â§c/boss returnÂ§7.");
 					}
 					else {
 						p.teleport(instanceSpawn);
@@ -763,12 +763,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 			String p = e.getPlayer().getName();
 			if (spectatorAcc.containsKey(e.getPlayer().getUniqueId())) {
 				e.setCancelled(true);
-				e.getPlayer().sendMessage("§cCan't drop items when you're dead!");
+				e.getPlayer().sendMessage("Â§cCan't drop items when you're dead!");
 				return;
 			}
 			else if (!dropCooldown.containsKey(p) || dropCooldown.get(p) + 2000 < System.currentTimeMillis()) {
 				e.setCancelled(true);
-				e.getPlayer().sendMessage("§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
+				e.getPlayer().sendMessage("Â§cYou tried to drop something! Drop it again within 2 seconds to confirm!");
 			}
 			dropCooldown.put(p, System.currentTimeMillis());
 		}
@@ -907,7 +907,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 
 		SkillAPI.saveSingle(p);
-		p.sendMessage("§4[§c§lBosses§4] §7Sending you back in 3 seconds...");
+		p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Sending you back in 3 seconds...");
 		BukkitRunnable sendBack = new BukkitRunnable() {
 			public void run() {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), returnCommand.replaceAll("%player%", p.getName()));

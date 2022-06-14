@@ -132,13 +132,13 @@ public class PaginatedList<E> {
 	}
 	
 	public void displayFooter(Player p, int page, String nextCmd, String prevCmd) {
-		ComponentBuilder prev = new ComponentBuilder("ง7ซ ");
+		ComponentBuilder prev = new ComponentBuilder("ยง7ยง ");
 		if (page > 0) {
 			prev.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, prevCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to previous page!")));
 		}
-		ComponentBuilder main = new ComponentBuilder("ง7Page งf" + (page + 1) + " ง7/ " + pages.size());
-		ComponentBuilder next = new ComponentBuilder("ง7 ป");
+		ComponentBuilder main = new ComponentBuilder("ยง7Page ยงf" + (page + 1) + " ยง7/ " + pages.size());
+		ComponentBuilder next = new ComponentBuilder("ยง7 ยง");
 		if (page < pages.size() - 1) {
 			next.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to next page!")));

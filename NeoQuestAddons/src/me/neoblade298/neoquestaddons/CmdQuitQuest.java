@@ -29,7 +29,7 @@ public class CmdQuitQuest implements CommandExecutor{
 				Quester quester = main.getQuests().getQuester(p.getUniqueId());
 				ConcurrentHashMap<Quest, Integer> map = quester.getCurrentQuests();
 				for (Quest q : map.keySet()) {
-					quester.quitQuest(q, new String("&4[&c&lMLMC&4] &7Successfully quit &6" + q.getName() + "&7!").replaceAll("&", "ง"));
+					quester.quitQuest(q, new String("&4[&c&lMLMC&4] &7Successfully quit &6" + q.getName() + "&7!").replaceAll("&", "ยง"));
 				}
 				return true;
 			}

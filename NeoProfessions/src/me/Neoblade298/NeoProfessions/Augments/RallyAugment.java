@@ -46,8 +46,8 @@ public class RallyAugment extends Augment implements ModHealAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases healing by งf" + formatPercentage(getHealMult(user)) + "% ง7while");
-		lore.add("ง7above 70% health.");
+		lore.add("ยง7Increases healing by ยงf" + formatPercentage(getHealMult(user)) + "% ยง7while");
+		lore.add("ยง7above 70% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

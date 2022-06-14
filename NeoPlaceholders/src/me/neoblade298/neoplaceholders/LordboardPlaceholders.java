@@ -66,10 +66,10 @@ public class LordboardPlaceholders extends PlaceholderExpansion {
 			placeholder = "";
 			// Check if cursed
 			if (FlagManager.hasFlag(p, "curse")) {
-				placeholder = "ง8";
+				placeholder = "ยง8";
 			}
 			else if (FlagManager.hasFlag(p, "stun") || FlagManager.hasFlag(p, "root") || FlagManager.hasFlag(p, "silence")) {
-				placeholder = "งb";
+				placeholder = "ยงb";
 			}
 			
 			if (health >= 10000) {

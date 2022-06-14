@@ -54,16 +54,16 @@ public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAug
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "% ง7but deal");
-		lore.add("ง71% of pre-buff damage to yourself");
-		lore.add("ง7as corruption damage.");
+		lore.add("ยง7Increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "% ยง7but deal");
+		lore.add("ยง71% of pre-buff damage to yourself");
+		lore.add("ยง7as corruption damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -17,10 +17,10 @@ public class AdminCommands {
 		if (main.games.containsKey(gameName)) {
 			Game game = main.games.get(gameName);
 			game.forceEndGame();
-			sender.sendMessage("§4[§c§lMLMC§4] §7Successfully ended game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully ended game!");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat game doesn't exist!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat game doesn't exist!");
 		}
 	}
 	
@@ -47,17 +47,17 @@ public class AdminCommands {
 			game.main.ingame.remove(toKick);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat player isn't in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat player isn't in a game!");
 		}
 	}
 	
 	public void checkGames(Player sender, Monopoly main) {
 		if (main.games.size() == 0) {
-			sender.sendMessage("§cNo games being played.");
+			sender.sendMessage("Â§cNo games being played.");
 		}
 		for (String name : main.games.keySet()) {
 			Game game = main.games.get(name);
-			String msg = "§e" + game.getName() + "§7: §e";
+			String msg = "Â§e" + game.getName() + "Â§7: Â§e";
 			for (GamePlayer gp : game.gameplayers) {
 				msg += gp + " ";
 			}
@@ -69,10 +69,10 @@ public class AdminCommands {
 		if (main.ingame.containsKey(toView)) {
 			Game game = main.ingame.get(toView);
 			GamePlayer gp = game.players.get(toView);
-			sender.sendMessage("§4[§c§lMLMC§4] §7" + game.requiredActions.get(gp));
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7" + game.requiredActions.get(gp));
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cThat player isn't in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThat player isn't in a game!");
 		}
 	}
 

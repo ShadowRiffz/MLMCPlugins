@@ -42,8 +42,8 @@ public class Quester {
 		cleanupQuest(qi.getQuest().getKey());
 		completedQuests.put(qi.getQuest().getKey().toUpperCase(), new CompletedQuest(qi.getQuest(), stage, success));
 		Questline ql = qi.getQuest().getQuestline();
-		p.sendTitle("§fQuest Completed", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
-		p.sendMessage("§4[§c§lMLMC§4] §7You completed quest: §6" + qi.getQuest().getDisplay() + "§7!");
+		p.sendTitle("Â§fQuest Completed", "Â§6" + qi.getQuest().getDisplay(), 10, 70, 10);
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You completed quest: Â§6" + qi.getQuest().getDisplay() + "Â§7!");
 		if (ql != null) {
 			if (ql.getLastQuest().equals(qi.getQuest().getKey())) {
 				activeQuestlines.remove(ql.getKey().toUpperCase());
@@ -67,8 +67,8 @@ public class Quester {
 				}
 			}
 
-			p.sendMessage("§4[§c§lMLMC§4] §7You cancelled quest: §6" + qi.getQuest().getDisplay() + "§7!");
-			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You cancelled quest: Â§6" + qi.getQuest().getDisplay() + "Â§7!");
+			p.sendTitle("Â§fQuest Cancelled", "Â§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		}
 	}
 	
@@ -86,12 +86,12 @@ public class Quester {
 		if (!ignoreConditions) {
 			Condition c = ConditionManager.getBlockingCondition(p, q.getConditions());
 			if (c != null) {
-				p.sendMessage("§4[§c§lMLMC§4] §cCould not start quest: §6" + q.getDisplay() + "§c: " + c.getExplanation(p));
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cCould not start quest: Â§6" + q.getDisplay() + "Â§c: " + c.getExplanation(p));
 				return;
 			}
 		}
-		p.sendTitle("§fQuest Started", "§6" + q.getDisplay(), 10, 70, 10);
-		p.sendMessage("§4[§c§lMLMC§4] §7You started quest: §6" + q.getDisplay() + "§7! Type §c/quest§7!");
+		p.sendTitle("Â§fQuest Started", "Â§6" + q.getDisplay(), 10, 70, 10);
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You started quest: Â§6" + q.getDisplay() + "Â§7! Type Â§c/questÂ§7!");
 		QuestInstance qi = new QuestInstance(this, q);
 		activeQuests.put(q.getKey().toUpperCase(), qi);
 		if (q.getQuestline() != null) addQuestline(q.getQuestline());
@@ -102,27 +102,27 @@ public class Quester {
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
 			for (QuestInstance qi : activeQuests.values()) {
-				ComponentBuilder builder = new ComponentBuilder("§6§l-[" + qi.getQuest().getDisplay() + "]- ");
-				ComponentBuilder quitquest = new ComponentBuilder("§7§o[Click to Quit]")
+				ComponentBuilder builder = new ComponentBuilder("Â§6Â§l-[" + qi.getQuest().getDisplay() + "]- ");
+				ComponentBuilder quitquest = new ComponentBuilder("Â§7Â§o[Click to Quit]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
 				s.spigot().sendMessage(builder.append(quitquest.create()).create());
 				qi.displayObjectives(s);
 			}
-			s.sendMessage("§7=====");
-			ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
+			s.sendMessage("Â§7=====");
+			ComponentBuilder builder = new ComponentBuilder("Â§e<Click for other quests you can take!>")
 					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
 			s.spigot().sendMessage(builder.create());
 		}
 		else {
-			s.sendMessage("§7You have no active quests!");
+			s.sendMessage("Â§7You have no active quests!");
 			displayGuide(s);
 		}
 	}
 	
 	public void displayGuide(CommandSender s) {
 		if (activeQuestlines.size() > 0) {
-			s.sendMessage("§eActive Questlines:");
+			s.sendMessage("Â§eActive Questlines:");
 			for (Questline ql : activeQuestlines.values()) {
 				Quest next = ql.getNextQuest(p);
 				if (next == null) {
@@ -130,17 +130,17 @@ public class Quester {
 							+ "as questlines are removed once the last quest is completed.");
 					continue;
 				}
-				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getDisplay() + "§7) ");
-				ComponentBuilder takequest = new ComponentBuilder("§7§o[Click to Take]")
+				ComponentBuilder builder = new ComponentBuilder("Â§7- Â§6" + ql.getDisplay() + " Â§7(Â§e" + next.getDisplay() + "Â§7) ");
+				ComponentBuilder takequest = new ComponentBuilder("Â§7Â§o[Click to Take]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + next.getKey()))
 						.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests take")));
 				s.spigot().sendMessage(builder.append(takequest.create()).create());
 			}
 		}
-		ComponentBuilder rec = new ComponentBuilder("§e<Click to show other recommended quests!>")
+		ComponentBuilder rec = new ComponentBuilder("Â§e<Click to show other recommended quests!>")
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended"));
-		ComponentBuilder side = new ComponentBuilder("§e<Click to show challenging sidequests!>")
+		ComponentBuilder side = new ComponentBuilder("Â§e<Click to show challenging sidequests!>")
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges"));
 		s.spigot().sendMessage(rec.create());

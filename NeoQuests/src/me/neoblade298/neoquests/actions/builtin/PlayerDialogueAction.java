@@ -20,12 +20,12 @@ public class PlayerDialogueAction implements Action, DialogueAction {
 	public PlayerDialogueAction() {}
 	
 	public PlayerDialogueAction(LineConfig cfg) {
-		this.dialogue = "ง7: " + cfg.getLine();
+		this.dialogue = "ยง7: " + cfg.getLine();
 	}
 
 	@Override
 	public void run(Player p) {
-		p.sendMessage("งe" + p.getName() + this.dialogue);
+		p.sendMessage("ยงe" + p.getName() + this.dialogue);
 	}
 
 	@Override

@@ -58,11 +58,11 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Decreases damage taken by งf" + formatPercentage(getDamageTakenMult(user)) + "%");
-		lore.add("ง7when within 3 blocks of an enemy.");
-		lore.add("ง7Taking damage from this distance");
-		lore.add("ง7increases resource regen by 10%");
-		lore.add("ง7for 2 seconds.");
+		lore.add("ยง7Decreases damage taken by ยงf" + formatPercentage(getDamageTakenMult(user)) + "%");
+		lore.add("ยง7when within 3 blocks of an enemy.");
+		lore.add("ยง7Taking damage from this distance");
+		lore.add("ยง7increases resource regen by 10%");
+		lore.add("ยง7for 2 seconds.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -19,8 +19,8 @@ public class Commands implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.isOp() || sender.hasPermission("mycommand.staff")) {
 			if (args.length == 0) {
-				sender.sendMessage("§6/conv play [player] [convname] §7- Play the conversation to the player");
-				sender.sendMessage("§6/conv reload §7- Reloads conversations");
+				sender.sendMessage("Â§6/conv play [player] [convname] Â§7- Play the conversation to the player");
+				sender.sendMessage("Â§6/conv reload Â§7- Reloads conversations");
 			}
 			else {
 				// conv play [convname] [player]
@@ -32,19 +32,19 @@ public class Commands implements CommandExecutor{
 						this.main.playConversation(this.main.conversations.get(convName), p);
 					}
 					else {
-						sender.sendMessage("§cThe conversation " + convName + " doesn't exist!");
+						sender.sendMessage("Â§cThe conversation " + convName + " doesn't exist!");
 					}
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("reload") && args.length == 1) {
 					this.main.loadConfig();
-					sender.sendMessage("§7Successfully reloaded config!");
+					sender.sendMessage("Â§7Successfully reloaded config!");
 					return true;
 				}
 			}
 		}
 		else {
-			sender.sendMessage("§cYou do not have permission to do that!");
+			sender.sendMessage("Â§cYou do not have permission to do that!");
 		}
 		return true;
 	}

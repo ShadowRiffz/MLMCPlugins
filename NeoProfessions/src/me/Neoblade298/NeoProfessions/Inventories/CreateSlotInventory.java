@@ -52,7 +52,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 		p.getInventory().removeItem(item);
 		level = new NBTItem(item).getInteger("level");
 		int nextSlot = new NBTItem(item).getInteger("slotsCreated") + 1;
-		inv = Bukkit.createInventory(p, 9, "§cAdd slot " + nextSlot + "?");
+		inv = Bukkit.createInventory(p, 9, "Â§cAdd slot " + nextSlot + "?");
 		
 		goldCost = goldPrices.get(nextSlot).getResult(level);
 		essenceCost = essencePrices.get(nextSlot);
@@ -61,10 +61,10 @@ public class CreateSlotInventory extends ProfessionInventory {
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
 		for (int i = 2; i < CREATESLOT_ICON; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo");
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "Â§cNo");
 		}
-		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
-				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
+		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aYes",
+				"Â§7Gold cost: Â§e" + goldCost + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

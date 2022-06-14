@@ -65,6 +65,6 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 		if (mobKills.containsKey(mob)) {
 			return name;
 		}
-    	return "§c???";
+    	return "Â§c???";
 	}
 }

@@ -43,8 +43,8 @@ public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "% ง7when");
-		lore.add("ง7below 30% health.");
+		lore.add("ยง7Increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "% ยง7when");
+		lore.add("ยง7below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

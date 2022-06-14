@@ -63,14 +63,14 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 			if (health.containsKey(args[1])) {
 				return "" + health.get(args[1]);
 			}
-			return "§cHealth not defined!";
+			return "Â§cHealth not defined!";
 		}
 		if (args[0].equalsIgnoreCase("name")) {
 			try {
 				return MythicBukkit.inst().getMobManager().getMythicMob(args[1]).get().getDisplayName().get();
 			}
 			catch (Exception e) {
-				return "§cInvalid name!";
+				return "Â§cInvalid name!";
 			}
 		}
 		else if (args[0].equalsIgnoreCase("itemlore")) {
@@ -83,9 +83,9 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 				return lore;
 			}
 			else {
-				return "§cLore not defined";
+				return "Â§cLore not defined";
 			}
 		}
-    	return "§cInvalid placeholder!";
+    	return "Â§cInvalid placeholder!";
 	}
 }

@@ -15,7 +15,7 @@ public class SpawnerDefinition {
 	}
 	
 	public void display(Player p, int count) {
-		p.sendMessage("งe" + count + " " + block + "ง7: งc" + mob + ", ง7spawner งc" + name + "ง7, group งc" + group + "ง7.");
+		p.sendMessage("ยงe" + count + " " + block + "ยง7: ยงc" + mob + ", ยง7spawner ยงc" + name + "ยง7, group ยงc" + group + "ยง7.");
 	}
 	
 	public String getMob() {

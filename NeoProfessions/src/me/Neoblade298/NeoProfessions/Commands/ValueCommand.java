@@ -24,7 +24,7 @@ public class ValueCommand implements CommandExecutor {
 			ItemStack item = p.getInventory().getItemInMainHand();
 			
 			if (item == null || item.getType().isAir()) {
-				p.sendMessage("§cYou're not holding anything!");
+				p.sendMessage("Â§cYou're not holding anything!");
 				return true;
 			}
 			
@@ -37,7 +37,7 @@ public class ValueCommand implements CommandExecutor {
 				value = nbti.getDouble("value");
 			}
 			String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
-			p.sendMessage("§7Value of " + name + "§7: §e" + value + "g");
+			p.sendMessage("Â§7Value of " + name + "Â§7: Â§e" + value + "g");
 			return true;
 		}
 		return false;

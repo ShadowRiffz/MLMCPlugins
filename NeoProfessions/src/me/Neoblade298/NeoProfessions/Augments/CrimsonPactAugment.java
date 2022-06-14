@@ -56,16 +56,16 @@ public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "%ง7.");
-		lore.add("ง7Deals 1% of your max health to you");
-		lore.add("ง7any time you deal damage. 2s cooldown.");
+		lore.add("ยง7Increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "%ยง7.");
+		lore.add("ยง7Deals 1% of your max health to you");
+		lore.add("ยง7any time you deal damage. 2s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

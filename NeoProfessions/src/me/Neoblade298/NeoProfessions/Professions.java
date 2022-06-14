@@ -125,7 +125,7 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 		
 		// general
-		lvlupMsg = cfg.getString("levelup").replaceAll("&", "ง");
+		lvlupMsg = cfg.getString("levelup").replaceAll("&", "ยง");
 		
 		// exp multipliers
 		rarityExpMults.clear();

@@ -25,14 +25,14 @@ public class ConversationResponse {
 	private int next = -1;
 
 	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
-		this.text = cfg.getString("text").replaceAll("&", "§");
+		this.text = cfg.getString("text").replaceAll("&", "Â§");
 		this.actions.load(cfg.getStringList("actions"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		this.next = cfg.getInt("next", -3);
 	}
 
 	public ConversationResponse() {
-		this.text = "§7[End Conversation]";
+		this.text = "Â§7[End Conversation]";
 		this.next = -1;
 	}
 
@@ -50,11 +50,11 @@ public class ConversationResponse {
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
 		if (!failed.isEmpty()) {
 			if (failed.get(0).getResult().equals(ConditionResult.UNCLICKABLE)) { // Unclickable
-				StringBuilder failHover = new StringBuilder("§c§oCannot be selected:");
+				StringBuilder failHover = new StringBuilder("Â§cÂ§oCannot be selected:");
 				for (Condition failedCond : failed) {
 					failHover.append("\n- " + failedCond.getExplanation(p));
 				}
-				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7§m" + ChatColor.stripColor(text))
+				ComponentBuilder builder = new ComponentBuilder("Â§cÂ§l[" + num + "] Â§7Â§m" + ChatColor.stripColor(text))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(failHover.toString())));
 				p.spigot().sendMessage(builder.create());
 				return true;
@@ -69,15 +69,15 @@ public class ConversationResponse {
 				q = QuestsManager.getQuest(actions.getQuest());
 			}
 			if (q != null) {
-				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
+				ComponentBuilder builder = new ComponentBuilder("Â§cÂ§l[" + num + "] Â§7" + text + " Â§6<Starts Quest>")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new Text("§oClick to select " + num + "\n§oThis starts the quest §6" + q.getDisplay())))
+								new Text("Â§oClick to select " + num + "\nÂ§oThis starts the quest Â§6" + q.getDisplay())))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
 				p.spigot().sendMessage(builder.create());
 			}
 			else {
-				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text)
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num)))
+				ComponentBuilder builder = new ComponentBuilder("Â§cÂ§l[" + num + "] Â§7" + text)
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Â§oClick to select " + num)))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
 				p.spigot().sendMessage(builder.create());
 			}
@@ -90,7 +90,7 @@ public class ConversationResponse {
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
 																							// condition
 		if (!failed.isEmpty()) {
-			StringBuilder failExpl = new StringBuilder("§c§oCannot be selected:");
+			StringBuilder failExpl = new StringBuilder("Â§cÂ§oCannot be selected:");
 			for (Condition failedCond : failed) {
 				failExpl.append("\n- " + failedCond.getExplanation(p));
 			}

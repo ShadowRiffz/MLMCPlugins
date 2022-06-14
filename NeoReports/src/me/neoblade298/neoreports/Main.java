@@ -82,10 +82,10 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 						}
 						if (numUrgent > 0) {
 							// Double check that the number is urgent
-							p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
+							p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cÂ§lThere are unfixed urgent bugs!");
 						}
 					}
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7# Bugs: Â§e" + Main.numBugs + "Â§7, # Urgent: Â§e" + Main.numUrgent + "Â§7, # Resolved today: Â§e" + Main.numResolved);
 
 				}
 			};

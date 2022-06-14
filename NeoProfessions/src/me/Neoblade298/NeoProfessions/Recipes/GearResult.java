@@ -48,7 +48,7 @@ public class GearResult implements RecipeResult {
 	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = Gear.getGearConfig(type, level).generateItem(rarity, level);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
+		meta.setDisplayName((canCraft ? "Â§a" : "Â§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
 	}

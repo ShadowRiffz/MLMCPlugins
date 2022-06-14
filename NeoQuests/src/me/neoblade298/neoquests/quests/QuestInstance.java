@@ -80,22 +80,22 @@ public class QuestInstance {
 	
 	public void displayObjectives(CommandSender s) {
 		for (ObjectiveSetInstance osi : sets.values()) {
-			s.sendMessage("§e" + osi.getSet().getDisplay() + ":");
+			s.sendMessage("Â§e" + osi.getSet().getDisplay() + ":");
 			for (ObjectiveInstance oi : osi.getObjectives()) {
 				// Special handling for fake objectives
 				String msg;
 				if (oi instanceof FakeObjectiveInstance) {
-					msg = "§7- " + ((FakeObjectiveInstance) oi).getDisplay();
+					msg = "Â§7- " + ((FakeObjectiveInstance) oi).getDisplay();
 				}
 				else if (oi.getObjective().isHidden()) {
 					continue;
 				}
 				else {
-					msg = "§7- " + oi.getObjective().getDisplay() + "§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+					msg = "Â§7- " + oi.getObjective().getDisplay() + "Â§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
 				}
 				if (oi.getObjective().getEndpoint() != null) {
 					ComponentBuilder builder = new ComponentBuilder(msg);
-					ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
+					ComponentBuilder nav = new ComponentBuilder(" Â§7Â§o[Click for GPS]")
 							.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
 					s.spigot().sendMessage(builder.append(nav.create()).create());
 				}
@@ -121,10 +121,10 @@ public class QuestInstance {
 			new BukkitRunnable() {
 				public void run() {
 					if (fRewards.size() > 0) {
-						p.sendMessage("§6Rewards:");
+						p.sendMessage("Â§6Rewards:");
 						for (RewardAction r : fRewards) {
 							if (r.getDisplay() != null || !r.isHidden()) {
-								p.sendMessage("§7- " + r.getDisplay());
+								p.sendMessage("Â§7- " + r.getDisplay());
 							}
 						}
 
@@ -137,7 +137,7 @@ public class QuestInstance {
 		}
 		else {
 			q.cancelQuest(quest.getKey());
-			p.sendMessage("§c[§4§lMLMC§4] §cYou failed §6" + quest.getDisplay() + "§c!");
+			p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou failed Â§6" + quest.getDisplay() + "Â§c!");
 		}
 	}
 	

@@ -118,7 +118,7 @@ public class Pathway {
 	public PathwayInstance start(Player p) {
 		Condition c = ConditionManager.getBlockingCondition(p, conditions);
 		if (c != null) {
-			Util.msg(p, "§cCould not start navigation from §6" + getStartPoint() + " to §6" + getEndPoint() + "§c, " + c.getExplanation(p));
+			Util.msg(p, "Â§cCould not start navigation from Â§6" + getStartPoint() + " to Â§6" + getEndPoint() + "Â§c, " + c.getExplanation(p));
 			return null;
 		}
 
@@ -147,7 +147,7 @@ public class Pathway {
 		}.runTaskTimer(NeoQuests.inst(), 0L, 20L);
 
 		pwi.setTask(task);
-		Util.msg(p, "§7Started navigation from &6" + getStartPoint() + "&7 to &6" + getEndPoint() + "§7!");
+		Util.msg(p, "Â§7Started navigation from &6" + getStartPoint() + "&7 to &6" + getEndPoint() + "Â§7!");
 		return pwi;
 	}
 	

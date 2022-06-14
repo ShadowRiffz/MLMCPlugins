@@ -50,16 +50,16 @@ public class HammerTimeAugment extends Augment implements ModDamageDealtAugment 
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "% ง7when dealing");
-		lore.add("ง7damage closer than 3 blocks away.");
-		lore.add("ง7Capped to งf200 ง7increase.");
+		lore.add("ยง7Increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "% ยง7when dealing");
+		lore.add("ยง7damage closer than 3 blocks away.");
+		lore.add("ยง7Capped to ยงf200 ยง7increase.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

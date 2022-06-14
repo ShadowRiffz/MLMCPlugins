@@ -33,10 +33,10 @@ public class CmdQuestAdminReload implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		if (NeoQuests.reloadAll()) {
-			s.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successful reload.");
 		}
 		else {
-			s.sendMessage("§4[§c§lMLMC§4] §cReload failed! Check the error messages!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cReload failed! Check the error messages!");
 		}
 	}
 

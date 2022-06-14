@@ -78,15 +78,15 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 					PlayerClass pProf = data.getClass("profession");
 					if (pClass != null) {
 						if (args[2].equalsIgnoreCase("level")) {
-							return "�e" + pClass.getLevel();
+							return "§e" + pClass.getLevel();
 						}
-						else if (args[2].equalsIgnoreCase("class")) return "�e" + pClass.getData().getName();
+						else if (args[2].equalsIgnoreCase("class")) return "§e" + pClass.getData().getName();
 					}
 					if (pProf != null) {
-						if (args[2].equalsIgnoreCase("profession")) return "�e" + pProf.getData().getName();
+						if (args[2].equalsIgnoreCase("profession")) return "§e" + pProf.getData().getName();
 					}
 				}
-				return "�cN/A";
+				return "§cN/A";
 			}
 		}
 		else if (args[0].equalsIgnoreCase("profession")) {
@@ -118,12 +118,12 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 			}
 			String cName = pClass.getData().getName();
 			if (pClass.getLevel() == 10 && cName.equalsIgnoreCase("Beginner")) {
-				return "�c/warp advance";
+				return "§c/warp advance";
 			}
 			else if (pClass.getLevel() == 30 && (cName.equalsIgnoreCase("Swordsman") ||
 					cName.equalsIgnoreCase("Archer") || cName.equalsIgnoreCase("Mage") ||
 					cName.equalsIgnoreCase("Thief"))) {
-				return "�c/warp advance";
+				return "§c/warp advance";
 			}
 			return "" + pClass.getLevel();
 		}
@@ -131,13 +131,13 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 			PlayerData data = SkillAPI.getPlayerData(p);
 			if (data != null) {
 				if (data.getAttributePoints() > 0) {
-					return "�cYou have " + data.getAttributePoints() + " unspent /attr!";
+					return "§cYou have " + data.getAttributePoints() + " unspent /attr!";
 				}
 				if (data.getClass("class") == null && !isInTutorial(p)) {
-					return "�cYou have no class! /warp advance!";
+					return "§cYou have no class! /warp advance!";
 				}
 			}
-			return "�8�m-|-------------|-";
+			return "§8§m-|-------------|-";
 		}
 	 	return "Invalid placeholder";
 	}

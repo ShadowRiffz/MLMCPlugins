@@ -60,15 +60,15 @@ public class BarrierAugment extends Augment implements ModSkillCastAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[ง9งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง9ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Reduces damage by งf50 ง7for");
-		lore.add("ง73s after casting a skill.");
+		lore.add("ยง7Reduces damage by ยงf50 ยง7for");
+		lore.add("ยง73s after casting a skill.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

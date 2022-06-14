@@ -9,7 +9,7 @@ public class Util {
 	}
 	
 	public static void sendMessage(CommandSender s, String msg) {
-		s.sendMessage(("&4[&c&lMLMC&4] " + msg).replaceAll("&", "ง"));
+		s.sendMessage(("&4[&c&lMLMC&4] " + msg).replaceAll("&", "ยง"));
 	}
 	
 	public static void serverBroadcast(String msg) {

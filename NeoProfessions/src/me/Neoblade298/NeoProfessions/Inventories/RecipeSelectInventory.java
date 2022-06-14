@@ -17,16 +17,16 @@ public class RecipeSelectInventory extends ProfessionInventory {
 
 	public RecipeSelectInventory(Player p) {
 		this.p = p;
-		inv = Bukkit.createInventory(p, 9, "ง1Crafting Recipes");
+		inv = Bukkit.createInventory(p, 9, "ยง1Crafting Recipes");
 
 		ItemStack[] contents = inv.getContents();
-		contents[0] = createItem(Material.COOKED_BEEF, "ง9Food Recipes", "Food", "food");
-		contents[1] = createItem(Material.IRON_SWORD, "ง9Gear Recipes", "Gear", "gear");
-		contents[2] = createItem(Material.ENDER_PEARL, "ง9Augment Recipes", "Augments", "augments");
-		contents[3] = createItem(Material.COMPOSTER, "ง9Fertilizer Recipes", "Fertilizers", "fertilizer");
-		contents[4] = createItem(Material.OAK_SAPLING, "ง9Garden Upgrades", "Garden Upgrades", "garden-upgrades");
-		contents[5] = createItem(Material.CHEST, "ง9All Recipes", "All", "all");
-		contents[8] = createItem(Material.HOPPER, "ง9/inv", "All", "all");
+		contents[0] = createItem(Material.COOKED_BEEF, "ยง9Food Recipes", "Food", "food");
+		contents[1] = createItem(Material.IRON_SWORD, "ยง9Gear Recipes", "Gear", "gear");
+		contents[2] = createItem(Material.ENDER_PEARL, "ยง9Augment Recipes", "Augments", "augments");
+		contents[3] = createItem(Material.COMPOSTER, "ยง9Fertilizer Recipes", "Fertilizers", "fertilizer");
+		contents[4] = createItem(Material.OAK_SAPLING, "ยง9Garden Upgrades", "Garden Upgrades", "garden-upgrades");
+		contents[5] = createItem(Material.CHEST, "ยง9All Recipes", "All", "all");
+		contents[8] = createItem(Material.HOPPER, "ยง9/inv", "All", "all");
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

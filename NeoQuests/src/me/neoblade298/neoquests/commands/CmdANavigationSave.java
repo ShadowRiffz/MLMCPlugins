@@ -41,7 +41,7 @@ public class CmdANavigationSave implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		if (NavigationManager.getEditor(p) == null) {
-			Util.msg(p, "§cYou aren't in a pathway editor!");
+			Util.msg(p, "Â§cYou aren't in a pathway editor!");
 			return;
 		}
 		try {

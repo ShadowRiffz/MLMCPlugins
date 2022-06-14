@@ -62,17 +62,17 @@ public class SpectreAugment extends Augment implements ModSkillCastAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[ง9งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง9ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Casting any non-shift skill grants");
-		lore.add("ง7invisibility for 3s. During that");
-		lore.add("ง7time, gain งf+50% ง7mana regen and");
-		lore.add("งf+5% ง7health regen.");
+		lore.add("ยง7Casting any non-shift skill grants");
+		lore.add("ยง7invisibility for 3s. During that");
+		lore.add("ยง7time, gain ยงf+50% ยง7mana regen and");
+		lore.add("ยงf+5% ยง7health regen.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

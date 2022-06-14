@@ -43,7 +43,7 @@ public class PrecisionAugment extends Augment implements ModCritCheckAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases critical hit chance by งf" + formatPercentage(getCritChanceMult(user)) + "%ง7.");
+		lore.add("ยง7Increases critical hit chance by ยงf" + formatPercentage(getCritChanceMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

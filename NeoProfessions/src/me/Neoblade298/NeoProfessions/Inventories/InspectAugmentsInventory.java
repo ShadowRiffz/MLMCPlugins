@@ -35,7 +35,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		this.p = p;
 		this.editor = new ItemEditor(item);
 		
-		inv = Bukkit.createInventory(p, 9, "§cAugment Viewer");
+		inv = Bukkit.createInventory(p, 9, "Â§cAugment Viewer");
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -49,7 +49,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		for (int i = 9 - slot; i < 9; i++) {
 			Augment oldAug = editor.getAugment(j);
 			if (oldAug == null) {
-				contents[i] = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, "§7Empty slot");
+				contents[i] = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, "Â§7Empty slot");
 			}
 			else {
 				contents[i] = createAugment(oldAug, j);
@@ -74,9 +74,9 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		ItemStack item = aug.getItem(p);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§cShift left click to unslot.");
-		lore.add("§cCosts §e" + GOLD_COST + "g §cand 3 Essence");
-		lore.add("§cof the same level.");
+		lore.add("Â§cShift left click to unslot.");
+		lore.add("Â§cCosts Â§e" + GOLD_COST + "g Â§cand 3 Essence");
+		lore.add("Â§cof the same level.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -88,7 +88,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		final ItemStack item = new ItemStack(material, 1);
 		final ItemMeta meta = item.getItemMeta();
 		if (aug.isPermanent()) {
-			meta.setDisplayName("§cThis augment cannot be swapped");
+			meta.setDisplayName("Â§cThis augment cannot be swapped");
 		}
 		else {
 			meta.setDisplayName(name);
@@ -140,7 +140,7 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 					p.getWorld().dropItem(p.getLocation(), failed.get(key));
 				}
 			}
-			p.sendMessage("§4[§c§lMLMC§4] §7You successfully unslotted " + augment.getLine() + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You successfully unslotted " + augment.getLine() + "Â§7!");
 			p.closeInventory();
 		}
 		else {

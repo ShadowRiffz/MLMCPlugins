@@ -121,7 +121,7 @@ public class GardenManager implements IOComponent, Manager {
 					public void run() {
 						Player online = Bukkit.getPlayer(p.getUniqueId());
 						if (online != null) {
-							online.sendMessage("§4[§c§lMLMC§4] §7Your §6/gardens §7have harvestable crops!");
+							online.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Your Â§6/gardens Â§7have harvestable crops!");
 						}
 					}
 				}.runTaskLaterAsynchronously(main, 100L);
@@ -178,7 +178,7 @@ public class GardenManager implements IOComponent, Manager {
 			public void run() {
 				Player online = Bukkit.getPlayer(uuid);
 				if (online != null) {
-					online.sendMessage("§4[§c§lMLMC§4] §7Your " + StorageManager.getItem(gs.getId()).getDisplay() + " §7can now be harvested!");
+					online.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Your " + StorageManager.getItem(gs.getId()).getDisplay() + " Â§7can now be harvested!");
 				}
 			}
 		}.runTaskLater(main, gs.getTicksRemaining());

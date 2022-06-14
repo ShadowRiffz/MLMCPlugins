@@ -48,7 +48,7 @@ public class TorrentAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[ง9งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง9ยงo" + name + " Lv " + level + "ยง7]";
 	}
 	
 	@Override
@@ -61,9 +61,9 @@ public class TorrentAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Heal for งf" + this.healthGain + " ง7every");
-		lore.add("ง75x you deal damage. 1s");
-		lore.add("ง7cooldown per damage.");
+		lore.add("ยง7Heal for ยงf" + this.healthGain + " ยง7every");
+		lore.add("ยง75x you deal damage. 1s");
+		lore.add("ยง7cooldown per damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

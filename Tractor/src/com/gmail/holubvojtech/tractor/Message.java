@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public enum Message
 {
-  TRACTOR_ENABLED("§aTractor §7(size %1$d x %2$d) §awas enabled"),  TRACTOR_DISABLED("§cTractor was disabled"),  NO_PERMISSION("§cYou don't have permission for this"),  CMD_USAGE("§c/tractor <size>");
+  TRACTOR_ENABLED("Â§aTractor Â§7(size %1$d x %2$d) Â§awas enabled"),  TRACTOR_DISABLED("Â§cTractor was disabled"),  NO_PERMISSION("Â§cYou don't have permission for this"),  CMD_USAGE("Â§c/tractor <size>");
   
   private String message;
   

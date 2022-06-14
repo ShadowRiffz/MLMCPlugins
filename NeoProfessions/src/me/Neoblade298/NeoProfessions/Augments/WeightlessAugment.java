@@ -57,16 +57,16 @@ public class WeightlessAugment extends Augment implements ModInitAugment, ModCle
 
 	@Override
 	public String getLine() {
-		return "ง7[งaงo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยงaยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Grants permanent jump boost 2.");
-		lore.add("ง7Dealing damage while in the air");
-		lore.add("ง7increases damage by งf" + formatPercentage(getDamageDealtMult(user)) + "%ง7.");
+		lore.add("ยง7Grants permanent jump boost 2.");
+		lore.add("ยง7Dealing damage while in the air");
+		lore.add("ยง7increases damage by ยงf" + formatPercentage(getDamageDealtMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

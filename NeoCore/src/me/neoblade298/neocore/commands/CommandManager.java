@@ -79,30 +79,30 @@ public class CommandManager implements CommandExecutor {
 	
 	private boolean check(Subcommand cmd, CommandSender s, String[] args) {
 		if (((perm != null && perm.length() != 0) && !s.hasPermission(perm)) && !s.isOp()) {
-			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
+			s.sendMessage("Â§cYou're missing the permission: " + cmd.getPermission());
 			return false;
 		}
 		
 		if (((cmd.getPermission() != null && cmd.getPermission().length() != 0) && !s.hasPermission(cmd.getPermission())) && !s.isOp()) {
-			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
+			s.sendMessage("Â§cYou're missing the permission: " + cmd.getPermission());
 			return false;
 		}
 
 		if ((cmd.getRunner() == SubcommandRunner.PLAYER_ONLY && !(s instanceof Player)) ||
 				(cmd.getRunner() == SubcommandRunner.CONSOLE_ONLY && !(s instanceof ConsoleCommandSender))) {
-			s.sendMessage("§cYou are the wrong type of user for this command!");
+			s.sendMessage("Â§cYou are the wrong type of user for this command!");
 			return false;
 		}
 		
 		if (cmd.getArgs() != null) {
 			CommandArguments cargs = cmd.getArgs();
 			if (args.length < cargs.getMin()) {
-				s.sendMessage("§cThis command requires at least " + cargs.getMin() + " args but received " + args.length + ".");
+				s.sendMessage("Â§cThis command requires at least " + cargs.getMin() + " args but received " + args.length + ".");
 				return false;
 			}
 			
 			if (args.length > cargs.getMax()) {
-				s.sendMessage("§cThis command requires at most " + cargs.getMax() + " args but received " + args.length + ".");
+				s.sendMessage("Â§cThis command requires at most " + cargs.getMax() + " args but received " + args.length + ".");
 				return false;
 			}
 		}

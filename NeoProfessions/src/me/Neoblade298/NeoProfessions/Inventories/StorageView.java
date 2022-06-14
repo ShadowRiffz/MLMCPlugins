@@ -46,15 +46,15 @@ public class StorageView extends ProfessionInventory {
 	public static final String NEXT_HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzYWU4ZGU3ZWQwNzllMzhkMmM4MmRkNDJiNzRjZmNiZDk0YjM0ODAzNDhkYmI1ZWNkOTNkYThiODEwMTVlMyJ9fX0=";
 	
 	static {
-		info.add("§9§oLeft/Shift click §7§oto make 1x/10x voucher");
-		info.add("§9§oRight click §7§oto show relevant recipes");
-		info.add("§9§oPress 1 §7§ofor info mode (Current)");
-		info.add("§9§oPress 2 §7§ofor display mode");
+		info.add("Â§9Â§oLeft/Shift click Â§7Â§oto make 1x/10x voucher");
+		info.add("Â§9Â§oRight click Â§7Â§oto show relevant recipes");
+		info.add("Â§9Â§oPress 1 Â§7Â§ofor info mode (Current)");
+		info.add("Â§9Â§oPress 2 Â§7Â§ofor display mode");
 	}
 	
 	public StorageView(Player p, int min, int max) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Storage View");
+		this.inv = Bukkit.createInventory(p, 54, "Â§9Storage View");
 		this.min = min;
 		this.max = max;
 		this.sorters = new Sorter[5];
@@ -254,12 +254,12 @@ public class StorageView extends ProfessionInventory {
 	private ItemStack createInfoItem() {
 		ItemStack item = SkullCreator.itemFromBase64(INFO_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Info");
+		meta.setDisplayName("Â§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§9§oLeft/Shift click §7§oto make 1x/10x voucher");
-		lore.add("§9§oRight click §7§oto show relevant recipes");
-		lore.add("§9§oPress 1 §7§ofor info mode");
-		lore.add("§9§oPress 2 §7§ofor display mode");
+		lore.add("Â§9Â§oLeft/Shift click Â§7Â§oto make 1x/10x voucher");
+		lore.add("Â§9Â§oRight click Â§7Â§oto show relevant recipes");
+		lore.add("Â§9Â§oPress 1 Â§7Â§ofor info mode");
+		lore.add("Â§9Â§oPress 2 Â§7Â§ofor display mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -270,9 +270,9 @@ public class StorageView extends ProfessionInventory {
 	private ItemStack createHomeItem() {
 		ItemStack item = SkullCreator.itemFromBase64(RecipeView.HOUSE_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Back");
+		meta.setDisplayName("Â§9Back");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oReturn to storage selection");
+		lore.add("Â§7Â§oReturn to storage selection");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -283,7 +283,7 @@ public class StorageView extends ProfessionInventory {
 	private ItemStack createPreviousButton() {
 		ItemStack item = SkullCreator.itemFromBase64(PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Previous Page");
+		meta.setDisplayName("Â§9Previous Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "previous");
@@ -293,7 +293,7 @@ public class StorageView extends ProfessionInventory {
 	private ItemStack createNextButton() {
 		ItemStack item = SkullCreator.itemFromBase64(NEXT_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Next Page");
+		meta.setDisplayName("Â§9Next Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "next");
@@ -373,7 +373,7 @@ public class StorageView extends ProfessionInventory {
 	private void createVoucher(Player p, int amount, int slot) {
 		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
 		if (si.giveVoucher(p, amount)) {
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully created voucher for " + si.getItem().getDisplay() + " §fx" + amount + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully created voucher for " + si.getItem().getDisplay() + " Â§fx" + amount + "Â§7!");
 		}
 		inv.setContents(updateSlot(inv.getContents(), slot));
 	}

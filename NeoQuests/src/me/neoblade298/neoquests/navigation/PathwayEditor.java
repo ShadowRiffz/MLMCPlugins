@@ -62,11 +62,11 @@ public class PathwayEditor {
 	public void selectOrConnectPoints(PathwayPoint point) {
 		if (selected == null) {
 			selected = point;
-			Util.msg(p, "§7Successfully selected point!");
+			Util.msg(p, "Â§7Successfully selected point!");
 		}
 		else {
 			if (!selected.getLocation().getWorld().equals(point.getLocation().getWorld())) {
-				Util.msg(p, "§cYou cannot connect points between worlds!");
+				Util.msg(p, "Â§cYou cannot connect points between worlds!");
 			}
 			
 			if (points.size() == 0) {
@@ -76,7 +76,7 @@ public class PathwayEditor {
 			points.add(point);
 			point.addConnection(this.name);
 			selected = point;
-			Util.msg(p, "§7Successfully connected points and selected point!");
+			Util.msg(p, "Â§7Successfully connected points and selected point!");
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class PathwayEditor {
 			cfg.save(pathwayFile);
 			NavigationManager.addPathway(new Pathway(sec, pathwayFile));
 			NavigationManager.savePoints();
-			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
+			Util.msg(p, "Successfully saved new pathway Â§6" + name + "Â§7!");
 			NavigationManager.exitPathwayEditor(p);
 			saveEndpoints();
 			return true;
@@ -148,7 +148,7 @@ public class PathwayEditor {
 			return;
 		}
 		if (point.isConnected()) {
-			Util.msg(p, "§cCannot delete point! It is still connected to the following pathways:");
+			Util.msg(p, "Â§cCannot delete point! It is still connected to the following pathways:");
 			for (String key : point.getPathwaysUsing()) {
 				Util.msg(p, "&7- &6" + key, false);
 			}
@@ -156,7 +156,7 @@ public class PathwayEditor {
 		}
 		
 		if (!NavigationManager.deletePoint(point)) {
-			Util.msg(p, "§cFailed to delete point!");
+			Util.msg(p, "Â§cFailed to delete point!");
 		}
 		else {
 			if (isSelected(point)) {

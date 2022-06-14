@@ -67,18 +67,18 @@ public class PhantomAugment extends Augment implements ModPotionAugment, ModDama
 
 	@Override
 	public String getLine() {
-		return "ง7[ง8งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง8ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Set effect with 4:");
-		lore.add("ง7Anytime you gain invisibility, receive");
-		lore.add("ง7speed and vice versa. 1s cooldown.");
-		lore.add("ง7Having either speed or invisibility");
-		lore.add("ง7Grants งf" + formatPercentage(getDamageDealtMult(user)) + "% ง7bonus damage.");
+		lore.add("ยง7Set effect with 4:");
+		lore.add("ยง7Anytime you gain invisibility, receive");
+		lore.add("ยง7speed and vice versa. 1s cooldown.");
+		lore.add("ยง7Having either speed or invisibility");
+		lore.add("ยง7Grants ยงf" + formatPercentage(getDamageDealtMult(user)) + "% ยง7bonus damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

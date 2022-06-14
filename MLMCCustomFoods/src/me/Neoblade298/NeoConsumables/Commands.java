@@ -28,11 +28,11 @@ public class Commands implements CommandExecutor, TabCompleter {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("mycommand.staff")) {
 			if (args.length == 0) {
-				sender.sendMessage("§7Permission: mycommand.staff");
-				sender.sendMessage("§c/cons get [food] {amount}");
-				sender.sendMessage("§c/cons give [player] boss");
-				sender.sendMessage("§c/cons debug");
-				sender.sendMessage("§c/cons reload");
+				sender.sendMessage("Â§7Permission: mycommand.staff");
+				sender.sendMessage("Â§c/cons get [food] {amount}");
+				sender.sendMessage("Â§c/cons give [player] boss");
+				sender.sendMessage("Â§c/cons debug");
+				sender.sendMessage("Â§c/cons reload");
 			}
 			// /cons give [player] boss/[key] [amount]
 			else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
@@ -49,7 +49,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 				
 				if (args[1 + offset].equalsIgnoreCase("boss")) {
 					p.getInventory().addItem(Items.getBossChestToken(p, System.currentTimeMillis()));
-					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully gave boss token to Â§e" + p.getName());
 					return true;
 				}
 				else {
@@ -61,23 +61,23 @@ public class Commands implements CommandExecutor, TabCompleter {
 					
 					if (cons != null) {
 						p.getInventory().addItem(cons.getItem(amt));
-						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + "§7 to §e" + p.getName());
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully gave " + cons.getDisplay() + "Â§7 to Â§e" + p.getName());
 						return true;
 					}
 					else {
-						sender.sendMessage("§4[§c§lMLMC§4] §cInvalid key!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInvalid key!");
 						return true;
 					}
 				}
 			}
 			else if (args[0].equalsIgnoreCase("reload")) {
-				sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded consumables");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Reloaded consumables");
 				main.reload();
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("debug")) {
 				Consumables.debug = !Consumables.debug;
-				sender.sendMessage("§4[§c§lMLMC§4] §7Set debug to " + Consumables.debug);
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Set debug to " + Consumables.debug);
 				return true;
 			}
 			return true;

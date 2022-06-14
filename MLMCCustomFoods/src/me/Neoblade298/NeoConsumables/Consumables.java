@@ -236,7 +236,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private ChestConsumable loadChestConsumable(ConfigurationSection config, String key) {
 		String internal = config.getString("internal");
 		int level = config.getInt("level");
-		String display = config.getString("display").replaceAll("&", "ง");
+		String display = config.getString("display").replaceAll("&", "ยง");
 		String bossDisplay = config.getString("boss-display", internal);
 		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 

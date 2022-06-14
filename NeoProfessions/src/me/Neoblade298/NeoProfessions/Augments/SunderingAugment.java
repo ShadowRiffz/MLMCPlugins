@@ -42,7 +42,7 @@ public class SunderingAugment extends Augment implements ModCritDamageAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases critical hit damage by งf" + formatPercentage(getCritDamageMult(user)) + "%ง7.");
+		lore.add("ยง7Increases critical hit damage by ยงf" + formatPercentage(getCritDamageMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

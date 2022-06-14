@@ -42,7 +42,7 @@ public class StoredItemReward extends ChestReward {
 		}
 		StoredItemReward r = new StoredItemReward(id, amount);
 		r.setWeight(weight);
-		StorageManager.addSource(id, "ง4งl" + display + " Chest", false);
+		StorageManager.addSource(id, "ยง4ยงl" + display + " Chest", false);
 		return r;
 	}
 	

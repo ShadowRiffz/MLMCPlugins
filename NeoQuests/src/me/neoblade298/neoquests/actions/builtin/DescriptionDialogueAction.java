@@ -20,7 +20,7 @@ public class DescriptionDialogueAction implements Action, DialogueAction {
 	public DescriptionDialogueAction() {}
 	
 	public DescriptionDialogueAction(LineConfig cfg) {
-		this.dialogue = "ง7งo" + cfg.getLine();
+		this.dialogue = "ยง7ยงo" + cfg.getLine();
 	}
 
 	@Override

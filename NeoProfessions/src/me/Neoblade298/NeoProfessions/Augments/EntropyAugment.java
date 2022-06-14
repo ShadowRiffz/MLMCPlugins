@@ -57,7 +57,7 @@ public class EntropyAugment extends Augment implements ModDamageTakenAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[งaงo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยงaยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	@Override
@@ -69,10 +69,10 @@ public class EntropyAugment extends Augment implements ModDamageTakenAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Taking damage heals you for");
-		lore.add("งf4.5% ง7max health over 3s");
-		lore.add("ง7This does not stack, but it");
-		lore.add("ง7does refresh on repeated hits.");
+		lore.add("ยง7Taking damage heals you for");
+		lore.add("ยงf4.5% ยง7max health over 3s");
+		lore.add("ยง7This does not stack, but it");
+		lore.add("ยง7does refresh on repeated hits.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

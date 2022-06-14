@@ -53,15 +53,15 @@ public class RedemptionAugment extends Augment implements ModDamageTakenAugment 
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Converts all corruption damage to");
-		lore.add("ง7healing.");
+		lore.add("ยง7Converts all corruption damage to");
+		lore.add("ยง7healing.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

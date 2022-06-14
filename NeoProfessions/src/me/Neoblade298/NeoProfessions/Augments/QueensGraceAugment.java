@@ -53,16 +53,16 @@ public class QueensGraceAugment extends Augment implements ModPotionAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[ง9งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง9ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Receiving any potion effect grants");
-		lore.add("งf50 ง7health and งf5 ง7mana. 5s");
-		lore.add("ง7cooldown.Only works with &9Mana&7.");
+		lore.add("ยง7Receiving any potion effect grants");
+		lore.add("ยงf50 ยง7health and ยงf5 ยง7mana. 5s");
+		lore.add("ยง7cooldown.Only works with &9Mana&7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

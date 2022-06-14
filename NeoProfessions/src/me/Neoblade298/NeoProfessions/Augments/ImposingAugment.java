@@ -42,8 +42,8 @@ public class ImposingAugment extends Augment implements ModTauntAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases taunts by งf" + formatPercentage(getTauntGainMult(user)) + "%");
-		lore.add("ง7when above 80% health.");
+		lore.add("ยง7Increases taunts by ยงf" + formatPercentage(getTauntGainMult(user)) + "%");
+		lore.add("ยง7when above 80% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

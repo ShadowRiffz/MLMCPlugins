@@ -30,7 +30,7 @@ public class Boss {
 		this.cooldown = cooldown;
 		this.displayName = displayName;
 		this.permission = permission;
-		this.placeholder = placeholder.replaceAll("&", "ง").replaceAll("@", "&");
+		this.placeholder = placeholder.replaceAll("&", "ยง").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
@@ -45,7 +45,7 @@ public class Boss {
 		this.timeLimit = timeLimit;
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
-		this.placeholder = placeholder.replaceAll("&", "ง").replaceAll("@", "&");
+		this.placeholder = placeholder.replaceAll("&", "ยง").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
@@ -60,7 +60,7 @@ public class Boss {
 		this.timeLimit = timeLimit;
 		this.permission = permission;
 		this.raidBosses = new ArrayList<RaidBoss>();
-		this.placeholder = placeholder.replaceAll("&", "ง").replaceAll("@", "&");
+		this.placeholder = placeholder.replaceAll("&", "ยง").replaceAll("@", "&");
 		this.spawnersets = spawners;
 	}
 

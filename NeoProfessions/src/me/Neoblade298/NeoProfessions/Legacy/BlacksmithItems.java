@@ -17,20 +17,20 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityItem(int level, String itemtype) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
+		meta.setDisplayName("Â§4[Lv " + level + "] Â§cDurability Augment");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level + " Durability Augment§0");
+		lore.add("Â§7Level " + level + " Durability AugmentÂ§0");
 		
 		if(itemtype.equals("armor")) {
-			lore.add("§7Effect: Increases armor max durability");
+			lore.add("Â§7Effect: Increases armor max durability");
 			int offset = (10 * ((level / 5) - 1)) + 1;
-			lore.add("§7Potency: §e" + ((int)(Math.random() * 10) + offset + 1));
+			lore.add("Â§7Potency: Â§e" + ((int)(Math.random() * 10) + offset + 1));
 		}
 		if(itemtype.equals("weapon")) {
-			lore.add("§7Effect: Increases weapon max durability");
+			lore.add("Â§7Effect: Increases weapon max durability");
 			int offset = (20 * ((level / 5) - 1));
-			lore.add("§7Potency: §e" + ((int)(Math.random() * 20) + offset + 1));
+			lore.add("Â§7Potency: Â§e" + ((int)(Math.random() * 20) + offset + 1));
 		}
 		meta.setLore(lore);	
 		item.setItemMeta(meta);
@@ -43,18 +43,18 @@ public class BlacksmithItems {
 	public static ItemStack getDurabilityItem(int level, String itemtype, int potency) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§4[Lv " + level + "] §cDurability Augment");
+		meta.setDisplayName("Â§4[Lv " + level + "] Â§cDurability Augment");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§7Level " + level + " Durability Augment§0");
+		lore.add("Â§7Level " + level + " Durability AugmentÂ§0");
 		
 		if(itemtype.equals("armor")) {
-			lore.add("§7Effect: Increases armor max durability");
-			lore.add("§7Potency: §e" + potency);
+			lore.add("Â§7Effect: Increases armor max durability");
+			lore.add("Â§7Potency: Â§e" + potency);
 		}
 		if(itemtype.equals("weapon")) {
-			lore.add("§7Effect: Increases weapon max durability");
-			lore.add("§7Potency: §e" + potency);
+			lore.add("Â§7Effect: Increases weapon max durability");
+			lore.add("Â§7Potency: Â§e" + potency);
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -67,15 +67,15 @@ public class BlacksmithItems {
 	public static ItemStack getRepairItem(int level) {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§4[Lv " + level + "] §cRepair Kit");
+		meta.setDisplayName("Â§4[Lv " + level + "] Â§cRepair Kit");
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		List<String> lore = new ArrayList<String>();
 
-		lore.add("§6Drag onto item to use§0");
-		lore.add("§cOnly works on quest items");
-		lore.add("§7Compatibility: Up to §4Lv " + level);
-		lore.add("§7Effect: Restores durability of an item");
-		lore.add("§7Potency: §e40%");
+		lore.add("Â§6Drag onto item to useÂ§0");
+		lore.add("Â§cOnly works on quest items");
+		lore.add("Â§7Compatibility: Up to Â§4Lv " + level);
+		lore.add("Â§7Effect: Restores durability of an item");
+		lore.add("Â§7Potency: Â§e40%");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);

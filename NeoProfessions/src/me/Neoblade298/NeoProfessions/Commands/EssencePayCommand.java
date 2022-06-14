@@ -24,7 +24,7 @@ public class EssencePayCommand implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if (args.length != 3) {
-			sender.sendMessage("§c/epay [player] [level] [amount]");
+			sender.sendMessage("Â§c/epay [player] [level] [amount]");
 		}
 		else {
 			Player recipient = Bukkit.getPlayer(args[0]);

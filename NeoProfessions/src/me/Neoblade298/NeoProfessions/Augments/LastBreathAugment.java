@@ -43,8 +43,8 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases health regen by งf" + formatPercentage(getRegenMult(user)) + "%");
-		lore.add("ง7while below 50% health.");
+		lore.add("ยง7Increases health regen by ยงf" + formatPercentage(getRegenMult(user)) + "%");
+		lore.add("ยง7while below 50% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

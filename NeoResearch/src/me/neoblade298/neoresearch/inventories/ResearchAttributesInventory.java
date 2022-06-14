@@ -26,35 +26,35 @@ public class ResearchAttributesInventory implements ResearchInventory {
 	public ResearchAttributesInventory(Player p, StoredAttributes attr) {
 
 		int remaining = attr.getAttribute("unused");
-		inv = Bukkit.createInventory(p, 9, "§8Research Attrs (" + remaining + " points)");
+		inv = Bukkit.createInventory(p, 9, "Â§8Research Attrs (" + remaining + " points)");
 		this.attr = attr;
 		this.p = p;
 		
 		Research.viewingInventory.put(p, this);
 
 		ItemStack[] contents = inv.getContents();
-		contents[0] = createGuiItem(Material.RED_DYE, "§7[§4Strength§7 (§f" + attr.getAttribute("strength") + "§7)]",
-				"strength", 100003, "§7Increases §4Red§7 values in", "§c/skills §7by 2%.",
-				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
-				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
-		contents[1] = createGuiItem(Material.YELLOW_DYE, "§7[§eDexterity§7 (§f" + attr.getAttribute("dexterity") + "§7)]",
-				"dexterity", 100004, "§7Increases §eYellow§7 values in", "§c/skills §7by 2%.",
-				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
-				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
-		contents[2] = createGuiItem(Material.LIGHT_BLUE_DYE, "§7[§9Intelligence§7 (§f" + attr.getAttribute("intelligence") + "§7)]",
-				"intelligence", 100005, "§7Increases §9Blue§7 values in", "§c/skills §7by 2%.",
-				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
-				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
-		contents[3] = createGuiItem(Material.LIME_DYE, "§7[§aSpirit§7 (§f" + attr.getAttribute("spirit") + "§7)]",
-				"spirit", 100006, "§7Increases §aGreen§7 values in", "§c/skills §7by 2%.",
-				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
-				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
-		contents[4] = createGuiItem(Material.ORANGE_DYE, "§7[§6Endurance§7 (§f" + attr.getAttribute("endurance") + "§7)]",
-				"endurance", 100008, "§7Increases §6Orange§7 values in", "§c/skills §7by 2%.",
-				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
-				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
-		contents[8] = createGuiItem(Material.BOOK, "§7[Info]",
-				null, 0, "§7You have §f" + attr.getAttribute("unused") + " §7points remaining.", "§7These attributes stack with §c/attr§7.");
+		contents[0] = createGuiItem(Material.RED_DYE, "Â§7[Â§4StrengthÂ§7 (Â§f" + attr.getAttribute("strength") + "Â§7)]",
+				"strength", 100003, "Â§7Increases Â§4RedÂ§7 values in", "Â§c/skills Â§7by 2%.",
+				"", "Â§7Â§oLeft click adds, right click removes,", "Â§7Â§oShift click for multiples of 10.",
+				"Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
+		contents[1] = createGuiItem(Material.YELLOW_DYE, "Â§7[Â§eDexterityÂ§7 (Â§f" + attr.getAttribute("dexterity") + "Â§7)]",
+				"dexterity", 100004, "Â§7Increases Â§eYellowÂ§7 values in", "Â§c/skills Â§7by 2%.",
+				"", "Â§7Â§oLeft click adds, right click removes,", "Â§7Â§oShift click for multiples of 10.",
+				"Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
+		contents[2] = createGuiItem(Material.LIGHT_BLUE_DYE, "Â§7[Â§9IntelligenceÂ§7 (Â§f" + attr.getAttribute("intelligence") + "Â§7)]",
+				"intelligence", 100005, "Â§7Increases Â§9BlueÂ§7 values in", "Â§c/skills Â§7by 2%.",
+				"", "Â§7Â§oLeft click adds, right click removes,", "Â§7Â§oShift click for multiples of 10.",
+				"Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
+		contents[3] = createGuiItem(Material.LIME_DYE, "Â§7[Â§aSpiritÂ§7 (Â§f" + attr.getAttribute("spirit") + "Â§7)]",
+				"spirit", 100006, "Â§7Increases Â§aGreenÂ§7 values in", "Â§c/skills Â§7by 2%.",
+				"", "Â§7Â§oLeft click adds, right click removes,", "Â§7Â§oShift click for multiples of 10.",
+				"Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
+		contents[4] = createGuiItem(Material.ORANGE_DYE, "Â§7[Â§6EnduranceÂ§7 (Â§f" + attr.getAttribute("endurance") + "Â§7)]",
+				"endurance", 100008, "Â§7Increases Â§6OrangeÂ§7 values in", "Â§c/skills Â§7by 2%.",
+				"", "Â§7Â§oLeft click adds, right click removes,", "Â§7Â§oShift click for multiples of 10.",
+				"Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
+		contents[8] = createGuiItem(Material.BOOK, "Â§7[Info]",
+				null, 0, "Â§7You have Â§f" + attr.getAttribute("unused") + " Â§7points remaining.", "Â§7These attributes stack with Â§c/attrÂ§7.");
 		inv.setContents(contents);
 
 		p.openInventory(inv);
@@ -129,7 +129,7 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		ItemMeta meta = item.getItemMeta();
 		String name = meta.getDisplayName();
 		name = name.substring(0, name.indexOf('(') + 1);
-		name += "§f" + attr.getAttribute(attribute) + "§7)]";
+		name += "Â§f" + attr.getAttribute(attribute) + "Â§7)]";
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
 		
@@ -143,10 +143,10 @@ public class ResearchAttributesInventory implements ResearchInventory {
 			meta = contents[i].getItemMeta();
 			List<String> lore = meta.getLore();
 			if (i != 8) {
-				lore.set(5, "§7§oYou have §f" + remaining + " §7§opoints remaining.");
+				lore.set(5, "Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
 			}
 			else {
-				lore.set(0, "§7§oYou have §f" + remaining + " §7§opoints remaining.");
+				lore.set(0, "Â§7Â§oYou have Â§f" + remaining + " Â§7Â§opoints remaining.");
 			}
 			meta.setLore(lore);
 			contents[i].setItemMeta(meta);

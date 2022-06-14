@@ -42,7 +42,7 @@ public abstract class Augment {
 	}
 
 	public String getLine() {
-		return "ง7[" + name + " Lv " + level + "]";
+		return "ยง7[" + name + " Lv " + level + "]";
 	}
 	
 	public void setEventType(List<EventType> etypes) {
@@ -64,9 +64,9 @@ public abstract class Augment {
 	public ItemStack getItem(Player user) {
 		ItemStack item = new ItemStack(Material.ENDER_PEARL);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("ง4[Lv " + level + "] งc" + name + " Augment");
+		meta.setDisplayName("ยง4[Lv " + level + "] ยงc" + name + " Augment");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("ง7Level " + level + " " + name + " Augment");
+		lore.add("ยง7Level " + level + " " + name + " Augment");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);

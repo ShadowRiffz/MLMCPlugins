@@ -23,7 +23,7 @@ public class NPCDialogueAction implements Action, DialogueAction {
 	
 	public NPCDialogueAction(LineConfig cfg) {
 		this.npcid = cfg.getInt("id", 0);
-		this.dialogue = "ง7: " + cfg.getLine();
+		this.dialogue = "ยง7: " + cfg.getLine();
 	}
 
 	@Override

@@ -161,7 +161,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	@Override
 	public boolean canUse(Player p, ItemStack item) {
 		if (Consumables.isInstance) {
-			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "§"));
+			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "Â§"));
 			return false;
 		}
 		return true;
@@ -169,7 +169,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 
 	@Override
 	public void use(Player p, ItemStack item) {
-		p.sendMessage("§4[§c§lMLMC§4] §7You opened " + item.getItemMeta().getDisplayName() + "§7 to find...");
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You opened " + item.getItemMeta().getDisplayName() + "Â§7 to find...");
 		for (Sound sound : getSounds()) {
 			p.getWorld().playSound(p.getEyeLocation(), sound, 1.0F, 1.0F);
 		}
@@ -180,8 +180,8 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	
 	private void generateLore() {
 		lore = new ArrayList<String>();
-		lore.add("§7§oUp to 1 item per letter tier");
-		lore.add("§7[§ePotential Rewards§7]");
+		lore.add("Â§7Â§oUp to 1 item per letter tier");
+		lore.add("Â§7[Â§ePotential RewardsÂ§7]");
 		Iterator<ChestStage> iter = stages.iterator();
 		int stageNum = 0;
 		while (iter.hasNext()) {
@@ -193,7 +193,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 			char letter = stageToLetter.get(stageNum);
 			for (ChestReward rew : stage.getRewards()) {
 				double pct = (rew.getWeight() / totalWeight) * chance;
-				lore.add(col + ChatColor.BOLD.toString() + "{" + letter + "} " + col + rew.toString() + " §7(" + df.format(pct * 100) + "%)");
+				lore.add(col + ChatColor.BOLD.toString() + "{" + letter + "} " + col + rew.toString() + " Â§7(" + df.format(pct * 100) + "%)");
 			}
 		}
 	}

@@ -42,7 +42,7 @@ public class ResetClass {
 		}
 
 		s.sendMessage(
-				"ง7Reset the class of งe" + p.getName() + " ง7from ง6" + classname + " ง7to ง6" + classAfter + "ง7.");
+				"ยง7Reset the class of ยงe" + p.getName() + " ยง7from ยง6" + classname + " ยง7to ยง6" + classAfter + "ยง7.");
 	}
 
 	private static void resetTier1(Player p, String rclass) {

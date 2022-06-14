@@ -43,7 +43,7 @@ public class BreathOfLifeAugment extends Augment implements ModHealAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases healing on allies by งf" + formatPercentage(getHealMult(user)) + "%ง7.");
+		lore.add("ยง7Increases healing on allies by ยงf" + formatPercentage(getHealMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -56,7 +56,7 @@ public class BreathOfLifeAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[งaงo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยงaยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 }

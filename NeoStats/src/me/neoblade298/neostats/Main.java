@@ -130,9 +130,9 @@ public class Main extends JavaPlugin implements Listener{
 			ArrayList<String> toRemove = new ArrayList<String>();
 			for (String receiver : inBoss.keySet()) {
 				if(Bukkit.getPlayer(receiver) != null && inBoss.get(receiver).equals(deadBoss)) {
-					Bukkit.getPlayer(receiver).sendMessage("§cPost-battle Stats §7(§4§l" + displayName + "§7) [Time:§c" + timer + "§7]");
-					Bukkit.getPlayer(receiver).sendMessage("§7-----");
-					Bukkit.getPlayer(receiver).sendMessage("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+					Bukkit.getPlayer(receiver).sendMessage("Â§cPost-battle Stats Â§7(Â§4Â§l" + displayName + "Â§7) [Time:Â§c" + timer + "Â§7]");
+					Bukkit.getPlayer(receiver).sendMessage("Â§7-----");
+					Bukkit.getPlayer(receiver).sendMessage("Â§7[Â§cDamage Dealt Â§7/ Â§4Damage Taken Â§7/ Â§2Self Healing Â§7/ Â§aAlly HealingÂ§7]");
 					for (String player : inBoss.keySet()) {
 						if(Bukkit.getPlayer(player) != null && inBoss.get(player).equals(deadBoss)) {
 							int damageDealt = (int) Math.round((damageDealtMap.get(player) * 100) / 100);
@@ -140,7 +140,7 @@ public class Main extends JavaPlugin implements Listener{
 							int selfHeal = (int) Math.round((selfHealed.get(player) * 100) / 100);
 							int allyHeal = (int) Math.round((allyHealed.get(player) * 100) / 100);
 						
-							String stat = new String("§e" + player + "§7 (§e" + SkillAPI.getPlayerData(Bukkit.getPlayer(player)).getClass("class").getData().getName() + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+							String stat = new String("Â§e" + player + "Â§7 (Â§e" + SkillAPI.getPlayerData(Bukkit.getPlayer(player)).getClass("class").getData().getName() + "Â§7) - [Â§c" + damageDealt + " Â§7/ Â§4" + damageTaken + " Â§7/ Â§2" + selfHeal + " Â§7/ Â§a" + allyHeal + "Â§7]");
 							Bukkit.getPlayer(receiver).sendMessage(stat);
 							toRemove.add(receiver);
 						}
@@ -161,11 +161,11 @@ public class Main extends JavaPlugin implements Listener{
 			
 			// Deprecated! Update if you need again
 			if (report && Bukkit.getPlayer("Neoblade298") != null) {
-				Bukkit.getPlayer("Neoblade298").sendMessage("§cDamage Statistics §7(§4§l" + displayName + "§7)");
-				Bukkit.getPlayer("Neoblade298").sendMessage("§7-----");
+				Bukkit.getPlayer("Neoblade298").sendMessage("Â§cDamage Statistics Â§7(Â§4Â§l" + displayName + "Â§7)");
+				Bukkit.getPlayer("Neoblade298").sendMessage("Â§7-----");
 				for (String player : damageDealtMap.keySet()) {
 					double damage = Math.round((damageDealtMap.get(player) * 100) / 100);
-					String stat = new String("§e" + player + "§7 - " + damage);
+					String stat = new String("Â§e" + player + "Â§7 - " + damage);
 					Bukkit.getPlayer("Neoblade298").sendMessage(stat);
 				}
 			}

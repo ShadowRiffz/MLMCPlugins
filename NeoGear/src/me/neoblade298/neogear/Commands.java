@@ -39,15 +39,15 @@ public class Commands implements CommandExecutor{
 				int lvl = selectLevel(args[3], (Player) sender);
 				
 				if (rarity == null) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: rarity");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: rarity");
 					return true;
 				}
 				if (type == null) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: type");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: type");
 					return true;
 				}
 				if (lvl == -1) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: level");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: level");
 					return true;
 				}
 				int failures = p.getInventory().addItem(Gear.getGearConfig(type, lvl).generateItem(rarity, lvl)).size();
@@ -67,19 +67,19 @@ public class Commands implements CommandExecutor{
 				int lvl = selectLevel(args[4], p);
 
 				if (p == null) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cPlayer not found");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cPlayer not found");
 					return true;
 				}
 				if (rarity == null) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: rarity");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: rarity");
 					return true;
 				}
 				if (type == null) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: type");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: type");
 					return true;
 				}
 				if (lvl == -1) {
-					sender.sendMessage("§4[§c§lMLMC§4] §cIncorrect format: level");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cIncorrect format: level");
 					return true;
 				}
 				
@@ -130,25 +130,25 @@ public class Commands implements CommandExecutor{
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 				main.loadConfigs();
-				sender.sendMessage("§4[§c§lMLMC§4] §7Successfully reloaded");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully reloaded");
 			}
 			else if (args.length == 2 && args[0].equalsIgnoreCase("repair")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				if (DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand())) {
-					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully repaired item");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully repaired item");
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear get/give {player} [rarity/set] [type/set/auto] [lvl/auto/range] §7- Spawns you gear");
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear getshard/giveshard {player} [rarity/level] --rarity:[rarity] --level:[level] §7- Spawns a shard");
-				sender.sendMessage("§4[§c§lMLMC§4] §7[auto] gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
-				sender.sendMessage("§4[§c§lMLMC§4] §7Add :lvl to [auto] if you want to set a max level to the gear (auto:30)");
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear repair {player} §7- Repairs a player's mainhand");
-				sender.sendMessage("§4[§c§lMLMC§4] §c/gear reload §7- Reloads config");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c/gear get/give {player} [rarity/set] [type/set/auto] [lvl/auto/range] Â§7- Spawns you gear");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c/gear getshard/giveshard {player} [rarity/level] --rarity:[rarity] --level:[level] Â§7- Spawns a shard");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7[auto] gives gear according to the player's level or class, {range} is formatted as lvl:lvl");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Add :lvl to [auto] if you want to set a max level to the gear (auto:30)");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c/gear repair {player} Â§7- Repairs a player's mainhand");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c/gear reload Â§7- Reloads config");
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou don't have permission to do that!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou don't have permission to do that!");
 		}
 		return true;
 	}

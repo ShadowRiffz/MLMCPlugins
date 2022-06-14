@@ -48,15 +48,15 @@ public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 
 	@Override
 	public String getLine() {
-		return "ง7[ง4งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง4ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Upon taking <300 damage pre-defense,");
-		lore.add("งf30%ง7 chance to take 0 damage.");
+		lore.add("ยง7Upon taking <300 damage pre-defense,");
+		lore.add("ยงf30%ยง7 chance to take 0 damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

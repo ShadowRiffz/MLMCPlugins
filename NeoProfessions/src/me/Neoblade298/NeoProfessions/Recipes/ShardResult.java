@@ -55,7 +55,7 @@ public class ShardResult implements RecipeResult {
 	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = this.type.equalsIgnoreCase("level") ? Shards.getLevelShard(level) : Shards.getRarityShard(rarity, level);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
+		meta.setDisplayName((canCraft ? "Â§a" : "Â§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
 	}

@@ -53,9 +53,9 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Upon taking damage, return งf" + formatDouble(getDamageReturned(user)));
-		lore.add("ง7damage to the sender.");
-		lore.add("ง7Has a 1 second cooldown.");
+		lore.add("ยง7Upon taking damage, return ยงf" + formatDouble(getDamageReturned(user)));
+		lore.add("ยง7damage to the sender.");
+		lore.add("ยง7Has a 1 second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -44,6 +44,6 @@ public class CmdRefundQuests implements CommandExecutor{
 				amount += q.getRewards().getMoney();
 			}
 		}
-		viewer.sendMessage("§4[§c§lMLMC§4] §6" + viewed.getName() + " §7requires §e" + amount + "g §7to refund their quests.");
+		viewer.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§6" + viewed.getName() + " Â§7requires Â§e" + amount + "g Â§7to refund their quests.");
 	}
 }

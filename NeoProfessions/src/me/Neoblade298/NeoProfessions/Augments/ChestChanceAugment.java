@@ -42,8 +42,8 @@ public class ChestChanceAugment extends Augment implements ModChestDropAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases drop rate of");
-		lore.add("ง7boss chests by งf" + formatPercentage(getChestChanceMult(user)) + "%ง7.");
+		lore.add("ยง7Increases drop rate of");
+		lore.add("ยง7boss chests by ยงf" + formatPercentage(getChestChanceMult(user)) + "%ยง7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -42,25 +42,25 @@ public class Tokens extends JavaPlugin implements org.bukkit.event.Listener {
 
 			NBTItem nbti = new NBTItem(item);
 			if (!p.getName().equals(nbti.getString("player"))) {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou cannot use this as you are not Â§e" + nbti.getString("player") + "Â§c!");
 				return;
 			}
 			
 			long now = System.currentTimeMillis();
 			long usable = nbti.getLong("timestamp") + 86400000;
 			if (now > usable) {
-				p.sendMessage("§4[§c§lMLMC§4] §cThis token has already expired!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThis token has already expired!");
 				p.getInventory().removeItem(item);
 				return;
 			}
 			
 			if (p.hasPermission(BOSS_TOKEN_PERM)) {
-				p.sendMessage("§4[§c§lMLMC§4] §cOne of these tokens is already active!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cOne of these tokens is already active!");
 				return;
 			}
 			
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set " + BOSS_TOKEN_PERM);
-			p.sendMessage("§4[§c§lMLMC§4] §7Boss token successfully activated!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Boss token successfully activated!");
 			p.getInventory().removeItem(item);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
 		}

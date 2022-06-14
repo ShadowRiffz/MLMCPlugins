@@ -31,7 +31,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class GearConfig {
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
-	public static final String DURAPREFIX = "ง7Durability ";
+	public static final String DURAPREFIX = "ยง7Durability ";
 	public String id, type, title;
 	public Material material;
 	public ArrayList<String> prefixes, displayNames;
@@ -63,15 +63,15 @@ public class GearConfig {
 		
 		// Add color codes to all strings necessary
 		for (String prefix : prefixes) {
-			prefix = prefix.replaceAll("&", "ง");
+			prefix = prefix.replaceAll("&", "ยง");
 		}
 		for (String displayName : displayNames) {
-			displayName = displayName.replaceAll("&", "ง");
+			displayName = displayName.replaceAll("&", "ยง");
 		}
 		
 		this.id = id;
 		if (title == null) {
-			this.title = "ง7Standard " + type;
+			this.title = "ยง7Standard " + type;
 		}
 		else {
 			this.title = title;
@@ -163,7 +163,7 @@ public class GearConfig {
 		// Rest of display, use color code only if nonexistent
 		String display = displayNames.get(Gear.gen.nextInt(displayNames.size()));
 		if (display.contains("&")) {
-			meta.setDisplayName((prefix + display).replaceAll("&", "ง"));
+			meta.setDisplayName((prefix + display).replaceAll("&", "ยง"));
 		}
 		else {
 			meta.setDisplayName(rarity.colorCode + prefix + display);
@@ -222,14 +222,14 @@ public class GearConfig {
 		}
 		// Lore part 1
 		lore.add(translateHexCodes("&7Title: " + this.title));
-		lore.add("ง7Type: " + this.type);
-		lore.add("ง7Rarity: " + rarity.displayName);
-		lore.add("ง7Level: " + level);
-		lore.add("ง7Max Slots: " + maxSlots);
+		lore.add("ยง7Type: " + this.type);
+		lore.add("ยง7Rarity: " + rarity.displayName);
+		lore.add("ยง7Level: " + level);
+		lore.add("ยง7Max Slots: " + maxSlots);
 		for (String loreLine : this.lore) {
-			lore.add(loreLine.replaceAll("&", "ง"));
+			lore.add(loreLine.replaceAll("&", "ยง"));
 		}
-		lore.add("ง8งm-----");
+		lore.add("ยง8ยงm-----");
 		// Lore part 2
 		for (String key : Gear.attributeOrder.keySet()) {
 			double amount = 0;
@@ -268,7 +268,7 @@ public class GearConfig {
 		// Lore part 3, only add separator if there was at least 1 attribute
 		HashMap<String, Integer> nbtIntegers = new HashMap<String, Integer>();
 		HashMap<String, String> nbtStrings = new HashMap<String, String>();
-		if (lore.size() >= 6) { lore.add("ง8งm-----"); }
+		if (lore.size() >= 6) { lore.add("ยง8ยงm-----"); }
 		for (String augment : requiredAugments) {
 			currentSlot++;
 			Augment aug = AugmentManager.getFromCache(augment.toLowerCase(), level);
@@ -279,12 +279,12 @@ public class GearConfig {
 		}
 		for (int i = 0; i < numSlots; i++) {
 			currentSlot++;
-			lore.add("ง8[Empty Slot]");
+			lore.add("ยง8[Empty Slot]");
 			nbtIntegers.put("slot" + currentSlot + "Line", lore.size() - 1);
 		}
 		
 		int durability = duraBase + rarities.get(rarity).duraBonus;
-		lore.add("ง7Durability " + durability + " / " + durability);
+		lore.add("ยง7Durability " + durability + " / " + durability);
 		meta.setLore(lore);
 		
 		item.setItemMeta(meta);
@@ -348,12 +348,12 @@ public class GearConfig {
 		nbti.applyNBT(item);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.set(2, "ง7Rarity: " + rarityDisplay);
-		lore.set(4, "ง7Max Slots: " + slotsMaxNew);
+		lore.set(2, "ยง7Rarity: " + rarityDisplay);
+		lore.set(4, "ยง7Max Slots: " + slotsMaxNew);
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
-		p.sendMessage("ง4[งcงlMLMCง4] ง7" + item.getItemMeta().getDisplayName() + "ง7's rarity has been increased to " + rarityDisplay + "ง7!");
+		p.sendMessage("ยง4[ยงcยงlMLMCยง4] ยง7" + item.getItemMeta().getDisplayName() + "ยง7's rarity has been increased to " + rarityDisplay + "ยง7!");
 		updateStats(p, item, false);
 		return null;
 	}
@@ -384,7 +384,7 @@ public class GearConfig {
 		}
 		nbti.setInteger("level", newLevel);
 		nbti.applyNBT(item);
-		p.sendMessage("ง4[งcงlMLMCง4] ง7" + item.getItemMeta().getDisplayName() + "ง7's level has been increased to งe" + newLevel + "ง7!");
+		p.sendMessage("ยง4[ยงcยงlMLMCยง4] ยง7" + item.getItemMeta().getDisplayName() + "ยง7's level has been increased to ยงe" + newLevel + "ยง7!");
 		p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
 		updateStats(p, item, false);
 		return null;
@@ -523,7 +523,7 @@ public class GearConfig {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		if (hasChanged && announceChanges) {
-			p.sendMessage("ง4[งcงlMLMCง4] ง7Your item's stats have been changed due to server balancing.");
+			p.sendMessage("ยง4[ยงcยงlMLMCยง4] ยง7Your item's stats have been changed due to server balancing.");
 		}
 	}
 	

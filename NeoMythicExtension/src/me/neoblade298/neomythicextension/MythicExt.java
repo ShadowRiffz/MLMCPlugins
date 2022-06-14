@@ -246,7 +246,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 				Player p = (Player) e.getDamager();
 				for (Entity ent : e.getEntity().getNearbyEntities(5, 5, 5)) {
 					if (ent instanceof Player) {
-						ent.sendMessage("งe" + p.getName() + " ง7did งc" + (Math.round(e.getFinalDamage() * 100) / 100) + " ง7damage");
+						ent.sendMessage("ยงe" + p.getName() + " ยง7did ยงc" + (Math.round(e.getFinalDamage() * 100) / 100) + " ยง7damage");
 					}
 				}
 			}

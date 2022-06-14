@@ -45,8 +45,8 @@ public class FinalLightAugment extends Augment implements ModManaGainAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Increases resource regen by งf" + formatPercentage(getManaGainMult(user)) + "% ง7when");
-		lore.add("ง7below 30% health.");
+		lore.add("ยง7Increases resource regen by ยงf" + formatPercentage(getManaGainMult(user)) + "% ยง7when");
+		lore.add("ยง7below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

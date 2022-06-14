@@ -31,7 +31,7 @@ public class BossRelic extends Augment{
 			display += " " + relicStrings[i];
 		}
 		
-		return "ง7[" + display + " Lv " + level + "]";
+		return "ยง7[" + display + " Lv " + level + "]";
 	}
 	
 	@Override

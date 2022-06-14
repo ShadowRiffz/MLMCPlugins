@@ -23,7 +23,7 @@ public class GoldRequirement implements RecipeRequirement {
 	}
 
 	public String failMessage(Player p) {
-		return "§4[§c§lMLMC§4] §cYou don't have enough gold!";
+		return "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou don't have enough gold!";
 	}
 	
 	public void useReq(Player p, int amount) {
@@ -31,7 +31,7 @@ public class GoldRequirement implements RecipeRequirement {
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p, 1) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "Â§a" : "Â§c";
 		msg += "- " + amount + "g";
 		return msg;
 	}

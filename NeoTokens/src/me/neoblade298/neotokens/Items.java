@@ -15,14 +15,14 @@ public class Items {
 	public static ItemStack getBossChestToken(Player p, long timestamp) {
 		ItemStack item = new ItemStack(Material.GOLD_INGOT);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§cBoss Chest Token");
+		meta.setDisplayName("Â§cBoss Chest Token");
 		
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Bound to §e" + p.getName());
-		lore.add("§7Expires §c24h §7after it's received");
-		lore.add("§6Right click to guarantee a boss");
-		lore.add("§6chest next time you defeat a boss.");
-		lore.add("§cDoes not stack its effect");
+		lore.add("Â§7Bound to Â§e" + p.getName());
+		lore.add("Â§7Expires Â§c24h Â§7after it's received");
+		lore.add("Â§6Right click to guarantee a boss");
+		lore.add("Â§6chest next time you defeat a boss.");
+		lore.add("Â§cDoes not stack its effect");
 		
 		meta.setLore(lore);
 		meta.addEnchant(Enchantment.LUCK, 1, true);

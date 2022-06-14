@@ -64,16 +64,16 @@ public class InexorableAugment extends Augment implements ModDamageTakenAugment 
 
 	@Override
 	public String getLine() {
-		return "ง7[ง9งo" + name + " Lv " + level + "ง7]";
+		return "ยง7[ยง9ยงo" + name + " Lv " + level + "ยง7]";
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Blocking damage with the shield grants");
-		lore.add("ง7invulnerability for 5 seconds while");
-		lore.add("ง7the shield remains raised.");
+		lore.add("ยง7Blocking damage with the shield grants");
+		lore.add("ยง7invulnerability for 5 seconds while");
+		lore.add("ยง7the shield remains raised.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

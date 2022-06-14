@@ -64,7 +64,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler(ignoreCancelled=true)
 	public void onChat(ChatChannelEvent e) {
 		if (this.muteGlobal && !e.getSender().hasPermission("towny.chat.mod")) {
-			e.getSender().sendMessage("§4[§c§lMLMC§4] §cThere is currently a server mute!");
+			e.getSender().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThere is currently a server mute!");
 			e.setCancelled(true);
 			return;
 		}
@@ -84,10 +84,10 @@ public class Main extends JavaPlugin implements Listener {
 			!sender.hasPermission("tutorial.chat.receive")) {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.chat.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7spoke in tutorial: §c" + msg);
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c" + sender.getName() + " Â§7spoke in tutorial: Â§c" + msg);
 					}
 				}
-				sender.sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou cannot speak in the tutorial, but staff can still hear you!");
 				e.setCancelled(true);
 			}
 			else if ((TOWNY_X_BOUND_1 <= x && x <= TOWNY_X_BOUND_2) &&
@@ -95,10 +95,10 @@ public class Main extends JavaPlugin implements Listener {
 			!sender.hasPermission("tutorial.chat.receive")) {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.chat.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7spoke in tutorial: §c" + msg);
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c" + sender.getName() + " Â§7spoke in tutorial: Â§c" + msg);
 					}
 				}
-				sender.sendMessage("§4[§c§lMLMC§4] §cYou cannot speak in the tutorial, but staff can still hear you!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou cannot speak in the tutorial, but staff can still hear you!");
 				e.setCancelled(true);
 			}
 		}
@@ -120,7 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 				
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.hasPermission("tutorial.staff.receive")) {
-						p.sendMessage("§4[§c§lMLMC§4] §c" + sender.getName() + " §7was punished for saying: §c" + msg);
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c" + sender.getName() + " Â§7was punished for saying: Â§c" + msg);
 					}
 				}
 				return;

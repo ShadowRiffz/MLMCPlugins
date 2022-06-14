@@ -54,10 +54,10 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage while above 10% mana. Costs");
-		lore.add("§f" + this.manaTaken + " §7mana per damage instance.");
-		lore.add("§cOnly works with mana.");
+		lore.add("Â§7Increases damage by Â§f" + formatPercentage(getDamageDealtMult(user)) + "% Â§7when dealing");
+		lore.add("Â§7damage while above 10% mana. Costs");
+		lore.add("Â§f" + this.manaTaken + " Â§7mana per damage instance.");
+		lore.add("Â§cOnly works with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

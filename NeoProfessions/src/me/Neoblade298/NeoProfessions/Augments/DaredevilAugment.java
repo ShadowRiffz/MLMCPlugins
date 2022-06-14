@@ -45,8 +45,8 @@ public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Decreases damage taken by งf" + formatPercentage(getDamageTakenMult(user)) + "%");
-		lore.add("ง7when below 30% health.");
+		lore.add("ยง7Decreases damage taken by ยงf" + formatPercentage(getDamageTakenMult(user)) + "%");
+		lore.add("ยง7when below 30% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

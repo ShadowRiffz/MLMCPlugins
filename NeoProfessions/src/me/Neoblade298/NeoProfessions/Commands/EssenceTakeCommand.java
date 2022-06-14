@@ -26,7 +26,7 @@ public class EssenceTakeCommand implements CommandExecutor {
 		}
 
 		if (args.length != 3) {
-			sender.sendMessage("ง4/etake [player] [level] [amount]");
+			sender.sendMessage("ยง4/etake [player] [level] [amount]");
 		}
 		else {
 			Player recipient = Bukkit.getPlayer(args[0]);

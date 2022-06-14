@@ -37,7 +37,7 @@ public class ScaleExpMechanic implements ITargetedEntitySkill {
 				double scale = Math.min(2, 1 + (0.1 * (data.getCaster().getLevel() - 1)));
 				double exp = Math.round(this.amount * scale);
 				SkillAPI.getPlayerData(p).giveExp(exp, ExpSource.MOB);
-				p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + exp + " §7exp!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You gained Â§e" + exp + " Â§7exp!");
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

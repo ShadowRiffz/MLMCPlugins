@@ -53,9 +53,9 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("ง7Healing also grants healed player");
-		lore.add("งf" + this.manaGain + " ง7mana. Only works on mana users.");
-		lore.add("ง7Has a 2 second cooldown.");
+		lore.add("ยง7Healing also grants healed player");
+		lore.add("ยงf" + this.manaGain + " ยง7mana. Only works on mana users.");
+		lore.add("ยง7Has a 2 second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

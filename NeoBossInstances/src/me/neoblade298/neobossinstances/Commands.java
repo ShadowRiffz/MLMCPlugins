@@ -42,7 +42,7 @@ public class Commands implements CommandExecutor {
 				UUID uuid = p.getUniqueId();
 				String boss = WordUtils.capitalize(args[2]);
 				String instance = WordUtils.capitalize(args[3]);
-				p.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+				p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Starting boss in 3 seconds...");
 				try {
 					// Connect
 					Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser, BossInstances.sqlPass);
@@ -83,7 +83,7 @@ public class Commands implements CommandExecutor {
 			// /boss send [player] [boss] [max] [radius]
 			else if (args.length == 5 && args[0].equalsIgnoreCase("send")) {
 				if (main.disableFights) {
-					Bukkit.getPlayer(args[1]).sendMessage("§4[§c§lBosses§4] §7Boss fights are currently disabled!");
+					Bukkit.getPlayer(args[1]).sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Boss fights are currently disabled!");
 					return true;
 				}
 				String boss = args[2];
@@ -116,15 +116,15 @@ public class Commands implements CommandExecutor {
 	    		
 				if (targets.size() > max) {
 					for (Player target : targets) {
-						target.sendMessage("§4[§c§lMLMC§4] §cThere are too many players! Max is §e" + max + "§c, you have §e" + targets.size() + "§c.");
+						target.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThere are too many players! Max is Â§e" + max + "Â§c, you have Â§e" + targets.size() + "Â§c.");
 					}
 					return true;
 				}
 				
-				String msg = "§4[§c§lMLMC§4] §cThe following players are still on cooldown:";
+				String msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§cThe following players are still on cooldown:";
 				if (onCooldown.size() > 0) {
 					for (Player cd : onCooldown) {
-						msg += "\n§7- §e" + cd.getName() + "§7: " + main.getCooldown(boss, cd);
+						msg += "\nÂ§7- Â§e" + cd.getName() + "Â§7: " + main.getCooldown(boss, cd);
 					}
 					for (Player target : targets) {
 						target.sendMessage(msg);
@@ -136,7 +136,7 @@ public class Commands implements CommandExecutor {
 				String instance = main.findInstance(boss);
 				if (instance.equals("Not found") || instance.equals("Failed to Connect")) {
 					for (Player target : targets) {
-						target.sendMessage("§4[§c§lMLMC§4] §cFailed: " + instance + ". Try again later!");
+						target.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cFailed: " + instance + ". Try again later!");
 					}
 					return true;
 				}
@@ -150,7 +150,7 @@ public class Commands implements CommandExecutor {
 				for (Player target : targets) {
 					SkillAPI.saveSingle(target);
 					UUID uuid = target.getUniqueId();
-					target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+					target.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Starting boss in 3 seconds...");
 					try {
 						// Connect
 						Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
@@ -221,7 +221,7 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				else {
-					p.sendMessage("§4[§c§lMLMC§4] §7This boss has already been fought!");
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7This boss has already been fought!");
 				}
 				return true;
 			}
@@ -230,10 +230,10 @@ public class Commands implements CommandExecutor {
 				main.disableFights = !main.disableFights;
 				String msg;
 				if (main.disableFights) {
-					msg = "§4[§c§lMLMC§4] §7Boss fights have been temporarily disabled for maintenance!";
+					msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Boss fights have been temporarily disabled for maintenance!";
 				}
 				else {
-					msg = "§4[§c§lMLMC§4] §7Boss fights have been re-enabled!";
+					msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Boss fights have been re-enabled!";
 				}
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					p.sendMessage(msg);
@@ -242,7 +242,7 @@ public class Commands implements CommandExecutor {
 			}
 			// /boss reload
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-				sender.sendMessage("§4[§c§lBosses§4] §7Bosses reloaded!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Bosses reloaded!");
 				main.loadConfig();
 				return true;
 			}
@@ -252,7 +252,7 @@ public class Commands implements CommandExecutor {
 						.containsKey(Bukkit.getPlayer(args[1]).getUniqueId())) {
 					main.cooldowns.get(WordUtils.capitalize(args[2]))
 							.remove(Bukkit.getPlayer(args[1]).getUniqueId());
-					sender.sendMessage("§4[§c§lBosses§4] §7Cleared cooldown!");
+					sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Cleared cooldown!");
 				}
 				return true;
 			}
@@ -263,7 +263,7 @@ public class Commands implements CommandExecutor {
 						main.cooldowns.get(boss).remove(Bukkit.getPlayer(args[1]).getUniqueId());
 					}
 				}
-				sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns for player!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Cleared all cooldowns for player!");
 				return true;
 			}
 			// /boss resetallcds
@@ -271,7 +271,7 @@ public class Commands implements CommandExecutor {
 				for (String boss : main.cooldowns.keySet()) {
 					main.cooldowns.get(boss).clear();
 				}
-				sender.sendMessage("§4[§c§lBosses§4] §7Cleared all cooldowns!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Cleared all cooldowns!");
 				return true;
 			}
 			// /boss resetinstances
@@ -282,7 +282,7 @@ public class Commands implements CommandExecutor {
 
 					// First clear all the cooldowns on the SQL currently
 					int deleted = stmt.executeUpdate("delete from neobossinstances_fights;");
-					sender.sendMessage("§4[§c§lBosses§4] §7Deleted §e" + deleted + " §7instances!");
+					sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Deleted Â§e" + deleted + " Â§7instances!");
 					con.close();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -291,15 +291,15 @@ public class Commands implements CommandExecutor {
 			}
 			// /boss permissions
 			else if (args.length == 1 && args[0].equalsIgnoreCase("permissions") && !main.isInstance) {
-				sender.sendMessage("§4bossinstances.admin §7- All permissions");
-				sender.sendMessage("§4bossinstances.exemptleave §7- Do not teleport player to spawn on leaving");
-				sender.sendMessage("§4bossinstances.exemptjoin §7- Do not teleport player to boss fight on joining");
+				sender.sendMessage("Â§4bossinstances.admin Â§7- All permissions");
+				sender.sendMessage("Â§4bossinstances.exemptleave Â§7- Do not teleport player to spawn on leaving");
+				sender.sendMessage("Â§4bossinstances.exemptjoin Â§7- Do not teleport player to boss fight on joining");
 				return true;
 			}
 			// /boss debug
 			else if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 				main.isDebug = !main.isDebug;
-				sender.sendMessage("§4[§c§lBosses§4] §7Set debug to §e" + main.isDebug + "§7!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Set debug to Â§e" + main.isDebug + "Â§7!");
 				return true;
 			}
 			// /boss debug [player] [boss] (adds player to active boss)
@@ -314,13 +314,13 @@ public class Commands implements CommandExecutor {
 					list.add(Bukkit.getPlayer(args[1]));
 					main.activeFights.put(args[2], list);
 				}
-				sender.sendMessage("§4[§c§lBosses§4] §7Added player to boss!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Added player to boss!");
 				return true;
 			}
 			// /boss active
 			else if (args.length == 1 && args[0].equalsIgnoreCase("active")) {
 				for (Entry<String, ArrayList<Player>> entry : main.activeFights.entrySet()) {
-					String toSend = "§4" + entry.getKey() + "§7: ";
+					String toSend = "Â§4" + entry.getKey() + "Â§7: ";
 					for (Player player : entry.getValue()) {
 						toSend += player.getName() + " ";
 					}
@@ -331,7 +331,7 @@ public class Commands implements CommandExecutor {
 			// /boss resetactive
 			else if (args.length == 1 && args[0].equalsIgnoreCase("resetactive")) {
 				main.activeFights.clear();
-				sender.sendMessage("§4[§c§lBosses§4] §7Reset active fights!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Reset active fights!");
 				return true;
 			}
 			// /boss spawners [boss]
@@ -343,25 +343,25 @@ public class Commands implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
-			sender.sendMessage("§7=== §4[§c§lBosses§4] §7===");
-			sender.sendMessage("§c/boss instances §7- Shows all players in instances");
-			sender.sendMessage("§c/boss return §7- Returns you safely to the main server");
+			sender.sendMessage("Â§7=== Â§4[Â§cÂ§lBossesÂ§4] Â§7===");
+			sender.sendMessage("Â§c/boss instances Â§7- Shows all players in instances");
+			sender.sendMessage("Â§c/boss return Â§7- Returns you safely to the main server");
 			if (sender.hasPermission("bossinstances.admin")) {
-				sender.sendMessage("§4/boss send [player] [boss] [max] [radius]§7- Send all nearby players to boss");
-				sender.sendMessage("§4/boss tp [name] [boss] [instance]§7- Ignores disabled fights");
-				sender.sendMessage("§4/boss mini [name] [boss] [miniboss]§7- Teleports player to open miniboss");
-				sender.sendMessage("§4/boss showstats/debugstats [boss] [displayname] §7- Shows stats, clears them if not debug");
-				sender.sendMessage("§4/boss resetcd/s/allcds [player] [boss]");
-				sender.sendMessage("§4/boss resetinstances §7- Resets all instances (live)");
-				sender.sendMessage("§4/boss addtoboss [player] [boss] §7- Add player to active fight");
-				sender.sendMessage("§4/boss permissions §7- Returns a list of plugin permissions");
-				sender.sendMessage("§4/boss active/resetactive §7- Instance only");
-				sender.sendMessage("§4/boss spawners [boss] §7- Get remaining spawners in boss");
+				sender.sendMessage("Â§4/boss send [player] [boss] [max] [radius]Â§7- Send all nearby players to boss");
+				sender.sendMessage("Â§4/boss tp [name] [boss] [instance]Â§7- Ignores disabled fights");
+				sender.sendMessage("Â§4/boss mini [name] [boss] [miniboss]Â§7- Teleports player to open miniboss");
+				sender.sendMessage("Â§4/boss showstats/debugstats [boss] [displayname] Â§7- Shows stats, clears them if not debug");
+				sender.sendMessage("Â§4/boss resetcd/s/allcds [player] [boss]");
+				sender.sendMessage("Â§4/boss resetinstances Â§7- Resets all instances (live)");
+				sender.sendMessage("Â§4/boss addtoboss [player] [boss] Â§7- Add player to active fight");
+				sender.sendMessage("Â§4/boss permissions Â§7- Returns a list of plugin permissions");
+				sender.sendMessage("Â§4/boss active/resetactive Â§7- Instance only");
+				sender.sendMessage("Â§4/boss spawners [boss] Â§7- Get remaining spawners in boss");
 			}
 			return true;
 		}
 		else if (args.length == 2 && args[0].equalsIgnoreCase("save")) {
-			sender.sendMessage("§4[§c§lBosses§4] §e" + args[1] + "§7 saved!");
+			sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§e" + args[1] + "Â§7 saved!");
 			SkillAPI.saveSingle(Bukkit.getPlayer(args[1]));
 			return true;
 		}
@@ -393,7 +393,7 @@ public class Commands implements CommandExecutor {
 				}
 				Collections.sort(healthList);
 			}
-			sender.sendMessage("§4[§c§lBosses§4] §7Added §e" + p.getName() + "§7!");
+			sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Added Â§e" + p.getName() + "Â§7!");
 			return true;
 		}
 		// boss startstats boss
@@ -419,7 +419,7 @@ public class Commands implements CommandExecutor {
 			for (int i = 3; i < args.length; i++) {
 				display += " " + args[i];
 			}
-			display.replaceAll("&", "§");
+			display.replaceAll("&", "Â§");
 			display.replaceAll("@", "&");
 
 			// Calculate timer
@@ -438,9 +438,9 @@ public class Commands implements CommandExecutor {
 		        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 		        }
 			}
-			messages.add("§cPost-battle Stats §7(§4§l" + display + "§7) [Time:§c" + timer + "§7]");
-			messages.add("§7-----");
-			messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+			messages.add("Â§cPost-battle Stats Â§7(Â§4Â§l" + display + "Â§7) [Time:Â§c" + timer + "Â§7]");
+			messages.add("Â§7-----");
+			messages.add("Â§7[Â§cDamage Dealt Â§7/ Â§4Damage Taken Â§7/ Â§2Self Healing Â§7/ Â§aAlly HealingÂ§7]");
 
 			// Calculate each person's stats
 			for (Player p : main.inBoss.get(boss)) {
@@ -452,7 +452,7 @@ public class Commands implements CommandExecutor {
 				int selfHeal = (int) Math.round((stats.getSelfHealed() * 100) / 100);
 				int allyHeal = (int) Math.round((stats.getAllyHealed() * 100) / 100);
 
-				messages.add("§e" + p.getName() + "§7 (§e" + pClass + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+				messages.add("Â§e" + p.getName() + "Â§7 (Â§e" + pClass + "Â§7) - [Â§c" + damageDealt + " Â§7/ Â§4" + damageTaken + " Â§7/ Â§2" + selfHeal + " Â§7/ Â§a" + allyHeal + "Â§7]");
 			}
 			
 			// Send messages
@@ -468,7 +468,7 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			else {
-				sender.sendMessage("§4[§c§lBosses§4] §7Sending them back...");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Sending them back...");
 				returnPlayer(Bukkit.getPlayer(args[1]));
 				return true;
 			}
@@ -488,16 +488,16 @@ public class Commands implements CommandExecutor {
 
 						// Empty instance
 						if (!rs.next()) {
-							sender.sendMessage("§e" + instance + "§7: Empty");
+							sender.sendMessage("Â§e" + instance + "Â§7: Empty");
 						}
 						else {
-							String temp = "§e" + instance + "§7: §e"
-									+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4"
-									+ main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
+							String temp = "Â§e" + instance + "Â§7: Â§e"
+									+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " Â§7(Â§4"
+									+ main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "xÂ§7)";
 							while (rs.next()) {
-								temp += "§7, §e"
+								temp += "Â§7, Â§e"
 										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName()
-										+ " §7(§4" + main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
+										+ " Â§7(Â§4" + main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "xÂ§7)";
 							}
 							if (temp != null) {
 								sender.sendMessage(temp);
@@ -509,7 +509,7 @@ public class Commands implements CommandExecutor {
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7You can only check instances on the main server!");
 			}
 			return true;
 		}
@@ -530,13 +530,13 @@ public class Commands implements CommandExecutor {
 
 							// Empty instance
 							if (!rs.next()) {
-								p.sendMessage("§e" + instance + "§7: Empty");
+								p.sendMessage("Â§e" + instance + "Â§7: Empty");
 							}
 							else {
-								String temp = "§e" + instance + "§7: §e"
+								String temp = "Â§e" + instance + "Â§7: Â§e"
 										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								while (rs.next()) {
-									temp += "§7, §e"
+									temp += "Â§7, Â§e"
 											+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName();
 								}
 								if (temp != null) {
@@ -549,11 +549,11 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				else {
-					p.sendMessage("§4[§c§lBosses§4] §7Invalid boss!");
+					p.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7Invalid boss!");
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lBosses§4] §7You can only check instances on the main server!");
+				sender.sendMessage("Â§4[Â§cÂ§lBossesÂ§4] Â§7You can only check instances on the main server!");
 			}
 			return true;
 		}
@@ -579,9 +579,9 @@ public class Commands implements CommandExecutor {
 	        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 	        }
 		}
-		messages.add("§cBoss Stats §7[" + BossInstances.color + "§7] (§4§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
-		messages.add("§7----- ");
-		messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
+		messages.add("Â§cBoss Stats Â§7[" + BossInstances.color + "Â§7] (Â§4Â§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "Â§7) [Time:Â§c" + timer + "Â§7]");
+		messages.add("Â§7----- ");
+		messages.add("Â§7[Â§cDamage Dealt Â§7/ Â§4Damage Taken Â§7/ Â§2Self Healing Â§7/ Â§aAlly HealingÂ§7]");
 		
 		// Calculate each person's stats (and clear them)
 		for (Player p : BossInstances.inst().inBoss.get(boss)) {
@@ -593,7 +593,7 @@ public class Commands implements CommandExecutor {
 			int selfHeal = (int) Math.round((stats.getSelfHealed() * 100) / 100);
 			int allyHeal = (int) Math.round((stats.getAllyHealed() * 100) / 100);
 
-			messages.add("§e" + p.getName() + "§7 (§e" + pClass + "§7) - [§c" + damageDealt + " §7/ §4" + damageTaken + " §7/ §2" + selfHeal + " §7/ §a" + allyHeal + "§7]");
+			messages.add("Â§e" + p.getName() + "Â§7 (Â§e" + pClass + "Â§7) - [Â§c" + damageDealt + " Â§7/ Â§4" + damageTaken + " Â§7/ Â§2" + selfHeal + " Â§7/ Â§a" + allyHeal + "Â§7]");
 			BossInstances.inst().playerStats.remove(p.getName());
 		}
 		
@@ -611,7 +611,7 @@ public class Commands implements CommandExecutor {
 		for (int i = 3; i < args.length; i++) {
 			display += " " + args[i];
 		}
-		display = display.replaceAll("&", "§").replaceAll("@", "&");
+		display = display.replaceAll("&", "Â§").replaceAll("@", "&");
 		showStats(boss, display);
 	}
 	

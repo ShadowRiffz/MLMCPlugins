@@ -31,15 +31,15 @@ public class ReportsCommand implements CommandExecutor {
 		if (sender.hasPermission("neoreports.user")) {
 			String author = sender.getName();
 			if (args.length == 0) {
-				sender.sendMessage("§7--- §cNeoReports §7---");
-				sender.sendMessage("§c/report bug [description] §7- Reports a bug to the staff");
-				sender.sendMessage("§c/report urgent [description] §7- Reports an urgent bug to the staff, use for time-sensitive issues!");
-				sender.sendMessage("§c/reports list §7- Lists all reports made by you");
-				sender.sendMessage("§4/reports check §7- Summary of existing bugs");
+				sender.sendMessage("Â§7--- Â§cNeoReports Â§7---");
+				sender.sendMessage("Â§c/report bug [description] Â§7- Reports a bug to the staff");
+				sender.sendMessage("Â§c/report urgent [description] Â§7- Reports an urgent bug to the staff, use for time-sensitive issues!");
+				sender.sendMessage("Â§c/reports list Â§7- Lists all reports made by you");
+				sender.sendMessage("Â§4/reports check Â§7- Summary of existing bugs");
 				if (sender.hasPermission("neoreports.admin")) {
-					sender.sendMessage("§4/reports list [bug/urgent/resolved] <pg #> §7- Lists all bugs of a certain type");
-					sender.sendMessage("§4/reports resolve [bug id] [comment] <pg #> §7- Resolves a bug, marking it with the comment");
-					sender.sendMessage("§4/reports edit [bug id] [comment] §7- Edits an existing comment (only for resolved bugs)");
+					sender.sendMessage("Â§4/reports list [bug/urgent/resolved] <pg #> Â§7- Lists all bugs of a certain type");
+					sender.sendMessage("Â§4/reports resolve [bug id] [comment] <pg #> Â§7- Resolves a bug, marking it with the comment");
+					sender.sendMessage("Â§4/reports edit [bug id] [comment] Â§7- Edits an existing comment (only for resolved bugs)");
 				}
 				return true;
 			}
@@ -55,12 +55,12 @@ public class ReportsCommand implements CommandExecutor {
 					rs = stmt.executeQuery("SELECT COUNT(*) FROM neoreports_bugs WHERE is_resolved = 0 AND is_urgent = 1;");
 					rs.next();
 					int numUrgent = rs.getInt(1);
-					sender.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + numBugs + "§7, # Urgent: §e" + numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7# Bugs: Â§e" + numBugs + "Â§7, # Urgent: Â§e" + numUrgent + "Â§7, # Resolved today: Â§e" + Main.numResolved);
 					con.close();
 				}
 				catch(Exception e) {
 					e.printStackTrace();
-					sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Maybe use fewer special characters?");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Maybe use fewer special characters?");
 				}
 				return true;
 			}
@@ -87,12 +87,12 @@ public class ReportsCommand implements CommandExecutor {
 						while (!reports.isEmpty()) {
 							reports.pop().list(sender);
 						}
-						sender.sendMessage("§7=====");
+						sender.sendMessage("Â§7=====");
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Maybe use fewer special characters?");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Maybe use fewer special characters?");
 					}
 				}
 				else if (args.length == 2) {
@@ -119,12 +119,12 @@ public class ReportsCommand implements CommandExecutor {
 						while (!reports.isEmpty()) {
 							reports.pop().list(sender);
 						}
-						sender.sendMessage("§7=====");
+						sender.sendMessage("Â§7=====");
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 				}
 				return true;
@@ -152,12 +152,12 @@ public class ReportsCommand implements CommandExecutor {
 						while (!reports.isEmpty()) {
 							reports.pop().list(sender);
 						}
-						sender.sendMessage("§7=====");
+						sender.sendMessage("Â§7=====");
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 					return true;
 				}
@@ -185,12 +185,12 @@ public class ReportsCommand implements CommandExecutor {
 						while (!reports.isEmpty()) {
 							reports.pop().list(sender);
 						}
-						sender.sendMessage("§7=====");
+						sender.sendMessage("Â§7=====");
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 					return true;
 				}
@@ -219,12 +219,12 @@ public class ReportsCommand implements CommandExecutor {
 							while (!reports.isEmpty()) {
 								reports.pop().list(sender);
 							}
-							sender.sendMessage("§7=====");
+							sender.sendMessage("Â§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 						}
 						return true;
 					}
@@ -252,12 +252,12 @@ public class ReportsCommand implements CommandExecutor {
 							while (!reports.isEmpty()) {
 								reports.pop().list(sender);
 							}
-							sender.sendMessage("§7=====");
+							sender.sendMessage("Â§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 						}
 						return true;
 					}
@@ -285,12 +285,12 @@ public class ReportsCommand implements CommandExecutor {
 							while (!reports.isEmpty()) {
 								reports.pop().list(sender);
 							}
-							sender.sendMessage("§7=====");
+							sender.sendMessage("Â§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 						}
 						return true;
 					}
@@ -318,12 +318,12 @@ public class ReportsCommand implements CommandExecutor {
 							while (!reports.isEmpty()) {
 								reports.pop().list(sender);
 							}
-							sender.sendMessage("§7=====");
+							sender.sendMessage("Â§7=====");
 							con.close();
 						}
 						catch(Exception e) {
 							e.printStackTrace();
-							sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 						}
 						return true;
 					}
@@ -344,10 +344,10 @@ public class ReportsCommand implements CommandExecutor {
 						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 1, `comment` = '" + desc + "', `resolver` = '" + author + 
 								"', `fixdate` = '" + dateformat.format(new Date()) + "' WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully resolved report!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully resolved report!");
 						}
 						else {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to resolve report!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Failed to resolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						if (rs.next()) {
@@ -366,7 +366,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 					return true;
 				}
@@ -378,10 +378,10 @@ public class ReportsCommand implements CommandExecutor {
 						ResultSet rs;
 						int resolved = stmt.executeUpdate("UPDATE neoreports_bugs SET `is_resolved` = 0 WHERE id = " + args[1] + ";");
 						if (resolved > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully unresolved report!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully unresolved report!");
 						}
 						else {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to unresolve report!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Failed to unresolve report!");
 						}
 						rs = stmt.executeQuery("SELECT * FROM neoreports_bugs WHERE id = " + args[1] + ";");
 						rs.next();
@@ -397,7 +397,7 @@ public class ReportsCommand implements CommandExecutor {
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 					return true;
 				}
@@ -412,22 +412,22 @@ public class ReportsCommand implements CommandExecutor {
 						Statement stmt = con.createStatement();
 						int edited = stmt.executeUpdate("UPDATE neoreports_bugs SET `comment` = '" + desc + "' WHERE id = " + args[1] + ";");
 						if (edited > 0) {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully edited comment!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully edited comment!");
 						}
 						else {
-							sender.sendMessage("§4[§c§lMLMC§4] §7Failed to edit comment!");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Failed to edit comment!");
 						}
 						con.close();
 					}
 					catch(Exception e) {
 						e.printStackTrace();
-						sender.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong!");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong!");
 					}
 					return true;
 				}
 			}
 			else {
-				sender.sendMessage("§4[§c§lMLMC§4] §cInvalid command!");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInvalid command!");
 				return true;
 			}
 		}

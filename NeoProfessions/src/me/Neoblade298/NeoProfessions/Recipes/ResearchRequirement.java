@@ -24,11 +24,11 @@ public class ResearchRequirement implements RecipeRequirement {
 
 	public String failMessage(Player p) {
 		String name = Research.getPlayerStats(p).getCompletedResearchItems().get(key).getName();
-		return "§4[§c§lMLMC§4] §cYou don't have the research goal " + name + "completed!";
+		return "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou don't have the research goal " + name + "completed!";
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p, 1) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "Â§a" : "Â§c";
 		msg += "- " + Research.getResearchItems().get(key).getName();
 		return msg;
 	}

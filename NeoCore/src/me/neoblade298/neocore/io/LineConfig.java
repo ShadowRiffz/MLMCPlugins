@@ -19,7 +19,7 @@ public class LineConfig {
 		
 		
 		if (lineIndex != -1) {
-			this.line = line.substring(lineIndex + 1).trim().replaceAll("&", "ง");
+			this.line = line.substring(lineIndex + 1).trim().replaceAll("&", "ยง");
 			argLine = line.substring(keyIndex, lineIndex).trim();
 		}
 		else {

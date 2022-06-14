@@ -44,7 +44,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 		this.p = p;
 		this.drops = drops;
 		this.difficulty = difficulty;
-		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
+		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "Â§"));
 		
 		ItemStack[] contents = inv.getContents();
 		for (int i = 11; i <= 15; i++) {
@@ -60,13 +60,13 @@ public class HarvestingMinigame extends ProfessionInventory {
 	private ItemStack generateStartButton() {
 		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aClick to start!");
+		meta.setDisplayName("Â§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§l§nInstructions");
-		lore.add("§e" + drops.size() + " §7items will flash onscreen, then");
-		lore.add("§7be covered by grey glass. Remember");
-		lore.add("§7where they were and click the glass");
-		lore.add("§7to retrieve the items!");
+		lore.add("Â§7Â§lÂ§nInstructions");
+		lore.add("Â§e" + drops.size() + " Â§7items will flash onscreen, then");
+		lore.add("Â§7be covered by grey glass. Remember");
+		lore.add("Â§7where they were and click the glass");
+		lore.add("Â§7to retrieve the items!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -75,10 +75,10 @@ public class HarvestingMinigame extends ProfessionInventory {
 	private ItemStack generateCover() {
 		ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aClick to reveal!");
+		meta.setDisplayName("Â§aClick to reveal!");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7If an item was under this pane,");
-		lore.add("§7you'll receive it!");
+		lore.add("Â§7If an item was under this pane,");
+		lore.add("Â§7you'll receive it!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
