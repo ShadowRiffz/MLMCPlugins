@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class InfiniteWater extends JavaPlugin implements org.bukkit.event.Listener {
 	
@@ -40,14 +41,23 @@ public class InfiniteWater extends JavaPlugin implements org.bukkit.event.Listen
 	}
 
     @EventHandler
-    public void OnPour(final PlayerBucketEmptyEvent event) {
+    public void OnPour(PlayerBucketEmptyEvent event) {
         final Material bucket = event.getBucket();
-        final ItemStack item = event.getItemStack();
         final Player p = event.getPlayer();
         if (p.hasPermission("neoinfinitewater.use") && !notUsing.contains(p.getUniqueId())) {
-            if (bucket == Material.WATER_BUCKET) {
-                item.setType(event.getBucket());
-            }
+        	new BukkitRunnable() {
+        		public void run() {
+        			try {
+                        if (bucket == Material.WATER_BUCKET) {
+                        	p.getInventory().removeItem(event.getItemStack());
+                        	p.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
+                        }
+        			}
+        			catch (Exception e) {
+        				e.printStackTrace();
+        			}
+        		}
+        	}.runTask(this);
         }
     }
 }
