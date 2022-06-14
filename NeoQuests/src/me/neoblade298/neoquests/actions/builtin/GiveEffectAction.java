@@ -3,6 +3,8 @@ package me.neoblade298.neoquests.actions.builtin;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
@@ -10,27 +12,26 @@ import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.DialogueAction;
 import me.neoblade298.neoquests.actions.RewardAction;
 
-public class GiveEffect extends RewardAction {
+public class GiveEffectAction implements Action {
 	private static String key = "give-storeditem";
-	private String display;
-	private int id;
-	private int amount;
+	private PotionEffect pe;
 
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
-		actions.put(key, new GiveEffect());
+		actions.put(key, new GiveEffectAction());
 	}
 	
-	public GiveEffect() {}
+	public GiveEffectAction() {}
 	
-	public GiveEffect(LineConfig cfg) {
-		super(cfg);
-		this.id = cfg.getInt("id", 0);
-		this.amount = cfg.getInt("amount", 1);
+	public GiveEffectAction(LineConfig cfg) {
+		int level = cfg.getInt("level", 1) - 1;
+		int duration = cfg.getInt("duration", 100);
+		String eff = cfg.getString("potion", "SLOWNESS").toUpperCase();
+		pe = new PotionEffect(PotionEffectType.getByName(eff), duration, level);
 	}
 
 	@Override
 	public Action create(LineConfig cfg) {
-		return new GiveEffect(cfg);
+		return new GiveEffectAction(cfg);
 	}
 
 	@Override
@@ -39,16 +40,8 @@ public class GiveEffect extends RewardAction {
 	}
 
 	@Override
-	public String getDisplay() {
-		if (display == null) {
-			display = "§f" + amount + " " + StorageManager.getItem(id).getDisplay();
-		}
-		return display;
-	}
-
-	@Override
 	public void run(Player p) {
-		StorageManager.givePlayer(p, id, amount);
+		p.addPotionEffect(pe);
 	}
 
 }

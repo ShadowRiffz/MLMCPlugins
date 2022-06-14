@@ -34,6 +34,7 @@ public class ActionManager {
 		mngr.register(new StartQuestlineAction());
 		mngr.register(new StartConversationAction());
 		mngr.register(new FakeAction());
+		mngr.register(new GiveEffectAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {
