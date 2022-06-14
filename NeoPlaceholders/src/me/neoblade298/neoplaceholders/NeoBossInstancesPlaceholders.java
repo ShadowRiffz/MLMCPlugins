@@ -71,12 +71,12 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				String boss = args[1];
 				String display = plugin.getBossName(boss, p);
 				int time = plugin.getBossCooldown(boss, p);
-				if (display == null) return "§c???";
-				else if (time <= 0) return display + "§7: " + "§aReady!";
+				if (display == null) return "Â§c???";
+				else if (time <= 0) return display + "Â§7: " + "Â§aReady!";
 				else if (time > 0) {
 					int minutes = time / 60;
 					int seconds = time % 60;
-					return display + "§7: " + String.format("§c%d:%02d", minutes, seconds);
+					return display + "Â§7: " + String.format("Â§c%d:%02d", minutes, seconds);
 				}
 			}
 			else if (args[0].equalsIgnoreCase("display")) {
@@ -105,19 +105,19 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				String color = null;
 
 				if (FlagManager.hasFlag(partyMember, "curse")) {
-					color = "§8";
+					color = "Â§8";
 				}
 				else if (FlagManager.hasFlag(partyMember, "stun") || FlagManager.hasFlag(partyMember, "root") || FlagManager.hasFlag(partyMember, "silence")) {
-					color = "§b";
+					color = "Â§b";
 				}
 				
 				if (color == null) {
-					color = "§a";
+					color = "Â§a";
 					if (php < 50 && php >= 25) {
-						color = "§e";
+						color = "Â§e";
 					}
 					else if (php < 25) {
-						color = "§c";
+						color = "Â§c";
 					}
 				}
 				
@@ -127,7 +127,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				for (int i = 0; i < phpmod; i++) {
 					bar += "|";
 				}
-				bar += "§7";
+				bar += "Â§7";
 				for (int i = 0; i < (10 - phpmod); i++) {
 					bar += "|";
 				}
@@ -142,31 +142,31 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				Boss b = plugin.getBoss(p);
 				if (b != null && b.getBossType().equals(BossType.DUNGEON)) {
 					if ((System.currentTimeMillis() & 8191) > 4096) {
-						return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
+						return "Â§8Â§l> Â§cÂ§lSpawners Killed: Â§f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
 					}
 					else {
-						return "§8§l> §c§lDungeon Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
+						return "Â§8Â§l> Â§cÂ§lDungeon Timer: Â§c" + formatter.format(raidTimer - System.currentTimeMillis());
 					}
 				}
 				if (bossTimer != -1 && raidTimer == -1) {
-					return "§8§l> §c§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
+					return "Â§8Â§l> Â§cÂ§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
 				}
 				// Raid timer only, no boss timer
 				else if (bossTimer == -1 && raidTimer != -1) {
-					return "§8§l> §c§lRaid Timer: " + formatter.format(raidTimer - System.currentTimeMillis());
+					return "Â§8Â§l> Â§cÂ§lBoss Timer: " + formatter.format(System.currentTimeMillis() - bossTimer);
 				}
 				// Both
 				else if (bossTimer != -1 && raidTimer != -1) {
 					if ((System.currentTimeMillis() & 8191) > 4096) {
-						return "§8§l> §c§lBoss Timer: §c" + formatter.format(raidTimer - System.currentTimeMillis());
+						return "Â§8Â§l> Â§cÂ§lBoss Timer: Â§c" + formatter.format(raidTimer - System.currentTimeMillis());
 					}
 					else {
-						return "§8§l> §c§lRaid Timer: §c" + formatter.format(System.currentTimeMillis() - bossTimer);
+						return "Â§8Â§l> Â§cÂ§lRaid Timer: Â§c" + formatter.format(System.currentTimeMillis() - bossTimer);
 					}
 				}
 				
 				// Neither
-				return "§8§l> §c§lTimer: §cN/A";
+				return "Â§8Â§l> Â§cÂ§lTimer: Â§cN/A";
 			}
 		}
 		catch (Exception e) {
