@@ -78,15 +78,15 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 					PlayerClass pProf = data.getClass("profession");
 					if (pClass != null) {
 						if (args[2].equalsIgnoreCase("level")) {
-							return "§e" + pClass.getLevel();
+							return "ï¿½e" + pClass.getLevel();
 						}
-						else if (args[2].equalsIgnoreCase("class")) return "§e" + pClass.getData().getName();
+						else if (args[2].equalsIgnoreCase("class")) return "ï¿½e" + pClass.getData().getName();
 					}
 					if (pProf != null) {
-						if (args[2].equalsIgnoreCase("profession")) return "§e" + pProf.getData().getName();
+						if (args[2].equalsIgnoreCase("profession")) return "ï¿½e" + pProf.getData().getName();
 					}
 				}
-				return "§cN/A";
+				return "ï¿½cN/A";
 			}
 		}
 		else if (args[0].equalsIgnoreCase("profession")) {
@@ -118,12 +118,12 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 			}
 			String cName = pClass.getData().getName();
 			if (pClass.getLevel() == 10 && cName.equalsIgnoreCase("Beginner")) {
-				return "§c/warp advance";
+				return "ï¿½c/warp advance";
 			}
 			else if (pClass.getLevel() == 30 && (cName.equalsIgnoreCase("Swordsman") ||
 					cName.equalsIgnoreCase("Archer") || cName.equalsIgnoreCase("Mage") ||
 					cName.equalsIgnoreCase("Thief"))) {
-				return "§c/warp advance";
+				return "ï¿½c/warp advance";
 			}
 			return "" + pClass.getLevel();
 		}
@@ -131,13 +131,13 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 			PlayerData data = SkillAPI.getPlayerData(p);
 			if (data != null) {
 				if (data.getAttributePoints() > 0) {
-					return "§cYou have " + data.getAttributePoints() + " unspent /attr!";
+					return "ï¿½cYou have " + data.getAttributePoints() + " unspent /attr!";
 				}
 				if (data.getClass("class") == null && !isInTutorial(p)) {
-					return "§cYou have no class! /warp advance!";
+					return "ï¿½cYou have no class! /warp advance!";
 				}
 			}
-			return "§8§m-|-------------|-";
+			return "ï¿½8ï¿½m-|-------------|-";
 		}
 	 	return "Invalid placeholder";
 	}
@@ -153,7 +153,7 @@ public class SkillAPIPlaceholders extends PlaceholderExpansion {
 				}
 			}
 			if (TOWNY_X_BOUND_1 < x && x < TOWNY_X_BOUND_2) {
-				if (TOWNY_Z_BOUND_2 < z && z < TOWNY_Z_BOUND_2) {
+				if (TOWNY_Z_BOUND_1 < z && z < TOWNY_Z_BOUND_2) {
 					return true;
 				}
 			}
