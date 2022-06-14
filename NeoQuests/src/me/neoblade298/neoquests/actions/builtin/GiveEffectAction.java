@@ -13,7 +13,7 @@ import me.neoblade298.neoquests.actions.DialogueAction;
 import me.neoblade298.neoquests.actions.RewardAction;
 
 public class GiveEffectAction implements Action {
-	private static String key = "give-storeditem";
+	private static String key = "give-effect";
 	private PotionEffect pe;
 
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
