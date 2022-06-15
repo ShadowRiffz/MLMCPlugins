@@ -1,10 +1,13 @@
-package me.neoblade298.neoquests.objectives;
+package me.neoblade298.neoquests.objectives.builtin;
 
 import org.bukkit.Bukkit;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveEvent;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class KillMythicmobObjective extends Objective {
 	private String type;

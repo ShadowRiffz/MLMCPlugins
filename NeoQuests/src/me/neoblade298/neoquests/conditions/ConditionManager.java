@@ -9,6 +9,9 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.conditions.builtin.ClassLevelCondition;
+import me.neoblade298.neoquests.conditions.builtin.QuestCompletedCondition;
+import me.neoblade298.neoquests.conditions.builtin.QuestSuccessfulCondition;
 
 public class ConditionManager {
 	private static LineConfigManager<Condition> mngr;

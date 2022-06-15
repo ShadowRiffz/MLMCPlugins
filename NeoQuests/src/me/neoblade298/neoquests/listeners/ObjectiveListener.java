@@ -12,6 +12,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neoquests.objectives.*;
+import me.neoblade298.neoquests.objectives.builtin.GetStoredItemObjective;
+import me.neoblade298.neoquests.objectives.builtin.InteractNpcObjective;
+import me.neoblade298.neoquests.objectives.builtin.KillMythicmobObjective;
+import me.neoblade298.neoquests.objectives.builtin.ReachLocationObjective;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class ObjectiveListener implements Listener {

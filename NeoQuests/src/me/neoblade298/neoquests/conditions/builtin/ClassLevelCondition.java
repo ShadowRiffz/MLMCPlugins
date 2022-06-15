@@ -1,4 +1,4 @@
-package me.neoblade298.neoquests.conditions;
+package me.neoblade298.neoquests.conditions.builtin;
 
 import org.bukkit.entity.Player;
 
@@ -7,6 +7,8 @@ import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.conditions.Condition;
+import me.neoblade298.neoquests.conditions.ConditionResult;
 
 public class ClassLevelCondition implements Condition {
 	private static final String key;

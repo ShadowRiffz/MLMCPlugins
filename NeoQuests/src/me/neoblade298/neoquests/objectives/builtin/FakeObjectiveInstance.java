@@ -1,9 +1,13 @@
-package me.neoblade298.neoquests.objectives;
+package me.neoblade298.neoquests.objectives.builtin;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.entity.Player;
+
+import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
+import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class FakeObjectiveInstance extends ObjectiveInstance {
 	private static Pattern pattern = Pattern.compile("\\{(\\d)(\\.)(.*?)\\}");

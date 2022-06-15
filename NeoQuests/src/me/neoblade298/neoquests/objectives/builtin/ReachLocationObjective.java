@@ -1,4 +1,4 @@
-package me.neoblade298.neoquests.objectives;
+package me.neoblade298.neoquests.objectives.builtin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -6,6 +6,9 @@ import org.bukkit.World;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveEvent;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class ReachLocationObjective extends Objective {
 	private Location loc;

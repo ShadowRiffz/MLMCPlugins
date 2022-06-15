@@ -10,10 +10,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.RewardAction;
-import me.neoblade298.neoquests.objectives.FakeObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
+import me.neoblade298.neoquests.objectives.builtin.FakeObjectiveInstance;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 

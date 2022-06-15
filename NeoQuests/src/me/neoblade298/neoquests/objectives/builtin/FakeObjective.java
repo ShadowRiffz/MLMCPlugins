@@ -1,9 +1,11 @@
-package me.neoblade298.neoquests.objectives;
+package me.neoblade298.neoquests.objectives.builtin;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.objectives.Objective;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class FakeObjective extends Objective {
 	private String line;
