@@ -6,11 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.DialogueAction;
-import me.neoblade298.neoquests.actions.RewardAction;
 
 public class GiveEffectAction implements Action {
 	private static String key = "give-effect";

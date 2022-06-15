@@ -8,7 +8,6 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.DialogueAction;
-import me.neoblade298.neoquests.actions.RewardAction;
 
 public class TeleportAction implements Action {
 	private static String key = "teleport";

@@ -2,8 +2,6 @@ package me.neoblade298.neoquests.objectives;
 
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neocore.exceptions.NeoIOException;
-import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.listeners.ObjectiveListener;
 
 public class ObjectiveInstance {
