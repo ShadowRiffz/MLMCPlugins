@@ -4,10 +4,15 @@ public class CompletedQuest {
 	private Quest q;
 	private int stage;
 	private boolean success;
+	private long timestamp;
 	public CompletedQuest(Quest q, int stage, boolean success) {
+		this(q, stage, success, System.currentTimeMillis());
+	}
+	public CompletedQuest(Quest q, int stage, boolean success, long timestamp) {
 		this.q = q;
 		this.stage = stage;
 		this.success = success;
+		this.timestamp = timestamp;
 	}
 	public Quest getQuest() {
 		return q;
@@ -18,5 +23,7 @@ public class CompletedQuest {
 	public boolean isSuccess() {
 		return success;
 	}
-	
+	public long getTimestamp() {
+		return timestamp;
+	}
 }

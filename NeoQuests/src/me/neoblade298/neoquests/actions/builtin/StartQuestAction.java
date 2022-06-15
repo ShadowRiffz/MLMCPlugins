@@ -20,7 +20,7 @@ public class StartQuestAction implements Action {
 	public StartQuestAction() {}
 	
 	public StartQuestAction(LineConfig cfg) {
-		this.quest = cfg.getString("name", "N/A");
+		this.quest = cfg.getString("key", "N/A");
 	}
 
 	@Override

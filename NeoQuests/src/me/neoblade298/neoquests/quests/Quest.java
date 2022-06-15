@@ -11,6 +11,7 @@ import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.actions.RewardAction;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
+import me.neoblade298.neoquests.conditions.builtin.QuestTakeableCondition;
 
 public class Quest {
 	private String key, display, startConv, fileLocation;
@@ -22,7 +23,7 @@ public class Quest {
 	private int stage;
 	
 	public Quest(ConfigurationSection cfg, File file) throws NeoIOException {
-		this.key = cfg.getName().toUpperCase();
+		this.key = cfg.getName();
 		this.fileLocation = file.getPath();
 		
 		this.display = cfg.getString("display");
@@ -35,7 +36,7 @@ public class Quest {
 		this.canRetry = cfg.getBoolean("retryable", false);
 		
 		if (!canRetry) {
-			// TODO: Add questtakeable condition, can use questline.nextquest as example
+			conditions.add(new QuestTakeableCondition(this.key));
 		}
 	}
 	

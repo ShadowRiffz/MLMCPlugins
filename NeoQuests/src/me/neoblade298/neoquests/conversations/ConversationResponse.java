@@ -85,7 +85,6 @@ public class ConversationResponse {
 		}
 	}
 
-	// Returns next stage
 	public boolean tryResponse(Player p) {
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking
 																							// condition

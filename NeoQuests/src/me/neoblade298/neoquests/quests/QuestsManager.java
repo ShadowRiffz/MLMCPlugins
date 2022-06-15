@@ -112,7 +112,7 @@ public class QuestsManager implements IOComponent, Manager {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3));
 					continue;
 				}
-				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5)));
+				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5), rs.getLong(6)));
 			}
 			
 			// Active questlines
@@ -202,7 +202,7 @@ public class QuestsManager implements IOComponent, Manager {
 				for (CompletedQuest cq : quester.getCompletedQuests()) {
 					insert.addBatch("REPLACE INTO quests_completed VALUES('"
 							+ p.getUniqueId() + "'," + acct + ",'" + cq.getQuest().getKey() + "'," + cq.getStage()
-							+ ",'" + (cq.isSuccess() ? "1" : "0") + "');");
+							+ ",'" + (cq.isSuccess() ? "1" : "0") + "'," + cq.getTimestamp() + ");");
 				}
 				
 				// Save active questlines

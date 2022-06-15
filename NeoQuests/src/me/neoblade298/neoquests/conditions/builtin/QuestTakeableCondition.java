@@ -18,7 +18,11 @@ public class QuestTakeableCondition implements Condition {
 		key = "quest-takeable";
 	}
 	
-	public QuestTakeableCondition() {}
+	public QuestTakeableCondition(String questname) {
+		result = ConditionResult.INVISIBLE;
+		
+		this.questname = questname;
+	}
 	
 	public QuestTakeableCondition(LineConfig cfg) {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
