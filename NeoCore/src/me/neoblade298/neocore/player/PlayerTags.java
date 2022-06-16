@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 
 import me.neoblade298.neocore.NeoCore;
-import me.neoblade298.neoplayerdata.NeoPlayerData;
 
 public class PlayerTags {
 	private final String key;
