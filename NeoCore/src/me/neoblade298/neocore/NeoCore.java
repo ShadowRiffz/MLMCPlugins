@@ -149,7 +149,7 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		return econ;
 	}
 	
-	public PlayerFields createPlayerFields(String key, Plugin plugin, boolean hidden) {
+	public static PlayerFields createPlayerFields(String key, Plugin plugin, boolean hidden) {
 		if (fields.containsKey(key)) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Player fields " + key + " for plugin " + plugin.getName() + " already exists. Returning existing keyed player data.");
 			return fields.get(key);
@@ -160,7 +160,7 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 		return newkp;
 	}
 	
-	public PlayerTags createPlayerTags(String key, Plugin plugin, boolean hidden) {
+	public static PlayerTags createPlayerTags(String key, Plugin plugin, boolean hidden) {
 		if (tags.containsKey(key)) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Player tags " + key + " for plugin " + plugin.getName() + " already exists. Returning existing keyed player data.");
 			return tags.get(key);
