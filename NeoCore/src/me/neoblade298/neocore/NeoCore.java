@@ -5,11 +5,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,13 +23,17 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.player.*;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
+	private static HashMap<String, PlayerFields> fields = new HashMap<String, PlayerFields>();
+	private static HashMap<String, PlayerTags> tags = new HashMap<String, PlayerTags>();
 	private static NeoCore inst;
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
 	private static String instName = null;
 	private static Economy econ;
+	private static boolean debug;
 	
 	
 	public void onEnable() {
@@ -141,5 +147,31 @@ public class NeoCore extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static Economy getEconomy() {
 		return econ;
+	}
+	
+	public PlayerFields createPlayerFields(String key, Plugin plugin, boolean hidden) {
+		if (fields.containsKey(key)) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Player fields " + key + " for plugin " + plugin.getName() + " already exists. Returning existing keyed player data.");
+			return fields.get(key);
+		}
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Created player fields of " + key + " for plugin " + plugin.getName() + ", hidden: " + hidden + ".");
+		PlayerFields newkp = new PlayerFields(key, hidden);
+		fields.put(key, newkp);
+		return newkp;
+	}
+	
+	public PlayerTags createPlayerTags(String key, Plugin plugin, boolean hidden) {
+		if (tags.containsKey(key)) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Player tags " + key + " for plugin " + plugin.getName() + " already exists. Returning existing keyed player data.");
+			return tags.get(key);
+		}
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Created player tags of " + key + " for plugin " + plugin.getName() + ", hidden: " + hidden + ".");
+		PlayerTags newkp = new PlayerTags(key, hidden);
+		tags.put(key, newkp);
+		return newkp;
+	}
+	
+	public static boolean isDebug() {
+		return debug;
 	}
 }

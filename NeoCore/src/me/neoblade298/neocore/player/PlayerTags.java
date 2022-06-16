@@ -1,4 +1,4 @@
-package me.neoblade298.neoplayerdata.objects;
+package me.neoblade298.neocore.player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +11,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neoplayerdata.NeoPlayerData;
 
 public class PlayerTags {
@@ -32,7 +33,7 @@ public class PlayerTags {
 	
 	public Set<String> getAllKeys(UUID uuid) {
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoPlayerData] Failed to get tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
 			return null;
 		}
 		return this.values.get(uuid).keySet();
@@ -40,7 +41,7 @@ public class PlayerTags {
 	
 	public boolean exists(String subkey, UUID uuid) {
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoPlayerData] Failed to get tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		HashMap<String, Value> pValues = values.get(uuid);
@@ -60,8 +61,8 @@ public class PlayerTags {
 	public void save(Statement insert, Statement delete, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
-			if (NeoPlayerData.inst().debug) {
-				Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Debug: Changed values: " + this.getKey() + " " + changedValues.get(uuid) + " for " + uuid + ".");
+			if (NeoCore.isDebug()) {
+				Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Changed values: " + this.getKey() + " " + changedValues.get(uuid) + " for " + uuid + ".");
 			}
 			
 			// Only save changed values
@@ -80,7 +81,7 @@ public class PlayerTags {
 					
 					
 					try {
-						Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Saving tag " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
+						Bukkit.getLogger().log(Level.INFO, "[NeoCore] Saving tag " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
 						insert.addBatch("REPLACE INTO neocore_strings VALUES ('" + uuid + "','" + this.getKey()
 						+ "','" + key + "','" + value + "'," + expiration + ");");
 					} catch (Exception e) {
@@ -89,7 +90,7 @@ public class PlayerTags {
 				}
 				// If value was unset
 				else {
-					Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Removing tag " + this.getKey() + "." + key + " for " + uuid + ".");
+					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Removing tag " + this.getKey() + "." + key + " for " + uuid + ".");
 					try {
 						delete.addBatch("DELETE FROM neocore_strings WHERE setting = '" + this.getKey() + "' AND Subkey = '" + key +
 						"';");
@@ -108,17 +109,17 @@ public class PlayerTags {
 		this.values.put(uuid, pSettings);
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM NeoPlayerData_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_tags WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
 			while (rs.next()) {
 				String Subkey = rs.getString(3);
 				long expiration = rs.getLong(5);
 				String value = rs.getString(4);
 				
 				if (value == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoPlayerData] Failed to load tag of " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load tag of " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
 				}
-				if (NeoPlayerData.inst().debug) {
-					Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Debug: Loading tag: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
+				if (NeoCore.isDebug()) {
+					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading tag: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
 				}
 				
 				if (expiration == -1 || expiration < System.currentTimeMillis()) {
@@ -139,7 +140,7 @@ public class PlayerTags {
 		String value = null;
 		
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoPlayerData] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 
@@ -158,8 +159,8 @@ public class PlayerTags {
 			values.get(uuid).put(key, curr);
 		}
 		
-		if (NeoPlayerData.inst().debug) {
-			Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Changed tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
+		if (NeoCore.isDebug()) {
+			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Changed tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
 					curr.getValue() + ".");
 		}
 		return true;
@@ -167,12 +168,12 @@ public class PlayerTags {
 	
 	public boolean reset(String key, UUID uuid) {
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoPlayerData] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		changedValues.get(uuid).add(key);
 		values.get(uuid).remove(key);
-		Bukkit.getLogger().log(Level.INFO, "[NeoPlayerData] Reset tag of " + this.getKey() + "." + key + " for " + uuid + ".");
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Reset tag of " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}
 	

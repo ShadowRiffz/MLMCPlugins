@@ -1,4 +1,4 @@
-package me.neoblade298.NeoCore.objects;
+package me.neoblade298.neocore.player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
-import me.neoblade298.NeoCore.NeoCore;
+import me.neoblade298.neocore.NeoCore;
 
 public class PlayerFields {
 	private final String key;
@@ -93,7 +93,7 @@ public class PlayerFields {
 	public void save(Statement insert, Statement delete, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
-			if (NeoCore.inst().debug) {
+			if (NeoCore.isDebug()) {
 				Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Changed values: " + this.getKey() + " " + changedValues.get(uuid) + " for " + uuid + ".");
 			}
 			
@@ -115,11 +115,11 @@ public class PlayerFields {
 					try {
 						Bukkit.getLogger().log(Level.INFO, "[NeoCore] Saving " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
 						if (value instanceof String) {
-							insert.addBatch("REPLACE INTO neocore_fields_integers VALUES ('" + uuid + "','" + this.getKey()
+							insert.addBatch("REPLACE INTO neocore_fields_strings VALUES ('" + uuid + "','" + this.getKey()
 							+ "','" + key + "','" + value + "'," + expiration + ");");
 						}
 						else if (value instanceof Boolean) {
-							insert.addBatch("REPLACE INTO neocore_fields_integers VALUES ('" + uuid + "','" + this.getKey()
+							insert.addBatch("REPLACE INTO neocore_fields_strings VALUES ('" + uuid + "','" + this.getKey()
 							+ "','" + key + "','" + value + "'," + expiration + ");");
 						}
 						else if (value instanceof Integer) {
@@ -158,7 +158,7 @@ public class PlayerFields {
 		this.values.put(uuid, pFields);
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_fields_integers WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_fields_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
 			while (rs.next()) {
 				String Subkey = rs.getString(3);
 				long expiration = rs.getLong(5);
@@ -178,7 +178,7 @@ public class PlayerFields {
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
 				}
-				if (NeoCore.inst().debug) {
+				if (NeoCore.isDebug()) {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
 				}
 				
@@ -204,7 +204,7 @@ public class PlayerFields {
 				if (value == null) {
 					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
 				}
-				if (NeoCore.inst().debug) {
+				if (NeoCore.isDebug()) {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
 				}
 				pFields.put(Subkey, new Value(value, expiration));
@@ -275,7 +275,7 @@ public class PlayerFields {
 			values.get(uuid).put(key, curr);
 		}
 		
-		if (NeoCore.inst().debug) {
+		if (NeoCore.isDebug()) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Changed field " + this.getKey() + "." + key + " for " + uuid + " to " +
 					curr.getValue() + ".");
 		}
@@ -326,7 +326,7 @@ public class PlayerFields {
 		if (expiration != 0) {
 			curr.setExpiration(expiration);
 		}
-		if (NeoCore.inst().debug) {
+		if (NeoCore.isDebug()) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Added " + v + " to field " + this.getKey() + "." + key + " for " + uuid + ". Before: " +
 					original + ", after: " + curr.getValue() + ".");
 		}
