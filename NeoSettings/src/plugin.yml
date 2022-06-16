@@ -5,6 +5,7 @@ depend: [SkillAPI, NeoCore]
 version: 1.0
 api-version: 1.16
 commands:
-   settings:
+   playerdata:
       description: Main command
-      usage: /settings
+      usage: /playerdata
+      aliases: pd

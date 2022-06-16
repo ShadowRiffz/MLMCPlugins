@@ -1,4 +1,4 @@
-package me.neoblade298.neosettings;
+package me.neoblade298.neoplayerdata;
 
 import java.util.HashMap;
 
@@ -8,14 +8,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neosettings.objects.Settings;
+import me.neoblade298.neoplayerdata.objects.PlayerFields;
 
 
 public class Commands implements CommandExecutor{
 	
-	NeoSettings main;
+	NeoPlayerData main;
 	
-	public Commands(NeoSettings main) {
+	public Commands(NeoPlayerData main) {
 		this.main = main;
 	}
 	
@@ -24,11 +24,11 @@ public class Commands implements CommandExecutor{
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
-				sender.sendMessage("§c/settings <player> set [setting] [subsetting] [value]");
-				sender.sendMessage("§c/settings <player> reset [setting] [subsetting]");
-				sender.sendMessage("§c/settings <player> get [setting] [subsetting]");
-				sender.sendMessage("§c/settings <player> list");
-				sender.sendMessage("§c/settings debug");
+				sender.sendMessage("§c/pd <player> set [key] [subkey] [value]");
+				sender.sendMessage("§c/pd <player> reset [key] [subkey]");
+				sender.sendMessage("§c/pd <player> get [key] [subkey]");
+				sender.sendMessage("§c/pd <player> list");
+				sender.sendMessage("§c/pd debug");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("debug") && p.hasPermission("mycommand.staff")) {
@@ -37,7 +37,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			else {
-				// /settings set setting subsetting value
+				// /settings set key subkey value
 				Player target = p;
 				int cmdArg = 0;
 				if (Bukkit.getPlayer(args[0]) != null && p.hasPermission("mycommand.staff")) {
@@ -45,37 +45,37 @@ public class Commands implements CommandExecutor{
 					cmdArg = 1;
 				}
 				if (args[cmdArg].equalsIgnoreCase("set")) {
-					if (main.changeSetting(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId(), canAccessHidden(p))) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully changed!");
+					if (main.change(args[cmdArg + 1], args[cmdArg + 2], args[cmdArg + 3], target.getUniqueId(), canAccessHidden(p))) {
+						p.sendMessage("§4[§c§lMLMC§4] §7Player data key §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully changed!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to change setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to change player data key " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("reset")) {
-					if (main.resetSetting(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId(), canAccessHidden(p))) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully reset!");
+					if (main.reset(args[cmdArg + 1], args[cmdArg + 2], target.getUniqueId(), canAccessHidden(p))) {
+						p.sendMessage("§4[§c§lMLMC§4] §7Player data key §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7successfully reset!");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to reset setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to reset player data key " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("get")) {
-					Settings settings = main.getSettings(args[cmdArg + 1], canAccessHidden(p));
+					PlayerFields settings = main.getKeyedPlayerData(args[cmdArg + 1], canAccessHidden(p));
 					if (settings != null) {
-						p.sendMessage("§4[§c§lMLMC§4] §7Setting §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7set to: §e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
+						p.sendMessage("§4[§c§lMLMC§4] §7Player data key §e" + args[cmdArg + 1] + "." + args[cmdArg + 2] + " §7set to: §e" + settings.getValue(target.getUniqueId(), args[cmdArg + 2]));
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §cFailed to get setting " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
+						p.sendMessage("§4[§c§lMLMC§4] §cFailed to get player data key " + args[cmdArg + 1] + "." + args[cmdArg + 2] + "!");
 					}
 					return true;
 				}
 				else if (args[cmdArg].equalsIgnoreCase("list")) {
-					HashMap<String, Settings> settings = main.getAllSettings();
+					HashMap<String, PlayerFields> settings = main.getAllKeyedPlayerData();
 					for (String key : settings.keySet()) {
-						Settings subsettings = settings.get(key);
+						PlayerFields subsettings = settings.get(key);
 						if (!subsettings.isHidden() || canAccessHidden(p)) {
 							for (String subkey : settings.get(key).getAllKeys()) {
 								p.sendMessage("§7- §6" + key + "." + subkey + "§7: §e" + settings.get(key).getValue(target.getUniqueId(), subkey));
