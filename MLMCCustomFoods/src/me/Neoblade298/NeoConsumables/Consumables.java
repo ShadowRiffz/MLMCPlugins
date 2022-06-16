@@ -19,11 +19,10 @@ import me.Neoblade298.NeoConsumables.objects.Consumable;
 import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.Rarity;
-import me.Neoblade298.NeoConsumables.objects.SettingsChanger;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
-import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
-import me.neoblade298.neosettings.NeoSettings;
-import me.neoblade298.neosettings.objects.Settings;
+import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.player.PlayerFields;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +55,8 @@ public class Consumables extends JavaPlugin implements Listener {
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
 	public static boolean isInstance = false;
-	public Settings settings;
-	public Settings hiddenSettings;
+	public PlayerFields settings;
+	public PlayerFields hiddenSettings;
 	
 	public static boolean debug = false;
 	
@@ -71,11 +70,10 @@ public class Consumables extends JavaPlugin implements Listener {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 
 		// Settings
-		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("Consumables", this, false);
-		settings.addSetting("InventoryUse", false);
-		hiddenSettings = nsettings.createSettings("Tokens", this, true);
-		hiddenSettings.addSetting("Boss", false);
+		settings = NeoCore.createPlayerFields("Consumables", this, false);
+		settings.initializeField("InventoryUse", false);
+		hiddenSettings = NeoCore.createPlayerFields("Tokens", this, true);
+		hiddenSettings.initializeField("Boss", false);
 
 		// Load consumables and boss chests
 		reload();
@@ -132,9 +130,9 @@ public class Consumables extends JavaPlugin implements Listener {
 					cons = loadChestConsumable(sec, key);
 					consumables.put(key, cons);
 				}
-				else if (type.equals("TOKEN")) {
-					cons = loadTokenConsumable(sec, key);
-					consumables.put(key, cons);
+				else {
+					Bukkit.getLogger().warning("[NeoConsumables] Could not load " + key + ", type does not exist");
+					continue;
 				}
 	
 				ArrayList<Sound> sounds = cons.getSounds();
@@ -304,35 +302,6 @@ public class Consumables extends JavaPlugin implements Listener {
 		ChestConsumable cc = new ChestConsumable(this, display, key, stages, initSound);
 		generatableConsumables.add(key);
 		return cc;
-	}
-
-	private TokenConsumable loadTokenConsumable(ConfigurationSection config, String key) {
-		TokenConsumable cons = new TokenConsumable(this, key);
-		ArrayList<SettingsChanger> settingsChangers = new ArrayList<SettingsChanger>();
-		ConfigurationSection scConfig = config.getConfigurationSection("settings");
-		if (scConfig != null) {
-			for (String settingsChangerKey : scConfig.getKeys(false)) {
-				ConfigurationSection sckConfig = scConfig.getConfigurationSection(settingsChangerKey);
-				String subsetting = sckConfig.getString("subkey");
-				String type = sckConfig.getString("type");
-				Object value = null;
-				long expiration = sckConfig.getLong("expiration");
-				boolean overwrite = sckConfig.getBoolean("overwrite");
-				if (type.equalsIgnoreCase("string")) {
-					value = sckConfig.getString("value");
-				}
-				else if (type.equalsIgnoreCase("boolean")) {
-					value = sckConfig.getBoolean("value");
-				}
-				else if (type.equalsIgnoreCase("integer")) {
-					value = sckConfig.getInt("value");
-				}
-				settingsChangers
-						.add(new SettingsChanger(this.hiddenSettings, subsetting, value, expiration, overwrite));
-			}
-			cons.setSettingsChangers(settingsChangers);
-		}
-		return cons;
 	}
 	
 	@EventHandler

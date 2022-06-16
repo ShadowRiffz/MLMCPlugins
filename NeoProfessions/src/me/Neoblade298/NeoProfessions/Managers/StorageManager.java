@@ -28,9 +28,9 @@ import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neosettings.NeoSettings;
-import me.neoblade298.neosettings.objects.Settings;
+import me.neoblade298.neocore.player.PlayerFields;
 
 public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
@@ -40,7 +40,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<Integer, Integer> limits = new HashMap<Integer, Integer>();
 	static boolean itemsLoaded = false;
 
-	public static Settings settings;
+	public static PlayerFields settings;
 	
 	public StorageManager(Professions main) {
 		StorageManager.main = main;
@@ -48,17 +48,16 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		// Load in items
 		reload();
 		
-		// Load settings
-		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("Professions-StorageSort", main, false);
-		settings.addSetting("level-priority", 1);
-		settings.addSetting("rarity-priority", 2);
-		settings.addSetting("amount-priority", 3);
-		settings.addSetting("name-priority", 4);
-		settings.addSetting("level-order", true);
-		settings.addSetting("rarity-order", false);
-		settings.addSetting("amount-order", false);
-		settings.addSetting("name-order", true);
+		// Load setting
+		settings = NeoCore.createPlayerFields("Professions-StorageSort", main, false);
+		settings.initializeField("level-priority", 1);
+		settings.initializeField("rarity-priority", 2);
+		settings.initializeField("amount-priority", 3);
+		settings.initializeField("name-priority", 4);
+		settings.initializeField("level-order", true);
+		settings.initializeField("rarity-order", false);
+		settings.initializeField("amount-order", false);
+		settings.initializeField("name-order", true);
 	}
 	
 	@Override

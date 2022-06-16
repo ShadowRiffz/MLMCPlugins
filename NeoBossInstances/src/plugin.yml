@@ -4,7 +4,7 @@ main: me.neoblade298.neobossinstances.BossInstances
 api-version: 1.16
 version: 1.0
 loadbefore: [SkillAPI]
-depend: [LuckPerms, NeoSettings]
+depend: [LuckPerms, NeoCore]
 softdepend: [Multiverse-Core, MythicMobs]
 commands:
   boss:

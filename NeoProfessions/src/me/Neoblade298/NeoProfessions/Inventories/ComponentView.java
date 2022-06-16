@@ -118,10 +118,10 @@ public class ComponentView extends ProfessionInventory {
 			
 			// Reset settings to default
 			Bukkit.getLogger().log(Level.WARNING, "[NeoProfessions] Not all sorters loaded, resetting " + p.getName() + " to default.");
-			StorageManager.settings.resetSetting("name-priority", uuid);
-			StorageManager.settings.resetSetting("level-priority", uuid);
-			StorageManager.settings.resetSetting("rarity-priority", uuid);
-			StorageManager.settings.resetSetting("amount-priority", uuid);
+			StorageManager.settings.resetField("name-priority", uuid);
+			StorageManager.settings.resetField("level-priority", uuid);
+			StorageManager.settings.resetField("rarity-priority", uuid);
+			StorageManager.settings.resetField("amount-priority", uuid);
 		}
 	}
 	
@@ -351,7 +351,7 @@ public class ComponentView extends ProfessionInventory {
 	private void changeSortOrder(int priority) {
 		Sorter sorter = sorters[priority];
 		boolean newOrder = sorter.flipOrder();
-		StorageManager.settings.changeSetting(sorter.getSettingString() + "-order", Boolean.toString(newOrder), p.getUniqueId());
+		StorageManager.settings.changeField(sorter.getSettingString() + "-order", Boolean.toString(newOrder), p.getUniqueId());
 		
 		Collections.sort(components, invsorter);
 		inv.setContents(setupAll(inv.getContents()));
@@ -367,8 +367,8 @@ public class ComponentView extends ProfessionInventory {
 		
 		Sorter toChange = sorters[oldPriority];
 		Sorter changingWith = sorters[hotbar];
-		StorageManager.settings.changeSetting(toChange.getSettingString() + "-priority", Integer.toString(hotbar), p.getUniqueId());
-		StorageManager.settings.changeSetting(changingWith.getSettingString() + "-priority", Integer.toString(oldPriority), p.getUniqueId());
+		StorageManager.settings.changeField(toChange.getSettingString() + "-priority", Integer.toString(hotbar), p.getUniqueId());
+		StorageManager.settings.changeField(changingWith.getSettingString() + "-priority", Integer.toString(oldPriority), p.getUniqueId());
 		
 		changingWith.setPriority(oldPriority);
 		toChange.setPriority(hotbar);

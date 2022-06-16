@@ -50,9 +50,6 @@ public class MythicExt extends JavaPlugin implements Listener {
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
 		nbi = (BossInstances) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
 		
-		// Create Settings
-		// settings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");

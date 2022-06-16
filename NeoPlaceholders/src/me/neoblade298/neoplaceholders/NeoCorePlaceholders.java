@@ -5,22 +5,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neocore.NeoCore;
 
-public class NeoSettingsPlaceholders extends PlaceholderExpansion {
-	private NeoSettings plugin;
+public class NeoCorePlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoSettings") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoCore") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoSettings");
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
     	if (plugin == null) return false;
-    	this.plugin = (NeoSettings) plugin;
     	return super.register();
     }
 
@@ -36,12 +34,12 @@ public class NeoSettingsPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "settings";
+		return "playerfields";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoSettings";
+        return "NeoCore";
     }
     
 	@Override
@@ -57,6 +55,6 @@ public class NeoSettingsPlaceholders extends PlaceholderExpansion {
 		String key = args[0];
 		String subkey = args[1];
 		
-		return "" + plugin.getSettings(key, true).getValue(p.getUniqueId(), subkey);
+		return "" + NeoCore.getPlayerFields(key).getValue(p.getUniqueId(), subkey);
 	}
 }

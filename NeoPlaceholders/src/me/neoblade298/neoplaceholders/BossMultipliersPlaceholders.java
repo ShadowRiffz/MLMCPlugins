@@ -8,10 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neosettings.NeoSettings;
+import me.neoblade298.neocore.NeoCore;
 
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
-	private NeoSettings plugin;
 	private HashMap<String, Integer> health;
 	private static DecimalFormat df = new DecimalFormat("##.##");
 
@@ -22,7 +21,7 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoSettings") != null;
+        return true;
     }
     
     @Override
@@ -30,7 +29,6 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
     	if (!canRegister()) return false;
     	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoSettings");
     	if (plugin == null) return false;
-    	this.plugin = (NeoSettings) plugin;
     	return super.register();
     }
 
@@ -48,11 +46,6 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 	public String getIdentifier() {
 		return "bossmults";
 	}
-
-    @Override
-    public String getRequiredPlugin(){
-        return "NeoSettings";
-    }
     
 	@Override
 	public String getVersion() {
@@ -66,10 +59,10 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		String boss = args[0];
 		String id = args[1];
-		if (plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss) == null) {
+		if (NeoCore.getPlayerFields("BossMultipliers").getValue(p.getUniqueId(), boss) == null) {
 			return "Invalid";
 		}
-		int level = (int) plugin.getSettings("BossMultipliers", true).getValue(p.getUniqueId(), boss);
+		int level = (int) NeoCore.getPlayerFields("BossMultipliers").getValue(p.getUniqueId(), boss);
 		
 		if (id.equalsIgnoreCase("gold")) {
 			if (level < 1) {

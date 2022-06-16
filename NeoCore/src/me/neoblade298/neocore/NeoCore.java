@@ -162,6 +162,14 @@ public class NeoCore extends JavaPlugin implements Listener {
 		return PlayerDataManager.createPlayerTags(key, plugin, hidden);
 	}
 	
+	public static PlayerFields getPlayerFields(String key) {
+		return PlayerDataManager.getPlayerFields(key);
+	}
+	
+	public static PlayerTags getPlayerTags(String key) {
+		return PlayerDataManager.getPlayerTags(key);
+	}
+	
 	public static boolean isDebug() {
 		return debug;
 	}
