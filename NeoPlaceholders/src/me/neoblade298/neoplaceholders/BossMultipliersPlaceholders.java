@@ -27,7 +27,7 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoSettings");
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
     	if (plugin == null) return false;
     	return super.register();
     }
