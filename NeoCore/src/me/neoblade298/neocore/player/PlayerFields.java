@@ -214,16 +214,16 @@ public class PlayerFields {
 		}
 	}
 	
-	public void initialize(String key, Object def) {
+	public void initializeField(String key, Object def) {
 		this.defaults.put(key, def);
 	}
 	
-	public boolean change(String key, String v, UUID uuid) {
-		return change(key, v, uuid, -1);
+	public boolean changeField(String key, String v, UUID uuid) {
+		return changeField(key, v, uuid, -1);
 	}
 	
 	// If expiration is 0, the original expiration is kept
-	public boolean change(String key, String v, UUID uuid, long expiration) {
+	public boolean changeField(String key, String v, UUID uuid, long expiration) {
 		Object value = null;
 		if (!defaults.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
@@ -252,7 +252,7 @@ public class PlayerFields {
 		}
 		
 		if (value.equals(defaults.get(key))) {
-			return reset(key, uuid);
+			return resetField(key, uuid);
 		}
 		
 		if (!values.containsKey(uuid)) {
@@ -282,13 +282,13 @@ public class PlayerFields {
 		return true;
 	}
 	
-	public boolean add(String key, int v, UUID uuid) {
+	public boolean addToField(String key, int v, UUID uuid) {
 		// Default to no expiration change
-		return add(key, v, uuid, 0);
+		return addToField(key, v, uuid, 0);
 	}
 	
 	// Returns true if successful
-	public boolean add(String key, int v, UUID uuid, long expiration) {
+	public boolean addToField(String key, int v, UUID uuid, long expiration) {
 		if (!defaults.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
 			return false;
@@ -317,7 +317,7 @@ public class PlayerFields {
 		}
 		
 		if (newValue == (int) defaults.get(key)) {
-			return reset(key, uuid);
+			return resetField(key, uuid);
 		}
 
 		changedValues.get(uuid).add(key);
@@ -333,7 +333,7 @@ public class PlayerFields {
 		return true;
 	}
 	
-	public boolean reset(String key, UUID uuid) {
+	public boolean resetField(String key, UUID uuid) {
 		if (!defaults.containsKey(key)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to reset field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
 			return false;

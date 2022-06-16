@@ -52,8 +52,8 @@ import io.lumine.mythic.bukkit.utils.numbers.RandomInt;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
-import me.neoblade298.neosettings.NeoSettings;
-import me.neoblade298.neosettings.objects.Settings;
+import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.player.PlayerFields;
 
 public class BossInstances extends JavaPlugin implements Listener {
 
@@ -98,7 +98,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
 	public HashSet<String> joiningPlayers = new HashSet<String>();
 	public HashSet<String> leavingPlayers = new HashSet<String>();
-	public Settings settings;
+	public PlayerFields settings;
 	public static String color;
 	
 	private static BossInstances inst;
@@ -122,8 +122,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		playerStats.clear();
 		bossMultiplier.clear();
 
-		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("BossMultipliers", this, false);
+		settings = NeoCore.createPlayerFields("BossMultipliers", this, false);
 
 		// See if this is an instance
 		File instanceFile = new File(getDataFolder(), "instance.yml");
@@ -161,7 +160,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
-			settings.addSetting(boss, 1);
+			settings.initializeField(boss, 1);
 
 			if (type.equals(BossType.BOSS)) {
 				bossInfo.put(boss,
