@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
