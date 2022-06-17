@@ -50,7 +50,7 @@ public class QuestCompletedCondition implements Condition {
 			if (cq != null) {
 				return stage != -1 && cq.getStage() != stage;
 			}
-			return false;
+			return true;
 		}
 	}
 

@@ -21,6 +21,7 @@ public class ConditionManager {
 		mngr.register(new QuestSuccessfulCondition());
 		mngr.register(new QuestCompletedCondition());
 		mngr.register(new QuestTakeableCondition());
+		mngr.register(new CopyQuestConditionsCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {
@@ -47,9 +48,7 @@ public class ConditionManager {
 	}
 	
 	public static Condition getBlockingCondition(Player p, ArrayList<Condition> conditions) {
-		System.out.println("Getting blocking conditions");
 		for (Condition cond : conditions) {
-			System.out.println("Checking cond " + cond.getKey());
 			if (!cond.passes(p)) {
 				return cond;
 			}

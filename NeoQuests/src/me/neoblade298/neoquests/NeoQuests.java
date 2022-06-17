@@ -15,6 +15,7 @@ import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.commands.*;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.listeners.GeneralListener;
 import me.neoblade298.neoquests.listeners.NavigationListener;
@@ -49,6 +50,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		try {
 			new ActionManager();
 			new ObjectiveManager();
+			new ConditionManager();
 			managers.add(new ConversationManager());
 			managers.add((Manager) NeoCore.registerIOComponent(this, new QuestsManager()));
 			managers.add(new NavigationManager());

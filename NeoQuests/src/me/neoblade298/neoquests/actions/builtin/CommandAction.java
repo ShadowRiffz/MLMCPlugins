@@ -47,10 +47,10 @@ public class CommandAction extends RewardAction {
 	@Override
 	public void run(Player p) {
 		if (isConsole) {
-			Bukkit.dispatchCommand(console, command);
+			Bukkit.dispatchCommand(console, command.replaceAll("<player>", p.getName()));
 		}
 		else {
-			Bukkit.dispatchCommand(p, command);
+			Bukkit.dispatchCommand(p, command.replaceAll("<player>", p.getName()));
 		}
 	}
 

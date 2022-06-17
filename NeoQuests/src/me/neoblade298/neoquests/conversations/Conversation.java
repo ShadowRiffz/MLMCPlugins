@@ -29,7 +29,6 @@ public class Conversation {
 		
 		this.startActions.load(cfg.getStringList("start-actions"));
 		this.endActions.load(cfg.getStringList("end-actions"));
-		System.out.println("Conv: " + key + ", conditions: " + conditions);
 	}
 	
 	public String getKey() {

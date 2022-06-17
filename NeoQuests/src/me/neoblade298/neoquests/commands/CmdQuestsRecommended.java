@@ -15,6 +15,7 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.quests.QuestRecommendation;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
@@ -68,14 +69,13 @@ public class CmdQuestsRecommended implements Subcommand {
 			}
 		}
 
-		Quester quester = QuestsManager.getQuester(p);
 		ArrayList<QuestRecommendation> recs = challenges ? QuestsManager.getChallenges() : QuestsManager.getRecommendations();
 		PaginatedList<QuestRecommendation> pages = new PaginatedList<QuestRecommendation>();
 		for (QuestRecommendation rec : recs) {
 			int min = rec.getMin(), max = rec.getMax(), level = SkillAPI.getPlayerData(p).getMainClass().getLevel();
 			if (min == -1 || min > level) continue;
 			if (max == -1 || max < level) continue;
-			if (quester.getCompletedQuest(rec.getQuest().getKey()) != null) continue;
+			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
 
 			pages.add(rec);
 		}
