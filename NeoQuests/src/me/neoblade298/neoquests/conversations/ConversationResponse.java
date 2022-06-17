@@ -84,6 +84,16 @@ public class ConversationResponse {
 			return true;
 		}
 	}
+	
+	public boolean isValidResponse(Player p) {
+		Condition c = ConditionManager.getBlockingCondition(p, conditions);
+		if (c != null) {
+			return c.getResult() != ConditionResult.INVISIBLE;
+		}
+		else {
+			return true;
+		}
+	}
 
 	public boolean tryResponse(Player p) {
 		ArrayList<Condition> failed = ConditionManager.getFailedConditions(p, conditions); // Pos 0 is blocking

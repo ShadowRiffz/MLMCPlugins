@@ -34,7 +34,7 @@ public class ConversationInstance {
 	}
 	
 	public boolean chooseResponse(int num) {
-		ConversationResponse resp = conv.getStage(stage).getResponse(num);
+		ConversationResponse resp = conv.getStage(stage).getValidResponses(p).get(num);
 		if (resp != null) {
 			if (resp.tryResponse(p)) {
 				// Successfully choose response

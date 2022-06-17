@@ -83,4 +83,14 @@ public class ConversationStage {
 			}
 		}
 	}
+	
+	public ArrayList<ConversationResponse> getValidResponses(Player p) {
+		ArrayList<ConversationResponse> resps = new ArrayList<ConversationResponse>();
+		for (ConversationResponse resp : responses) {
+			if (resp.isValidResponse(p)) {
+				resps.add(resp);
+			}
+		}
+		return resps;
+	}
 }

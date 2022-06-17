@@ -36,7 +36,7 @@ public class ConversationManager implements Manager, Listener {
 					convs.put(key, new Conversation(file, cfg.getConfigurationSection(key)));
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + cfg);
+					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + file.getPath(), e);
 				}
 			}
 		};

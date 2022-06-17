@@ -9,12 +9,11 @@ import me.neoblade298.neoquests.conversations.ConversationInstance;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
-public class NpcListener implements Listener {
+public class ConversationListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onInteractNPC(NPCRightClickEvent e) {
 		Player p = e.getClicker();
 		
-		// Conversations
 		ConversationManager.startConversation(p, e.getNPC().getId());
 	}
 	

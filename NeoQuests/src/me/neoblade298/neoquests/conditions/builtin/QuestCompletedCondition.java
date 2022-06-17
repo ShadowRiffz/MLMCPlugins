@@ -12,6 +12,7 @@ public class QuestCompletedCondition implements Condition {
 	private static final String key;
 	private ConditionResult result;
 	private String questname;
+	private boolean negate;
 	private int stage;
 	
 	static {
@@ -22,6 +23,7 @@ public class QuestCompletedCondition implements Condition {
 	
 	public QuestCompletedCondition(LineConfig cfg) {
 		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		negate = cfg.getBool("negate", false);
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
 		stage = cfg.getInt("stage", -1);
@@ -35,26 +37,45 @@ public class QuestCompletedCondition implements Condition {
 	@Override
 	public boolean passes(Player p) {
 		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
-		if (cq != null) {
-			if (stage != -1) {
-				return cq.getStage() == stage;
+		if (!negate) {
+			if (cq != null) {
+				if (stage != -1) {
+					return cq.getStage() == stage;
+				}
+				return true;
 			}
-			return true;
+			return false;
 		}
-		return false;
+		else {
+			if (cq != null) {
+				return stage != -1 && cq.getStage() != stage;
+			}
+			return false;
+		}
 	}
 
 	@Override
 	public String getExplanation(Player p) {
 		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
-		if (cq != null) {
-			if (stage != -1) {
-				return "You must complete quest " + cq.getQuest().getDisplay() + " in a different way!";
+		if (!negate) {
+			if (cq != null) {
+				if (stage != -1) {
+					return "You must complete quest " + cq.getQuest().getDisplay() + " in a different way!";
+				}
+				return "Error";
 			}
-			return "Error";
+			return "Quest " + QuestsManager.getQuest(questname).getDisplay() + " is not complete!";
 		}
 		else {
-			return "Quest " + QuestsManager.getQuest(questname).getDisplay() + " is not complete!";
+			if (cq != null) {
+				if (stage == -1) {
+					return "Quest " + QuestsManager.getQuest(questname).getDisplay() + " must not be complete!";
+				}
+				else {
+					return "You must complete quest " + cq.getQuest().getDisplay() + " in a different way!";
+				}
+			}
+			return "Error";
 		}
 	}
 

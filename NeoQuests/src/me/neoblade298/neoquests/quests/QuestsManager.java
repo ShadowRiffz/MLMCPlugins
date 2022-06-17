@@ -106,10 +106,11 @@ public class QuestsManager implements IOComponent, Manager {
 			// Completed quests
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				Quest quest = quests.get(rs.getString(3));
+				int account = rs.getInt(2);
+				Quester quester = initializeOrGetQuester(p, account);
+				Quest quest = QuestsManager.getQuest(rs.getString(3));
 				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3));
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account);
 					continue;
 				}
 				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5), rs.getLong(6)));
@@ -119,7 +120,7 @@ public class QuestsManager implements IOComponent, Manager {
 			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
-				Questline ql = questlines.get(rs.getString(3).toUpperCase());
+				Questline ql = QuestsManager.getQuestline(rs.getString(3));
 				if (ql == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3));
 					continue;
@@ -141,7 +142,8 @@ public class QuestsManager implements IOComponent, Manager {
 			// Active quests
 			rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
 			while (rs.next()) {
-				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
+				int account = rs.getInt(2);
+				Quester quester = initializeOrGetQuester(p, account);
 				
 				String qname = rs.getString(3);
 				int stage = rs.getInt(4);
@@ -154,9 +156,9 @@ public class QuestsManager implements IOComponent, Manager {
 					counts.add(Integer.parseInt(scounts[i]));
 				}
 				
-				Quest quest = quests.get(qname);
+				Quest quest = QuestsManager.getQuest(qname);
 				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname);
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account);
 					continue;
 				}
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));

@@ -17,7 +17,7 @@ public class Conversation {
 	private ActionSequence startActions = new ActionSequence(), endActions = new ActionSequence();
 	
 	public Conversation(File file, ConfigurationSection cfg) throws NeoIOException {
-		this.key = cfg.getName().toUpperCase();
+		this.key = cfg.getName();
 		this.fileLocation = file.getPath();
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
 		stages = new ArrayList<ConversationStage>();
@@ -29,6 +29,7 @@ public class Conversation {
 		
 		this.startActions.load(cfg.getStringList("start-actions"));
 		this.endActions.load(cfg.getStringList("end-actions"));
+		System.out.println("Conv: " + key + ", conditions: " + conditions);
 	}
 	
 	public String getKey() {

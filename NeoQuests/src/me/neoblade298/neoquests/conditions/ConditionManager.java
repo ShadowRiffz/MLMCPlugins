@@ -9,9 +9,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.conditions.builtin.ClassLevelCondition;
-import me.neoblade298.neoquests.conditions.builtin.QuestCompletedCondition;
-import me.neoblade298.neoquests.conditions.builtin.QuestSuccessfulCondition;
+import me.neoblade298.neoquests.conditions.builtin.*;
 
 public class ConditionManager {
 	private static LineConfigManager<Condition> mngr;
@@ -22,6 +20,7 @@ public class ConditionManager {
 		mngr.register(new ClassLevelCondition());
 		mngr.register(new QuestSuccessfulCondition());
 		mngr.register(new QuestCompletedCondition());
+		mngr.register(new QuestTakeableCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {
@@ -31,7 +30,7 @@ public class ConditionManager {
 				conds.add(mngr.get(new LineConfig(line)));
 			}
 			catch (Exception e) {
-				throw new NeoIOException("Failed to load condition line: " + line);
+				NeoQuests.showWarning("Failed to parse condition " + line, e);
 			}
 		}
 		return conds;
@@ -48,7 +47,9 @@ public class ConditionManager {
 	}
 	
 	public static Condition getBlockingCondition(Player p, ArrayList<Condition> conditions) {
+		System.out.println("Getting blocking conditions");
 		for (Condition cond : conditions) {
+			System.out.println("Checking cond " + cond.getKey());
 			if (!cond.passes(p)) {
 				return cond;
 			}
