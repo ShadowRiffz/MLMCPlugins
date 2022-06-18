@@ -16,11 +16,15 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	public Objective() {}
 	
 	public Objective(ObjectiveEvent type, LineConfig cfg) {
+		this(type, cfg, false);
+	}
+	
+	public Objective(ObjectiveEvent type, LineConfig cfg, boolean hide) {
 		this.cfg = cfg;
 		this.type = type;
 		this.needed = cfg.getInt("needed", 1);
 		this.endpoint = cfg.getString("endpoint", null);
-		this.hide = cfg.getBool("hide", false);
+		this.hide = cfg.getBool("hide", hide);
 	}
 	
 	public ObjectiveEvent getType() {

@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
+import me.neoblade298.neocore.events.PlayerTagChangedEvent;
 import me.neoblade298.neoquests.objectives.*;
 import me.neoblade298.neoquests.objectives.builtin.GetStoredItemObjective;
 import me.neoblade298.neoquests.objectives.builtin.InteractNpcObjective;
@@ -95,6 +96,18 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((ReachLocationObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onTagReceive(PlayerTagChangedEvent e) {
+		Player p = e.getPlayer();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.TAG_RECEIVED);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((GetTagObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}
