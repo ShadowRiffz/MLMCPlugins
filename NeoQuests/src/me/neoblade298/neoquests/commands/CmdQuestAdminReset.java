@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.commands;
 
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -13,7 +14,9 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.player.PlayerTags;
 import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
@@ -60,18 +63,25 @@ public class CmdQuestAdminReset implements Subcommand {
 			Util.msg(s, "&cSomething's wrong with the command arguments!");
 		}
 		
-		// Reset entire player
 		Statement stmt = NeoCore.getStatement();
+		UUID uuid = p.getUniqueId();
 		try {
+			// No args, reset everything
 			if (args.length == offset) {
-				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "';");
-				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + p.getUniqueId() + "';");
-				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + p.getUniqueId() + "';");
-				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';");
+				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + uuid + "';");
+				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + uuid + "';");
+				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + uuid + "';");
+				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "';");
 				for (Quester quester : QuestsManager.getAllAccounts(p)) {
 					quester.reset();
 				}
+				for (PlayerTags pTags : NeoQuests.getAllPlayerTags()) {
+					for (String key : pTags.getAllKeys(uuid)) {
+						pTags.reset(key, uuid);
+					}
+				}
 			}
+			// Has args, reset a specific account
 			else {
 				if (!StringUtils.isNumeric(args[offset])) {
 					Util.msg(s, "&cAccount must be a number!");
@@ -81,11 +91,15 @@ public class CmdQuestAdminReset implements Subcommand {
 				if (quester == null) {
 					Util.msg(s, "&cThis account doesn't exist!");
 				}
-				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
-				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
-				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
-				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
+				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
 				quester.reset();
+				PlayerTags pTags = NeoQuests.getPlayerTags(p, acct);
+				for (String key : pTags.getAllKeys(uuid)) {
+					pTags.reset(key, uuid);
+				}
 			}
 			ConversationManager.endConversation(p, false);
 			Util.msg(s, "&7Successfully reset player &6" + p.getName() + ".");

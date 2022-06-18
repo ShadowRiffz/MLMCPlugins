@@ -6,12 +6,10 @@ import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conditions.ConditionResult;
-import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class CopyQuestConditionsCondition implements Condition {
+public class CopyQuestConditionsCondition extends Condition {
 	private static final String key;
-	private ConditionResult result;
 	private String questname;
 	
 	static {
@@ -21,7 +19,7 @@ public class CopyQuestConditionsCondition implements Condition {
 	public CopyQuestConditionsCondition() {}
 	
 	public CopyQuestConditionsCondition(LineConfig cfg) {
-		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		super(cfg);
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
 	}
@@ -44,10 +42,5 @@ public class CopyQuestConditionsCondition implements Condition {
 	@Override
 	public Condition create(LineConfig cfg) {
 		return new CopyQuestConditionsCondition(cfg);
-	}
-
-	@Override
-	public ConditionResult getResult() {
-		return result;
 	}
 }

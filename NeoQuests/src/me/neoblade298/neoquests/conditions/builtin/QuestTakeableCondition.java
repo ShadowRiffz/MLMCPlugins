@@ -9,9 +9,8 @@ import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.Quest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class QuestTakeableCondition implements Condition {
+public class QuestTakeableCondition extends Condition {
 	private static final String key;
-	private ConditionResult result;
 	private String questname;
 	
 	static {
@@ -27,7 +26,7 @@ public class QuestTakeableCondition implements Condition {
 	}
 	
 	public QuestTakeableCondition(LineConfig cfg) {
-		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		super(cfg);
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
 	}
@@ -65,10 +64,5 @@ public class QuestTakeableCondition implements Condition {
 	@Override
 	public Condition create(LineConfig cfg) {
 		return new QuestTakeableCondition(cfg);
-	}
-
-	@Override
-	public ConditionResult getResult() {
-		return result;
 	}
 }

@@ -8,9 +8,8 @@ import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
-public class QuestSuccessfulCondition implements Condition {
+public class QuestSuccessfulCondition extends Condition {
 	private static final String key;
-	private ConditionResult result;
 	private String questname;
 	private boolean negate;
 	private int stage;
@@ -22,7 +21,7 @@ public class QuestSuccessfulCondition implements Condition {
 	public QuestSuccessfulCondition() {}
 	
 	public QuestSuccessfulCondition(LineConfig cfg) {
-		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		super(cfg);
 		negate = cfg.getBool("negate", false);
 		
 		questname = cfg.getString("quest", "N/A").toUpperCase();
@@ -83,10 +82,5 @@ public class QuestSuccessfulCondition implements Condition {
 	@Override
 	public Condition create(LineConfig cfg) {
 		return new QuestSuccessfulCondition(cfg);
-	}
-
-	@Override
-	public ConditionResult getResult() {
-		return result;
 	}
 }

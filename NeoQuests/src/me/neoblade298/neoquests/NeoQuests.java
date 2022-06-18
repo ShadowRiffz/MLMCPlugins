@@ -10,9 +10,12 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sucy.skill.SkillAPI;
+
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.interfaces.Manager;
+import me.neoblade298.neocore.player.PlayerTags;
 import me.neoblade298.neoquests.actions.ActionManager;
 import me.neoblade298.neoquests.commands.*;
 import me.neoblade298.neoquests.conditions.ConditionManager;
@@ -33,6 +36,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static HashSet<Player> debuggers = new HashSet<Player>();
 	private static ArrayList<Manager> managers = new ArrayList<Manager>();
 	private static HashMap<String, CommandManager> commands = new HashMap<String, CommandManager>();
+	private static PlayerTags[] accountTags = new PlayerTags[12];
 
 	public void onEnable() {
 		inst = this;
@@ -56,6 +60,11 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 			managers.add(new NavigationManager());
 		} catch (Exception e) {
 			showWarning("Failed to enable managers on startup", e);
+		}
+		
+		// Playerdata
+		for (int i = 1; i <= 12; i++) {
+			accountTags[i - 1] = NeoCore.createPlayerTags("questaccount_" + i, this, true);
 		}
 	}
 
@@ -154,5 +163,18 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 
 	public static HashMap<String, CommandManager> getCommands() {
 		return commands;
+	}
+	
+	public static PlayerTags getPlayerTags(Player p) {
+		int account = SkillAPI.getPlayerAccountData(p).getActiveId();
+		return getPlayerTags(p, account);
+	}
+	
+	public static PlayerTags getPlayerTags(Player p, int account) {
+		return accountTags[account - 1];
+	}
+	
+	public static PlayerTags[] getAllPlayerTags() {
+		return accountTags;
 	}
 }

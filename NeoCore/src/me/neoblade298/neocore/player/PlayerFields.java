@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.events.PlayerFieldChangedEvent;
+import me.neoblade298.neocore.events.ValueChangeType;
 
 public class PlayerFields {
 	private final String key;
@@ -80,6 +82,7 @@ public class PlayerFields {
 		if (pValues.containsKey(subkey)) {
 			// If value has expired, remove it
 			if (pValues.get(subkey).isExpired()) {
+				Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, subkey, pValues.get(subkey), ValueChangeType.EXPIRED));
 				pValues.remove(subkey);
 				changedValues.get(uuid).add(key);
 				return false;
@@ -269,10 +272,12 @@ public class PlayerFields {
 			if (expiration != 0) {
 				curr.setExpiration(expiration);
 			}
+			Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.CHANGED));
 		}
 		else {
 			curr = new Value(value, expiration);
 			values.get(uuid).put(key, curr);
+			Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.ADDED));
 		}
 		
 		if (NeoCore.isDebug()) {
@@ -323,6 +328,7 @@ public class PlayerFields {
 		changedValues.get(uuid).add(key);
 		Value curr = values.get(uuid).get(key);
 		curr.setValue(newValue);
+		Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.CHANGED));
 		if (expiration != 0) {
 			curr.setExpiration(expiration);
 		}
@@ -339,11 +345,12 @@ public class PlayerFields {
 			return false;
 		}
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to reset field " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		changedValues.get(uuid).add(key);
-		values.get(uuid).remove(key);
+		Value removed = values.get(uuid).remove(key);
+		Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.REMOVED));
 		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Reset field " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}

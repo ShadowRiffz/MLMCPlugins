@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.events.PlayerTagChangedEvent;
+import me.neoblade298.neocore.events.ValueChangeType;
 
 public class PlayerTags {
 	private final String key;
@@ -47,8 +49,9 @@ public class PlayerTags {
 		if (pValues.containsKey(subkey)) {
 			// If value has expired, remove it
 			if (pValues.get(subkey).isExpired()) {
-				pValues.remove(subkey);
+				Value v = pValues.remove(subkey);
 				changedValues.get(uuid).add(key);
+				Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, v, ValueChangeType.EXPIRED));
 				return false;
 			}
 			return true;
@@ -130,16 +133,16 @@ public class PlayerTags {
 		}
 	}
 	
-	public boolean change(String key, String v, UUID uuid) {
-		return change(key, v, uuid, -1);
+	public boolean set(String key, UUID uuid) {
+		return set(key, uuid, -1);
 	}
 	
 	// If expiration is 0, the original expiration is kept
-	public boolean change(String key, String v, UUID uuid, long expiration) {
-		String value = null;
+	public boolean set(String key, UUID uuid, long expiration) {
+		String value = key;
 		
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to set tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 
@@ -152,14 +155,16 @@ public class PlayerTags {
 			if (expiration != 0) {
 				curr.setExpiration(expiration);
 			}
+			Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.CHANGED));
 		}
 		else {
 			curr = new Value(value, expiration);
 			values.get(uuid).put(key, curr);
+			Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.ADDED));
 		}
 		
 		if (NeoCore.isDebug()) {
-			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Changed tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
+			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Set tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
 					curr.getValue() + ".");
 		}
 		return true;
@@ -167,11 +172,12 @@ public class PlayerTags {
 	
 	public boolean reset(String key, UUID uuid) {
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to reset tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		changedValues.get(uuid).add(key);
-		values.get(uuid).remove(key);
+		Value removed = values.get(uuid).remove(key);
+		Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.EXPIRED));
 		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Reset tag of " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}

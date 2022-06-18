@@ -10,9 +10,8 @@ import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionResult;
 
-public class ClassLevelCondition implements Condition {
+public class ClassLevelCondition extends Condition {
 	private static final String key;
-	private ConditionResult result;
 	private int min, max;
 	private boolean negate;
 	
@@ -23,7 +22,7 @@ public class ClassLevelCondition implements Condition {
 	public ClassLevelCondition() {}
 	
 	public ClassLevelCondition(LineConfig cfg) {
-		result = ConditionResult.valueOf(cfg.getString("result", "INVISIBLE").toUpperCase());
+		super(cfg);
 		negate = cfg.getBool("negate", false);
 		
 		min = cfg.getInt("min", -1);
@@ -65,10 +64,5 @@ public class ClassLevelCondition implements Condition {
 	@Override
 	public Condition create(LineConfig cfg) {
 		return new ClassLevelCondition(cfg);
-	}
-
-	@Override
-	public ConditionResult getResult() {
-		return result;
 	}
 }
