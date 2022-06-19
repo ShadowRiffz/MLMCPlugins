@@ -5,23 +5,13 @@ import java.util.Scanner;
 
 public class MoneyCalculator {
 	public static void main (String[] args) {
-		File file = new File("C:\\Users\\Alex\\Desktop\\bugged acc.txt");
-		String account = new String();
-		try {
-			Scanner scan = new Scanner(file);
-			while (scan.hasNext()) {
-				account += scan.nextLine();
-				if (scan.hasNext()) {
-					account += "\n";
-				}
-				
-			}
-			scan.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		double total = 0;
+		double price = 1000;
+		for (int i = 1; i <= 500; i++) {
+			total += price;
+			price *= 1.005;
 		}
-		System.out.println(account);
-		System.out.println("Stop here");
+		System.out.println("Price: " + price + ", total: " + total);
 	}
 }
