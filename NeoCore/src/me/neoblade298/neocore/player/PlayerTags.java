@@ -40,16 +40,16 @@ public class PlayerTags {
 		return this.values.get(uuid).keySet();
 	}
 	
-	public boolean exists(String subkey, UUID uuid) {
+	public boolean exists(String tag, UUID uuid) {
 		if (!values.containsKey(uuid)) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get tag of " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		HashMap<String, Value> pValues = values.get(uuid);
-		if (pValues.containsKey(subkey)) {
+		if (pValues.containsKey(tag)) {
 			// If value has expired, remove it
-			if (pValues.get(subkey).isExpired()) {
-				Value v = pValues.remove(subkey);
+			if (pValues.get(tag).isExpired()) {
+				Value v = pValues.remove(tag);
 				changedValues.get(uuid).add(key);
 				Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, v, ValueChangeType.EXPIRED));
 				return false;
@@ -84,7 +84,7 @@ public class PlayerTags {
 					
 					try {
 						Bukkit.getLogger().log(Level.INFO, "[NeoCore] Saving tag " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
-						insert.addBatch("REPLACE INTO neocore_strings VALUES ('" + uuid + "','" + this.getKey()
+						insert.addBatch("REPLACE INTO neocore_tags VALUES ('" + uuid + "','" + this.getKey()
 						+ "','" + key + "','" + value + "'," + expiration + ");");
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -94,7 +94,7 @@ public class PlayerTags {
 				else {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Removing tag " + this.getKey() + "." + key + " for " + uuid + ".");
 					try {
-						delete.addBatch("DELETE FROM neocore_strings WHERE setting = '" + this.getKey() + "' AND Subkey = '" + key +
+						delete.addBatch("DELETE FROM neocore_tags WHERE `key` = '" + this.getKey() + "' AND tag = '" + key +
 						"';");
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -111,21 +111,20 @@ public class PlayerTags {
 		this.values.put(uuid, pSettings);
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_tags WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_tags WHERE uuid = '" + uuid + "' AND `key` = '" + this.getKey() + "';");
 			while (rs.next()) {
-				String Subkey = rs.getString(3);
-				long expiration = rs.getLong(5);
-				String value = rs.getString(4);
+				String tag = rs.getString(3);
+				long expiration = rs.getLong(4);
 				
-				if (value == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load tag of " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
+				if (tag == null) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load tag of " + this.getKey() + "." + tag + " for " + uuid + ". Value is null.");
 				}
 				if (NeoCore.isDebug()) {
-					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading tag: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
+					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading tag: " + this.getKey() + "." + tag + " for " + uuid + ".");
 				}
 				
 				if (expiration == -1 || expiration < System.currentTimeMillis()) {
-					pSettings.put(Subkey, new Value(value, expiration));
+					pSettings.put(tag, new Value(tag, expiration));
 				}
 			}
 		} catch (SQLException e) {

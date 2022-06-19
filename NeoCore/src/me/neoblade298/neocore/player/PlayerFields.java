@@ -40,7 +40,7 @@ public class PlayerFields {
 	
 	public Object getValue(UUID uuid, String key) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get field " + this.getKey() + "." + key + " for " + uuid + ". Field doesn't exist.");
 			return null;
 		}
 		if (!values.containsKey(uuid)) {
@@ -63,15 +63,15 @@ public class PlayerFields {
 	
 	public Object getDefault(String key) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get default field " + this.getKey() + "." + key + ". Subkey doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get default field " + this.getKey() + "." + key + ". Field doesn't exist.");
 			return null;
 		}
 		return defaults.get(key);
 	}
 	
-	public boolean exists(String subkey, UUID uuid) {
-		if (!defaults.containsKey(subkey)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get field " + this.getKey() + "." + subkey + " for " + uuid + ". Subkey doesn't exist.");
+	public boolean exists(String field, UUID uuid) {
+		if (!defaults.containsKey(field)) {
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get field " + this.getKey() + "." + field + " for " + uuid + ". Field doesn't exist.");
 			return false;
 		}
 		if (!values.containsKey(uuid)) {
@@ -79,11 +79,11 @@ public class PlayerFields {
 			return false;
 		}
 		HashMap<String, Value> pValues = values.get(uuid);
-		if (pValues.containsKey(subkey)) {
+		if (pValues.containsKey(field)) {
 			// If value has expired, remove it
-			if (pValues.get(subkey).isExpired()) {
-				Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, subkey, pValues.get(subkey), ValueChangeType.EXPIRED));
-				pValues.remove(subkey);
+			if (pValues.get(field).isExpired()) {
+				Bukkit.getPluginManager().callEvent(new PlayerFieldChangedEvent(Bukkit.getPlayer(uuid), this.key, field, pValues.get(field), ValueChangeType.EXPIRED));
+				pValues.remove(field);
 				changedValues.get(uuid).add(key);
 				return false;
 			}
@@ -139,11 +139,11 @@ public class PlayerFields {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Defaulting " + this.getKey() + "." + key + " to " + def + " for " + uuid + ".");
 					try {
 						if (def instanceof String || def instanceof Boolean) {
-							delete.addBatch("DELETE FROM neocore_fields_strings WHERE setting = '" + this.getKey() + "' AND Subkey = '" + key +
+							delete.addBatch("DELETE FROM neocore_fields_strings WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
 							"';");
 						}
 						else if (def instanceof Integer) {
-							delete.addBatch("DELETE FROM neocore_fields_integers WHERE setting = '" + this.getKey() + "' AND Subkey = '" + key +
+							delete.addBatch("DELETE FROM neocore_fields_integers WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
 							"';");
 						}
 					} catch (Exception e) {
@@ -161,14 +161,14 @@ public class PlayerFields {
 		this.values.put(uuid, pFields);
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_fields_strings WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_fields_strings WHERE uuid = '" + uuid + "' AND `key` = '" + this.getKey() + "';");
 			while (rs.next()) {
-				String Subkey = rs.getString(3);
+				String field = rs.getString(3);
 				long expiration = rs.getLong(5);
-				Object o = defaults.get(Subkey);
+				Object o = defaults.get(field);
 				Object value = null;
 				if (o == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Subkey doesn't exist.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + field + " for " + uuid + ". Field doesn't exist.");
 					return;
 				}
 				else if (o instanceof String) {
@@ -179,25 +179,25 @@ public class PlayerFields {
 				}
 				
 				if (value == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + field + " for " + uuid + ". Value is null.");
 				}
 				if (NeoCore.isDebug()) {
-					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
+					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + field + " for " + uuid + ".");
 				}
 				
 				if (expiration == -1 || expiration < System.currentTimeMillis()) {
-					pFields.put(Subkey, new Value(value, expiration));
+					pFields.put(field, new Value(value, expiration));
 				}
 			}
 			
-			rs = stmt.executeQuery("SELECT * FROM neocore_fields_integers WHERE uuid = '" + uuid + "' AND setting = '" + this.getKey() + "';");
+			rs = stmt.executeQuery("SELECT * FROM neocore_fields_integers WHERE uuid = '" + uuid + "' AND `key` = '" + this.getKey() + "';");
 			while (rs.next()) {
-				String Subkey = rs.getString(3);
+				String field = rs.getString(3);
 				long expiration = rs.getLong(5);
-				Object o = defaults.get(Subkey);
+				Object o = defaults.get(field);
 				Object value = null;
 				if (o == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Subkey doesn't exist.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + field + " for " + uuid + ". Field doesn't exist.");
 					return;
 				}
 				else if (o instanceof Integer) {
@@ -205,12 +205,12 @@ public class PlayerFields {
 				}
 				
 				if (value == null) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + Subkey + " for " + uuid + ". Value is null.");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to load field " + this.getKey() + "." + field + " for " + uuid + ". Value is null.");
 				}
 				if (NeoCore.isDebug()) {
-					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + Subkey + " for " + uuid + ".");
+					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Debug: Loading field: " + this.getKey() + "." + field + " for " + uuid + ".");
 				}
-				pFields.put(Subkey, new Value(value, expiration));
+				pFields.put(field, new Value(value, expiration));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -229,7 +229,7 @@ public class PlayerFields {
 	public boolean changeField(String key, String v, UUID uuid, long expiration) {
 		Object value = null;
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Field doesn't exist.");
 			return false;
 		}
 		
@@ -295,13 +295,13 @@ public class PlayerFields {
 	// Returns true if successful
 	public boolean addToField(String key, int v, UUID uuid, long expiration) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Field doesn't exist.");
 			return false;
 		}
 		
 		// Make sure the changed field is an integer
 		if (defaults.get(key).getClass() != Integer.class) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Subkey was not of type Integer.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to change field " + this.getKey() + "." + key + " for " + uuid + ". Field was not of type Integer.");
 			return false;
 		}
 		
@@ -341,7 +341,7 @@ public class PlayerFields {
 	
 	public boolean resetField(String key, UUID uuid) {
 		if (!defaults.containsKey(key)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to reset field " + this.getKey() + "." + key + " for " + uuid + ". Subkey doesn't exist.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to reset field " + this.getKey() + "." + key + " for " + uuid + ". Field doesn't exist.");
 			return false;
 		}
 		if (!values.containsKey(uuid)) {

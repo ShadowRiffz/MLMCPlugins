@@ -179,6 +179,11 @@ public class MythicExt extends JavaPlugin implements Listener {
 			event.register(mechanic);
 		}
 
+		else if (name.equalsIgnoreCase("accounttag")) {
+			AccountTagMechanic mechanic = new AccountTagMechanic(event.getConfig());
+			event.register(mechanic);
+		}
+
 		else if (name.equalsIgnoreCase("removeflag")) {
 			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
 			event.register(mechanic);
