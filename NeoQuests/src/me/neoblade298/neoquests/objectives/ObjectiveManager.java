@@ -8,11 +8,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
-import me.neoblade298.neoquests.objectives.builtin.FakeObjective;
-import me.neoblade298.neoquests.objectives.builtin.GetStoredItemObjective;
-import me.neoblade298.neoquests.objectives.builtin.InteractNpcObjective;
-import me.neoblade298.neoquests.objectives.builtin.KillMythicmobObjective;
-import me.neoblade298.neoquests.objectives.builtin.ReachLocationObjective;
+import me.neoblade298.neoquests.objectives.builtin.*;
 
 public class ObjectiveManager {
 	private static LineConfigManager<Objective> mngr;
@@ -25,6 +21,7 @@ public class ObjectiveManager {
 		register(new KillMythicmobObjective());
 		register(new ReachLocationObjective());
 		register(new FakeObjective());
+		register(new GetTagObjective());
 	}
 	
 	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {

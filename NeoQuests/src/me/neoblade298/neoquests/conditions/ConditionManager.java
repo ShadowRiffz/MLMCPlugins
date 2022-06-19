@@ -22,6 +22,7 @@ public class ConditionManager {
 		mngr.register(new QuestCompletedCondition());
 		mngr.register(new QuestTakeableCondition());
 		mngr.register(new CopyQuestConditionsCondition());
+		mngr.register(new HasTagCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {

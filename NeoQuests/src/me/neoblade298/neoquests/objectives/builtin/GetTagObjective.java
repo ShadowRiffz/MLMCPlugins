@@ -1,8 +1,5 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
-import org.bukkit.entity.Player;
-import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.events.PlayerTagChangedEvent;
 import me.neoblade298.neocore.events.ValueChangeType;
 import me.neoblade298.neocore.io.LineConfig;
@@ -48,7 +45,7 @@ public class GetTagObjective extends Objective {
 	
 	@Override
 	public void initialize(ObjectiveInstance oi) {
-		if (NeoQuests.getPlayerTags(oi.getPlayer()).exists(tag, oi.getPlayer().getUniqueId()) {
+		if (NeoQuests.getPlayerTags(oi.getPlayer()).exists(tag, oi.getPlayer().getUniqueId())) {
 			oi.setCount(1);
 		}
 	}

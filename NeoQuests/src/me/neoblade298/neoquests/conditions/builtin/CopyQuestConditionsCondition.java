@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
-import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CopyQuestConditionsCondition extends Condition {

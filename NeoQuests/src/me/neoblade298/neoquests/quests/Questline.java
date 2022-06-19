@@ -24,6 +24,9 @@ public class Questline implements Comparator<Questline> {
 		quests = new ArrayList<Quest>(recs.size());
 		for (String line : recs) {
 			Quest q = QuestsManager.getQuest(line);
+			if (q == null) {
+				throw new NeoIOException("Quest in questline " + key + " doesn't exist: " + line);
+			}
 			q.setQuestline(this);
 			quests.add(q);
 		}

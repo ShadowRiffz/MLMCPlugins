@@ -17,7 +17,6 @@ import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.quests.QuestRecommendation;
-import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

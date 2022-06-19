@@ -13,10 +13,7 @@ import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neocore.events.PlayerTagChangedEvent;
 import me.neoblade298.neoquests.objectives.*;
-import me.neoblade298.neoquests.objectives.builtin.GetStoredItemObjective;
-import me.neoblade298.neoquests.objectives.builtin.InteractNpcObjective;
-import me.neoblade298.neoquests.objectives.builtin.KillMythicmobObjective;
-import me.neoblade298.neoquests.objectives.builtin.ReachLocationObjective;
+import me.neoblade298.neoquests.objectives.builtin.*;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class ObjectiveListener implements Listener {
@@ -104,7 +101,7 @@ public class ObjectiveListener implements Listener {
 	public void onTagReceive(PlayerTagChangedEvent e) {
 		Player p = e.getPlayer();
 
-		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.TAG_RECEIVED);
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.RECEIVE_TAG);
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((GetTagObjective) o.getObjective()).checkEvent(e, o);

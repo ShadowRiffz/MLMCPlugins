@@ -2,14 +2,9 @@ package me.neoblade298.neoquests.conditions.builtin;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerClass;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.conditions.Condition;
-import me.neoblade298.neoquests.conditions.ConditionResult;
 
 public class HasTagCondition extends Condition {
 	private static final String key;
@@ -17,7 +12,7 @@ public class HasTagCondition extends Condition {
 	private boolean negate;
 	
 	static {
-		key = "class-level";
+		key = "has-tag";
 	}
 	
 	public HasTagCondition() {}

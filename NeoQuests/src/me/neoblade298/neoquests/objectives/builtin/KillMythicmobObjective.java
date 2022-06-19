@@ -1,5 +1,9 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -10,7 +14,7 @@ import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class KillMythicmobObjective extends Objective {
-	private String type;
+	private List<String> types;
 	private String display;
 	
 	public KillMythicmobObjective() {
@@ -20,7 +24,7 @@ public class KillMythicmobObjective extends Objective {
 	public KillMythicmobObjective(LineConfig cfg) {
 		super(ObjectiveEvent.KILL_MYTHICMOB, cfg);
 
-		type = cfg.getString("type", null);
+		types = Arrays.asList(cfg.getString("type", null).split(","));
 	}
 
 	@Override
@@ -34,9 +38,12 @@ public class KillMythicmobObjective extends Objective {
 	}
 
 	public boolean checkEvent(MythicMobDeathEvent e, ObjectiveInstance o) {
-		if (e.getMobType().getInternalName().equals(type)) {
-			o.incrementCount();
-			return true;
+		String name = e.getMobType().getInternalName();
+		for (String type : types) {
+			if (name.equals(type)) {
+				o.incrementCount();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -45,7 +52,7 @@ public class KillMythicmobObjective extends Objective {
 	public String getDisplay() {
 		if (display == null) {
 			try {
-				display = MythicBukkit.inst().getMobManager().getMythicMob(type).get().getDisplayName().get();
+				display = MythicBukkit.inst().getMobManager().getMythicMob(types.get(0)).get().getDisplayName().get();
 			}
 			catch (Exception e) {
 				Bukkit.getLogger().warning("[NeoQuests] Failed to retrieve mob display for Mythic Mob " + type + ".");
