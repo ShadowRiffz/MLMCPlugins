@@ -79,7 +79,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) + amount;
 			storage.put(id, total);
-			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
+			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay() + " §7(§c/inv§7)");
 			Bukkit.getPluginManager().callEvent(new ReceiveStoredItemEvent(p, id));
 			return true;
 		}
@@ -91,7 +91,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) - amount;
 			storage.put(id, storage.get(id) - amount);
-			p.sendMessage("§c-" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
+			p.sendMessage("§c-" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay() + " §7(§c/inv§7)");
 			return true;
 		}
 		return false;
@@ -244,7 +244,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			givePlayer(p, nbti.getInteger("id"), nbti.getInteger("amount") * item.getAmount());
 			p.getInventory().removeItem(item);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + (amount * item.getAmount()) + " " + si.getDisplay() + "§7!");
+			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + (amount * item.getAmount()) + " " + si.getDisplay() + "§7! (§c/inv§7)");
 		}
 	}
 	
