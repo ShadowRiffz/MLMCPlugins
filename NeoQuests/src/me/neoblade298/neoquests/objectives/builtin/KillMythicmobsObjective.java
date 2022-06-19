@@ -12,15 +12,15 @@ import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
-public class KillMythicmobObjective extends Objective {
+public class KillMythicmobsObjective extends Objective {
 	private List<String> types;
 	private String display;
 	
-	public KillMythicmobObjective() {
+	public KillMythicmobsObjective() {
 		super();
 	}
 
-	public KillMythicmobObjective(LineConfig cfg) {
+	public KillMythicmobsObjective(LineConfig cfg) {
 		super(ObjectiveEvent.KILL_MYTHICMOB, cfg);
 
 		types = Arrays.asList(cfg.getString("type", null).split(","));
@@ -28,12 +28,12 @@ public class KillMythicmobObjective extends Objective {
 
 	@Override
 	public Objective create(LineConfig cfg) {
-		return new KillMythicmobObjective(cfg);
+		return new KillMythicmobsObjective(cfg);
 	}
 
 	@Override
 	public String getKey() {
-		return "kill-mythicmob";
+		return "kill-mythicmobs";
 	}
 
 	public boolean checkEvent(MythicMobDeathEvent e, ObjectiveInstance o) {

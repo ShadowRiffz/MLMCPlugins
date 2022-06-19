@@ -80,7 +80,7 @@ public class ObjectiveListener implements Listener {
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.KILL_MYTHICMOB);
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
-				((KillMythicmobObjective) o.getObjective()).checkEvent(e, o);
+				((KillMythicmobsObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}

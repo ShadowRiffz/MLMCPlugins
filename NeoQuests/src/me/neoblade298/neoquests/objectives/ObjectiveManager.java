@@ -18,7 +18,7 @@ public class ObjectiveManager {
 		
 		register(new InteractNpcObjective());
 		register(new GetStoredItemObjective());
-		register(new KillMythicmobObjective());
+		register(new KillMythicmobsObjective());
 		register(new ReachLocationObjective());
 		register(new FakeObjective());
 		register(new GetTagObjective());
