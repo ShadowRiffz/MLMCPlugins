@@ -7,3 +7,6 @@ commands:
    core:
       description: NeoCore command
       usage: /core
+   help:
+      description: Base help command
+      usage: /core
