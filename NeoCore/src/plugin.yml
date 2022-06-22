@@ -9,4 +9,10 @@ commands:
       usage: /core
    help:
       description: Base help command
-      usage: /core
+      usage: /help
+   features:
+      description: Base features command
+      usage: /features
+   commands:
+      description: Base commands command
+      usage: /commands
