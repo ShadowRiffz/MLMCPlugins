@@ -1,7 +1,7 @@
 name: NeoBase
 main: me.neoblade298.base.Main
 author: [Neoblade298]
-depend: [MythicMobs]
+depend: [NeoCore]
 version: 1.0
 api-version: 1.16
 commands:
