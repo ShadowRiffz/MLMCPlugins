@@ -44,4 +44,8 @@ public class PlayerPoints {
 	public HashMap<PlayerPointType, Double> getAllPoints() {
 		return points;
 	}
+	
+	public boolean isEmpty() {
+		return points.isEmpty();
+	}
 }	

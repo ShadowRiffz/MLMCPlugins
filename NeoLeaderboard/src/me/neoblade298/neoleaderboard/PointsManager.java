@@ -1,8 +1,10 @@
 package me.neoblade298.neoleaderboard;
 
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -46,12 +48,9 @@ public class PointsManager implements IOComponent {
 	private void saveNation(NationPoints npoints, Statement insert, Statement delete) {
 		try {
 			HashMap<NationPointType, Double> points = npoints.getAllPoints();
-			insert.addBatch("REPLACE INTO neoleaderboard_accounts VALUES ('"
-					+ npoints.getUuid() + "','" + npoints.getDisplay() + "',1);");
-			
 			for (Entry<NationPointType, Double> e : points.entrySet()) {
 				insert.addBatch("REPLACE INTO neoleaderboard_points VALUES ('"
-									+ npoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
+									+ npoints.getUuid() + "',1,'" + e.getKey() + "'," + e.getValue() + ");");
 			}
 		}
 		catch (Exception e) {
@@ -73,15 +72,29 @@ public class PointsManager implements IOComponent {
 	}
 
 	@Override
-	public void loadPlayer(Player arg0, Statement arg1) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void loadPlayer(Player arg0, Statement arg1) {}
 
 	@Override
-	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {
-		// TODO Auto-generated method stub
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
+		if (playerPoints.containsKey(p.getUniqueId())) {
+			return;
+		}
 		
+		try {
+			PlayerPoints ppoints = new PlayerPoints(p.getUniqueId());
+			ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE uuid = '" + p.getUniqueId() + "';");
+			while (rs.next()) {
+				ppoints.addPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(4)));
+			}
+			
+			if (!ppoints.isEmpty()) {
+				playerPoints.put(p.getUniqueId(), ppoints);
+			}
+		}
+		catch (Exception e) {
+			Bukkit.getLogger().log(Level.WARNING, "Professions failed to load or init storage for user " + p.getName());
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -94,7 +107,7 @@ public class PointsManager implements IOComponent {
 			
 			for (Entry<PlayerPointType, Double> e : ppoints.getAllPoints().entrySet()) {
 				insert.addBatch("REPLACE INTO neoleaderboard_points VALUES ('"
-									+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
+									+ ppoints.getUuid() + "',0,'" + e.getKey() + "'," + e.getValue() + ");");
 			}
 		}
 		catch (Exception e) {
