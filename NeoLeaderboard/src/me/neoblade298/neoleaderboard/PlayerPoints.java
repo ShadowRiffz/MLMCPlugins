@@ -10,6 +10,7 @@ public class PlayerPoints {
 	private UUID uuid;
 	private String display;
 	private HashMap<PlayerPointType, Double> points = new HashMap<PlayerPointType, Double>();
+	private static double LIMIT = 250;
 	
 	public PlayerPoints(UUID uuid) {
 		this.uuid = uuid;
@@ -47,5 +48,9 @@ public class PlayerPoints {
 	
 	public boolean isEmpty() {
 		return points.isEmpty();
+	}
+	
+	public static double getLimit() {
+		return LIMIT;
 	}
 }	

@@ -9,24 +9,34 @@ import com.palmergames.bukkit.towny.TownyAPI;
 public class NationPoints {
 	private UUID uuid;
 	private String display;
-	private HashMap<NationPointType, Double> points;
+	private HashMap<NationPointType, Double> nationPoints;
+	private HashMap<PlayerPointType, Double> playerPoints;
 	
 	public NationPoints(UUID uuid) {
 		this.uuid = uuid;
 		this.display = TownyAPI.getInstance().getNation(uuid).getName();
 	}
 	
-	public void addPoints(double amount, NationPointType type) {
-		points.put(type, points.getOrDefault(type, 0D));
+	public void addNationPoints(double amount, NationPointType type) {
+		nationPoints.put(type, nationPoints.getOrDefault(type, 0D));
 	}
 	
-	public void takePoints(double amount, NationPointType type) {
-		double after = points.getOrDefault(type, 0D) - amount;
-		points.put(type, Math.max(0, after));
+	public void takeNationPoints(double amount, NationPointType type) {
+		double after = nationPoints.getOrDefault(type, 0D) - amount;
+		nationPoints.put(type, Math.max(0, after));
+	}
+	
+	public void addPlayerPoints(double amount, PlayerPointType type) {
+		playerPoints.put(type, playerPoints.getOrDefault(type, 0D));
+	}
+	
+	public void takePlayerPoints(double amount, PlayerPointType type) {
+		double after = playerPoints.getOrDefault(type, 0D) - amount;
+		playerPoints.put(type, Math.max(0, after));
 	}
 	
 	public void clearPoints() {
-		points.clear();
+		nationPoints.clear();
 	}
 	
 	public UUID getUuid() {
@@ -41,7 +51,11 @@ public class NationPoints {
 		this.display = display;
 	}
 	
-	public HashMap<NationPointType, Double> getAllPoints() {
-		return points;
+	public HashMap<NationPointType, Double> getAllNationPoints() {
+		return nationPoints;
+	}
+	
+	public HashMap<PlayerPointType, Double> getAllPlayerPoints() {
+		return playerPoints;
 	}
 }	
