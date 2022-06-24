@@ -265,9 +265,13 @@ public class PointsManager implements IOComponent {
 	
 	private void savePlayerData(UUID uuid, Statement insert) throws SQLException {
 		PlayerPoints ppoints = playerPoints.get(uuid);
-		for (Entry<PlayerPointType, Double> e : ppoints.getAllPoints().entrySet()) {
+		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO neoleaderboard_points VALUES ('"
-								+ ppoints.getUuid() + "',0,'" + e.getKey() + "'," + e.getValue() + ");");
+								+ ppoints.getUuid() + "',0,0,'" + e.getKey() + "'," + e.getValue() + ");");
+		}
+		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
+			insert.addBatch("REPLACE INTO neoleaderboard_contributed VALUES ('"
+								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 	}
 	
