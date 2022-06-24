@@ -1,5 +1,7 @@
 package me.neoblade298.neoleaderboard;
 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -10,6 +12,8 @@ public class PlayerPoints {
 	private UUID uuid;
 	private String display;
 	private HashMap<PlayerPointType, Double> points = new HashMap<PlayerPointType, Double>();
+	private HashMap<PlayerPointType, Double> contributedPoints = new HashMap<PlayerPointType, Double>();
+	private double contributed;
 	private static double LIMIT = 250;
 	
 	public PlayerPoints(UUID uuid) {
@@ -26,8 +30,11 @@ public class PlayerPoints {
 		points.put(type, Math.max(0, after));
 	}
 	
-	public void clearPoints() {
+	public void clearPoints(Statement delete) throws SQLException {
+		contributedPoints.clear();
+		contributed = 0;
 		points.clear();
+		delete.addBatch("DELETE FROM neoleaderboard_points WHERE uuid = '" + uuid + "';");
 	}
 	
 	public UUID getUuid() {
@@ -42,7 +49,15 @@ public class PlayerPoints {
 		this.display = display;
 	}
 	
-	public HashMap<PlayerPointType, Double> getAllPoints() {
+	public double getContributed() {
+		return contributed;
+	}
+	
+	public HashMap<PlayerPointType, Double> getContributedPoints() {
+		return contributedPoints;
+	}
+	
+	public HashMap<PlayerPointType, Double> getTotalPoints() {
 		return points;
 	}
 	
