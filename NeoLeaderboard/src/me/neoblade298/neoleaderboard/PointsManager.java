@@ -46,23 +46,24 @@ public class PointsManager implements IOComponent {
 						nationEntries.put(uuid, new NationEntry(uuid, rs.getInt(3)));
 					}
 					
-					// Add nationwide points
-					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE isNation = 1 AND isNationent = 1;");
-					while (rs.next()) {
-						UUID uuid = UUID.fromString(rs.getString(1));
-						NationEntry np = nationEntries.get(uuid);
-						np.addNationPoints(rs.getDouble(3), NationPointType.valueOf(rs.getString(4)));
-					}
-					
-					// Add player points
-					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE isNation = 1 AND isNationent = 0;");
-					while (rs.next()) {
-						UUID uuid = UUID.fromString(rs.getString(1));
-						NationEntry ne = nationEntries.get(uuid);
-						TownyAPI api = TownyAPI.getInstance();
-						Resident r = api.getResident(uuid);
-						Town town = api.getResidentTownOrNull(r);
-						ne.addPlayerPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(4)), town);
+					// Set items for nation entries
+					for (NationEntry n : nationEntries.values()) {
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_nationpoints WHERE uuid = '" + "';");
+						while (rs.next()) {
+							n.setNationPoints(rs.getDouble(2), NationPointType.valueOf(rs.getString(3)));
+						}
+
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_nationplayerpoints WHERE uuid = '" + "';");
+						while (rs.next()) {
+							n.setPlayerPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
+						}
+
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_townpoints WHERE uuid = '" + "';");
+						while (rs.next()) {
+							UUID uuid = UUID.fromString(rs.getString(1));
+							Town town = TownyAPI.getInstance().getTown(uuid);
+							n.setTownPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(4)), town);
+						}
 					}
 				}
 				catch (Exception e) {
@@ -141,7 +142,7 @@ public class PointsManager implements IOComponent {
 		else {
 			try {
 				Statement stmt = NeoCore.getStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE uuid = '" + uuid + "';");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 				double current = 0;
 				
 				// If this was a player's first points
@@ -149,8 +150,8 @@ public class PointsManager implements IOComponent {
 					nent.incrementContributors();
 				}
 				else {
-					// Check their current points and add the new points
-					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE uuid = '" + uuid + "' AND category = '" + type + "';");
+					// Simply load in the player and save them after
+					rs = stmt.executeQuery("SELECT SUM(points) FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "' AND category = '" + type + "';");
 					current = rs.next() ? rs.getDouble(4) : 0;
 				}
 
@@ -225,20 +226,26 @@ public class PointsManager implements IOComponent {
 		}
 		
 		try {
-			PlayerPoints ppoints = new PlayerPoints(p.getUniqueId());
-			ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_points WHERE uuid = '" + p.getUniqueId() + "';");
-			while (rs.next()) {
-				ppoints.addPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(4)));
-			}
-			
-			if (!ppoints.isEmpty()) {
-				playerPoints.put(p.getUniqueId(), ppoints);
-			}
+			loadPlayerPoints(p, stmt);
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to load points for player " + p.getName());
 			e.printStackTrace();
 		}
+	}
+	
+	private PlayerPoints loadPlayerPoints(OfflinePlayer p, Statement stmt) throws SQLException {
+		PlayerPoints ppoints = new PlayerPoints(p.getUniqueId());
+		ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_playerpoints WHERE uuid = '" + p.getUniqueId() + "';");
+		while (rs.next()) {
+			ppoints.setPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
+		}
+		rs = stmt.executeQuery("SELECT * FROM neoleaderboard_contributed WHERE uuid = '" + p.getUniqueId() + "';");
+		while (rs.next()) {
+			ppoints.setContributedPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
+		}
+		ppoints.calculateContributed();
+		return ppoints;
 	}
 
 	@Override
@@ -265,9 +272,13 @@ public class PointsManager implements IOComponent {
 	
 	private void savePlayerData(UUID uuid, Statement insert) throws SQLException {
 		PlayerPoints ppoints = playerPoints.get(uuid);
-		for (Entry<PlayerPointType, Double> e : ppoints.getAllPoints().entrySet()) {
-			insert.addBatch("REPLACE INTO neoleaderboard_points VALUES ('"
-								+ ppoints.getUuid() + "',0,'" + e.getKey() + "'," + e.getValue() + ");");
+		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
+			insert.addBatch("REPLACE INTO neoleaderboard_playerpoints VALUES ('"
+								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
+		}
+		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
+			insert.addBatch("REPLACE INTO neoleaderboard_contributed VALUES ('"
+								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 	}
 	

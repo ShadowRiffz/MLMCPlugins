@@ -7,10 +7,12 @@ import java.util.UUID;
 
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
 public class NationEntry {
 	private UUID uuid;
+	private Nation nation;
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<Town, HashMap<PlayerPointType, Double>> townPoints = new HashMap<Town, HashMap<PlayerPointType, Double>>();
@@ -23,10 +25,26 @@ public class NationEntry {
 	public NationEntry(UUID uuid, int numContributors) {
 		this.uuid = uuid;
 		this.numContributors = numContributors;
+		
+		this.nation = TownyAPI.getInstance().getNation(uuid);
 	}
 	
 	public void incrementContributors() {
 		numContributors++;
+	}
+	
+	public void setNationPoints(double amount, NationPointType type) {
+		nationPoints.put(type, amount);
+	}
+	
+	public void setPlayerPoints(double amount, PlayerPointType type) {
+		playerPoints.put(type, amount);
+	}
+	
+	public void setTownPoints(double amount, PlayerPointType type, Town town) {
+		HashMap<PlayerPointType, Double> tpoints = townPoints.getOrDefault(town, new HashMap<PlayerPointType, Double>());
+		tpoints.put(type, amount);
+		townPoints.putIfAbsent(town, tpoints);
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {

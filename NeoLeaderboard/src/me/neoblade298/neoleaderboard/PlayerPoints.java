@@ -21,6 +21,23 @@ public class PlayerPoints {
 		this.display = Bukkit.getOfflinePlayer(uuid).getName();
 	}
 	
+	public void setPoints(double amount, PlayerPointType type) {
+		points.put(type, amount);
+	}
+	
+	public void setContributedPoints(double amount, PlayerPointType type) {
+		contributedPoints.put(type, amount);
+	}
+	
+	public double calculateContributed() {
+		double sum = 0;
+		for (double d : contributedPoints.values()) {
+			sum += d;
+		}
+		contributed = sum;
+		return contributed;
+	}
+	
 	public void addPoints(double amount, PlayerPointType type) {
 		points.put(type, points.getOrDefault(type, 0D));
 	}
