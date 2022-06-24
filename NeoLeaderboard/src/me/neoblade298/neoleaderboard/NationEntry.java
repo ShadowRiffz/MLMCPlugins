@@ -2,10 +2,8 @@ package me.neoblade298.neoleaderboard;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.TreeSet;
 import java.util.UUID;
 
-import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
@@ -86,6 +84,10 @@ public class NationEntry {
 		return playerPoints;
 	}
 	
+	public HashMap<Town, HashMap<PlayerPointType, Double>> getAllTownPoints() {
+		return townPoints;
+	}
+	
 	public void removePlayer(PlayerPoints ppoints, Town town) {
 		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
 			takeTownPoints(e.getValue(), e.getKey(), town);
@@ -102,6 +104,10 @@ public class NationEntry {
 			playerPoints.put(e.getKey(), playerPoints.get(e.getKey()) - e.getValue());
 		}
 		townPoints.remove(town);
+	}
+	
+	public Nation getNation() {
+		return nation;
 	}
 	
 	private void takeTownPoints(double amount, PlayerPointType type, Town town) {

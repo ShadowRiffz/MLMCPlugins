@@ -51,7 +51,8 @@ public class PlayerPoints {
 		contributedPoints.clear();
 		contributed = 0;
 		points.clear();
-		delete.addBatch("DELETE FROM neoleaderboard_points WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
 	}
 	
 	public UUID getUuid() {
