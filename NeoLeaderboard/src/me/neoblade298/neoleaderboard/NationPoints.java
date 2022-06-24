@@ -8,13 +8,21 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 public class NationPoints {
 	private UUID uuid;
-	private String display;
 	private HashMap<NationPointType, Double> nationPoints;
 	private HashMap<PlayerPointType, Double> playerPoints;
+	private int numContributors;
 	
 	public NationPoints(UUID uuid) {
+		this(uuid, 0);
+	}
+	
+	public NationPoints(UUID uuid, int numContributors) {
 		this.uuid = uuid;
-		this.display = TownyAPI.getInstance().getNation(uuid).getName();
+		this.numContributors = numContributors;
+	}
+	
+	public void incrementContributors() {
+		numContributors++;
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {
@@ -43,12 +51,8 @@ public class NationPoints {
 		return uuid;
 	}
 	
-	public String getDisplay() {
-		return display;
-	}
-	
-	public void setDisplay(String display) {
-		this.display = display;
+	public int getContributors() {
+		return numContributors;
 	}
 	
 	public HashMap<NationPointType, Double> getAllNationPoints() {

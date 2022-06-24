@@ -6,7 +6,7 @@ public enum PlayerPointType {
 	KILL_BOSS("Boss kills"),
 	PROFESSION_CRAFT("Profession items crafted"),
 	EDIT_BLOCK("Blocks placed/broken"),
-	EVENT("Events");
+	PLAYER_EVENT("Player event points");
 	
 
 	private final String display;
