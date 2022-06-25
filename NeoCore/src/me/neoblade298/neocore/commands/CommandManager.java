@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -17,22 +18,23 @@ public class CommandManager implements CommandExecutor {
 	private String base, perm;
 	private ChatColor color;
 	
-	public CommandManager(String base) {
-		this(base, null, ChatColor.RED);
+	public CommandManager(String base, JavaPlugin plugin) {
+		this(base, null, ChatColor.RED, plugin);
 	}
 	
-	public CommandManager(String base, String perm) {
-		this(base, perm, ChatColor.RED);
+	public CommandManager(String base, String perm, JavaPlugin plugin) {
+		this(base, perm, ChatColor.RED, plugin);
 	}
 	
-	public CommandManager(String base, ChatColor color) {
-		this(base, null, ChatColor.RED);
+	public CommandManager(String base, ChatColor color, JavaPlugin plugin) {
+		this(base, null, ChatColor.RED, plugin);
 	}
 	
-	public CommandManager(String base, String perm, ChatColor color) {
+	public CommandManager(String base, String perm, ChatColor color, JavaPlugin plugin) {
 		this.base = base;
 		this.perm = perm;
 		this.color = color;
+		plugin.getCommand(base).setExecutor(this);
 	}
 	
 	@Override

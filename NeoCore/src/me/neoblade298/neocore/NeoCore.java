@@ -76,27 +76,23 @@ public class NeoCore extends JavaPlugin implements Listener {
 
 	private void initCommands() {
 		String cmd = "core";
-		CommandManager mngr = new CommandManager(cmd);
+		CommandManager mngr = new CommandManager(cmd, this);
 		mngr.registerCommandList("");
 		mngr.register(new CmdCoreEnable());
 		mngr.register(new CmdCoreDisable());
 		mngr.register(new CmdCoreDebug());
-		this.getCommand(cmd).setExecutor(mngr);
 		
 		cmd = "help";
-		mngr = new CommandManager(cmd);
+		mngr = new CommandManager(cmd, this);
 		mngr.register(new CmdMessage("help"));
-		this.getCommand(cmd).setExecutor(mngr);
 		
 		cmd = "features";
-		mngr = new CommandManager(cmd);
+		mngr = new CommandManager(cmd, this);
 		mngr.register(new CmdMessage("features", 2));
-		this.getCommand(cmd).setExecutor(mngr);
 		
 		cmd = "commands";
-		mngr = new CommandManager(cmd);
+		mngr = new CommandManager(cmd, this);
 		mngr.register(new CmdMessage("commands", 4));
-		this.getCommand(cmd).setExecutor(mngr);
 	}
 	
 	public void onDisable() {
