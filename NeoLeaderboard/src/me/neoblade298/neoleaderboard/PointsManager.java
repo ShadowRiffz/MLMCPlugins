@@ -80,7 +80,7 @@ public class PointsManager implements IOComponent {
 		try {
 			nationEntries.get(n.getUUID()).removePlayer(playerPoints.get(r.getUUID()), town);
 			Statement delete = NeoCore.getStatement();
-			playerPoints.remove(r.getUUID()).clearPoints(delete);
+			clearPlayer(r.getUUID(), delete);
 			delete.executeBatch();
 		}
 		catch (Exception e) {
@@ -93,14 +93,13 @@ public class PointsManager implements IOComponent {
 		new BukkitRunnable() {
 			public void run() {
 				try {
+					// Remove points from nation
+					nationEntries.get(n.getUUID()).removeTown(town);
+					
+					// Clear players themselves
 					Statement delete = NeoCore.getStatement();
 					for (Resident res : town.getResidents()) {
-						UUID uuid = res.getUUID();
-						
-						if (playerPoints.containsKey(uuid)) {
-							playerPoints.remove(uuid).clearPoints(delete);
-							nationEntries.get(n.getUUID()).removeTown(town);
-						}
+						clearPlayer(res.getUUID(), delete);
 					}
 					delete.executeBatch();
 				}
@@ -110,6 +109,18 @@ public class PointsManager implements IOComponent {
 				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
+	}
+	
+	public static void clearPlayer(UUID uuid, Statement delete) throws SQLException {
+		// Player is online
+		if (playerPoints.containsKey(uuid)) {
+			playerPoints.remove(uuid).clearPoints(delete); // This adds batch
+		}
+		// Player is offline
+		else {
+			delete.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+			delete.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
+		}
 	}
 	
 	public static void takePlayerPoints(UUID uuid, double amount, PlayerPointType type) {
@@ -127,6 +138,7 @@ public class PointsManager implements IOComponent {
 				Resident r = api.getResident(uuid);
 				Nation n = api.getResidentNationOrNull(r);
 				Town t = api.getResidentTownOrNull(r);
+				double contributable = 0;
 				if (n == null) return;
 				
 				NationEntry nent = nationEntries.get(n.getUUID());
@@ -138,8 +150,8 @@ public class PointsManager implements IOComponent {
 						nent.incrementContributors();
 						playerPoints.put(uuid, ppoints);
 					}
-					nent.addPlayerPoints(amount, type, t);
-					ppoints.addPoints(amount, type);
+					contributable = ppoints.addPoints(amount, type);
+					nent.addPlayerPoints(contributable, type, t);
 				}
 				else {
 					try {
@@ -150,14 +162,11 @@ public class PointsManager implements IOComponent {
 						if (!rs.next()) {
 							nent.incrementContributors();
 						}
-						else {
-							// Simply load in the player and save them after
-							rs = stmt.executeQuery("SELECT SUM(points) FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "' AND category = '" + type + "';");
-							ppoints = loadPlayerPoints(uuid, stmt);
-							nent.addPlayerPoints(amount, type, t);
-							ppoints.addPoints(amount, type);
-							savePlayerData(uuid, stmt);
-						}
+						
+						// Simply load in the player and save them after
+						ppoints = loadPlayerPoints(uuid, stmt);
+						contributable = ppoints.addPoints(amount, type);
+						savePlayerData(uuid, stmt);
 						nent.addPlayerPoints(amount, type, t);
 					}
 					catch (Exception e) {
