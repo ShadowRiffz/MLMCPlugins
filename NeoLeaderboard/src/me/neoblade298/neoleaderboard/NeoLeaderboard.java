@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neoleaderboard.commands.CmdNations;
+import me.neoblade298.neoleaderboard.points.PointsManager;
 
 public class NeoLeaderboard extends JavaPlugin {
 	private static NeoLeaderboard inst;
@@ -22,10 +24,8 @@ public class NeoLeaderboard extends JavaPlugin {
 	}
 	
 	private void initCommands() {
-		String cmd = "nations";
-		CommandManager mngr = new CommandManager(cmd);
-		mngr.registerCommandList("");
-		this.getCommand(cmd).setExecutor(mngr);
+		CommandManager mngr = new CommandManager("nations", this);
+		mngr.register(new CmdNations());
 	}
 	
 	public static NeoLeaderboard inst() {

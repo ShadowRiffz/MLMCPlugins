@@ -1,4 +1,4 @@
-package me.neoblade298.neoleaderboard;
+package me.neoblade298.neoleaderboard.points;
 
 public enum PlayerPointType {
 	KILL_PLAYER("Player kills"),

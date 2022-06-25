@@ -1,4 +1,4 @@
-package me.neoblade298.neoleaderboard;
+package me.neoblade298.neoleaderboard.points;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -8,12 +8,13 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
-public class NationEntry {
+public class NationEntry implements Comparable<NationEntry> {
 	private UUID uuid;
 	private Nation nation;
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<Town, HashMap<PlayerPointType, Double>> townPoints = new HashMap<Town, HashMap<PlayerPointType, Double>>();
+	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
 	
 	public NationEntry(UUID uuid) {
@@ -33,10 +34,12 @@ public class NationEntry {
 	
 	public void setNationPoints(double amount, NationPointType type) {
 		nationPoints.put(type, amount);
+		totalNationPoints = amount;
 	}
 	
 	public void setPlayerPoints(double amount, PlayerPointType type) {
 		playerPoints.put(type, amount);
+		totalPlayerPoints = amount;
 	}
 	
 	public void setTownPoints(double amount, PlayerPointType type, Town town) {
@@ -48,6 +51,7 @@ public class NationEntry {
 	public void addNationPoints(double amount, NationPointType type) {
 		double after = nationPoints.getOrDefault(type, 0D) + amount;
 		nationPoints.putIfAbsent(type, after);
+		totalNationPoints += amount;
 	}
 	
 	public void takeNationPoints(double amount, NationPointType type) {
@@ -57,6 +61,7 @@ public class NationEntry {
 	public void addPlayerPoints(double amount, PlayerPointType type, Town town) {
 		double after = playerPoints.getOrDefault(type, 0D) + amount;
 		playerPoints.putIfAbsent(type, after);
+		totalPlayerPoints += amount;
 		addTownPoints(amount, type, town);
 	}
 	
@@ -118,5 +123,14 @@ public class NationEntry {
 		HashMap<PlayerPointType, Double> tpoints = townPoints.getOrDefault(town, new HashMap<PlayerPointType, Double>());
 		tpoints.put(type, tpoints.getOrDefault(type, 0D) + amount);
 		townPoints.putIfAbsent(town, tpoints);
+	}
+	
+	public double getEffectivePoints() {
+		return totalNationPoints + (totalPlayerPoints / numContributors);
+	}
+
+	@Override
+	public int compareTo(NationEntry o) {
+		return (int) (this.getEffectivePoints() - o.getEffectivePoints());
 	}
 }	

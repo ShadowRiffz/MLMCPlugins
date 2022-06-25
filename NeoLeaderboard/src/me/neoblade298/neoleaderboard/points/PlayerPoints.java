@@ -1,4 +1,4 @@
-package me.neoblade298.neoleaderboard;
+package me.neoblade298.neoleaderboard.points;
 
 import java.sql.SQLException;
 import java.sql.Statement;

@@ -1,8 +1,9 @@
-package me.neoblade298.neoleaderboard;
+package me.neoblade298.neoleaderboard.points;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import com.palmergames.bukkit.towny.object.Town;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neoleaderboard.NeoLeaderboard;
 
 public class PointsManager implements IOComponent {
 	private static HashMap<UUID, PlayerPoints> playerPoints = new HashMap<UUID, PlayerPoints>();
@@ -288,6 +290,10 @@ public class PointsManager implements IOComponent {
 			insert.addBatch("REPLACE INTO neoleaderboard_contributed VALUES ('"
 								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
+	}
+	
+	public static Collection<NationEntry> getNationEntries() {
+		return nationEntries.values();
 	}
 	
 	public static double getMaxContribution() {
