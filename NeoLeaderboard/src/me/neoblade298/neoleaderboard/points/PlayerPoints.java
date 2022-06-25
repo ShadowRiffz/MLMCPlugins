@@ -8,6 +8,9 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neoleaderboard.PlayerPointType;
+import me.neoblade298.neoleaderboard.PointsManager;
+
 public class PlayerPoints {
 	private UUID uuid;
 	private String display;
@@ -37,14 +40,54 @@ public class PlayerPoints {
 		contributed = sum;
 		return contributed;
 	}
-	
-	public void addPoints(double amount, PlayerPointType type) {
-		points.put(type, points.getOrDefault(type, 0D));
+
+	// Return the amount that can be contributed
+	public double addPoints(double amount, PlayerPointType type) {
+		points.put(type, points.getOrDefault(type, 0D) + amount);
+
+		double before = contributedPoints.getOrDefault(type, 0.0D);
+		double after = before + amount;
+		double contributable = 0;
+		
+		if (amount >= 0) {
+			if (contributed >= PointsManager.getMaxContribution()) {
+				return 0;
+			}
+			else if (before < LIMIT && after > LIMIT) {
+				contributable = LIMIT - before;
+				contributedPoints.put(type, LIMIT);
+				contributed += contributable;
+				return contributable; // Will be positive
+			}
+			else if (before < LIMIT && after < LIMIT) {
+				contributedPoints.put(type, after);
+				contributed += amount;
+				return amount;
+			}
+			// before > LIMIT && after > LIMIT we don't do anything
+			// before > LIMIT && after < LIMIT not possible
+		}
+		else {
+			if (before > LIMIT && after < LIMIT) {
+				contributable = after - LIMIT;
+				contributedPoints.put(type, after);
+				contributed += contributable;
+				return contributable; // Will be negative
+			}
+			else if (before < LIMIT && after < LIMIT) {
+				contributedPoints.put(type, after);
+				contributed += amount;
+				return amount;
+			}
+			// before > LIMIT && after > LIMIT we don't do anything
+			// before < LIMIT && after > LIMIT not possible
+		}
+		
+		return 0;
 	}
 	
-	public void takePoints(double amount, PlayerPointType type) {
-		double after = points.getOrDefault(type, 0D) - amount;
-		points.put(type, Math.max(0, after));
+	public double takePoints(double amount, PlayerPointType type) {
+		return addPoints(-amount, type);
 	}
 	
 	public void clearPoints(Statement delete) throws SQLException {

@@ -105,6 +105,7 @@ public class NationEntry implements Comparable<NationEntry> {
 			return;
 		}
 		
+		// Remove all town points from nation entry
 		for (Entry<PlayerPointType, Double> e : townPoints.get(town).entrySet()) {
 			playerPoints.put(e.getKey(), playerPoints.get(e.getKey()) - e.getValue());
 		}
