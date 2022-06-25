@@ -28,7 +28,7 @@ public class PointsManager implements IOComponent {
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
 	
-	public PointsManager() {
+	public static void initialize() {
 		// Ground rules:
 		// PlayerPoints only exists once a player gets their first points, but it is created even if the player gets them while offline
 		// PlayerPoints does not persist on logout
