@@ -7,6 +7,11 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.bukkit.command.CommandSender;
+
+import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.object.Nation;
+
+import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
@@ -18,8 +23,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class CmdNations implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+public class CmdNLTowns implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(new CommandArgument("nation"));
 	private static final Formatter fmt = new Formatter();
 	private static final String month;
 	
@@ -57,14 +62,11 @@ public class CmdNations implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		String temp = "testNation";
+		Nation n = TownyUniverse.getInstance().getNation(args[0]);
 		TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
 		Iterator<NationEntry> iter = sorted.iterator();
 		
-		ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + " §c§l«\n")
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
-		builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);
+		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
 		int i = 1;
 		while (iter.hasNext() && i <= 5) {
 			NationEntry e = iter.next();

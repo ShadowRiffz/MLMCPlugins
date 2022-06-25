@@ -63,6 +63,7 @@ public class NationEntry implements Comparable<NationEntry> {
 		playerPoints.putIfAbsent(type, after);
 		totalPlayerPoints += amount;
 		addTownPoints(amount, type, town);
+		System.out.println("4");
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, Town town) {

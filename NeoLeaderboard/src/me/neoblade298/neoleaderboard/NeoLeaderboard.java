@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neoleaderboard.commands.CmdNations;
+import me.neoblade298.neoleaderboard.listeners.PointsListener;
 import me.neoblade298.neoleaderboard.points.PointsManager;
 
 public class NeoLeaderboard extends JavaPlugin {
@@ -16,6 +17,8 @@ public class NeoLeaderboard extends JavaPlugin {
 
 		PointsManager.initialize();
 		initCommands();
+		
+		Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
 	}
 	
 	public void onDisable() {

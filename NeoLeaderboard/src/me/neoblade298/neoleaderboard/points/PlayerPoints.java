@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import me.neoblade298.neoleaderboard.PlayerPointType;
-import me.neoblade298.neoleaderboard.PointsManager;
 
 public class PlayerPoints {
 	private UUID uuid;
@@ -94,8 +90,8 @@ public class PlayerPoints {
 		contributedPoints.clear();
 		contributed = 0;
 		points.clear();
-		delete.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
-		delete.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
 	}
 	
 	public UUID getUuid() {
