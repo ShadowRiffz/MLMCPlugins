@@ -7,9 +7,12 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neoleaderboard.NeoLeaderboard;
 import me.neoblade298.neoleaderboard.points.NationEntry;
 import me.neoblade298.neoleaderboard.points.PointsManager;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -58,23 +61,28 @@ public class CmdNations implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		String temp = "testNation";
-		TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
-		Iterator<NationEntry> iter = sorted.iterator();
 		
-		ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + " §c§l«\n")
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
-		builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);
-		int i = 1;
-		while (iter.hasNext() && i <= 5) {
-			NationEntry e = iter.next();
-			String name = e.getNation().getName();
-			String hovertext = "Click for details: §e/nl towns " + name;
-			hovertext += "\n";
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getEffectivePoints(), FormatRetention.NONE)
-			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hovertext)))
-			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl towns " + name));
-		}
-		s.spigot().sendMessage(builder.create());
+		new BukkitRunnable() {
+			public void run() {
+				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
+				Iterator<NationEntry> iter = sorted.iterator();
+				
+				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + " §c§l«\n")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
+				builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);
+				int i = 1;
+				while (iter.hasNext() && i <= 5) {
+					NationEntry e = iter.next();
+					String name = e.getNation().getName();
+					String hovertext = "Click for details: §e/nl nation " + name;
+					hovertext += "\n";
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getEffectivePoints(), FormatRetention.NONE)
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hovertext)))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl nation " + name));
+				}
+				s.spigot().sendMessage(builder.create());
+			}
+		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
 }

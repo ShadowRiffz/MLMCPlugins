@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
-public class PlayerPoints {
+public class PlayerEntry {
 	private UUID uuid;
 	private String display;
 	private HashMap<PlayerPointType, Double> points = new HashMap<PlayerPointType, Double>();
@@ -15,7 +15,7 @@ public class PlayerPoints {
 	private double contributed;
 	private static double LIMIT = 250;
 	
-	public PlayerPoints(UUID uuid) {
+	public PlayerEntry(UUID uuid) {
 		this.uuid = uuid;
 		this.display = Bukkit.getOfflinePlayer(uuid).getName();
 	}

@@ -15,8 +15,8 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neoleaderboard.points.NationEntry;
 import me.neoblade298.neoleaderboard.points.PointsManager;
+import me.neoblade298.neoleaderboard.points.TownEntry;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,15 +25,6 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class CmdNLTowns implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(new CommandArgument("nation"));
-	private static final Formatter fmt = new Formatter();
-	private static final String month;
-	
-	static {
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date());
-		c.add(Calendar.MONTH, -1);
-		month = fmt.format("%tB", c).toString();
-	}
 
 	@Override
 	public String getDescription() {
@@ -42,7 +33,7 @@ public class CmdNLTowns implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "";
+		return "nation";
 	}
 
 	@Override
@@ -63,17 +54,17 @@ public class CmdNLTowns implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Nation n = TownyUniverse.getInstance().getNation(args[0]);
-		TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
-		Iterator<NationEntry> iter = sorted.iterator();
+		TreeSet<TownEntry> sorted = new TreeSet<TownEntry>(PointsManager.getTownEntriesFromNation(n));
+		Iterator<TownEntry> iter = sorted.iterator();
 		
 		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
 		int i = 1;
 		while (iter.hasNext() && i <= 5) {
-			NationEntry e = iter.next();
-			String name = e.getNation().getName();
-			String hovertext = "Click for details: §e/nl towns " + name;
+			TownEntry e = iter.next();
+			String name = e.getTown().getName();
+			String hovertext = "Click for details: §e/nl residents " + name;
 			hovertext += "\n";
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getEffectivePoints(), FormatRetention.NONE)
+			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getTotalPoints(), FormatRetention.NONE)
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hovertext)))
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl towns " + name));
 		}

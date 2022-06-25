@@ -25,7 +25,7 @@ import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
 
 public class PointsManager implements IOComponent {
-	private static HashMap<UUID, PlayerPoints> playerPoints = new HashMap<UUID, PlayerPoints>();
+	private static HashMap<UUID, PlayerEntry> playerPoints = new HashMap<UUID, PlayerEntry>();
 	private static HashMap<UUID, NationEntry> nationEntries = new HashMap<UUID, NationEntry>();
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
@@ -53,6 +53,14 @@ public class PointsManager implements IOComponent {
 						nationEntries.putIfAbsent(n.getUUID(), new NationEntry(n.getUUID()));
 					}
 					
+					// Initialize all towns
+					rs = stmt.executeQuery("SELECT * FROM leaderboard_towns");
+					while (rs.next()) {
+						UUID uuid = UUID.fromString(rs.getString(1));
+						UUID nation = UUID.fromString(rs.getString(2));
+						nationEntries.get(nation).initializeTown(uuid, rs.getInt(3));
+					}
+					
 					// Set items for nation entries
 					for (NationEntry n : nationEntries.values()) {
 						rs = stmt.executeQuery("SELECT * FROM leaderboard_nationpoints WHERE uuid = '" + "';");
@@ -69,7 +77,7 @@ public class PointsManager implements IOComponent {
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							Town town = TownyAPI.getInstance().getTown(uuid);
-							n.setTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), town);
+							n.addTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), town);
 						}
 					}
 				}
@@ -151,11 +159,11 @@ public class PointsManager implements IOComponent {
 
 				System.out.println("1");
 				NationEntry nent = nationEntries.get(n.getUUID());
-				PlayerPoints ppoints = playerPoints.get(uuid);
+				PlayerEntry ppoints = playerPoints.get(uuid);
 				
 				if (online) {
 					if (ppoints == null) {
-						ppoints = new PlayerPoints(uuid);
+						ppoints = new PlayerEntry(uuid);
 						nent.incrementContributors();
 						playerPoints.put(uuid, ppoints);
 					}
@@ -207,7 +215,7 @@ public class PointsManager implements IOComponent {
 				try {
 					HashMap<NationPointType, Double> points = nent.getAllNationPoints();
 					HashMap<PlayerPointType, Double> ppoints = nent.getAllPlayerPoints();
-					HashMap<Town, HashMap<PlayerPointType, Double>> tpoints = nent.getAllTownPoints();
+					HashMap<UUID, TownEntry> tpoints = nent.getAllTownPoints();
 
 					insert.addBatch("REPLACE INTO leaderboard_nations VALUES ('"
 										+ nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
@@ -219,10 +227,11 @@ public class PointsManager implements IOComponent {
 						insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
-					for (Town t : tpoints.keySet()) {
-						for (Entry<PlayerPointType, Double> e : tpoints.get(t).entrySet()) {
+					for (UUID uuid : tpoints.keySet()) {
+						String name = TownyUniverse.getInstance().getTown(uuid).getName();
+						for (Entry<PlayerPointType, Double> e : tpoints.get(uuid).getPlayerPoints().entrySet()) {
 							insert.addBatch("REPLACE INTO leaderboard_townpoints VALUES ('"
-									+ t.getUUID() + "','" + t.getName() + "','" + e.getKey() + "'," + e.getValue() + ");");
+									+ uuid + "','" + name + "','" + e.getKey() + "'," + e.getValue() + ");");
 						}
 					}
 				}
@@ -261,8 +270,8 @@ public class PointsManager implements IOComponent {
 		}
 	}
 	
-	private static PlayerPoints loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
-		PlayerPoints ppoints = new PlayerPoints(uuid);
+	private static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
+		PlayerEntry ppoints = new PlayerEntry(uuid);
 		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
 			ppoints.setPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
@@ -301,7 +310,7 @@ public class PointsManager implements IOComponent {
 	}
 	
 	private static void savePlayerData(UUID uuid, Statement insert) throws SQLException {
-		PlayerPoints ppoints = playerPoints.get(uuid);
+		PlayerEntry ppoints = playerPoints.get(uuid);
 		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
 								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
@@ -314,6 +323,10 @@ public class PointsManager implements IOComponent {
 	
 	public static Collection<NationEntry> getNationEntries() {
 		return nationEntries.values();
+	}
+	
+	public static Collection<TownEntry> getTownEntriesFromNation(Nation n) {
+		return nationEntries.get(n.getUUID()).getAllTownPoints().values();
 	}
 	
 	public static double getMaxContribution() {
