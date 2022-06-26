@@ -31,7 +31,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr.register(new CmdNations());
 		
 		mngr = new CommandManager("nl", this);
-		mngr.register(new CmdNLTowns());
+		mngr.register(new CmdNLNation());
 	}
 	
 	public static NeoLeaderboard inst() {

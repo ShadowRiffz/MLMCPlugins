@@ -325,8 +325,8 @@ public class PointsManager implements IOComponent {
 		return nationEntries.values();
 	}
 	
-	public static Collection<TownEntry> getTownEntriesFromNation(Nation n) {
-		return nationEntries.get(n.getUUID()).getAllTownPoints().values();
+	public static NationEntry getNationEntry(UUID uuid) {
+		return nationEntries.get(uuid);
 	}
 	
 	public static double getMaxContribution() {
