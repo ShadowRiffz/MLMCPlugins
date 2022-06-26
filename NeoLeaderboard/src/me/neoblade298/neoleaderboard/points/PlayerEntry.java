@@ -6,12 +6,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
-import me.neoblade298.neoleaderboard.PlayerPointType;
-import me.neoblade298.neoleaderboard.PointsManager;
-
-public class PlayerPoints {
+public class PlayerEntry {
 	private UUID uuid;
 	private String display;
 	private HashMap<PlayerPointType, Double> points = new HashMap<PlayerPointType, Double>();
@@ -19,7 +15,7 @@ public class PlayerPoints {
 	private double contributed;
 	private static double LIMIT = 250;
 	
-	public PlayerPoints(UUID uuid) {
+	public PlayerEntry(UUID uuid) {
 		this.uuid = uuid;
 		this.display = Bukkit.getOfflinePlayer(uuid).getName();
 	}
@@ -94,8 +90,8 @@ public class PlayerPoints {
 		contributedPoints.clear();
 		contributed = 0;
 		points.clear();
-		delete.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
-		delete.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+		delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
 	}
 	
 	public UUID getUuid() {

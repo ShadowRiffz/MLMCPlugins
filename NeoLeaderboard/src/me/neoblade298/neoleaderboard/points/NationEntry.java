@@ -1,7 +1,9 @@
 package me.neoblade298.neoleaderboard.points;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -13,9 +15,12 @@ public class NationEntry implements Comparable<NationEntry> {
 	private Nation nation;
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
-	private HashMap<Town, HashMap<PlayerPointType, Double>> townPoints = new HashMap<Town, HashMap<PlayerPointType, Double>>();
+	private HashMap<UUID, TownEntry> townPoints = new HashMap<UUID, TownEntry>();
+	private TreeSet<UUID> topTowns;
 	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
+	
+	private final Comparator<UUID> townComparer;
 	
 	public NationEntry(UUID uuid) {
 		this(uuid, 0);
@@ -26,6 +31,14 @@ public class NationEntry implements Comparable<NationEntry> {
 		this.numContributors = numContributors;
 		
 		this.nation = TownyAPI.getInstance().getNation(uuid);
+
+		townComparer = new Comparator<UUID>() {
+			public int compare(UUID o1, UUID o2) {
+				return (int) (townPoints.get(o1).getTotalPoints() - townPoints.get(o2).getTotalPoints());
+			}
+		};
+		
+		topTowns = new TreeSet<UUID>(townComparer);
 	}
 	
 	public void incrementContributors() {
@@ -42,10 +55,24 @@ public class NationEntry implements Comparable<NationEntry> {
 		totalPlayerPoints = amount;
 	}
 	
-	public void setTownPoints(double amount, PlayerPointType type, Town town) {
-		HashMap<PlayerPointType, Double> tpoints = townPoints.getOrDefault(town, new HashMap<PlayerPointType, Double>());
-		tpoints.put(type, amount);
-		townPoints.putIfAbsent(town, tpoints);
+	public void initializeTown(UUID uuid) {
+		initializeTown(uuid, 0);
+	}
+	
+	public void initializeTown(UUID uuid, int contributors) {
+		townPoints.put(uuid, new TownEntry(uuid, contributors));
+	}
+	
+	public void addTownPoints(double amount, PlayerPointType type, UUID uuid) {
+		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, 0));
+		te.addPlayerPoints(amount, type);
+		townPoints.putIfAbsent(uuid, te);
+		
+		// Changes to town points means town uuid must be re-sorted
+		if (topTowns.contains(uuid)) {
+			topTowns.remove(uuid);
+		}
+		topTowns.add(uuid);
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {
@@ -63,6 +90,7 @@ public class NationEntry implements Comparable<NationEntry> {
 		playerPoints.putIfAbsent(type, after);
 		totalPlayerPoints += amount;
 		addTownPoints(amount, type, town);
+		System.out.println("4");
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, Town town) {
@@ -89,49 +117,53 @@ public class NationEntry implements Comparable<NationEntry> {
 		return playerPoints;
 	}
 	
-	public HashMap<Town, HashMap<PlayerPointType, Double>> getAllTownPoints() {
+	public HashMap<UUID, TownEntry> getAllTownPoints() {
 		return townPoints;
 	}
 	
-	public void removePlayer(PlayerPoints ppoints, Town town) {
+	public void removePlayer(PlayerEntry ppoints, Town town) {
 		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
-			takeTownPoints(e.getValue(), e.getKey(), town);
+			takePlayerPoints(e.getValue(), e.getKey(), town);
 		}
 	}
 	
 	public void removeTown(Town town) {
 		// If town hasn't contributed any points
-		if (!townPoints.containsKey(town)) {
+		if (!townPoints.containsKey(town.getUUID())) {
 			return;
 		}
 		
 		// Remove all town points from nation entry
-		for (Entry<PlayerPointType, Double> e : townPoints.get(town).entrySet()) {
-			playerPoints.put(e.getKey(), playerPoints.get(e.getKey()) - e.getValue());
+		for (Entry<PlayerPointType, Double> e : townPoints.get(town.getUUID()).getPlayerPoints().entrySet()) {
+			takePlayerPoints(e.getValue(), e.getKey(), town);
 		}
-		townPoints.remove(town);
+		townPoints.remove(town.getUUID());
 	}
 	
 	public Nation getNation() {
 		return nation;
 	}
 	
-	private void takeTownPoints(double amount, PlayerPointType type, Town town) {
+	public void takeTownPoints(double amount, PlayerPointType type, Town town) {
 		addTownPoints(-amount, type, town);
 	}
 	
-	private void addTownPoints(double amount, PlayerPointType type, Town town) {
-		HashMap<PlayerPointType, Double> tpoints = townPoints.getOrDefault(town, new HashMap<PlayerPointType, Double>());
-		tpoints.put(type, tpoints.getOrDefault(type, 0D) + amount);
-		townPoints.putIfAbsent(town, tpoints);
+	public void addTownPoints(double amount, PlayerPointType type, Town town) {
+		TownEntry te = townPoints.getOrDefault(town, new TownEntry(town.getUUID(), 0));
+		te.addPlayerPoints(amount, type);
+		townPoints.putIfAbsent(town.getUUID(), te);
 	}
 	
 	public double getEffectivePoints() {
-		return totalNationPoints + (totalPlayerPoints / numContributors);
+		return totalNationPoints + PointsManager.calculateEffectivePoints(this, totalPlayerPoints);
 	}
 
 	@Override
 	public int compareTo(NationEntry o) {
 		return (int) (this.getEffectivePoints() - o.getEffectivePoints());
+	}
+	
+	public TreeSet<UUID> getTopTownOrder() {
+		return topTowns;
 	}
 }	
