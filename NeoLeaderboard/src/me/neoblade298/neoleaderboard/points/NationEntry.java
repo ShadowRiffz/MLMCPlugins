@@ -1,7 +1,9 @@
 package me.neoblade298.neoleaderboard.points;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -14,8 +16,11 @@ public class NationEntry implements Comparable<NationEntry> {
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<UUID, TownEntry> townPoints = new HashMap<UUID, TownEntry>();
+	private TreeSet<UUID> topTowns;
 	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
+	
+	private final Comparator<UUID> townComparer;
 	
 	public NationEntry(UUID uuid) {
 		this(uuid, 0);
@@ -26,6 +31,14 @@ public class NationEntry implements Comparable<NationEntry> {
 		this.numContributors = numContributors;
 		
 		this.nation = TownyAPI.getInstance().getNation(uuid);
+
+		townComparer = new Comparator<UUID>() {
+			public int compare(UUID o1, UUID o2) {
+				return (int) (townPoints.get(o1).getTotalPoints() - townPoints.get(o2).getTotalPoints());
+			}
+		};
+		
+		topTowns = new TreeSet<UUID>(townComparer);
 	}
 	
 	public void incrementContributors() {
@@ -54,6 +67,12 @@ public class NationEntry implements Comparable<NationEntry> {
 		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, 0));
 		te.addPlayerPoints(amount, type);
 		townPoints.putIfAbsent(uuid, te);
+		
+		// Changes to town points means town uuid must be re-sorted
+		if (topTowns.contains(uuid)) {
+			topTowns.remove(uuid);
+		}
+		topTowns.add(uuid);
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {
@@ -136,11 +155,15 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public double getEffectivePoints() {
-		return totalNationPoints + (totalPlayerPoints / numContributors);
+		return totalNationPoints + PointsManager.calculateEffectivePoints(this, totalPlayerPoints);
 	}
 
 	@Override
 	public int compareTo(NationEntry o) {
 		return (int) (this.getEffectivePoints() - o.getEffectivePoints());
+	}
+	
+	public TreeSet<UUID> getTopTownOrder() {
+		return topTowns;
 	}
 }	

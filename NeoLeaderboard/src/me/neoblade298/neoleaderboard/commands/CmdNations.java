@@ -3,11 +3,15 @@ package me.neoblade298.neoleaderboard.commands;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.palmergames.bukkit.towny.object.Nation;
 
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
@@ -15,6 +19,7 @@ import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
 import me.neoblade298.neoleaderboard.points.NationEntry;
 import me.neoblade298.neoleaderboard.points.PointsManager;
+import me.neoblade298.neoleaderboard.points.TownEntry;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -75,14 +80,27 @@ public class CmdNations implements Subcommand {
 				while (iter.hasNext() && i <= 5) {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
-					String hovertext = "Click for details: §e/nl nation " + name;
-					hovertext += "\n";
 					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getEffectivePoints(), FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hovertext)))
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildNationHover(e))))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl nation " + name));
 				}
 				s.spigot().sendMessage(builder.create());
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
+	}
+	
+	private String buildNationHover(NationEntry e) {
+		String hovertext = "Click for details: §e/nl nation " + e.getNation().getName() + "\n";
+		hovertext += "§6Top town contributors:";
+		
+		TreeSet<UUID> townOrder = e.getTopTownOrder();
+		HashMap<UUID, TownEntry> towns = e.getAllTownPoints();
+		Iterator<UUID> iter = townOrder.descendingIterator();
+		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
+			UUID uuid = iter.next();
+			TownEntry te = towns.get(uuid);
+			hovertext += "\n§6§l" + i + ". §e" + PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
+		}
+		return hovertext;
 	}
 }

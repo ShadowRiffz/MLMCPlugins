@@ -332,4 +332,8 @@ public class PointsManager implements IOComponent {
 	public static double getMaxContribution() {
 		return MAX_PLAYER_CONTRIBUTION;
 	}
+	
+	public static double calculateEffectivePoints(NationEntry ne, double total) {
+		return total / ne.getContributors();
+	}
 }
