@@ -34,9 +34,20 @@ public class TownEntry implements Comparable<TownEntry> {
 		topPlayers = new TreeSet<UUID>(playerComparer);
 	}
 	
-	public void addPlayerPoints(double amount, PlayerPointType type) {
+	public void addPlayerPoints(double amount, PlayerPointType type, UUID uuid) {
 		playerPoints.put(type, playerPoints.getOrDefault(type, 0D) + amount);
 		total += amount;
+
+		players.putIfAbsent(uuid, PointsManager.getPlayerEntry(uuid));
+		
+		if (topPlayers.contains(uuid)) {
+			topPlayers.remove(uuid); // Re-sort
+		}
+		topPlayers.add(uuid);
+	}
+	
+	public void takePlayerPoints(double amount, PlayerPointType type, UUID uuid) {
+		addPlayerPoints(-amount, type, uuid);
 	}
 	
 	public HashMap<PlayerPointType, Double> getPlayerPoints() {

@@ -17,6 +17,7 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoleaderboard.points.NationEntry;
 import me.neoblade298.neoleaderboard.points.PlayerEntry;
 import me.neoblade298.neoleaderboard.points.PointsManager;
@@ -58,6 +59,11 @@ public class CmdNLNation implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Nation n = TownyUniverse.getInstance().getNation(args[0]);
+		if (n == null) {
+			Util.msg(s, "&cThis nation doesn't exist!");
+			return;
+		}
+		
 		NationEntry ne = PointsManager.getNationEntry(n.getUUID());
 		Iterator<UUID> iter = ne.getTopTownOrder().descendingIterator();
 		HashMap<UUID, TownEntry> towns = ne.getAllTownPoints();
@@ -67,7 +73,8 @@ public class CmdNLNation implements Subcommand {
 		while (iter.hasNext() && i <= 10) {
 			TownEntry e = towns.get(iter.next());
 			String name = e.getTown().getName();
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getTotalPoints(), FormatRetention.NONE)
+			double effective = PointsManager.calculateEffectivePoints(ne, e.getTotalPoints());
+			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective, FormatRetention.NONE)
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTownHover(e))))
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl towns " + name));
 		}
@@ -78,7 +85,7 @@ public class CmdNLNation implements Subcommand {
 		String hovertext = "Click for details: §e/nl town " + e.getNation().getName() + "\n";
 		hovertext += "§6Top town contributors:";
 		
-		TreeSet<UUID> playerOrder = e.getTopPlayers()
+		TreeSet<UUID> playerOrder = e.getTopPlayers();
 		HashMap<UUID, PlayerEntry> players = e.getAllPlayerPoints();
 		Iterator<UUID> iter = playerOrder.descendingIterator();
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {

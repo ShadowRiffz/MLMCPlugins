@@ -60,12 +60,12 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public void initializeTown(UUID uuid, int contributors) {
-		townPoints.put(uuid, new TownEntry(uuid, contributors));
+		townPoints.put(uuid, new TownEntry(uuid, this.getNation().getUUID(), contributors));
 	}
 	
 	public void addTownPoints(double amount, PlayerPointType type, UUID uuid) {
-		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, 0));
-		te.addPlayerPoints(amount, type);
+		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, this.getNation().getUUID(), 0));
+		te.addPlayerPoints(amount, type, uuid);
 		townPoints.putIfAbsent(uuid, te);
 		
 		// Changes to town points means town uuid must be re-sorted
@@ -85,16 +85,16 @@ public class NationEntry implements Comparable<NationEntry> {
 		addNationPoints(-amount, type);
 	}
 	
-	public void addPlayerPoints(double amount, PlayerPointType type, Town town) {
+	public void addPlayerPoints(double amount, PlayerPointType type, Town town, UUID player) {
 		double after = playerPoints.getOrDefault(type, 0D) + amount;
 		playerPoints.putIfAbsent(type, after);
 		totalPlayerPoints += amount;
-		addTownPoints(amount, type, town);
+		addTownPoints(amount, type, town, player);
 		System.out.println("4");
 	}
 	
-	public void takePlayerPoints(double amount, PlayerPointType type, Town town) {
-		addPlayerPoints(-amount, type, town);
+	public void takePlayerPoints(double amount, PlayerPointType type, Town town, UUID player) {
+		addPlayerPoints(-amount, type, town, player);
 	}
 	
 	public void clearPoints() {
@@ -121,9 +121,9 @@ public class NationEntry implements Comparable<NationEntry> {
 		return townPoints;
 	}
 	
-	public void removePlayer(PlayerEntry ppoints, Town town) {
+	public void removePlayer(PlayerEntry ppoints, Town town, UUID player) {
 		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
-			takePlayerPoints(e.getValue(), e.getKey(), town);
+			takePlayerPoints(e.getValue(), e.getKey(), town, player);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class NationEntry implements Comparable<NationEntry> {
 		
 		// Remove all town points from nation entry
 		for (Entry<PlayerPointType, Double> e : townPoints.get(town.getUUID()).getPlayerPoints().entrySet()) {
-			takePlayerPoints(e.getValue(), e.getKey(), town);
+			playerPoints.put(e.getKey(), playerPoints.get(e.getKey()) - e.getValue());
 		}
 		townPoints.remove(town.getUUID());
 	}
@@ -144,13 +144,13 @@ public class NationEntry implements Comparable<NationEntry> {
 		return nation;
 	}
 	
-	public void takeTownPoints(double amount, PlayerPointType type, Town town) {
-		addTownPoints(-amount, type, town);
+	public void takeTownPoints(double amount, PlayerPointType type, Town town, UUID player) {
+		addTownPoints(-amount, type, town, player);
 	}
 	
-	public void addTownPoints(double amount, PlayerPointType type, Town town) {
-		TownEntry te = townPoints.getOrDefault(town, new TownEntry(town.getUUID(), 0));
-		te.addPlayerPoints(amount, type);
+	public void addTownPoints(double amount, PlayerPointType type, Town town, UUID player) {
+		TownEntry te = townPoints.getOrDefault(town, new TownEntry(town.getUUID(), this.getNation().getUUID(), 0));
+		te.addPlayerPoints(amount, type, player);
 		townPoints.putIfAbsent(town.getUUID(), te);
 	}
 	

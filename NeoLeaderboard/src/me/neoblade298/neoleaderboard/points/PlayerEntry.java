@@ -7,6 +7,9 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Town;
+
 public class PlayerEntry {
 	private UUID uuid;
 	private String display;
@@ -14,6 +17,7 @@ public class PlayerEntry {
 	private HashMap<PlayerPointType, Double> contributedPoints = new HashMap<PlayerPointType, Double>();
 	private double contributed;
 	private static double LIMIT = 250;
+	private Town town;
 	
 	public PlayerEntry(UUID uuid) {
 		this.uuid = uuid;
@@ -35,6 +39,10 @@ public class PlayerEntry {
 		}
 		contributed = sum;
 		return contributed;
+	}
+	
+	public void setTown(UUID town) {
+		this.town = TownyAPI.getInstance().getTown(town);
 	}
 
 	// Return the amount that can be contributed
@@ -124,5 +132,9 @@ public class PlayerEntry {
 	
 	public static double getLimit() {
 		return LIMIT;
+	}
+	
+	public Town getTown() {
+		return town;
 	}
 }	

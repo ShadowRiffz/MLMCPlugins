@@ -76,8 +76,7 @@ public class PointsManager implements IOComponent {
 						rs = stmt.executeQuery("SELECT * FROM leaderboard_townpoints WHERE nation_uuid = '" + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
-							Town town = TownyAPI.getInstance().getTown(uuid);
-							n.addTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), town);
+							n.addTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), uuid);
 						}
 					}
 				}
@@ -108,8 +107,8 @@ public class PointsManager implements IOComponent {
 		new BukkitRunnable() {
 			public void run() {
 				try {	
-					// Remove points from nation	
-					nationEntries.get(n.getUUID()).removeTown(town);	
+					// Remove points from nation, this should also remove towns
+					nationEntries.get(n.getUUID()).removeTown(town);
 						
 					// Clear players themselves	
 					Statement delete = NeoCore.getStatement();	
@@ -169,7 +168,7 @@ public class PointsManager implements IOComponent {
 					}
 					System.out.println("2");
 					contributable = ppoints.addPoints(amount, type);
-					nent.addPlayerPoints(contributable, type, t);
+					nent.addPlayerPoints(contributable, type, t, uuid);
 					System.out.println("3");
 					
 				}
@@ -188,7 +187,7 @@ public class PointsManager implements IOComponent {
 							contributable = ppoints.addPoints(amount, type);	
 							savePlayerData(uuid, stmt);
 						}
-						nent.addPlayerPoints(amount, type, t);
+						nent.addPlayerPoints(amount, type, t, uuid);
 					}
 					catch (Exception e) {
 						Bukkit.getLogger().warning("[NeoLeaderboard] Failed to give points to offline player " + uuid + " for type " + type + ", amount " + amount);
@@ -272,7 +271,17 @@ public class PointsManager implements IOComponent {
 	
 	private static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
 		PlayerEntry ppoints = new PlayerEntry(uuid);
-		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_players WHERE uuid = '" + uuid + "';");
+		while (rs.next()) {
+			UUID town = UUID.fromString(rs.getString(2));
+			ppoints.setTown(town);
+		}
+		
+		if (ppoints.getTown() == null) {
+			return ppoints; // No sql entry exists, return without loading more
+		}
+		
+		rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
 			ppoints.setPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
 		}
@@ -327,6 +336,10 @@ public class PointsManager implements IOComponent {
 	
 	public static NationEntry getNationEntry(UUID uuid) {
 		return nationEntries.get(uuid);
+	}
+	
+	public static PlayerEntry getPlayerEntry(UUID uuid) {
+		return playerPoints.get(uuid);
 	}
 	
 	public static double getMaxContribution() {
