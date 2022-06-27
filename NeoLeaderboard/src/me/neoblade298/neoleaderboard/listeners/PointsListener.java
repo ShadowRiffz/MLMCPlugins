@@ -13,7 +13,6 @@ public class PointsListener implements Listener {
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
-		System.out.println("Broke block");
 		PointsManager.addPlayerPoints(e.getPlayer().getUniqueId(), BLOCK_EDIT, PlayerPointType.EDIT_BLOCK);
 	}
 

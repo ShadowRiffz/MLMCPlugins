@@ -76,7 +76,7 @@ public class PointsManager implements IOComponent {
 						rs = stmt.executeQuery("SELECT * FROM leaderboard_townpoints WHERE nation_uuid = '" + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
-							n.addTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), uuid);
+							n.initializeTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), uuid);
 						}
 					}
 				}
@@ -148,7 +148,6 @@ public class PointsManager implements IOComponent {
 	public static void addPlayerPoints(UUID uuid, double amount, PlayerPointType type, boolean online) {
 		new BukkitRunnable() {
 			public void run() {
-				System.out.println("0");
 				TownyAPI api = TownyAPI.getInstance();
 				Resident r = api.getResident(uuid);
 				Nation n = api.getResidentNationOrNull(r);
@@ -156,7 +155,6 @@ public class PointsManager implements IOComponent {
 				double contributable  = 0;
 				if (n == null) return;
 
-				System.out.println("1");
 				NationEntry nent = nationEntries.get(n.getUUID());
 				PlayerEntry ppoints = playerPoints.get(uuid);
 				
@@ -166,10 +164,8 @@ public class PointsManager implements IOComponent {
 						nent.incrementContributors();
 						playerPoints.put(uuid, ppoints);
 					}
-					System.out.println("2");
 					contributable = ppoints.addPoints(amount, type);
 					nent.addPlayerPoints(contributable, type, t, uuid);
-					System.out.println("3");
 					
 				}
 				else {
@@ -269,7 +265,7 @@ public class PointsManager implements IOComponent {
 		}
 	}
 	
-	private static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
+	public static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
 		PlayerEntry ppoints = new PlayerEntry(uuid);
 		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_players WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {

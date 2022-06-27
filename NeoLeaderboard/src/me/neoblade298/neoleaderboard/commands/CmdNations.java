@@ -99,7 +99,7 @@ public class CmdNations implements Subcommand {
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
 			UUID uuid = iter.next();
 			TownEntry te = towns.get(uuid);
-			hovertext += "\n§6§l" + i + ". §e" + PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
+			hovertext += "\n§6§l" + i + ". §e" + te.getTown().getName() + " §7- §f" + PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
 		}
 		return hovertext;
 	}

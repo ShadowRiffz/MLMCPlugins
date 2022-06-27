@@ -57,13 +57,15 @@ public class NationEntry implements Comparable<NationEntry> {
 	
 	public void initializeTown(UUID uuid) {
 		initializeTown(uuid, 0);
+		topTowns.add(uuid);
 	}
 	
 	public void initializeTown(UUID uuid, int contributors) {
 		townPoints.put(uuid, new TownEntry(uuid, this.getNation().getUUID(), contributors));
+		topTowns.add(uuid);
 	}
 	
-	public void addTownPoints(double amount, PlayerPointType type, UUID uuid) {
+	public void initializeTownPoints(double amount, PlayerPointType type, UUID uuid) {
 		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, this.getNation().getUUID(), 0));
 		te.addPlayerPoints(amount, type, uuid);
 		townPoints.putIfAbsent(uuid, te);
@@ -90,7 +92,6 @@ public class NationEntry implements Comparable<NationEntry> {
 		playerPoints.putIfAbsent(type, after);
 		totalPlayerPoints += amount;
 		addTownPoints(amount, type, town, player);
-		System.out.println("4");
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, Town town, UUID player) {
@@ -149,9 +150,16 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public void addTownPoints(double amount, PlayerPointType type, Town town, UUID player) {
-		TownEntry te = townPoints.getOrDefault(town, new TownEntry(town.getUUID(), this.getNation().getUUID(), 0));
+		TownEntry te = townPoints.getOrDefault(town.getUUID(), new TownEntry(town.getUUID(), this.getNation().getUUID(), 0));
 		te.addPlayerPoints(amount, type, player);
-		townPoints.putIfAbsent(town.getUUID(), te);
+		UUID tuuid = town.getUUID();
+		townPoints.putIfAbsent(tuuid, te);
+		
+		// Changes to town points means town uuid must be re-sorted
+		if (topTowns.contains(tuuid)) {
+			topTowns.remove(tuuid);
+		}
+		topTowns.add(tuuid);
 	}
 	
 	public double getEffectivePoints() {

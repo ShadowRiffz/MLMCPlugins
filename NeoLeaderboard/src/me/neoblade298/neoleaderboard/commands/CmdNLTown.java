@@ -1,14 +1,9 @@
 package me.neoblade298.neoleaderboard.commands;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeSet;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.palmergames.bukkit.towny.TownyUniverse;
@@ -31,7 +26,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class CmdNLTown implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(new CommandArgument("nation"));
+	private static final CommandArguments args = new CommandArguments(new CommandArgument("town"));
 
 	@Override
 	public String getDescription() {
@@ -75,14 +70,16 @@ public class CmdNLTown implements Subcommand {
 		Iterator<UUID> iter = te.getTopPlayers().descendingIterator();
 		HashMap<UUID, PlayerEntry> players = te.getAllPlayerPoints();
 		
-		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
+		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + n.getName() + " §c§l«§8§m--------§6§l<")
+				.append("n\n§7§o(Doesn't include offline players, view them with §e/nl player [name]§7§o)");
 		int i = 1;
 		while (iter.hasNext() && i <= 10) {
 			PlayerEntry e = players.get(iter.next());
 			String name = e.getDisplay();
 			double effective = PointsManager.calculateEffectivePoints(ne, e.getContributed());
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective, FormatRetention.NONE)
-			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§e/nl player " + name + " §7for more information!")));
+			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective + " §7§o(" + e.getContributed() + ")", FormatRetention.NONE)
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§fClick for details:\n§e/nl player " + name)))
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl player " + name));
 		}
 		s.spigot().sendMessage(builder.create());
 	}

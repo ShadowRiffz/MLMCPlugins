@@ -74,9 +74,9 @@ public class CmdNLNation implements Subcommand {
 			TownEntry e = towns.get(iter.next());
 			String name = e.getTown().getName();
 			double effective = PointsManager.calculateEffectivePoints(ne, e.getTotalPoints());
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective, FormatRetention.NONE)
+			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective + " §7§o(" + e.getTotalPoints() + ")", FormatRetention.NONE)
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTownHover(e))))
-			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl towns " + name));
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl town " + name));
 		}
 		s.spigot().sendMessage(builder.create());
 	}
@@ -91,8 +91,8 @@ public class CmdNLNation implements Subcommand {
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
 			UUID uuid = iter.next();
 			PlayerEntry pe = players.get(uuid);
-			hovertext += "\n§6§l" + i + ". §e" + PointsManager.calculateEffectivePoints(
-					PointsManager.getNationEntry(e.getNation().getUUID()), pe.getContributed());
+			double effective = PointsManager.calculateEffectivePoints(PointsManager.getNationEntry(e.getNation().getUUID());
+			hovertext += "\n§6§l" + i + ". §e" + effective , pe.getContributed());
 		}
 		return hovertext;
 	}
