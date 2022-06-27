@@ -48,16 +48,15 @@ public class CmdList implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		int offset = key.length() == 0 ? 0 : 1;
 		if (pages == null) {
 			pages = new PaginatedList<Subcommand>(cmds.values());
 		}
 		
-		if (args.length == offset) {
+		if (args.length == 0) {
 			showPage(s, 1);
 		}
 		else {
-			showPage(s, Integer.parseInt(args[offset]));
+			showPage(s, Integer.parseInt(args[0]));
 		}
 	}
 	
