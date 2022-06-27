@@ -1,6 +1,5 @@
 package me.neoblade298.neoleaderboard.points;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeSet;
@@ -16,11 +15,9 @@ public class NationEntry implements Comparable<NationEntry> {
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<UUID, TownEntry> townPoints = new HashMap<UUID, TownEntry>();
-	private TreeSet<UUID> topTowns;
+	private TreeSet<TownEntry> topTowns = new TreeSet<TownEntry>();;
 	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
-	
-	private final Comparator<UUID> townComparer;
 	
 	public NationEntry(UUID uuid) {
 		this(uuid, 0);
@@ -31,14 +28,6 @@ public class NationEntry implements Comparable<NationEntry> {
 		this.numContributors = numContributors;
 		
 		this.nation = TownyAPI.getInstance().getNation(uuid);
-
-		townComparer = new Comparator<UUID>() {
-			public int compare(UUID o1, UUID o2) {
-				return (int) (townPoints.get(o1).getTotalPoints() - townPoints.get(o2).getTotalPoints());
-			}
-		};
-		
-		topTowns = new TreeSet<UUID>(townComparer);
 	}
 	
 	public void incrementContributors() {
@@ -57,24 +46,23 @@ public class NationEntry implements Comparable<NationEntry> {
 	
 	public void initializeTown(UUID uuid) {
 		initializeTown(uuid, 0);
-		topTowns.add(uuid);
 	}
 	
 	public void initializeTown(UUID uuid, int contributors) {
-		townPoints.put(uuid, new TownEntry(uuid, this.getNation().getUUID(), contributors));
-		topTowns.add(uuid);
+		TownEntry te = new TownEntry(uuid, this.getNation().getUUID(), contributors);
+		townPoints.put(uuid, te);
+		topTowns.add(te);
 	}
 	
 	public void initializeTownPoints(double amount, PlayerPointType type, UUID uuid) {
+		// Changes to town points means town uuid must be re-sorted
 		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, this.getNation().getUUID(), 0));
+		topTowns.remove(te);
+		
 		te.addPlayerPoints(amount, type, uuid);
 		townPoints.putIfAbsent(uuid, te);
 		
-		// Changes to town points means town uuid must be re-sorted
-		if (topTowns.contains(uuid)) {
-			topTowns.remove(uuid);
-		}
-		topTowns.add(uuid);
+		topTowns.add(te);
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {
@@ -150,28 +138,45 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public void addTownPoints(double amount, PlayerPointType type, Town town, UUID player) {
+		// Re-sorting happens with PointsManager calling removeFromSort
 		TownEntry te = townPoints.getOrDefault(town.getUUID(), new TownEntry(town.getUUID(), this.getNation().getUUID(), 0));
 		te.addPlayerPoints(amount, type, player);
 		UUID tuuid = town.getUUID();
 		townPoints.putIfAbsent(tuuid, te);
 		
-		// Changes to town points means town uuid must be re-sorted
-		if (topTowns.contains(tuuid)) {
-			topTowns.remove(tuuid);
-		}
-		topTowns.add(tuuid);
+		topTowns.add(te);
 	}
 	
 	public double getEffectivePoints() {
 		return totalNationPoints + PointsManager.calculateEffectivePoints(this, totalPlayerPoints);
 	}
+	
+	public double getTotalPoints() {
+		return totalNationPoints + totalPlayerPoints;
+	}
 
 	@Override
 	public int compareTo(NationEntry o) {
-		return (int) (this.getEffectivePoints() - o.getEffectivePoints());
+		if (this.getEffectivePoints() > o.getEffectivePoints()) {
+			return 1;
+		}
+		if (this.getEffectivePoints() < o.getEffectivePoints()) {
+			return -1;
+		}
+		else {
+			return o.getNation().getName().compareTo(this.getNation().getName());
+		}
 	}
 	
-	public TreeSet<UUID> getTopTownOrder() {
+	public TreeSet<TownEntry> getTopTowns() {
 		return topTowns;
+	}
+	
+	public void removeFromSort(PlayerEntry pe) {
+		topTowns.remove(pe.getTownEntry());
+	}
+	
+	public TownEntry getTownEntry(UUID uuid) {
+		return townPoints.get(uuid);
 	}
 }	

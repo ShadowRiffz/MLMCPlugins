@@ -1,6 +1,5 @@
 package me.neoblade298.neoleaderboard.points;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -12,38 +11,35 @@ import com.palmergames.bukkit.towny.object.Town;
 public class TownEntry implements Comparable<TownEntry> {
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<UUID, PlayerEntry> players = new HashMap<UUID, PlayerEntry>();
-	private TreeSet<UUID> topPlayers;
+	private TreeSet<PlayerEntry> topPlayers;
 	private double total;
 	private int contributors;
 	private Town town;
 	private Nation nation;
-	
-	private final Comparator<UUID> playerComparer;
+	private NationEntry ne;
 	
 	public TownEntry(UUID uuid, UUID nation, int contributors) {
 		this.contributors = contributors;
 		this.town = TownyAPI.getInstance().getTown(uuid);
 		this.nation = TownyAPI.getInstance().getNation(nation);
-		
-		playerComparer = new Comparator<UUID>() {
-			public int compare(UUID o1, UUID o2) {
-				return (int) (players.get(o1).getContributed() - players.get(o2).getContributed());
-			}
-		};
-		
-		topPlayers = new TreeSet<UUID>(playerComparer);
+		this.ne = PointsManager.getNationEntry(nation);
+		topPlayers = new TreeSet<PlayerEntry>();
 	}
 	
 	public void addPlayerPoints(double amount, PlayerPointType type, UUID uuid) {
+		// Re-sort is done from PointsManager calling removeFromSort
+		
+		PlayerEntry pe = PointsManager.getPlayerEntry(uuid);
 		playerPoints.put(type, playerPoints.getOrDefault(type, 0D) + amount);
 		total += amount;
-
-		players.putIfAbsent(uuid, PointsManager.getPlayerEntry(uuid));
+		players.putIfAbsent(uuid, pe);
 		
-		if (topPlayers.contains(uuid)) {
-			topPlayers.remove(uuid); // Re-sort
-		}
-		topPlayers.add(uuid);
+		topPlayers.add(pe);
+	}
+	
+	// Must be called anytime a player gets points in PointsManager to remove the entry from the set and re-sort it later
+	public void removeFromSort(PlayerEntry pe) {
+		topPlayers.remove(pe);
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, UUID uuid) {
@@ -52,11 +48,6 @@ public class TownEntry implements Comparable<TownEntry> {
 	
 	public HashMap<PlayerPointType, Double> getPlayerPoints() {
 		return playerPoints;
-	}
-
-	@Override
-	public int compareTo(TownEntry o) {
-		return (int) (this.total - o.total);
 	}
 	
 	public int getContributors() {
@@ -71,7 +62,7 @@ public class TownEntry implements Comparable<TownEntry> {
 		return total;
 	}
 	
-	public TreeSet<UUID> getTopPlayers() {
+	public TreeSet<PlayerEntry> getTopPlayers() {
 		return topPlayers;
 	}
 	
@@ -81,5 +72,23 @@ public class TownEntry implements Comparable<TownEntry> {
 	
 	public Nation getNation() {
 		return nation;
+	}
+	
+	public NationEntry getNationEntry() {
+		return ne;
+	}
+
+
+	@Override
+	public int compareTo(TownEntry o) {
+		if (this.total > o.total) {
+			return 1;
+		}
+		else if (this.total < o.total) {
+			return -1;
+		}
+		else {
+			return o.town.getName().compareTo(this.town.getName());
+		}
 	}
 }

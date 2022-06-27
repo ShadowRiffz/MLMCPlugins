@@ -1,9 +1,6 @@
 package me.neoblade298.neoleaderboard.commands;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.UUID;
-
 import org.bukkit.command.CommandSender;
 
 import com.palmergames.bukkit.towny.TownyUniverse;
@@ -66,18 +63,18 @@ public class CmdNLTown implements Subcommand {
 			return;
 		}
 		NationEntry ne = PointsManager.getNationEntry(n.getUUID());
-		TownEntry te = ne.getAllTownPoints().get(t.getUUID());
-		Iterator<UUID> iter = te.getTopPlayers().descendingIterator();
-		HashMap<UUID, PlayerEntry> players = te.getAllPlayerPoints();
+		TownEntry te = ne.getTownEntry(t.getUUID());
+		Iterator<PlayerEntry> iter = te.getTopPlayers().descendingIterator();
 		
-		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + n.getName() + " §c§l«§8§m--------§6§l<")
-				.append("n\n§7§o(Doesn't include offline players, view them with §e/nl player [name]§7§o)");
-		int i = 1;
-		while (iter.hasNext() && i <= 10) {
-			PlayerEntry e = players.get(iter.next());
+		ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + te.getTown().getName() + " §c§l«§8§m--------§6§l<")
+				.append("\n§7§o(Online only, view offline with §e/nl player [name]§7§o)");
+		int i = 0;
+		while (iter.hasNext() && i++ <= 10) {
+			PlayerEntry e = iter.next();
 			String name = e.getDisplay();
 			double effective = PointsManager.calculateEffectivePoints(ne, e.getContributed());
-			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + effective + " §7§o(" + e.getContributed() + ")", FormatRetention.NONE)
+			builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(effective) + 
+					" §7§o(" + PointsManager.formatPoints(e.getContributed()) + ")", FormatRetention.NONE)
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§fClick for details:\n§e/nl player " + name)))
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl player " + name));
 		}

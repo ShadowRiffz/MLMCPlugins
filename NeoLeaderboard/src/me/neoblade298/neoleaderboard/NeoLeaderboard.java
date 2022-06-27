@@ -3,6 +3,7 @@ package me.neoblade298.neoleaderboard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neoleaderboard.commands.*;
 import me.neoblade298.neoleaderboard.listeners.PointsListener;
@@ -14,6 +15,8 @@ public class NeoLeaderboard extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
+		
+		NeoCore.registerIOComponent(this, new PointsManager());
 
 		PointsManager.initialize();
 		initCommands();
@@ -33,6 +36,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr = new CommandManager("nl", this);
 		mngr.register(new CmdNLNation());
 		mngr.register(new CmdNLTown());
+		mngr.register(new CmdNLPlayer());
 		mngr.registerCommandList("help");
 	}
 	

@@ -8,20 +8,33 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
-public class PlayerEntry {
+public class PlayerEntry implements Comparable<PlayerEntry> {
 	private UUID uuid;
 	private String display;
 	private HashMap<PlayerPointType, Double> points = new HashMap<PlayerPointType, Double>();
 	private HashMap<PlayerPointType, Double> contributedPoints = new HashMap<PlayerPointType, Double>();
 	private double contributed;
 	private static double LIMIT = 250;
-	private Town town;
+	private Nation n;
+	private Town t;
+	private NationEntry ne;
+	private TownEntry te;
 	
 	public PlayerEntry(UUID uuid) {
 		this.uuid = uuid;
 		this.display = Bukkit.getOfflinePlayer(uuid).getName();
+		
+		// Must be loaded after NationEntry and TownEntry for this
+		TownyAPI api = TownyAPI.getInstance();
+		Resident r = api.getResident(uuid);
+		t = r.getTownOrNull();
+		n = t.getNationOrNull();
+		ne = PointsManager.getNationEntry(n.getUUID());
+		te = ne.getTownEntry(t.getUUID());
 	}
 	
 	public void setPoints(double amount, PlayerPointType type) {
@@ -42,7 +55,7 @@ public class PlayerEntry {
 	}
 	
 	public void setTown(UUID town) {
-		this.town = TownyAPI.getInstance().getTown(town);
+		this.t = TownyAPI.getInstance().getTown(town);
 	}
 
 	// Return the amount that can be contributed
@@ -135,6 +148,35 @@ public class PlayerEntry {
 	}
 	
 	public Town getTown() {
-		return town;
+		return t;
+	}
+	
+	public Nation getNation() {
+		return n;
+	}
+	
+	public NationEntry getNationEntry() {
+		return ne;
+	}
+	
+	public TownEntry getTownEntry() {
+		// Unlike nation entries, town entries may not exist at 0 points
+		if (te == null) {
+			te = ne.getTownEntry(t.getUUID());
+		}
+		return te;
+	}
+
+	@Override
+	public int compareTo(PlayerEntry o) {
+		if (this.contributed > o.contributed) {
+			return 1;
+		}
+		if (this.contributed < o.contributed) {
+			return -1;
+		}
+		else {
+			return o.display.compareTo(this.display);
+		}
 	}
 }	

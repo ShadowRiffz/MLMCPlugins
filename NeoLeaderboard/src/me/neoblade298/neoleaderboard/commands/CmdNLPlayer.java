@@ -81,12 +81,14 @@ public class CmdNLPlayer implements Subcommand {
 				HashMap<PlayerPointType, Double> totalPoints = pe.getTotalPoints();
 				for (Entry<PlayerPointType, Double> e : cpoints.entrySet()) {
 					double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
-					builder.append("\n§6§l" + e.getKey().getDisplay() + ": §f" + effective + " §7§o(" + e.getValue() + ")", FormatRetention.NONE);
+					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(effective) + 
+							" §7§o(" + PointsManager.formatPoints(e.getValue()) + ")", FormatRetention.NONE);
 				}
-				builder.append("§6§l>§8§m--------§c§l» §6Player Totals: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
+				builder.append("\n§6§l>§8§m--------§c§l» §6Player Totals: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				for (Entry<PlayerPointType, Double> e : totalPoints.entrySet()) {
 					double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
-					builder.append("\n§6§l" + e.getKey().getDisplay() + ": §f" + effective + " §7§o(" + e.getValue() + ")", FormatRetention.NONE);
+					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(effective) + 
+							" §7§o(" + PointsManager.formatPoints(e.getValue()) + ")", FormatRetention.NONE);
 				}
 				s.spigot().sendMessage(builder.create());
 			}

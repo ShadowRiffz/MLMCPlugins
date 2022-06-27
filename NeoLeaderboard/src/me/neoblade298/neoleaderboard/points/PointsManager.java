@@ -3,6 +3,7 @@ package me.neoblade298.neoleaderboard.points;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -29,6 +30,7 @@ public class PointsManager implements IOComponent {
 	private static HashMap<UUID, NationEntry> nationEntries = new HashMap<UUID, NationEntry>();
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
+	private static final DecimalFormat df = new DecimalFormat("##.00");
 	
 	public static void initialize() {
 		// Ground rules:
@@ -164,6 +166,10 @@ public class PointsManager implements IOComponent {
 						nent.incrementContributors();
 						playerPoints.put(uuid, ppoints);
 					}
+					// This makes it so sorting works properly
+					nent.removeFromSort(ppoints);
+					ppoints.getTownEntry().removeFromSort(ppoints);
+					
 					contributable = ppoints.addPoints(amount, type);
 					nent.addPlayerPoints(contributable, type, t, uuid);
 					
@@ -177,12 +183,11 @@ public class PointsManager implements IOComponent {
 						if (!rs.next()) {
 							nent.incrementContributors();
 						}
-						else {	
-							// Simply load in the player and save them after	
-							ppoints = loadPlayerPoints(uuid, stmt);	
-							contributable = ppoints.addPoints(amount, type);	
-							savePlayerData(uuid, stmt);
-						}
+						
+						// Simply load in the player and save them after	
+						ppoints = loadPlayerPoints(uuid, stmt);	
+						contributable = ppoints.addPoints(amount, type);	
+						savePlayerData(uuid, stmt);
 						nent.addPlayerPoints(amount, type, t, uuid);
 					}
 					catch (Exception e) {
@@ -257,7 +262,10 @@ public class PointsManager implements IOComponent {
 	@Override
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
 		try {
-			playerPoints.put(p.getUniqueId(), loadPlayerPoints(p.getUniqueId(), stmt));
+			PlayerEntry pe = loadPlayerPoints(p.getUniqueId(), stmt);
+			if (pe != null) {
+				playerPoints.put(p.getUniqueId(), pe);
+			}
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to load points for player " + p.getName());
@@ -266,20 +274,28 @@ public class PointsManager implements IOComponent {
 	}
 	
 	public static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
-		PlayerEntry ppoints = new PlayerEntry(uuid);
+		PlayerEntry ppoints;
 		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_players WHERE uuid = '" + uuid + "';");
+		// Return null if no points exist, since object doesn't exist until points do
+		if (!rs.next()) {
+			return null;
+		}
+		else {
+			rs.previous();
+			ppoints = new PlayerEntry(uuid);
+		}
+		
 		while (rs.next()) {
 			UUID town = UUID.fromString(rs.getString(2));
 			ppoints.setTown(town);
 		}
 		
 		if (ppoints.getTown() == null) {
-			return ppoints; // No sql entry exists, return without loading more
+			return ppoints; // No sql entry exists OR town was deleted, return without loading more
 		}
 		
 		rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
-			ppoints.setPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
 		}
 		rs = stmt.executeQuery("SELECT * FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
@@ -344,5 +360,9 @@ public class PointsManager implements IOComponent {
 	
 	public static double calculateEffectivePoints(NationEntry ne, double total) {
 		return total / ne.getContributors();
+	}
+	
+	public static String formatPoints(double points) {
+		return df.format(points);
 	}
 }

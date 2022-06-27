@@ -3,15 +3,10 @@ package me.neoblade298.neoleaderboard.commands;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.UUID;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.palmergames.bukkit.towny.object.Nation;
 
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
@@ -70,17 +65,18 @@ public class CmdNations implements Subcommand {
 		new BukkitRunnable() {
 			public void run() {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
-				Iterator<NationEntry> iter = sorted.iterator();
+				Iterator<NationEntry> iter = sorted.descendingIterator();
 				
 				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + " §c§l«\n")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
 				builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);
-				int i = 1;
-				while (iter.hasNext() && i <= 5) {
+				int i = 0;
+				while (iter.hasNext() && i++ <= 10) {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
-					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + e.getEffectivePoints(), FormatRetention.NONE)
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getEffectivePoints()) +
+							" §7§o(" + PointsManager.formatPoints(e.getTotalPoints()) + ")", FormatRetention.NONE)
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildNationHover(e))))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl nation " + name));
 				}
@@ -93,13 +89,13 @@ public class CmdNations implements Subcommand {
 		String hovertext = "Click for details: §e/nl nation " + e.getNation().getName() + "\n";
 		hovertext += "§6Top town contributors:";
 		
-		TreeSet<UUID> townOrder = e.getTopTownOrder();
-		HashMap<UUID, TownEntry> towns = e.getAllTownPoints();
-		Iterator<UUID> iter = townOrder.descendingIterator();
+		TreeSet<TownEntry> townOrder = e.getTopTowns();
+		Iterator<TownEntry> iter = townOrder.descendingIterator();
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
-			UUID uuid = iter.next();
-			TownEntry te = towns.get(uuid);
-			hovertext += "\n§6§l" + i + ". §e" + te.getTown().getName() + " §7- §f" + PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
+			TownEntry te = iter.next();
+			double effective = PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
+			hovertext += "\n§6§l" + i + ". §e" + te.getTown().getName() + " §7- §f" + PointsManager.formatPoints(effective) +
+					 " §7§o(" + PointsManager.formatPoints(te.getTotalPoints()) + ")";
 		}
 		return hovertext;
 	}

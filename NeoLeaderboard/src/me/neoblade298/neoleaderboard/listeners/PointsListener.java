@@ -1,23 +1,58 @@
 package me.neoblade298.neoleaderboard.listeners;
 
+import java.util.HashMap;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
 
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
 import me.neoblade298.neoleaderboard.points.PointsManager;
 
 public class PointsListener implements Listener {
-	private static final double BLOCK_EDIT = 0.01;
+	private static final double BLOCK_EDIT_POINTS = 0.01;
+	private static final double KILL_PLAYER_POINTS = 0.01;
+	private static final HashMap<UUID, Long> deathCooldowns = new HashMap<UUID, Long>();
+	private static final long DEATH_COOLDOWN = 600000L;
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
-		PointsManager.addPlayerPoints(e.getPlayer().getUniqueId(), BLOCK_EDIT, PlayerPointType.EDIT_BLOCK);
+		PointsManager.addPlayerPoints(e.getPlayer().getUniqueId(), BLOCK_EDIT_POINTS, PlayerPointType.EDIT_BLOCK);
 	}
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
-		PointsManager.addPlayerPoints(e.getPlayer().getUniqueId(), BLOCK_EDIT, PlayerPointType.EDIT_BLOCK);
+		PointsManager.addPlayerPoints(e.getPlayer().getUniqueId(), BLOCK_EDIT_POINTS, PlayerPointType.EDIT_BLOCK);
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerKill(PlayerDeathEvent e) {
+		Player victim = e.getEntity();
+		Player killer = victim.getKiller();
+		
+		if (killer == null) return;
+		TownyAPI api = TownyAPI.getInstance();
+		Resident vr = api.getResident(victim);
+		Resident kr = api.getResident(killer);
+		Nation vn = vr.getNationOrNull();
+		Nation kn = kr.getNationOrNull();
+		
+		if (vn == null || kn == null) return;
+		if (deathCooldownActive(victim.getUniqueId())) return;
+		deathCooldowns.put(victim.getUniqueId(), System.currentTimeMillis() + DEATH_COOLDOWN);
+		PointsManager.addPlayerPoints(killer.getUniqueId(), KILL_PLAYER_POINTS, PlayerPointType.KILL_PLAYER);
+	}
+	
+	private boolean deathCooldownActive(UUID uuid) {
+		if (!deathCooldowns.containsKey(uuid)) return false;
+		return System.currentTimeMillis() > deathCooldowns.get(uuid);
 	}
 }
