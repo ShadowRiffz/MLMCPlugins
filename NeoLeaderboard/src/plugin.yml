@@ -1,7 +1,7 @@
 name: NeoLeaderboard
 main: me.neoblade298.neoleaderboard.NeoLeaderboard
 author: [Neoblade298]
-depend: [NeoCore, Towny]
+depend: [NeoCore, Towny, NeoBossInstances]
 version: 1.0
 api-version: 1.16
 commands:
