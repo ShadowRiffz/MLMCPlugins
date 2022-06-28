@@ -118,7 +118,7 @@ public class CommandManager implements CommandExecutor {
 			
 			if (cmd.getAliases() != null) {
 				for (String alias : cmd.getAliases()) {
-					handlers.put(alias.toUpperCase(), cmd);
+					handlers.put(alias.toUpperCase(), new HiddenSubcommand(cmd, alias));
 				}
 			}
 		}
