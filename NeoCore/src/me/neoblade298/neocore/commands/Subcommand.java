@@ -8,6 +8,7 @@ public interface Subcommand {
 	public String getPermission();
 	public SubcommandRunner getRunner();
 	public String getKey();
+	public default String[] getAliases() { return null; }
 	public String getDescription();
 	public default ChatColor getColor() { return null; }
 	public default CommandArguments getArgs() { return null; }

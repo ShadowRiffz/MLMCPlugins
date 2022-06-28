@@ -115,6 +115,12 @@ public class CommandManager implements CommandExecutor {
 	public void register(Subcommand... cmds) {
 		for (Subcommand cmd : cmds) {
 			handlers.put(cmd.getKey().toUpperCase(), cmd);
+			
+			if (cmd.getAliases() != null) {
+				for (String alias : cmd.getAliases()) {
+					handlers.put(alias.toUpperCase(), cmd);
+				}
+			}
 		}
 	}
 	

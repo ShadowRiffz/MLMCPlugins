@@ -16,6 +16,7 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ScaleChestMechanic implements ITargetedEntitySkill {
@@ -88,7 +89,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 					localMsg += "!";
 					p.sendMessage(localMsg);
 					String name = fitem.getItemMeta().getDisplayName().replaceAll("§", "&");
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "sync console all neoshinies " + p.getName() + " has found " + name);
+					NeoCore.broadcast("&4[&c&lMLMC&4&l] &e" + p.getName() + " &7has found " + name + "&7!");
 				}
 				return SkillResult.SUCCESS;
 			}
