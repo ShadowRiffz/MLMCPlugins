@@ -15,6 +15,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ISkillMechanic;
+import io.lumine.mythic.api.skills.conditions.ISkillCondition;
+import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicDropLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
@@ -49,30 +53,33 @@ public class MythicExt extends JavaPlugin implements Listener {
 		scores = new ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>>();
 		spawnermakers = new HashMap<UUID, SpawnerMaker>();
 		nbi = (BossInstances) Bukkit.getPluginManager().getPlugin("NeoBossInstances");
-		
+
 		// Get command listener
 		this.getCommand("nme").setExecutor(new Commands(this));
 		log.info("NeoMythicExtensions Enabled!");
 		inst = this;
-		
-        if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+
+		// Setup bungee pluginmsging
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "instance_bosskills");
+
+		if (!setupEconomy()) {
+			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
 	}
-    
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
-    }
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
+	}
 
 	public void onDisable() {
 		log.info("NeoMythicExtensions Disabled!");
@@ -80,48 +87,40 @@ public class MythicExt extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onMythicConditionLoad(MythicConditionLoadEvent event) {
-		String name = event.getConditionName();
-		if (name.equalsIgnoreCase("hasflag")) {
-			SkillAPIFlagCondition condition = new SkillAPIFlagCondition(event.getConfig(), this);
-			event.register(condition);
+		String name = event.getConditionName().toLowerCase();
+		ISkillCondition condition = null;
+		MythicLineConfig cfg = event.getConfig();
+		switch (name) {
+		case "hasflag":
+			condition = new SkillAPIFlagCondition(cfg, this);
+			break;
+		case "nglobalscore":
+			condition = new GlobalScoreCondition(cfg, this);
+			break;
+		case "nscore":
+			condition = new ScoreCondition(cfg);
+			break;
+		case "playersinboss":
+			condition = new PlayersInBossCondition(cfg, nbi);
+			break;
+		case "aboveblock":
+			condition = new AboveBlockCondition(cfg);
+			break;
+		case "strongplayerwithin":
+			condition = new StrongPlayerWithin(cfg);
+			break;
+		case "fightingboss":
+			condition = new FightingBossCondition(cfg);
+			break;
+		case "isinstance":
+			condition = new IsInstanceCondition(cfg);
+			break;
 		}
-
-		else if (name.equalsIgnoreCase("nglobalscore")) {
-			GlobalScoreCondition condition = new GlobalScoreCondition(event.getConfig(), this);
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("nscore")) {
-			ScoreCondition condition = new ScoreCondition(event.getConfig());
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("playersinboss")) {
-			PlayersInBossCondition condition = new PlayersInBossCondition(event.getConfig(), nbi);
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("aboveblock")) {
-			AboveBlockCondition condition = new AboveBlockCondition(event.getConfig());
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("strongplayerwithin")) {
-			StrongPlayerWithin condition = new StrongPlayerWithin(event.getConfig());
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("fightingboss")) {
-			FightingBossCondition condition = new FightingBossCondition(event.getConfig());
-			event.register(condition);
-		}
-
-		else if (name.equalsIgnoreCase("isinstance")) {
-			IsInstanceCondition condition = new IsInstanceCondition(event.getConfig());
+		if (condition != null) {
 			event.register(condition);
 		}
 	}
-	
+
 	@EventHandler
 	public void onMythicDropLoad(MythicDropLoadEvent event) {
 		String name = event.getDropName();
@@ -132,110 +131,91 @@ public class MythicExt extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onMythicTargeterLoad(MythicTargeterLoadEvent event) {
-		String name = event.getTargeterName();
-		if (name.equalsIgnoreCase("playersinboss")
-				|| event.getTargeterName().equalsIgnoreCase("pib")) {
-			PlayersInBossTargeter targeter = new PlayersInBossTargeter(event.getConfig(), nbi);
-			event.register(targeter);
+		String name = event.getTargeterName().toLowerCase();
+		ISkillTargeter targeter = null;
+		MythicLineConfig cfg = event.getConfig();
+		switch (name) {
+		case "playersinboss":
+			targeter = new PlayersInBossTargeter(cfg, nbi);
+			break;
+		case "pib":
+			targeter = new PlayersInBossTargeter(cfg, nbi);
+			break;
+		case "offset":
+			targeter = new OffsetTargeter(cfg);
+			break;
 		}
-
-		else if (name.equalsIgnoreCase("offset")) {
-			OffsetTargeter targeter = new OffsetTargeter(event.getConfig());
+		if (targeter != null) {
 			event.register(targeter);
 		}
 	}
 
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent event) {
-		String name = event.getMechanicName();
+		String name = event.getMechanicName().toLowerCase();
+		ISkillMechanic mechanic = null;
+		MythicLineConfig cfg = event.getConfig();
 
-		if (name.equalsIgnoreCase("nscore")) {
-			ModScore mechanic = new ModScore(event.getConfig(), this);
-			event.register(mechanic);
+		switch (name) {
+		case "nscore":
+			mechanic = new ModScore(cfg, this);
+			break;
+		case "nglobalscore":
+			mechanic = new ModGlobalScore(cfg, this);
+			break;
+		case "warn":
+			mechanic = new WarnMechanic(cfg);
+			break;
+		case "taunt":
+			mechanic = new TauntMechanic(cfg);
+			break;
+		case "reducethreat":
+			mechanic = new ReduceThreatMechanic(cfg);
+			break;
+		case "flag":
+			mechanic = new FlagMechanic(cfg);
+			break;
+		case "accounttag":
+			mechanic = new AccountTagMechanic(cfg);
+			break;
+		case "removeflag":
+			mechanic = new RemoveFlagMechanic(cfg);
+			break;
+		case "scalechest":
+			mechanic = new ScaleChestMechanic(cfg);
+			break;
+		case "scaletolevel":
+			mechanic = new ScaleToLevelMechanic(cfg, nbi);
+			break;
+		case "scalegold":
+			mechanic = new ScaleGoldMechanic(cfg, nbi);
+			break;
+		case "researchpoints":
+			mechanic = new ResearchPointsMechanic(cfg);
+			break;
+		case "researchpointschance":
+			mechanic = new ResearchPointsChanceMechanic(cfg);
+			break;
+		case "researchkills":
+			mechanic = new ResearchKillsMechanic(cfg);
+			break;
+		case "modmana":
+			mechanic = new ModManaMechanic(cfg);
+			break;
+		case "scaleheal":
+			mechanic = new ScaleHealMechanic(cfg);
+			break;
+		case "scaleexp":
+			mechanic = new ScaleExpMechanic(cfg);
+			break;
+		case "givestoreditem":
+			mechanic = new GiveStoredItemMechanic(cfg);
+			break;
+		case "pluginmessage":
+			mechanic = new PluginMessageMechanic(cfg);
+			break;
 		}
-
-		else if (name.equalsIgnoreCase("nglobalscore")) {
-			ModGlobalScore mechanic = new ModGlobalScore(event.getConfig(), this);
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("warn")) {
-			WarnMechanic mechanic = new WarnMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("taunt")) {
-			TauntMechanic mechanic = new TauntMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("reducethreat")) {
-			ReduceThreatMechanic mechanic = new ReduceThreatMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("flag")) {
-			FlagMechanic mechanic = new FlagMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("accounttag")) {
-			AccountTagMechanic mechanic = new AccountTagMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("removeflag")) {
-			RemoveFlagMechanic mechanic = new RemoveFlagMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("scalechest")) {
-			ScaleChestMechanic mechanic = new ScaleChestMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("scaletolevel")) {
-			ScaleToLevelMechanic mechanic = new ScaleToLevelMechanic(event.getConfig(), nbi);
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("scalegold")) {
-			ScaleGoldMechanic mechanic = new ScaleGoldMechanic(event.getConfig(), nbi);
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("researchpoints")) {
-			ResearchPointsMechanic mechanic = new ResearchPointsMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("researchpointschance")) {
-			ResearchPointsChanceMechanic mechanic = new ResearchPointsChanceMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("researchkills")) {
-			ResearchKillsMechanic mechanic = new ResearchKillsMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("modmana")) {
-			ModManaMechanic mechanic = new ModManaMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("scaleheal")) {
-			ScaleHealMechanic mechanic = new ScaleHealMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("scaleexp")) {
-			ScaleExpMechanic mechanic = new ScaleExpMechanic(event.getConfig());
-			event.register(mechanic);
-		}
-
-		else if (name.equalsIgnoreCase("givestoreditem")) {
-			GiveStoredItemMechanic mechanic = new GiveStoredItemMechanic(event.getConfig());
+		if (mechanic != null) {
 			event.register(mechanic);
 		}
 	}
@@ -248,7 +228,8 @@ public class MythicExt extends JavaPlugin implements Listener {
 				Player p = (Player) e.getDamager();
 				for (Entity ent : e.getEntity().getNearbyEntities(5, 5, 5)) {
 					if (ent instanceof Player) {
-						ent.sendMessage("§e" + p.getName() + " §7did §c" + (Math.round(e.getFinalDamage() * 100) / 100) + " §7damage");
+						ent.sendMessage("§e" + p.getName() + " §7did §c" + (Math.round(e.getFinalDamage() * 100) / 100)
+								+ " §7damage");
 					}
 				}
 			}
