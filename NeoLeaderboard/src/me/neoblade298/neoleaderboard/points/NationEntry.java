@@ -179,4 +179,10 @@ public class NationEntry implements Comparable<NationEntry> {
 	public TownEntry getTownEntry(UUID uuid) {
 		return townPoints.get(uuid);
 	}
+	
+	public void clearAllPlayers() {
+		for (TownEntry te : topTowns) {
+			te.clearAllPlayers();
+		}
+	}
 }	

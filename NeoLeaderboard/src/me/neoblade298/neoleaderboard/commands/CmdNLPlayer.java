@@ -65,7 +65,7 @@ public class CmdNLPlayer implements Subcommand {
 				}
 				else {
 					try {
-						pe = PointsManager.loadPlayerPoints(Bukkit.getOfflinePlayer(args[0]).getUniqueId(), NeoCore.getStatement());
+						pe = PointsManager.loadPlayerEntry(Bukkit.getOfflinePlayer(args[0]).getUniqueId(), NeoCore.getStatement());
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}

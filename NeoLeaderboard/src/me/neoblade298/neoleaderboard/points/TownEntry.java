@@ -1,5 +1,6 @@
 package me.neoblade298.neoleaderboard.points;
 
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -90,5 +91,18 @@ public class TownEntry implements Comparable<TownEntry> {
 		else {
 			return o.town.getName().compareTo(this.town.getName());
 		}
+	}
+	
+	public void clearPlayer(PlayerEntry pe) {
+		topPlayers.remove(pe);
+		players.remove(pe.getUuid());
+	}
+	
+	public void clearAllPlayers() {
+		for (PlayerEntry pe : topPlayers) {
+			
+		}
+		players.clear();
+		topPlayers.clear();
 	}
 }

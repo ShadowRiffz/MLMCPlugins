@@ -107,14 +107,6 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		return addPoints(-amount, type);
 	}
 	
-	public void clearPoints(Statement delete) throws SQLException {
-		contributedPoints.clear();
-		contributed = 0;
-		points.clear();
-		delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
-		delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
-	}
-	
 	public UUID getUuid() {
 		return uuid;
 	}
@@ -178,5 +170,9 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		else {
 			return o.display.compareTo(this.display);
 		}
+	}
+	
+	public void clear() {
+		getTownEntry().clearPlayer(this);
 	}
 }	

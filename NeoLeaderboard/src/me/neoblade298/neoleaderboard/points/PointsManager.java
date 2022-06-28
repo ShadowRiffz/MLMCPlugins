@@ -26,7 +26,7 @@ import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
 
 public class PointsManager implements IOComponent {
-	private static HashMap<UUID, PlayerEntry> playerPoints = new HashMap<UUID, PlayerEntry>();
+	private static HashMap<UUID, PlayerEntry> playerEntries = new HashMap<UUID, PlayerEntry>();
 	private static HashMap<UUID, NationEntry> nationEntries = new HashMap<UUID, NationEntry>();
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
@@ -38,6 +38,7 @@ public class PointsManager implements IOComponent {
 		// PlayerPoints does not persist on logout
 		// Nationent exists on startup, listens to nation create and delete
 		// Nationent only increments numContributors if PlayerPoints was 0
+		
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -89,54 +90,98 @@ public class PointsManager implements IOComponent {
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
-	
-	public static void handleLeaveTown(Nation n, Town town, Resident r) {
-		if (!playerPoints.containsKey(r.getUUID())) return;
+
+	// To delete PlayerEntry, must clear town and pointsmanager playerentries
+	// To delete NationEntry, just remove from pointsmanager
+	// To delete TownEntry, must clear NationEntry and PlayerEntries
+	public static void deleteNationEntry(UUID nuuid) {
+		NationEntry ne = nationEntries.get(nuuid);
+		for (TownEntry te : ne.getTopTowns()) {
+			deleteTownEntry(te, false);
+		}
 		
-		try {
-			Statement delete = NeoCore.getStatement();
-			clearPlayer(r.getUUID(), delete);
-			playerPoints.remove(r.getUUID()).clearPoints(delete);
-			delete.executeBatch();
-		}
-		catch (Exception e) {
-			Bukkit.getLogger().warning("[NeoLeaderboard] Failed to handle player " + r.getName() + " leaving nation");
-			e.printStackTrace();
-		}
-	}
-	
-	public static void handleLeaveNation(Nation n, Town town) {
 		new BukkitRunnable() {
 			public void run() {
-				try {	
-					// Remove points from nation, this should also remove towns
-					nationEntries.get(n.getUUID()).removeTown(town);
-						
-					// Clear players themselves	
-					Statement delete = NeoCore.getStatement();	
-					for (Resident res : town.getResidents()) {	
-						clearPlayer(res.getUUID(), delete);
+				try {
+					Statement stmt = NeoCore.getStatement();
+					ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_players WHERE nation = '" + nuuid + "';");
+
+					while (rs.next()) {
+						UUID uuid = UUID.fromString(rs.getString(1));
+						stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + uuid + "';");
 					}
-					delete.executeBatch();
+					stmt.executeBatch();
 				}
 				catch (Exception e) {
-					Bukkit.getLogger().warning("[NeoLeaderboard] Failed to handle town " + town.getName() + " leaving nation");
 					e.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
 	
-	public static void clearPlayer(UUID uuid, Statement delete) throws SQLException {
-		// Player is online
-		if (playerPoints.containsKey(uuid)) {
-			playerPoints.remove(uuid).clearPoints(delete); // This adds batch
+	public static void deleteTownEntry(UUID nation, UUID town, boolean deleteFromSql) {
+		NationEntry ne = nationEntries.get(nation);
+		deleteTownEntry(ne.getTownEntry(town), deleteFromSql);
+	}
+	
+	public static void deleteTownEntry(TownEntry te, boolean deleteFromSql) {
+		for (PlayerEntry pe : te.getTopPlayers()) {
+			deletePlayerEntry(pe.getUuid(), false);
 		}
-		// Player is offline
-		else {
-			delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
-			delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
+		
+		if (deleteFromSql) {
+			new BukkitRunnable() {
+				public void run() {
+					try {
+						Statement stmt = NeoCore.getStatement();
+						ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_players WHERE town = '" + te.getTown().getUUID() + "';");
+
+						while (rs.next()) {
+							UUID uuid = UUID.fromString(rs.getString(1));
+							stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+							stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
+							stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + uuid + "';");
+						}
+						stmt.executeBatch();
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}.runTaskAsynchronously(NeoLeaderboard.inst());
 		}
+	}
+	
+	public static void deletePlayerEntry(UUID player, boolean deleteFromSql) {
+		PlayerEntry pe = playerEntries.get(player);
+		if (pe != null) {
+			pe.clear(); // Clears from any town entries
+			playerEntries.remove(pe.getUuid());
+		}
+
+		if (deleteFromSql) {
+			new BukkitRunnable() {
+				public void run() {
+					try {
+						Statement stmt = NeoCore.getStatement();
+						stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + player + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + player + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + player + "';");
+						stmt.executeBatch();
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}.runTaskAsynchronously(NeoLeaderboard.inst());
+		}
+	}
+	
+	public static void initializeTownInNation(UUID nation, Town t) {
+		NationEntry ne = nationEntries.get(nation);
+		ne.initializeTown(t.getUUID());
 	}
 	
 	public static void takePlayerPoints(UUID uuid, double amount, PlayerPointType type) {
@@ -158,13 +203,13 @@ public class PointsManager implements IOComponent {
 				if (n == null) return;
 
 				NationEntry nent = nationEntries.get(n.getUUID());
-				PlayerEntry ppoints = playerPoints.get(uuid);
+				PlayerEntry ppoints = playerEntries.get(uuid);
 				
 				if (online) {
 					if (ppoints == null) {
 						ppoints = new PlayerEntry(uuid);
 						nent.incrementContributors();
-						playerPoints.put(uuid, ppoints);
+						playerEntries.put(uuid, ppoints);
 					}
 					// This makes it so sorting works properly
 					nent.removeFromSort(ppoints);
@@ -185,7 +230,7 @@ public class PointsManager implements IOComponent {
 						}
 						
 						// Simply load in the player and save them after	
-						ppoints = loadPlayerPoints(uuid, stmt);	
+						ppoints = loadPlayerEntry(uuid, stmt);	
 						contributable = ppoints.addPoints(amount, type);	
 						savePlayerData(uuid, stmt);
 						nent.addPlayerPoints(amount, type, t, uuid);
@@ -262,9 +307,9 @@ public class PointsManager implements IOComponent {
 	@Override
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
 		try {
-			PlayerEntry pe = loadPlayerPoints(p.getUniqueId(), stmt);
+			PlayerEntry pe = loadPlayerEntry(p.getUniqueId(), stmt);
 			if (pe != null) {
-				playerPoints.put(p.getUniqueId(), pe);
+				playerEntries.put(p.getUniqueId(), pe);
 			}
 		}
 		catch (Exception e) {
@@ -273,7 +318,7 @@ public class PointsManager implements IOComponent {
 		}
 	}
 	
-	public static PlayerEntry loadPlayerPoints(UUID uuid, Statement stmt) throws SQLException {
+	public static PlayerEntry loadPlayerEntry(UUID uuid, Statement stmt) throws SQLException {
 		PlayerEntry ppoints;
 		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_players WHERE uuid = '" + uuid + "';");
 		// Return null if no points exist, since object doesn't exist until points do
@@ -304,10 +349,14 @@ public class PointsManager implements IOComponent {
 		ppoints.calculateContributed();
 		return ppoints;
 	}
+	
+	public static void clearPlayerEntry(UUID uuid) {
+		playerEntries.remove(uuid);
+	}
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
-		if (!playerPoints.containsKey(p.getUniqueId())) {
+		if (!playerEntries.containsKey(p.getUniqueId())) {
 			return;
 		}
 		try {
@@ -320,18 +369,24 @@ public class PointsManager implements IOComponent {
 			if (n != null) {
 				saveNation(n, insert); // Limited to once every 10 seconds per nation
 			}
+			
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("[NeoLeaderboard] Failed to save player " + p.getName() + " on cleanup.");
 			e.printStackTrace();
 		}
 		finally {
-			playerPoints.remove(p.getUniqueId());
+			// Remove references so they don't show up in things like town top players
+			if (playerEntries.containsKey(p.getUniqueId())) {
+				playerEntries.get(p.getUniqueId()).clear();
+			}
+			
+			playerEntries.remove(p.getUniqueId());
 		}
 	}
 	
 	private static void savePlayerData(UUID uuid, Statement insert) throws SQLException {
-		PlayerEntry ppoints = playerPoints.get(uuid);
+		PlayerEntry ppoints = playerEntries.get(uuid);
 		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
 								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
@@ -351,7 +406,7 @@ public class PointsManager implements IOComponent {
 	}
 	
 	public static PlayerEntry getPlayerEntry(UUID uuid) {
-		return playerPoints.get(uuid);
+		return playerEntries.get(uuid);
 	}
 	
 	public static double getMaxContribution() {
@@ -364,5 +419,9 @@ public class PointsManager implements IOComponent {
 	
 	public static String formatPoints(double points) {
 		return df.format(points);
+	}
+	
+	public static void initializeNation(Nation n) {
+		nationEntries.put(n.getUUID(), new NationEntry(n.getUUID()));
 	}
 }
