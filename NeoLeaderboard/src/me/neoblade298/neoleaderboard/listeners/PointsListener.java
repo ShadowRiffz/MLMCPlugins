@@ -9,7 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -17,7 +20,7 @@ import com.palmergames.bukkit.towny.object.Resident;
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
 import me.neoblade298.neoleaderboard.points.PointsManager;
 
-public class PointsListener implements Listener {
+public class PointsListener implements Listener, PluginMessageListener {
 	private static final double BLOCK_EDIT_POINTS = 0.01;
 	private static final double KILL_PLAYER_POINTS = 0.01;
 	private static final HashMap<UUID, Long> deathCooldowns = new HashMap<UUID, Long>();
@@ -54,5 +57,19 @@ public class PointsListener implements Listener {
 	private boolean deathCooldownActive(UUID uuid) {
 		if (!deathCooldowns.containsKey(uuid)) return false;
 		return System.currentTimeMillis() > deathCooldowns.get(uuid);
+	}
+
+	@Override
+	public void onPluginMessageReceived(String channel, Player p, byte[] msg) {
+	    if (!channel.equals("BungeeCord")) {
+	      return;
+	    }
+	    
+	    ByteArrayDataInput in = ByteStreams.newDataInput(msg);
+	    String subchannel = in.readUTF();
+	    if (subchannel.equals("SomeSubChannel")) {
+	      // Use the code sample in the 'Response' sections below to read
+	      // the data.
+	    }
 	}
 }

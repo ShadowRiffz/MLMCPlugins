@@ -22,8 +22,13 @@ public class NeoLeaderboard extends JavaPlugin {
 		PointsManager.initialize();
 		initCommands();
 		
-		Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
+		PointsListener pl = new PointsListener();
+		Bukkit.getPluginManager().registerEvents(pl, this);
 		Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
+		
+		
+	    this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pl);
 	}
 	
 	public void onDisable() {
