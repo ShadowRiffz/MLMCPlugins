@@ -14,6 +14,7 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import me.neoblade298.neomythicextension.MythicExt;
 
 public class PluginMessageMechanic implements ITargetedEntitySkill {
 
@@ -26,7 +27,7 @@ public class PluginMessageMechanic implements ITargetedEntitySkill {
 	}
 
 	public PluginMessageMechanic(MythicLineConfig config) {
-		this.channel = config.getString(new String[] { "channel", "c" }, "instance_bosskills");
+		this.channel = config.getString(new String[] { "channel", "c" }, "neocore_bosskills");
 		this.msg = config.getString(new String[] { "message", "msg", "m" }, "none");
 	}
 
@@ -44,7 +45,7 @@ public class PluginMessageMechanic implements ITargetedEntitySkill {
 				ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 				DataOutputStream msgout = new DataOutputStream(msgbytes);
 				try {
-					msgout.writeUTF(p.getUniqueId().toString()); // You can do anything you want with msgout
+					msgout.writeUTF(p.getUniqueId().toString());
 					msgout.writeUTF(this.msg);
 				} catch (IOException exception) {
 					exception.printStackTrace();
@@ -52,6 +53,7 @@ public class PluginMessageMechanic implements ITargetedEntitySkill {
 
 				out.writeShort(msgbytes.toByteArray().length);
 				out.write(msgbytes.toByteArray());
+				p.sendPluginMessage(MythicExt.inst, "BungeeCord", out.toByteArray());
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

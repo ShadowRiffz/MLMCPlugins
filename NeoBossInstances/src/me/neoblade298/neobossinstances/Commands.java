@@ -62,7 +62,7 @@ public class Commands implements CommandExecutor {
 				}
 
 				// Only give cooldown if they've beaten the boss before or it's not a boss
-				if (!main.bossInfo.get(boss).getBossType().equals(BossType.BOSS) || p.hasPermission(main.bossInfo.get(boss).getPermission())) {
+				if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) || p.hasPermission(BossInstances.getBoss(boss).getPermission())) {
 					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 				}
 				if (main.mainSpawn.getWorld() == null) {
@@ -107,7 +107,7 @@ public class Commands implements CommandExecutor {
 		    		if (main.cooldowns.get(boss).containsKey(target.getUniqueId())) {
 			    		long lastUse = main.cooldowns.get(boss).get(target.getUniqueId());
 			    		long currTime = System.currentTimeMillis();
-			    		long cooldown = main.bossInfo.get(boss).getCooldown() * 1000;
+			    		long cooldown = BossInstances.getBoss(boss).getCooldown() * 1000;
 			    		if (currTime < lastUse + cooldown) {
 			    			onCooldown.add(target);
 			    		}
@@ -172,7 +172,7 @@ public class Commands implements CommandExecutor {
 					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + target.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
-					if (!main.bossInfo.get(boss).getBossType().equals(BossType.BOSS) || target.hasPermission(main.bossInfo.get(boss).getPermission())) {
+					if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) || target.hasPermission(BossInstances.getBoss(boss).getPermission())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
 
@@ -192,7 +192,7 @@ public class Commands implements CommandExecutor {
 			}
 			// /boss mini [player] [boss] [miniboss]
 			else if (args.length == 4 && args[0].equalsIgnoreCase("mini") && main.isInstance) {
-				Boss boss = main.bossInfo.get(args[2]);
+				Boss boss = BossInstances.getBoss(args[2]);
 				RaidBoss rboss = null;
 				Player p = Bukkit.getPlayer(args[1]);
 				for (RaidBoss rbosses : boss.getRaidBosses()) {
@@ -336,7 +336,7 @@ public class Commands implements CommandExecutor {
 			}
 			// /boss spawners [boss]
 			else if (args.length == 2 && args[0].equalsIgnoreCase("spawners")) {
-				for (String spawner : main.bossInfo.get(args[1]).getSpawnersAlive()) {
+				for (String spawner : BossInstances.getBoss(args[1]).getSpawnersAlive()) {
 					sender.sendMessage(spawner);
 				}
 			}
@@ -380,7 +380,7 @@ public class Commands implements CommandExecutor {
 				main.activeFights.get(boss).add(p);
 				main.inBoss.get(boss).add(p);
 			}
-			main.fightingBoss.put(p.getUniqueId(), boss);
+			BossInstances.fightingBoss.put(p.getUniqueId(), boss);
 			
 			// Recalculate everyone's health bars every time someone joins
 			for (Player partyMember : main.activeFights.get(boss)) {
@@ -493,11 +493,11 @@ public class Commands implements CommandExecutor {
 						else {
 							String temp = "§e" + instance + "§7: §e"
 									+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName() + " §7(§4"
-									+ main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
+									+ BossInstances.getBoss(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
 							while (rs.next()) {
 								temp += "§7, §e"
 										+ Bukkit.getOfflinePlayer(UUID.fromString(rs.getString(1))).getName()
-										+ " §7(§4" + main.bossInfo.get(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
+										+ " §7(§4" + BossInstances.getBoss(rs.getString(2)).getDisplayName() + " " + rs.getInt(4) + "x§7)";
 							}
 							if (temp != null) {
 								sender.sendMessage(temp);

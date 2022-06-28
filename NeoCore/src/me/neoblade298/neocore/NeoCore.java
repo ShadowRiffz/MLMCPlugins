@@ -104,6 +104,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 	public void onDisable() {
 		IOListener.handleDisable();
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoCore Disabled");
+	    this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
 	    super.onDisable();
 	}
 	

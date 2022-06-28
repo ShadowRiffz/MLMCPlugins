@@ -28,7 +28,7 @@ public class CmdBroadcast implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Plays a message";
+		return "Broadcasts a message on all servers";
 	}
 
 	@Override

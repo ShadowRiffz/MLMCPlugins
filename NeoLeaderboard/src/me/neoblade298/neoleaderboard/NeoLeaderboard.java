@@ -26,13 +26,12 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(pl, this);
 		Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
 		
-		
-	    this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pl);
 	}
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoLeaderboard Disabled");
+	    this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
 	    super.onDisable();
 	}
 	

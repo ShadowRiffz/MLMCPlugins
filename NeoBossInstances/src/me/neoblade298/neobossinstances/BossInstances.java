@@ -80,7 +80,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	// playername and
 	// payload is last fought
 	public ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>> cooldowns = new ConcurrentHashMap<String, ConcurrentHashMap<UUID, Long>>();
-	public ConcurrentHashMap<String, Boss> bossInfo = new ConcurrentHashMap<String, Boss>();
+	private static HashMap<String, Boss> bossInfo = new HashMap<String, Boss>();
 	public ConcurrentHashMap<String, Long> dropCooldown = new ConcurrentHashMap<String, Long>();
 	public ArrayList<String> raidBossesFought = new ArrayList<String>();
 	ArrayList<String> instanceNames = null;
@@ -93,7 +93,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public ConcurrentHashMap<UUID, Integer> spectatorAcc = new ConcurrentHashMap<UUID, Integer>();
 	public ConcurrentHashMap<String, ArrayList<String>> healthbars = new ConcurrentHashMap<String, ArrayList<String>>();
 	public static HashMap<UUID, Boss> spectatingBoss = new HashMap<UUID, Boss>();
-	public ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
+	public static ConcurrentHashMap<UUID, String> fightingBoss = new ConcurrentHashMap<UUID, String>();
 	public ConcurrentHashMap<String, PlayerStat> playerStats = new ConcurrentHashMap<String, PlayerStat>();
 	public ConcurrentHashMap<String, Long> statTimers = new ConcurrentHashMap<String, Long>();
 	public HashSet<String> joiningPlayers = new HashSet<String>();
@@ -929,12 +929,16 @@ public class BossInstances extends JavaPlugin implements Listener {
 		return -1;
 	}
 
-	public Boss getBoss(Player p) {
+	public static Boss getBoss(Player p) {
 		String boss = fightingBoss.get(p.getUniqueId());
 		if (boss != null) {
 			return bossInfo.get(fightingBoss.get(p.getUniqueId()));
 		}
 		return null;
+	}
+	
+	public static Boss getBoss(String boss) {
+		return bossInfo.get(boss);
 	}
 
 	public static Set<UUID> getSpectators() {

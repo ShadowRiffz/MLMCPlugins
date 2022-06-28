@@ -139,7 +139,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				if (!SkillAPI.isLoaded(p)) return "";
 				long bossTimer = plugin.getBossTimer(p);
 				long raidTimer = plugin.getRaidTimer(p);
-				Boss b = plugin.getBoss(p);
+				Boss b = BossInstances.getBoss(p);
 				if (b != null && b.getBossType().equals(BossType.DUNGEON)) {
 					if ((System.currentTimeMillis() & 8191) > 4096) {
 						return "§8§l> §c§lSpawners Killed: §f" + b.getSpawnersKilled() + " / " + b.getTotalSpawners();
