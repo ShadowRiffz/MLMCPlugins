@@ -13,7 +13,7 @@ public class CmdBroadcast implements Subcommand {
 
 	@Override
 	public SubcommandRunner getRunner() {
-		return SubcommandRunner.PLAYER_ONLY;
+		return SubcommandRunner.BOTH;
 	}
 
 	@Override
