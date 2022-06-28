@@ -23,7 +23,6 @@ public class AccountTagMechanic implements ITargetedEntitySkill {
 
 	public AccountTagMechanic(MythicLineConfig config) {
         this.tag = config.getString(new String[] {"tag", "t"}, "none");
-        NeoCore.createPlayerTags("questaccount_2", MythicExt.inst, true);
 	}
 	
 	@Override
