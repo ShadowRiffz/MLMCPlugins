@@ -8,7 +8,7 @@ public class CmdBroadcast implements Subcommand {
 
 	@Override
 	public String getPermission() {
-		return null;
+		return "mycommand.staff";
 	}
 
 	@Override
