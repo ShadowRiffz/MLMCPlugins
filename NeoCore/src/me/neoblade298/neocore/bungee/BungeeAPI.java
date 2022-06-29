@@ -13,7 +13,6 @@ import com.google.common.io.ByteStreams;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.Util;
-import me.neoblade298.neomythicextension.MythicExt;
 
 public class BungeeAPI {
 	public static void broadcast(String msg) {

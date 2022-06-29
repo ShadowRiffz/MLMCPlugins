@@ -89,7 +89,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 					localMsg += "!";
 					p.sendMessage(localMsg);
 					String name = fitem.getItemMeta().getDisplayName().replaceAll("§", "&");
-					NeoCore.broadcast("&4[&c&lMLMC&4&l] &e" + p.getName() + " &7has found " + name + "&7!");
+					BungeeAPI.broadcast("&4[&c&lMLMC&4&l] &e" + p.getName() + " &7has found " + name + "&7!");
 				}
 				return SkillResult.SUCCESS;
 			}

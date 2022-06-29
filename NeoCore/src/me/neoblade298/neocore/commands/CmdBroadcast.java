@@ -1,7 +1,7 @@
 package me.neoblade298.neocore.commands;
 
 import org.bukkit.command.CommandSender;
-import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.util.Util;
 
 public class CmdBroadcast implements Subcommand {
@@ -49,7 +49,7 @@ public class CmdBroadcast implements Subcommand {
 			}
 			
 			// Send msg
-			NeoCore.broadcast(msg);
+			BungeeAPI.broadcast(msg);
 		}
 	}
 
