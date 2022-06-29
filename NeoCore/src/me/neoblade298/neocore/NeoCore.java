@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.commands.*;
+import me.neoblade298.neocore.commands.builtin.*;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
@@ -83,16 +84,20 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCoreEnable());
 		mngr.register(new CmdCoreDisable());
 		mngr.register(new CmdCoreDebug());
-		mngr.register(new CmdBroadcast());
 		
 		mngr = new CommandManager("help", this);
-		mngr.register(new CmdMessage("help"));
+		mngr.register(new CmdCoreMessage("help"));
 		
 		mngr = new CommandManager("features", this);
-		mngr.register(new CmdMessage("features", 2));
+		mngr.register(new CmdCoreMessage("features", 2));
 		
 		mngr = new CommandManager("commands", this);
-		mngr.register(new CmdMessage("commands", 4));
+		mngr.register(new CmdCoreMessage("commands", 4));
+		
+		mngr = new CommandManager("bcore", this);
+		mngr.registerCommandList("");
+		mngr.register(new CmdBCoreSend());
+		mngr.register(new CmdBCoreBroadcast());
 	}
 	
 	public void onDisable() {

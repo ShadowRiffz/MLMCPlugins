@@ -203,21 +203,20 @@ public class PointsManager implements IOComponent {
 				if (n == null) return;
 
 				NationEntry nent = nationEntries.get(n.getUUID());
-				PlayerEntry ppoints = playerEntries.get(uuid);
+				PlayerEntry pentry = playerEntries.get(uuid);
 				
 				if (online) {
-					if (ppoints == null) {
-						System.out.println("Null ppoints");
-						ppoints = new PlayerEntry(uuid);
+					if (pentry == null) {
+						pentry = new PlayerEntry(uuid);
 						nent.incrementContributors();
 						nent.initializeTown(t.getUUID()); // If town is already initialized, this does nothing
-						playerEntries.put(uuid, ppoints);
+						playerEntries.put(uuid, pentry);
 					}
 					// This makes it so sorting works properly
-					nent.removeFromSort(ppoints);
-					ppoints.getTownEntry().removeFromSort(ppoints);
+					nent.removeFromSort(pentry);
+					pentry.getTownEntry().removeFromSort(pentry);
 					
-					contributable = ppoints.addPoints(amount, type);
+					contributable = pentry.addPoints(amount, type);
 					nent.addPlayerPoints(contributable, type, t, uuid);
 					
 				}
@@ -232,13 +231,15 @@ public class PointsManager implements IOComponent {
 						}
 						
 						// Simply load in the player and save them after	
-						ppoints = loadPlayerEntry(uuid, stmt);	
-						contributable = ppoints.addPoints(amount, type);	
-						savePlayerData(uuid, stmt);
+						pentry = loadPlayerEntry(uuid, stmt);	
+						contributable = pentry.addPoints(amount, type);	
+						savePlayerData(pentry, stmt);
 						nent.addPlayerPoints(amount, type, t, uuid);
+						stmt.executeBatch();
 					}
 					catch (Exception e) {
 						Bukkit.getLogger().warning("[NeoLeaderboard] Failed to give points to offline player " + uuid + " for type " + type + ", amount " + amount);
+						e.printStackTrace();
 					}
 				}
 			}
@@ -303,7 +304,7 @@ public class PointsManager implements IOComponent {
 		try {
 			insert.executeBatch();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			Bukkit.getLogger().warning("[NeoLeaderboard] Failed to cleanup nations");
 			e.printStackTrace();
 		}
 	}
@@ -320,9 +321,7 @@ public class PointsManager implements IOComponent {
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
 		try {
 			PlayerEntry pe = loadPlayerEntry(p.getUniqueId(), stmt);
-			System.out.println("Loading player");
 			if (pe != null) {
-				System.out.println("Putting player in");
 				playerEntries.put(p.getUniqueId(), pe);
 			}
 		}
@@ -345,7 +344,6 @@ public class PointsManager implements IOComponent {
 		UUID nation = UUID.fromString(rs.getString(4));
 		
 		if (ppoints.getTown() == null || ppoints.getNation() == null) {
-			System.out.println("1");
 			return null; // town/nation was deleted, return without loading more
 		}
 		
@@ -406,19 +404,23 @@ public class PointsManager implements IOComponent {
 	}
 	
 	private static void savePlayerData(UUID uuid, Statement insert) throws SQLException {
-		PlayerEntry ppoints = playerEntries.get(uuid);
+		PlayerEntry pentry = playerEntries.get(uuid);
+		savePlayerData(pentry, insert);
+	}
+	
+	private static void savePlayerData(PlayerEntry pentry, Statement insert) throws SQLException {
 		insert.addBatch("REPLACE INTO leaderboard_players VALUES ('"
-				+ ppoints.getUuid() + "','" + ppoints.getDisplay() + "','"
-				+ ppoints.getTown().getUUID() + "','" + ppoints.getNation().getUUID() + "');");
+				+ pentry.getUuid() + "','" + pentry.getDisplay() + "','"
+				+ pentry.getTown().getUUID() + "','" + pentry.getNation().getUUID() + "');");
 		
-		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
+		for (Entry<PlayerPointType, Double> e : pentry.getTotalPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
-								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
+								+ pentry.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 		
-		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
+		for (Entry<PlayerPointType, Double> e : pentry.getContributedPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_contributed VALUES ('"
-								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
+								+ pentry.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 	}
 	

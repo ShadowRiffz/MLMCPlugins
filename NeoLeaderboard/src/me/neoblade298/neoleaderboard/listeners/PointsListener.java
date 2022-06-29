@@ -67,12 +67,13 @@ public class PointsListener implements Listener, PluginMessageListener {
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player p, byte[] msg) {
-		System.out.println("Received plugin msg");
+		System.out.println("Received plugin msg from " + channel);
 		if (!channel.equals("BungeeCord")) {
 			return;
 		}
 		ByteArrayDataInput in = ByteStreams.newDataInput(msg);
 		String subchannel = in.readUTF();
+		System.out.println("Subchannel: " + subchannel);
 		
 		if (!subchannel.equals("neocore_bosskills")) return;
 		
@@ -87,7 +88,7 @@ public class PointsListener implements Listener, PluginMessageListener {
 			Boss b = BossInstances.getBoss(boss);
 			if (b != null) {
 				String ph = b.getPlaceholder();
-				double lv = Integer.parseInt(b.getPlaceholder().substring(1, ph.indexOf(']'))); 
+				double lv = Integer.parseInt(b.getPlaceholder().substring(ph.indexOf("Lv ") + 3, ph.indexOf(']'))); 
 				PointsManager.addPlayerPoints(uuid, KILL_BOSS_BASE_POINTS * lv, PlayerPointType.KILL_BOSS);
 			}
 		} catch (IOException e) {

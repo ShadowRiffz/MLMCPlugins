@@ -29,12 +29,15 @@ public class TownEntry implements Comparable<TownEntry> {
 	public void addPlayerPoints(double amount, PlayerPointType type, UUID uuid) {
 		// Re-sort is done from PointsManager calling removeFromSort
 		
-		PlayerEntry pe = PointsManager.getPlayerEntry(uuid);
 		playerPoints.put(type, playerPoints.getOrDefault(type, 0D) + amount);
 		total += amount;
-		players.putIfAbsent(uuid, pe);
 		
-		topPlayers.add(pe);
+		PlayerEntry pe = PointsManager.getPlayerEntry(uuid);
+		// Only add if the player is online
+		if (pe != null) {
+			players.putIfAbsent(uuid, pe);
+			topPlayers.add(pe);
+		}
 	}
 	
 	// Must be called anytime a player gets points in PointsManager to remove the entry from the set and re-sort it later
