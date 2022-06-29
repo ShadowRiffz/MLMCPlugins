@@ -1,0 +1,9 @@
+name: NeoPvp
+main: me.neoblade298.neopvp.NeoPvp
+author: [Neoblade298]
+depend: [NeoCore]
+version: 1.0
+api-version: 1.16
+commands:
+   pvpbal:
+      usage: /pvpbal
