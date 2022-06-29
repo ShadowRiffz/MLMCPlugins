@@ -1,7 +1,5 @@
 package me.neoblade298.neoleaderboard.points;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -33,6 +31,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		Resident r = api.getResident(uuid);
 		t = r.getTownOrNull();
 		n = t.getNationOrNull();
+		if (n == null) return;
 		ne = PointsManager.getNationEntry(n.getUUID());
 		te = ne.getTownEntry(t.getUUID());
 	}
@@ -56,6 +55,10 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 	
 	public void setTown(UUID town) {
 		this.t = TownyAPI.getInstance().getTown(town);
+		this.n = t.getNationOrNull();
+		if (n == null) return;
+		this.ne = PointsManager.getNationEntry(n.getUUID());
+		this.te = ne.getTownEntry(t.getUUID());
 	}
 
 	// Return the amount that can be contributed

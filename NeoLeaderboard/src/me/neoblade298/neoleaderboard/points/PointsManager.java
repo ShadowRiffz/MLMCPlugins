@@ -61,7 +61,7 @@ public class PointsManager implements IOComponent {
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						UUID nation = UUID.fromString(rs.getString(2));
-						nationEntries.get(nation).initializeTown(uuid, rs.getInt(3));
+						nationEntries.get(nation).initializeTown(uuid, rs.getInt(4));
 					}
 					
 					// Set items for nation entries
@@ -84,7 +84,7 @@ public class PointsManager implements IOComponent {
 					}
 				}
 				catch (Exception e) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to initialize nationwide points");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to initialize nations");
 					e.printStackTrace();
 				}
 			}
@@ -207,8 +207,10 @@ public class PointsManager implements IOComponent {
 				
 				if (online) {
 					if (ppoints == null) {
+						System.out.println("Null ppoints");
 						ppoints = new PlayerEntry(uuid);
 						nent.incrementContributors();
+						nent.initializeTown(t.getUUID()); // If town is already initialized, this does nothing
 						playerEntries.put(uuid, ppoints);
 					}
 					// This makes it so sorting works properly
@@ -256,6 +258,7 @@ public class PointsManager implements IOComponent {
 					return;
 				}
 				lastSaved.put(nent.getUuid(), System.currentTimeMillis());
+				System.out.println("Saved nation");
 				
 				try {
 					HashMap<NationPointType, Double> points = nent.getAllNationPoints();
@@ -269,16 +272,19 @@ public class PointsManager implements IOComponent {
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (Entry<PlayerPointType, Double> e : ppoints.entrySet()) {
-						insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
+						insert.addBatch("REPLACE INTO leaderboard_nationplayerpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (UUID uuid : tpoints.keySet()) {
 						String name = TownyUniverse.getInstance().getTown(uuid).getName();
+						insert.addBatch("REPLACE INTO leaderboard_towns VALUES ('"
+								+ uuid + "','" + nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
 						for (Entry<PlayerPointType, Double> e : tpoints.get(uuid).getPlayerPoints().entrySet()) {
 							insert.addBatch("REPLACE INTO leaderboard_townpoints VALUES ('"
-									+ uuid + "','" + name + "','" + e.getKey() + "'," + e.getValue() + ");");
+									+ uuid + "','" + nent.getUuid() + "','" + name + "','" + e.getKey() + "'," + e.getValue() + ");");
 						}
 					}
+					insert.executeBatch();
 				}
 				catch (Exception e) {
 					Bukkit.getLogger().warning("[NeoLeaderboard] Failed to save nation " + n.getName() + " on cleanup.");
@@ -294,6 +300,12 @@ public class PointsManager implements IOComponent {
 		for (NationEntry nent : nationEntries.values()) {
 			saveNation(tu.getNation(nent.getUuid()), insert);
 		}
+		try {
+			insert.executeBatch();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -308,7 +320,9 @@ public class PointsManager implements IOComponent {
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
 		try {
 			PlayerEntry pe = loadPlayerEntry(p.getUniqueId(), stmt);
+			System.out.println("Loading player");
 			if (pe != null) {
+				System.out.println("Putting player in");
 				playerEntries.put(p.getUniqueId(), pe);
 			}
 		}
@@ -325,26 +339,28 @@ public class PointsManager implements IOComponent {
 		if (!rs.next()) {
 			return null;
 		}
-		else {
-			rs.previous();
-			ppoints = new PlayerEntry(uuid);
+		
+		ppoints = new PlayerEntry(uuid);
+		UUID town = UUID.fromString(rs.getString(3));
+		UUID nation = UUID.fromString(rs.getString(4));
+		
+		if (ppoints.getTown() == null || ppoints.getNation() == null) {
+			System.out.println("1");
+			return null; // town/nation was deleted, return without loading more
 		}
 		
-		while (rs.next()) {
-			UUID town = UUID.fromString(rs.getString(2));
-			ppoints.setTown(town);
-		}
-		
-		if (ppoints.getTown() == null) {
-			return ppoints; // No sql entry exists OR town was deleted, return without loading more
+		// If town/nation was changed, points are reset to 0
+		if (!ppoints.getTown().getUUID().equals(town) || !ppoints.getNation().getUUID().equals(nation)) {
+			return null;
 		}
 		
 		rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
+			ppoints.setPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(2)));
 		}
 		rs = stmt.executeQuery("SELECT * FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
-			ppoints.setContributedPoints(rs.getDouble(2), PlayerPointType.valueOf(rs.getString(3)));
+			ppoints.setContributedPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(2)));
 		}
 		ppoints.calculateContributed();
 		return ppoints;
@@ -356,20 +372,24 @@ public class PointsManager implements IOComponent {
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
-		if (!playerEntries.containsKey(p.getUniqueId())) {
-			return;
-		}
 		try {
-			savePlayerData(p.getUniqueId(), insert);
-			
-			// Also save the nation so we don't get issues if server crash
+			if (!playerEntries.containsKey(p.getUniqueId())) {
+				UUID uuid = p.getUniqueId();
+				delete.addBatch("DELETE FROM leaderboard_players WHERE uuid = '" + uuid + "';");
+				delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+				delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
+				delete.executeBatch();
+				return;
+			}
+			// Only save if nation exists
 			TownyAPI api = TownyAPI.getInstance();
 			Resident r = api.getResident(p);
 			Nation n = api.getResidentNationOrNull(r);
-			if (n != null) {
-				saveNation(n, insert); // Limited to once every 10 seconds per nation
-			}
+			if (n == null) return;
 			
+			savePlayerData(p.getUniqueId(), insert);
+			saveNation(n, insert); // Limited to once every 10 seconds per nation
+			insert.executeBatch();
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("[NeoLeaderboard] Failed to save player " + p.getName() + " on cleanup.");
@@ -387,10 +407,15 @@ public class PointsManager implements IOComponent {
 	
 	private static void savePlayerData(UUID uuid, Statement insert) throws SQLException {
 		PlayerEntry ppoints = playerEntries.get(uuid);
+		insert.addBatch("REPLACE INTO leaderboard_players VALUES ('"
+				+ ppoints.getUuid() + "','" + ppoints.getDisplay() + "','"
+				+ ppoints.getTown().getUUID() + "','" + ppoints.getNation().getUUID() + "');");
+		
 		for (Entry<PlayerPointType, Double> e : ppoints.getTotalPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
 								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
+		
 		for (Entry<PlayerPointType, Double> e : ppoints.getContributedPoints().entrySet()) {
 			insert.addBatch("REPLACE INTO leaderboard_contributed VALUES ('"
 								+ ppoints.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
@@ -418,7 +443,7 @@ public class PointsManager implements IOComponent {
 	}
 	
 	public static String formatPoints(double points) {
-		return df.format(points);
+		return df.format(Math.round(points * 1000) / 1000D);
 	}
 	
 	public static void initializeNation(Nation n) {

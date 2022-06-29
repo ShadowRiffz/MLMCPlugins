@@ -1,6 +1,5 @@
 package me.neoblade298.neoleaderboard.points;
 
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.UUID;

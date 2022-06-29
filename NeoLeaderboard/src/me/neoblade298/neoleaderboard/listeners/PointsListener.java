@@ -67,6 +67,7 @@ public class PointsListener implements Listener, PluginMessageListener {
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player p, byte[] msg) {
+		System.out.println("Received plugin msg");
 		if (!channel.equals("BungeeCord")) {
 			return;
 		}
@@ -84,7 +85,11 @@ public class PointsListener implements Listener, PluginMessageListener {
 			UUID uuid = UUID.fromString(msgin.readUTF());
 			String boss = msgin.readUTF();
 			Boss b = BossInstances.getBoss(boss);
-			PointsManager.addPlayerPoints(uuid, amount, type);
+			if (b != null) {
+				String ph = b.getPlaceholder();
+				double lv = Integer.parseInt(b.getPlaceholder().substring(1, ph.indexOf(']'))); 
+				PointsManager.addPlayerPoints(uuid, KILL_BOSS_BASE_POINTS * lv, PlayerPointType.KILL_BOSS);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
