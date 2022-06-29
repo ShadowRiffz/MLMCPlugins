@@ -60,6 +60,16 @@ public class CommandManager implements CommandExecutor {
 			runCommand(args[0], sender, args);
 			return true;
 		}
+		else if (!handlers.containsKey(args[0].toUpperCase()) && handlers.containsKey("")) {
+			Subcommand cmd = handlers.get("");
+			CommandArguments cArgs = cmd.getArgs();
+			if (cArgs != null) {
+				if (cArgs.getMin() > 0) {
+					runCommand(args[0], sender, args);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	
@@ -70,7 +80,9 @@ public class CommandManager implements CommandExecutor {
 	public void runCommand(String key, CommandSender s, String[] args, boolean shouldCheck) {
 		Subcommand sc = handlers.get(key.toUpperCase());
 		String[] reducedArgs = args;
-		if (args.length > 0) {
+		
+		// Do not reduce args if key is ""
+		if (args.length > 0 && key.length() != 0) {
 			reducedArgs = Arrays.copyOfRange(args, 1, args.length);
 		}
 		
