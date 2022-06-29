@@ -8,6 +8,7 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.util.Util;
 
@@ -40,13 +41,9 @@ public class CmdCoreEnable implements Subcommand {
 			Util.msg(s, "&7Valid IO actions: save, preload, load, cleanup");
 		}
 		else {
-			switch (args[0].toLowerCase()) { 
-			case "save": IOListener.setCanSave(true); break;
-			case "load": IOListener.setCanLoad(true); break;
-			case "preload": IOListener.setCanPreload(true); break;
-			case "cleanup": IOListener.setCanCleanup(true); break;
-			}
-			Util.msg(s, "Successfully set " + args[0].toLowerCase() + " to enabled.");
+			IOType type = IOType.valueOf(args[0].toUpperCase());
+			IOListener.enableIO(type);
+			Util.msg(s, "Successfully set " + type + " to enabled.");
 		}
 	}
 

@@ -3,7 +3,9 @@ package me.neoblade298.neocore.listeners;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -25,13 +27,24 @@ import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.io.IOType;
+import me.neoblade298.neocore.io.PostIOTask;
 
 public class IOListener implements Listener {
 	private static String connection;
 	private static Properties properties;
 	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
-	private static boolean canSave = true, canLoad = true, canPreload = true, canCleanup = true;
+	private static HashSet<IOType> disabledIO = new HashSet<IOType>();
+	private static HashMap<IOType, HashSet<UUID>> performingIO = new HashMap<IOType, HashSet<UUID>>();
+	private static HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>> postIOTasks = new HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>>();
+	
+	static {
+		for (IOType type : IOType.values()) {
+			performingIO.put(type, new HashSet<UUID>());
+			postIOTasks.put(type, new HashMap<UUID, ArrayList<PostIOTask>>());
+		}
+	}
 	
 	public IOListener(String connection, Properties properties) {
 		try {
@@ -73,7 +86,7 @@ public class IOListener implements Listener {
 	}
 	
 	private void save(Player p) {
-		if (!canSave) {
+		if (disabledIO.contains(IOType.SAVE)) {
 			return;
 		}
 		
@@ -83,6 +96,8 @@ public class IOListener implements Listener {
 			return;
 		}
 		lastSave.put(uuid, System.currentTimeMillis());
+		IOType type = IOType.SAVE;
+		performingIO.get(type).add(uuid);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -108,14 +123,19 @@ public class IOListener implements Listener {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				finally {
+					endIOTask(type, p.getUniqueId());
+				}
 			}
 		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
 	private void preload(OfflinePlayer p) {
-		if (!canPreload) {
+		IOType type = IOType.PRELOAD;
+		if (disabledIO.contains(type)) {
 			return;
 		}
+		performingIO.get(type).add(p.getUniqueId());
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -139,14 +159,19 @@ public class IOListener implements Listener {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				finally {
+					endIOTask(type, p.getUniqueId());
+				}
 			}
 		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
 	private void load(Player p) {
-		if (!canLoad) {
+		IOType type = IOType.LOAD;
+		if (disabledIO.contains(type)) {
 			return;
 		}
+		performingIO.get(type).add(p.getUniqueId());
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -170,12 +195,15 @@ public class IOListener implements Listener {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				finally {
+					endIOTask(type, p.getUniqueId());
+				}
 			}
 		}.runTaskAsynchronously(NeoCore.inst());
 	}
 	
 	public static void handleDisable() {
-		if (!canCleanup) {
+		if (disabledIO.contains(IOType.CLEANUP)) {
 			return;
 		}
 		
@@ -217,19 +245,36 @@ public class IOListener implements Listener {
 		return null;
 	}
 	
-	public static void setCanSave(boolean canSave) {
-		IOListener.canSave = canSave;
+	public static void disableIO(IOType type) {
+		disabledIO.add(type);
+	}
+
+	public static void enableIO(IOType type) {
+		disabledIO.remove(type);
 	}
 	
-	public static void setCanLoad(boolean canLoad) {
-		IOListener.canLoad = canLoad;
+	public static void addPostIOTask(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
+		ArrayList<PostIOTask> tasks = postIOTasks.get(type).getOrDefault(uuid, new ArrayList<PostIOTask>());
+		tasks.add(new PostIOTask(task, async));
+		postIOTasks.get(type).putIfAbsent(uuid,	tasks);
 	}
 	
-	public static void setCanPreload(boolean canPreload) {
-		IOListener.canPreload = canPreload;
+	public static boolean isPerformingIO(UUID uuid, IOType type) {
+		return performingIO.get(type).contains(uuid);
 	}
 	
-	public static void setCanCleanup(boolean canCleanup) {
-		IOListener.canCleanup = canCleanup;
+	private static void endIOTask(IOType type, UUID uuid) {
+		performingIO.get(type).remove(uuid);
+		if (postIOTasks.get(type).containsKey(uuid)) {
+			for (PostIOTask task : postIOTasks.get(type).get(uuid)) {
+				if (task.isAsync()) {
+					task.getRunnable().runTaskAsynchronously(NeoCore.inst());
+				}
+				else {
+					task.getRunnable().runTask(NeoCore.inst());
+				}
+			}
+			postIOTasks.get(type).remove(uuid);
+		}
 	}
 }

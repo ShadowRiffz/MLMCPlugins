@@ -4,7 +4,9 @@ import java.io.File;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,6 +25,7 @@ import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.player.*;
 import net.milkbowl.vault.economy.Economy;
@@ -194,5 +197,13 @@ public class NeoCore extends JavaPlugin implements Listener {
 	public static boolean toggleDebug() {
 		debug = !debug;
 		return debug;
+	}
+	
+	public static boolean isPerformingIO(UUID uuid, IOType type) {
+		return IOListener.isPerformingIO(uuid, type);
+	}
+	
+	public static void addPostIOTask(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
+		IOListener.addPostIOTask(task, type, uuid, async);
 	}
 }
