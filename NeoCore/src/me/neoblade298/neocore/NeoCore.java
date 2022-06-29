@@ -196,15 +196,4 @@ public class NeoCore extends JavaPlugin implements Listener {
 		debug = !debug;
 		return debug;
 	}
-	
-	public static void broadcast(String msg) {
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeUTF("Message");
-		out.writeUTF("ALL");
-		out.writeUTF(Util.translateColors(msg));
-
-		Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-
-		p.sendPluginMessage(NeoCore.inst(), "BungeeCord", out.toByteArray());
-	}
 }
