@@ -59,9 +59,6 @@ public class MythicExt extends JavaPlugin implements Listener {
 		log.info("NeoMythicExtensions Enabled!");
 		inst = this;
 
-		// Setup bungee pluginmsging
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
 		if (!setupEconomy()) {
 			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);

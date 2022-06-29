@@ -35,14 +35,18 @@ public class BungeeAPI {
 	}
 	
 	public static void sendPluginMessage(String channel, Object... msgs) {
-		sendPluginMessage(Iterables.getFirst(Bukkit.getOnlinePlayers(), null), "ALL", channel, msgs);
+		sendPluginMessage("ALL", Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
 	}
 	
-	public static void sendPluginMessage(String channel, String server, Object... msgs) {
-		sendPluginMessage(Iterables.getFirst(Bukkit.getOnlinePlayers(), null), server, channel, msgs);
+	public static void sendPluginMessage(String server, String channel, Object... msgs) {
+		sendPluginMessage(server, Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
 	}
 	
-	public static void sendPluginMessage(Player p, String server, String channel, Object... msgs) {
+	public static void sendPluginMessage(Player p, String channel, Object... msgs) {
+		sendPluginMessage("ALL", p, channel, msgs);
+	}
+	
+	public static void sendPluginMessage(String server, Player p, String channel, Object... msgs) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("Forward");
 		out.writeUTF(server);

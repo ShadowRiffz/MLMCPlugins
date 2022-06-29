@@ -16,7 +16,7 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
-import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ScaleChestMechanic implements ITargetedEntitySkill {
