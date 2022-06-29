@@ -19,6 +19,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ISkillMechanic;
 import io.lumine.mythic.api.skills.conditions.ISkillCondition;
 import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicDropLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
@@ -59,11 +60,16 @@ public class MythicExt extends JavaPlugin implements Listener {
 		log.info("NeoMythicExtensions Enabled!");
 		inst = this;
 
+		// Setup bungee pluginmsging
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
 		if (!setupEconomy()) {
 			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+		
+		MythicBukkit.inst().getMobManager().getActiveMob(UUID.fromString("test")).get().getBar("test").set
 	}
 
 	private boolean setupEconomy() {
