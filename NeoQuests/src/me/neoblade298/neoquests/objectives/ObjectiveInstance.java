@@ -37,6 +37,16 @@ public class ObjectiveInstance {
 		return false;
 	}
 
+	public boolean addCount(int count) {
+		this.count += count;
+		this.count = Math.min(obj.getNeeded(), count);
+		if (isComplete()) {
+			set.checkCompletion();
+			return true;
+		}
+		return false;
+	}
+
 	public boolean incrementCount() {
 		if (this.count < obj.getNeeded()) {
 			this.count++;

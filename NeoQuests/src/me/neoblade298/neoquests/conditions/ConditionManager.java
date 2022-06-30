@@ -18,11 +18,11 @@ public class ConditionManager {
 		mngr = new LineConfigManager<Condition>(NeoQuests.inst(), "conditions");
 		
 		mngr.register(new ClassLevelCondition());
-		mngr.register(new QuestSuccessfulCondition());
-		mngr.register(new QuestCompletedCondition());
-		mngr.register(new QuestTakeableCondition());
 		mngr.register(new CopyQuestConditionsCondition());
 		mngr.register(new HasTagCondition());
+		mngr.register(new QuestCompletedCondition());
+		mngr.register(new QuestSuccessfulCondition());
+		mngr.register(new QuestTakeableCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {
