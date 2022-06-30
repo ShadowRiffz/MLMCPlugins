@@ -19,24 +19,25 @@ public class ActionManager {
 		dialogueActions.add("player");
 		dialogueActions.add("desc");
 		dialogueActions.add("msg");
-		
+
+		mngr.register(new CommandAction());
 		mngr.register(new DelayAction());
 		mngr.register(new DescriptionDialogueAction());
+		mngr.register(new FakeAction());
+		mngr.register(new GiveClassExpAction());
+		mngr.register(new GiveEffectAction());
+		mngr.register(new GiveMoneyAction());
+		mngr.register(new GiveProfessionExpAction());
+		mngr.register(new GiveStoredItemAction());
+		mngr.register(new GiveTagAction());
+		mngr.register(new LeaveQuestlineAction());
 		mngr.register(new MessageDialogueAction());
 		mngr.register(new NPCDialogueAction());
 		mngr.register(new PlayerDialogueAction());
-		mngr.register(new GiveStoredItemAction());
-		mngr.register(new GiveClassExpAction());
-		mngr.register(new GiveProfessionExpAction());
-		mngr.register(new GiveMoneyAction());
-		mngr.register(new StartQuestAction());
-		mngr.register(new CommandAction());
-		mngr.register(new LeaveQuestlineAction());
-		mngr.register(new StartQuestlineAction());
-		mngr.register(new StartConversationAction());
-		mngr.register(new FakeAction());
-		mngr.register(new GiveEffectAction());
 		mngr.register(new PlaySoundAction());
+		mngr.register(new StartConversationAction());
+		mngr.register(new StartQuestAction());
+		mngr.register(new StartQuestlineAction());
 		mngr.register(new TeleportAction());
 	}
 	
