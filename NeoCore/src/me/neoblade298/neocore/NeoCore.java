@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -203,7 +202,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		return IOListener.isPerformingIO(uuid, type);
 	}
 	
-	public static void addPostIOTask(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
-		IOListener.addPostIOTask(task, type, uuid, async);
+	public static void addPostIORunnable(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
+		IOListener.addPostIORunnable(task, type, uuid, async);
 	}
 }

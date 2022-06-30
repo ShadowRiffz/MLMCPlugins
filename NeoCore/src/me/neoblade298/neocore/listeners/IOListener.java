@@ -37,12 +37,12 @@ public class IOListener implements Listener {
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
 	private static HashSet<IOType> disabledIO = new HashSet<IOType>();
 	private static HashMap<IOType, HashSet<UUID>> performingIO = new HashMap<IOType, HashSet<UUID>>();
-	private static HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>> postIOTasks = new HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>>();
+	private static HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>> postIORunnables = new HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>>();
 	
 	static {
 		for (IOType type : IOType.values()) {
 			performingIO.put(type, new HashSet<UUID>());
-			postIOTasks.put(type, new HashMap<UUID, ArrayList<PostIOTask>>());
+			postIORunnables.put(type, new HashMap<UUID, ArrayList<PostIOTask>>());
 		}
 	}
 	
@@ -253,10 +253,10 @@ public class IOListener implements Listener {
 		disabledIO.remove(type);
 	}
 	
-	public static void addPostIOTask(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
-		ArrayList<PostIOTask> tasks = postIOTasks.get(type).getOrDefault(uuid, new ArrayList<PostIOTask>());
+	public static void addPostIORunnable(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
+		ArrayList<PostIOTask> tasks = postIORunnables.get(type).getOrDefault(uuid, new ArrayList<PostIOTask>());
 		tasks.add(new PostIOTask(task, async));
-		postIOTasks.get(type).putIfAbsent(uuid,	tasks);
+		postIORunnables.get(type).putIfAbsent(uuid,	tasks);
 	}
 	
 	public static boolean isPerformingIO(UUID uuid, IOType type) {
@@ -265,8 +265,8 @@ public class IOListener implements Listener {
 	
 	private static void endIOTask(IOType type, UUID uuid) {
 		performingIO.get(type).remove(uuid);
-		if (postIOTasks.get(type).containsKey(uuid)) {
-			for (PostIOTask task : postIOTasks.get(type).get(uuid)) {
+		if (postIORunnables.get(type).containsKey(uuid)) {
+			for (PostIOTask task : postIORunnables.get(type).get(uuid)) {
 				if (task.isAsync()) {
 					task.getRunnable().runTaskAsynchronously(NeoCore.inst());
 				}
@@ -274,7 +274,7 @@ public class IOListener implements Listener {
 					task.getRunnable().runTask(NeoCore.inst());
 				}
 			}
-			postIOTasks.get(type).remove(uuid);
+			postIORunnables.get(type).remove(uuid);
 		}
 	}
 }

@@ -99,12 +99,4 @@ public class TownEntry implements Comparable<TownEntry> {
 		topPlayers.remove(pe);
 		players.remove(pe.getUuid());
 	}
-	
-	public void clearAllPlayers() {
-		for (PlayerEntry pe : topPlayers) {
-			
-		}
-		players.clear();
-		topPlayers.clear();
-	}
 }
