@@ -27,6 +27,7 @@ public class ActionManager {
 		mngr.register(new PlayerDialogueAction());
 		mngr.register(new GiveStoredItemAction());
 		mngr.register(new GiveClassExpAction());
+		mngr.register(new GiveProfessionExpAction());
 		mngr.register(new GiveMoneyAction());
 		mngr.register(new StartQuestAction());
 		mngr.register(new CommandAction());
@@ -35,6 +36,8 @@ public class ActionManager {
 		mngr.register(new StartConversationAction());
 		mngr.register(new FakeAction());
 		mngr.register(new GiveEffectAction());
+		mngr.register(new PlaySoundAction());
+		mngr.register(new TeleportAction());
 	}
 	
 	public static ArrayList<RewardAction> parseRewards(List<String> actionLines) throws NeoIOException {
