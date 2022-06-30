@@ -67,13 +67,11 @@ public class PointsListener implements Listener, PluginMessageListener {
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player p, byte[] msg) {
-		System.out.println("Received plugin msg from " + channel);
 		if (!channel.equals("BungeeCord")) {
 			return;
 		}
 		ByteArrayDataInput in = ByteStreams.newDataInput(msg);
 		String subchannel = in.readUTF();
-		System.out.println("Subchannel: " + subchannel);
 		
 		if (!subchannel.equals("neocore_bosskills")) return;
 		

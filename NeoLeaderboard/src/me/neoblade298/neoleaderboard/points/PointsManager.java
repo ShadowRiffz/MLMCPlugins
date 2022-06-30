@@ -23,6 +23,7 @@ import com.palmergames.bukkit.towny.object.Town;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
 
 public class PointsManager implements IOComponent {
@@ -193,7 +194,7 @@ public class PointsManager implements IOComponent {
 	}
 	
 	public static void addPlayerPoints(UUID uuid, double amount, PlayerPointType type, boolean online) {
-		new BukkitRunnable() {
+		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
 				TownyAPI api = TownyAPI.getInstance();
 				Resident r = api.getResident(uuid);
@@ -243,7 +244,14 @@ public class PointsManager implements IOComponent {
 					}
 				}
 			}
-		}.runTaskAsynchronously(NeoLeaderboard.inst());
+		};
+		
+		if (NeoCore.isPerformingIO(uuid, IOType.PRELOAD)) {
+			NeoCore.addPostIORunnable(runnable, IOType.PRELOAD, uuid, true);
+		}
+		else {
+			runnable.runTaskAsynchronously(NeoLeaderboard.inst());
+		}
 	}
 	
 	public static void addNationPoints(UUID uuid, double amount, NationPointType type) {
@@ -259,7 +267,6 @@ public class PointsManager implements IOComponent {
 					return;
 				}
 				lastSaved.put(nent.getUuid(), System.currentTimeMillis());
-				System.out.println("Saved nation");
 				
 				try {
 					HashMap<NationPointType, Double> points = nent.getAllNationPoints();
