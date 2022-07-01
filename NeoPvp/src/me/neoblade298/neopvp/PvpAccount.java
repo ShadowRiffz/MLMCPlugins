@@ -8,4 +8,16 @@ public class PvpAccount {
 	private HashSet<UUID> uniqueKills;
 	private double pvpBalance;
 	private int elo;
+	
+	public void addElo(int amount) {
+		elo += amount;
+	}
+	
+	public void takeElo(int amount) {
+		addElo(-amount);
+	}
+	
+	public int getElo() {
+		return elo;
+	}
 }
