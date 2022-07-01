@@ -7,11 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neocore.events.PlayerTagChangedEvent;
+import me.neoblade298.neoquests.events.ConversationEvent;
 import me.neoblade298.neoquests.objectives.*;
 import me.neoblade298.neoquests.objectives.builtin.*;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -53,7 +55,12 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			e.setCancelled(true);
 			for (ObjectiveInstance o : insts) {
-				((InteractNpcObjective) o.getObjective()).checkEvent(e, o);
+				if (o.getObjective() instanceof InteractNpcObjective) {
+					((InteractNpcObjective) o.getObjective()).checkEvent(e, o);
+				}
+				else {
+					((DeliverItemsObjective) o.getObjective()).checkEvent(e, o);
+				}
 			}
 		}
 	}
@@ -105,6 +112,30 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((GetTagObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onConversationResponse(ConversationEvent e) {
+		Player p = e.getPlayer();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.RESPOND_CONVERSATION);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((RespondConversationObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent e) {
+		Player p = e.getPlayer();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.CHAT);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((SayObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}

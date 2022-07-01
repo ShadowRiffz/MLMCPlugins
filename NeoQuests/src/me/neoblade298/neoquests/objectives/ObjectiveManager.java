@@ -15,13 +15,16 @@ public class ObjectiveManager {
 	
 	public ObjectiveManager() {
 		mngr = new LineConfigManager<Objective>(NeoQuests.inst(), "objectives");
-		
-		register(new InteractNpcObjective());
+
+		register(new DeliverItemsObjective());
+		register(new FakeObjective());
 		register(new GetStoredItemObjective());
+		register(new GetTagObjective());
+		register(new InteractNpcObjective());
 		register(new KillMythicmobsObjective());
 		register(new ReachLocationObjective());
-		register(new FakeObjective());
-		register(new GetTagObjective());
+		register(new RespondConversationObjective());
+		register(new SayObjective());
 	}
 	
 	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {

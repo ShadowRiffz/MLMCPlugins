@@ -1,5 +1,6 @@
 package me.neoblade298.neoquests.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -9,10 +10,12 @@ import me.neoblade298.neoquests.conversations.ConversationStage;
 
 public class ConversationEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
+    private Player p;
 	private Conversation conv;
 	private ConversationStage stage;
 	private ConversationResponse resp;
-	public ConversationEvent(Conversation conv, ConversationStage stage, ConversationResponse resp) {
+	public ConversationEvent(Player p, Conversation conv, ConversationStage stage, ConversationResponse resp) {
+		this.p = p;
 		this.conv = conv;
 		this.stage = stage;
 		this.resp = resp;
@@ -25,6 +28,9 @@ public class ConversationEvent extends Event {
 	}
 	public ConversationResponse getResp() {
 		return resp;
+	}
+	public Player getPlayer() {
+		return p;
 	}
 
 	@Override

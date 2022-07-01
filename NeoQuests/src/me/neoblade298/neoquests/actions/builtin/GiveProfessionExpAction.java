@@ -4,9 +4,6 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.enums.ExpSource;
-
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 import me.neoblade298.neocore.io.LineConfig;

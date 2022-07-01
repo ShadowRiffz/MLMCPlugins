@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.objectives;
 
 public enum ObjectiveEvent {
+	CHAT,
 	KILL_MYTHICMOB,
 	RECEIVE_STORED_ITEM,
 	MOVE,

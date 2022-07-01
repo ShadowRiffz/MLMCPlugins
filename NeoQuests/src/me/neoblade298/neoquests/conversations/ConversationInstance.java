@@ -40,7 +40,7 @@ public class ConversationInstance {
 				// Successfully choose response
 				new BukkitRunnable() {
 					public void run() {
-						Bukkit.getPluginManager().callEvent(new ConversationEvent(conv, conv.getStage(stage), resp));
+						Bukkit.getPluginManager().callEvent(new ConversationEvent(p, conv, conv.getStage(stage), resp));
 						int runtime = resp.getActions().run(p);
 						
 						// If no next, try stage + 1, else just stay the same

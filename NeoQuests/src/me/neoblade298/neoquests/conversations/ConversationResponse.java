@@ -18,6 +18,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class ConversationResponse {
+	private int responseNum;
 	private String text;
 	private ArrayList<Condition> conditions = new ArrayList<Condition>();
 	private ActionSequence actions = new ActionSequence();
@@ -25,6 +26,7 @@ public class ConversationResponse {
 	private int next = -1;
 
 	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
+		this.responseNum = Integer.parseInt(cfg.getName());
 		this.text = cfg.getString("text").replaceAll("&", "§");
 		this.actions.load(cfg.getStringList("actions"));
 		this.conditions = ConditionManager.parseConditions(cfg.getStringList("conditions"));
@@ -125,5 +127,9 @@ public class ConversationResponse {
 			responses.add(new ConversationResponse(cfg.getConfigurationSection(key)));
 		}
 		return responses;
+	}
+	
+	public int getResponseNum() {
+		return responseNum;
 	}
 }
