@@ -10,6 +10,11 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StringFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import com.sk89q.worldguard.session.SessionManager;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neocore.NeoCore;
@@ -28,6 +33,7 @@ import me.neoblade298.neoquests.listeners.QuesterListener;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
+import me.neoblade298.neoquests.worldguard.RequiredTagFlagHandler;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static Random rand = new Random();
@@ -37,6 +43,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static ArrayList<Manager> managers = new ArrayList<Manager>();
 	private static HashMap<String, CommandManager> commands = new HashMap<String, CommandManager>();
 	private static PlayerTags[] accountTags = new PlayerTags[12];
+	public static StringFlag REQ_TAG_FLAG;
 
 	public void onEnable() {
 		inst = this;
@@ -66,6 +73,27 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		for (int i = 1; i <= 12; i++) {
 			accountTags[i - 1] = NeoCore.createPlayerTags("questaccount_" + i, this, true);
 		}
+		
+		// WorldGuard
+	    SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+	    // second param allows for ordering of handlers - see the JavaDocs
+	    sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
+	}
+	
+	@Override
+	public void onLoad() {
+		// WorldGuard
+		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+	    try {
+	        // create a flag with the name "my-custom-flag"
+	        StringFlag flag = new StringFlag("required-tag");
+	        registry.register(flag);
+	        REQ_TAG_FLAG = flag; // only set our field if there was no error
+	    } catch (FlagConflictException e) {
+	        // some other plugin registered a flag by the same name already.
+	        // you can use the existing flag, but this may cause conflicts - be sure to check type
+	    	e.printStackTrace();
+	    }
 	}
 
 	private void initCommands() {
