@@ -15,9 +15,12 @@ public class NationEntry implements Comparable<NationEntry> {
 	private HashMap<NationPointType, Double> nationPoints = new HashMap<NationPointType, Double>();
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<UUID, TownEntry> townPoints = new HashMap<UUID, TownEntry>();
-	private TreeSet<TownEntry> topTowns = new TreeSet<TownEntry>();;
 	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
+	private long townsLastSorted = 0;
+	private static final long SORT_COOLDOWN = 1000 * 60 * 15; // 15 minutes
+	private TreeSet<TownEntry> topTowns = new TreeSet<TownEntry>();
+	private HashMap<>
 	
 	public NationEntry(UUID uuid) {
 		this(uuid, 0);
@@ -54,19 +57,13 @@ public class NationEntry implements Comparable<NationEntry> {
 		}
 		TownEntry te = new TownEntry(uuid, this.getNation().getUUID(), contributors);
 		townPoints.put(uuid, te);
-		topTowns.add(te);
 		return true;
 	}
 	
 	public void initializeTownPoints(double amount, PlayerPointType type, UUID uuid) {
-		// Changes to town points means town uuid must be re-sorted
 		TownEntry te = townPoints.getOrDefault(uuid, new TownEntry(uuid, this.getNation().getUUID(), 0));
-		topTowns.remove(te);
-		
 		te.addPlayerPoints(amount, type, uuid);
 		townPoints.putIfAbsent(uuid, te);
-		
-		topTowns.add(te);
 	}
 	
 	public void addNationPoints(double amount, NationPointType type) {
@@ -140,13 +137,10 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public void addTownPoints(double amount, PlayerPointType type, Town town, UUID player) {
-		// Re-sorting happens with PointsManager calling removeFromSort
 		TownEntry te = townPoints.getOrDefault(town.getUUID(), new TownEntry(town.getUUID(), this.getNation().getUUID(), 0));
 		te.addPlayerPoints(amount, type, player);
 		UUID tuuid = town.getUUID();
 		townPoints.putIfAbsent(tuuid, te);
-		
-		topTowns.add(te);
 	}
 	
 	public double getEffectivePoints() {
@@ -171,12 +165,16 @@ public class NationEntry implements Comparable<NationEntry> {
 	}
 	
 	public TreeSet<TownEntry> getTopTowns() {
+		resort();
 		return topTowns;
 	}
 	
-	public void removeFromSort(PlayerEntry pe) {
-		if (pe.getTownEntry() != null) {
-			topTowns.remove(pe.getTownEntry());
+	private void resort() {
+		if (System.currentTimeMillis() > townsLastSorted + SORT_COOLDOWN) {
+			topTowns.clear();
+			for (TownEntry te : townPoints.values()) {
+				topTowns.add(te);
+			}
 		}
 	}
 	

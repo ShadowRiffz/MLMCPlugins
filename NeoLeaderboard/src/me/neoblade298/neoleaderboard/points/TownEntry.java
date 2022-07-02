@@ -11,24 +11,24 @@ import com.palmergames.bukkit.towny.object.Town;
 public class TownEntry implements Comparable<TownEntry> {
 	private HashMap<PlayerPointType, Double> playerPoints = new HashMap<PlayerPointType, Double>();
 	private HashMap<UUID, PlayerEntry> players = new HashMap<UUID, PlayerEntry>();
-	private TreeSet<PlayerEntry> topPlayers;
 	private double total;
 	private int contributors;
 	private Town town;
 	private Nation nation;
 	private NationEntry ne;
 	
+	private TreeSet<PlayerEntry> topPlayers = new TreeSet<PlayerEntry>();
+	private long playersLastSorted = 0L;
+	private static final long SORT_COOLDOWN = 1000 * 60 * 15;
+	
 	public TownEntry(UUID uuid, UUID nation, int contributors) {
 		this.contributors = contributors;
 		this.town = TownyAPI.getInstance().getTown(uuid);
 		this.nation = TownyAPI.getInstance().getNation(nation);
 		this.ne = PointsManager.getNationEntry(nation);
-		topPlayers = new TreeSet<PlayerEntry>();
 	}
 	
 	public void addPlayerPoints(double amount, PlayerPointType type, UUID uuid) {
-		// Re-sort is done from PointsManager calling removeFromSort
-		
 		playerPoints.put(type, playerPoints.getOrDefault(type, 0D) + amount);
 		total += amount;
 		
@@ -36,13 +36,7 @@ public class TownEntry implements Comparable<TownEntry> {
 		// Only add if the player is online
 		if (pe != null) {
 			players.putIfAbsent(uuid, pe);
-			topPlayers.add(pe);
 		}
-	}
-	
-	// Must be called anytime a player gets points in PointsManager to remove the entry from the set and re-sort it later
-	public void removeFromSort(PlayerEntry pe) {
-		topPlayers.remove(pe);
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, UUID uuid) {
@@ -63,10 +57,6 @@ public class TownEntry implements Comparable<TownEntry> {
 	
 	public double getTotalPoints() {
 		return total;
-	}
-	
-	public TreeSet<PlayerEntry> getTopPlayers() {
-		return topPlayers;
 	}
 	
 	public HashMap<UUID, PlayerEntry> getAllPlayerPoints() {
@@ -96,7 +86,17 @@ public class TownEntry implements Comparable<TownEntry> {
 	}
 	
 	public void clearPlayer(PlayerEntry pe) {
-		topPlayers.remove(pe);
 		players.remove(pe.getUuid());
+	}
+
+	public TreeSet<PlayerEntry> getTopPlayers() {
+		if (System.currentTimeMillis() > playersLastSorted + SORT_COOLDOWN) {
+			topPlayers.clear();
+			for (PlayerEntry te : players.values()) {
+				topPlayers.add(te);
+			}
+		}
+
+		return topPlayers;
 	}
 }

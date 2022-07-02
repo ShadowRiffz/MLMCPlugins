@@ -1,6 +1,6 @@
 package me.neoblade298.neoleaderboard.points;
 
-public enum PlayerPointType {
+public enum PlayerPointType implements PointType {
 	KILL_PLAYER("Player kills"),
 	PLAYTIME("Time online"),
 	KILL_BOSS("Boss kills"),

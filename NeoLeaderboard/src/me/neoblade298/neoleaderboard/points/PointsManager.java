@@ -213,9 +213,6 @@ public class PointsManager implements IOComponent {
 						nent.initializeTown(t.getUUID()); // If town is already initialized, this does nothing
 						playerEntries.put(uuid, pentry);
 					}
-					// This makes it so sorting works properly
-					nent.removeFromSort(pentry);
-					pentry.getTownEntry().removeFromSort(pentry);
 					
 					contributable = pentry.addPoints(amount, type);
 					nent.addPlayerPoints(contributable, type, t, uuid);
