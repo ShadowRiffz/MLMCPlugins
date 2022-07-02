@@ -1,6 +1,7 @@
 package me.neoblade298.neocore.commands;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -150,5 +151,9 @@ public class CommandManager implements CommandExecutor {
 	
 	public Subcommand getCommand(String key) {
 		return handlers.get(key.toUpperCase());
+	}
+	
+	public Set<String> getKeys() {
+		return handlers.keySet();
 	}
 }

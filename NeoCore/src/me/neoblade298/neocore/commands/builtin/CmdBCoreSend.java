@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
@@ -11,7 +13,7 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
 public class CmdBCoreSend implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"), new CommandArgument("server")));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false), new CommandArgument("server")));
 
 	@Override
 	public String getPermission() {
@@ -30,17 +32,17 @@ public class CmdBCoreSend implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Broadcasts a message on all servers";
-	}
-
-	@Override
-	public String getArgOverride() {
-		return "[msg]";
+		return "Sends a player or yourself to another server";
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		BungeeAPI.sendPlayer(Bukkit.getPlayer(args[0]), args[1]);
+		if (args.length == 1 && s instanceof Player) {
+			BungeeAPI.sendPlayer((Player) s, args[0]);
+		}
+		else if (args.length == 2) {
+			BungeeAPI.sendPlayer(Bukkit.getPlayer(args[0]), args[1]);
+		}
 	}
 
 	@Override
