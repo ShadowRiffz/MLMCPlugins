@@ -24,8 +24,8 @@ import me.neoblade298.neoleaderboard.points.PointsManager;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 
-public class CmdNLPlayer implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(new CommandArgument("player"));
+public class CmdNLBase implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(new CommandArgument("player", false));
 
 	@Override
 	public String getDescription() {
@@ -34,7 +34,7 @@ public class CmdNLPlayer implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "player";
+		return "";
 	}
 
 	@Override
@@ -58,7 +58,19 @@ public class CmdNLPlayer implements Subcommand {
 		// Async in case it has to load offline player data
 		new BukkitRunnable() {
 			public void run() {
-				Player p = Bukkit.getPlayer(args[0]);
+				if (args.length == 0 && !(s instanceof Player)) {
+					Util.msg(s, "&cYou can't use this command on yourself as console!");
+					return;
+				}
+				
+				Player p;
+				if (args.length == 0 && s instanceof Player) {
+					p = (Player) s;
+				}
+				else {
+					p = Bukkit.getPlayer(args[0]);
+				}
+				
 				PlayerEntry pe = null;
 				if (p != null) {
 					 pe = PointsManager.getPlayerEntry(p.getUniqueId());

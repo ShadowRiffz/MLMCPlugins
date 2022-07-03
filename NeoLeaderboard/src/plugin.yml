@@ -12,3 +12,6 @@ commands:
    nl:
       description: Base command for nation leaderboard
       usage: /nl
+   nc:
+      description: Base command for nation categories
+      usage: /nc

@@ -1,5 +1,6 @@
 package me.neoblade298.neoleaderboard.points;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeSet;
@@ -18,9 +19,10 @@ public class NationEntry implements Comparable<NationEntry> {
 	private double totalNationPoints, totalPlayerPoints;
 	private int numContributors;
 	private long townsLastSorted = 0;
+	private HashMap<PlayerPointType, Long> townCategoryLastSorted = new HashMap<PlayerPointType, Long>();
 	private static final long SORT_COOLDOWN = 1000 * 60 * 15; // 15 minutes
 	private TreeSet<TownEntry> topTowns = new TreeSet<TownEntry>();
-	private HashMap<>
+	private HashMap<PlayerPointType, TreeSet<TownEntry>> topTownCategories = new HashMap<PlayerPointType, TreeSet<TownEntry>>();
 	
 	public NationEntry(UUID uuid) {
 		this(uuid, 0);
@@ -31,6 +33,26 @@ public class NationEntry implements Comparable<NationEntry> {
 		this.numContributors = numContributors;
 		
 		this.nation = TownyAPI.getInstance().getNation(uuid);
+		
+		for (PlayerPointType type : PlayerPointType.values()) {
+			Comparator<TownEntry> comp = new Comparator<TownEntry>() {
+				@Override
+				public int compare(TownEntry t1, TownEntry t2) {
+					if (t1.getPlayerPoints(type) > t2.getPlayerPoints(type)) {
+						return 1;
+					}
+					else if (t1.getPlayerPoints(type) < t2.getPlayerPoints(type)) {
+						return 1;
+					}
+					else {
+						// Since we sort in descending, this will make name ascending
+						return t2.getTown().getName().compareTo(t1.getTown().getName());
+					}
+				}
+			};
+			topTownCategories.put(type, new TreeSet<TownEntry>(comp));
+			townCategoryLastSorted.put(type, 0L);
+		}
 	}
 	
 	public void incrementContributors() {
@@ -160,22 +182,32 @@ public class NationEntry implements Comparable<NationEntry> {
 			return -1;
 		}
 		else {
+			// Since we sort in descending, this will make it ascending
 			return o.getNation().getName().compareTo(this.getNation().getName());
 		}
 	}
 	
 	public TreeSet<TownEntry> getTopTowns() {
-		resort();
-		return topTowns;
-	}
-	
-	private void resort() {
 		if (System.currentTimeMillis() > townsLastSorted + SORT_COOLDOWN) {
 			topTowns.clear();
 			for (TownEntry te : townPoints.values()) {
 				topTowns.add(te);
 			}
+			townsLastSorted = System.currentTimeMillis();
 		}
+		return topTowns;
+	}
+	
+	public TreeSet<TownEntry> getTopTowns(PlayerPointType type) {
+		if (System.currentTimeMillis() > townCategoryLastSorted.get(type) + SORT_COOLDOWN) {
+			topTownCategories.get(type).clear();
+			for (TownEntry te : townPoints.values()) {
+				topTownCategories.get(type).add(te);
+			}
+			townCategoryLastSorted.put(type, System.currentTimeMillis());
+		}
+		
+		return topTownCategories.get(type);
 	}
 	
 	public TownEntry getTownEntry(UUID uuid) {

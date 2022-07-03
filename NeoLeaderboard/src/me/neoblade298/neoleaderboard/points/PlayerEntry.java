@@ -130,6 +130,10 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		return contributedPoints;
 	}
 	
+	public double getContributedPoints(PlayerPointType type) {
+		return contributedPoints.get(type);
+	}
+	
 	public HashMap<PlayerPointType, Double> getTotalPoints() {
 		return points;
 	}
@@ -171,6 +175,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 			return -1;
 		}
 		else {
+			// Since we sort in descending, this will make it ascending
 			return o.display.compareTo(this.display);
 		}
 	}

@@ -38,11 +38,16 @@ public class NeoLeaderboard extends JavaPlugin {
 	private void initCommands() {
 		CommandManager mngr = new CommandManager("nations", this);
 		mngr.register(new CmdNations());
+		mngr.registerCommandList("help");
 		
 		mngr = new CommandManager("nl", this);
 		mngr.register(new CmdNLNation());
 		mngr.register(new CmdNLTown());
-		mngr.register(new CmdNLPlayer());
+		mngr.register(new CmdNLBase());
+		mngr.registerCommandList("help");
+
+		mngr = new CommandManager("nc", this);
+		mngr.register(new CmdNCBase());
 		mngr.registerCommandList("help");
 	}
 	
