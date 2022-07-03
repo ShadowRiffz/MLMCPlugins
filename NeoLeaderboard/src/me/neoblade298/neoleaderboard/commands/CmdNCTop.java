@@ -27,7 +27,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class CmdNCNation implements Subcommand {
+public class CmdNCTop implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(new CommandArgument("category"));
 
 	@Override
@@ -97,20 +97,9 @@ public class CmdNCNation implements Subcommand {
 					String name = e.getNation().getName();
 					double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
 					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(effective) +
-							" §7§o(" + PointsManager.formatPoints(e.getTotalPoints()) + ")", FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTownHover(e))))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl town " + name));
-				}
-				for (NationPointType type : NationPointType.values()) {
-					builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc " + type)))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc " + type));
-				}
-				builder.append("\n§6§l>§8§m--------§c§l» Player Categories «§8§m--------§6§l<", FormatRetention.NONE);
-				for (PlayerPointType type : PlayerPointType.values()) {
-					builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc " + type)))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc " + type));
+							" §7§o(" + PointsManager.formatPoints(e.getPoints(type)) + ")", FormatRetention.NONE)
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc nation " + name)))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc nation " + name));
 				}
 				s.spigot().sendMessage(builder.create());
 			}
