@@ -45,6 +45,7 @@ public class CommandManager implements CommandExecutor {
 	
 	public boolean handleCommand(CommandSender sender, String[] args) {
 		if (args.length == 0) {
+			System.out.println("1");
 			if (handlers.containsKey("") ) {
 				runCommand("", sender, args);
 				return true;
@@ -54,10 +55,12 @@ public class CommandManager implements CommandExecutor {
 			}
 		}
 		else if (StringUtils.isNumeric(args[0]) && handlers.get("") != null && handlers.get("") instanceof CmdList) {
+			System.out.println("2");
 			runCommand("", sender, args);
 			return true;
 		}
 		else if (handlers.containsKey(args[0].toUpperCase())) {
+			System.out.println("3");
 			runCommand(args[0], sender, args);
 			return true;
 		}
@@ -65,7 +68,7 @@ public class CommandManager implements CommandExecutor {
 			Subcommand cmd = handlers.get("");
 			CommandArguments cArgs = cmd.getArgs();
 			if (cArgs != null) {
-				if (cArgs.getMin() > 0) {
+				if (cArgs.getMin() > 0 || cArgs.getMax() > 0) {
 					runCommand(args[0], sender, args);
 					return true;
 				}
