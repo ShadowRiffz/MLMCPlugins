@@ -66,7 +66,7 @@ public class CommandManager implements CommandExecutor {
 			CommandArguments cArgs = cmd.getArgs();
 			if (cArgs != null) {
 				if (cArgs.getMin() > 0 || cArgs.getMax() > 0) {
-					runCommand(args[0], sender, args);
+					runCommand("", sender, args);
 					return true;
 				}
 			}
@@ -79,11 +79,14 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	public void runCommand(String key, CommandSender s, String[] args, boolean shouldCheck) {
-		Subcommand sc = handlers.get(key.toUpperCase());
+		runCommand(handlers.get(key.toUpperCase()), s, args, shouldCheck);
+	}
+	
+	public void runCommand(Subcommand sc, CommandSender s, String[] args, boolean shouldCheck) {
 		String[] reducedArgs = args;
 		
 		// Do not reduce args if key is ""
-		if (args.length > 0 && key.length() != 0) {
+		if (args.length > 0 && sc.getKey().length() != 0) {
 			reducedArgs = Arrays.copyOfRange(args, 1, args.length);
 		}
 		
