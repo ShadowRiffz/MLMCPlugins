@@ -82,7 +82,11 @@ public class CmdNLBase implements Subcommand {
 						e1.printStackTrace();
 					}
 				}
-				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Player Contributions: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
+				
+				if (pe == null) {
+					Util.msg(s, "&cThis player hasn't contributed anything yet!");
+					return;
+				}
 				Resident r = TownyAPI.getInstance().getResident(pe.getUuid());
 				if (r.getNationOrNull() == null) {
 					Util.msg(s, "&cThis player isn't in a nation!");
@@ -91,6 +95,7 @@ public class CmdNLBase implements Subcommand {
 				NationEntry ne = PointsManager.getNationEntry(r.getNationOrNull().getUUID());
 				HashMap<PlayerPointType, Double> cpoints = pe.getContributedPoints();
 				HashMap<PlayerPointType, Double> totalPoints = pe.getTotalPoints();
+				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Player Contributions: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				for (Entry<PlayerPointType, Double> e : cpoints.entrySet()) {
 					double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
 					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(effective) + 

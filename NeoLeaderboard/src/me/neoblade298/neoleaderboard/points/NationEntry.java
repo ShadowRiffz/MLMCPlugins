@@ -213,4 +213,13 @@ public class NationEntry implements Comparable<NationEntry> {
 	public TownEntry getTownEntry(UUID uuid) {
 		return townPoints.get(uuid);
 	}
+	
+	public double getPoints(PointType type) {
+		if (type instanceof PlayerPointType) {
+			return playerPoints.get((PlayerPointType) type);
+		}
+		else {
+			return nationPoints.get((NationPointType) type);
+		}
+	}
 }	

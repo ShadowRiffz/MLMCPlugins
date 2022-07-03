@@ -28,7 +28,7 @@ public class CmdNCBase implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return null;
+		return "Displays clickable list of categories";
 	}
 
 	@Override
@@ -53,18 +53,15 @@ public class CmdNCBase implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-			TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
-			Iterator<NationEntry> iter = sorted.descendingIterator();
-			
 			ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» Nation Categories «§8§m--------§6§l<");
 			for (NationPointType type : NationPointType.values()) {
-				builder.append("\n §6§l»" + type.getDisplay(), FormatRetention.NONE)
+				builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc " + type)))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc " + type));
 			}
-			builder.append("\n§6§l>§8§m--------§c§l» Player Categories «§8§m--------§6§l<");
+			builder.append("\n§6§l>§8§m--------§c§l» Player Categories «§8§m--------§6§l<", FormatRetention.NONE);
 			for (PlayerPointType type : PlayerPointType.values()) {
-				builder.append("\n §6§l»" + type.getDisplay(), FormatRetention.NONE)
+				builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc " + type)))
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc " + type));
 			}
