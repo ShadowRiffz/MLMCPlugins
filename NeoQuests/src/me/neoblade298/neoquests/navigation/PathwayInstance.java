@@ -30,12 +30,12 @@ public class PathwayInstance {
 	private static final double DISTANCE_SHOWABLE = 5000;
 	private static final DustOptions PARTICLE_DATA = new DustOptions(Color.RED, 1.0F);
 	
-	public PathwayInstance(Player p, EndPoint start, EndPoint end, LinkedList<Point> points) {
+	public PathwayInstance(Player p, EndPoint start, EndPoint end) {
 		this.p = p;
 		this.w = start.getWorld();
 		this.start = start;
 		this.end = end;
-		this.points = points;
+		this.points = start.getDestinations().get(end);
 
 		PathwayInstance pwi = this;
 		task = new BukkitRunnable() {
@@ -70,11 +70,13 @@ public class PathwayInstance {
 	
 	public void stop() {
 		task.cancel();
+		NavigationManager.stopNavigation(p, false);
 		Util.msg(p, "Navigation from &6" + start.getDisplay() + " &7to &6" + end.getDisplay() + " &7was successful!");
 	}
 	
 	public void cancel(String reason) {
 		task.cancel();
+		NavigationManager.stopNavigation(p, true);
 		Util.msg(p, "Navigation from &6" + start.getDisplay() + "&7 to &6" + end.getDisplay() + "&7 was cancelled, " + reason);
 	}
 	

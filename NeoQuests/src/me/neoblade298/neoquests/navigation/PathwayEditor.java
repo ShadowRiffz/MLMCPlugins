@@ -29,7 +29,8 @@ public class PathwayEditor {
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
 	
-	private Point endpointEditor;
+	private Point pointEditor;
+	private EndPoint endpointEditor;
 	
 	public PathwayEditor(Player p) throws NeoIOException {
 		this.p = p;
@@ -111,9 +112,18 @@ public class PathwayEditor {
 			EndPoint start = points.getFirst().getEndpoint();
 			EndPoint end = points.getLast().getEndpoint();
 			File file = start.getFile() == null ? endpointFile : start.getFile();
+			YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+			ConfigurationSection sec = yml.getConfigurationSection(start.getKey());
 			
-			ConfigurationSection sec = YamlConfiguration.loadConfiguration(file).createSection(start.getKey());
-			sec.set("world", points.getFirst().getLocation().getWorld().getName());
+			// Get or create "to" section
+			if (sec.contains("to")) {
+				sec = sec.getConfigurationSection("to");
+			}
+			else {
+				sec = sec.createSection("to");
+			}
+			
+			sec = sec.createSection(end.getKey());
 			ArrayList<String> serialized = new ArrayList<String>(points.size());
 			for (Point point : points) {
 				serialized.add(point.serializeAsPath());
@@ -124,18 +134,34 @@ public class PathwayEditor {
 				}
 			}
 			sec.set("points", serialized);
-			sec.set("bidirectional", bidirectional);
+			// Only add this if it's set to true
+			if (bidirectional) sec.set("bidirectional", bidirectional);
+			yml.save(file);
 			NavigationManager.savePoints();
 			
 			end.addStartPoint(start, points);
-			start.addDestination(end, NavigationManager.createReversed(points));
+			start.addDestination(end, points);
+			if (bidirectional) {
+				LinkedList<Point> rev = NavigationManager.createReversed(points);
+				end.addDestination(start, rev);
+				start.addStartPoint(end, rev);
+			}
+			
 			Util.msg(p, "Successfully saved new pathway!");
+			reset();
 			return true;
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			e.printStackTrace();
-			throw new NeoIOException("Failed to save pathway editor");
+			return false;
 		}
+	}
+	
+	private void reset() {
+		// Can't use clear or it'll remove the points from the endpoint pathways!
+		points = new LinkedList<Point>();
+		endpointEditor = null;
+		selected = null;
 	}
 	
 	public void deletePoint(Location loc) {
@@ -162,11 +188,13 @@ public class PathwayEditor {
 		}
 	}
 	
-	public void editEndpoint(Point point) {
-		this.endpointEditor = point;
+	public void editEndpoint(Point point, EndPoint ep) {
+		this.pointEditor = point;
+		this.endpointEditor = ep;
 	}
 	
 	public void stopEditingEndpoint() {
+		this.pointEditor = null;
 		this.endpointEditor = null;
 	}
 	
@@ -174,7 +202,11 @@ public class PathwayEditor {
 		return endpointEditor != null;
 	}
 	
-	public Point getEditingEndpoint() {
+	public Point getEditingPoint() {
+		return pointEditor;
+	}
+	
+	public EndPoint getEditingEndpoint() {
 		return endpointEditor;
 	}
 	
@@ -182,26 +214,22 @@ public class PathwayEditor {
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(endpointFile);
 		for (Point point : new Point[] { points.getFirst(), points.getLast() }) {
 			EndPoint ep = point.getEndpoint();
-			ep.setFile(endpointFile);
 			// Only save endpoints that haven't been saved yet
 			if (ep.getFile() != null) {
 				continue;
 			}
-			
+
+			ep.setFile(endpointFile);
 			ConfigurationSection sec = cfg.createSection(ep.getKey());
 			sec.set("display", ep.getDisplay());
 			sec.set("location", point.serializeLocation());
 			sec.set("world", point.getLocation().getWorld().getName());
+			try {
+				cfg.save(endpointFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new NeoIOException("Failed to save endpoints for new pathway");
+			}
 		}
-		try {
-			cfg.save(endpointFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new NeoIOException("Failed to save endpoints for new pathway");
-		}
-	}
-	
-	public File getEndpointFile() {
-		return endpointFile;
 	}
 }

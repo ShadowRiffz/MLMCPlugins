@@ -14,37 +14,45 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 public class EndPoint {
 	private Point point;
 	private String key, display;
+	private ConfigurationSection cfg;
 	private File file;
 	private HashMap<EndPoint, LinkedList<Point>> startPoints = new HashMap<EndPoint, LinkedList<Point>>();
 	private HashMap<EndPoint, LinkedList<Point>> destinations = new HashMap<EndPoint, LinkedList<Point>>();
 	
 	public EndPoint() {}
 	
-	public EndPoint(File file, ConfigurationSection cfg, Point point) throws NeoIOException {
-		this.point = point;
+	public EndPoint(File file, ConfigurationSection cfg) throws NeoIOException {
 		this.file = file;
+		this.key = cfg.getName();
+		this.display = cfg.getString("display");
+		this.cfg = cfg;
+	}
+	
+	public void loadPathways() throws NeoIOException {
 		ConfigurationSection sec = cfg.getConfigurationSection("to");
 		if (sec != null) {
 			for (String key : sec.getKeys(false)) {
 				ConfigurationSection path = sec.getConfigurationSection(key);
-				EndPoint ep = NavigationManager.getEndpoint(key);
-				if (ep == null) {
+				EndPoint end = NavigationManager.getEndpoint(key);
+				if (end == null) {
 					throw new NeoIOException("Failed to load path from " + this.key + " to " + key + ", " + key + " doesn't exist or isn't an endpoint.");
 				}
 				LinkedList<Point> points = parsePoints(path.getStringList("points"));
-				startPoints.put(ep, points);
+				destinations.put(end, points);
+				end.addStartPoint(this, points);
 				
 				if (path.getBoolean("bidirectional", false)) {
 					LinkedList<Point> reversed = NavigationManager.createReversed(points);
-					ep.addStartPoint(this, reversed);
+					startPoints.put(end, reversed);
+					end.addDestination(this, reversed);
 				}
 			}
 		}
+		cfg = null; // Remove cfg from memory after it's used
 	}
 	
 	// Notably, when an endpoint is first made it has no file variable (must be set and/or loaded via cfg)
-	public EndPoint(Point point, String key, String display) {
-		this.point = point;
+	public EndPoint(String key, String display) {
 		this.key = key;
 		this.display = display;
 	}
@@ -75,10 +83,12 @@ public class EndPoint {
 	
 	public void addStartPoint(EndPoint point, LinkedList<Point> pw) {
 		startPoints.put(point, pw);
+		getStartPoints();
 	}
 	
 	public void addDestination(EndPoint point, LinkedList<Point> pw) {
 		destinations.put(point, pw);
+		getDestinations();
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getStartPoints() {
@@ -131,5 +141,14 @@ public class EndPoint {
 	
 	public World getWorld() {
 		return point.getWorld();
+	}
+	
+	public void setPoint(Point point) {
+		this.point = point;
+	}
+	
+	@Override
+	public String toString() {
+		return "EP: " + this.point.toString();
 	}
 }

@@ -1,11 +1,8 @@
 package me.neoblade298.neoquests.commands;
 
-import java.util.Arrays;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
@@ -14,7 +11,7 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
 public class CmdANavigationCreate implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("name", true)));
+	private static final CommandArguments args = new CommandArguments();
 
 	@Override
 	public String getDescription() {
@@ -40,7 +37,7 @@ public class CmdANavigationCreate implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		try {
-			NavigationManager.startPathwayEditor(p, args[0]);
+			NavigationManager.startPathwayEditor(p);
 		} catch (NeoIOException e) {
 			NeoQuests.showWarning("Failed to start pathway editor", e);
 		}

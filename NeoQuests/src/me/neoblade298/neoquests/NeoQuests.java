@@ -93,6 +93,9 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	        // some other plugin registered a flag by the same name already.
 	        // you can use the existing flag, but this may cause conflicts - be sure to check type
 	    	e.printStackTrace();
+	    	
+	    } catch (IllegalStateException e) {
+	    	e.printStackTrace();
 	    }
 	}
 

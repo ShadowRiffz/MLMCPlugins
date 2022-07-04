@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
@@ -15,7 +16,7 @@ import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
 public class CmdANavigationSave implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList());
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("bidirectional", false)));
 
 	@Override
 	public String getDescription() {
@@ -45,7 +46,7 @@ public class CmdANavigationSave implements Subcommand {
 			return;
 		}
 		try {
-			NavigationManager.getEditor(p).save();
+			NavigationManager.getEditor(p).save(args.length == 0 ? false : args[0].equalsIgnoreCase("true"));
 		} catch (NeoIOException e) {
 			NeoQuests.showWarning("Failed to save pathway editor", e);
 		}

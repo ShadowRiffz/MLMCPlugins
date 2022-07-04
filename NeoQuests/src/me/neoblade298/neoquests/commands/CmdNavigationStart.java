@@ -39,7 +39,7 @@ public class CmdNavigationStart implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = null;
-		if (args.length == 0) {
+		if (args.length == 2) {
 			p = (Player) s;
 		}
 		else {

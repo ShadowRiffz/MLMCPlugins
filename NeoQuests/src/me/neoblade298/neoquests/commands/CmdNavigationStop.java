@@ -34,7 +34,7 @@ public class CmdNavigationStop implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		NavigationManager.stopNavigation(p);
+		NavigationManager.stopNavigation(p, true);
 	}
 
 	@Override

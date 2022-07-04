@@ -1,7 +1,6 @@
 package me.neoblade298.neoquests.commands;
 
 import java.util.Arrays;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,9 +11,8 @@ import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neoquests.navigation.EndPoint;
 import me.neoblade298.neoquests.navigation.NavigationManager;
-import me.neoblade298.neoquests.navigation.Pathway;
-import me.neoblade298.neoquests.navigation.PathwayPoint;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -57,13 +55,13 @@ public class CmdANavigationTo implements Subcommand {
 			Util.msg(s, "&cPlayer is not online!");
 		}
 		
-		PathwayPoint point = NavigationManager.getEndpoint(args[0]);
-		if (point.getToEndpoints().size() > 0) {
+		EndPoint point = NavigationManager.getEndpoint(args[0]);
+		if (point.getDestinations().size() > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
-			for (Entry<PathwayPoint, Pathway> ent : point.getToEndpoints().entrySet()) {
-				ComponentBuilder entry = new ComponentBuilder("§7- §6" + ent.getKey().getDisplay())
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + ent.getValue().getKey()))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + ent.getKey().getDisplay())));
+			for (EndPoint dest : point.getDestinations().keySet()) {
+				ComponentBuilder entry = new ComponentBuilder("§7- §6" + dest.getDisplay())
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + point.getKey() + " " + dest.getKey()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + dest.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}
 		}

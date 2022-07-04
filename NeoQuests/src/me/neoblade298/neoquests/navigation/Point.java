@@ -194,4 +194,9 @@ public class Point implements LineConfigParser<Point>, Comparable<Point>{
 	public EndPoint getEndpoint() {
 		return endpoint;
 	}
+	
+	@Override
+	public String toString() {
+		return loc.getX() + " " + loc.getY() + " " +loc.getZ();
+	}
 }

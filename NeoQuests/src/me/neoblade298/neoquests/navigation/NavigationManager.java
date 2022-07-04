@@ -30,7 +30,7 @@ public class NavigationManager implements Manager {
 	private static TreeSet<Point> points = new TreeSet<Point>();
 	private static HashMap<String, EndPoint> endpoints = new HashMap<String, EndPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
-	private static FileLoader pathwaysLoader, pointLoader, endpointsLoader;
+	private static FileLoader pointLoader, endpointsLoader;
 	private static File data = new File(NeoQuests.inst().getDataFolder(), "navigation");
 	
 	private static LineConfigManager<Point> mngr = new LineConfigManager<Point>(NeoQuests.inst(), "points");
@@ -63,16 +63,23 @@ public class NavigationManager implements Manager {
 					double y = Double.parseDouble(args[1]);
 					double z = Double.parseDouble(args[2]);
 					Point point = getPoint(new Location(w, x, y, z));
-					EndPoint ep = new EndPoint(file, sec, point);
 					if (point == null) {
 						NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
 						continue;
 					}
-					endpoints.put(key.toUpperCase(), ep);
-					point.setEndpoint(ep);
+					EndPoint ep = new EndPoint(file, sec);
+					addEndpoint(ep, point);
 				}
 				catch (NeoIOException e) {
 					NeoQuests.showWarning("Failed to load endpoints", e);
+				}
+			}
+			
+			for (EndPoint ep : endpoints.values()) {
+				try {
+					ep.loadPathways();
+				} catch (NeoIOException e) {
+					NeoQuests.showWarning("Failed to load endpoint pathway fors " + ep.getKey(), e);
 				}
 			}
 		};
@@ -101,7 +108,6 @@ public class NavigationManager implements Manager {
 			activePathways.clear();
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
-			NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
 			for (Point point : points) {
 				if (!point.isConnected()) {
 					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
@@ -141,31 +147,30 @@ public class NavigationManager implements Manager {
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
-		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint, endPoint.getStartPoints().get(startPoint));
+		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
 		activePathways.put(p, pi);
 		return true;
 	}
 	
-	public static void stopNavigation(Player p) {
+	public static void stopNavigation(Player p, boolean cancelled) {
 		if (activePathways.containsKey(p)) {
-			activePathways.remove(p).cancel("cancelled by player.");
+			PathwayInstance pwi = activePathways.remove(p);
+			if (cancelled) {
+				pwi.cancel("cancelled by player.");
+			}
+			return;
 		}
 		Util.msg(p, "&cYou're not currently navigating anywhere!");
 	}
 	
-	public static void startPathwayEditor(Player p, String name) throws NeoIOException {
+	public static void startPathwayEditor(Player p) throws NeoIOException {
 		if (pathwayEditors.containsKey(p)) {
 			Util.msg(p, "§cYou are already in the editor!");
 			Util.msg(p, "§cType /nav exit to dispose of your edits if you want to start a new one!");
 			return;
 		}
-		File file = new File(NeoQuests.inst().getDataFolder(), "pathways/" + name + ".yml");
-		if (file.exists()) {
-			Util.msg(p, "§cThe file name §6" + file.getName() + " already exists! Try another one! You can always rename it later.");
-			return;
-		}
 
-		Util.msg(p, "Successfully started pathway editor for name: " + name);
+		Util.msg(p, "Successfully started pathway editor");
 		Util.msg(p, "&oMake sure you're holding a stick!");
 		Util.msg(p, "&cLeft Click&7: Place Point, &cShift-Left Click&7: Delete Point");
 		Util.msg(p, "&cRight Click&7: Select/Connect Points, &cShift-Right Click&7: Undo Last Connection");
@@ -278,6 +283,16 @@ public class NavigationManager implements Manager {
 			rev.add(iter.next());
 		}
 		return rev;
+	}
+	
+	public static void removeEndpoint(String key) {
+		endpoints.remove(key.toUpperCase());
+	}
+	
+	public static void addEndpoint(EndPoint ep, Point point) {
+		endpoints.put(ep.getKey().toUpperCase(), ep);
+		point.setEndpoint(ep);
+		ep.setPoint(point);
 	}
 	
 	@Override

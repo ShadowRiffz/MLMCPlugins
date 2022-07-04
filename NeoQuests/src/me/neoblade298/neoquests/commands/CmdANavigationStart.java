@@ -14,8 +14,9 @@ import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
 public class CmdANavigationStart implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("pathway"),
-			new CommandArgument("player", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false), 
+			new CommandArgument("start"),
+			new CommandArgument("end")));
 
 	@Override
 	public String getDescription() {
@@ -40,17 +41,19 @@ public class CmdANavigationStart implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = null;
+		int offset = 0;
 		if (args.length == 2) {
 			p = (Player) s;
 		}
 		else {
-			p = (Bukkit.getPlayer(args[1]));
+			p = (Bukkit.getPlayer(args[0]));
+			offset = 1;
 		}
 		
 		if (p == null) {
 			Util.msg(s, "&cPlayer is not online!");
 		}
-		NavigationManager.startNavigation(p, args[0]);
+		NavigationManager.startNavigation(p, args[offset], args[offset + 1]);
 	}
 
 	@Override
