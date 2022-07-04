@@ -103,6 +103,6 @@ public class CmdNCTop implements Subcommand {
 				}
 				s.spigot().sendMessage(builder.create());
 			}
-		}
+		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
 }
