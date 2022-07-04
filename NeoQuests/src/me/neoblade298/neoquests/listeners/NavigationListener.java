@@ -15,7 +15,8 @@ import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.navigation.Pathway;
 import me.neoblade298.neoquests.navigation.PathwayEditor;
 import me.neoblade298.neoquests.navigation.PathwayPoint;
-import me.neoblade298.neoquests.navigation.PathwayPointType;
+import me.neoblade298.neoquests.navigation.Point;
+import me.neoblade298.neoquests.navigation.PointType;
 
 public class NavigationListener implements Listener {
 	@EventHandler
@@ -64,7 +65,7 @@ public class NavigationListener implements Listener {
 		if (editor == null) return;
 		if (!editor.editingEndpoint()) return;
 		
-		PathwayPoint point = editor.getEditingEndpoint();
+		Point point = editor.getEditingEndpoint();
 		e.setCancelled(true);
 		if (point.getEndpointKey() == null) {
 			point.setKey(e.getMessage().split(" ")[0]);
@@ -82,7 +83,7 @@ public class NavigationListener implements Listener {
 	private void createOrTogglePoint(Player p, PathwayEditor editor, Location loc) {
 		PathwayPoint point = NavigationManager.getOrCreatePoint(loc);
 		if (point != null) {
-			PathwayPointType type = point.toggleType();
+			PointType type = point.toggleType();
 			Util.msg(p, "Successfully toggled point to be type &6" + type + "&7!");
 		}
 		else {
@@ -95,7 +96,7 @@ public class NavigationListener implements Listener {
 	}
 	
 	private void selectPoint(Player p, PathwayEditor editor, Location loc) {
-		PathwayPoint point = NavigationManager.getPoint(loc);
+		Point point = NavigationManager.getPoint(loc);
 		if (point != null) {
 			if (editor.isSelected(point)) {
 				editor.deselect();
@@ -111,7 +112,7 @@ public class NavigationListener implements Listener {
 	}
 	
 	private void editEndpoint(Player p, PathwayEditor editor, Location loc, PlayerDropItemEvent e) {
-		PathwayPoint point = NavigationManager.getPoint(loc);
+		Point point = NavigationManager.getPoint(loc);
 		if (point != null) {
 			if (point.isEndpoint()) {
 				// Only able to remove endpoints if existing path is only connector

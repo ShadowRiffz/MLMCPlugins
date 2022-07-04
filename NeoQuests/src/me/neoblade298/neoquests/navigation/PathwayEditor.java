@@ -19,10 +19,9 @@ import me.neoblade298.neoquests.ParticleUtils;
 
 public class PathwayEditor {
 	private Player p;
-	private String name;
-	private LinkedList<PathwayPoint> points = new LinkedList<PathwayPoint>();
-	private PathwayPoint selected;
-	private File pathwayFile, endpointFile;
+	private LinkedList<Point> points = new LinkedList<Point>();
+	private Point selected;
+	private static final File endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
 
 	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.YELLOW, 2.0F);
 	private static final DustOptions PARTICLE_OPTIONS = new DustOptions(Color.YELLOW, 1.0F);
@@ -30,27 +29,19 @@ public class PathwayEditor {
 	private static final double PARTICLE_OFFSET = 0.1;
 	private static final int PARTICLE_SPEED = 0;
 	
-	private PathwayPoint endpointEditor;
+	private Point endpointEditor;
 	
-	public PathwayEditor(Player p, String name) throws NeoIOException {
+	public PathwayEditor(Player p) throws NeoIOException {
 		this.p = p;
-		this.name = name;
-		
-		pathwayFile = new File(NavigationManager.getDataFolder(), "pathways/New Pathways.yml");
-		endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
-	}
-	
-	public String getName() {
-		return name;
 	}
 	
 	public void show() {
 		NavigationManager.showNearbyPoints(p);
-		Pathway.showLines(p, points, false);
+		PathwayInstance.showLines(p, points, false);
 		showSelectedPoint();
 	}
 	
-	public boolean isSelected(PathwayPoint point) {
+	public boolean isSelected(Point point) {
 		return selected != null && selected.getLocation().equals(point.getLocation());
 	}
 	
@@ -59,7 +50,7 @@ public class PathwayEditor {
 		selected = null;
 	}
 	
-	public void selectOrConnectPoints(PathwayPoint point) {
+	public void selectOrConnectPoints(Point point) {
 		if (selected == null) {
 			selected = point;
 			Util.msg(p, "§7Successfully selected point!");
@@ -71,10 +62,10 @@ public class PathwayEditor {
 			
 			if (points.size() == 0) {
 				points.add(selected);
-				selected.addConnection(this.name);
+				selected.addConnection("editor");
 			}
+			point.addConnection("editor");
 			points.add(point);
-			point.addConnection(this.name);
 			selected = point;
 			Util.msg(p, "§7Successfully connected points and selected point!");
 		}
@@ -89,16 +80,12 @@ public class PathwayEditor {
 	
 	public void undoConnection() {
 		if (points.size() > 2) {
-			PathwayPoint point = points.removeLast();
-			point.removeConnection(this.name);
-			points.getLast().removeConnection(this.name);
+			points.removeLast().removeConnection("editor");
 			Util.msg(p, "Successfully undid last connection!");
 		}
 		else if (points.size() == 2) {
-			for (PathwayPoint point : points) {
-				point.removeConnection(this.name);
-			}
-			points.clear();
+			points.remove().removeConnection("editor");
+			points.remove().removeConnection("editor");
 			Util.msg(p, "Successfully undid last connection!");
 		}
 		else {
@@ -106,7 +93,7 @@ public class PathwayEditor {
 		}
 	}
 	
-	public boolean save() throws NeoIOException {
+	public boolean save(boolean bidirectional) throws NeoIOException {
 		if (points.size() == 0) {
 			Util.msg(p, "No points have been connected yet!");
 			return false;
@@ -119,31 +106,40 @@ public class PathwayEditor {
 		}
 		
 		try {
-			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(pathwayFile);
-			ConfigurationSection sec = cfg.createSection(name);
+			saveNewEndpoints();
+			
+			EndPoint start = points.getFirst().getEndpoint();
+			EndPoint end = points.getLast().getEndpoint();
+			File file = start.getFile() == null ? endpointFile : start.getFile();
+			
+			ConfigurationSection sec = YamlConfiguration.loadConfiguration(file).createSection(start.getKey());
 			sec.set("world", points.getFirst().getLocation().getWorld().getName());
 			ArrayList<String> serialized = new ArrayList<String>(points.size());
-			for (PathwayPoint point : points) {
+			for (Point point : points) {
 				serialized.add(point.serializeAsPath());
+				point.removeConnection("editor");
+				point.addConnection(start.getKey() + " -> " + end.getKey());
+				if (bidirectional) {
+					point.addConnection(end.getKey() + " -> " + start.getKey());
+				}
 			}
 			sec.set("points", serialized);
-			sec.set("bidirectional", true);
-			cfg.save(pathwayFile);
-			NavigationManager.addPathway(new Pathway(sec, pathwayFile));
+			sec.set("bidirectional", bidirectional);
 			NavigationManager.savePoints();
-			Util.msg(p, "Successfully saved new pathway §6" + name + "§7!");
-			NavigationManager.exitPathwayEditor(p);
-			saveEndpoints();
+			
+			end.addStartPoint(start, points);
+			start.addDestination(end, NavigationManager.createReversed(points));
+			Util.msg(p, "Successfully saved new pathway!");
 			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new NeoIOException("Failed to save pathway editor " + name);
+			throw new NeoIOException("Failed to save pathway editor");
 		}
 	}
 	
 	public void deletePoint(Location loc) {
-		PathwayPoint point = NavigationManager.getPoint(loc);
+		Point point = NavigationManager.getPoint(loc);
 		if (point == null) {
 			return;
 		}
@@ -166,7 +162,7 @@ public class PathwayEditor {
 		}
 	}
 	
-	public void editEndpoint(PathwayPoint point) {
+	public void editEndpoint(Point point) {
 		this.endpointEditor = point;
 	}
 	
@@ -178,15 +174,22 @@ public class PathwayEditor {
 		return endpointEditor != null;
 	}
 	
-	public PathwayPoint getEditingEndpoint() {
+	public Point getEditingEndpoint() {
 		return endpointEditor;
 	}
 	
-	private void saveEndpoints() throws NeoIOException {
+	private void saveNewEndpoints() throws NeoIOException {
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(endpointFile);
-		for (PathwayPoint point : new PathwayPoint[] { points.getFirst(), points.getLast() }) {
-			ConfigurationSection sec = cfg.createSection(point.getEndpointKey());
-			sec.set("display", point.getDisplay());
+		for (Point point : new Point[] { points.getFirst(), points.getLast() }) {
+			EndPoint ep = point.getEndpoint();
+			ep.setFile(endpointFile);
+			// Only save endpoints that haven't been saved yet
+			if (ep.getFile() != null) {
+				continue;
+			}
+			
+			ConfigurationSection sec = cfg.createSection(ep.getKey());
+			sec.set("display", ep.getDisplay());
 			sec.set("location", point.serializeLocation());
 			sec.set("world", point.getLocation().getWorld().getName());
 		}
@@ -200,9 +203,5 @@ public class PathwayEditor {
 	
 	public File getEndpointFile() {
 		return endpointFile;
-	}
-	
-	public File getPathwayFile() {
-		return pathwayFile;
 	}
 }

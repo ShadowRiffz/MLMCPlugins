@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
@@ -25,18 +26,17 @@ import me.neoblade298.neoquests.NeoQuests;
 
 public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
-	private static HashMap<String, Pathway> pathways = new HashMap<String, Pathway>();
-	private static HashMap<Chunk, ArrayList<PathwayPoint>> pointMap = new HashMap<Chunk, ArrayList<PathwayPoint>>();
-	private static TreeSet<PathwayPoint> points = new TreeSet<PathwayPoint>();
-	private static HashMap<String, PathwayPoint> endpoints = new HashMap<String, PathwayPoint>();
+	private static HashMap<Chunk, ArrayList<Point>> pointMap = new HashMap<Chunk, ArrayList<Point>>();
+	private static TreeSet<Point> points = new TreeSet<Point>();
+	private static HashMap<String, EndPoint> endpoints = new HashMap<String, EndPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pathwaysLoader, pointLoader, endpointsLoader;
 	private static File data = new File(NeoQuests.inst().getDataFolder(), "navigation");
 	
-	private static LineConfigManager<PathwayPoint> mngr = new LineConfigManager<PathwayPoint>(NeoQuests.inst(), "points");
+	private static LineConfigManager<Point> mngr = new LineConfigManager<Point>(NeoQuests.inst(), "points");
 	
 	static {
-		mngr.register(new PathwayPoint());
+		mngr.register(new Point());
 		
 		pointLoader = (cfg, file) -> {
 			for (String line : cfg.getStringList("points")) {
@@ -48,46 +48,32 @@ public class NavigationManager implements Manager {
 			}
 		};
 		
-		pathwaysLoader = (cfg, file) -> {
-			for (String key : cfg.getKeys(false)) {
-				try {
-					if (pathways.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate pathway " + key + "in file " + file.getPath() + ", " +
-								"the loaded pathway with this key is in " + pathways.get(key).getFileLocation());
-						continue;
-					}
-					Pathway pw = new Pathway(cfg.getConfigurationSection(key), file);
-					pathways.put(key.toUpperCase(), pw);
-					if (pw.isBidirectional()) {
-						Pathway reverse = new Pathway(pw);
-						pathways.put(reverse.getKey().toUpperCase(), reverse);
-					}
-				} catch (NeoIOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		
 		endpointsLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
-				if (endpoints.containsKey(key.toUpperCase())) {
-					NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
-							"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
-					continue;
+				try {
+					if (endpoints.containsKey(key.toUpperCase())) {
+						NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
+								"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
+						continue;
+					}
+					ConfigurationSection sec = cfg.getConfigurationSection(key);
+					World w = Bukkit.getWorld(sec.getString("world", "Argyll"));
+					String[] args = sec.getString("location").split(" ");
+					double x = Double.parseDouble(args[0]);
+					double y = Double.parseDouble(args[1]);
+					double z = Double.parseDouble(args[2]);
+					Point point = getPoint(new Location(w, x, y, z));
+					EndPoint ep = new EndPoint(file, sec, point);
+					if (point == null) {
+						NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
+						continue;
+					}
+					endpoints.put(key.toUpperCase(), ep);
+					point.setEndpoint(ep);
 				}
-				ConfigurationSection sec = cfg.getConfigurationSection(key);
-				World w = Bukkit.getWorld(sec.getString("world", "Argyll"));
-				String[] args = sec.getString("location").split(" ");
-				double x = Double.parseDouble(args[0]);
-				double y = Double.parseDouble(args[1]);
-				double z = Double.parseDouble(args[2]);
-				PathwayPoint point = getPoint(new Location(w, x, y, z));
-				if (point == null) {
-					NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
-					continue;
+				catch (NeoIOException e) {
+					NeoQuests.showWarning("Failed to load endpoints", e);
 				}
-				point.setEndpointFields(key, Util.translateColors(sec.getString("display", key)), file);
-				endpoints.put(key.toUpperCase(), point);
 			}
 		};
 	}
@@ -108,7 +94,6 @@ public class NavigationManager implements Manager {
 		try {
 			points.clear();
 			endpoints.clear();
-			pathways.clear();
 			pointMap.clear();
 			for (PathwayInstance pi : activePathways.values()) {
 				pi.cancel("navigation reloaded.");
@@ -117,7 +102,7 @@ public class NavigationManager implements Manager {
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
 			NeoCore.loadFiles(new File(data, "pathways"), pathwaysLoader);
-			for (PathwayPoint point : points) {
+			for (Point point : points) {
 				if (!point.isConnected()) {
 					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
 				}
@@ -133,25 +118,32 @@ public class NavigationManager implements Manager {
 		return "NavigationManager";
 	}
 	
-	public static boolean startNavigation(Player p, String pathway) {
-		if (!pathways.containsKey(pathway.toUpperCase())) {
-			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway " + pathway + " for player " + p.getName() + ", pathway doesn't exist");
-			Util.msg(p, "&cThat pathway doesn't exist!");
+	public static boolean startNavigation(Player p, String start, String end) {
+		if (!endpoints.containsKey(start.toUpperCase())) {
+			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway from " + start + " for player " + p.getName() + ", start point doesn't exist");
+			Util.msg(p, "&cThat start point doesn't exist!");
 			return false;
 		}
-		return NavigationManager.startNavigation(p, pathways.get(pathway.toUpperCase()));
-	}
-	
-	public static boolean startNavigation(Player p, Pathway pathway) {
+		if (!endpoints.containsKey(end.toUpperCase())) {
+			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway to " + end + " for player " + p.getName() + ", end point doesn't exist");
+			Util.msg(p, "&cThat end point doesn't exist!");
+			return false;
+		}
+		EndPoint startPoint = endpoints.get(start.toUpperCase());
+		EndPoint endPoint = endpoints.get(end.toUpperCase());
+		if (!endPoint.getStartPoints().containsKey(startPoint)) {
+			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway from " + start + " to " + end + " for player " + p.getName() +
+					", " + start + " doesn't connect to " + end + "!");
+			Util.msg(p, "&cThat end point doesn't connect to that start point!");
+			return false;
+		}
+
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
-		PathwayInstance pi = pathway.start(p);
-		if (pi != null) {
-			activePathways.put(p, pi);
-			return true;
-		}
-		return false;
+		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint, endPoint.getStartPoints().get(startPoint));
+		activePathways.put(p, pi);
+		return true;
 	}
 	
 	public static void stopNavigation(Player p) {
@@ -163,7 +155,7 @@ public class NavigationManager implements Manager {
 	
 	public static void startPathwayEditor(Player p, String name) throws NeoIOException {
 		if (pathwayEditors.containsKey(p)) {
-			Util.msg(p, "§cYou are already editing pathway: §6" + pathwayEditors.get(p).getName());
+			Util.msg(p, "§cYou are already in the editor!");
 			Util.msg(p, "§cType /nav exit to dispose of your edits if you want to start a new one!");
 			return;
 		}
@@ -178,7 +170,7 @@ public class NavigationManager implements Manager {
 		Util.msg(p, "&cLeft Click&7: Place Point, &cShift-Left Click&7: Delete Point");
 		Util.msg(p, "&cRight Click&7: Select/Connect Points, &cShift-Right Click&7: Undo Last Connection");
 		Util.msg(p, "&cThrow Stick&7: Create endpoint");
-		pathwayEditors.put(p, new PathwayEditor(p, name));
+		pathwayEditors.put(p, new PathwayEditor(p));
 	}
 	
 	public static void exitPathwayEditor(Player p) {
@@ -190,13 +182,9 @@ public class NavigationManager implements Manager {
 		}
 	}
 	
-	public static void addPathway(Pathway pw) {
-		pathways.put(pw.getKey().toUpperCase(), pw);
-	}
-	
 	public static void savePoints() throws IOException {
 		LinkedList<String> serialized = new LinkedList<String>();
-		for (PathwayPoint point : points) {
+		for (Point point : points) {
 			serialized.add(point.serializeAsPoint());
 		}
 		YamlConfiguration cfg = new YamlConfiguration();
@@ -207,7 +195,7 @@ public class NavigationManager implements Manager {
 	public static void showNearbyPoints(Player p) {
 		for (Chunk c : Chunk.getSurroundingChunks(p.getLocation())) {
 			if (pointMap.containsKey(c)) {
-				for (PathwayPoint point : pointMap.get(c)) {
+				for (Point point : pointMap.get(c)) {
 					point.spawnParticle(p, false, false);
 				}
 			}
@@ -218,10 +206,10 @@ public class NavigationManager implements Manager {
 		return pathwayEditors.get(p);
 	}
 	
-	public static PathwayPoint getOrCreatePoint(Location loc) {
-		PathwayPoint point = getPoint(loc);
+	public static Point getOrCreatePoint(Location loc) {
+		Point point = getPoint(loc);
 		if (point == null) {
-			point = new PathwayPoint(loc, PathwayPointType.POINT);
+			point = new Point(loc, PointType.POINT);
 			addPoint(point);
 			return null;
 		}
@@ -230,11 +218,11 @@ public class NavigationManager implements Manager {
 		}
 	}
 	
-	public static PathwayPoint getPoint(Location loc) {
+	public static Point getPoint(Location loc) {
 		if (Chunk.containsKey(loc)) {
 			Chunk c = Chunk.getChunk(loc);
 			if (pointMap.containsKey(c)) {
-				for (PathwayPoint point : pointMap.get(c)) {
+				for (Point point : pointMap.get(c)) {
 					if (point.getLocation().equals(loc)) {
 						return point;
 					}
@@ -244,19 +232,19 @@ public class NavigationManager implements Manager {
 		return null;
 	}
 	
-	public static void addPoint(PathwayPoint point) {
+	public static void addPoint(Point point) {
 		Chunk c = Chunk.getOrCreateChunk(point.getLocation());
-		ArrayList<PathwayPoint> list = pointMap.getOrDefault(c, new ArrayList<PathwayPoint>());
+		ArrayList<Point> list = pointMap.getOrDefault(c, new ArrayList<Point>());
 		list.add(point);
 		point.setChunk(c);
 		pointMap.put(c, list);
 		points.add(point);
 	}
 	
-	public static boolean deletePoint(PathwayPoint toDelete) {
+	public static boolean deletePoint(Point toDelete) {
 		Chunk c = toDelete.getChunk();
-		PathwayPoint found = null;
-		for (PathwayPoint point : pointMap.get(c)) {
+		Point found = null;
+		for (Point point : pointMap.get(c)) {
 			if (point.getLocation().equals(toDelete.getLocation())) {
 				found = point;
 				break;
@@ -275,22 +263,23 @@ public class NavigationManager implements Manager {
 		return false;
 	}
 	
-	public static PathwayPoint getEndpoint(String key) {
+	public static EndPoint getEndpoint(String key) {
 		return endpoints.get(key.toUpperCase());
 	}
 	
 	public static File getDataFolder() {
 		return data;
 	}
-	
-	public static void addEndpoint(PathwayPoint point) {
-		endpoints.put(point.getEndpointKey().toUpperCase(), point);
-	}
-	
-	public static void removeEndpoint(PathwayPoint point) {
-		endpoints.remove(point.getEndpointKey().toUpperCase());
-	}
 
+	public static LinkedList<Point> createReversed(LinkedList<Point> list) {
+		LinkedList<Point> rev = new LinkedList<Point>();
+		Iterator<Point> iter = list.descendingIterator();
+		while (iter.hasNext()) {
+			rev.add(iter.next());
+		}
+		return rev;
+	}
+	
 	@Override
 	public void cleanup() {	}
 }
