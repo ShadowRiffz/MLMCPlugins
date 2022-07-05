@@ -43,7 +43,6 @@ public class PointsManager implements IOComponent {
 		// Nationent exists on startup, listens to nation create and delete
 		// Nationent only increments numContributors if PlayerPoints was 0
 		
-		
 		new BukkitRunnable() {
 			public void run() {
 				try {
@@ -72,12 +71,14 @@ public class PointsManager implements IOComponent {
 					for (NationEntry n : nationEntries.values()) {
 						rs = stmt.executeQuery("SELECT * FROM leaderboard_nationpoints WHERE uuid = '" + "';");
 						while (rs.next()) {
-							n.setNationPoints(rs.getDouble(3), NationPointType.valueOf(rs.getString(2)));
-						}
-
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_nationplayerpoints WHERE uuid = '" + "';");
-						while (rs.next()) {
-							n.setPlayerPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(2)));
+							String type = rs.getString(2);
+							NationPointType ntype = NationPointType.valueOf(type);
+							if (ntype == null) {
+								n.setPlayerPoints(rs.getDouble(3), PlayerPointType.valueOf(type));
+							}
+							else {
+								n.setNationPoints(rs.getDouble(3), ntype);
+							}
 						}
 
 						rs = stmt.executeQuery("SELECT * FROM leaderboard_townpoints WHERE nation_uuid = '" + "';");
@@ -280,7 +281,7 @@ public class PointsManager implements IOComponent {
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (Entry<PlayerPointType, Double> e : ppoints.entrySet()) {
-						insert.addBatch("REPLACE INTO leaderboard_nationplayerpoints VALUES ('"
+						insert.addBatch("REPLACE INTO leaderboard_nationpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (UUID uuid : tpoints.keySet()) {
@@ -495,28 +496,40 @@ public class PointsManager implements IOComponent {
 		new BukkitRunnable() {
 			public void run() {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(comp);
-				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + sorted.first().getNation().getName() + "&7!");
+				NationEntry winner = sorted.last();
+				Nation n = winner.getNation();
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + winner.getNation().getName() + "&7!");
 				saveAll();
-				playerEntries.clear();
-				nationEntries.clear();
 				
 				Statement stmt = NeoCore.getStatement();
 				String prefix = "INSERT INTO leaderboard_previous_nations (SELECT * FROM ";
 				String suffix = " ORDER BY points DESC LIMIT 10);";
 				
 				try {
-					// Need an aggregate function using SUM and LIMIT and ORDER BY
-					stmt.addBatch("INSERT INTO leaderboard_winners VALUES ('" + 
+					stmt.addBatch("INSERT INTO leaderboard_winners VALUES ('" + n.getUUID() + "','" + n.getName() +
+							"'," + System.currentTimeMillis() + "," + winner.getEffectivePoints() + "," + winner.getContributors());
+					
+					// Totals
+					stmt.addBatch(prefix + "SELECT uuid, leaderboard_nations.name, 'TOTAL' AS category, SUM(points) AS points FROM leaderboard_nationpoints "
+							+ "JOIN leaderboard_nations ON leaderboard_nationpoints.uuid = leaderboard_nations.uuid GROUP BY uuid" + suffix);
+					stmt.addBatch(prefix + "SELECT uuid, leaderboard_towns.name, 'TOTAL' AS category, SUM(points) AS points FROM leaderboard_townpoints "
+							+ "JOIN leaderboard_towns ON leaderboard_townpoints.uuid = leaderboard_towns.uuid GROUP BY uuid" + suffix);
+					stmt.addBatch(prefix + "SELECT uuid, 'TOTAL' AS category, SUM(points) AS points FROM Dev.leaderboard_playerpoints GROUP BY uuid" + suffix);
 					
 					for (NationPointType type : NationPointType.values()) {
 						stmt.addBatch(prefix + "leaderboard_nationpoints WHERE category = '" + type + "'" + suffix);
 					}
 					for (PlayerPointType type : PlayerPointType.values()) {
-						stmt.addBatch(prefix + "leaderboard_nationplayerpoints WHERE category = '" + type + "'" + suffix);
+						stmt.addBatch(prefix + "leaderboard_nationpoints WHERE category = '" + type + "'" + suffix);
 						stmt.addBatch(prefix + "leaderboard_townpoints WHERE category = '" + type + "'" + suffix);
 						stmt.addBatch(prefix + "leaderboard_playerpoints WHERE category = '" + type + "'" + suffix);
 					}
+					stmt.executeBatch();
+
+					playerEntries.clear();
+					nationEntries.clear();
 				} catch (SQLException e) {
+					Bukkit.getLogger().warning("[NeoLeaderboard] Failed to reset leaderboard");
 					e.printStackTrace();
 				}
 			}
