@@ -528,6 +528,10 @@ public class PointsManager implements IOComponent {
 
 					playerEntries.clear();
 					nationEntries.clear();
+					
+					for (Nation nation : TownyUniverse.getInstance().getNations()) {
+						nationEntries.putIfAbsent(nation.getUUID(), new NationEntry(nation.getUUID()));
+					}
 				} catch (SQLException e) {
 					Bukkit.getLogger().warning("[NeoLeaderboard] Failed to reset leaderboard");
 					e.printStackTrace();
