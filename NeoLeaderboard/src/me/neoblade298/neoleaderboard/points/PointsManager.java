@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.UUID;
@@ -22,6 +24,7 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
@@ -255,7 +258,7 @@ public class PointsManager implements IOComponent {
 		nationEntries.get(uuid).addNationPoints(amount, type);
 	}
 	
-	private void saveNation(Nation n, Statement insert) {
+	private static void saveNation(Nation n, Statement insert) {
 		new BukkitRunnable() {
 			public void run() {
 				// Don't save same nation more than once every 10 seconds
@@ -454,5 +457,69 @@ public class PointsManager implements IOComponent {
 	
 	public static void initializeNation(Nation n) {
 		nationEntries.put(n.getUUID(), new NationEntry(n.getUUID()));
+	}
+	
+	public static void saveAll() {
+		Statement stmt = NeoCore.getStatement();
+		TownyUniverse tu = TownyUniverse.getInstance();
+		for (NationEntry nent : nationEntries.values()) {
+			saveNation(tu.getNation(nent.getUuid()), stmt);
+		}
+		for (PlayerEntry pe : playerEntries.values()) {
+			try {
+				savePlayerData(pe, stmt);
+			}
+			catch (SQLException e) {
+				Bukkit.getLogger().warning("[NeoLeaderboard] Failed to save player " + pe.getDisplay());
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void reset() {
+		Comparator<NationEntry> comp = new Comparator<NationEntry>() {
+			@Override
+			public int compare(NationEntry n1, NationEntry n2) {
+				if (n1.getTotalPoints() > n2.getTotalPoints()) {
+					return 1;
+				}
+				else if (n1.getTotalPoints() > n2.getTotalPoints()) {
+					return -1;
+				}
+				else {
+					return n2.getNation().getName().compareTo(n1.getNation().getName());
+				}
+			}
+		};
+		
+		new BukkitRunnable() {
+			public void run() {
+				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(comp);
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + sorted.first().getNation().getName() + "&7!");
+				saveAll();
+				playerEntries.clear();
+				nationEntries.clear();
+				
+				Statement stmt = NeoCore.getStatement();
+				String prefix = "INSERT INTO leaderboard_previous_nations (SELECT * FROM ";
+				String suffix = " ORDER BY points DESC LIMIT 10);";
+				
+				try {
+					// Need an aggregate function using SUM and LIMIT and ORDER BY
+					stmt.addBatch("INSERT INTO leaderboard_winners VALUES ('" + 
+					
+					for (NationPointType type : NationPointType.values()) {
+						stmt.addBatch(prefix + "leaderboard_nationpoints WHERE category = '" + type + "'" + suffix);
+					}
+					for (PlayerPointType type : PlayerPointType.values()) {
+						stmt.addBatch(prefix + "leaderboard_nationplayerpoints WHERE category = '" + type + "'" + suffix);
+						stmt.addBatch(prefix + "leaderboard_townpoints WHERE category = '" + type + "'" + suffix);
+						stmt.addBatch(prefix + "leaderboard_playerpoints WHERE category = '" + type + "'" + suffix);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
 }
