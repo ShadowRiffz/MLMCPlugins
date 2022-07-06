@@ -16,6 +16,8 @@ public class EndPoint {
 	private String key, display;
 	private ConfigurationSection cfg;
 	private File file;
+	private HashMap<EndPoint, LinkedList<PathwayObject>> startPointsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
+	private HashMap<EndPoint, LinkedList<PathwayObject>> destinationsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
 	private HashMap<EndPoint, LinkedList<Point>> startPoints = new HashMap<EndPoint, LinkedList<Point>>();
 	private HashMap<EndPoint, LinkedList<Point>> destinations = new HashMap<EndPoint, LinkedList<Point>>();
 	
@@ -37,14 +39,14 @@ public class EndPoint {
 				if (end == null) {
 					throw new NeoIOException("Failed to load path from " + this.key + " to " + key + ", " + key + " doesn't exist or isn't an endpoint.");
 				}
-				LinkedList<Point> points = parsePoints(path.getStringList("points"));
-				destinations.put(end, points);
-				end.addStartPoint(this, points);
+				LinkedList<PathwayObject> points = parsePoints(path.getStringList("points"), this.key + " -> " + end.getKey());
+				destinationsUnconverted.put(end, points);
+				end.addStartPointUnconverted(this, points);
 				
 				if (path.getBoolean("bidirectional", false)) {
-					LinkedList<Point> reversed = NavigationManager.createReversed(points);
-					startPoints.put(end, reversed);
-					end.addDestination(this, reversed);
+					LinkedList<PathwayObject> reversed = NavigationManager.createReversedPathwayObjects(points);
+					startPointsUnconverted.put(end, reversed);
+					end.addDestinationUnconverted(this, reversed);
 				}
 			}
 		}
@@ -81,6 +83,16 @@ public class EndPoint {
 		return this.file;
 	}
 	
+	public void addStartPointUnconverted(EndPoint point, LinkedList<PathwayObject> pw) {
+		startPointsUnconverted.put(point, pw);
+		getStartPoints();
+	}
+	
+	public void addDestinationUnconverted(EndPoint point, LinkedList<PathwayObject> pw) {
+		destinationsUnconverted.put(point, pw);
+		getDestinations();
+	}
+	
 	public void addStartPoint(EndPoint point, LinkedList<Point> pw) {
 		startPoints.put(point, pw);
 		getStartPoints();
@@ -89,6 +101,14 @@ public class EndPoint {
 	public void addDestination(EndPoint point, LinkedList<Point> pw) {
 		destinations.put(point, pw);
 		getDestinations();
+	}
+	
+	public HashMap<EndPoint, LinkedList<PathwayObject>> getStartPointsUnconverted() {
+		return startPointsUnconverted;
+	}
+	
+	public HashMap<EndPoint, LinkedList<PathwayObject>> getDestinationsUnconverted() {
+		return destinationsUnconverted;
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getStartPoints() {
@@ -104,13 +124,18 @@ public class EndPoint {
 		return super.equals(o) && o instanceof EndPoint;
 	}
 	
-	private LinkedList<Point> parsePoints(List<String> list) throws NeoIOException {
+	private LinkedList<PathwayObject> parsePoints(List<String> list, String connection) throws NeoIOException {
 		if (list.size() <= 1) {
 			throw new NeoIOException("Pathway " + this.key + " has <= 1 points, invalid!");
 		}
 		
-		LinkedList<Point> points = new LinkedList<Point>();
+		LinkedList<PathwayObject> points = new LinkedList<PathwayObject>();
 		for (String line : list) {
+			if (line.contains("->")) {
+				String[] args = line.split("->");
+				points.add(new FuturePointSet(NavigationManager.getEndpoint(args[0]), NavigationManager.getEndpoint(args[1])));
+				continue;
+			}
 			String args[] = line.split(" ");
 			double x = Double.parseDouble(args[0]);
 			double y = Double.parseDouble(args[1]);
@@ -123,19 +148,17 @@ public class EndPoint {
 		}
 		
 		// Passed validation
-		setupPoints(points);
+		setupPoints(points, connection);
 		return points;
 	}
 	
-	private void setupPoints(LinkedList<Point> points) {
-		ListIterator<Point> iter = points.listIterator();
-		Point l1 = null;
-		Point l2 = iter.next();
+	private void setupPoints(LinkedList<PathwayObject> points, String connection) {
+		ListIterator<PathwayObject> iter = points.listIterator();
+		PathwayObject p = null;
 		while (iter.hasNext()) {
-			l1 = l2;
-			l2 = iter.next();
-			l1.addConnection(this.key);
-			l2.addConnection(this.key);
+			p = iter.next();
+			if (p instanceof FuturePointSet) continue;
+			((Point) p).addConnection(connection);
 		}
 	}
 	
@@ -154,5 +177,18 @@ public class EndPoint {
 	
 	public Point getPoint() {
 		return point;
+	}
+	
+	// This should only ever happen by player, never by loading
+	public LinkedList<Point> getOrConvert(EndPoint dest) {
+		if (this.startPointsUnconverted.containsKey(dest)) {
+			LinkedList<Point> points = new LinkedList<Point>();
+			for (PathwayObject po : this.startPointsUnconverted.get(dest)) {
+				po.addTo(points);
+			}
+			this.startPoints.put(dest, points);
+			this.startPointsUnconverted.remove(dest);
+		}
+		return this.startPoints.get(dest);
 	}
 }

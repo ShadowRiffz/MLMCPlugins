@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.navigation;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigParser;
 
-public class Point implements LineConfigParser<Point>, Comparable<Point>{
+public class Point implements LineConfigParser<Point>, Comparable<Point>, PathwayObject {
 	private LineConfig cfg;
 	private static final int PARTICLES_PER_POINT = 20;
 	private static final double PARTICLE_OFFSET = 0.1;
@@ -198,5 +199,10 @@ public class Point implements LineConfigParser<Point>, Comparable<Point>{
 	@Override
 	public String toString() {
 		return loc.getX() + " " + loc.getY() + " " +loc.getZ();
+	}
+
+	@Override
+	public void addTo(LinkedList<Point> points) {
+		points.add(this);
 	}
 }

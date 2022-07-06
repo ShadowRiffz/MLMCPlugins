@@ -35,7 +35,9 @@ public class PathwayInstance {
 		this.w = start.getWorld();
 		this.start = start;
 		this.end = end;
-		this.points = start.getDestinations().get(end);
+		
+		// Figure out whether the pathway is converted yet
+		this.points = start.getOrConvert(end);
 
 		PathwayInstance pwi = this;
 		task = new BukkitRunnable() {

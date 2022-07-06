@@ -277,7 +277,20 @@ public class NavigationManager implements Manager {
 		return data;
 	}
 
-	public static LinkedList<Point> createReversed(LinkedList<Point> list) {
+	public static LinkedList<PathwayObject> createReversedPathwayObjects(LinkedList<PathwayObject> list) {
+		LinkedList<PathwayObject> rev = new LinkedList<PathwayObject>();
+		Iterator<PathwayObject> iter = list.descendingIterator();
+		while (iter.hasNext()) {
+			PathwayObject po = iter.next();
+			if (po instanceof FuturePointSet) {
+				((FuturePointSet) po).toggleReversed();
+			}
+			rev.add(iter.next());
+		}
+		return rev;
+	}
+
+	public static LinkedList<Point> createReversedPoints(LinkedList<Point> list) {
 		LinkedList<Point> rev = new LinkedList<Point>();
 		Iterator<Point> iter = list.descendingIterator();
 		while (iter.hasNext()) {

@@ -140,7 +140,7 @@ public class PathwayEditor {
 			end.addStartPoint(start, points);
 			start.addDestination(end, points);
 			if (bidirectional) {
-				LinkedList<Point> rev = NavigationManager.createReversed(points);
+				LinkedList<Point> rev = NavigationManager.createReversedPoints(points);
 				end.addDestination(start, rev);
 				start.addStartPoint(end, rev);
 			}
