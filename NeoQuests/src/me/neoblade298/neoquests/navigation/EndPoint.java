@@ -181,13 +181,15 @@ public class EndPoint {
 	
 	// This should only ever happen by player, never by loading
 	public LinkedList<Point> getOrConvert(EndPoint dest) {
-		if (this.startPointsUnconverted.containsKey(dest)) {
-			LinkedList<Point> points = new LinkedList<Point>();
-			for (PathwayObject po : this.startPointsUnconverted.get(dest)) {
-				po.addTo(points);
+		if (!startPoints.containsKey(dest)) {
+			if (this.startPointsUnconverted.containsKey(dest)) {
+				LinkedList<Point> points = new LinkedList<Point>();
+				for (PathwayObject po : this.startPointsUnconverted.get(dest)) {
+					po.addTo(points);
+				}
+				this.startPoints.put(dest, points);
+				this.startPointsUnconverted.remove(dest);
 			}
-			this.startPoints.put(dest, points);
-			this.startPointsUnconverted.remove(dest);
 		}
 		return this.startPoints.get(dest);
 	}

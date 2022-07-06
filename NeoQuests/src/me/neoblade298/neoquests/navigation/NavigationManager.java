@@ -179,6 +179,25 @@ public class NavigationManager implements Manager {
 		pathwayEditors.put(p, new PathwayEditor(p));
 	}
 	
+	public static void addExistingPathway(Player p, String startStr, String endStr) {
+		if (!pathwayEditors.containsKey(p)) {
+			Util.msg(p, "§cYou aren't in the pathway editor!");
+			return;
+		}
+		EndPoint start = getEndpoint(startStr);
+		EndPoint end = getEndpoint(endStr);
+		if (start == null) {
+			Util.msg(p, "§cThe endpoint " + startStr + " doesn't exist!");
+			return;
+		}
+		if (end == null) {
+			Util.msg(p, "§cThe endpoint " + endStr + " doesn't exist!");
+			return;
+		}
+		Util.msg(p, "&7Successfully added existing pathway!");
+		pathwayEditors.get(p).addExistingPathway(p, start, end);
+	}
+	
 	public static void exitPathwayEditor(Player p) {
 		if (pathwayEditors.remove(p) != null) {
 			Util.msg(p, "Successfully exited pathway editor");

@@ -72,7 +72,8 @@ public class Point implements LineConfigParser<Point>, Comparable<Point>, Pathwa
 		}
 	}
 	
-	public String serializeAsPath() {
+	@Override
+	public String serializePath() {
 		return loc.getX() + " " + loc.getY() + " " + loc.getZ();
 	}
 	

@@ -4,4 +4,5 @@ import java.util.LinkedList;
 
 public interface PathwayObject {
 	public void addTo(LinkedList<Point> points);
+	public String serializePath();
 }

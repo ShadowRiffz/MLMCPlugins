@@ -27,6 +27,11 @@ public class FuturePointSet implements PathwayObject{
 		}
 	}
 	
+	@Override
+	public String serializePath() {
+		return start.getKey() + "->" + end.getKey();
+	}
+	
 	public void toggleReversed() {
 		isReversed = !isReversed;
 	}

@@ -20,6 +20,7 @@ import me.neoblade298.neoquests.ParticleUtils;
 public class PathwayEditor {
 	private Player p;
 	private LinkedList<Point> points = new LinkedList<Point>();
+	private LinkedList<PathwayObject> pathwayObjects = new LinkedList<PathwayObject>();
 	private Point selected;
 	public static final File endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
 
@@ -63,13 +64,26 @@ public class PathwayEditor {
 			
 			if (points.size() == 0) {
 				points.add(selected);
+				pathwayObjects.add(selected);
 				selected.addConnection("editor");
 			}
 			point.addConnection("editor");
 			points.add(point);
+			pathwayObjects.add(point);
 			selected = point;
 			Util.msg(p, "§7Successfully connected points and selected point!");
 		}
+	}
+	
+	public void addExistingPathway(Player p, EndPoint start, EndPoint end) {
+		LinkedList<Point> pathway = start.getOrConvert(end);
+		if (pathway == null) {
+			Util.msg(p, "&cThis pathway doesn't exist!");
+			return;
+		}
+		
+		points.addAll(pathway);
+		pathwayObjects.add(new FuturePointSet(start, end));
 	}
 	
 	private void showSelectedPoint() {
@@ -123,14 +137,18 @@ public class PathwayEditor {
 			
 			sec = sec.createSection(end.getKey());
 			ArrayList<String> serialized = new ArrayList<String>(points.size());
+			for (PathwayObject po : pathwayObjects) {
+				serialized.add(po.serializePath());
+			}
+			
 			for (Point point : points) {
-				serialized.add(point.serializeAsPath());
 				point.removeConnection("editor");
 				point.addConnection(start.getKey() + " -> " + end.getKey());
 				if (bidirectional) {
 					point.addConnection(end.getKey() + " -> " + start.getKey());
 				}
 			}
+			
 			sec.set("points", serialized);
 			// Only add this if it's set to true
 			if (bidirectional) sec.set("bidirectional", bidirectional);

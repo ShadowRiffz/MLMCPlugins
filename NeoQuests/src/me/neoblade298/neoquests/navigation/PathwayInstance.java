@@ -36,7 +36,6 @@ public class PathwayInstance {
 		this.start = start;
 		this.end = end;
 		
-		// Figure out whether the pathway is converted yet
 		this.points = start.getOrConvert(end);
 
 		PathwayInstance pwi = this;
