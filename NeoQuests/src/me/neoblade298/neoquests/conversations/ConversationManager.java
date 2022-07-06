@@ -48,7 +48,7 @@ public class ConversationManager implements Manager, Listener {
 					int npcid = Integer.parseInt(key);
 					for (String line : cfg.getStringList(key)) {
 						if (!convs.containsKey(line)) {
-							NeoQuests.showWarning("Failed to load conversation for NPC " + key + ": " + line);
+							NeoQuests.showWarning("Failed to load conversation for NPC " + key + " in file " + file.getPath() + ": " + line);
 							continue;
 						}
 						clist.add(convs.get(line));
@@ -56,7 +56,7 @@ public class ConversationManager implements Manager, Listener {
 					npcConvs.put(npcid, clist);
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + file.getPath() + " for NPC " + npcid, e);
+					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + file.getPath() + " for NPC " + key, e);
 				}
 			}
 		};
