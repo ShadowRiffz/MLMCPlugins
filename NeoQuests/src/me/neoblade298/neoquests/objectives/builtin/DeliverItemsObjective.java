@@ -43,7 +43,7 @@ public class DeliverItemsObjective extends Objective {
 
 	@Override
 	public String getKey() {
-		return "lore";
+		return "deliver-items";
 	}
 
 	public boolean checkEvent(NPCRightClickEvent e, ObjectiveInstance o) {

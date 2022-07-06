@@ -44,7 +44,7 @@ public class QuestsManager implements IOComponent, Manager {
 					}
 					quests.put(key.toUpperCase(), new Quest(cfg.getConfigurationSection(key), file));
 				} catch (NeoIOException e) {
-					NeoQuests.showWarning("Failed to load quest " + key, e);
+					NeoQuests.showWarning("Failed to load quest " + key + " from file " + file.getPath(), e);
 				}
 			}
 		};
@@ -59,7 +59,7 @@ public class QuestsManager implements IOComponent, Manager {
 					}
 					questlines.put(key.toUpperCase(), new Questline(cfg.getConfigurationSection(key), file));
 				} catch (Exception e) {
-					NeoQuests.showWarning("Failed to load questline " + key, e);
+					NeoQuests.showWarning("Failed to load questline " + key + " from file " + file.getPath(), e);
 				}
 			}
 		};

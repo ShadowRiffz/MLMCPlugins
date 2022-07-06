@@ -56,7 +56,7 @@ public class ConversationManager implements Manager, Listener {
 					npcConvs.put(npcid, clist);
 				}
 				catch (Exception e) {
-					NeoQuests.showWarning("Failed to load conversation " + key, e);
+					NeoQuests.showWarning("Failed to load conversation " + key + " from file " + file.getPath() + " for NPC " + npcid, e);
 				}
 			}
 		};
