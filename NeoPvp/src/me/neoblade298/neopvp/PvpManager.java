@@ -53,6 +53,10 @@ public class PvpManager {
 		killerAcc.incrementKillstreak();
 		killedAcc.clearKillstreak();
 		
+		// Wins and losses
+		killerAcc.incrementWins();
+		killedAcc.incrementLosses();
+		
 		// TODO
 		handleWarKill();
 	}

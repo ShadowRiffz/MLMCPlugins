@@ -1,15 +1,32 @@
 package me.neoblade298.neopvp;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import me.neoblade298.neocore.util.Util;
 
 public class PvpAccount {
 	private UUID uuid;
+	private Player p;
 	private HashSet<UUID> uniqueKills;
 	private double pvpBalance;
-	private int elo, killstreak;
+	private int elo, killstreak, wins, losses;
+	
+	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
+		this.uuid = uuid;
+		killstreak = rs.getInt(2);
+		wins = rs.getInt(3);
+		losses = rs.getInt(4);
+		elo = rs.getInt(5);
+		pvpBalance = rs.getDouble(6);
+		this.p = Bukkit.getPlayer(uuid);
+	}
 	
 	public void addElo(int amount) {
 		elo += amount;
@@ -53,5 +70,38 @@ public class PvpAccount {
 	
 	public void clearKillstreak() {
 		killstreak = 0;
+	}
+	
+	public void incrementWins() {
+		wins++;
+	}
+	
+	public void incrementLosses() {
+		losses++;
+	}
+	
+	public void setUniqueKills(HashSet<UUID> uniqueKills) {
+		this.uniqueKills = uniqueKills;
+	}
+	
+	public int getWins() {
+		return wins;
+	}
+	
+	public int getLosses() {
+		return losses;
+	}
+	
+	public void displayAccount(CommandSender s) {
+		Util.msg(s, "&c===[&6" + p.getName() + "&6]===");
+		Util.msg(s, " &6Rating: &e" + elo);
+		Util.msg(s, " &6Pvp Balance: &e" + pvpBalance);
+		Util.msg(s, " &6Killstreak: &e" + killstreak);
+		Util.msg(s, " &6Wins: &e" + wins);
+		Util.msg(s, " &6Losses: &e" + losses);
+	}
+	
+	public UUID getUuid() {
+		return uuid;
 	}
 }
