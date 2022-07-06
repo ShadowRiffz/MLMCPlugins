@@ -1,9 +1,13 @@
 package me.neoblade298.neopvp.generators;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.neoblade298.neocore.NeoCore;
@@ -64,5 +68,17 @@ public class GeneratorManager implements Manager {
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static long getNextHour() {
+		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+		return Duration.between(start, end).toMillis();
+	}
+	
+	public static long getNextHalfHour() {
+		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+		return Duration.between(start, end).toMillis();
 	}
 }
