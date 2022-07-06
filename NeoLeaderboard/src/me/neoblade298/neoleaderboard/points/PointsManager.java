@@ -28,6 +28,7 @@ import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
+import me.neoblade298.neoleaderboard.previous.PreviousPointsManager;
 
 public class PointsManager implements IOComponent {
 	private static HashMap<UUID, PlayerEntry> playerEntries = new HashMap<UUID, PlayerEntry>();
@@ -532,6 +533,8 @@ public class PointsManager implements IOComponent {
 					for (Nation nation : TownyUniverse.getInstance().getNations()) {
 						nationEntries.putIfAbsent(nation.getUUID(), new NationEntry(nation.getUUID()));
 					}
+					
+					PreviousPointsManager.reload();
 				} catch (SQLException e) {
 					Bukkit.getLogger().warning("[NeoLeaderboard] Failed to reset leaderboard");
 					e.printStackTrace();

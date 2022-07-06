@@ -3,7 +3,6 @@ package me.neoblade298.neoleaderboard.previous;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -24,7 +23,13 @@ public class PreviousPointsManager {
 	private static HashMap<PlayerPointType, TreeSet<PreviousEntry>> topTownCategories = new HashMap<PlayerPointType, TreeSet<PreviousEntry>>();
 	private static HashMap<PlayerPointType, TreeSet<PreviousEntry>> topPlayerCategories = new HashMap<PlayerPointType, TreeSet<PreviousEntry>>();
 	
-	static {
+	public static void reload() {
+		topNations.clear();
+		topTowns.clear();
+		topPlayers.clear();
+		topNationCategories.clear();
+		topTownCategories.clear();
+		topPlayerCategories.clear();
 		new BukkitRunnable() {
 			public void run() {
 				// Grab the top 10 for everything
