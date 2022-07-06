@@ -72,7 +72,7 @@ public class NavigationListener implements Listener {
 		}
 		else if (ep.getDisplay() == null) {
 			ep.setDisplay(Util.translateColors(e.getMessage()));
-			NavigationManager.addEndpoint(ep, editor.getEditingPoint());
+			NavigationManager.addEndpoint(ep, editor.getEditingPoint(), true);
 			Util.msg(p, "Endpoint &6" + e.getMessage() + " &7successfully created!");
 			editor.stopEditingEndpoint();
 			e.setCancelled(true);

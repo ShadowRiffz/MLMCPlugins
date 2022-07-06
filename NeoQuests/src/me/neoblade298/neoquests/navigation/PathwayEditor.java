@@ -43,16 +43,19 @@ public class PathwayEditor {
 	}
 	
 	public void connectPoints(Point point) {
-		Point selected = points.getLast();
+		Point selected = points.peekLast();
+		
+		if (selected == null) {
+			points.add(point);
+			pathwayObjects.add(point);
+			point.addConnection("editor");
+			return;
+		}
+		
 		if (!selected.getLocation().getWorld().equals(point.getLocation().getWorld())) {
 			Util.msg(p, "§cYou cannot connect points between worlds!");
 		}
 		
-		if (points.size() == 0) {
-			points.add(selected);
-			pathwayObjects.add(selected);
-			selected.addConnection("editor");
-		}
 		point.addConnection("editor");
 		points.add(point);
 		pathwayObjects.add(point);
@@ -61,18 +64,19 @@ public class PathwayEditor {
 	}
 	
 	public void addExistingPathway(Player p, EndPoint start, EndPoint end) {
-		LinkedList<Point> pathway = start.getOrConvert(end);
+		LinkedList<Point> pathway = start.getPoints(end);
 		if (pathway == null) {
 			Util.msg(p, "&cThis pathway doesn't exist!");
 			return;
 		}
 		
+		Util.msg(p, "&7Successfully added existing pathway!");
 		points.addAll(pathway);
 		pathwayObjects.add(new FuturePointSet(start, end));
 	}
 	
 	private void showSelectedPoint() {
-		Point selected = points.getLast();
+		Point selected = points.peekLast();
 		if (selected != null) {
 		    p.spawnParticle(Particle.REDSTONE, selected.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
 		    ParticleUtils.drawLine(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
@@ -100,7 +104,7 @@ public class PathwayEditor {
 			return false;
 		}
 
-		if (!points.getFirst().isEndpoint() || !points.getLast().isEndpoint()) {
+		if (!points.getFirst().isEndpoint() || !points.peekLast().isEndpoint()) {
 			Util.msg(p, "&cEither the start or finish point is not an endpoint! Drop a stick while "
 					+ "pointing at the point to make it an endpoint!");
 			return false;
@@ -108,7 +112,7 @@ public class PathwayEditor {
 		
 		try {
 			EndPoint start = points.getFirst().getEndpoint();
-			EndPoint end = points.getLast().getEndpoint();
+			EndPoint end = points.peekLast().getEndpoint();
 			File file = start.getFile() == null ? endpointFile : start.getFile();
 			YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
 			ConfigurationSection sec = yml.getConfigurationSection(start.getKey());
@@ -162,6 +166,7 @@ public class PathwayEditor {
 	private void reset() {
 		// Can't use clear or it'll remove the points from the endpoint pathways!
 		points = new LinkedList<Point>();
+		pathwayObjects = new LinkedList<PathwayObject>();
 		endpointEditor = null;
 	}
 	

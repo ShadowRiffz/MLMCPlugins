@@ -14,7 +14,6 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
-import com.sk89q.worldguard.session.SessionManager;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neocore.NeoCore;
@@ -33,7 +32,6 @@ import me.neoblade298.neoquests.listeners.QuesterListener;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
-import me.neoblade298.neoquests.worldguard.RequiredTagFlagHandler;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static Random rand = new Random();
@@ -75,9 +73,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 		
 		// WorldGuard
-	    SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
-	    // second param allows for ordering of handlers - see the JavaDocs
-	    sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
+	    //SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+	    //sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
 	}
 	
 	@Override
@@ -145,7 +142,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 				new CmdANavigationEditor(),
 				new CmdANavigationExit(),
 				new CmdANavigationTo(),
-				new CmdANavigationFrom());
+				new CmdANavigationFrom(),
+				new CmdANavigationAddPathway());
 		this.getCommand(cmd).setExecutor(anavigation);
 		commands.put(cmd, anavigation);
 	}

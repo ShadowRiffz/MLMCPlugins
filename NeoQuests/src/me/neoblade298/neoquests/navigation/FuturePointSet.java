@@ -17,7 +17,7 @@ public class FuturePointSet implements PathwayObject{
 	@Override
 	public void addTo(LinkedList<Point> receiver) {
 		if (points == null) {
-			Iterator<Point> iter = isReversed ? start.getOrConvert(end).descendingIterator() : start.getOrConvert(end).iterator();
+			Iterator<Point> iter = isReversed ? start.getPoints(end).descendingIterator() : start.getPoints(end).iterator();
 			while(iter.hasNext()) {
 				points.add(iter.next());
 			}

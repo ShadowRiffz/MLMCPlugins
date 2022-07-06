@@ -36,7 +36,7 @@ public class PathwayInstance {
 		this.start = start;
 		this.end = end;
 		
-		this.points = start.getOrConvert(end);
+		this.points = start.getPoints(end);
 
 		PathwayInstance pwi = this;
 		task = new BukkitRunnable() {
@@ -53,7 +53,7 @@ public class PathwayInstance {
 				}
 				
 				// Check if location reached
-				if (p.getLocation().distanceSquared(points.getLast().getLocation()) <= END_RADIUS_SQ) {
+				if (p.getLocation().distanceSquared(points.peekLast().getLocation()) <= END_RADIUS_SQ) {
 					pwi.stop();
 					return;
 				}

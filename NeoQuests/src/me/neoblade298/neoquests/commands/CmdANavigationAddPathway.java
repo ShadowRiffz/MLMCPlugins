@@ -9,9 +9,10 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neocore.exceptions.NeoIOException;
-import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neoquests.navigation.EndPoint;
 import me.neoblade298.neoquests.navigation.NavigationManager;
+import me.neoblade298.neoquests.navigation.PathwayEditor;
 
 public class CmdANavigationAddPathway implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("start"), new CommandArgument("end")));
@@ -23,7 +24,7 @@ public class CmdANavigationAddPathway implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "editor";
+		return "addpathway";
 	}
 
 	@Override
@@ -39,11 +40,24 @@ public class CmdANavigationAddPathway implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		try {
-			NavigationManager.startPathwayEditor(p);
-		} catch (NeoIOException e) {
-			NeoQuests.showWarning("Failed to start pathway editor", e);
+		PathwayEditor editor = NavigationManager.getEditor(p);
+		if (editor == null) {
+			Util.msg(p, "&cYou need to be in the editor to use this command!");
+			return;
 		}
+		
+		EndPoint start = NavigationManager.getEndpoint(args[0].toUpperCase());
+		EndPoint end = NavigationManager.getEndpoint(args[1].toUpperCase());
+		if (start == null) {
+			Util.msg(p, "&cThe start point doesn't exist!");
+			return;
+		}
+		if (end == null) {
+			Util.msg(p, "&cThe destination point doesn't exist!");
+			return;
+		}
+		
+		editor.addExistingPathway(p, start, end);
 	}
 
 	@Override

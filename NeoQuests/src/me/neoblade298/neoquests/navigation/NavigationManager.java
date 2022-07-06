@@ -68,7 +68,7 @@ public class NavigationManager implements Manager {
 						continue;
 					}
 					EndPoint ep = new EndPoint(file, sec);
-					addEndpoint(ep, point);
+					addEndpoint(ep, point, false);
 				}
 				catch (NeoIOException e) {
 					NeoQuests.showWarning("Failed to load endpoints", e);
@@ -137,6 +137,8 @@ public class NavigationManager implements Manager {
 		}
 		EndPoint startPoint = endpoints.get(start.toUpperCase());
 		EndPoint endPoint = endpoints.get(end.toUpperCase());
+		startPoint.convertIfNeeded();
+		endPoint.convertIfNeeded();
 		if (!endPoint.getStartPoints().containsKey(startPoint)) {
 			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway from " + start + " to " + end + " for player " + p.getName() +
 					", " + start + " doesn't connect to " + end + "!");
@@ -329,11 +331,11 @@ public class NavigationManager implements Manager {
 		}
 	}
 	
-	public static void addEndpoint(EndPoint ep, Point point) {
+	public static void addEndpoint(EndPoint ep, Point point, boolean save) {
 		endpoints.put(ep.getKey().toUpperCase(), ep);
 		point.setEndpoint(ep);
 		ep.setPoint(point);
-		saveEndpoint(ep);
+		if (save) saveEndpoint(ep);
 	}
 	
 	public static void saveEndpoint(EndPoint ep) {

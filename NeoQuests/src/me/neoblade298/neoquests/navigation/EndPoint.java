@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,6 +17,7 @@ public class EndPoint {
 	private String key, display;
 	private ConfigurationSection cfg;
 	private File file;
+	private boolean converted = false;
 	private HashMap<EndPoint, LinkedList<PathwayObject>> startPointsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
 	private HashMap<EndPoint, LinkedList<PathwayObject>> destinationsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
 	private HashMap<EndPoint, LinkedList<Point>> startPoints = new HashMap<EndPoint, LinkedList<Point>>();
@@ -85,22 +87,18 @@ public class EndPoint {
 	
 	public void addStartPointUnconverted(EndPoint point, LinkedList<PathwayObject> pw) {
 		startPointsUnconverted.put(point, pw);
-		getStartPoints();
 	}
 	
 	public void addDestinationUnconverted(EndPoint point, LinkedList<PathwayObject> pw) {
 		destinationsUnconverted.put(point, pw);
-		getDestinations();
 	}
 	
 	public void addStartPoint(EndPoint point, LinkedList<Point> pw) {
 		startPoints.put(point, pw);
-		getStartPoints();
 	}
 	
 	public void addDestination(EndPoint point, LinkedList<Point> pw) {
 		destinations.put(point, pw);
-		getDestinations();
 	}
 	
 	public HashMap<EndPoint, LinkedList<PathwayObject>> getStartPointsUnconverted() {
@@ -112,10 +110,12 @@ public class EndPoint {
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getStartPoints() {
+		convertIfNeeded();
 		return startPoints;
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getDestinations() {
+		convertIfNeeded();
 		return destinations;
 	}
 	
@@ -172,7 +172,7 @@ public class EndPoint {
 	
 	@Override
 	public String toString() {
-		return "EP: " + this.point.toString();
+		return this.key;
 	}
 	
 	public Point getPoint() {
@@ -180,17 +180,33 @@ public class EndPoint {
 	}
 	
 	// This should only ever happen by player, never by loading
-	public LinkedList<Point> getOrConvert(EndPoint dest) {
-		if (!startPoints.containsKey(dest)) {
-			if (this.startPointsUnconverted.containsKey(dest)) {
-				LinkedList<Point> points = new LinkedList<Point>();
-				for (PathwayObject po : this.startPointsUnconverted.get(dest)) {
-					po.addTo(points);
-				}
-				this.startPoints.put(dest, points);
-				this.startPointsUnconverted.remove(dest);
+	public LinkedList<Point> getPoints(EndPoint dest) {
+		convertIfNeeded();
+		dest.convertIfNeeded();
+		return this.destinations.get(dest);
+	}
+	
+	public void convertIfNeeded() {
+		if (converted) return;
+		
+		for (Entry<EndPoint, LinkedList<PathwayObject>> e : startPointsUnconverted.entrySet()) {
+			LinkedList<Point> points = new LinkedList<Point>();
+			for (PathwayObject po : this.startPointsUnconverted.get(e.getKey())) {
+				po.addTo(points);
 			}
+			this.startPoints.put(e.getKey(), points);
 		}
-		return this.startPoints.get(dest);
+		startPointsUnconverted.clear();
+
+		for (Entry<EndPoint, LinkedList<PathwayObject>> e : destinationsUnconverted.entrySet()) {
+			LinkedList<Point> points = new LinkedList<Point>();
+			for (PathwayObject po : this.destinationsUnconverted.get(e.getKey())) {
+				po.addTo(points);
+			}
+			this.destinations.put(e.getKey(), points);
+		}
+		destinationsUnconverted.clear();
+		
+		converted = true;
 	}
 }
