@@ -59,10 +59,10 @@ public class CmdANavigationFrom implements Subcommand {
 		EndPoint point = NavigationManager.getEndpoint(args[0]);
 		if (point.getDestinations().size() > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
-			for (EndPoint start : point.getDestinations().keySet()) {
-				ComponentBuilder entry = new ComponentBuilder("§7- §6" + start.getDisplay())
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + start.getKey() + " " + point.getKey()))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + start.getDisplay())));
+			for (EndPoint dest : point.getDestinations().keySet()) {
+				ComponentBuilder entry = new ComponentBuilder("§7- §6" + dest.getDisplay())
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + point.getKey() + " " + dest.getKey()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + dest.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}
 		}

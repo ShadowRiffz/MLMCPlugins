@@ -21,7 +21,7 @@ public class PathwayEditor {
 	private Player p;
 	private LinkedList<Point> points = new LinkedList<Point>();
 	private Point selected;
-	private static final File endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
+	public static final File endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
 
 	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.YELLOW, 2.0F);
 	private static final DustOptions PARTICLE_OPTIONS = new DustOptions(Color.YELLOW, 1.0F);
@@ -107,8 +107,6 @@ public class PathwayEditor {
 		}
 		
 		try {
-			saveNewEndpoints();
-			
 			EndPoint start = points.getFirst().getEndpoint();
 			EndPoint end = points.getLast().getEndpoint();
 			File file = start.getFile() == null ? endpointFile : start.getFile();
@@ -208,28 +206,5 @@ public class PathwayEditor {
 	
 	public EndPoint getEditingEndpoint() {
 		return endpointEditor;
-	}
-	
-	private void saveNewEndpoints() throws NeoIOException {
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(endpointFile);
-		for (Point point : new Point[] { points.getFirst(), points.getLast() }) {
-			EndPoint ep = point.getEndpoint();
-			// Only save endpoints that haven't been saved yet
-			if (ep.getFile() != null) {
-				continue;
-			}
-
-			ep.setFile(endpointFile);
-			ConfigurationSection sec = cfg.createSection(ep.getKey());
-			sec.set("display", ep.getDisplay());
-			sec.set("location", point.serializeLocation());
-			sec.set("world", point.getLocation().getWorld().getName());
-			try {
-				cfg.save(endpointFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new NeoIOException("Failed to save endpoints for new pathway");
-			}
-		}
 	}
 }

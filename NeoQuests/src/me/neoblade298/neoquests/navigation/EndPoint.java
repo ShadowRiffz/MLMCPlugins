@@ -151,4 +151,8 @@ public class EndPoint {
 	public String toString() {
 		return "EP: " + this.point.toString();
 	}
+	
+	public Point getPoint() {
+		return point;
+	}
 }

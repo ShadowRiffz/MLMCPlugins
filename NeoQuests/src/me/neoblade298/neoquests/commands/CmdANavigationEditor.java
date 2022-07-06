@@ -10,17 +10,17 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 
-public class CmdANavigationCreate implements Subcommand {
+public class CmdANavigationEditor implements Subcommand {
 	private static final CommandArguments args = new CommandArguments();
 
 	@Override
 	public String getDescription() {
-		return "Creates a new pathway editor";
+		return "Starts pathway editor";
 	}
 
 	@Override
 	public String getKey() {
-		return "create";
+		return "editor";
 	}
 
 	@Override

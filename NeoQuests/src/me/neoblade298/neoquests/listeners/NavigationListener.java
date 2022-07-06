@@ -126,7 +126,6 @@ public class NavigationListener implements Listener {
 					}
 					return;
 				}
-				point.setEndpoint(null);
 				NavigationManager.removeEndpoint(ep.getKey());
 				Util.msg(p, "Successfully removed endpoint!");
 			}

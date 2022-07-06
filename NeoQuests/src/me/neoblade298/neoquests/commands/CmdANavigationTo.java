@@ -56,17 +56,17 @@ public class CmdANavigationTo implements Subcommand {
 		}
 		
 		EndPoint point = NavigationManager.getEndpoint(args[0]);
-		if (point.getDestinations().size() > 0) {
-			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
-			for (EndPoint dest : point.getDestinations().keySet()) {
-				ComponentBuilder entry = new ComponentBuilder("§7- §6" + dest.getDisplay())
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + point.getKey() + " " + dest.getKey()))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + dest.getDisplay())));
+		if (point.getStartPoints().size() > 0) {
+			Util.msg(p, "Setting destination to &6" + point.getDisplay() + "&7. Choose a start point:");
+			for (EndPoint start : point.getStartPoints().keySet()) {
+				ComponentBuilder entry = new ComponentBuilder("§7- §6" + start.getDisplay())
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + start.getKey() + " " + point.getKey()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set start point to " + start.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}
 		}
 		else {
-			Util.msg(p, "&cThis start point does not have any destinations!");
+			Util.msg(p, "&cThis destination does not have any start points!");
 		}
 	}
 

@@ -49,7 +49,7 @@ public class CmdNavigationTo implements Subcommand {
 			Util.msg(p, "Setting destination to &6" + point.getDisplay() + "&7. Choose a start point:");
 			for (EndPoint start : point.getStartPoints().keySet()) {
 				ComponentBuilder entry = new ComponentBuilder("§7- §6" + start.getDisplay())
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + start.getKey()))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + start.getKey() + " " + point.getKey()))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to start from " + start.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}

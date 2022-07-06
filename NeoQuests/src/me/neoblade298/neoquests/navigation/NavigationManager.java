@@ -286,13 +286,44 @@ public class NavigationManager implements Manager {
 	}
 	
 	public static void removeEndpoint(String key) {
-		endpoints.remove(key.toUpperCase());
+		EndPoint ep = endpoints.get(key.toUpperCase());
+		ep.getPoint().setEndpoint(null);
+		try {
+			unsaveEndpoint(ep);
+		} catch (IOException e) {
+			NeoQuests.showWarning("Failed to remove endpoint " + key, e);
+			e.printStackTrace();
+		}
 	}
 	
 	public static void addEndpoint(EndPoint ep, Point point) {
 		endpoints.put(ep.getKey().toUpperCase(), ep);
 		point.setEndpoint(ep);
 		ep.setPoint(point);
+		saveEndpoint(ep);
+	}
+	
+	public static void saveEndpoint(EndPoint ep) {
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(PathwayEditor.endpointFile);
+		Point point = ep.getPoint();
+
+		ep.setFile(PathwayEditor.endpointFile);
+		ConfigurationSection sec = cfg.createSection(ep.getKey());
+		sec.set("display", ep.getDisplay());
+		sec.set("location", point.serializeLocation());
+		sec.set("world", point.getLocation().getWorld().getName());
+		try {
+			cfg.save(PathwayEditor.endpointFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			NeoQuests.showWarning("Failed to save endpoint " + ep.getKey(), e);
+		}
+	}
+	
+	public static void unsaveEndpoint(EndPoint ep) throws IOException {
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(ep.getFile());
+		cfg.set(ep.getKey(), null);
+		cfg.save(ep.getFile());
 	}
 	
 	@Override

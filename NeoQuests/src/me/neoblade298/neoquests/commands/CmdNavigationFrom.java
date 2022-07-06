@@ -44,18 +44,18 @@ public class CmdNavigationFrom implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		
-		EndPoint ep = NavigationManager.getEndpoint(args[0]);
-		if (ep.getStartPoints().size() > 0) {
-			Util.msg(p, "Setting destination to &6" + ep.getDisplay() + "&7. Choose a start point:");
-			for (EndPoint start : ep.getStartPoints().keySet()) {
-				ComponentBuilder entry = new ComponentBuilder("§7- §6" + start.getDisplay())
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + start.getKey() + " " + ep.getKey()))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set start point to " + start.getDisplay())));
+		EndPoint point = NavigationManager.getEndpoint(args[0]);
+		if (point.getDestinations().size() > 0) {
+			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
+			for (EndPoint dest : point.getDestinations().keySet()) {
+				ComponentBuilder entry = new ComponentBuilder("§7- §6" + dest.getDisplay())
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav start " + point.getKey() + " " + dest.getKey()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + dest.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}
 		}
 		else {
-			Util.msg(p, "&cThis destination is not connected to any start points!");
+			Util.msg(p, "&cThis start point is not connected to any destinations!");
 		}
 	}
 
