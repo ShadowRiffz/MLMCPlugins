@@ -37,7 +37,7 @@ public class NavigationListener implements Listener {
 			}
 		}
 		else if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !p.isSneaking()) {
-			selectPoint(p, editor, e.getClickedBlock().getLocation().add(0.5, 0, 0.5));
+			connectPoint(p, editor, e.getClickedBlock().getLocation().add(0.5, 0, 0.5));
 		}
 		else if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (p.isSneaking()) {
@@ -94,15 +94,10 @@ public class NavigationListener implements Listener {
 		editor.deletePoint(loc);
 	}
 	
-	private void selectPoint(Player p, PathwayEditor editor, Location loc) {
+	private void connectPoint(Player p, PathwayEditor editor, Location loc) {
 		Point point = NavigationManager.getPoint(loc);
 		if (point != null) {
-			if (editor.isSelected(point)) {
-				editor.deselect();
-				return;
-			}
-
-			editor.selectOrConnectPoints(point);
+			editor.connectPoints(point);
 		}
 	}
 	

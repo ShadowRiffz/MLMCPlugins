@@ -21,7 +21,6 @@ public class PathwayEditor {
 	private Player p;
 	private LinkedList<Point> points = new LinkedList<Point>();
 	private LinkedList<PathwayObject> pathwayObjects = new LinkedList<PathwayObject>();
-	private Point selected;
 	public static final File endpointFile = new File(NavigationManager.getDataFolder(), "endpoints/New Endpoints.yml");
 
 	private static final DustOptions PARTICLE_POINT_OPTIONS = new DustOptions(Color.YELLOW, 2.0F);
@@ -43,36 +42,22 @@ public class PathwayEditor {
 		showSelectedPoint();
 	}
 	
-	public boolean isSelected(Point point) {
-		return selected != null && selected.getLocation().equals(point.getLocation());
-	}
-	
-	public void deselect() {
-		Util.msg(p, "Successfully deselected point!");
-		selected = null;
-	}
-	
-	public void selectOrConnectPoints(Point point) {
-		if (selected == null) {
-			selected = point;
-			Util.msg(p, "§7Successfully selected point!");
+	public void connectPoints(Point point) {
+		Point selected = points.getLast();
+		if (!selected.getLocation().getWorld().equals(point.getLocation().getWorld())) {
+			Util.msg(p, "§cYou cannot connect points between worlds!");
 		}
-		else {
-			if (!selected.getLocation().getWorld().equals(point.getLocation().getWorld())) {
-				Util.msg(p, "§cYou cannot connect points between worlds!");
-			}
-			
-			if (points.size() == 0) {
-				points.add(selected);
-				pathwayObjects.add(selected);
-				selected.addConnection("editor");
-			}
-			point.addConnection("editor");
-			points.add(point);
-			pathwayObjects.add(point);
-			selected = point;
-			Util.msg(p, "§7Successfully connected points and selected point!");
+		
+		if (points.size() == 0) {
+			points.add(selected);
+			pathwayObjects.add(selected);
+			selected.addConnection("editor");
 		}
+		point.addConnection("editor");
+		points.add(point);
+		pathwayObjects.add(point);
+		selected = point;
+		Util.msg(p, "§7Successfully connected points and selected point!");
 	}
 	
 	public void addExistingPathway(Player p, EndPoint start, EndPoint end) {
@@ -87,6 +72,7 @@ public class PathwayEditor {
 	}
 	
 	private void showSelectedPoint() {
+		Point selected = points.getLast();
 		if (selected != null) {
 		    p.spawnParticle(Particle.REDSTONE, selected.getGroundLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_OFFSET * 2, PARTICLE_SPEED, PARTICLE_POINT_OPTIONS);
 		    ParticleUtils.drawLine(p, selected.getGroundLocation(), p.getLocation(), PARTICLES_PER_POINT, PARTICLE_OFFSET, PARTICLE_SPEED, PARTICLE_OPTIONS);
@@ -177,7 +163,6 @@ public class PathwayEditor {
 		// Can't use clear or it'll remove the points from the endpoint pathways!
 		points = new LinkedList<Point>();
 		endpointEditor = null;
-		selected = null;
 	}
 	
 	public void deletePoint(Location loc) {
@@ -197,9 +182,6 @@ public class PathwayEditor {
 			Util.msg(p, "§cFailed to delete point!");
 		}
 		else {
-			if (isSelected(point)) {
-				deselect();
-			}
 			Util.msg(p, "Successfully deleted point");
 		}
 	}
