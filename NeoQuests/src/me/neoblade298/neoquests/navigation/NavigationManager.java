@@ -147,6 +147,7 @@ public class NavigationManager implements Manager {
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
+		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to " + endPoint.getDisplay());
 		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
 		activePathways.put(p, pi);
 		return true;

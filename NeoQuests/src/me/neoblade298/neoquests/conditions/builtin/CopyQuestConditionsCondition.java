@@ -1,10 +1,13 @@
 package me.neoblade298.neoquests.conditions.builtin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.io.LineConfig;
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
+import me.neoblade298.neoquests.quests.Quest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CopyQuestConditionsCondition extends Condition {
@@ -30,7 +33,12 @@ public class CopyQuestConditionsCondition extends Condition {
 
 	@Override
 	public boolean passes(Player p) {
-		return ConditionManager.getBlockingCondition(p, QuestsManager.getQuest(questname).getConditions()) == null;
+		Quest q = QuestsManager.getQuest(questname);
+		if (q == null) {
+			Bukkit.getLogger().warning("[NeoQuests] CopyQuestCondition failed to find quest " + questname);
+			NeoQuests.showWarning("CopyQuestCondition failed to find quest " + questname);
+		}
+		return ConditionManager.getBlockingCondition(p, q.getConditions()) == null;
 	}
 
 	@Override
