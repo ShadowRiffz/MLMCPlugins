@@ -29,7 +29,7 @@ public class ConversationManager implements Manager, Listener {
 			for (String key : cfg.getKeys(false)) {
 				try {
 					if (convs.containsKey(key)) {
-						NeoQuests.showWarning("Duplicate conversation " + key + "in file " + file.getPath() + ", " +
+						NeoQuests.showWarning("Duplicate conversation " + key + " in file " + file.getPath() + ", " +
 								"the loaded conversation with this key is in " + convs.get(key).getFileLocation());
 						continue;
 					}
@@ -46,6 +46,10 @@ public class ConversationManager implements Manager, Listener {
 				try {
 					ArrayList<Conversation> clist = new ArrayList<Conversation>();
 					int npcid = Integer.parseInt(key);
+					if (npcConvs.containsKey(npcid)) {
+						NeoQuests.showWarning("Duplicate npc conversation list " + key + " in file " + file.getPath());
+						continue;
+					}
 					for (String line : cfg.getStringList(key)) {
 						if (!convs.containsKey(line)) {
 							NeoQuests.showWarning("Failed to load conversation for NPC " + key + " in file " + file.getPath() + ": " + line);
