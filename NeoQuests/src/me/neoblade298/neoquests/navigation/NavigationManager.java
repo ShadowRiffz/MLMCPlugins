@@ -64,7 +64,7 @@ public class NavigationManager implements Manager {
 					double z = Double.parseDouble(args[2]);
 					Point point = getPoint(new Location(w, x, y, z));
 					if (point == null) {
-						NeoQuests.showWarning("Failed to load endpoint " + x + " " + y + " " + z);
+						NeoQuests.showWarning("Failed to load endpoint " + key + ", point is null");
 						continue;
 					}
 					EndPoint ep = new EndPoint(file, sec);
@@ -72,14 +72,6 @@ public class NavigationManager implements Manager {
 				}
 				catch (NeoIOException e) {
 					NeoQuests.showWarning("Failed to load endpoints", e);
-				}
-			}
-			
-			for (EndPoint ep : endpoints.values()) {
-				try {
-					ep.loadPathways();
-				} catch (NeoIOException e) {
-					NeoQuests.showWarning("Failed to load endpoint pathway fors " + ep.getKey(), e);
 				}
 			}
 		};
@@ -108,6 +100,14 @@ public class NavigationManager implements Manager {
 			activePathways.clear();
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
+			for (EndPoint ep : endpoints.values()) {
+				try {
+					ep.loadPathways();
+				} catch (NeoIOException e) {
+					NeoQuests.showWarning("Failed to load endpoint pathway fors " + ep.getKey(), e);
+				}
+			}
+			
 			for (Point point : points) {
 				if (!point.isConnected()) {
 					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
@@ -168,8 +168,7 @@ public class NavigationManager implements Manager {
 	
 	public static void startPathwayEditor(Player p) throws NeoIOException {
 		if (pathwayEditors.containsKey(p)) {
-			Util.msg(p, "§cYou are already in the editor!");
-			Util.msg(p, "§cType /nav exit to dispose of your edits if you want to start a new one!");
+			exitPathwayEditor(p);
 			return;
 		}
 

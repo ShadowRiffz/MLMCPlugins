@@ -180,9 +180,15 @@ public class EndPoint {
 	}
 	
 	// This should only ever happen by player, never by loading
-	public LinkedList<Point> getPoints(EndPoint dest) {
-		convertIfNeeded();
-		dest.convertIfNeeded();
+	public LinkedList<Point> getPathToDestination(EndPoint dest) {
+		if (!converted && destinationsUnconverted.containsKey(dest)) {
+			LinkedList<Point> points = new LinkedList<Point>();
+			for (PathwayObject po : this.destinationsUnconverted.get(dest)) {
+				po.addTo(points);
+			}
+			this.destinations.put(dest, points);
+			this.destinationsUnconverted.remove(dest);
+		}
 		return this.destinations.get(dest);
 	}
 	
@@ -208,5 +214,9 @@ public class EndPoint {
 		destinationsUnconverted.clear();
 		
 		converted = true;
+	}
+	
+	public ConfigurationSection getConfig() {
+		return cfg;
 	}
 }

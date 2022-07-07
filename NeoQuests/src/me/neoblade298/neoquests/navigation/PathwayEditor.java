@@ -49,6 +49,7 @@ public class PathwayEditor {
 			points.add(point);
 			pathwayObjects.add(point);
 			point.addConnection("editor");
+			Util.msg(p, "§7Started pathway connection!");
 			return;
 		}
 		
@@ -64,7 +65,7 @@ public class PathwayEditor {
 	}
 	
 	public void addExistingPathway(Player p, EndPoint start, EndPoint end) {
-		LinkedList<Point> pathway = start.getPoints(end);
+		LinkedList<Point> pathway = start.getPathToDestination(end);
 		if (pathway == null) {
 			Util.msg(p, "&cThis pathway doesn't exist!");
 			return;
@@ -84,13 +85,9 @@ public class PathwayEditor {
 	}
 	
 	public void undoConnection() {
-		if (points.size() > 2) {
+		if (pathwayObjects.size() > 0) {
 			points.removeLast().removeConnection("editor");
-			Util.msg(p, "Successfully undid last connection!");
-		}
-		else if (points.size() == 2) {
-			points.remove().removeConnection("editor");
-			points.remove().removeConnection("editor");
+			pathwayObjects.removeLast();
 			Util.msg(p, "Successfully undid last connection!");
 		}
 		else {
