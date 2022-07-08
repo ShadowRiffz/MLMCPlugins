@@ -1,0 +1,9 @@
+name: SellAll
+main: me.ShanaChans.SellAll.SellAllManager
+author: [ShanaChans]
+version: 1.0
+api-version: 1.16
+commands:
+   sellall:
+       description: Sell all the goods in your inventory!
+       usage: /sellall
