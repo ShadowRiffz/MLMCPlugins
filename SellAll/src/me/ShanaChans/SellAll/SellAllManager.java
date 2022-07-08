@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -93,7 +95,9 @@ public class SellAllManager extends JavaPlugin implements Listener
         	{
         		e.setCancelled(true);
         		Chest chest = (Chest) e.getClickedBlock().getState();
-            	SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(chest.getBlockInventory(), player);
+        		Inventory inv = chest.getInventory();
+        		SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player);
+        		
         	}
         }
     }
