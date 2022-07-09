@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -358,6 +359,19 @@ public class NavigationManager implements Manager {
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(ep.getFile());
 		cfg.set(ep.getKey(), null);
 		cfg.save(ep.getFile());
+	}
+	
+	public static void clearUnusedPoints(CommandSender s) {
+		ArrayList<Point> toRemove = new ArrayList<Point>();
+		for (Point point : points) {
+			if (!point.isConnected()) {
+				toRemove.add(point);
+			}
+		}
+		for (Point point : toRemove) {
+			deletePoint(point);
+			Util.msg(s, "&7Deleted point at " + point);
+		}
 	}
 	
 	@Override

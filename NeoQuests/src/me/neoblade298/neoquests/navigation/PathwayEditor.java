@@ -45,6 +45,10 @@ public class PathwayEditor {
 	public void connectPoints(Point point) {
 		Point selected = points.peekLast();
 		
+		if (point.isEndpoint()) {
+			Util.msg(p, "&7Connected: &6" + point.getEndpoint().getKey());
+		}
+		
 		if (selected == null) {
 			points.add(point);
 			pathwayObjects.add(point);

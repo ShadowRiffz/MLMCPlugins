@@ -199,7 +199,7 @@ public class Point implements LineConfigParser<Point>, Comparable<Point>, Pathwa
 	
 	@Override
 	public String toString() {
-		return loc.getX() + " " + loc.getY() + " " +loc.getZ();
+		return loc.getWorld().getName() + "-" + loc.getX() + " " + loc.getY() + " " +loc.getZ();
 	}
 
 	@Override
