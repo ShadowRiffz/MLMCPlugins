@@ -36,7 +36,7 @@ public class PathwayInstance {
 		this.start = start;
 		this.end = end;
 		
-		this.points = start.getPoints(end);
+		this.points = start.getPathToDestination(end);
 
 		PathwayInstance pwi = this;
 		task = new BukkitRunnable() {

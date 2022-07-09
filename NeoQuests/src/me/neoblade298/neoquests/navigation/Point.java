@@ -206,4 +206,9 @@ public class Point implements LineConfigParser<Point>, Comparable<Point>, Pathwa
 	public void addTo(LinkedList<Point> points) {
 		points.add(this);
 	}
+	
+	@Override
+	public int size() {
+		return 1;
+	}
 }

@@ -17,7 +17,8 @@ public class FuturePointSet implements PathwayObject{
 	@Override
 	public void addTo(LinkedList<Point> receiver) {
 		if (points == null) {
-			Iterator<Point> iter = isReversed ? start.getPoints(end).descendingIterator() : start.getPoints(end).iterator();
+			points = new LinkedList<Point>();
+			Iterator<Point> iter = isReversed ? start.getPathToDestination(end).descendingIterator() : start.getPathToDestination(end).iterator();
 			while(iter.hasNext()) {
 				points.add(iter.next());
 			}
@@ -34,5 +35,16 @@ public class FuturePointSet implements PathwayObject{
 	
 	public void toggleReversed() {
 		isReversed = !isReversed;
+	}
+	
+	public int size() {
+		if (points == null) {
+			points = new LinkedList<Point>();
+			Iterator<Point> iter = isReversed ? start.getPathToDestination(end).descendingIterator() : start.getPathToDestination(end).iterator();
+			while(iter.hasNext()) {
+				points.add(iter.next());
+			}
+		}
+		return points.size();
 	}
 }
