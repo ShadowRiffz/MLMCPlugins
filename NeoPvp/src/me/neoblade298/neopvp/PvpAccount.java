@@ -14,9 +14,15 @@ import me.neoblade298.neocore.util.Util;
 public class PvpAccount {
 	private UUID uuid;
 	private Player p;
-	private HashSet<UUID> uniqueKills;
+	private HashSet<UUID> uniqueKills = new HashSet<UUID>();
 	private double pvpBalance;
 	private int elo, killstreak, wins, losses;
+	private long protectionExpires = -1;
+	
+	public PvpAccount(UUID uuid) {
+		this.uuid = uuid;
+		this.p = Bukkit.getPlayer(uuid);
+	}
 	
 	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
 		this.uuid = uuid;
@@ -25,6 +31,7 @@ public class PvpAccount {
 		losses = rs.getInt(4);
 		elo = rs.getInt(5);
 		pvpBalance = rs.getDouble(6);
+		protectionExpires = rs.getLong(7);
 		this.p = Bukkit.getPlayer(uuid);
 	}
 	
@@ -92,6 +99,10 @@ public class PvpAccount {
 		return losses;
 	}
 	
+	public boolean isProtected() {
+		return protectionExpires > System.currentTimeMillis();
+	}
+	
 	public void displayAccount(CommandSender s) {
 		Util.msg(s, "&c===[&6" + p.getName() + "&6]===");
 		Util.msg(s, " &6Rating: &e" + elo);
@@ -103,5 +114,13 @@ public class PvpAccount {
 	
 	public UUID getUuid() {
 		return uuid;
+	}
+	
+	public Player getPlayer() {
+		return this.p;
+	}
+	
+	public long getProtectionExpiration() {
+		return protectionExpires;
 	}
 }

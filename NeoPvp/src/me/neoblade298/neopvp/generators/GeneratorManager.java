@@ -46,9 +46,11 @@ public class GeneratorManager implements Manager {
 	public GeneratorManager() {
 		task = new BukkitRunnable() {
 			public void run() {
-				for (String key)
+				for (Generator gen : generators.values()) {
+					gen.spawnItem();
+				}
 			}
-		}
+		}.runTaskLater(NeoPvp.inst(), TimeUtil.getTicksToNext(60), 1000 * 60 * 60);
 		
 		reload();
 	}
@@ -68,17 +70,5 @@ public class GeneratorManager implements Manager {
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static long getNextHour() {
-		LocalDateTime start = LocalDateTime.now();
-		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-		return Duration.between(start, end).toMillis();
-	}
-	
-	public static long getNextHalfHour() {
-		LocalDateTime start = LocalDateTime.now();
-		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-		return Duration.between(start, end).toMillis();
 	}
 }
