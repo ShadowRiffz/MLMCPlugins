@@ -24,11 +24,21 @@ public class FuturePointSet implements PathwayObject{
 	public void convert() {
 		if (points == null) {
 			points = new LinkedList<Point>();
-			Iterator<Point> iter = isReversed ? start.getPathToDestination(end).descendingIterator() : start.getPathToDestination(end).iterator();
-			System.out.println("Adding points from " + start + " to " + end);
+			Iterator<PathwayObject> iter = isReversed ? start.getUnconvertedPathToDestination(end).descendingIterator()
+						: start.getUnconvertedPathToDestination(end).iterator();
 			while(iter.hasNext()) {
-				System.out.println("Adding a point...");
-				points.add(iter.next());
+				PathwayObject pwo = iter.next();
+				if (pwo instanceof Point) {
+					points.add((Point) pwo);
+				}
+				// If the path contains an unconverted future point set, convert that first
+				else {
+					FuturePointSet set = (FuturePointSet) pwo;
+					if (!set.isConverted()) {
+						set.convert();
+					}
+					set.addTo(points);
+				}
 			}
 		}
 	}
@@ -51,5 +61,9 @@ public class FuturePointSet implements PathwayObject{
 			}
 		}
 		return points.size();
+	}
+	
+	public boolean isConverted() {
+		return points != null;
 	}
 }

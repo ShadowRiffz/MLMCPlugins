@@ -1,7 +1,6 @@
 package me.neoblade298.neoquests.navigation;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,12 +109,10 @@ public class EndPoint {
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getStartPoints() {
-		convertIfNeeded();
 		return startPoints;
 	}
 	
 	public HashMap<EndPoint, LinkedList<Point>> getDestinations() {
-		convertIfNeeded();
 		return destinations;
 	}
 	
@@ -186,9 +183,11 @@ public class EndPoint {
 		return this.destinations.get(dest);
 	}
 	
+	public LinkedList<PathwayObject> getUnconvertedPathToDestination(EndPoint dest) {
+		return this.destinationsUnconverted.get(dest);
+	}
+	
 	public void addFuturePathways() {
-		// First convert future point sets so there's no circular dependency
-
 		for (Entry<EndPoint, LinkedList<PathwayObject>> e : startPointsUnconverted.entrySet()) {
 			LinkedList<Point> points = new LinkedList<Point>();
 			for (PathwayObject po : this.startPointsUnconverted.get(e.getKey())) {

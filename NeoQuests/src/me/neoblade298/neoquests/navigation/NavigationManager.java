@@ -34,7 +34,6 @@ public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pointLoader, endpointsLoader;
 	private static File data = new File(NeoQuests.inst().getDataFolder(), "navigation");
-	private static boolean converted = false;
 	
 	private static LineConfigManager<Point> mngr = new LineConfigManager<Point>(NeoQuests.inst(), "points");
 	
@@ -116,10 +115,11 @@ public class NavigationManager implements Manager {
 				}
 			}
 			
-			// TODO: Load in future point sets
+			// Load in future point sets
 			for (FuturePointSet set : toConvert) {
 				set.convert();
 			}
+			toConvert.clear();
 			
 			// Finish loading pathways by adding the future point sets in
 			for (EndPoint ep : endpoints.values()) {
@@ -159,7 +159,7 @@ public class NavigationManager implements Manager {
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
-		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to " + endPoint.getDisplay());
+		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to &6" + endPoint.getDisplay());
 		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
 		activePathways.put(p, pi);
 		return true;

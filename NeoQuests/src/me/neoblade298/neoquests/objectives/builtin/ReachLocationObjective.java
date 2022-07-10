@@ -43,7 +43,14 @@ public class ReachLocationObjective extends Objective {
 	}
 
 	public boolean checkEvent(PlayerMoveEvent e, ObjectiveInstance o) {
-		return e.getTo().distanceSquared(loc) < radiusSq;
+		if (!e.getTo().getWorld().equals(loc.getWorld())) {
+			return false;
+		}
+		if (e.getTo().distanceSquared(loc) < radiusSq) {
+			o.incrementCount();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
