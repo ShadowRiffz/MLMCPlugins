@@ -1,6 +1,7 @@
 package me.neoblade298.neoquests.navigation;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,6 @@ public class EndPoint {
 	private String key, display;
 	private ConfigurationSection cfg;
 	private File file;
-	private boolean converted = false;
 	private HashMap<EndPoint, LinkedList<PathwayObject>> startPointsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
 	private HashMap<EndPoint, LinkedList<PathwayObject>> destinationsUnconverted = new HashMap<EndPoint, LinkedList<PathwayObject>>();
 	private HashMap<EndPoint, LinkedList<Point>> startPoints = new HashMap<EndPoint, LinkedList<Point>>();
@@ -133,7 +133,9 @@ public class EndPoint {
 		for (String line : list) {
 			if (line.contains("->")) {
 				String[] args = line.split("->");
-				points.add(new FuturePointSet(NavigationManager.getEndpoint(args[0]), NavigationManager.getEndpoint(args[1])));
+				FuturePointSet set = new FuturePointSet(NavigationManager.getEndpoint(args[0]), NavigationManager.getEndpoint(args[1]));
+				points.add(set);
+				NavigationManager.addFuturePointSet(set);
 				continue;
 			}
 			String args[] = line.split(" ");
@@ -181,20 +183,12 @@ public class EndPoint {
 	
 	// This should only ever happen by player, never by loading
 	public LinkedList<Point> getPathToDestination(EndPoint dest) {
-		if (!converted && destinationsUnconverted.containsKey(dest)) {
-			LinkedList<Point> points = new LinkedList<Point>();
-			for (PathwayObject po : this.destinationsUnconverted.get(dest)) {
-				po.addTo(points);
-			}
-			this.destinations.put(dest, points);
-			this.destinationsUnconverted.remove(dest);
-		}
 		return this.destinations.get(dest);
 	}
 	
-	public void convertIfNeeded() {
-		if (converted) return;
-		
+	public void addFuturePathways() {
+		// First convert future point sets so there's no circular dependency
+
 		for (Entry<EndPoint, LinkedList<PathwayObject>> e : startPointsUnconverted.entrySet()) {
 			LinkedList<Point> points = new LinkedList<Point>();
 			for (PathwayObject po : this.startPointsUnconverted.get(e.getKey())) {
@@ -202,7 +196,7 @@ public class EndPoint {
 			}
 			this.startPoints.put(e.getKey(), points);
 		}
-		startPointsUnconverted.clear();
+		startPointsUnconverted = null;
 
 		for (Entry<EndPoint, LinkedList<PathwayObject>> e : destinationsUnconverted.entrySet()) {
 			LinkedList<Point> points = new LinkedList<Point>();
@@ -211,9 +205,7 @@ public class EndPoint {
 			}
 			this.destinations.put(e.getKey(), points);
 		}
-		destinationsUnconverted.clear();
-		
-		converted = true;
+		destinationsUnconverted = null;
 	}
 	
 	public ConfigurationSection getConfig() {

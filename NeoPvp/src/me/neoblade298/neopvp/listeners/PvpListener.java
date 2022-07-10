@@ -7,6 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
@@ -32,7 +37,10 @@ public class PvpListener implements Listener {
 		PvpAccount attacker = PvpManager.getAccount(pa);
 		PvpAccount victim = PvpManager.getAccount(pv);
 		
-		// TODO: Make check for if user is in a protection-bypassed region
+		// TODO: Make check for if user is in an allowed protection region
+		RegionContainer ca = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		RegionQuery qa = ca.createQuery();
+		ApplicableRegionSet seta = qa.getApplicableRegions(pa.getLocation());
 		
 		if (attacker.isProtected()) {
 			Util.msg(pa, "&cYou cannot attack others while pvp protected!");

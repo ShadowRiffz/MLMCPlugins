@@ -29,10 +29,12 @@ public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
 	private static HashMap<Chunk, ArrayList<Point>> pointMap = new HashMap<Chunk, ArrayList<Point>>();
 	private static TreeSet<Point> points = new TreeSet<Point>();
+	private static ArrayList<FuturePointSet> toConvert = new ArrayList<FuturePointSet>();
 	private static HashMap<String, EndPoint> endpoints = new HashMap<String, EndPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pointLoader, endpointsLoader;
 	private static File data = new File(NeoQuests.inst().getDataFolder(), "navigation");
+	private static boolean converted = false;
 	
 	private static LineConfigManager<Point> mngr = new LineConfigManager<Point>(NeoQuests.inst(), "points");
 	
@@ -95,12 +97,17 @@ public class NavigationManager implements Manager {
 			points.clear();
 			endpoints.clear();
 			pointMap.clear();
+			
 			for (PathwayInstance pi : activePathways.values()) {
 				pi.cancel("navigation reloaded.");
 			}
 			activePathways.clear();
+			
+			// Load in files
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
+			
+			// Loads in pathways, but does not load future point sets
 			for (EndPoint ep : endpoints.values()) {
 				try {
 					ep.loadPathways();
@@ -109,10 +116,14 @@ public class NavigationManager implements Manager {
 				}
 			}
 			
-			for (Point point : points) {
-				if (!point.isConnected()) {
-					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
-				}
+			// TODO: Load in future point sets
+			for (FuturePointSet set : toConvert) {
+				set.convert();
+			}
+			
+			// Finish loading pathways by adding the future point sets in
+			for (EndPoint ep : endpoints.values()) {
+				ep.addFuturePathways();
 			}
 		}
 		catch (Exception e) {
@@ -138,8 +149,6 @@ public class NavigationManager implements Manager {
 		}
 		EndPoint startPoint = endpoints.get(start.toUpperCase());
 		EndPoint endPoint = endpoints.get(end.toUpperCase());
-		startPoint.convertIfNeeded();
-		endPoint.convertIfNeeded();
 		if (!endPoint.getStartPoints().containsKey(startPoint)) {
 			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway from " + start + " to " + end + " for player " + p.getName() +
 					", " + start + " doesn't connect to " + end + "!");
@@ -376,4 +385,12 @@ public class NavigationManager implements Manager {
 	
 	@Override
 	public void cleanup() {	}
+	
+	public static void convert() {
+		
+	}
+	
+	public static void addFuturePointSet(FuturePointSet set) {
+		toConvert.add(set);
+	}
 }

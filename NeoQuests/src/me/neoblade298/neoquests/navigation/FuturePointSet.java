@@ -16,15 +16,20 @@ public class FuturePointSet implements PathwayObject{
 	// This should ONLY ever happen by player after loading is done
 	@Override
 	public void addTo(LinkedList<Point> receiver) {
+		for (Point p : points) {
+			receiver.add(p);
+		}
+	}
+	
+	public void convert() {
 		if (points == null) {
 			points = new LinkedList<Point>();
 			Iterator<Point> iter = isReversed ? start.getPathToDestination(end).descendingIterator() : start.getPathToDestination(end).iterator();
+			System.out.println("Adding points from " + start + " to " + end);
 			while(iter.hasNext()) {
+				System.out.println("Adding a point...");
 				points.add(iter.next());
 			}
-		}
-		for (Point p : points) {
-			receiver.add(p);
 		}
 	}
 	
