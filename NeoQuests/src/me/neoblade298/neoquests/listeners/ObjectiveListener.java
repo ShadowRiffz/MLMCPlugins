@@ -98,7 +98,6 @@ public class ObjectiveListener implements Listener {
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.MOVE);
 		if (insts != null) {
-			System.out.println("Player has an onmove obj");
 			for (ObjectiveInstance o : insts) {
 				((ReachLocationObjective) o.getObjective()).checkEvent(e, o);
 			}
