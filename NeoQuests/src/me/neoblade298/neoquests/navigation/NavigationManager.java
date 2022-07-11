@@ -348,15 +348,17 @@ public class NavigationManager implements Manager {
 	}
 	
 	public static void saveEndpoint(EndPoint ep) {
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(PathwayEditor.endpointFile);
-		Point point = ep.getPoint();
-
-		ep.setFile(PathwayEditor.endpointFile);
-		ConfigurationSection sec = cfg.createSection(ep.getKey());
-		sec.set("display", ep.getDisplay());
-		sec.set("location", point.serializeLocation());
-		sec.set("world", point.getLocation().getWorld().getName());
 		try {
+			savePoints();
+			
+			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(PathwayEditor.endpointFile);
+			Point point = ep.getPoint();
+	
+			ep.setFile(PathwayEditor.endpointFile);
+			ConfigurationSection sec = cfg.createSection(ep.getKey());
+			sec.set("display", ep.getDisplay());
+			sec.set("location", point.serializeLocation());
+			sec.set("world", point.getLocation().getWorld().getName());
 			cfg.save(PathwayEditor.endpointFile);
 		} catch (IOException e) {
 			e.printStackTrace();
