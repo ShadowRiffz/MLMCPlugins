@@ -70,7 +70,8 @@ public class QuestInstance {
 			stage = stage + 1 >= quest.getStages().size() ? stage : stage + 1; // Next stage if one exists
 		}
 		else {
-			stage = set.getNext();
+			endQuest(set, true, stage); // If no next stage exists, automatic -1
+			return;
 		}
 		
 		// Setup new stage
