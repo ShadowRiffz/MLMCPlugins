@@ -55,7 +55,7 @@ public class NavigationManager implements Manager {
 				try {
 					if (endpoints.containsKey(key.toUpperCase())) {
 						NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
-								"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
+								"the loaded pathway with this key is in " + endpoints.get(key.toUpperCase()).getFile().getPath());
 						continue;
 					}
 					ConfigurationSection sec = cfg.getConfigurationSection(key);
