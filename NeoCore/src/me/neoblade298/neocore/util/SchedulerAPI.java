@@ -40,18 +40,17 @@ public class SchedulerAPI {
 	
 	private static void runScheduledItems() {
 		Calendar inst = Calendar.getInstance();
-		int date = (inst.get(Calendar.YEAR) * 10000) + (inst.get(Calendar.MONTH) * 100) + inst.get(Calendar.DAY_OF_MONTH);
-		int diff = date - startupTime;
+		int diff = getDateKey(inst) - startupTime;
 		int hour = inst.get(Calendar.HOUR_OF_DAY);
 		int minute = inst.get(Calendar.MINUTE);
-		int roundedMinute = minute - (minute % 15);
-		int time = (hour * 100) + roundedMinute;
+		minute -= minute % 15;
+		int timeKey = (hour * 100) + minute;
 		
 		// Scheduled items first
 		HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(diff);
 		if (day != null) {
-			if (day.containsKey(time)) {
-				for (OffsetRunnable runnable : day.get(time)) {
+			if (day.containsKey(timeKey)) {
+				for (OffsetRunnable runnable : day.get(timeKey)) {
 					if (runnable.offset == 0) {
 						runnable.runnable.runTask(NeoCore.inst());
 					}
@@ -67,20 +66,20 @@ public class SchedulerAPI {
 			runnable.runTask(NeoCore.inst());
 		}
 
-		if (roundedMinute % 30 == 0) {
+		if (minute % 30 == 0) {
 			for (BukkitRunnable runnable : repeaters.get(ScheduleInterval.HALF_HOUR)) {
 				runnable.runTask(NeoCore.inst());
 			}
 		}
 		
-		if (roundedMinute == 0) {
+		if (minute == 0) {
 			for (BukkitRunnable runnable : repeaters.get(ScheduleInterval.HOUR)) {
 				runnable.runTask(NeoCore.inst());
 			}
 		}
 	}
 	
-	private static void schedule(int date, int hour, int minute, int second, BukkitRunnable runnable) {
+	private static boolean schedule(int date, int hour, int minute, int second, BukkitRunnable runnable) {
 		int diff = date - startupTime;
 		if (diff >= 0 && diff <= 2) {
 			HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(diff);
@@ -91,26 +90,37 @@ public class SchedulerAPI {
 			ArrayList<OffsetRunnable> runnables = day.getOrDefault(time, new ArrayList<OffsetRunnable>());
 			runnables.add(new OffsetRunnable(runnable, offset));
 			day.putIfAbsent(time, runnables);
+			return true;
 		}
+		return false;
 	}
 	
-	public static void schedule(int year, int month, int day, int hour, int minute, int second,BukkitRunnable runnable) {
+	public static boolean schedule(int year, int month, int day, int hour, int minute, int second, BukkitRunnable runnable) {
 		int date = (year * 10000) + (month * 100) + day;
-		schedule(date, hour, minute, second, runnable);
+		return schedule(date, hour, minute, second, runnable);
 	}
 	
-	public static void schedule(int hour, int minute, int second, BukkitRunnable runnable) {
-		Calendar inst = Calendar.getInstance();
-		schedule(inst.get(Calendar.YEAR), inst.get(Calendar.MONTH), inst.get(Calendar.DAY_OF_MONTH), hour, minute, second, runnable);
+	public static boolean schedule(int hour, int minute, int second, BukkitRunnable runnable) {
+		Calendar c = Calendar.getInstance();
+		return schedule(getDateKey(c), hour, minute, second, runnable);
 	}
 	
-	public static void schedule(int hour, int minute, BukkitRunnable runnable) {
-		Calendar inst = Calendar.getInstance();
-		schedule(inst.get(Calendar.YEAR), inst.get(Calendar.MONTH), inst.get(Calendar.DAY_OF_MONTH), hour, minute, 0, runnable);
+	public static boolean schedule(int hour, int minute, BukkitRunnable runnable) {
+		return schedule(hour, minute, 0, runnable);
 	}
 	
 	public static void scheduleRepeating(ScheduleInterval interval, BukkitRunnable runnable) {
 		repeaters.get(interval).add(runnable);
+	}
+	
+	public static boolean schedule(long time, BukkitRunnable runnable) {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(time);
+		return schedule(getDateKey(c), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND), runnable);
+	}
+	
+	private static int getDateKey(Calendar c) {
+		return (c.get(Calendar.YEAR) * 10000) + ((c.get(Calendar.MONTH) + 1) * 100) + c.get(Calendar.DAY_OF_MONTH);
 	}
 	
 	private static class OffsetRunnable {

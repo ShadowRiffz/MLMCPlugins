@@ -12,6 +12,6 @@ public class Tester {
 
 		int min = minute - (minute % 15);
 		int time = (hour * 100) + min;
-		System.out.println(hour + " " + (min) + " " + time);
+		System.out.println(date);
 	}
 }

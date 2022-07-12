@@ -10,9 +10,11 @@ import java.util.Iterator;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.object.Nation;
 
+import me.neoblade298.neocore.util.SchedulerAPI;
 import me.neoblade298.neocore.util.Util;
 
 public class War {
@@ -40,6 +42,19 @@ public class War {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean schedule() {
+		BukkitRunnable runnable = new BukkitRunnable() {
+			public void run() {
+				commenceWar();
+			}
+		};
+		return SchedulerAPI.schedule(this.date, runnable);
+	}
+	
+	public void commenceWar() {
+		
 	}
 	
 	public void setDate(String date) {

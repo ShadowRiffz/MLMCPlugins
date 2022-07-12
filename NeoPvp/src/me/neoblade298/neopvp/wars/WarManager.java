@@ -1,14 +1,50 @@
 package me.neoblade298.neopvp.wars;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.Util;
 
 public class WarManager {
 	private static HashMap<String, War> wars = new HashMap<String, War>();
+	private static HashMap<String, War> ongoingWars = new HashMap<String, War>();
 	private static HashMap<CommandSender, War> creatingWar = new HashMap<CommandSender, War>();
+	
+	public static void initialize() {
+		Statement stmt = NeoCore.getStatement();
+		Statement delete = NeoCore.getStatement();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM neopvp_wars;");
+			
+			while(rs.next()) {
+				String key = rs.getString(1);
+				ResultSet teams = "SELECT * FROM neopvp_warteams WHERE war = '" + key + "';";
+				War war = new War(rs, teams);
+				
+				// War date was before now and never happened, delete it
+				if (rs.getLong(4) < System.currentTimeMillis()) {
+					delete.addBatch("DELETE FROM neopvp_wars WHERE war = '" + key + "';";
+					delete.addBatch("DELETE FROM neopvp_warteams WHERE war = '" + key + "';";
+					Bukkit.getLogger().warning("[NeoPvp] Deleted war " + key + " that was never started but is past due.");
+					continue;
+				}
+				
+				if (war.schedule()) {
+					wars.put(rs.getString(1), war);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public static void newWar(CommandSender s, War war) {
 		creatingWar.put(s, war);
