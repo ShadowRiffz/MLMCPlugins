@@ -1,5 +1,7 @@
 package me.neoblade298.neopvp.wars;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 import org.bukkit.Location;
@@ -7,16 +9,23 @@ import org.bukkit.Location;
 import com.palmergames.bukkit.towny.object.Nation;
 
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neocore.util.Util;
 
 public class WarTeam {
-	private String name;
+	private String display;
 	private int points;
 	private ActiveMob baseMob;
 	private Location spawn, mascotSpawn;
 	private HashSet<Nation> nations = new HashSet<Nation>();
 	
-	public WarTeam(String name) {
-		this.name = name;
+	public WarTeam(ResultSet team) throws SQLException {
+		this.display = team.getString(2);
+		this.spawn = Util.stringToLoc(team.getString(3));
+		this.mascotSpawn = Util.stringToLoc(team.getString(4));
+	}
+	
+	public WarTeam(String display) {
+		this.display = display;
 	}
 	
 	public void addNation(Nation n) {
@@ -35,8 +44,8 @@ public class WarTeam {
 		this.mascotSpawn = mascotSpawn;
 	}
 
-	public String getName() {
-		return name;
+	public String getDisplay() {
+		return display;
 	}
 
 	public int getPoints() {

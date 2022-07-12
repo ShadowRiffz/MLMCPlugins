@@ -1,5 +1,8 @@
 package me.neoblade298.neopvp.wars;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +23,23 @@ public class War {
 	
 	public War(String key) {
 		this.key = key;
+	}
+	
+	public War(ResultSet war, ResultSet teams) {
+		try {
+			war.next();
+			this.key = war.getString(1);
+			this.display = war.getString(2);
+			this.maxPlayers = war.getInt(3);
+			this.date = new Date(war.getLong(4));
+			
+			teams.next();
+			this.teams[0] = new WarTeam(teams);
+			teams.next();
+			this.teams[1] = new WarTeam(teams);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setDate(String date) {
@@ -59,7 +79,7 @@ public class War {
 	}
 	
 	public void display(CommandSender s) {
-		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.name + " «§8§m--------§6§l<");
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<");
 		Util.msg(s, "&6Date&7: " + date);
 		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers);
 		
@@ -70,7 +90,7 @@ public class War {
 	private void displayTeam(int num, CommandSender s) {
 		if (teams[num + 1] != null) {
 			WarTeam team = teams[num + 1];
-			String msg = "&6Team " + num + " &7(&c" + teams[0].getName() + "&7) - ";
+			String msg = "&6Team " + num + " &7(&c" + teams[0].getDisplay() + "&7) - ";
 			Iterator<Nation> iter = team.getNations().iterator();
 			while (iter.hasNext()) {
 				msg += "&e" + iter.next().getName();
@@ -80,16 +100,12 @@ public class War {
 			}
 			Util.msg(s, msg);
 			
-			Util.msg(s, "&7- &6Spawn&7: &e" + locationToString(team.getSpawn()));
-			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + locationToString(team.getMascotSpawn()));
+			Util.msg(s, "&7- &6Spawn&7: &e" + Util.locToString(team.getSpawn()));
+			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + Util.locToString(team.getMascotSpawn()));
 		}
 		else {
 			Util.msg(s, "&6Team " + num + "&7: null");
 		}
-	}
-	
-	private String locationToString(Location loc) {
-		return loc.getX() + " " + loc.getY() + " " +loc.getZ();
 	}
 	
 	public String getKey() {
