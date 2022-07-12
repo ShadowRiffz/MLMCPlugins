@@ -56,7 +56,7 @@ public class Util {
 		return descending ? sorted.descendingMultiset() : sorted;
 	}
 	
-	public Location stringToLoc(String loc) {
+	public static Location stringToLoc(String loc) {
 		String args[] = loc.split(" ");
 		World w = Bukkit.getWorld(args[0]);
 		double x = Double.parseDouble(args[1]);
@@ -65,7 +65,7 @@ public class Util {
 		return new Location(w, x, y, z);
 	}
 	
-	public String locToString(Location loc) {
+	public static String locToString(Location loc) {
 		return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ();
 	}
 }
