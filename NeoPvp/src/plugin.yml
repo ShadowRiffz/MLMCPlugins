@@ -8,3 +8,6 @@ api-version: 1.16
 commands:
    pvp:
       usage: /pvp
+   adminwar:
+      usage: /adminwar
+      alias: awar

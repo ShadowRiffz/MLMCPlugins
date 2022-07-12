@@ -13,13 +13,13 @@ import com.palmergames.bukkit.towny.object.Nation;
 import me.neoblade298.neocore.util.Util;
 
 public class War {
-	private String name;
+	private String key, display;
 	private int maxPlayers;
 	private Date date;
 	private WarTeam[] teams = new WarTeam[2];
 	
-	public War(String name) {
-		this.name = name;
+	public War(String key) {
+		this.key = key;
 	}
 	
 	public void setDate(String date) {
@@ -52,6 +52,10 @@ public class War {
 	
 	public void setMascotSpawn(int num, Location loc) {
 		teams[num - 1].setMascotSpawn(loc);
+	}
+	
+	public void setDisplay(String display) {
+		this.display = display;
 	}
 	
 	public void display(CommandSender s) {
@@ -87,9 +91,13 @@ public class War {
 	private String locationToString(Location loc) {
 		return loc.getX() + " " + loc.getY() + " " +loc.getZ();
 	}
+	
+	public String getKey() {
+		return key;
+	}
 
-	public String getName() {
-		return name;
+	public String getDisplay() {
+		return display;
 	}
 
 	public int getMaxPlayers() {
