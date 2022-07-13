@@ -23,18 +23,18 @@ public class QuestInstance {
 	private int stage;
 	private LinkedHashMap<String, ObjectiveSetInstance> sets;
 	
+	// Used only when starting a new quest
 	public QuestInstance(Quester quester, Quest quest) {
 		this(quester, quest, 0);
+		this.getQuest().getStages().get(0).runActions(q.getPlayer());
 	}
 	
+	// Used only on loading in
 	public QuestInstance(Quester quester, Quest quest, int stage) {
 		this.q = quester;
 		this.quest = quest;
 		this.stage = stage;
 		this.sets = new LinkedHashMap<String, ObjectiveSetInstance>();
-		
-		// Run stage 0 actions
-		this.getQuest().getStages().get(stage).runActions(q.getPlayer());
 	}
 	
 	// Used anytime new objectives show up
