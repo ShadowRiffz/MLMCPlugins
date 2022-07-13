@@ -68,8 +68,6 @@ public class MythicExt extends JavaPlugin implements Listener {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		
-		MythicBukkit.inst().getMobManager().getActiveMob(UUID.fromString("test")).get().getBar("test").set
 	}
 
 	private boolean setupEconomy() {
