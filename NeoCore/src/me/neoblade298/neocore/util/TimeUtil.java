@@ -22,6 +22,7 @@ public class TimeUtil {
 		else {
 			end = start.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed + 1) * segmentLength);
 		}
+		end.truncatedTo(ChronoUnit.SECONDS);
 
 		// Get Duration
 		return Duration.between(start, end).toMillis() / 50;

@@ -83,6 +83,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		
 		
 		// Testing SchedulerAPI
+		SchedulerAPI.initialize();
 		SchedulerAPI.scheduleRepeating(ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
 			public void run() {
 				System.out.println("TEST 15 minute interval");
@@ -98,34 +99,24 @@ public class NeoCore extends JavaPlugin implements Listener {
 				System.out.println("TEST 1 hour interval");
 			}
 		});
-		SchedulerAPI.schedule(16, 10, new Runnable() {
+		SchedulerAPI.schedule(17, 40, new Runnable() {
 			public void run() {
-				System.out.println("TEST 4:10 pm");
+				System.out.println("TEST 5:40 pm");
 			}
 		});
-		SchedulerAPI.schedule(16, 12, new Runnable() {
+		SchedulerAPI.schedule(17, 42, 30, new Runnable() {
 			public void run() {
-				System.out.println("TEST 4:12 pm");
+				System.out.println("TEST 5:42 pm 20 seconds");
 			}
 		});
-		SchedulerAPI.schedule(16, 30, new Runnable() {
+		SchedulerAPI.schedule(17, 45, 5, new Runnable() {
 			public void run() {
-				System.out.println("TEST 4:30 pm");
+				System.out.println("TEST 5:45 pm 5 seconds");
 			}
 		});
-		SchedulerAPI.schedule(17, 45, new Runnable() {
+		SchedulerAPI.schedule(2022, 13, 7, 17, 45, 8, new Runnable() {
 			public void run() {
-				System.out.println("TEST 5:45 pm");
-			}
-		});
-		SchedulerAPI.schedule(17, 50, new Runnable() {
-			public void run() {
-				System.out.println("TEST 5:50 pm");
-			}
-		});
-		SchedulerAPI.schedule(17, 50, 30, new Runnable() {
-			public void run() {
-				System.out.println("TEST 5:50, pm 30 seconds");
+				System.out.println("TEST 5:45 pm 8 seconds");
 			}
 		});
 	}

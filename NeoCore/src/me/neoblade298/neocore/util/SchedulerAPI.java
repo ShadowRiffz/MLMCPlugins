@@ -9,14 +9,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.NeoCore;
 
 public class SchedulerAPI {
-	private static final int startupTime;
+	private static final int startupTime = getDateKey(Calendar.getInstance());
 	private static ArrayList<HashMap<Integer, ArrayList<OffsetRunnable>>> schedule = new ArrayList<HashMap<Integer, ArrayList<OffsetRunnable>>>(3);
 	private static HashMap<ScheduleInterval, ArrayList<Runnable>> repeaters = new HashMap<ScheduleInterval, ArrayList<Runnable>>();
 	
-	static {
-		Calendar inst = Calendar.getInstance();
-		startupTime = getDateKey(inst);
-		
+	public static void initialize() {
 		for (int i = 0; i < 2; i++) {
 			schedule.add(new HashMap<Integer, ArrayList<OffsetRunnable>>());
 		}
