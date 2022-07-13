@@ -15,7 +15,7 @@ public class SchedulerAPI {
 	
 	static {
 		Calendar inst = Calendar.getInstance();
-		startupTime = (inst.get(Calendar.YEAR) * 10000) + (inst.get(Calendar.MONTH) * 100) + inst.get(Calendar.DAY_OF_MONTH);
+		startupTime = getDateKey(inst);
 		
 		for (int i = 0; i < 2; i++) {
 			schedule.add(new HashMap<Integer, ArrayList<OffsetRunnable>>());
