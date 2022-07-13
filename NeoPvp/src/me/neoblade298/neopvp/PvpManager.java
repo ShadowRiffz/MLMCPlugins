@@ -70,7 +70,7 @@ public class PvpManager implements IOComponent {
 	}
 	
 	private static void handleWarKill() {
-		
+		// Check for if they're involved in a war
 	}
 
 	@Override

@@ -27,19 +27,19 @@ public class PvpListener implements Listener {
 
 		if (killer == null) return;
 	}
-	
+
 	@EventHandler
 	public void onPvp(EntityDamageByEntityEvent e) {
 		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
 			return;
 		}
-		
+
 		Player pa = (Player) e.getDamager();
 		Player pv = (Player) e.getEntity();
-		
+
 		PvpAccount attacker = PvpManager.getAccount(pa);
 		PvpAccount victim = PvpManager.getAccount(pv);
-		
+
 		// Make check for if user is in an allowed protection region
 		RegionContainer ca = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery qa = ca.createQuery();
@@ -48,20 +48,24 @@ public class PvpListener implements Listener {
 		RegionContainer cv = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery qv = cv.createQuery();
 		ApplicableRegionSet setv = qv.getApplicableRegions(BukkitAdapter.adapt(pv.getLocation()), QueryOption.NONE);
-		
-		if (!seta.testState(WorldGuardPlugin.inst().wrapPlayer(pa), NeoPvp.PROTECTION_ALLOWED_FLAG)) return;
-		if (!setv.testState(WorldGuardPlugin.inst().wrapPlayer(pv), NeoPvp.PROTECTION_ALLOWED_FLAG)) return;
-		
-		if (attacker.isProtected()) {
-			Util.msg(pa, "&cYou cannot attack others while pvp protected!");
-			e.setCancelled(true);
-			return;
+
+		// pvp protection
+		if (seta.testState(WorldGuardPlugin.inst().wrapPlayer(pa), NeoPvp.PROTECTION_ALLOWED_FLAG)
+				|| setv.testState(WorldGuardPlugin.inst().wrapPlayer(pv), NeoPvp.PROTECTION_ALLOWED_FLAG)) {
+
+			if (attacker.isProtected()) {
+				Util.msg(pa, "&cYou cannot attack others while pvp protected!");
+				e.setCancelled(true);
+				return;
+			}
+
+			if (victim.isProtected()) {
+				Util.msg(pa, "&cThis player is currently pvp protected!");
+				e.setCancelled(true);
+				return;
+			}
 		}
-		
-		if (victim.isProtected()) {
-			Util.msg(pa, "&cThis user is currently pvp protected!");
-			e.setCancelled(true);
-			return;
-		}
+
+		PvpManager.handleKill(pa, pv);
 	}
 }
