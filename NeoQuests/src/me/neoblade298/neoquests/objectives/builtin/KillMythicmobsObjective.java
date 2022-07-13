@@ -52,6 +52,11 @@ public class KillMythicmobsObjective extends Objective {
 		if (display == null) {
 			try {
 				display = MythicBukkit.inst().getMobManager().getMythicMob(types.get(0)).get().getDisplayName().get();
+				if (types.size() > 1) {
+					for (int i = 1; i < types.size(); i++) {
+						display += "&7, " + types.get(i);
+					}
+				}
 			}
 			catch (Exception e) {
 				Bukkit.getLogger().warning("[NeoQuests] Failed to retrieve mob display for Mythic Mob " + type + ".");
