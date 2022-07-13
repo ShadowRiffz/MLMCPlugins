@@ -20,11 +20,25 @@ public class TimeUtil {
 			end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS); // Next segment starts on the hour
 		}
 		else {
-			end = start.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed + 1) * segmentLength);
+			end = start.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed + 1) * segmentLength).truncatedTo(ChronoUnit.MINUTES);
 		}
-		end.truncatedTo(ChronoUnit.SECONDS);
 
 		// Get Duration
 		return Duration.between(start, end).toMillis() / 50;
+	}
+
+	public static long getTicksPastPreviousSegment(int segmentLength) {
+		LocalDateTime end = LocalDateTime.now();
+		int segmentsPassed = end.getMinute() / segmentLength;
+		LocalDateTime start;
+		if (segmentsPassed == 0) {
+			start = end.truncatedTo(ChronoUnit.HOURS); // Previous segment was top of the hour
+		}
+		else {
+			start = end.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed - 1) * segmentLength).truncatedTo(ChronoUnit.MINUTES);
+		}
+
+		// Get Duration
+		return Duration.between(start, end.truncatedTo(ChronoUnit.MINUTES)).toMillis() / 50;
 	}
 }

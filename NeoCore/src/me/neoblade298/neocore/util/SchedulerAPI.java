@@ -1,5 +1,6 @@
 package me.neoblade298.neocore.util;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -23,10 +24,40 @@ public class SchedulerAPI {
 		}
 
 		scheduleTimekeeper();
+		initialScheduledRun();
+		// Run anything that's meant to be scheduled within 15 minutes of startup
+	}
+	
+	private static void initialScheduledRun() {
+		Calendar inst = Calendar.getInstance();
+		int hour = inst.get(Calendar.HOUR_OF_DAY);
+		int minute = inst.get(Calendar.MINUTE);
+		int timeKey = (hour * 100) + minute;
+		long ticksPast = TimeUtil.getTicksPastPreviousSegment(15);
+		
+		// Scheduled items first
+		HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(0);
+		if (day != null) {
+			if (day.containsKey(timeKey)) {
+				for (OffsetRunnable runnable : day.get(timeKey)) {
+					long newOffset = runnable.offset - ticksPast;
+					
+					// Only run scheduled items that are after the current offset from the segment
+					if (runnable.offset >= 0) {
+						new BukkitRunnable() {
+							public void run() {
+								runnable.runnable.run();
+							}
+						}.runTaskLater(NeoCore.inst(), newOffset * 20);
+					}
+				}
+			}
+		}
 	}
 	
 	// Every 15 minutes
 	private static void scheduleTimekeeper() {
+		System.out.println("Scheduling new timekeeper in ticks: " + TimeUtil.getTicksToNextSegment(15));
 		new BukkitRunnable() {
 			public void run() {
 				runScheduledItems();
@@ -92,6 +123,8 @@ public class SchedulerAPI {
 			ArrayList<OffsetRunnable> runnables = day.getOrDefault(time, new ArrayList<OffsetRunnable>());
 			runnables.add(new OffsetRunnable(runnable, offset));
 			day.putIfAbsent(time, runnables);
+			System.out.println("Scheduled for " + diff + " at time key " + time + ":");
+			runnable.run();
 			return true;
 		}
 		return false;
