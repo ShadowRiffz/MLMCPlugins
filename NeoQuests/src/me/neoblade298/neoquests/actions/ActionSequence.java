@@ -66,7 +66,7 @@ public class ActionSequence {
 		int tick = delay;
 		for (ActionSet set : sets) {
 			if (!set.isEmpty()) {
-				if (delay != 0) {
+				if (tick != 0) {
 					new BukkitRunnable() {
 						public void run() {
 							set.run(p);

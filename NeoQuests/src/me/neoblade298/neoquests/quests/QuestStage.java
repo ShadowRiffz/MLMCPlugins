@@ -20,7 +20,7 @@ public class QuestStage {
 		this.actions.load(cfg.getStringList("actions"));
 	}
 	
-	public int complete(Player p) {
+	public int runActions(Player p) {
 		actions.run(p);
 		return actions.getRuntime();
 	}

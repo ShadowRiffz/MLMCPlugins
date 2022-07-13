@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neoquests.actions.ActionManager;
@@ -20,7 +19,6 @@ public class Quest {
 	private ArrayList<QuestStage> stages;
 	private Questline ql;
 	private boolean canRepeat = false, canRetry = false;
-	private int stage;
 	
 	public Quest(ConfigurationSection cfg, File file) throws NeoIOException {
 		this.key = cfg.getName();
@@ -46,10 +44,6 @@ public class Quest {
 	
 	public String getDisplay() {
 		return display;
-	}
-	
-	public void completeStage(Player p) {
-		stages.get(stage).complete(p);
 	}
 	
 	public ArrayList<QuestStage> getStages() {

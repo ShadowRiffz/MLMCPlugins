@@ -32,6 +32,9 @@ public class QuestInstance {
 		this.quest = quest;
 		this.stage = stage;
 		this.sets = new LinkedHashMap<String, ObjectiveSetInstance>();
+		
+		// Run stage 0 actions
+		this.getQuest().getStages().get(stage).runActions(q.getPlayer());
 	}
 	
 	// Used anytime new objectives show up
@@ -63,9 +66,11 @@ public class QuestInstance {
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		set.finalizeObjectives();
 		if (set.getNext() == -1 || set.getNext() == -2) {
+			endQuest(set, true, stage);
+			return;
 		}
 		else if (set.getNext() == -3) {
-			if (stage + 1 >= quest.getStages().size()) {
+			if (stage + 1 < quest.getStages().size()) {
 				stage = stage + 1;
 			}
 			else {
@@ -78,6 +83,7 @@ public class QuestInstance {
 		}
 		
 		// Setup new stage
+		quest.getStages().get(stage).runActions(q.getPlayer());
 		setupInstances(true);
 		displayObjectives(q.getPlayer());
 	}

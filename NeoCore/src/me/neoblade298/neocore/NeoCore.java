@@ -27,6 +27,8 @@ import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.player.*;
+import me.neoblade298.neocore.util.ScheduleInterval;
+import me.neoblade298.neocore.util.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
@@ -78,6 +80,34 @@ public class NeoCore extends JavaPlugin implements Listener {
 				Bukkit.getPluginManager().callEvent(new NeoCoreInitEvent());
 			}
 		}.runTask(this);
+		
+		
+		// Testing SchedulerAPI
+		SchedulerAPI.scheduleRepeating(ScheduleInterval.FIFTEEN_MINUTES, new BukkitRunnable() {
+			public void run() {
+				System.out.println("15 minute interval");
+			}
+		});
+		SchedulerAPI.scheduleRepeating(ScheduleInterval.HALF_HOUR, new BukkitRunnable() {
+			public void run() {
+				System.out.println("30 minute interval");
+			}
+		});
+		SchedulerAPI.scheduleRepeating(ScheduleInterval.HOUR, new BukkitRunnable() {
+			public void run() {
+				System.out.println("1 hour interval");
+			}
+		});
+		SchedulerAPI.schedule(14, 30, new BukkitRunnable() {
+			public void run() {
+				System.out.println("2:30 pm");
+			}
+		});
+		SchedulerAPI.schedule(15, 45, new BukkitRunnable() {
+			public void run() {
+				System.out.println("3:45 pm");
+			}
+		});
 	}
 
 	private void initCommands() {
