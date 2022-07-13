@@ -19,7 +19,6 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ISkillMechanic;
 import io.lumine.mythic.api.skills.conditions.ISkillCondition;
 import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
-import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicDropLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
