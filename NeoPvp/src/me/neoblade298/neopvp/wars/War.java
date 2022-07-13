@@ -2,10 +2,9 @@ package me.neoblade298.neopvp.wars;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import org.bukkit.Location;
@@ -20,8 +19,10 @@ import me.neoblade298.neocore.util.Util;
 public class War {
 	private String key, display;
 	private int maxPlayers;
-	private Date date;
+	private Calendar date = Calendar.getInstance();
 	private WarTeam[] teams = new WarTeam[2];
+	
+	private static final int DEFAULT_WAR_HOUR = 14;
 	
 	public War(String key) {
 		this.key = key;
@@ -33,12 +34,12 @@ public class War {
 			this.key = war.getString(1);
 			this.display = war.getString(2);
 			this.maxPlayers = war.getInt(3);
-			this.date = new Date(war.getLong(4));
+			this.date.setTimeInMillis(war.getLong(4));
 			
 			teams.next();
-			this.teams[0] = new WarTeam(teams);
+			this.teams[0] = new WarTeam(this.key, teams);
 			teams.next();
-			this.teams[1] = new WarTeam(teams);
+			this.teams[1] = new WarTeam(this.key, teams);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -47,19 +48,26 @@ public class War {
 	public boolean schedule() {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
-				commenceWar();
+				start();
 			}
 		};
-		return SchedulerAPI.schedule(this.date, runnable);
+		return SchedulerAPI.schedule(this.date.getTimeInMillis(), runnable);
 	}
 	
-	public void commenceWar() {
-		
+	public void start() {
+		for (WarTeam team : teams) {
+			team.startWar();
+		}
 	}
 	
-	public void setDate(String date) {
+	public void setDate(String src) {
+		setDate(src, DEFAULT_WAR_HOUR);
+	}
+	
+	public void setDate(String src, int hour) {
 		try {
-			this.date = new SimpleDateFormat("MM/dd/yyyy").parse(date);
+			this.date.setTime(new SimpleDateFormat("MM/dd/yyyy").parse(src));
+			this.date.set(Calendar.HOUR_OF_DAY, hour);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -135,7 +143,7 @@ public class War {
 		return maxPlayers;
 	}
 
-	public Date getDate() {
+	public Calendar getDate() {
 		return date;
 	}
 

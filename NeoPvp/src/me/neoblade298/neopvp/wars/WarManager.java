@@ -25,23 +25,22 @@ public class WarManager {
 			
 			while(rs.next()) {
 				String key = rs.getString(1);
-				ResultSet teams = "SELECT * FROM neopvp_warteams WHERE war = '" + key + "';";
+				ResultSet teams = stmt.executeQuery("SELECT * FROM neopvp_warteams WHERE war = '" + key + "';");
 				War war = new War(rs, teams);
 				
 				// War date was before now and never happened, delete it
 				if (rs.getLong(4) < System.currentTimeMillis()) {
-					delete.addBatch("DELETE FROM neopvp_wars WHERE war = '" + key + "';";
-					delete.addBatch("DELETE FROM neopvp_warteams WHERE war = '" + key + "';";
+					delete.addBatch("DELETE FROM neopvp_wars WHERE war = '" + key + "';");
+					delete.addBatch("DELETE FROM neopvp_warteams WHERE war = '" + key + "';");
 					Bukkit.getLogger().warning("[NeoPvp] Deleted war " + key + " that was never started but is past due.");
 					continue;
 				}
-				
-				if (war.schedule()) {
-					wars.put(rs.getString(1), war);
-				}
+
+				wars.put(rs.getString(1), war);
+				war.schedule();
 			}
+			delete.executeBatch();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +79,22 @@ public class WarManager {
 		}
 		
 		creatingWar.remove(s);
-		wars.put(war.getName(), war);
+		wars.put(war.getKey(), war);
+	}
+	
+	public static void startWar(String key) {
+		War war = wars.remove(key);
+		ongoingWars.put(key, war);
+		war.start();
+		
+		Statement stmt = NeoCore.getStatement();
+		try {
+			stmt.addBatch("DELETE FROM neopvp_wars WHERE war = '" + key + "';");
+			stmt.addBatch("DELETE FROM neopvp_warteams WHERE war = '" + key + "';");
+			stmt.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

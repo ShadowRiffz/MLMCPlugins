@@ -26,7 +26,7 @@ public class CmdAWarNew implements Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "mycommand.staff";
+		return null;
 	}
 
 	@Override

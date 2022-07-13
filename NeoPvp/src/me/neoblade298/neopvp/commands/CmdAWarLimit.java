@@ -25,7 +25,7 @@ public class CmdAWarLimit implements Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "mycommand.staff";
+		return null;
 	}
 
 	@Override

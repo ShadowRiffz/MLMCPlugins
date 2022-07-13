@@ -1,14 +1,9 @@
 package me.neoblade298.neopvp.commands;
 
-import java.util.Arrays;
-
 import org.bukkit.command.CommandSender;
 
-import me.neoblade298.neocore.commands.CommandArgument;
-import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
 
 public class CmdAWarDisplay implements Subcommand {
@@ -25,7 +20,7 @@ public class CmdAWarDisplay implements Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "mycommand.staff";
+		return null;
 	}
 
 	@Override
