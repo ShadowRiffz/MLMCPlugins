@@ -49,7 +49,6 @@ public class SellAllPlayer
 	
 	public void sellAll(Inventory inv, Player player)
 	{
-		// add permissions to check additions to sellPricemodifier
 		HashMap<Material, Integer> itemAmount = new HashMap<Material, Integer>();
 		HashMap<Material, Double> itemTotal = new HashMap<Material, Double>();
 		
@@ -73,17 +72,17 @@ public class SellAllPlayer
         				if(itemAmountSold.get(material) + itemAmount.get(material) > itemSellCap.get(material) || itemAmountSold.get(material) + items.getAmount() > itemSellCap.get(material))
         				{
         					int difference = (itemAmountSold.get(material) + items.getAmount()) - itemSellCap.get(material);
-        					itemAmount.replace(material, itemAmount.get(material) + (items.getAmount() - difference));
-        					itemAmountSold.replace(material, itemAmountSold.get(material) + (items.getAmount() - difference));
-        					itemTotal.replace(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+        					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
+        					itemAmountSold.put(material, itemAmountSold.get(material) + (items.getAmount() - difference));
+        					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
         					inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
         				}
         				else
         				{
-        					itemAmount.replace(material, itemAmount.get(material) + items.getAmount());
-        					itemAmountSold.replace(material, itemAmountSold.get(material) + items.getAmount());
-        					itemTotal.replace(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+        					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
+        					itemAmountSold.put(material, itemAmountSold.get(material) + items.getAmount());
+        					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
                 			inv.removeItem(new ItemStack(material, items.getAmount()));
         				}

@@ -31,6 +31,7 @@ public class SellAllManager extends JavaPlugin implements Listener
 {
 	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
+	private static HashMap<Double, String> permissions = new HashMap<Double, String>();
 	private YamlConfiguration cfg;
 	
 	public void onEnable() 
