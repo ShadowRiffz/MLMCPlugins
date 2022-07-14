@@ -6,5 +6,5 @@ item-cap:
    DIAMOND: 100
    EMERALD: 50
 multipliers:
-    rank.ruby: 1.2
-    rank.sapphire: 1.5
+   rank.ruby: 1.2
+   rank.sapphire: 1.5

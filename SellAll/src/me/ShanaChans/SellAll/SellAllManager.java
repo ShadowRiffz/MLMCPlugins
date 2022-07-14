@@ -80,7 +80,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			if (Material.valueOf(key) == null) {
 				Bukkit.getLogger().warning("Item failed to load: " + key);
 			}
-			else {
+			else 
+			{
 				itemPrices.put(Material.valueOf(key), sec.getDouble(key));
 			}
 		}
