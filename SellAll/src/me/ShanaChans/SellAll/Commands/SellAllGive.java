@@ -25,9 +25,15 @@ public class SellAllGive implements Subcommand
 	@Override
 	public String getPermission() 
 	{
-		return null;
+		return "sellall.give";
 	}
 
+	@Override
+	public boolean isHidden()
+	{
+		return true;
+	}
+	
 	@Override
 	public SubcommandRunner getRunner() 
 	{

@@ -8,14 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,11 +33,12 @@ import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.util.SchedulerAPI;
 
 public class SellAllManager extends JavaPlugin implements Listener, IOComponent {
 	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
+	private static HashMap<Material, Integer> itemCaps = new HashMap<Material, Integer>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
-	private static HashMap<Double, String> permissions = new HashMap<Double, String>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
 	private YamlConfiguration cfg;
 
@@ -49,6 +47,11 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		getServer().getPluginManager().registerEvents(this, this);
 		initCommands();
 		loadConfigs();
+		SchedulerAPI.schedule(10, 0, new Runnable() {
+		    public void run() {
+		        resetPlayers();
+		    }
+		});
 		NeoCore.registerIOComponent(this, this);
 	}
 
@@ -76,31 +79,54 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 
 		this.cfg = YamlConfiguration.loadConfiguration(cfg);
-		ConfigurationSection sec = this.cfg.getConfigurationSection("pricelist");
+		ConfigurationSection sec = this.cfg.getConfigurationSection("price-list");
 
 		for (String key : sec.getKeys(false)) {
 			if (Material.valueOf(key) == null) {
 				Bukkit.getLogger().warning("Item failed to load: " + key);
 			}
-			else {
+			else 
+			{
 				itemPrices.put(Material.valueOf(key), sec.getDouble(key));
 			}
 		}
-
+		
+		sec = this.cfg.getConfigurationSection("item-cap");
+		
+		for(Material mat : itemPrices.keySet())
+		{
+			if(sec.contains(mat.name()))
+			{
+				itemCaps.put(mat, sec.getInt(mat.name()));
+			}
+			else
+			{
+				itemCaps.put(mat, 100);
+			}
+		}
+		
+		sec = this.cfg.getConfigurationSection("multipliers");
+		
+		for (String key : sec.getKeys(false)) 
+		{
+			key.replaceAll("-", ".");
+			permMultipliers.put(sec.getDouble(key), key);
+		}
 	}
 
 	@EventHandler
-	public void rightClick(PlayerInteractEvent e) {
+	public void rightClick(PlayerInteractEvent e) 
+	{
 		Player player = e.getPlayer();
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND
-				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) {
+				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) 
+		{
 			NBTItem heldItem = new NBTItem(e.getItem());
 			if (heldItem.hasKey("sellStick")) {
 				e.setCancelled(true);
 				Chest chest = (Chest) e.getClickedBlock().getState();
 				Inventory inv = chest.getInventory();
 				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player);
-
 			}
 		}
 	}
@@ -113,30 +139,43 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		return itemPrices;
 	}
 	
-	public static double getMultiplier(Player p) {
+	public static HashMap<Material, Integer> getItemCaps() {
+		return itemCaps;
+	}
+	
+	public static double getMultiplier(Player p) 
+	{
 		Iterator<Double> iter = permMultipliers.descendingKeySet().iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext()) 
+		{
 			double mult = iter.next();
 			String perm = permMultipliers.get(mult);
-			if (p.hasPermission(perm)) {
-				return mult;
+			if (p.hasPermission(perm)) 
+			{
+				return mult;	
 			}
 		}
-		return 1;
+		return 1.0;
 	}
-
-    @EventHandler
-    public void join(PlayerJoinEvent e) 
+    
+    public void resetPlayers()
     {
-       if(!e.getPlayer().hasPlayedBefore() || !players.containsKey(e.getPlayer().getUniqueId()))
-       {
-    	   players.put(e.getPlayer().getUniqueId(), new SellAllPlayer(new HashMap<Material, Integer>()));
-       }
+    	Statement stmt = NeoCore.getStatement();
+    	
+    	try {
+			stmt.executeUpdate("DELETE FROM sellall_players;");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    	for(UUID uuid : players.keySet())
+    	{
+    		players.get(uuid).resetSold();
+    	}
     }
 
 	@Override
-	public void cleanup(Statement arg0, Statement arg1) {
-	}
+	public void cleanup(Statement arg0, Statement arg1) {}
 
 	@Override
 	public String getKey() {
@@ -159,7 +198,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 					sold.put(key, value);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			players.put(p.getUniqueId(), new SellAllPlayer(sold));
@@ -177,7 +215,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				}
 				insert.executeBatch();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

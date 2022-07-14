@@ -26,7 +26,13 @@ public class SellAllSet implements Subcommand
 	@Override
 	public String getPermission() 
 	{
-		return null;
+		return "sellall.set";
+	}
+	
+	@Override
+	public boolean isHidden()
+	{
+		return true;
 	}
 
 	@Override
