@@ -1,6 +1,5 @@
 package me.neoblade298.neocore.util;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,7 +13,10 @@ public class SchedulerAPI {
 	private static ArrayList<HashMap<Integer, ArrayList<OffsetRunnable>>> schedule = new ArrayList<HashMap<Integer, ArrayList<OffsetRunnable>>>(3);
 	private static HashMap<ScheduleInterval, ArrayList<Runnable>> repeaters = new HashMap<ScheduleInterval, ArrayList<Runnable>>();
 	
+	private static final int MINUTES_PER_SEGMENT = 15;
+	
 	public static void initialize() {
+		System.out.println("Initializing scheduler");
 		for (int i = 0; i < 2; i++) {
 			schedule.add(new HashMap<Integer, ArrayList<OffsetRunnable>>());
 		}
@@ -29,11 +31,12 @@ public class SchedulerAPI {
 	}
 	
 	private static void initialScheduledRun() {
+		System.out.println("Scheduling initial timekeeper");
 		Calendar inst = Calendar.getInstance();
 		int hour = inst.get(Calendar.HOUR_OF_DAY);
 		int minute = inst.get(Calendar.MINUTE);
 		int timeKey = (hour * 100) + minute;
-		long ticksPast = TimeUtil.getTicksPastPreviousSegment(15);
+		long ticksPast = TimeUtil.getTicksPastPreviousSegment(1);
 		
 		// Scheduled items first
 		HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(0);
@@ -57,13 +60,14 @@ public class SchedulerAPI {
 	
 	// Every 15 minutes
 	private static void scheduleTimekeeper() {
-		System.out.println("Scheduling new timekeeper in ticks: " + TimeUtil.getTicksToNextSegment(15));
+		long ticks = TimeUtil.getTicksToNextSegment(MINUTES_PER_SEGMENT);
+		System.out.println("Scheduling new timekeeper in ticks: " + ticks);
 		new BukkitRunnable() {
 			public void run() {
 				runScheduledItems();
 				scheduleTimekeeper();
 			}
-		}.runTaskLater(NeoCore.inst(), TimeUtil.getTicksToNextSegment(15));
+		}.runTaskLater(NeoCore.inst(), ticks);
 	}
 	
 	private static void runScheduledItems() {
@@ -123,8 +127,6 @@ public class SchedulerAPI {
 			ArrayList<OffsetRunnable> runnables = day.getOrDefault(time, new ArrayList<OffsetRunnable>());
 			runnables.add(new OffsetRunnable(runnable, offset));
 			day.putIfAbsent(time, runnables);
-			System.out.println("Scheduled for " + diff + " at time key " + time + ":");
-			runnable.run();
 			return true;
 		}
 		return false;
