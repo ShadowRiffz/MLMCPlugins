@@ -26,4 +26,10 @@ public class CompletedQuest {
 	public long getTimestamp() {
 		return timestamp;
 	}
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 }

@@ -29,7 +29,7 @@ public class ReachLocationObjective extends Objective {
 		loc = new Location(w, x, y, z);
 		radiusSq = cfg.getDouble("radius", 5);
 		radiusSq *= radiusSq;
-		display = cfg.getString("display", "Location").replaceAll("_", " ");
+		display = cfg.getLine();
 	}
 
 	@Override
