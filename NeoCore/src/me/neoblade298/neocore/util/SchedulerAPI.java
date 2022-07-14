@@ -16,7 +16,6 @@ public class SchedulerAPI {
 	private static final int MINUTES_PER_SEGMENT = 15;
 	
 	public static void initialize() {
-		System.out.println("Initializing scheduler");
 		for (int i = 0; i < 2; i++) {
 			schedule.add(new HashMap<Integer, ArrayList<OffsetRunnable>>());
 		}
@@ -26,42 +25,11 @@ public class SchedulerAPI {
 		}
 
 		scheduleTimekeeper();
-		initialScheduledRun();
-		// Run anything that's meant to be scheduled within 15 minutes of startup
-	}
-	
-	private static void initialScheduledRun() {
-		System.out.println("Scheduling initial timekeeper");
-		Calendar inst = Calendar.getInstance();
-		int hour = inst.get(Calendar.HOUR_OF_DAY);
-		int minute = inst.get(Calendar.MINUTE);
-		int timeKey = (hour * 100) + minute;
-		long ticksPast = TimeUtil.getTicksPastPreviousSegment(1);
-		
-		// Scheduled items first
-		HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(0);
-		if (day != null) {
-			if (day.containsKey(timeKey)) {
-				for (OffsetRunnable runnable : day.get(timeKey)) {
-					long newOffset = runnable.offset - ticksPast;
-					
-					// Only run scheduled items that are after the current offset from the segment
-					if (runnable.offset >= 0) {
-						new BukkitRunnable() {
-							public void run() {
-								runnable.runnable.run();
-							}
-						}.runTaskLater(NeoCore.inst(), newOffset * 20);
-					}
-				}
-			}
-		}
 	}
 	
 	// Every 15 minutes
 	private static void scheduleTimekeeper() {
 		long ticks = TimeUtil.getTicksToNextSegment(MINUTES_PER_SEGMENT);
-		System.out.println("Scheduling new timekeeper in ticks: " + ticks);
 		new BukkitRunnable() {
 			public void run() {
 				runScheduledItems();
@@ -77,7 +45,6 @@ public class SchedulerAPI {
 		int minute = inst.get(Calendar.MINUTE);
 		minute -= minute % 15;
 		int timeKey = (hour * 100) + minute;
-		System.out.println("Running scheduled items for diff: " + diff + ", timekey: " + timeKey);
 		
 		// Scheduled items first
 		HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(diff);
@@ -118,16 +85,34 @@ public class SchedulerAPI {
 	
 	private static boolean schedule(int date, int hour, int minute, int second, Runnable runnable) {
 		int diff = date - startupTime;
+		runnable.run();
 		if (diff >= 0 && diff <= 2) {
-			HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(diff);
 			int scheduledMinute = minute - (minute % 15); // Round to previous 15
 			int offset = ((minute % 15) * 60) + second; // Offset is number of seconds after the scheduled 15 minute interval
 			int time = (hour * 100) + (scheduledMinute);
-			
-			ArrayList<OffsetRunnable> runnables = day.getOrDefault(time, new ArrayList<OffsetRunnable>());
-			runnables.add(new OffsetRunnable(runnable, offset));
-			day.putIfAbsent(time, runnables);
-			return true;
+	
+			// If the schedule time is within 15 minutes from now, just make it a regular bukkitrunnable
+			if (diff == 0 && time == getLastTimeKey()) {
+				Calendar now = Calendar.getInstance();
+				Calendar scheduledTime = Calendar.getInstance();
+				scheduledTime.set(Calendar.MINUTE, minute);
+				scheduledTime.set(Calendar.SECOND, second);
+				long timeToSchedule = scheduledTime.getTimeInMillis() - now.getTimeInMillis();
+				new BukkitRunnable() {
+					public void run() {
+						runnable.run();
+					}
+				}.runTaskLater(NeoCore.inst(), timeToSchedule / 50);
+			}
+			// If schedule time is > 15 minutes from now, put it in the schedule
+			else {
+				HashMap<Integer, ArrayList<OffsetRunnable>> day = schedule.get(diff);
+				
+				ArrayList<OffsetRunnable> runnables = day.getOrDefault(time, new ArrayList<OffsetRunnable>());
+				runnables.add(new OffsetRunnable(runnable, offset));
+				day.putIfAbsent(time, runnables);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -167,5 +152,12 @@ public class SchedulerAPI {
 			this.runnable = runnable;
 			this.offset = offset;
 		}
+	}
+	
+	private static int getLastTimeKey() {
+		Calendar c = Calendar.getInstance();
+		int minute = c.get(Calendar.MINUTE);
+		minute -= minute % MINUTES_PER_SEGMENT;
+		return (c.get(Calendar.HOUR) * 100) + minute;
 	}
 }

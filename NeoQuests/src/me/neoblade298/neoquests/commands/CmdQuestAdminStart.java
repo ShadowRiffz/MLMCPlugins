@@ -52,5 +52,4 @@ public class CmdQuestAdminStart implements Subcommand {
 	public CommandArguments getArgs() {
 		return args;
 	}
-
 }

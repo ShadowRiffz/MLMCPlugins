@@ -81,44 +81,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 			}
 		}.runTask(this);
 		
-		
-		// Testing SchedulerAPI
 		SchedulerAPI.initialize();
-		SchedulerAPI.scheduleRepeating(ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
-			public void run() {
-				System.out.println("TEST 15 minute interval");
-			}
-		});
-		SchedulerAPI.scheduleRepeating(ScheduleInterval.HALF_HOUR, new Runnable() {
-			public void run() {
-				System.out.println("TEST 30 minute interval");
-			}
-		});
-		SchedulerAPI.scheduleRepeating(ScheduleInterval.HOUR, new Runnable() {
-			public void run() {
-				System.out.println("TEST 1 hour interval");
-			}
-		});
-		SchedulerAPI.schedule(20, 55, new Runnable() {
-			public void run() {
-				System.out.println("TEST 8:55 pm");
-			}
-		});
-		SchedulerAPI.schedule(20, 57, 30, new Runnable() {
-			public void run() {
-				System.out.println("TEST 8:57 pm 30 seconds");
-			}
-		});
-		SchedulerAPI.schedule(20, 57, 5, new Runnable() {
-			public void run() {
-				System.out.println("TEST 8:57 pm 5 seconds");
-			}
-		});
-		SchedulerAPI.schedule(2022, 13, 7, 20, 59, 8, new Runnable() {
-			public void run() {
-				System.out.println("TEST 8:59 pm 8 seconds");
-			}
-		});
 	}
 
 	private void initCommands() {

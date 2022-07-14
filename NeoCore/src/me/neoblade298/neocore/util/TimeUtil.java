@@ -24,8 +24,8 @@ public class TimeUtil {
 		}
 
 		// Get Duration
-		long between = (Duration.between(start, end).toMillis() / 50) + 1; // Add 1 because truncate will round it down 1 tick
-		return between <= 1 ? segmentLength * 60 * 20 : between; // If between is 0, get the next segment
+		long between = (Duration.between(start, end).toMillis() / 50) + 20; // Add 20 because truncate will round it down 1 tick
+		return between <= 20 ? segmentLength * 60 * 20 : between; // If between is 0, get the next segment
 	}
 
 	public static long getTicksPastPreviousSegment(int segmentLength) {
@@ -40,7 +40,7 @@ public class TimeUtil {
 		}
 
 		// Get Duration
-		long between = (Duration.between(start, end).toMillis() / 50) + 1;
-		return between <= 1 ? segmentLength * 60 * 20 : between; // If between is 0, get the previous segment
+		long between = (Duration.between(start, end).toMillis() / 50) + 20;
+		return between <= 20 ? segmentLength * 60 * 20 : between; // If between is 0, get the previous segment
 	}
 }
