@@ -111,7 +111,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	public void rightClick(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND
-				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) {
+				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) 
+		{
 			NBTItem heldItem = new NBTItem(e.getItem());
 			if (heldItem.hasKey("sellStick")) {
 				e.setCancelled(true);
