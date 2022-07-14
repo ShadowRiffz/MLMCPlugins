@@ -1,15 +1,20 @@
 package me.ShanaChans.SellAll.Commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.ShanaChans.SellAll.SellAllManager;
+import me.neoblade298.neocore.commands.CommandArgument;
+import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
 public class SellAllCap implements Subcommand
 {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false)));
 
 	@Override
 	public String getDescription() 
@@ -24,6 +29,12 @@ public class SellAllCap implements Subcommand
 	}
 
 	@Override
+	public CommandArguments getArgs() 
+	{
+		return args;
+	}
+	
+	@Override
 	public String getPermission() 
 	{
 		return null;
@@ -33,6 +44,12 @@ public class SellAllCap implements Subcommand
 	public SubcommandRunner getRunner() 
 	{
 		return SubcommandRunner.PLAYER_ONLY;
+	}
+	
+	@Override
+	public String[] getAliases() 
+	{
+		return new String[] {"cap"};
 	}
 
 	@Override

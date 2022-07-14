@@ -16,7 +16,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class SellAllPlayer 
 {
 	private HashMap<Material, Integer> itemSellCap = new HashMap<Material, Integer>();
-	private HashMap<Material, Integer> itemAmountSold;
+	private HashMap<Material, Integer> itemAmountSold = new HashMap<Material, Integer>();
 	
 	public SellAllPlayer(HashMap<Material, Integer> itemAmountSold)
 	{
@@ -46,11 +46,12 @@ public class SellAllPlayer
     		{
     			Material material = items.getType();
     			double sellPriceModifier = SellAllManager.getMultiplier(player);
+    			
         		if(SellAllManager.getItemPrices().containsKey(material))
         		{
         			int sold = itemAmountSold.getOrDefault(material, 0);
-        			int cap = itemSellCap.getOrDefault(material, SellAllManager.getItemCaps().get(material));
-        			if(sold < cap)
+        			itemSellCap.put(material, itemSellCap.getOrDefault(material, SellAllManager.getItemCaps().get(material)));
+        			if(sold < itemSellCap.get(material))
         			{
         				if(!itemAmount.containsKey(material))
     					{
@@ -58,9 +59,9 @@ public class SellAllPlayer
     						itemTotal.put(material, 0.00);
     					}
         				
-        				if(sold + itemAmount.get(material) > cap || sold + items.getAmount() > cap)
+        				if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material))
         				{
-        					int difference = (sold + items.getAmount()) - cap;
+        					int difference = (sold + items.getAmount()) - itemSellCap.get(material);
         					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
         					itemAmountSold.put(material, sold + (items.getAmount() - difference));
         					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
@@ -75,6 +76,7 @@ public class SellAllPlayer
         					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
                 			inv.removeItem(new ItemStack(material, items.getAmount()));
         				}
+        				System.out.println("TotalCost" + totalCost);
         			}
         		}
     		}
@@ -86,7 +88,7 @@ public class SellAllPlayer
     	}
     	else
     	{
-    		ComponentBuilder builder = new ComponentBuilder("ยง6[Sell Log]");
+    		ComponentBuilder builder = new ComponentBuilder("ง6[Sell Log]");
     		String text = "";
     		for(Material mat : itemAmount.keySet())
     		{
@@ -95,7 +97,7 @@ public class SellAllPlayer
     		text = text.concat("ง7TOTAL - งe" + totalCost + "g");
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall limit"));
     		player.spigot().sendMessage(builder.create());
-    		//NeoCore.getEconomy().depositPlayer(player, totalCost);
+    		NeoCore.getEconomy().depositPlayer(player, totalCost);
     	}
     }
 	
@@ -122,9 +124,9 @@ public class SellAllPlayer
 	{
 		if(itemAmountSold.containsKey(mat))
 		{
-			if(-1 < newAmount && newAmount < (itemSellCap.get(mat) + 1))
+			if(-1 < newAmount && newAmount < (itemSellCap.getOrDefault(mat, SellAllManager.getItemCaps().get(mat)) + 1))
 			{
-				itemAmountSold.replace(mat, newAmount);
+				itemAmountSold.put(mat, newAmount);
 				player.sendMessage("ง6Changed sold amount!");
 			}
 		}
@@ -132,5 +134,13 @@ public class SellAllPlayer
 
 	public HashMap<Material, Integer> getItemAmountSold() {
 		return itemAmountSold;
+	}
+	
+	public void resetSold()
+	{
+		for(Material mat : itemAmountSold.keySet())
+		{
+			itemAmountSold.put(mat, 0);
+		}
 	}
 }

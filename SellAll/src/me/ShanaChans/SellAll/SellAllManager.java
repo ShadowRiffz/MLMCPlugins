@@ -21,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +33,7 @@ import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.util.SchedulerAPI;
 
 public class SellAllManager extends JavaPlugin implements Listener, IOComponent {
 	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
@@ -47,7 +47,12 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		getServer().getPluginManager().registerEvents(this, this);
 		initCommands();
 		loadConfigs();
-		//NeoCore.registerIOComponent(this, this);
+		SchedulerAPI.schedule(10, 0, new Runnable() {
+		    public void run() {
+		        resetPlayers();
+		    }
+		});
+		NeoCore.registerIOComponent(this, this);
 	}
 
 	public void onDisable() {
@@ -104,12 +109,14 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		
 		for (String key : sec.getKeys(false)) 
 		{
+			key.replaceAll("-", ".");
 			permMultipliers.put(sec.getDouble(key), key);
 		}
 	}
 
 	@EventHandler
-	public void rightClick(PlayerInteractEvent e) {
+	public void rightClick(PlayerInteractEvent e) 
+	{
 		Player player = e.getPlayer();
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND
 				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) 
@@ -120,7 +127,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				Chest chest = (Chest) e.getClickedBlock().getState();
 				Inventory inv = chest.getInventory();
 				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player);
-
 			}
 		}
 	}
@@ -149,16 +155,23 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				return mult;	
 			}
 		}
-		return 1;
+		return 1.0;
 	}
-
-    @EventHandler
-    public void join(PlayerJoinEvent e) 
+    
+    public void resetPlayers()
     {
-       if(!e.getPlayer().hasPlayedBefore() || !players.containsKey(e.getPlayer().getUniqueId()))
-       {
-    	   players.put(e.getPlayer().getUniqueId(), new SellAllPlayer(new HashMap<Material, Integer>()));
-       }
+    	Statement stmt = NeoCore.getStatement();
+    	
+    	try {
+			stmt.executeUpdate("DELETE FROM sellall_players;");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    	for(UUID uuid : players.keySet())
+    	{
+    		players.get(uuid).resetSold();
+    	}
     }
 
 	@Override
