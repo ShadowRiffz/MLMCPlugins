@@ -72,7 +72,7 @@ public class QuestInstance {
 		}
 		else if (set.getNext() == -3) {
 			if (stage + 1 < quest.getStages().size()) {
-				stage = stage + 1;
+				setStage(++stage);
 			}
 			else {
 				endQuest(set, true, stage, ticks);
@@ -80,10 +80,11 @@ public class QuestInstance {
 			}
 		}
 		else {
-			stage = set.getNext();
+			setStage(set.getNext());
 		}
-		
-		// Setup new stage
+	}
+	
+	public void setStage(int stage) {
 		quest.getStages().get(stage).runActions(q.getPlayer());
 		setupInstances(true);
 		displayObjectives(q.getPlayer());
@@ -142,7 +143,7 @@ public class QuestInstance {
 						}
 					}
 				}
-			}.runTaskLater(NeoQuests.inst(), 20L);
+			}.runTaskLater(NeoQuests.inst(), ticks);
 		}
 		else {
 			q.cancelQuest(quest.getKey());

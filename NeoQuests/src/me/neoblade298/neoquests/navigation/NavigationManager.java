@@ -157,7 +157,7 @@ public class NavigationManager implements Manager {
 		}
 
 		if (activePathways.containsKey(p)) {
-			activePathways.remove(p).cancel("started a new pathway.");
+			activePathways.get(p).cancel("started a new pathway.");
 		}
 		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to &6" + endPoint.getDisplay());
 		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
@@ -165,12 +165,9 @@ public class NavigationManager implements Manager {
 		return true;
 	}
 	
-	public static void stopNavigation(Player p, boolean cancelled) {
+	public static void stopNavigation(Player p) {
 		if (activePathways.containsKey(p)) {
-			PathwayInstance pwi = activePathways.remove(p);
-			if (cancelled) {
-				pwi.cancel("cancelled by player.");
-			}
+			activePathways.get(p).cancel("cancelled by player");
 			return;
 		}
 		Util.msg(p, "&cYou're not currently navigating anywhere!");
@@ -370,6 +367,10 @@ public class NavigationManager implements Manager {
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(ep.getFile());
 		cfg.set(ep.getKey(), null);
 		cfg.save(ep.getFile());
+	}
+	
+	public static void removeActivePathway(Player p) {
+		activePathways.remove(p);
 	}
 	
 	public static void clearUnusedPoints(CommandSender s) {

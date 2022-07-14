@@ -286,6 +286,10 @@ public class QuestsManager implements IOComponent, Manager {
 		getQuester(p).startQuest(q, ignoreConditions);
 	}
 	
+	public static void setStage(Player p, String quest, int stage) {
+		getQuester(p).setStage(quest, stage);
+	}
+	
 	public static Collection<Quester> getAllAccounts(Player p) {
 		return questers.get(p.getUniqueId()).values();
 	}

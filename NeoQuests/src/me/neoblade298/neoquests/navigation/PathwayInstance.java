@@ -72,11 +72,13 @@ public class PathwayInstance {
 	public void stop() {
 		task.cancel();
 		Util.msg(p, "Navigation from &6" + start.getDisplay() + " &7to &6" + end.getDisplay() + " &7was successful!");
+		NavigationManager.removeActivePathway(p);
 	}
 	
 	public void cancel(String reason) {
 		task.cancel();
-		Util.msg(p, "Navigation from &6" + start.getDisplay() + "&7 to &6" + end.getDisplay() + "&7 was cancelled, " + reason);
+		Util.msg(p, "Navigation from &6" + start.getDisplay() + "&7 to &6" + end.getDisplay() + "&7 was cancelled: " + reason);
+		NavigationManager.removeActivePathway(p);
 	}
 	
 	public void show(Player p) {

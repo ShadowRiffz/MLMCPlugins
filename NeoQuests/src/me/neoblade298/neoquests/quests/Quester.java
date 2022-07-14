@@ -55,7 +55,7 @@ public class Quester {
 					public void run() {
 						ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 					}
-				}.runTaskLater(NeoQuests.inst(), 100L);
+				}.runTaskLater(NeoQuests.inst(), 160L);
 			}
 		}
 	}
@@ -245,5 +245,9 @@ public class Quester {
 			qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
 		}
 		QuestsManager.initializeOrGetQuester(p).startListening();
+	}
+	
+	public void setStage(String key, int stage) {
+		activeQuests.get(key.toUpperCase()).setStage(stage);
 	}
 }
