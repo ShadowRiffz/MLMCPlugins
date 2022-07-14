@@ -61,7 +61,7 @@ public class DeliverItemsObjective extends Objective {
 					}
 					remaining -= clone.getAmount();
 					inv.removeItem(clone);
-					o.addCount(remaining);
+					o.addCount(clone.getAmount());
 					if (remaining <= 0) {
 						return true;
 					}

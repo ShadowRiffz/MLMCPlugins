@@ -19,7 +19,6 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ISkillMechanic;
 import io.lumine.mythic.api.skills.conditions.ISkillCondition;
 import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
-import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicDropLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
@@ -68,8 +67,6 @@ public class MythicExt extends JavaPlugin implements Listener {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		
-		MythicBukkit.inst().getMobManager().getActiveMob(UUID.fromString("test")).get().getBar("test").set
 	}
 
 	private boolean setupEconomy() {

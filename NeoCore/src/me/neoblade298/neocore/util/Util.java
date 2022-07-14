@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.SortedMultiset;
@@ -51,5 +54,18 @@ public class Util {
 			}
 		}
 		return descending ? sorted.descendingMultiset() : sorted;
+	}
+	
+	public static Location stringToLoc(String loc) {
+		String args[] = loc.split(" ");
+		World w = Bukkit.getWorld(args[0]);
+		double x = Double.parseDouble(args[1]);
+		double y = Double.parseDouble(args[2]);
+		double z = Double.parseDouble(args[3]);
+		return new Location(w, x, y, z);
+	}
+	
+	public static String locToString(Location loc) {
+		return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ();
 	}
 }

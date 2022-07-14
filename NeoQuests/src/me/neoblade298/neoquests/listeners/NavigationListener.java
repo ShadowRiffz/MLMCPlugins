@@ -23,7 +23,7 @@ public class NavigationListener implements Listener {
 		Player p = e.getPlayer();
 		PathwayEditor editor = NavigationManager.getEditor(p);
 		if (editor == null) return;
-		if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
+		if (e.getHand() != null && e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (e.getItem() == null || !e.getItem().getType().equals(Material.STICK)) return;
 		
 		e.setCancelled(true);

@@ -1,9 +1,6 @@
 package me.neoblade298.neopvp.generators;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -14,12 +11,14 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
+import me.neoblade298.neocore.util.TimeUtil;
 import me.neoblade298.neopvp.NeoPvp;
 
 public class GeneratorManager implements Manager {
 	private static HashMap<String, Generator> generators = new HashMap<String, Generator>();
 	private static FileLoader generatorLoader;
-	private static BukkitTask task;
+	private static BukkitTask tasks[] = new BukkitTask[3];
+	private static final int MINUTES_PER_GENERATION = 30;
 	
 	static {
 		generatorLoader = (cfg, file) -> {
@@ -44,11 +43,22 @@ public class GeneratorManager implements Manager {
 	}
 	
 	public GeneratorManager() {
-		task = new BukkitRunnable() {
+		tasks[0] = new BukkitRunnable() {
 			public void run() {
-				for (String key)
+				for (Generator gen : generators.values()) {
+					gen.spawnItem();
+				}
 			}
-		}
+		}.runTaskTimer(NeoPvp.inst(), TimeUtil.getTicksToNextSegment(MINUTES_PER_GENERATION), 1000 * 60 * MINUTES_PER_GENERATION);
+		
+
+		tasks[0] = new BukkitRunnable() {
+			public void run() {
+				for (Generator gen : generators.values()) {
+					gen.spawnItem();
+				}
+			}
+		}.runTaskTimer(NeoPvp.inst(), TimeUtil.getTicksToNextSegment(MINUTES_PER_GENERATION), 1000 * 60 * MINUTES_PER_GENERATION);
 		
 		reload();
 	}
@@ -68,17 +78,5 @@ public class GeneratorManager implements Manager {
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static long getNextHour() {
-		LocalDateTime start = LocalDateTime.now();
-		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-		return Duration.between(start, end).toMillis();
-	}
-	
-	public static long getNextHalfHour() {
-		LocalDateTime start = LocalDateTime.now();
-		LocalDateTime end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-		return Duration.between(start, end).toMillis();
 	}
 }

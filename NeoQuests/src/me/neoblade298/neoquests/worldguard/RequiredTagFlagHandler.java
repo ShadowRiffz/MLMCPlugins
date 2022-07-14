@@ -33,17 +33,18 @@ public class RequiredTagFlagHandler extends FlagValueChangeHandler<String>{
 
     @Override
     public boolean onCrossBoundary(LocalPlayer player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> entered, Set<ProtectedRegion> exited, MoveType moveType) {
+        if (entered.isEmpty() && exited.isEmpty()
+                && from.getExtent().equals(to.getExtent())) { // sets don't include global regions (we don't need to check those for this)
+            return true; // no changes to flags if regions didn't change
+        }
+        
     	String req = toSet.queryValue(player, NeoQuests.REQ_TAG_FLAG);
         if (req == null) return true;
         
         boolean bypass = getSession().getManager().hasBypass(player, (World) to.getExtent());
         boolean allowed = NeoQuests.getPlayerTags(Bukkit.getPlayer(player.getUniqueId())).exists(req, player.getUniqueId());
 
-        if (bypass && !allowed && moveType.isCancellable()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(bypass && !allowed && moveType.isCancellable());
     }
 
 	@Override

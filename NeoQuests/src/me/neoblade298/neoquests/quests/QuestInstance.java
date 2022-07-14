@@ -23,10 +23,13 @@ public class QuestInstance {
 	private int stage;
 	private LinkedHashMap<String, ObjectiveSetInstance> sets;
 	
+	// Used only when starting a new quest
 	public QuestInstance(Quester quester, Quest quest) {
 		this(quester, quest, 0);
+		this.getQuest().getStages().get(0).runActions(q.getPlayer());
 	}
 	
+	// Used only on loading in
 	public QuestInstance(Quester quester, Quest quest, int stage) {
 		this.q = quester;
 		this.quest = quest;
@@ -63,17 +66,24 @@ public class QuestInstance {
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		set.finalizeObjectives();
 		if (set.getNext() == -1 || set.getNext() == -2) {
-			endQuest(set, set.getNext() == -1, stage);
+			endQuest(set, true, stage);
 			return;
 		}
 		else if (set.getNext() == -3) {
-			stage = stage + 1 >= quest.getStages().size() ? stage : stage + 1; // Next stage if one exists
+			if (stage + 1 < quest.getStages().size()) {
+				stage = stage + 1;
+			}
+			else {
+				endQuest(set, true, stage);
+				return;
+			}
 		}
 		else {
 			stage = set.getNext();
 		}
 		
 		// Setup new stage
+		quest.getStages().get(stage).runActions(q.getPlayer());
 		setupInstances(true);
 		displayObjectives(q.getPlayer());
 	}

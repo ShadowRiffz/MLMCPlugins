@@ -27,6 +27,8 @@ import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.player.*;
+import me.neoblade298.neocore.util.ScheduleInterval;
+import me.neoblade298.neocore.util.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
@@ -78,6 +80,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 				Bukkit.getPluginManager().callEvent(new NeoCoreInitEvent());
 			}
 		}.runTask(this);
+		
+		SchedulerAPI.initialize();
 	}
 
 	private void initCommands() {

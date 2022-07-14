@@ -37,6 +37,7 @@ public class CopyQuestConditionsCondition extends Condition {
 		if (q == null) {
 			Bukkit.getLogger().warning("[NeoQuests] CopyQuestCondition failed to find quest " + questname);
 			NeoQuests.showWarning("CopyQuestCondition failed to find quest " + questname);
+			return false;
 		}
 		return ConditionManager.getBlockingCondition(p, q.getConditions()) == null;
 	}

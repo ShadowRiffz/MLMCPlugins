@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ public class NavigationManager implements Manager {
 	private static HashMap<Player, PathwayInstance> activePathways = new HashMap<Player, PathwayInstance>();
 	private static HashMap<Chunk, ArrayList<Point>> pointMap = new HashMap<Chunk, ArrayList<Point>>();
 	private static TreeSet<Point> points = new TreeSet<Point>();
+	private static ArrayList<FuturePointSet> toConvert = new ArrayList<FuturePointSet>();
 	private static HashMap<String, EndPoint> endpoints = new HashMap<String, EndPoint>();
 	private static HashMap<Player, PathwayEditor> pathwayEditors = new HashMap<Player, PathwayEditor>();
 	private static FileLoader pointLoader, endpointsLoader;
@@ -53,7 +55,7 @@ public class NavigationManager implements Manager {
 				try {
 					if (endpoints.containsKey(key.toUpperCase())) {
 						NeoQuests.showWarning("Duplicate endpoint " + key + " in file " + file.getPath() + ", " +
-								"the loaded pathway with this key is in " + endpoints.get(key).getFile().getAbsolutePath());
+								"the loaded pathway with this key is in " + endpoints.get(key.toUpperCase()).getFile().getPath());
 						continue;
 					}
 					ConfigurationSection sec = cfg.getConfigurationSection(key);
@@ -94,12 +96,17 @@ public class NavigationManager implements Manager {
 			points.clear();
 			endpoints.clear();
 			pointMap.clear();
+			
 			for (PathwayInstance pi : activePathways.values()) {
 				pi.cancel("navigation reloaded.");
 			}
 			activePathways.clear();
+			
+			// Load in files
 			NeoCore.loadFiles(new File(data, "points.yml"), pointLoader);
 			NeoCore.loadFiles(new File(data, "endpoints"), endpointsLoader);
+			
+			// Loads in pathways, but does not load future point sets
 			for (EndPoint ep : endpoints.values()) {
 				try {
 					ep.loadPathways();
@@ -108,10 +115,15 @@ public class NavigationManager implements Manager {
 				}
 			}
 			
-			for (Point point : points) {
-				if (!point.isConnected()) {
-					NeoQuests.showWarning("The following point has no connections: " + point.getLocation());
-				}
+			// Load in future point sets
+			for (FuturePointSet set : toConvert) {
+				set.convert();
+			}
+			toConvert.clear();
+			
+			// Finish loading pathways by adding the future point sets in
+			for (EndPoint ep : endpoints.values()) {
+				ep.addFuturePathways();
 			}
 		}
 		catch (Exception e) {
@@ -137,8 +149,6 @@ public class NavigationManager implements Manager {
 		}
 		EndPoint startPoint = endpoints.get(start.toUpperCase());
 		EndPoint endPoint = endpoints.get(end.toUpperCase());
-		startPoint.convertIfNeeded();
-		endPoint.convertIfNeeded();
 		if (!endPoint.getStartPoints().containsKey(startPoint)) {
 			Bukkit.getLogger().warning("[NeoQuests] Could not start pathway from " + start + " to " + end + " for player " + p.getName() +
 					", " + start + " doesn't connect to " + end + "!");
@@ -149,7 +159,7 @@ public class NavigationManager implements Manager {
 		if (activePathways.containsKey(p)) {
 			activePathways.remove(p).cancel("started a new pathway.");
 		}
-		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to " + endPoint.getDisplay());
+		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to &6" + endPoint.getDisplay());
 		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
 		activePathways.put(p, pi);
 		return true;
@@ -338,15 +348,17 @@ public class NavigationManager implements Manager {
 	}
 	
 	public static void saveEndpoint(EndPoint ep) {
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(PathwayEditor.endpointFile);
-		Point point = ep.getPoint();
-
-		ep.setFile(PathwayEditor.endpointFile);
-		ConfigurationSection sec = cfg.createSection(ep.getKey());
-		sec.set("display", ep.getDisplay());
-		sec.set("location", point.serializeLocation());
-		sec.set("world", point.getLocation().getWorld().getName());
 		try {
+			savePoints();
+			
+			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(PathwayEditor.endpointFile);
+			Point point = ep.getPoint();
+	
+			ep.setFile(PathwayEditor.endpointFile);
+			ConfigurationSection sec = cfg.createSection(ep.getKey());
+			sec.set("display", ep.getDisplay());
+			sec.set("location", point.serializeLocation());
+			sec.set("world", point.getLocation().getWorld().getName());
 			cfg.save(PathwayEditor.endpointFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -360,6 +372,27 @@ public class NavigationManager implements Manager {
 		cfg.save(ep.getFile());
 	}
 	
+	public static void clearUnusedPoints(CommandSender s) {
+		ArrayList<Point> toRemove = new ArrayList<Point>();
+		for (Point point : points) {
+			if (!point.isConnected()) {
+				toRemove.add(point);
+			}
+		}
+		for (Point point : toRemove) {
+			deletePoint(point);
+			Util.msg(s, "&7Deleted point at " + point);
+		}
+	}
+	
 	@Override
 	public void cleanup() {	}
+	
+	public static void convert() {
+		
+	}
+	
+	public static void addFuturePointSet(FuturePointSet set) {
+		toConvert.add(set);
+	}
 }
