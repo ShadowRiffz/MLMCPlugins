@@ -8,7 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
@@ -49,7 +51,11 @@ public class Quester {
 			}
 			// Only continue the questline if the player still has it
 			else if (activeQuestlines.containsKey(ql.getKey().toUpperCase())) {
-				ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
+				new BukkitRunnable() {
+					public void run() {
+						ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
+					}
+				}.runTaskLater(NeoQuests.inst(), 100L);
 			}
 		}
 	}

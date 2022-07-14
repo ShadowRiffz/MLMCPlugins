@@ -65,8 +65,9 @@ public class QuestInstance {
 	
 	public void completeObjectiveSet(ObjectiveSetInstance set) {
 		set.finalizeObjectives();
+		int ticks = set.getSet().getActions().run(q.getPlayer());
 		if (set.getNext() == -1 || set.getNext() == -2) {
-			endQuest(set, true, stage);
+			endQuest(set, true, stage, ticks);
 			return;
 		}
 		else if (set.getNext() == -3) {
@@ -74,7 +75,7 @@ public class QuestInstance {
 				stage = stage + 1;
 			}
 			else {
-				endQuest(set, true, stage);
+				endQuest(set, true, stage, ticks);
 				return;
 			}
 		}
@@ -116,11 +117,9 @@ public class QuestInstance {
 		}
 	}
 	
-	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
+	public void endQuest(ObjectiveSetInstance si, boolean success, int stage, int ticks) {
 		Player p = q.getPlayer();
 		if (success) {
-			// Run actions first in case we're switching to a new questline
-			si.getSet().getActions().run(p);
 			q.completeQuest(this, stage, success);
 			
 			ArrayList<RewardAction> rewards = quest.getRewards();

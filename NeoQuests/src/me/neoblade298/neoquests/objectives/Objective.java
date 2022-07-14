@@ -47,7 +47,7 @@ public abstract class Objective implements LineConfigParser<Objective> {
 	}
 	// Sets up obj count on quest startup, returns true if quest complete
 	public void initialize(ObjectiveInstance oi) {}
-	// Done after stage ends, basically just for GetStoredItem
+	// Done after stage ends, basically just for GetStoredItem (to remove the items)
 	public void finalize(Player p) { } 
 	
 	public abstract String getKey();

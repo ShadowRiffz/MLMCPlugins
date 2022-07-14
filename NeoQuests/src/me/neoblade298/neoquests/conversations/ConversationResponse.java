@@ -24,6 +24,12 @@ public class ConversationResponse {
 	private ActionSequence actions = new ActionSequence();
 	private boolean isFirstRun = true;
 	private int next = -1;
+	
+	private static ArrayList<String> endConv = new ArrayList<String>();
+	
+	static {
+		endConv.add("msg > You ended the conversation.");
+	}
 
 	public ConversationResponse(ConfigurationSection cfg) throws NeoIOException {
 		this.responseNum = Integer.parseInt(cfg.getName());
@@ -36,6 +42,12 @@ public class ConversationResponse {
 	public ConversationResponse() {
 		this.text = "§7[End Conversation]";
 		this.next = -1;
+		ArrayList<String> endConv = new ArrayList<String>();
+		try {
+			this.actions.load(endConv);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// True if number should be incremented
