@@ -1,6 +1,8 @@
 package me.ShanaChans.SellAll;
 
 import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,16 +17,16 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class SellAllPlayer 
 {
-	private static HashMap<Material, Integer> itemSellCap = new HashMap<Material, Integer>();
-	private static HashMap<Material, Integer> itemAmountSold = new HashMap<Material, Integer>();
-	private static double sellPriceModifier = 1;
+	private HashMap<Material, Integer> itemSellCap = new HashMap<Material, Integer>();
+	private HashMap<Material, Integer> itemAmountSold;
+	private double sellPriceModifier = 1;
 	
-	public SellAllPlayer()
-	{
-		itemSellCap.put(Material.DIAMOND, 100);
-		itemSellCap.put(Material.EMERALD, 100);
-		itemAmountSold.put(Material.DIAMOND, 0);
-		itemAmountSold.put(Material.EMERALD, 0);
+	public SellAllPlayer(HashMap<Material, Integer> itemAmountSold) {
+		this.itemAmountSold = itemAmountSold;
+		// itemSellCap.put(Material.DIAMOND, 100);
+		// itemSellCap.put(Material.EMERALD, 100);
+		// itemAmountSold.put(Material.DIAMOND, 0);
+		// itemAmountSold.put(Material.EMERALD, 0);
 	}
 	
 	public static int getItemCap(Material mat) 
@@ -93,17 +95,17 @@ public class SellAllPlayer
     	
     	if(totalCost == 0)
     	{
-    		player.sendMessage("ง6No items to be sold.");
+    		player.sendMessage("ยง6No items to be sold.");
     	}
     	else
     	{
-    		ComponentBuilder builder = new ComponentBuilder("ง6[Sell Log]");
+    		ComponentBuilder builder = new ComponentBuilder("ยง6[Sell Log]");
     		String text = "";
     		for(Material mat : itemAmount.keySet())
     		{
-    			text = text.concat("ง6" + mat.name() + " ง7(" + itemAmount.get(mat) + "x) - " + "งe" + itemTotal.get(mat) + "g\n");
+    			text = text.concat("ยง6" + mat.name() + " ยง7(" + itemAmount.get(mat) + "x) - " + "ยงe" + itemTotal.get(mat) + "g\n");
     		}	
-    		text = text.concat("ง7TOTAL - งe" + totalCost + "g");
+    		text = text.concat("ยง7TOTAL - ยงe" + totalCost + "g");
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall limit"));
     		player.spigot().sendMessage(builder.create());
     		//NeoCore.getEconomy().depositPlayer(player, totalCost);
@@ -116,10 +118,10 @@ public class SellAllPlayer
 	 */
 	public void getSellCap(Player player, Player displayPlayer)
 	{
-		player.sendMessage("ง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
+		player.sendMessage("ยง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
 		for(Material mat : itemSellCap.keySet())
 		{
-			player.sendMessage("ง7" + mat.name() + ": " + itemAmountSold.get(mat) + " / " + itemSellCap.get(mat));
+			player.sendMessage("ยง7" + mat.name() + ": " + itemAmountSold.get(mat) + " / " + itemSellCap.get(mat));
 		}
 	}
 	
@@ -136,8 +138,12 @@ public class SellAllPlayer
 			if(-1 < newAmount && newAmount < (itemSellCap.get(mat) + 1))
 			{
 				itemAmountSold.replace(mat, newAmount);
-				player.sendMessage("ง6Changed sold amount!");
+				player.sendMessage("ยง6Changed sold amount!");
 			}
 		}
+	}
+
+	public HashMap<Material, Integer> getItemAmountSold() {
+		return itemAmountSold;
 	}
 }
