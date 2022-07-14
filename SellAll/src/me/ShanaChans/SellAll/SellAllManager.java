@@ -8,14 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -39,8 +37,8 @@ import me.neoblade298.neocore.io.IOComponent;
 
 public class SellAllManager extends JavaPlugin implements Listener, IOComponent {
 	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
+	private static HashMap<Material, Integer> itemCaps = new HashMap<Material, Integer>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
-	private static HashMap<Double, String> permissions = new HashMap<Double, String>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
 	private YamlConfiguration cfg;
 
@@ -49,7 +47,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		getServer().getPluginManager().registerEvents(this, this);
 		initCommands();
 		loadConfigs();
-		NeoCore.registerIOComponent(this, this);
+		//NeoCore.registerIOComponent(this, this);
 	}
 
 	public void onDisable() {
@@ -76,7 +74,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 
 		this.cfg = YamlConfiguration.loadConfiguration(cfg);
-		ConfigurationSection sec = this.cfg.getConfigurationSection("pricelist");
+		ConfigurationSection sec = this.cfg.getConfigurationSection("price-list");
 
 		for (String key : sec.getKeys(false)) {
 			if (Material.valueOf(key) == null) {
@@ -86,7 +84,27 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				itemPrices.put(Material.valueOf(key), sec.getDouble(key));
 			}
 		}
-
+		
+		sec = this.cfg.getConfigurationSection("item-cap");
+		
+		for(Material mat : itemPrices.keySet())
+		{
+			if(sec.contains(mat.name()))
+			{
+				itemCaps.put(mat, sec.getInt(mat.name()));
+			}
+			else
+			{
+				itemCaps.put(mat, 100);
+			}
+		}
+		
+		sec = this.cfg.getConfigurationSection("multipliers");
+		
+		for (String key : sec.getKeys(false)) 
+		{
+			permMultipliers.put(sec.getDouble(key), key);
+		}
 	}
 
 	@EventHandler
@@ -113,13 +131,20 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		return itemPrices;
 	}
 	
-	public static double getMultiplier(Player p) {
+	public static HashMap<Material, Integer> getItemCaps() {
+		return itemCaps;
+	}
+	
+	public static double getMultiplier(Player p) 
+	{
 		Iterator<Double> iter = permMultipliers.descendingKeySet().iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext()) 
+		{
 			double mult = iter.next();
 			String perm = permMultipliers.get(mult);
-			if (p.hasPermission(perm)) {
-				return mult;
+			if (p.hasPermission(perm)) 
+			{
+				return mult;	
 			}
 		}
 		return 1;
@@ -135,8 +160,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
     }
 
 	@Override
-	public void cleanup(Statement arg0, Statement arg1) {
-	}
+	public void cleanup(Statement arg0, Statement arg1) {}
 
 	@Override
 	public String getKey() {
@@ -159,7 +183,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 					sold.put(key, value);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			players.put(p.getUniqueId(), new SellAllPlayer(sold));
@@ -177,7 +200,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				}
 				insert.executeBatch();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

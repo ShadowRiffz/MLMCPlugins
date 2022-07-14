@@ -1,8 +1,6 @@
 package me.ShanaChans.SellAll;
 
 import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,34 +17,20 @@ public class SellAllPlayer
 {
 	private HashMap<Material, Integer> itemSellCap = new HashMap<Material, Integer>();
 	private HashMap<Material, Integer> itemAmountSold;
-	private double sellPriceModifier = 1;
 	
-	public SellAllPlayer(HashMap<Material, Integer> itemAmountSold) {
+	public SellAllPlayer(HashMap<Material, Integer> itemAmountSold)
+	{
 		this.itemAmountSold = itemAmountSold;
-		// itemSellCap.put(Material.DIAMOND, 100);
-		// itemSellCap.put(Material.EMERALD, 100);
-		// itemAmountSold.put(Material.DIAMOND, 0);
-		// itemAmountSold.put(Material.EMERALD, 0);
 	}
 	
-	public static int getItemCap(Material mat) 
+	public int getItemCap(Material mat) 
 	{
 		return itemSellCap.get(mat);
 	}
 
-	public static void setItemCap(Material mat, int newSellCap) 
+	public void setItemCap(Material mat, int newSellCap) 
 	{
-		SellAllPlayer.itemSellCap.replace(mat, newSellCap);
-	}
-
-	public static double getSellPriceModifier() 
-	{
-		return sellPriceModifier;
-	}
-
-	public static void setPriceModifier(double modifier) 
-	{
-		SellAllPlayer.sellPriceModifier = modifier;
+		itemSellCap.replace(mat, newSellCap);
 	}
 	
 	public void sellAll(Inventory inv, Player player)
@@ -61,9 +45,12 @@ public class SellAllPlayer
     		if(items != null)
     		{
     			Material material = items.getType();
+    			double sellPriceModifier = SellAllManager.getMultiplier(player);
         		if(SellAllManager.getItemPrices().containsKey(material))
         		{
-        			if(itemAmountSold.get(material) < itemSellCap.get(material))
+        			int sold = itemAmountSold.getOrDefault(material, 0);
+        			int cap = itemSellCap.getOrDefault(material, SellAllManager.getItemCaps().get(material));
+        			if(sold < cap)
         			{
         				if(!itemAmount.containsKey(material))
     					{
@@ -71,11 +58,11 @@ public class SellAllPlayer
     						itemTotal.put(material, 0.00);
     					}
         				
-        				if(itemAmountSold.get(material) + itemAmount.get(material) > itemSellCap.get(material) || itemAmountSold.get(material) + items.getAmount() > itemSellCap.get(material))
+        				if(sold + itemAmount.get(material) > cap || sold + items.getAmount() > cap)
         				{
-        					int difference = (itemAmountSold.get(material) + items.getAmount()) - itemSellCap.get(material);
+        					int difference = (sold + items.getAmount()) - cap;
         					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
-        					itemAmountSold.put(material, itemAmountSold.get(material) + (items.getAmount() - difference));
+        					itemAmountSold.put(material, sold + (items.getAmount() - difference));
         					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
         					inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
@@ -83,7 +70,7 @@ public class SellAllPlayer
         				else
         				{
         					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
-        					itemAmountSold.put(material, itemAmountSold.get(material) + items.getAmount());
+        					itemAmountSold.put(material, sold + items.getAmount());
         					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
                 			inv.removeItem(new ItemStack(material, items.getAmount()));
@@ -95,7 +82,7 @@ public class SellAllPlayer
     	
     	if(totalCost == 0)
     	{
-    		player.sendMessage("ยง6No items to be sold.");
+    		player.sendMessage("ง6No items to be sold.");
     	}
     	else
     	{
@@ -103,9 +90,9 @@ public class SellAllPlayer
     		String text = "";
     		for(Material mat : itemAmount.keySet())
     		{
-    			text = text.concat("ยง6" + mat.name() + " ยง7(" + itemAmount.get(mat) + "x) - " + "ยงe" + itemTotal.get(mat) + "g\n");
+    			text = text.concat("ง6" + mat.name() + " ง7(" + itemAmount.get(mat) + "x) - " + "งe" + itemTotal.get(mat) + "g\n");
     		}	
-    		text = text.concat("ยง7TOTAL - ยงe" + totalCost + "g");
+    		text = text.concat("ง7TOTAL - งe" + totalCost + "g");
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall limit"));
     		player.spigot().sendMessage(builder.create());
     		//NeoCore.getEconomy().depositPlayer(player, totalCost);
@@ -118,10 +105,10 @@ public class SellAllPlayer
 	 */
 	public void getSellCap(Player player, Player displayPlayer)
 	{
-		player.sendMessage("ยง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
+		player.sendMessage("ง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
 		for(Material mat : itemSellCap.keySet())
 		{
-			player.sendMessage("ยง7" + mat.name() + ": " + itemAmountSold.get(mat) + " / " + itemSellCap.get(mat));
+			player.sendMessage("ง7" + mat.name() + ": " + itemAmountSold.get(mat) + " / " + itemSellCap.get(mat));
 		}
 	}
 	
@@ -138,7 +125,7 @@ public class SellAllPlayer
 			if(-1 < newAmount && newAmount < (itemSellCap.get(mat) + 1))
 			{
 				itemAmountSold.replace(mat, newAmount);
-				player.sendMessage("ยง6Changed sold amount!");
+				player.sendMessage("ง6Changed sold amount!");
 			}
 		}
 	}
