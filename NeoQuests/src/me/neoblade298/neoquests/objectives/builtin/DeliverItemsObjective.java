@@ -89,7 +89,7 @@ public class DeliverItemsObjective extends Objective {
 		
 		if (material != null && item.getType() != material) return false;
 		if (nbtstring != null && !nbti.getString("quests").equals(nbtstring)) return false;
-		
+
 		if (item.hasItemMeta()) {
 			ItemMeta meta = item.getItemMeta();
 			if (modeldata != -1 && meta.getCustomModelData() != modeldata) return false;
@@ -103,7 +103,7 @@ public class DeliverItemsObjective extends Objective {
 		}
 		// If the item has no meta but requires it
 		else {
-			return modeldata != -1 || loreNum != -1;
+			return modeldata == -1 && loreNum == -1;
 		}
 	}
 

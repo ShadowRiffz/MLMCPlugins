@@ -31,7 +31,10 @@ public class GetGlobalTagObjective extends Objective {
 	}
 
 	public boolean checkEvent(PlayerTagChangedEvent e, ObjectiveInstance o) {
-		e.getKey()
+		if (!e.getKey().equals(NeoQuests.getPlayerTags(o.getPlayer()).getKey())) {
+			return false;
+		}
+		
 		if (e.getType() == ValueChangeType.ADDED && ((String) e.getValue().getValue()).equalsIgnoreCase(tag)) {
 			o.incrementCount();
 			return true;

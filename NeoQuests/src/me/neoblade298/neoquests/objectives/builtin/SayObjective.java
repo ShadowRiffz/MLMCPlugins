@@ -31,7 +31,11 @@ public class SayObjective extends Objective {
 	}
 
 	public boolean checkEvent(AsyncPlayerChatEvent e, ObjectiveInstance o) {
-		return e.getMessage().toUpperCase().contains(chat);
+		if (e.getMessage().toUpperCase().contains(chat)) {
+			o.incrementCount();
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -135,7 +135,7 @@ public class ObjectiveListener implements Listener {
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.CHAT);
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
-				((SayObjective) o.getObjective()).checkEvent(e, o);
+				if (((SayObjective) o.getObjective()).checkEvent(e, o)) e.setCancelled(true);
 			}
 		}
 	}

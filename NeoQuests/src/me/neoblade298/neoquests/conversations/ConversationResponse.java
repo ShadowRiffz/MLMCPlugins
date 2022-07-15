@@ -42,7 +42,6 @@ public class ConversationResponse {
 	public ConversationResponse() {
 		this.text = "§7[End Conversation]";
 		this.next = -1;
-		ArrayList<String> endConv = new ArrayList<String>();
 		try {
 			this.actions.load(endConv);
 		} catch (NeoIOException e) {

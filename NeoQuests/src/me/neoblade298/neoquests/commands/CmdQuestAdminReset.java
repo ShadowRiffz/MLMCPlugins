@@ -96,7 +96,7 @@ public class CmdQuestAdminReset implements Subcommand {
 				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
 				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
 				quester.reset();
-				PlayerTags pTags = NeoQuests.getPlayerTags(p, acct);
+				PlayerTags pTags = NeoQuests.getPlayerTags(acct);
 				for (String key : pTags.getAllKeys(uuid)) {
 					pTags.reset(key, uuid);
 				}
