@@ -20,6 +20,7 @@ public class ConditionManager {
 		mngr.register(new ClassLevelCondition());
 		mngr.register(new CopyQuestConditionsCondition());
 		mngr.register(new HasTagCondition());
+		mngr.register(new HasGlobalTagCondition());
 		mngr.register(new QuestCompletedCondition());
 		mngr.register(new QuestSuccessfulCondition());
 		mngr.register(new QuestTakeableCondition());

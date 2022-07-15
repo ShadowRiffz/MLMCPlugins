@@ -26,6 +26,7 @@ public class ActionManager {
 		mngr.register(new FakeAction());
 		mngr.register(new GiveClassExpAction());
 		mngr.register(new GiveEffectAction());
+		mngr.register(new GiveGlobalTagAction());
 		mngr.register(new GiveMoneyAction());
 		mngr.register(new GiveProfessionExpAction());
 		mngr.register(new GiveStoredItemAction());

@@ -8,33 +8,30 @@ import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
-public class GetTagObjective extends Objective {
+public class GetGlobalTagObjective extends Objective {
 	private String tag;
 	
-	public GetTagObjective() {
+	public GetGlobalTagObjective() {
 		super();
 	}
 
-	public GetTagObjective(LineConfig cfg) {
+	public GetGlobalTagObjective(LineConfig cfg) {
 		super(ObjectiveEvent.RECEIVE_TAG, cfg, true);
 		tag = cfg.getString("tag", null);
 	}
 
 	@Override
 	public Objective create(LineConfig cfg) {
-		return new GetTagObjective(cfg);
+		return new GetGlobalTagObjective(cfg);
 	}
 
 	@Override
 	public String getKey() {
-		return "get-tag";
+		return "get-global-tag";
 	}
 
 	public boolean checkEvent(PlayerTagChangedEvent e, ObjectiveInstance o) {
-		if (!e.getKey().equals(NeoQuests.getPlayerTags(o.getPlayer()).getKey())) {
-			return false;
-		}
-		
+		e.getKey()
 		if (e.getType() == ValueChangeType.ADDED && ((String) e.getValue().getValue()).equalsIgnoreCase(tag)) {
 			o.incrementCount();
 			return true;

@@ -9,23 +9,23 @@ import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.DialogueAction;
 import me.neoblade298.neoquests.actions.RewardAction;
 
-public class GiveTagAction extends RewardAction {
-	private static String key = "give-tag";
+public class GiveGlobalTagAction extends RewardAction {
+	private static String key = "give-global-tag";
 	private String tag;
 
 	public static void register(HashMap<String, Action> actions, HashMap<String, DialogueAction> dialogueActions) {
-		actions.put(key, new GiveTagAction());
+		actions.put(key, new GiveGlobalTagAction());
 	}
 	
-	public GiveTagAction() {}
+	public GiveGlobalTagAction() {}
 	
-	public GiveTagAction(LineConfig cfg) {
+	public GiveGlobalTagAction(LineConfig cfg) {
 		tag = cfg.getString("tag", null);
 	}
 
 	@Override
 	public Action create(LineConfig cfg) {
-		return new GiveTagAction(cfg);
+		return new GiveGlobalTagAction(cfg);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class GiveTagAction extends RewardAction {
 
 	@Override
 	public void run(Player p) {
-		NeoQuests.getPlayerTags(p).set(tag, p.getUniqueId());
+		NeoQuests.getGlobalPlayerTags().set(tag, p.getUniqueId());
 	}
 
 	@Override

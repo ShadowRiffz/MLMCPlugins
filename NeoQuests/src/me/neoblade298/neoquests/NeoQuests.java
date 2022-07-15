@@ -41,6 +41,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	private static ArrayList<Manager> managers = new ArrayList<Manager>();
 	private static HashMap<String, CommandManager> commands = new HashMap<String, CommandManager>();
 	private static PlayerTags[] accountTags = new PlayerTags[12];
+	private static PlayerTags globalTags;
 	public static StringFlag REQ_TAG_FLAG;
 
 	public void onEnable() {
@@ -71,6 +72,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		for (int i = 1; i <= 12; i++) {
 			accountTags[i - 1] = NeoCore.createPlayerTags("questaccount_" + i, this, true);
 		}
+		globalTags = NeoCore.createPlayerTags("questaccount_global", this, true);
 		
 		// WorldGuard
 	    //SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
@@ -197,14 +199,18 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	
 	public static PlayerTags getPlayerTags(Player p) {
 		int account = SkillAPI.getPlayerAccountData(p).getActiveId();
-		return getPlayerTags(p, account);
+		return getPlayerTags(account);
 	}
 	
-	public static PlayerTags getPlayerTags(Player p, int account) {
+	public static PlayerTags getPlayerTags(int account) {
 		return accountTags[account - 1];
 	}
 	
 	public static PlayerTags[] getAllPlayerTags() {
 		return accountTags;
+	}
+	
+	public static PlayerTags getGlobalPlayerTags() {
+		return globalTags;
 	}
 }
