@@ -18,6 +18,7 @@ public class ObjectiveManager {
 
 		register(new DeliverItemsObjective());
 		register(new FakeObjective());
+		register(new GetSkillObjective());
 		register(new GetStoredItemObjective());
 		register(new GetTagObjective());
 		register(new InteractNpcObjective());

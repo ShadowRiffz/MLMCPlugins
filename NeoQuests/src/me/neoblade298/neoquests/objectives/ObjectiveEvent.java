@@ -9,5 +9,6 @@ public enum ObjectiveEvent {
 	RECEIVE_TAG,
 	RESPOND_CONVERSATION,
 	LEVEL_UP,
-	CHANGE_CLASS;
+	CHANGE_CLASS,
+	GET_SKILL;
 }

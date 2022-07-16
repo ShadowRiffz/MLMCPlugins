@@ -53,11 +53,6 @@ public class ObjectiveListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onInteractNPC(NPCRightClickEvent e) {
 		Player p = e.getClicker();
-		System.out.println("interact " + getPlayerInstances(p));
-
-		System.out.println(p);
-		System.out.println(p.getUniqueId());
-		System.out.println(p.getName());
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.INTERACT_NPC);
 		if (insts != null) {
@@ -163,12 +158,7 @@ public class ObjectiveListener implements Listener {
 	@EventHandler
 	public void onChangeClass(PlayerClassChangeEvent e) {
 		Player p = e.getPlayerData().getPlayer();
-
-		System.out.println(p);
-		System.out.println(p.getUniqueId());
-		System.out.println(p.getName());
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.CHANGE_CLASS);
-		System.out.println("Class change " + getPlayerInstances(p));
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((ReachTierObjective) o.getObjective()).checkEvent(e, o);

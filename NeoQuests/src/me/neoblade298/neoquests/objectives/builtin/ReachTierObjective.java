@@ -39,7 +39,6 @@ public class ReachTierObjective extends Objective {
 
 	public boolean checkEvent(PlayerClassChangeEvent e, ObjectiveInstance o) {
 		RPGClass c = e.getNewClass();
-		System.out.println("Checking event");
 		return check(c, o);
 	}
 	
@@ -47,13 +46,11 @@ public class ReachTierObjective extends Objective {
 	public void initialize(ObjectiveInstance oi) {
 		PlayerData data = SkillAPI.getPlayerData(oi.getPlayer());
 		if (data != null && data.getMainClass() != null) {
-			System.out.println("Initializing");
 			check(SkillAPI.getPlayerData(oi.getPlayer()).getMainClass().getData(), oi);
 		}
 	}
 	
 	private boolean check(RPGClass c, ObjectiveInstance o) {
-		if (c != null) System.out.println("Checking: " + c.getMaxLevel() + " " + level);
 		if (c != null && c.getMaxLevel() == level && o.getCount() == 0) {
 			o.incrementCount();
 			return true;
