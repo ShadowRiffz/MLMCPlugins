@@ -59,7 +59,6 @@ public class ObjectiveInstance {
 	}
 
 	public boolean isComplete() {
-		updateCount();
 		return count >= obj.getNeeded();
 	}
 	
@@ -74,6 +73,4 @@ public class ObjectiveInstance {
 	public void startListening() {
 		ObjectiveListener.startListening(this);
 	}
-
-	public void updateCount() {}
 }

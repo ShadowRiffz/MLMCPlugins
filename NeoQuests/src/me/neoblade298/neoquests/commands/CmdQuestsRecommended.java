@@ -97,9 +97,16 @@ public class CmdQuestsRecommended implements Subcommand {
 		Util.msg(s, "&7Recommended quests for you:");
 		for (QuestRecommendation rec : pages.get(page)) {
 			ComponentBuilder text = new ComponentBuilder("§7- §6" + rec.getQuest().getDisplay());
-			ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + rec.getEndpoint()));
-			p.spigot().sendMessage(text.append(nav.create()).create());
+			if (rec.getEndpoint() == null) {
+				ComponentBuilder take = new ComponentBuilder(" §7§o[Click to take]")
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + rec.getQuest().getKey()));
+				p.spigot().sendMessage(text.append(take.create()).create());
+			}
+			else {
+				ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + rec.getEndpoint()));
+				p.spigot().sendMessage(text.append(nav.create()).create());
+			}
 		}
 		pages.displayFooter(p, page, "/quests recommended " + (page + 2), "/quests recommended " + page);
 	}

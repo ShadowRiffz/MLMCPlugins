@@ -22,7 +22,9 @@ public class ObjectiveManager {
 		register(new GetTagObjective());
 		register(new InteractNpcObjective());
 		register(new KillMythicmobsObjective());
+		register(new ReachLevelObjective());
 		register(new ReachLocationObjective());
+		register(new ReachTierObjective());
 		register(new RespondConversationObjective());
 		register(new SayObjective());
 	}

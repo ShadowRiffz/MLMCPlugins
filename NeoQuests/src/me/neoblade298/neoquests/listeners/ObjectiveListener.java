@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.sucy.skill.api.event.PlayerClassChangeEvent;
+import com.sucy.skill.api.event.PlayerLevelUpEvent;
+
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neocore.events.PlayerTagChangedEvent;
@@ -50,6 +53,11 @@ public class ObjectiveListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onInteractNPC(NPCRightClickEvent e) {
 		Player p = e.getClicker();
+		System.out.println("interact " + getPlayerInstances(p));
+
+		System.out.println(p);
+		System.out.println(p.getUniqueId());
+		System.out.println(p.getName());
 
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.INTERACT_NPC);
 		if (insts != null) {
@@ -136,6 +144,34 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				if (((SayObjective) o.getObjective()).checkEvent(e, o)) e.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onLevelUp(PlayerLevelUpEvent e) {
+		Player p = e.getPlayerData().getPlayer();
+
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.LEVEL_UP);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((ReachLevelObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onChangeClass(PlayerClassChangeEvent e) {
+		Player p = e.getPlayerData().getPlayer();
+
+		System.out.println(p);
+		System.out.println(p.getUniqueId());
+		System.out.println(p.getName());
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.CHANGE_CLASS);
+		System.out.println("Class change " + getPlayerInstances(p));
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((ReachTierObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}
