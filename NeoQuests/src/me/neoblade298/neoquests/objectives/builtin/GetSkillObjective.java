@@ -4,17 +4,13 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.neoblade298.neocore.events.PlayerTagChangedEvent;
-import me.neoblade298.neocore.events.ValueChangeType;
 import me.neoblade298.neocore.io.LineConfig;
-import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class GetSkillObjective extends Objective {
 	private String skill;
-	private int level;
 	
 	public GetSkillObjective() {
 		super();

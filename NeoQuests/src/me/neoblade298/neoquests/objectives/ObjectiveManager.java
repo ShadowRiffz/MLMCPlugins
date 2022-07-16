@@ -27,6 +27,7 @@ public class ObjectiveManager {
 		register(new ReachLocationObjective());
 		register(new ReachTierObjective());
 		register(new RespondConversationObjective());
+		register(new RunCommandObjective());
 		register(new SayObjective());
 	}
 	

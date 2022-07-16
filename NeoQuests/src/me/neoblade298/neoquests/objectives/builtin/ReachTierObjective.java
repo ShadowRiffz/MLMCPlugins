@@ -3,10 +3,8 @@ package me.neoblade298.neoquests.objectives.builtin;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.classes.RPGClass;
 import com.sucy.skill.api.event.PlayerClassChangeEvent;
-import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;

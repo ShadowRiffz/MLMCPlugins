@@ -1,8 +1,6 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.classes.RPGClass;
-import com.sucy.skill.api.event.PlayerClassChangeEvent;
 import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.player.PlayerData;
 

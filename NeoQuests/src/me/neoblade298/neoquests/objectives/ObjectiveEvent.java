@@ -10,5 +10,6 @@ public enum ObjectiveEvent {
 	RESPOND_CONVERSATION,
 	LEVEL_UP,
 	CHANGE_CLASS,
-	GET_SKILL;
+	GET_SKILL,
+	COMMAND;
 }
