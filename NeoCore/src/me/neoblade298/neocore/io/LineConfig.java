@@ -11,7 +11,7 @@ public class LineConfig {
 		int lineIndex = line.indexOf('>');
 		
 		String argLine;
-		key = line.substring(0, keyIndex).toLowerCase();
+		key = line.substring(0, keyIndex == -1 ? line.length() : keyIndex).toLowerCase();
 		if (key.indexOf(':') != -1) {
 			key = "";
 			keyIndex = 0; // If there's a :, there's no key, use keyless system
