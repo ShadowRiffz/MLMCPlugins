@@ -1,9 +1,5 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
-import com.sucy.skill.api.player.PlayerData;
-
 import me.Neoblade298.NeoProfessions.Events.OpenProfessionInvEvent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.objectives.Objective;

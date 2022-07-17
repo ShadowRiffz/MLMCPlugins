@@ -16,12 +16,14 @@ public class ObjectiveManager {
 	public ObjectiveManager() {
 		mngr = new LineConfigManager<Objective>(NeoQuests.inst(), "objectives");
 
+		register(new CreateTownObjective());
 		register(new DeliverItemsObjective());
 		register(new FakeObjective());
 		register(new GetSkillObjective());
 		register(new GetStoredItemObjective());
 		register(new GetTagObjective());
 		register(new InteractNpcObjective());
+		register(new JoinTownObjective());
 		register(new KillMythicmobsObjective());
 		register(new OpenProfessionInventoryObjective());
 		register(new PlantSeedObjective());

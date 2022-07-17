@@ -11,6 +11,7 @@
 	<classpathentry kind="lib" path="src/item-nbt-api-plugin-2.9.2.jar"/>
 	<classpathentry kind="lib" path="src/worldguard-bukkit-7.0.7-dist.jar"/>
 	<classpathentry kind="lib" path="src/worldedit-bukkit-7.2.10.jar"/>
+	<classpathentry kind="lib" path="src/Towny-0.98.3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>

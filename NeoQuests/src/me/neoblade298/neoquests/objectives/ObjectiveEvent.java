@@ -15,5 +15,7 @@ public enum ObjectiveEvent {
 	PLANT_SEED,
 	SLOT_AUGMENT,
 	PROFESSION_CRAFT,
+	JOIN_TOWN,
+	CREATE_TOWN,
 	COMMAND;
 }

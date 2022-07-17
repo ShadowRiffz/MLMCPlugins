@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.palmergames.bukkit.towny.event.NewTownEvent;
+import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
 import com.sucy.skill.api.event.PlayerClassChangeEvent;
 import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
@@ -174,6 +176,30 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((GetSkillObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onJoinTown(TownAddResidentEvent e) {
+		Player p = e.getResident().getPlayer();
+		
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.JOIN_TOWN);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((JoinTownObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onCreateTown(NewTownEvent e) {
+		Player p = e.getTown().getMayor().getPlayer();
+		
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.CREATE_TOWN);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((CreateTownObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}

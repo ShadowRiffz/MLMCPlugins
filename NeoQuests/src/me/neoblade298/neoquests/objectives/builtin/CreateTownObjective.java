@@ -1,39 +1,37 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
-import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
+import com.palmergames.bukkit.towny.event.NewTownEvent;
+import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
+
+import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
-public class PlantSeedObjective extends Objective {
-	private int seed;
+public class CreateTownObjective extends Objective {
 	
-	public PlantSeedObjective() {
+	public CreateTownObjective() {
 		super();
 	}
 
-	public PlantSeedObjective(LineConfig cfg) {
-		super(ObjectiveEvent.PLANT_SEED, cfg, true);
-		seed = cfg.getInt("seed", -1);
+	public CreateTownObjective(LineConfig cfg) {
+		super(ObjectiveEvent.CREATE_TOWN, cfg, true);
 	}
 
 	@Override
 	public Objective create(LineConfig cfg) {
-		return new PlantSeedObjective(cfg);
+		return new CreateTownObjective(cfg);
 	}
 
 	@Override
 	public String getKey() {
-		return "plant-seed";
+		return "create-town";
 	}
 
-	public boolean checkEvent(ProfessionPlantSeedEvent e, ObjectiveInstance o) {
-		if (e.getSeed().getId() == seed) {
-			o.incrementCount();
-			return true;
-		}
-		return false;
+	public boolean checkEvent(NewTownEvent e, ObjectiveInstance o) {
+		o.incrementCount();
+		return true;
 	}
 
 	@Override
