@@ -14,7 +14,7 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class PvpManager implements IOComponent {
-	private static HashMap<UUID, PvpAccount> accounts;
+	private static HashMap<UUID, PvpAccount> accounts = new HashMap<UUID, PvpAccount>();
 	private static final double MAX_ELO_GAIN = 24;
 	private static final double DEFAULT_KILL_GOLD = 500;
 	private static final int MAX_UNIQUE_KILLS = 100;
@@ -82,7 +82,9 @@ public class PvpManager implements IOComponent {
 	}
 
 	@Override
-	public void loadPlayer(Player arg0, Statement arg1) {}
+	public void loadPlayer(Player p, Statement stmt) {
+		accounts.get(p.getUniqueId()).loadPlayer();
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
@@ -105,7 +107,7 @@ public class PvpManager implements IOComponent {
 		PvpAccount acct = getAccount(p);
 		try {
 			insert.addBatch("INSERT INTO neopvp_accounts VALUES ('" +
-					p.getUniqueId() + "'," + acct.getKillstreak() + "," + acct.getWins() + "," + acct.getLosses() +
+					p.getUniqueId() + "'," + acct.getKillstreak() + "," + acct.getWins() + "," + acct.getLosses() + "," +
 					acct.getElo() + "," + acct.getBalance() + "," + acct.getProtectionExpiration() + ");");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

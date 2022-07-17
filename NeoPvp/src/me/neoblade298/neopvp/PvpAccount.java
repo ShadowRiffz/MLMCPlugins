@@ -10,6 +10,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.util.Util;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class PvpAccount {
 	private UUID uuid;
@@ -21,7 +26,23 @@ public class PvpAccount {
 	
 	public PvpAccount(UUID uuid) {
 		this.uuid = uuid;
-		this.p = Bukkit.getPlayer(uuid);
+		protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
+	}
+	
+	public void loadPlayer() {
+		this.p = Bukkit.getPlayer(this.uuid);
+	}
+	
+	public void removeProtection() {
+		this.protectionExpires = -1;
+		Util.msg(p, "Your protection was removed.");
+	}
+	
+	public void addProtection(long timeInMillis) {
+		if (protectionExpires < System.currentTimeMillis()) {
+			protectionExpires = System.currentTimeMillis();
+		}
+		protectionExpires += timeInMillis;
 	}
 	
 	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
@@ -104,7 +125,21 @@ public class PvpAccount {
 	}
 	
 	public void displayAccount(CommandSender s) {
+		String prot = "&6Protection: ";
+		if (protectionExpires < System.currentTimeMillis()) {
+			prot += "&4N/A";
+		}
+		else {
+			ComponentBuilder b = new ComponentBuilder(prot + "&eExpires in " + (protectionExpires - System.currentTimeMillis()) + "s ");
+			if (s instanceof Player && (Player) s == this.p) {
+				b.append("&7&o[Click to remove]", FormatRetention.NONE)
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp disableprotection"))
+				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp disableprotection")));
+			}
+			s.spigot().sendMessage(b.create());
+		}
 		Util.msg(s, "&c===[&6" + p.getName() + "&6]===");
+		Util.msg(s, prot);
 		Util.msg(s, " &6Rating: &e" + elo);
 		Util.msg(s, " &6Pvp Balance: &e" + pvpBalance);
 		Util.msg(s, " &6Killstreak: &e" + killstreak);

@@ -24,7 +24,9 @@ public class NeoPvp extends JavaPlugin {
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPvp Enabled");
+		inst = this;
 		mngrs.add(new GeneratorManager());
+		initCommands();
 		
 		NeoCore.registerIOComponent(this, new PvpManager());
 		// WorldGuard
@@ -38,6 +40,9 @@ public class NeoPvp extends JavaPlugin {
 		mngr.register(new CmdAWarCreate(), new CmdAWarDisplay(),
 				new CmdAWarInfo(), new CmdAWarLimit(), new CmdAWarNew(), new CmdAWarTeam1(),
 				new CmdAWarTeam2());
+		
+		mngr = new CommandManager("pvp", this);
+		mngr.register(new CmdPvpBase());
 	}
 	
 	@Override

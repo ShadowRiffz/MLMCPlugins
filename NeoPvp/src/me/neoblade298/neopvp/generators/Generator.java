@@ -36,7 +36,7 @@ public class Generator {
 		double x = Double.parseDouble(args[1]);
 		double y = Double.parseDouble(args[2]);
 		double z = Double.parseDouble(args[3]);
-		this.loc = new Location(w, x, y + 1, z);
+		this.loc = new Location(w, x, y, z);
 	}
 	
 	public void spawnItem() {
