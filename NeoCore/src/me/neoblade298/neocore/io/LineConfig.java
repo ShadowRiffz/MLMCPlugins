@@ -7,7 +7,7 @@ public class LineConfig {
 	private HashMap<String, String> args = new HashMap<String, String>();
 	public LineConfig(String line) {
 		fullLine = line;
-		int keyIndex = line.indexOf(' ');
+		int keyIndex = line.indexOf(' ') == -1 ? line.length() : line.indexOf(' ');
 		int lineIndex = line.indexOf('>');
 		
 		String argLine;
