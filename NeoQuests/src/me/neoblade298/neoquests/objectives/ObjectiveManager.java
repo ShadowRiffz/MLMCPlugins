@@ -23,12 +23,16 @@ public class ObjectiveManager {
 		register(new GetTagObjective());
 		register(new InteractNpcObjective());
 		register(new KillMythicmobsObjective());
+		register(new OpenProfessionInventoryObjective());
+		register(new PlantSeedObjective());
+		register(new ProfessionCraftObjective());
 		register(new ReachLevelObjective());
 		register(new ReachLocationObjective());
 		register(new ReachTierObjective());
 		register(new RespondConversationObjective());
 		register(new RunCommandObjective());
 		register(new SayObjective());
+		register(new SlotAugmentObjective());
 	}
 	
 	public static ArrayList<ObjectiveSet> parseObjectiveSets(ConfigurationSection cfg) throws NeoIOException {
