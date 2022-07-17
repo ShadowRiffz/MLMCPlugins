@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 
+import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.neoblade298.neocore.io.LineConfig;
@@ -51,10 +52,11 @@ public class KillMythicmobsObjective extends Objective {
 	public String getDisplay() {
 		if (display == null) {
 			try {
-				display = MythicBukkit.inst().getMobManager().getMythicMob(types.get(0)).get().getDisplayName().get();
+				MobManager mm = MythicBukkit.inst().getMobManager();
+				display = mm.getMythicMob(types.get(0)).get().getDisplayName().get();
 				if (types.size() > 1) {
 					for (int i = 1; i < types.size(); i++) {
-						display += "&7, " + types.get(i);
+						display += "§7, " + mm.getMythicMob(types.get(i)).get().getDisplayName().get();
 					}
 				}
 			}
