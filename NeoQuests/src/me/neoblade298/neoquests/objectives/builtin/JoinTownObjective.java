@@ -2,7 +2,6 @@ package me.neoblade298.neoquests.objectives.builtin;
 
 import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
 
-import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;

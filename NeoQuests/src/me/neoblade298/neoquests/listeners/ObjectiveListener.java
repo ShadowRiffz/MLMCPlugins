@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.palmergames.bukkit.towny.event.NewTownEvent;
@@ -17,6 +18,10 @@ import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
+import me.Neoblade298.NeoProfessions.Events.OpenProfessionInvEvent;
+import me.Neoblade298.NeoProfessions.Events.ProfessionCraftSuccessEvent;
+import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
+import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.neoblade298.neocore.events.PlayerTagChangedEvent;
 import me.neoblade298.neoquests.events.ConversationEvent;
@@ -181,6 +186,50 @@ public class ObjectiveListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onProfessionInvOpen(OpenProfessionInvEvent e) {
+		Player p = e.getPlayer();
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.OPEN_PROFESSION_INV);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((OpenProfessionInventoryObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlantSeed(ProfessionPlantSeedEvent e) {
+		Player p = e.getPlayer();
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.PLANT_SEED);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((PlantSeedObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onProfessionCraft(ProfessionCraftSuccessEvent e) {
+		Player p = e.getPlayer();
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.PROFESSION_CRAFT);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((ProfessionCraftObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onSlotAugment(ProfessionSlotSuccessEvent e) {
+		Player p = e.getPlayer();
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.SLOT_AUGMENT);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((SlotAugmentObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onJoinTown(TownAddResidentEvent e) {
 		Player p = e.getResident().getPlayer();
 		
@@ -200,6 +249,18 @@ public class ObjectiveListener implements Listener {
 		if (insts != null) {
 			for (ObjectiveInstance o : insts) {
 				((CreateTownObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onCommand(PlayerCommandPreprocessEvent e) {
+		Player p = e.getPlayer();
+		
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.COMMAND);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((RunCommandObjective) o.getObjective()).checkEvent(e, o);
 			}
 		}
 	}

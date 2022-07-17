@@ -30,18 +30,32 @@ public class RunCommandObjective extends Objective {
 	}
 
 	public boolean checkEvent(PlayerCommandPreprocessEvent e, ObjectiveInstance o) {
+		String msg = e.getMessage().substring(1); // Remove / from start of command
 		if (command.startsWith("*") && command.endsWith("*")) {
-			return e.getMessage().contains(command);
+			if (msg.contains(command)) {
+				o.incrementCount();
+				return true;
+			}
 		}
 		else if (command.startsWith("*")) {
-			return e.getMessage().endsWith(command);
+			if (msg.endsWith(command)) {
+				o.incrementCount();
+				return true;
+			}
 		}
 		else if (command.endsWith("*")) {
-			return e.getMessage().startsWith(command);
+			if (msg.startsWith(command)) {
+				o.incrementCount();
+				return true;
+			}
 		}
 		else {
-			return e.getMessage().equalsIgnoreCase(command);
+			if (msg.equalsIgnoreCase(command)) {
+				o.incrementCount();
+				return true;
+			}
 		}
+		return false;
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package me.neoblade298.neoquests.objectives.builtin;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
-import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
-
-import me.Neoblade298.NeoProfessions.Events.ProfessionSlotSuccessEvent;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.objectives.Objective;
 import me.neoblade298.neoquests.objectives.ObjectiveEvent;
@@ -42,5 +40,13 @@ public class CreateTownObjective extends Objective {
 	@Override
 	public boolean isHidden() {
 		return true;
+	}
+	
+	@Override
+	public void initialize(ObjectiveInstance oi) {
+		TownyAPI api = TownyAPI.getInstance();
+		if (api.getResident(oi.getPlayer()).getTownOrNull() != null) {
+			oi.incrementCount();
+		}
 	}
 }
