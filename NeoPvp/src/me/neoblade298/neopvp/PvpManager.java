@@ -43,7 +43,7 @@ public class PvpManager implements IOComponent {
 		killedAcc.takeElo(change);
 		
 		// Take money
-		double toTake = DEFAULT_KILL_GOLD * (1 + (Math.max(killerAcc.getNumUniqueKills(), MAX_UNIQUE_KILLS) * 0.05));
+		double toTake = DEFAULT_KILL_GOLD * (1 + (Math.min(killerAcc.getNumUniqueKills(), MAX_UNIQUE_KILLS) * 0.05));
 		if (NeoCore.getEconomy().has(killed, toTake)) {
 			killerAcc.addUniqueKill(killed);
 		}
@@ -54,8 +54,8 @@ public class PvpManager implements IOComponent {
 		killerAcc.addBalance(toTake * PCT_GOLD_KEPT);
 		
 		// Transfer pvp balance
-		killedAcc.setBalance(0);
 		killerAcc.addBalance(killedAcc.getBalance());
+		killedAcc.setBalance(0);
 		
 		// Killstreak
 		killerAcc.incrementKillstreak();
