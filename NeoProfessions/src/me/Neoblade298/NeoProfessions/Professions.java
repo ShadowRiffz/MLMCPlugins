@@ -104,7 +104,6 @@ public class Professions extends JavaPlugin implements Listener {
 			IOListener.register(this, gm);
 	
 			// Command listeners for all classes
-			this.getCommand("value").setExecutor(new ValueCommand(this));
 			this.getCommand("ebal").setExecutor(new EssenceBalanceCommand(this));
 			this.getCommand("epay").setExecutor(new EssencePayCommand(this));
 			this.getCommand("evouch").setExecutor(new EssenceVouchCommand(this));
