@@ -51,7 +51,7 @@ public class War {
 				start();
 			}
 		};
-		SchedulerAPI.schedule(this.date.getTimeInMillis(), runnable);
+		SchedulerAPI.schedule("War-" + this.key, this.date.getTimeInMillis(), runnable);
 	}
 	
 	public void start() {

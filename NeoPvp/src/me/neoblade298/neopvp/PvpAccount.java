@@ -32,7 +32,7 @@ public class PvpAccount {
 		this.uuid = uuid;
 		protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
 		
-		cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + p.getUniqueId(), protectionExpires, new Runnable() {
 			public void run() {
 				removeProtection();
 			}
@@ -61,7 +61,7 @@ public class PvpAccount {
 			cr.setCancelled(true);
 		}
 		
-		cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + p.getUniqueId(), protectionExpires, new Runnable() {
 			public void run() {
 				removeProtection();
 			}
@@ -76,10 +76,9 @@ public class PvpAccount {
 		elo = rs.getInt(5);
 		pvpBalance = rs.getDouble(6);
 		protectionExpires = rs.getLong(7);
-		this.p = Bukkit.getPlayer(uuid);
 		
 		if (protectionExpires > System.currentTimeMillis()) {
-			cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+			cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + p.getUniqueId(), protectionExpires, new Runnable() {
 				public void run() {
 					removeProtection();
 				}
