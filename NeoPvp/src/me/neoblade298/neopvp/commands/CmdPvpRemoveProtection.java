@@ -18,7 +18,7 @@ public class CmdPvpRemoveProtection implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "";
+		return "removeprotection";
 	}
 
 	@Override

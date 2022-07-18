@@ -2,6 +2,7 @@ package me.neoblade298.neopvp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -25,14 +26,16 @@ public class PvpAccount {
 	private double pvpBalance;
 	private int elo, killstreak, wins, losses;
 	private long protectionExpires = -1;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 	
 	private CoreRunnable cr;
 	
 	public PvpAccount(UUID uuid) {
 		this.uuid = uuid;
-		protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
+		this.protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
+		this.elo = 1800;
 		
-		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + p.getUniqueId(), protectionExpires, new Runnable() {
+		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
 			public void run() {
 				removeProtection();
 			}
@@ -157,26 +160,28 @@ public class PvpAccount {
 	}
 	
 	public void displayAccount(CommandSender s) {
-		String prot = "&6Protection: ";
+		String prot = "§6Protection: ";
+		Util.msg(s, "&6===[&e" + p.getName() + "&6]===", false);
 		if (protectionExpires < System.currentTimeMillis()) {
 			prot += "&4N/A";
+			Util.msg(s, prot, false);
 		}
 		else {
-			ComponentBuilder b = new ComponentBuilder(prot + "&eExpires in " + (protectionExpires - System.currentTimeMillis()) + "s ");
+			double millisToExpiration = protectionExpires - System.currentTimeMillis();
+			double hoursLeft = millisToExpiration / 1000 / 60 / 60;
+			ComponentBuilder b = new ComponentBuilder(prot + "§eExpires in " + df.format(hoursLeft) + "h ");
 			if (s instanceof Player && (Player) s == this.p) {
-				b.append("&7&o[Click to remove]", FormatRetention.NONE)
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp disableprotection"))
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp disableprotection")));
+				b.append("§7§o[Click to remove]", FormatRetention.NONE)
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp removeprotection"))
+				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp removeprotection")));
 			}
 			s.spigot().sendMessage(b.create());
 		}
-		Util.msg(s, "&c===[&6" + p.getName() + "&6]===");
-		Util.msg(s, prot);
-		Util.msg(s, " &6Rating: &e" + elo);
-		Util.msg(s, " &6Pvp Balance: &e" + pvpBalance);
-		Util.msg(s, " &6Killstreak: &e" + killstreak);
-		Util.msg(s, " &6Wins: &e" + wins);
-		Util.msg(s, " &6Losses: &e" + losses);
+		Util.msg(s, "&6Rating: &e" + elo, false);
+		Util.msg(s, "&6Pvp Balance: &e" + pvpBalance, false);
+		Util.msg(s, "&6Killstreak: &e" + killstreak, false);
+		Util.msg(s, "&6Wins: &e" + wins, false);
+		Util.msg(s, "&6Losses: &e" + losses, false);
 	}
 	
 	public UUID getUuid() {

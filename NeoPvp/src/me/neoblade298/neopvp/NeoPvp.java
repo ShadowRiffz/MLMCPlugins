@@ -15,6 +15,7 @@ import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neopvp.commands.*;
 import me.neoblade298.neopvp.generators.GeneratorManager;
+import me.neoblade298.neopvp.listeners.PvpListener;
 import net.md_5.bungee.api.ChatColor;
 
 public class NeoPvp extends JavaPlugin {
@@ -29,6 +30,7 @@ public class NeoPvp extends JavaPlugin {
 		initCommands();
 		
 		NeoCore.registerIOComponent(this, new PvpManager());
+		Bukkit.getPluginManager().registerEvents(new PvpListener(), this);
 		// WorldGuard
 	    //SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
 	    //sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
@@ -42,10 +44,12 @@ public class NeoPvp extends JavaPlugin {
 				new CmdAWarTeam2());
 		
 		mngr = new CommandManager("pvp", this);
+		mngr.registerCommandList("?");
 		mngr.register(new CmdPvpBase());
 		mngr.register(new CmdPvpRemoveProtection());
 		
 		mngr = new CommandManager("adminpvp", "mycommand.staff", ChatColor.DARK_RED, this);
+		mngr.registerCommandList("");
 		mngr.register(new CmdAPvpAddProtection());
 		mngr.register(new CmdAPvpRemoveProtection());
 	}

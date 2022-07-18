@@ -106,7 +106,7 @@ public class PvpManager implements IOComponent {
 	public void savePlayer(Player p, Statement insert, Statement delete) {
 		PvpAccount acct = getAccount(p);
 		try {
-			insert.addBatch("INSERT INTO neopvp_accounts VALUES ('" +
+			insert.addBatch("REPLACE INTO neopvp_accounts VALUES ('" +
 					p.getUniqueId() + "'," + acct.getKillstreak() + "," + acct.getWins() + "," + acct.getLosses() + "," +
 					acct.getElo() + "," + acct.getBalance() + "," + acct.getProtectionExpiration() + ");");
 		} catch (SQLException e) {
