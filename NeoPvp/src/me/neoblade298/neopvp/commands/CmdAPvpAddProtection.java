@@ -1,5 +1,7 @@
 package me.neoblade298.neopvp.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,17 +14,17 @@ import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
 
-public class CmdPvpRemoveProtection implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+public class CmdAPvpAddProtection implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"), new CommandArgument("time (seconds)")));
 
 	@Override
 	public String getDescription() {
-		return "Removes your protection";
+		return "Adds protection time to a player";
 	}
 
 	@Override
 	public String getKey() {
-		return "";
+		return "addprotection";
 	}
 
 	@Override
@@ -32,12 +34,12 @@ public class CmdPvpRemoveProtection implements Subcommand {
 
 	@Override
 	public SubcommandRunner getRunner() {
-		return SubcommandRunner.PLAYER_ONLY;
+		return SubcommandRunner.BOTH;
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		PvpManager.getAccount((Player) s).removeProtection();
+		PvpManager.getAccount(Bukkit.getPlayer(args[0])).addProtection(Integer.parseInt(args[1]) * 1000);
 	}
 	
 	@Override

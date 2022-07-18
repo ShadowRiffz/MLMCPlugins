@@ -43,6 +43,11 @@ public class NeoPvp extends JavaPlugin {
 		
 		mngr = new CommandManager("pvp", this);
 		mngr.register(new CmdPvpBase());
+		mngr.register(new CmdPvpRemoveProtection());
+		
+		mngr = new CommandManager("adminpvp", "mycommand.staff", ChatColor.DARK_RED, this);
+		mngr.register(new CmdAPvpAddProtection());
+		mngr.register(new CmdAPvpRemoveProtection());
 	}
 	
 	@Override

@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.util.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -24,9 +26,17 @@ public class PvpAccount {
 	private int elo, killstreak, wins, losses;
 	private long protectionExpires = -1;
 	
+	private CoreRunnable cr;
+	
 	public PvpAccount(UUID uuid) {
 		this.uuid = uuid;
 		protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
+		
+		cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+			public void run() {
+				removeProtection();
+			}
+		});
 	}
 	
 	public void loadPlayer() {
@@ -34,8 +44,11 @@ public class PvpAccount {
 	}
 	
 	public void removeProtection() {
-		this.protectionExpires = -1;
-		Util.msg(p, "Your protection was removed.");
+		// If statement for in case a scheduler removes protection when it's already gone
+		if (this.protectionExpires != -1) {
+			this.protectionExpires = -1;
+			Util.msg(p, "Your protection was removed.");
+		}
 	}
 	
 	public void addProtection(long timeInMillis) {
@@ -43,6 +56,16 @@ public class PvpAccount {
 			protectionExpires = System.currentTimeMillis();
 		}
 		protectionExpires += timeInMillis;
+		
+		if (cr != null) {
+			cr.setCancelled(true);
+		}
+		
+		cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+			public void run() {
+				removeProtection();
+			}
+		});
 	}
 	
 	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
@@ -54,6 +77,14 @@ public class PvpAccount {
 		pvpBalance = rs.getDouble(6);
 		protectionExpires = rs.getLong(7);
 		this.p = Bukkit.getPlayer(uuid);
+		
+		if (protectionExpires > System.currentTimeMillis()) {
+			cr = SchedulerAPI.schedule(protectionExpires, new Runnable() {
+				public void run() {
+					removeProtection();
+				}
+			});
+		}
 	}
 	
 	public void addElo(int amount) {

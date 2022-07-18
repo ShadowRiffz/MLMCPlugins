@@ -45,13 +45,13 @@ public class War {
 		}
 	}
 	
-	public boolean schedule() {
+	public void schedule() {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
 				start();
 			}
 		};
-		return SchedulerAPI.schedule(this.date.getTimeInMillis(), runnable);
+		SchedulerAPI.schedule(this.date.getTimeInMillis(), runnable);
 	}
 	
 	public void start() {
