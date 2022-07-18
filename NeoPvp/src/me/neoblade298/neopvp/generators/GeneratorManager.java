@@ -4,21 +4,19 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.util.TimeUtil;
+import me.neoblade298.neocore.util.ScheduleInterval;
+import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.util.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neopvp.NeoPvp;
 
 public class GeneratorManager implements Manager {
 	private static HashMap<String, Generator> generators = new HashMap<String, Generator>();
 	private static FileLoader generatorLoader;
-	private static BukkitTask tasks[] = new BukkitTask[3];
-	private static final int MINUTES_PER_GENERATION = 30;
+	private static CoreRunnable generationTask;
 	
 	static {
 		generatorLoader = (cfg, file) -> {
@@ -43,22 +41,13 @@ public class GeneratorManager implements Manager {
 	}
 	
 	public GeneratorManager() {
-		tasks[0] = new BukkitRunnable() {
+		generationTask = SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, new Runnable() {
 			public void run() {
 				for (Generator gen : generators.values()) {
 					gen.spawnItem();
 				}
 			}
-		}.runTaskTimer(NeoPvp.inst(), TimeUtil.getTicksToNextSegment(MINUTES_PER_GENERATION), 1000 * 60 * MINUTES_PER_GENERATION);
-		
-
-		tasks[0] = new BukkitRunnable() {
-			public void run() {
-				for (Generator gen : generators.values()) {
-					gen.spawnItem();
-				}
-			}
-		}.runTaskTimer(NeoPvp.inst(), TimeUtil.getTicksToNextSegment(MINUTES_PER_GENERATION), 1000 * 60 * MINUTES_PER_GENERATION);
+		});
 		
 		reload();
 	}
