@@ -12,9 +12,6 @@ commands:
   profs:
     description: View exp command
     usage: /profs [args]
-  value:
-    description: Value command
-    usage: /value
   evouch:
     description: Evouch command
     usage: /evouch [args]
