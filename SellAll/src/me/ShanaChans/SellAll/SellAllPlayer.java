@@ -62,21 +62,20 @@ public class SellAllPlayer
         				if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material))
         				{
         					int difference = (sold + items.getAmount()) - itemSellCap.get(material);
-        					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
         					itemAmountSold.put(material, sold + (items.getAmount() - difference));
+        					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
         					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
         					inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
         				}
         				else
         				{
-        					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
         					itemAmountSold.put(material, sold + items.getAmount());
+        					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
         					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
         					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-                			inv.removeItem(new ItemStack(material, items.getAmount()));
+        					inv.removeItem(new ItemStack(material, items.getAmount()));
         				}
-        				System.out.println("TotalCost" + totalCost);
         			}
         		}
     		}
@@ -89,14 +88,15 @@ public class SellAllPlayer
     	else
     	{
     		ComponentBuilder builder = new ComponentBuilder("§6[Sell Log]");
-    		String text = "";
-    		for(Material mat : itemAmount.keySet())
-    		{
-    			text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + itemTotal.get(mat) + "g\n");
-    		}	
-    		text = text.concat("§7TOTAL - §e" + totalCost + "g");
-    		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall limit"));
-    		player.spigot().sendMessage(builder.create());
+        	String text = "";
+        	for(Material mat : itemAmount.keySet())
+        	{
+        		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + itemTotal.get(mat) + "g\n");
+        	}	
+        	text = text.concat("§7TOTAL - §e" + totalCost + "g");
+        	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
+        	player.spigot().sendMessage(builder.create());
+
     		NeoCore.getEconomy().depositPlayer(player, totalCost);
     	}
     }
