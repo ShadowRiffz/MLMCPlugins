@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.SchedulerAPI;
 import me.neoblade298.neocore.util.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neocore.util.Util;
@@ -22,7 +24,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class PvpAccount {
 	private UUID uuid;
 	private Player p;
-	private HashSet<UUID> uniqueKills = new HashSet<UUID>();
+	private PaginatedList<UUID> uniqueKills;
 	private double pvpBalance;
 	private int elo, killstreak, wins, losses;
 	private long protectionExpires = -1;
@@ -34,6 +36,7 @@ public class PvpAccount {
 		this.uuid = uuid;
 		this.protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
 		this.elo = 1800;
+		this.uniqueKills = new PaginatedList<UUID>();
 		
 		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
 			public void run() {
@@ -119,6 +122,10 @@ public class PvpAccount {
 		return uniqueKills.size();
 	}
 	
+	public PaginatedList<UUID> getUniqueKills() {
+		return uniqueKills;
+	}
+	
 	public void addUniqueKill(Player p) {
 		uniqueKills.add(p.getUniqueId());
 	}
@@ -143,7 +150,7 @@ public class PvpAccount {
 		losses++;
 	}
 	
-	public void setUniqueKills(HashSet<UUID> uniqueKills) {
+	public void setUniqueKills(PaginatedList<UUID> uniqueKills) {
 		this.uniqueKills = uniqueKills;
 	}
 	
@@ -182,6 +189,18 @@ public class PvpAccount {
 		Util.msg(s, "&6Killstreak: &e" + killstreak, false);
 		Util.msg(s, "&6Wins: &e" + wins, false);
 		Util.msg(s, "&6Losses: &e" + losses, false);
+		ComponentBuilder b = new ComponentBuilder(prot + "§6# of Unique Kills: §e" + uniqueKills.size())
+			.append(" §7§o[Click to view]", FormatRetention.NONE)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp uniquekills " + p.getName()))
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp uniquekills " + p.getName())));
+		s.spigot().sendMessage(b.create());
+	}
+	
+	public void redeemBounty(CommandSender s) {
+		NeoCore.getEconomy().depositPlayer(p, pvpBalance);
+		Util.msg(s, "&7Successfully redeemed &e" + pvpBalance + "g&7.");
+		pvpBalance = 0;
+		uniqueKills.clear();
 	}
 	
 	public UUID getUuid() {

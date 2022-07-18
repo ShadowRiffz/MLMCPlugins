@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.util.PaginatedList;
 
 public class PvpManager implements IOComponent {
 	private static HashMap<UUID, PvpAccount> accounts = new HashMap<UUID, PvpAccount>();
@@ -92,6 +94,13 @@ public class PvpManager implements IOComponent {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neopvp_accounts WHERE uuid = '" + p.getUniqueId() + "';");
 			if (rs.next()) {
 				accounts.put(p.getUniqueId(), new PvpAccount(p.getUniqueId(), rs));
+				
+				PaginatedList<UUID> uniqueKills = new PaginatedList<UUID>();
+				rs = stmt.executeQuery("SELECT * FROM neopvp_uniquekills WHERE uuid = '" + p.getUniqueId() + "';");
+				while (rs.next()) {
+					uniqueKills.add(UUID.fromString(rs.getString(2)));
+				}
+				accounts.get(p.getUniqueId()).setUniqueKills(uniqueKills);
 			}
 			else {
 				accounts.put(p.getUniqueId(), new PvpAccount(p.getUniqueId()));
@@ -109,8 +118,10 @@ public class PvpManager implements IOComponent {
 			insert.addBatch("REPLACE INTO neopvp_accounts VALUES ('" +
 					p.getUniqueId() + "'," + acct.getKillstreak() + "," + acct.getWins() + "," + acct.getLosses() + "," +
 					acct.getElo() + "," + acct.getBalance() + "," + acct.getProtectionExpiration() + ");");
+			for (UUID uuid : acct.getNumUniqueKills()) {
+				
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
