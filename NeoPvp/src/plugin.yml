@@ -11,3 +11,6 @@ commands:
    adminwar:
       usage: /adminwar
       alias: awar
+   adminpvp:
+      usage: /adminpvp
+      alias: apvp

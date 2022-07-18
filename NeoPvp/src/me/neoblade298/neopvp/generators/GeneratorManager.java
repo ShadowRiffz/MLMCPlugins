@@ -10,13 +10,11 @@ import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.util.ScheduleInterval;
 import me.neoblade298.neocore.util.SchedulerAPI;
-import me.neoblade298.neocore.util.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neopvp.NeoPvp;
 
 public class GeneratorManager implements Manager {
 	private static HashMap<String, Generator> generators = new HashMap<String, Generator>();
 	private static FileLoader generatorLoader;
-	private static CoreRunnable generationTask;
 	
 	static {
 		generatorLoader = (cfg, file) -> {
@@ -41,7 +39,7 @@ public class GeneratorManager implements Manager {
 	}
 	
 	public GeneratorManager() {
-		generationTask = SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, new Runnable() {
+		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, new Runnable() {
 			public void run() {
 				for (Generator gen : generators.values()) {
 					gen.spawnItem();
