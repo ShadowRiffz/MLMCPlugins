@@ -11,7 +11,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class PaginatedList<E> {
+public class PaginatedList<E> implements Iterable<E> {
 	private static final int DEFAULT_PAGE_SIZE = 10;
 	private LinkedList<LinkedList<E>> pages = new LinkedList<LinkedList<E>>();
 	private int pageSize;
@@ -148,5 +148,33 @@ public class PaginatedList<E> {
 	
 	public void displayFooter(Player p, int page) {
 		Util.msg(p, "&7Page &f" + (page + 1) + " &7/ " + pages.size());
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new PaginatedListIterator();
+	}
+	
+	private class PaginatedListIterator implements Iterator<E> {
+		private int page = 0;
+		private Iterator<E> iter = pages.get(0).iterator();
+
+		@Override
+		public boolean hasNext() {
+			return iter.hasNext() || this.page + 1 < pages.size();
+		}
+
+		@Override
+		public E next() {
+			if (iter.hasNext()) {
+				return iter.next();
+			}
+			else if (this.page + 1 < pages.size()) {
+				iter = pages.get(++this.page).iterator();
+				return iter.next();
+			}
+			return null;
+		}
+		
 	}
 }
