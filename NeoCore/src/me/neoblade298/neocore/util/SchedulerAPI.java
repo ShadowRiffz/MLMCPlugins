@@ -1,10 +1,15 @@
 package me.neoblade298.neocore.util;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.NeoCore;
@@ -30,7 +35,7 @@ public class SchedulerAPI {
 	
 	// Every 15 minutes
 	private static void scheduleTimekeeper() {
-		long ticks = TimeUtil.getTicksToNextSegment(MINUTES_PER_SEGMENT);
+		long ticks = getTicksToNextSegment(MINUTES_PER_SEGMENT);
 		new BukkitRunnable() {
 			public void run() {
 				runScheduledItems();
@@ -110,7 +115,7 @@ public class SchedulerAPI {
 		}
 	}
 	
-	private static CoreRunnable schedule(int date, int hour, int minute, int second, Runnable runnable) {
+	private static CoreRunnable schedule(String key, int date, int hour, int minute, int second, Runnable runnable) {
 		int diff = date - startupTime;
 		runnable.run();
 		if (diff >= 0 && diff <= 2) {
@@ -136,7 +141,7 @@ public class SchedulerAPI {
 				HashMap<Integer, ArrayList<CoreRunnable>> day = schedule.get(diff);
 				
 				ArrayList<CoreRunnable> runnables = day.getOrDefault(time, new ArrayList<CoreRunnable>());
-				CoreRunnable cr = new CoreRunnable(runnable, offset);
+				CoreRunnable cr = new CoreRunnable(key, runnable, offset);
 				runnables.add(cr);
 				day.putIfAbsent(time, runnables);
 				return cr;
@@ -145,30 +150,30 @@ public class SchedulerAPI {
 		return null;
 	}
 	
-	public static CoreRunnable schedule(int year, int month, int day, int hour, int minute, int second, Runnable runnable) {
+	public static CoreRunnable schedule(String key, int year, int month, int day, int hour, int minute, int second, Runnable runnable) {
 		int date = (year * 10000) + (month * 100) + day;
-		return schedule(date, hour, minute, second, runnable);
+		return schedule(key, date, hour, minute, second, runnable);
 	}
 	
-	public static CoreRunnable schedule(int hour, int minute, int second, Runnable runnable) {
+	public static CoreRunnable schedule(String key, int hour, int minute, int second, Runnable runnable) {
 		Calendar c = Calendar.getInstance();
-		return schedule(getDateKey(c), hour, minute, second, runnable);
+		return schedule(key, getDateKey(c), hour, minute, second, runnable);
 	}
 	
-	public static CoreRunnable schedule(int hour, int minute, Runnable runnable) {
-		return schedule(hour, minute, 0, runnable);
+	public static CoreRunnable schedule(String key, int hour, int minute, Runnable runnable) {
+		return schedule(key, hour, minute, 0, runnable);
 	}
 	
-	public static CoreRunnable scheduleRepeating(ScheduleInterval interval, Runnable runnable) {
-		CoreRunnable cr = new CoreRunnable(runnable, 0);
+	public static CoreRunnable scheduleRepeating(String key, ScheduleInterval interval, Runnable runnable) {
+		CoreRunnable cr = new CoreRunnable(key, runnable, 0);
 		repeaters.get(interval).add(cr);
 		return cr;
 	}
 	
-	public static CoreRunnable schedule(long time, Runnable runnable) {
+	public static CoreRunnable schedule(String key, long time, Runnable runnable) {
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
-		return schedule(getDateKey(c), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND), runnable);
+		return schedule(key, getDateKey(c), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND), runnable);
 	}
 	
 	private static int getDateKey(Calendar c) {
@@ -176,13 +181,27 @@ public class SchedulerAPI {
 	}
 	
 	public static class CoreRunnable {
+		private String key;
 		private Runnable runnable;
 		private boolean isCancelled;
 		private int offset;
-		public CoreRunnable(Runnable runnable, int offset) {
+		public CoreRunnable(String key, Runnable runnable, int offset) {
+			this.key = key;
 			this.runnable = runnable;
 			this.offset = offset;
 			this.isCancelled = false;
+		}
+		
+		public String getKey() {
+			return key;
+		}
+		
+		public boolean isCancelled() {
+			return isCancelled;
+		}
+		
+		public int getOffset() {
+			return offset;
 		}
 		
 		public void setCancelled(boolean cancelled) {
@@ -195,5 +214,84 @@ public class SchedulerAPI {
 		int minute = c.get(Calendar.MINUTE);
 		minute -= minute % MINUTES_PER_SEGMENT;
 		return (c.get(Calendar.HOUR) * 100) + minute;
+	}
+
+	public static long getTicksToHour(int hour) {
+		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime end = start.withHour(hour);
+		return Duration.between(start, end).toMillis() / 50;
+	}
+
+	public static long getTicksToNextSegment(int segmentLength) {
+		LocalDateTime start = LocalDateTime.now();
+		int totalSegments = (60 / segmentLength); // Segment Length must cleanly divide 60
+		int segmentsPassed = start.getMinute() / segmentLength;
+		LocalDateTime end;
+		if (segmentsPassed + 1 == totalSegments) {
+			end = start.plusHours(1).truncatedTo(ChronoUnit.HOURS); // Next segment starts on the hour
+		}
+		else {
+			end = start.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed + 1) * segmentLength).truncatedTo(ChronoUnit.MINUTES);
+		}
+
+		// Get Duration
+		long between = (Duration.between(start, end).toMillis() / 50) + 20; // Add 20 because truncate will round it down 1 tick
+		return between <= 20 ? segmentLength * 60 * 20 : between; // If between is 0, get the next segment
+	}
+
+	public static long getTicksPastPreviousSegment(int segmentLength) {
+		LocalDateTime end = LocalDateTime.now();
+		int segmentsPassed = end.getMinute() / segmentLength;
+		LocalDateTime start;
+		if (segmentsPassed == 0) {
+			start = end.truncatedTo(ChronoUnit.HOURS); // Previous segment was top of the hour
+		}
+		else {
+			start = end.truncatedTo(ChronoUnit.HOURS).plusMinutes((segmentsPassed - 1) * segmentLength).truncatedTo(ChronoUnit.MINUTES);
+		}
+
+		// Get Duration
+		long between = (Duration.between(start, end).toMillis() / 50) + 20;
+		return between <= 20 ? segmentLength * 60 * 20 : between; // If between is 0, get the previous segment
+	}
+	
+	public static void display(CommandSender s) {
+		int diff = getDateKey(Calendar.getInstance()) - startupTime;
+		
+		Util.msg(s, "&6-- Scheduled Runnables --");
+		for (Entry<Integer, ArrayList<CoreRunnable>> e : schedule.get(diff).entrySet()) {
+			ArrayList<CoreRunnable> crs = e.getValue();
+			String msg = "&e" + e.getKey() + "&f: &6" + crs.get(0).getKey();
+			for (int i = 1; i < crs.size(); i++) {
+				msg += "&7, &6" + crs.get(i).getKey();
+			}
+			Util.msg(s, msg);
+		}
+
+		Util.msg(s, "&6-- Repeating Runnables --");
+		ArrayList<CoreRunnable> list = repeaters.get(ScheduleInterval.HOUR);
+		if (list.size() != 0) {
+			String msg = "&eHour&f: &6" + list.get(0);
+			for (int i = 1; i < list.size(); i++) {
+				msg += "&7, &6" + list.get(i);
+			}
+			Util.msg(s, msg);
+		}
+		list = repeaters.get(ScheduleInterval.HALF_HOUR);
+		if (list.size() != 0) {
+			String msg = "&eHalf Hour&f: &6" + list.get(0);
+			for (int i = 1; i < list.size(); i++) {
+				msg += "&7, &6" + list.get(i);
+			}
+			Util.msg(s, msg);
+		}
+		list = repeaters.get(ScheduleInterval.FIFTEEN_MINUTES);
+		if (list.size() != 0) {
+			String msg = "&eFifteen Minutes&f: &6" + list.get(0);
+			for (int i = 1; i < list.size(); i++) {
+				msg += "&7, &6" + list.get(i);
+			}
+			Util.msg(s, msg);
+		}
 	}
 }
