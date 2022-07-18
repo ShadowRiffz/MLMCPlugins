@@ -117,7 +117,6 @@ public class SchedulerAPI {
 	
 	private static CoreRunnable schedule(String key, int date, int hour, int minute, int second, Runnable runnable) {
 		int diff = date - startupTime;
-		runnable.run();
 		if (diff >= 0 && diff <= 2) {
 			int scheduledMinute = minute - (minute % 15); // Round to previous 15
 			int offset = ((minute % 15) * 60) + second; // Offset is number of seconds after the scheduled 15 minute interval
