@@ -42,8 +42,9 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static HashMap<Material, Integer> itemCaps = new HashMap<Material, Integer>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
-	private YamlConfiguration cfg;
-
+	private static YamlConfiguration cfg;
+	private static SellAllManager inst;
+	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("SellAll Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
@@ -54,6 +55,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		        resetPlayers();
 		    }
 		});
+		inst = this;
 		NeoCore.registerIOComponent(this, this);
 	}
 
@@ -87,12 +89,16 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		ConfigurationSection sec = this.cfg.getConfigurationSection("price-list");
 
 		for (String key : sec.getKeys(false)) {
-			if (Material.valueOf(key) == null) {
-				Bukkit.getLogger().warning("Item failed to load: " + key);
-			}
-			else 
-			{
-				itemPrices.put(Material.valueOf(key), sec.getDouble(key));
+			try {
+				if (Material.valueOf(key) == null) {
+					Bukkit.getLogger().warning("Item failed to load: " + key);
+				}
+				else 
+				{
+					itemPrices.put(Material.valueOf(key), sec.getDouble(key));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -111,6 +117,50 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 		
 		sec = this.cfg.getConfigurationSection("multipliers");
+		
+		for (String key : sec.getKeys(false)) 
+		{
+			key.replaceAll("-", ".");
+			permMultipliers.put(sec.getDouble(key), key);
+		}
+	}
+	
+	public static void reloadConfig()
+	{
+		File cfgReload = new File(SellAllManager.inst.getDataFolder(), "config.yml");
+
+		cfg = YamlConfiguration.loadConfiguration(cfgReload);
+		ConfigurationSection sec = cfg.getConfigurationSection("price-list");
+
+		for (String key : sec.getKeys(false)) {
+			try {
+				if (Material.valueOf(key) == null) {
+					Bukkit.getLogger().warning("Item failed to load: " + key);
+				}
+				else 
+				{
+					itemPrices.put(Material.valueOf(key), sec.getDouble(key));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		sec = cfg.getConfigurationSection("item-cap");
+		
+		for(Material mat : itemPrices.keySet())
+		{
+			if(sec.contains(mat.name()))
+			{
+				itemCaps.put(mat, sec.getInt(mat.name()));
+			}
+			else
+			{
+				itemCaps.put(mat, 100);
+			}
+		}
+		
+		sec = cfg.getConfigurationSection("multipliers");
 		
 		for (String key : sec.getKeys(false)) 
 		{
@@ -264,5 +314,15 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
         }
         
         p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+	}
+	
+	public static SellAllManager inst()
+	{
+		return inst;
+	}
+	
+	public static YamlConfiguration getCfg() 
+	{
+		return cfg;
 	}
 }
