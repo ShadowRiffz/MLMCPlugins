@@ -23,6 +23,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -30,6 +31,7 @@ import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
+import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
@@ -47,7 +49,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		getServer().getPluginManager().registerEvents(this, this);
 		initCommands();
 		loadConfigs();
-		SchedulerAPI.schedule(10, 0, new Runnable() {
+		SchedulerAPI.schedule("sellall-resetcaps", 10, 0, new Runnable() {
 		    public void run() {
 		        resetPlayers();
 		    }
@@ -62,12 +64,15 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 
 	private void initCommands() {
 		CommandManager sellAll = new CommandManager("sellall", this);
+		CommandManager value = new CommandManager("value", this);
 		sellAll.register(new SellAllCommand());
 		sellAll.register(new SellAllCap());
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
+		value.register(new SellAllValue());
 		sellAll.registerCommandList("help");
 		this.getCommand("sellall").setExecutor(sellAll);
+		this.getCommand("value").setExecutor(value);
 	}
 
 	public void loadConfigs() {
@@ -219,5 +224,45 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 	}
-
+	
+	public static void getValue(Player p)
+	{
+		ItemStack item = p.getInventory().getItemInMainHand();
+        
+        if (item == null || item.getType().isAir()) 
+        {
+            p.sendMessage("§6You're not holding anything!");
+            return;
+        }
+        
+        NBTItem nbti = new NBTItem(item);
+        double value = 0;
+        
+        if (!nbti.getString("value").isBlank()) 
+        {
+            value = Double.parseDouble(nbti.getString("value"));
+        }
+        else 
+        {
+            value = nbti.getDouble("value");
+        }
+        
+        String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
+        
+        if(value == 0)
+        {
+        	if(itemPrices.containsKey(item.getType()))
+        	{
+        		name = item.getType().name();
+        		value = itemPrices.get(item.getType());
+        	}
+        	else
+        	{
+        		p.sendMessage("§6This item does not have a price!");
+        		return;
+        	}
+        }
+        
+        p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+	}
 }
