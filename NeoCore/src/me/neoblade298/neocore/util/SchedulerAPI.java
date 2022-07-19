@@ -56,21 +56,8 @@ public class SchedulerAPI {
 		HashMap<Integer, ArrayList<CoreRunnable>> day = schedule.get(diff);
 		if (day != null) {
 			if (day.containsKey(timeKey)) {
-				for (CoreRunnable runnable : day.get(timeKey)) {
-					if (runnable.offset == 0) {
-						if (runnable.isCancelled) {
-							runnable.runnable.run();
-						}
-					}
-					else {
-						new BukkitRunnable() {
-							public void run() {
-								if (runnable.isCancelled) {
-									runnable.runnable.run();
-								}
-							}
-						}.runTaskLater(NeoCore.inst(), runnable.offset * 20);
-					}
+				for (CoreRunnable cr : day.get(timeKey)) {
+					cr.run();
 				}
 				day.remove(timeKey);
 			}
@@ -84,7 +71,7 @@ public class SchedulerAPI {
 				iter.remove();
 			}
 			else {
-				cr.runnable.run();
+				cr.run();
 			}
 		}
 
@@ -96,7 +83,7 @@ public class SchedulerAPI {
 					iter.remove();
 				}
 				else {
-					cr.runnable.run();
+					cr.run();
 				}
 			}
 		}
@@ -109,7 +96,7 @@ public class SchedulerAPI {
 					iter.remove();
 				}
 				else {
-					cr.runnable.run();
+					cr.run();
 				}
 			}
 		}
@@ -169,6 +156,12 @@ public class SchedulerAPI {
 		return cr;
 	}
 	
+	public static CoreRunnable scheduleRepeating(String key, ScheduleInterval interval, int offsetSeconds, Runnable runnable) {
+		CoreRunnable cr = new CoreRunnable(key, runnable, offsetSeconds);
+		repeaters.get(interval).add(cr);
+		return cr;
+	}
+	
 	public static CoreRunnable schedule(String key, long time, Runnable runnable) {
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
@@ -205,6 +198,23 @@ public class SchedulerAPI {
 		
 		public void setCancelled(boolean cancelled) {
 			this.isCancelled = cancelled;
+		}
+		
+		public void run() {
+			if (offset == 0) {
+				if (!isCancelled) {
+					runnable.run();
+				}
+			}
+			else {
+				new BukkitRunnable() {
+					public void run() {
+						if (!isCancelled) {
+							runnable.run();
+						}
+					}
+				}.runTaskLater(NeoCore.inst(), offset * 20);
+			}
 		}
 	}
 	
