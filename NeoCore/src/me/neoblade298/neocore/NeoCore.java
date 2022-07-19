@@ -28,7 +28,7 @@ import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
-import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {

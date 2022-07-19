@@ -1,4 +1,4 @@
-package me.neoblade298.neocore.util;
+package me.neoblade298.neocore.scheduler;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.util.Util;
 
 public class SchedulerAPI {
 	private static final int startupTime = getDateKey(Calendar.getInstance());
@@ -64,7 +65,23 @@ public class SchedulerAPI {
 		}
 
 		// Repeating tasks
-		Iterator<CoreRunnable> iter = repeaters.get(ScheduleInterval.FIFTEEN_MINUTES).iterator();
+		runRepeaters(ScheduleInterval.FIFTEEN_MINUTES);
+
+		if (minute % 30 == 0) {
+			runRepeaters(ScheduleInterval.HALF_HOUR);
+		}
+		
+		if (minute == 0) {
+			runRepeaters(ScheduleInterval.HOUR);
+			
+			if (hour == 10) {
+				runRepeaters(ScheduleInterval.DAILY);
+			}
+		}
+	}
+	
+	private static void runRepeaters(ScheduleInterval interval) {
+		Iterator<CoreRunnable> iter = repeaters.get(interval).iterator();
 		while (iter.hasNext()) {
 			CoreRunnable cr = iter.next();
 			if (cr.isCancelled) {
@@ -72,32 +89,6 @@ public class SchedulerAPI {
 			}
 			else {
 				cr.runOrSchedule();
-			}
-		}
-
-		if (minute % 30 == 0) {
-			iter = repeaters.get(ScheduleInterval.HALF_HOUR).iterator();
-			while (iter.hasNext()) {
-				CoreRunnable cr = iter.next();
-				if (cr.isCancelled) {
-					iter.remove();
-				}
-				else {
-					cr.runOrSchedule();
-				}
-			}
-		}
-		
-		if (minute == 0) {
-			iter = repeaters.get(ScheduleInterval.HOUR).iterator();
-			while (iter.hasNext()) {
-				CoreRunnable cr = iter.next();
-				if (cr.isCancelled) {
-					iter.remove();
-				}
-				else {
-					cr.runOrSchedule();
-				}
 			}
 		}
 	}
@@ -166,7 +157,7 @@ public class SchedulerAPI {
 		int minute = now.get(Calendar.MINUTE);
 		int scheduledMinute = minute - (minute % 15); // Round to previous 15
 		
-		if (scheduledMinute % interval.getDivisor() == 0) {
+		if (interval.getDivisor() != -1 && scheduledMinute % interval.getDivisor() == 0) {
 			Calendar scheduledTime = Calendar.getInstance();
 			scheduledTime.add(Calendar.SECOND, offsetSeconds);
 			long timeToSchedule = scheduledTime.getTimeInMillis() - now.getTimeInMillis();
