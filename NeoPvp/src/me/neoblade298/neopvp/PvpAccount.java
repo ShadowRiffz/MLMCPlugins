@@ -171,6 +171,7 @@ public class PvpAccount {
 	public void displayAccount(CommandSender s) {
 		String prot = "§6Protection: ";
 		Util.msg(s, "&6===[&e" + p.getName() + "&6]===", false);
+		boolean displayToSelf = s instanceof Player && (Player) s == this.p;
 		if (protectionExpires < System.currentTimeMillis()) {
 			prot += "&4N/A";
 			Util.msg(s, prot, false);
@@ -179,7 +180,7 @@ public class PvpAccount {
 			double millisToExpiration = protectionExpires - System.currentTimeMillis();
 			double hoursLeft = millisToExpiration / 1000 / 60 / 60;
 			ComponentBuilder b = new ComponentBuilder(prot + "§eExpires in " + df.format(hoursLeft) + "h ");
-			if (s instanceof Player && (Player) s == this.p) {
+			if (displayToSelf) {
 				b.append("§7§o[Click to remove]", FormatRetention.NONE)
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp removeprotection"))
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp removeprotection")));
@@ -188,10 +189,17 @@ public class PvpAccount {
 		}
 		Util.msg(s, "&6Rating: &e" + elo, false);
 		Util.msg(s, "&6Pvp Balance: &e" + pvpBalance, false);
+		ComponentBuilder b = new ComponentBuilder("§6Pvp Balance: §e" + pvpBalance);
+		if (displayToSelf) {
+			b.append(" §7§o[Click to redeem]", FormatRetention.NONE)
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp redeem"))
+			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp redeem")));
+		}
+		s.spigot().sendMessage(b.create());
 		Util.msg(s, "&6Killstreak: &e" + killstreak, false);
 		Util.msg(s, "&6Wins: &e" + wins, false);
 		Util.msg(s, "&6Losses: &e" + losses, false);
-		ComponentBuilder b = new ComponentBuilder("§6# of Unique Kills: §e" + uniqueKills.size())
+		b = new ComponentBuilder("§6# of Unique Kills: §e" + uniqueKills.size())
 			.append(" §7§o[Click to view]", FormatRetention.NONE)
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp uniquekills " + p.getName()))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp uniquekills " + p.getName())));

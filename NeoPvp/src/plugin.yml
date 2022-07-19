@@ -10,7 +10,7 @@ commands:
       usage: /pvp
    adminwar:
       usage: /adminwar
-      alias: awar
+      aliases: awar
    adminpvp:
       usage: /adminpvp
-      alias: apvp
+      aliases: apvp
