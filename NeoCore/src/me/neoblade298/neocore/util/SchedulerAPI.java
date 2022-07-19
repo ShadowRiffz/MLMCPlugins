@@ -272,7 +272,7 @@ public class SchedulerAPI {
 		if (list.size() != 0) {
 			String msg = "&eHour&f: &6" + list.get(0);
 			for (int i = 1; i < list.size(); i++) {
-				msg += "&7, &6" + list.get(i);
+				msg += "&7, &6" + list.get(i).getKey();
 			}
 			Util.msg(s, msg);
 		}
@@ -280,7 +280,7 @@ public class SchedulerAPI {
 		if (list.size() != 0) {
 			String msg = "&eHalf Hour&f: &6" + list.get(0);
 			for (int i = 1; i < list.size(); i++) {
-				msg += "&7, &6" + list.get(i);
+				msg += "&7, &6" + list.get(i).getKey();
 			}
 			Util.msg(s, msg);
 		}
@@ -288,7 +288,7 @@ public class SchedulerAPI {
 		if (list.size() != 0) {
 			String msg = "&eFifteen Minutes&f: &6" + list.get(0);
 			for (int i = 1; i < list.size(); i++) {
-				msg += "&7, &6" + list.get(i);
+				msg += "&7, &6" + list.get(i).getKey();
 			}
 			Util.msg(s, msg);
 		}
