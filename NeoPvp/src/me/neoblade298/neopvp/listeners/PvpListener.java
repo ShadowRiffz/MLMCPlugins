@@ -41,7 +41,7 @@ public class PvpListener implements Listener {
 		PvpAccount victim = PvpManager.getAccount(pv);
 
 		// Make check for if user is in an allowed protection region
-		/* RegionContainer ca = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		RegionContainer ca = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery qa = ca.createQuery();
 		ApplicableRegionSet seta = qa.getApplicableRegions(BukkitAdapter.adapt(pa.getLocation()), QueryOption.NONE);
 
@@ -65,7 +65,6 @@ public class PvpListener implements Listener {
 				return;
 			}
 		}
-		*/
 
 	}
 	

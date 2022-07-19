@@ -3,7 +3,6 @@ package me.neoblade298.neopvp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -87,7 +86,6 @@ public class PvpAccount {
 			System.out.println(protectionExpires + " " + System.currentTimeMillis());
 			cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
 				public void run() {
-					System.out.println("TEST");
 					removeProtection();
 				}
 			});
@@ -189,7 +187,7 @@ public class PvpAccount {
 		Util.msg(s, "&6Killstreak: &e" + killstreak, false);
 		Util.msg(s, "&6Wins: &e" + wins, false);
 		Util.msg(s, "&6Losses: &e" + losses, false);
-		ComponentBuilder b = new ComponentBuilder(prot + "§6# of Unique Kills: §e" + uniqueKills.size())
+		ComponentBuilder b = new ComponentBuilder("§6# of Unique Kills: §e" + uniqueKills.size())
 			.append(" §7§o[Click to view]", FormatRetention.NONE)
 			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp uniquekills " + p.getName()))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/pvp uniquekills " + p.getName())));
@@ -201,6 +199,21 @@ public class PvpAccount {
 		Util.msg(s, "&7Successfully redeemed &e" + pvpBalance + "g&7.");
 		pvpBalance = 0;
 		uniqueKills.clear();
+	}
+	
+	public void displayUniqueKills(CommandSender s, int page) {
+		if (uniqueKills.size() == 0) {
+			Util.msg(s, "&cThis player doesn't have any unique kills yet!");
+		}
+		else if (uniqueKills.pages() <= page) {
+			Util.msg(s, "&cThis page doesn't exist!");
+		}
+		else {
+			Util.msg(s, "&6Unique Kills:");
+			for (UUID uuid : uniqueKills.get(page)) {
+				Util.msg(s, "&7- &e" + Bukkit.getOfflinePlayer(uuid).getName());
+			}
+		}
 	}
 	
 	public UUID getUuid() {
