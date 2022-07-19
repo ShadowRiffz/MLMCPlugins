@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
@@ -44,6 +45,20 @@ public class GeneratorManager implements Manager {
 				for (Generator gen : generators.values()) {
 					gen.spawnItem();
 				}
+			}
+		});
+		
+		// 5 minute warning
+		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, 1500, new Runnable() {
+			public void run() {
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e5 &7minutes until the item generators activate at &c/warp resource&7!");
+			}
+		});
+		
+		// 1 minute warning
+		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, 1740, new Runnable() {
+			public void run() {
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e1 &7minute until the item generators activate at &c/warp resource&7!");
 			}
 		});
 		

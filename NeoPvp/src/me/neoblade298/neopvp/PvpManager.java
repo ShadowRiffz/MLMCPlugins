@@ -57,6 +57,9 @@ public class PvpManager implements IOComponent {
 		// Transfer pvp balance
 		killerAcc.addBalance(killedAcc.getBalance());
 		killedAcc.setBalance(0);
+		
+		// Remove unique kills from loser
+		killedAcc.clearUniqueKills();
 
 		// Killstreak
 		killerAcc.incrementKillstreak();

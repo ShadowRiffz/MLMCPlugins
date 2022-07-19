@@ -128,6 +128,10 @@ public class PvpAccount {
 		uniqueKills.add(p.getUniqueId());
 	}
 	
+	public void clearUniqueKills() {
+		uniqueKills.clear();
+	}
+	
 	public void incrementKillstreak() {
 		killstreak++;
 	}
