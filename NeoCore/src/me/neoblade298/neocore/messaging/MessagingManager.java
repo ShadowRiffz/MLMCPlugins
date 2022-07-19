@@ -2,7 +2,9 @@ package me.neoblade298.neocore.messaging;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -18,7 +20,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 
 public class MessagingManager {
-	private static HashMap<String, BaseComponent[]> messages = new HashMap<String, BaseComponent[]>();
+	private static HashMap<String, BaseComponent[][]> messages = new HashMap<String, BaseComponent[][]>();
 	
 	private static final FileLoader msgLoader;
 	
@@ -26,22 +28,54 @@ public class MessagingManager {
 		msgLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
 				ConfigurationSection sec = cfg.getConfigurationSection(key);
-				messages.put(key.toUpperCase(), parseMessage(sec));
+				messages.put(key.toUpperCase(), parsePage(sec));
 			}
 		};
 	}
 	
-	public static void initialize() throws NeoIOException {
+	public static void reload() throws NeoIOException {
+		messages.clear();
 		NeoCore.loadFiles(new File(NeoCore.inst().getDataFolder(), "messages"), msgLoader);
 	}
 	
 	public static void sendMessage(CommandSender s, String key) {
+		sendMessage(s, key, 1);
+	}
+	
+	public static void sendMessage(CommandSender s, String key, int page) {
+		page--;
 		if (messages.containsKey(key.toUpperCase())) {
-			s.spigot().sendMessage(messages.get(key.toUpperCase()));
+			BaseComponent[][] msgs = messages.get(key.toUpperCase());
+			if (msgs.length <= page) {
+				Util.msg(s, "&cThis doesn't have " + page + " pages!");
+				return;
+			}
+			
+			s.spigot().sendMessage(msgs[page]);
 		}
 		else {
-			Util.msg(s, "&cMessage doesn't exist: " + key);
+			Util.msg(s, "&cMessage " + key + " doesn't exist!");
+			Bukkit.getLogger().warning("[NeoCore] Failed to send message to " + s.getName() + ", key doesn't exist: " + key);
 		}
+	}
+	
+	public static BaseComponent[][] parsePage(ConfigurationSection cfg) {
+		BaseComponent[][] list;
+		if (cfg.contains("pages")) {
+			ConfigurationSection pages = cfg.getConfigurationSection("pages");
+			Set<String> keys = pages.getKeys(false);
+			list = new BaseComponent[keys.size()][];
+			
+			int i = 0;
+			for (String key : pages.getKeys(false)) {
+				list[i] = parseMessage(pages.getConfigurationSection(key));
+			}
+		}
+		else {
+			list = new BaseComponent[1][];
+			list[0] = parseMessage(cfg);
+		}
+		return list;
 	}
 	
 	public static BaseComponent[] parseMessage(ConfigurationSection cfg) {

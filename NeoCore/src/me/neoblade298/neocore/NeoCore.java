@@ -77,7 +77,7 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // messaging
         try {
-			MessagingManager.initialize();
+			MessagingManager.reload();
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
@@ -99,11 +99,21 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCoreDebug());
 		mngr.register(new CmdCoreSchedule());
 		mngr.register(new CmdCoreMessage());
+		mngr.register(new CmdCorePlayerMessage());
+		mngr.register(new CmdCoreReload());
 		
 		mngr = new CommandManager("bcore", this);
 		mngr.registerCommandList("");
 		mngr.register(new CmdBCoreSend());
 		mngr.register(new CmdBCoreBroadcast());
+	}
+	
+	public static void reload() {
+		try {
+			MessagingManager.reload();
+		} catch (NeoIOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void onDisable() {
