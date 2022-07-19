@@ -22,7 +22,10 @@ public class BungeeAPI {
 		out.writeUTF(Util.translateColors(msg));
 
 		Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-
+		if (p == null) {
+			Bukkit.getLogger().warning("[NeoCore] Could not send message due to no online players: " + msg);
+			return;
+		}
 		p.sendPluginMessage(NeoCore.inst(), "BungeeCord", out.toByteArray());
 	}
 	
@@ -75,6 +78,13 @@ public class BungeeAPI {
 
 		out.writeShort(msgbytes.toByteArray().length);
 		out.write(msgbytes.toByteArray());
+		if (p == null) {
+			Bukkit.getLogger().warning("[NeoCore] Could not send pluginmsg in channel " + channel + " due to no online players:");
+			for (Object msg : msgs) {
+				Bukkit.getLogger().warning("[NeoCore] - " + msg);
+			}
+			return;
+		}
 		p.sendPluginMessage(NeoCore.inst(), "BungeeCord", out.toByteArray());
 	}
 }
