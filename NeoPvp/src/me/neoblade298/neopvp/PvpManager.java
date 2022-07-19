@@ -104,7 +104,6 @@ public class PvpManager implements IOComponent {
 				while (rs.next()) {
 					uniqueKills.add(UUID.fromString(rs.getString(2)));
 				}
-				uniqueKills.add(UUID.fromString("8108a15f-bf77-4614-84b8-5930a1c71e9d"));
 				acct.setUniqueKills(uniqueKills);
 			}
 			else {

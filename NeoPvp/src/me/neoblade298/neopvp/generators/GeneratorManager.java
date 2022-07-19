@@ -49,14 +49,14 @@ public class GeneratorManager implements Manager {
 		});
 		
 		// 5 minute warning
-		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, 1500, new Runnable() {
+		SchedulerAPI.scheduleRepeating("neopvp-generators-5m-warn", ScheduleInterval.HALF_HOUR, 1500, new Runnable() {
 			public void run() {
 				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e5 &7minutes until the item generators activate at &c/warp resource&7!");
 			}
 		});
 		
 		// 1 minute warning
-		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, 1740, new Runnable() {
+		SchedulerAPI.scheduleRepeating("neopvp-generators-1m-warn", ScheduleInterval.HALF_HOUR, 1740, new Runnable() {
 			public void run() {
 				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e1 &7minute until the item generators activate at &c/warp resource&7!");
 			}

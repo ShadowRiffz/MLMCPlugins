@@ -83,7 +83,6 @@ public class PvpAccount {
 		protectionExpires = rs.getLong(7);
 		
 		if (protectionExpires > System.currentTimeMillis()) {
-			System.out.println(protectionExpires + " " + System.currentTimeMillis());
 			cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
 				public void run() {
 					removeProtection();
