@@ -57,7 +57,7 @@ public class SchedulerAPI {
 		if (day != null) {
 			if (day.containsKey(timeKey)) {
 				for (CoreRunnable cr : day.get(timeKey)) {
-					cr.run();
+					cr.runOrSchedule();
 				}
 				day.remove(timeKey);
 			}
@@ -71,7 +71,7 @@ public class SchedulerAPI {
 				iter.remove();
 			}
 			else {
-				cr.run();
+				cr.runOrSchedule();
 			}
 		}
 
@@ -83,7 +83,7 @@ public class SchedulerAPI {
 					iter.remove();
 				}
 				else {
-					cr.run();
+					cr.runOrSchedule();
 				}
 			}
 		}
@@ -96,7 +96,7 @@ public class SchedulerAPI {
 					iter.remove();
 				}
 				else {
-					cr.run();
+					cr.runOrSchedule();
 				}
 			}
 		}
@@ -116,11 +116,14 @@ public class SchedulerAPI {
 				scheduledTime.set(Calendar.MINUTE, minute);
 				scheduledTime.set(Calendar.SECOND, second);
 				long timeToSchedule = scheduledTime.getTimeInMillis() - now.getTimeInMillis();
-				new BukkitRunnable() {
-					public void run() {
-						runnable.run();
-					}
-				}.runTaskLater(NeoCore.inst(), timeToSchedule / 50);
+				if (timeToSchedule >= 0) {
+					CoreRunnable cr = new CoreRunnable(key, runnable, (minute * 60) + second);
+					new BukkitRunnable() {
+						public void run() {
+							cr.runInstantly();
+						}
+					}.runTaskLater(NeoCore.inst(), timeToSchedule / 50);
+				}
 			}
 			// If schedule time is > 15 minutes from now, put it in the schedule
 			else {
@@ -151,14 +154,31 @@ public class SchedulerAPI {
 	}
 	
 	public static CoreRunnable scheduleRepeating(String key, ScheduleInterval interval, Runnable runnable) {
-		CoreRunnable cr = new CoreRunnable(key, runnable, 0);
-		repeaters.get(interval).add(cr);
-		return cr;
+		return scheduleRepeating(key, interval, 0, runnable);
 	}
 	
 	public static CoreRunnable scheduleRepeating(String key, ScheduleInterval interval, int offsetSeconds, Runnable runnable) {
 		CoreRunnable cr = new CoreRunnable(key, runnable, offsetSeconds);
 		repeaters.get(interval).add(cr);
+
+		// If the schedule time is within 15 minutes from now, just make it a regular bukkitrunnable
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		int scheduledMinute = minute - (minute % 15); // Round to previous 15
+		
+		if (scheduledMinute % interval.getDivisor() == 0) {
+			Calendar scheduledTime = Calendar.getInstance();
+			scheduledTime.add(Calendar.SECOND, offsetSeconds);
+			long timeToSchedule = scheduledTime.getTimeInMillis() - now.getTimeInMillis();
+			if (timeToSchedule >= 0) {
+				new BukkitRunnable() {
+					public void run() {
+						cr.runInstantly();
+					}
+				}.runTaskLater(NeoCore.inst(), timeToSchedule / 50);
+			}
+		}
+		
 		return cr;
 	}
 	
@@ -200,7 +220,7 @@ public class SchedulerAPI {
 			this.isCancelled = cancelled;
 		}
 		
-		public void run() {
+		public void runOrSchedule() {
 			if (offset == 0) {
 				if (!isCancelled) {
 					runnable.run();
@@ -214,6 +234,12 @@ public class SchedulerAPI {
 						}
 					}
 				}.runTaskLater(NeoCore.inst(), offset * 20);
+			}
+		}
+		
+		public void runInstantly() {
+			if (!isCancelled) {
+				runnable.run();
 			}
 		}
 	}
@@ -280,7 +306,7 @@ public class SchedulerAPI {
 		Util.msg(s, "&6-- Repeating Runnables --");
 		ArrayList<CoreRunnable> list = repeaters.get(ScheduleInterval.HOUR);
 		if (list.size() != 0) {
-			String msg = "&eHour&f: &6" + list.get(0);
+			String msg = "&eHour&f: &6" + list.get(0).getKey();
 			for (int i = 1; i < list.size(); i++) {
 				msg += "&7, &6" + list.get(i).getKey();
 			}
@@ -288,7 +314,7 @@ public class SchedulerAPI {
 		}
 		list = repeaters.get(ScheduleInterval.HALF_HOUR);
 		if (list.size() != 0) {
-			String msg = "&eHalf Hour&f: &6" + list.get(0);
+			String msg = "&eHalf Hour&f: &6" + list.get(0).getKey();
 			for (int i = 1; i < list.size(); i++) {
 				msg += "&7, &6" + list.get(i).getKey();
 			}
@@ -296,7 +322,7 @@ public class SchedulerAPI {
 		}
 		list = repeaters.get(ScheduleInterval.FIFTEEN_MINUTES);
 		if (list.size() != 0) {
-			String msg = "&eFifteen Minutes&f: &6" + list.get(0);
+			String msg = "&eFifteen Minutes&f: &6" + list.get(0).getKey();
 			for (int i = 1; i < list.size(); i++) {
 				msg += "&7, &6" + list.get(i).getKey();
 			}
