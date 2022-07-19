@@ -159,6 +159,7 @@ public class SchedulerAPI {
 		
 		if (interval.getDivisor() != -1 && scheduledMinute % interval.getDivisor() == 0) {
 			Calendar scheduledTime = Calendar.getInstance();
+			scheduledTime.set(Calendar.SECOND, 0);
 			scheduledTime.add(Calendar.SECOND, offsetSeconds);
 			long timeToSchedule = scheduledTime.getTimeInMillis() - now.getTimeInMillis();
 			if (timeToSchedule >= 0) {
