@@ -26,6 +26,7 @@ import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
 import me.neoblade298.neocore.util.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
@@ -73,6 +74,13 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // playerdata
         IOListener.register(this, new PlayerDataManager());
+        
+        // messaging
+        try {
+			MessagingManager.initialize();
+		} catch (NeoIOException e) {
+			e.printStackTrace();
+		}
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -90,15 +98,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCoreDisable());
 		mngr.register(new CmdCoreDebug());
 		mngr.register(new CmdCoreSchedule());
-		
-		mngr = new CommandManager("help", this);
-		mngr.register(new CmdCoreMessage("help"));
-		
-		mngr = new CommandManager("features", this);
-		mngr.register(new CmdCoreMessage("features", 2));
-		
-		mngr = new CommandManager("commands", this);
-		mngr.register(new CmdCoreMessage("commands", 4));
+		mngr.register(new CmdCoreMessage());
 		
 		mngr = new CommandManager("bcore", this);
 		mngr.registerCommandList("");
@@ -162,14 +162,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 			}
 		}
 		else {
-			try {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(load);
-				loader.load(cfg, load);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				throw new NeoIOException("Failed to parse yaml for file " + load.getParent() + "/" + load.getName());
-			}
+			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(load);
+			loader.load(cfg, load);
 		}
 	}
 	
