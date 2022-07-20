@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.event.BonusBlockPurchaseCostCalculationEvent;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -196,5 +197,20 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	@EventHandler
 	public void onTownCreate(NewTownEvent e) {
 		e.getTown().getAccount().deposit(2500, "Starter money");
+	}
+	
+	@EventHandler
+	public void onBonusBlockCostCalculation(BonusBlockPurchaseCostCalculationEvent e) {
+		int blocks = e.getAlreadyPurchasedBlocksAmount();
+		int numPurchased = e.getAmountOfPurchasingBlocksRequest();
+		double cost = 0;
+		for (int i = 0; i < numPurchased; i++) {
+			cost += getBonusBlockPrice(blocks + i);
+		}
+		e.setPrice(cost);
+	}
+	
+	private double getBonusBlockPrice(int previousBlocks) {
+		return 1000 + (2 * previousBlocks) + (Math.pow(previousBlocks, 2) / 200);
 	}
 }
