@@ -34,9 +34,17 @@ public class SellAllReload implements Subcommand
 	}
 	
 	@Override
+	public boolean isHidden()
+	{
+		return true;
+	}
+	
+	@Override
 	public void run(CommandSender sender, String[] args) 
 	{	
-		SellAllManager.reloadConfig(null);
+		Player player = (Player) sender;
+		player.sendMessage("§6SellAll Config reloaded!");
+		SellAllManager.inst().loadConfigs();
 	}
 
 }

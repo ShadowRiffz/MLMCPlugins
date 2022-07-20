@@ -30,12 +30,14 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
+import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.ScheduleInterval;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
 
 public class SellAllManager extends JavaPlugin implements Listener, IOComponent {
 	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
@@ -50,7 +52,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		getServer().getPluginManager().registerEvents(this, this);
 		initCommands();
 		loadConfigs();
-		SchedulerAPI.schedule("sellall-resetcaps", 10, 0, new Runnable() {
+		SchedulerAPI.scheduleRepeating("sellall-resetcaps", ScheduleInterval.DAILY, new Runnable() {
 		    public void run() {
 		        resetPlayers();
 		    }
@@ -71,13 +73,18 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		sellAll.register(new SellAllCap());
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
+		sellAll.register(new SellAllReload());
 		value.register(new SellAllValue());
 		sellAll.registerCommandList("help");
 		this.getCommand("sellall").setExecutor(sellAll);
 		this.getCommand("value").setExecutor(value);
 	}
 
-	public void loadConfigs() {
+	public void loadConfigs() 
+	{
+		itemPrices.clear();
+		itemCaps.clear();
+		permMultipliers.clear();
 		File cfg = new File(getDataFolder(), "config.yml");
 
 		// Save config if doesn't exist
@@ -85,8 +92,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			saveResource("config.yml", false);
 		}
 
-		this.cfg = YamlConfiguration.loadConfiguration(cfg);
-		ConfigurationSection sec = this.cfg.getConfigurationSection("price-list");
+		SellAllManager.cfg = YamlConfiguration.loadConfiguration(cfg);
+		ConfigurationSection sec = SellAllManager.cfg.getConfigurationSection("price-list");
 
 		for (String key : sec.getKeys(false)) {
 			try {
@@ -102,7 +109,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 		
-		sec = this.cfg.getConfigurationSection("item-cap");
+		sec = SellAllManager.cfg.getConfigurationSection("item-cap");
 		
 		for(Material mat : itemPrices.keySet())
 		{
@@ -116,51 +123,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 		
-		sec = this.cfg.getConfigurationSection("multipliers");
-		
-		for (String key : sec.getKeys(false)) 
-		{
-			key.replaceAll("-", ".");
-			permMultipliers.put(sec.getDouble(key), key);
-		}
-	}
-	
-	public static void reloadConfig()
-	{
-		File cfgReload = new File(SellAllManager.inst.getDataFolder(), "config.yml");
-
-		cfg = YamlConfiguration.loadConfiguration(cfgReload);
-		ConfigurationSection sec = cfg.getConfigurationSection("price-list");
-
-		for (String key : sec.getKeys(false)) {
-			try {
-				if (Material.valueOf(key) == null) {
-					Bukkit.getLogger().warning("Item failed to load: " + key);
-				}
-				else 
-				{
-					itemPrices.put(Material.valueOf(key), sec.getDouble(key));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		sec = cfg.getConfigurationSection("item-cap");
-		
-		for(Material mat : itemPrices.keySet())
-		{
-			if(sec.contains(mat.name()))
-			{
-				itemCaps.put(mat, sec.getInt(mat.name()));
-			}
-			else
-			{
-				itemCaps.put(mat, 100);
-			}
-		}
-		
-		sec = cfg.getConfigurationSection("multipliers");
+		sec = SellAllManager.cfg.getConfigurationSection("multipliers");
 		
 		for (String key : sec.getKeys(false)) 
 		{
@@ -319,10 +282,5 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	public static SellAllManager inst()
 	{
 		return inst;
-	}
-	
-	public static YamlConfiguration getCfg() 
-	{
-		return cfg;
 	}
 }
