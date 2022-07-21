@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -37,6 +38,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 	private static String instName = null;
 	private static Economy econ;
 	private static boolean debug;
+	
+	public static Random gen = new Random();
 	
 	
 	public void onEnable() {
