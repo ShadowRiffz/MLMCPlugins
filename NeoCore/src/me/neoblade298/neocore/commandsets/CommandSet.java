@@ -2,8 +2,11 @@ package me.neoblade298.neocore.commandsets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.bukkit.configuration.ConfigurationSection;
+
+import me.neoblade298.neocore.NeoCore;
 
 public class CommandSet {
 	private String key;
@@ -15,7 +18,7 @@ public class CommandSet {
 		this.key = key;
 		
 		if (cfg.contains("variables")) {
-			ConfigurationSection sec = cfg.getConfigurationSection("variables")
+			ConfigurationSection sec = cfg.getConfigurationSection("variables");
 			for (String var : sec.getKeys(false)) {
 				variables.put(var, new CommandSetVariable(sec.getConfigurationSection(var)));
 			}
@@ -27,5 +30,21 @@ public class CommandSet {
 			entries.add(cse);
 			totalWeight += cse.getWeight();
 		}
+	}
+	
+	public void run(String args[]) {
+		System.out.println("Got here");
+		int gen = NeoCore.gen.nextInt(totalWeight);
+		Iterator<CommandSetEntry> iter = entries.iterator();
+		CommandSetEntry e = null;
+		while (gen >= 0 && iter.hasNext()) {
+			e = iter.next();
+			gen -= e.getWeight();
+		}
+		e.run(variables, args);
+	}
+	
+	public String getKey() {
+		return key;
 	}
 }

@@ -2,14 +2,11 @@ package me.neoblade298.neocore.commands.builtin;
 
 import org.bukkit.command.CommandSender;
 
-import me.neoblade298.neocore.NeoCore;
-import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neocore.commandsets.CommandSetManager;
 
-public class CmdCoreReload implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+public class CmdCoreCommandSet implements Subcommand {
 
 	@Override
 	public String getPermission() {
@@ -23,22 +20,25 @@ public class CmdCoreReload implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "reload";
+		return "commandset";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Reloads the plugin safely";
+		return "Runs a command set";
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		NeoCore.reload();
-		Util.msg(s, "&7Successful reload");
+		String[] newArgs = new String[args.length - 1];
+		for (int i = 1; i < args.length; i++) {
+			newArgs[i - 1] = args[i];
+		}
+		CommandSetManager.runSet(args[0], newArgs);
 	}
 
 	@Override
-	public CommandArguments getArgs() {
-		return args;
+	public String getArgOverride() {
+		return "[key] {args}";
 	}
 }

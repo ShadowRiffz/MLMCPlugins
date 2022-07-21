@@ -33,6 +33,7 @@ public class CommandSetEntry {
 			int i = 1;
 			while (i <= args.length) {
 				cmd = cmd.replaceAll("%arg" + i + "%", args[i - 1]);
+				i++;
 			}
 			
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);

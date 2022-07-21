@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.commands.builtin.*;
+import me.neoblade298.neocore.commandsets.CommandSetManager;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
@@ -78,6 +79,9 @@ public class NeoCore extends JavaPlugin implements Listener {
         // playerdata
         IOListener.register(this, new PlayerDataManager());
         
+        // CommandSets
+        CommandSetManager.reload();
+        
         // messaging
         try {
 			MessagingManager.reload();
@@ -104,6 +108,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCoreMessage());
 		mngr.register(new CmdCorePlayerMessage());
 		mngr.register(new CmdCoreReload());
+		mngr.register(new CmdCoreCommandSet());
 		
 		mngr = new CommandManager("bcore", this);
 		mngr.registerCommandList("");
@@ -114,6 +119,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 	public static void reload() {
 		try {
 			MessagingManager.reload();
+			CommandSetManager.reload();
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
