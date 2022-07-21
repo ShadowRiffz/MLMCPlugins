@@ -33,7 +33,6 @@ public class CommandSet {
 	}
 	
 	public void run(String args[]) {
-		System.out.println("Got here");
 		int gen = NeoCore.gen.nextInt(totalWeight);
 		Iterator<CommandSetEntry> iter = entries.iterator();
 		CommandSetEntry e = null;
