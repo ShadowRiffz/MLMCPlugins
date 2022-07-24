@@ -68,7 +68,7 @@ public class MessagingManager {
 			
 			int i = 0;
 			for (String key : pages.getKeys(false)) {
-				list[i] = parseMessage(pages.getConfigurationSection(key));
+				list[i++] = parseMessage(pages.getConfigurationSection(key));
 			}
 		}
 		else {
