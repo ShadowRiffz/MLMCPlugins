@@ -441,35 +441,6 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			}
 		}
 	}
-	
-	public void checkItemCompletionSilent(String mob, Player p, int totalPoints) {
-		// Check if new discovery
-		PlayerStats stats = playerStats.get(p.getUniqueId());
-		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-		
-		// Check for research goals that need it
-		HashMap<String, ResearchItem> completedItems = stats.getCompletedResearchItems();
-		if (mobMap.containsKey(mob)) {
-			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
-				if (!completedItems.containsKey(researchItem.getId())) { // If the player hasn't completed it
-					// Check if research goal is completed for specific mob
-					HashMap<String, Integer> goals = researchItem.getGoals();
-					if (goals.get(mob) <= totalPoints) {
-						for (String rMob : goals.keySet()) { // Check every objective
-							if (!researchPoints.containsKey(rMob) || researchPoints.get(rMob) < goals.get(rMob)) {
-								return; // Haven't completed every item
-							}
-						}
-	
-						// Completed a research item
-						completedItems.put(researchItem.getId(), researchItem);
-						stats.addExp(p, researchItem.getExp());
-						updateBonuses(p);
-					}
-				}
-			}
-		}
-	}
 
 	// Strictly for taking away research points/kills
 	public void checkItemDecompletion(String mob, Player p, int totalPoints) {
@@ -561,21 +532,6 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 				String msg = display + " - §cResearch level too low!";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 			}
-		}
-	}
-	
-	public void giveResearchPointsBypass(Player p, int amount, String mob) {
-		UUID uuid = p.getUniqueId();
-		if (playerStats.containsKey(uuid)) {
-			PlayerStats pStats = playerStats.get(uuid);
-			HashMap<String, Integer> mobKills = pStats.getMobKills();
-			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-			researchPoints.put(mob, points);
-			if (!mobKills.containsKey(mob)) {
-				mobKills.put(mob, 0);
-			}
-			checkItemCompletionSilent(mob, p, points);
 		}
 	}
 

@@ -5,9 +5,13 @@ import java.util.TreeMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.sucy.skill.api.event.PlayerExperienceGainEvent;
+
+import me.neoblade298.neomythicextension.events.ChestDropEvent;
+import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class BoostListener implements Listener {
 	public static TreeMap<Double, String> expMultipliers = new TreeMap<Double, String>();
@@ -46,6 +50,39 @@ public class BoostListener implements Listener {
 			double mult = iter.next();
 			if (p.hasPermission(expMultipliers.get(mult))) {
 				e.setExp(e.getExp() * mult);
+				return;
+			}
+		}
+	}
+	
+
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onResearchPointGain(MythicResearchPointsChanceEvent e) {
+		Player p = e.getPlayer();
+		Iterator<Double> iter = researchMultipliers.descendingKeySet().iterator();
+		while (iter.hasNext()) {
+			double mult = iter.next();
+			if (p.hasPermission(researchMultipliers.get(mult))) {
+				e.setChance(e.getChance() * mult);
+				return;
+			}
+		}
+	}
+	
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onChestDrop(ChestDropEvent e) {
+		if (e.getDropType() == 2) {
+			return; // Boss chest token
+		}
+		
+		Player p = e.getPlayer();
+		Iterator<Double> iter = bossChestMultipliers.descendingKeySet().iterator();
+		while (iter.hasNext()) {
+			double mult = iter.next();
+			if (p.hasPermission(bossChestMultipliers.get(mult))) {
+				e.setChance(e.getChance() * mult);
 				return;
 			}
 		}

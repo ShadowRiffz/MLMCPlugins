@@ -371,58 +371,6 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		// /nr convert [amount]
-		if (args[0].equalsIgnoreCase("convert") && sender instanceof Player) {
-			Player p = (Player) sender;
-			if (p.hasPermission("research.converted")) {
-				p.sendMessage("§c[§4§lMLMC§4] §cYou have already converted once!");
-				return true;
-			}
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + p.getName() + " permission set research.converted");
-
-			p.sendMessage("§c[§4§lMLMC§4] §7Converting your collections...");
-			int max = 950;
-			if (args.length == 2) {
-				max = Integer.parseInt(args[1]);
-				if (max > 950) max = 950;
-			}
-			int minimax = max / 10;
-			
-			HashMap<String, Integer> mobKills = new HashMap<String, Integer>();
-			for (String perm : Research.getConverter().keySet()) {
-				if (p.hasPermission(perm)) {
-					HashMap<String, Integer> mobs = Research.getConverter().get(perm);
-					
-					// Tally up points for each mob
-					for (String mob : mobs.keySet()) {
-						if (mobKills.containsKey(mob)) {
-							mobKills.put(mob, mobKills.get(mob) + mobs.get(mob));
-						}
-						else {
-							mobKills.put(mob, mobs.get(mob));
-						}
-					}
-				}
-			}
-			
-			// Give all the tallies
-			for (Entry<String, Integer> entry : mobKills.entrySet()) {
-				main.giveResearchKills(p, entry.getValue(), entry.getKey());
-				int points = 0;
-				if (Research.getMinibosses().contains(entry.getKey())) {
-					points = entry.getValue() >= minimax ? minimax : entry.getValue();
-				}
-				else {
-					points = entry.getValue() >= max ? max : entry.getValue();
-				}
-				main.giveResearchPointsBypass(p, points, entry.getKey());
-			}
-			
-			// Get rid of perms
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lpext removeall " + p.getName() + " collections.");
-			p.sendMessage("§c[§4§lMLMC§4] §7Conversion complete!");
-			return true;
-		}
 		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
 			Player p = (Player) sender;
 			int acc = SkillAPI.getPlayerAccountData(p).getActiveId();
