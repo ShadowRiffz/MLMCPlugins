@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.PlayerProfessions;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.bukkit.Sound;
@@ -8,6 +9,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Listeners.BoostListener;
 
 public class Profession {
 	ProfessionType type;
@@ -64,6 +66,16 @@ public class Profession {
 		}
 		
 		exp *= Professions.getExpMultiplier(this.type);
+		
+		// Boosts
+		Iterator<Double> iter = BoostListener.profExpMultipliers.descendingKeySet().iterator();
+		while (iter.hasNext()) {
+			double mult = iter.next();
+			if (p.hasPermission(BoostListener.profExpMultipliers.get(mult))) {
+				exp *= mult;
+				break;
+			}
+		}
 		
 		int newExp = exp + this.exp;
 		

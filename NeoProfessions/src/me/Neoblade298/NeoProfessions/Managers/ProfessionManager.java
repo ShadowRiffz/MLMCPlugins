@@ -50,6 +50,12 @@ public class ProfessionManager implements IOComponent, Manager {
 		}
 		return -1;
 	}
+	
+	public static void giveExp(Player p, ProfessionType prof, int exp) {
+		if (accounts.containsKey(p.getUniqueId())) {
+			accounts.get(p.getUniqueId()).get(prof).addExp(p, exp);
+		}
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}

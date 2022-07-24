@@ -3,6 +3,7 @@ package me.Neoblade298.NeoProfessions.Inventories;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Listeners.BoostListener;
 
 public class SellInventory extends ProfessionInventory {
 	private Professions main;
@@ -122,11 +124,26 @@ public class SellInventory extends ProfessionInventory {
 				contents[i] = receipt;
 			}
 		}
+
+		// Boosts
+		Iterator<Double> iter = BoostListener.melbaMultipliers.descendingKeySet().iterator();
+		double finalMult = -1;
+		while (iter.hasNext()) {
+			double mult = iter.next();
+			if (p.hasPermission(BoostListener.melbaMultipliers.get(mult))) {
+				totalSell *= mult;
+				finalMult = mult;
+				break;
+			}
+		}
+		
+		
 		ItemStack totalReceipt = new ItemStack(Material.OAK_SIGN);
 		ItemMeta receiptMeta = totalReceipt.getItemMeta();
 		receiptMeta.setDisplayName("§aSuccessfully sold " + numSold + " items!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7Total gold gained: §a" + totalSell + "g");
+		if (finalMult != -1) lore.add("§7Melba Multiplier active: §e" + finalMult + "x");
 		lore.add("§7Unsold items will be returned to your");
 		lore.add("§7inventory after you close this menu.");
 		receiptMeta.setLore(lore);
