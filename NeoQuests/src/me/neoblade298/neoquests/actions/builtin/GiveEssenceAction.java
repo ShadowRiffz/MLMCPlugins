@@ -4,11 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.enums.ExpSource;
-
 import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
-import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.actions.Action;
 import me.neoblade298.neoquests.actions.DialogueAction;
