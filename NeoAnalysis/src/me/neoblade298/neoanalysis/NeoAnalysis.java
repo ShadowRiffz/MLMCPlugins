@@ -6,8 +6,6 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,15 +21,15 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quester;
-import me.blackvein.quests.Quests;
+import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.quests.QuestInstance;
+import me.neoblade298.neoquests.quests.Quester;
+import me.neoblade298.neoquests.quests.QuestsManager;
 
 
 public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
 	public String url, user, pass;
-	public Quests quests;
 	public ArrayList<String> bosses;
 	
 	public void onEnable() {
@@ -54,26 +52,24 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 		user = sql.getString("username");
 		pass = sql.getString("password");
 		
-		quests = (Quests) Bukkit.getPluginManager().getPlugin("Quests");
-		
 		// Bosses
 		bosses = new ArrayList<String>();
-		bosses.add("drop.ratface");
-		bosses.add("drop.spiderqueen");
-		bosses.add("drop.angvoth");
-		bosses.add("drop.lucius");
-		bosses.add("drop.hamvil");
-		bosses.add("drop.eirik");
-		bosses.add("drop.banditking");
-		bosses.add("drop.aberration");
-		bosses.add("drop.zachai");
-		bosses.add("drop.hollister");
-		bosses.add("drop.blight");
-		bosses.add("drop.dhaga");
-		bosses.add("drop.frostqueen");
-		bosses.add("drop.rhain");
-		bosses.add("drop.maleficent");
-		bosses.add("drop.salonden");
+		bosses.add("KilledRatface");
+		bosses.add("KilledSpiderQueen");
+		bosses.add("KilledAngvoth");
+		bosses.add("KilledLucius");
+		bosses.add("KilledHamvil");
+		bosses.add("KilledEirik");
+		bosses.add("KilledBanditKing");
+		bosses.add("KilledAberration");
+		bosses.add("KilledZachai");
+		bosses.add("KilledHollister");
+		bosses.add("KilledBlight");
+		bosses.add("KilledDhaga");
+		bosses.add("KilledFrostQueen");
+		bosses.add("KilledRhain");
+		bosses.add("KilledMaleficent");
+		bosses.add("KilledSalondeon");
 	}
 	
 	public void onDisable() {
@@ -93,15 +89,21 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 	
 	private void saveSql(Player p) {
 		UUID uuid = p.getUniqueId();
-		Quester quester = quests.getQuester(uuid);
-		ConcurrentHashMap<Quest, Integer> map = quester.getCurrentQuests();
+		Quester quester = QuestsManager.getQuester(p, 1);
 		// Find latest quest
-		String q = "";
-		for (Quest quest : map.keySet()) {
-			q = quest.getName();
-			break;
+		String q = "" + quester.getCompletedQuests().size() + "-";
+		boolean iteratedAll = true;
+		for (QuestInstance qi : quester.getActiveQuests()) {
+			if (q.length() + qi.getQuest().getKey().length() < 77) {
+				q += qi.getQuest().getKey() + ",";
+			}
+			else {
+				iteratedAll = false;
+				break;
+			}
 		}
-		final String quest = q.replaceAll("'", "''");
+		if (iteratedAll) q += "...";
+		final String quest = q;
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -109,7 +111,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 				// Find latest boss
 				String boss = "";
 				for (String perm : bosses) {
-					if (p.hasPermission(perm)) {
+					if (NeoQuests.getPlayerTags(1).exists(perm, uuid)) {
 						boss = perm;
 					}
 					else {
