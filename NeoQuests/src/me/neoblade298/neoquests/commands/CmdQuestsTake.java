@@ -13,7 +13,8 @@ import me.neoblade298.neoquests.conversations.ConversationManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsTake implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("key")));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("key"),
+			new CommandArgument("skip conversation", false)));
 
 	@Override
 	public String getDescription() {
@@ -38,6 +39,11 @@ public class CmdQuestsTake implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
+		if (args.length == 2) {
+			if (args[1].equalsIgnoreCase("true")) {
+				QuestsManager.startQuest(p, args[0]);
+			}
+		}
 		String conv = QuestsManager.getQuest(args[0]).getStartConversation();
 		ConversationManager.startConversation(p, conv, false);
 	}
