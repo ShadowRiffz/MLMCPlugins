@@ -61,12 +61,12 @@ public class SellAllCap implements Subcommand
 		{
 			if(Bukkit.getPlayer(args[0]) != null && Bukkit.getPlayer(args[0]).isOnline())
 			{
-				SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]));
+				SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), 0);
 			}
 		}
 		else
 		{
-			SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player);
+			SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, 0);
 		}
 	}
 

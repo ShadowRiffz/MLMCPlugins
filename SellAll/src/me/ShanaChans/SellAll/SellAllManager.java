@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.tr7zw.nbtapi.NBTItem;
 import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
+import me.ShanaChans.SellAll.Commands.SellAllConfirm;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
@@ -44,6 +45,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static HashMap<Material, Integer> itemCaps = new HashMap<Material, Integer>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
+	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
 	private static YamlConfiguration cfg;
 	private static SellAllManager inst;
 	
@@ -74,6 +76,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
 		sellAll.register(new SellAllReload());
+		sellAll.register(new SellAllConfirm());
 		value.register(new SellAllValue());
 		sellAll.registerCommandList("help");
 		this.getCommand("sellall").setExecutor(sellAll);
@@ -144,7 +147,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				e.setCancelled(true);
 				Chest chest = (Chest) e.getClickedBlock().getState();
 				Inventory inv = chest.getInventory();
-				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player);
+				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player, false);
 			}
 		}
 	}
@@ -277,6 +280,11 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
         }
         
         p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+	}
+	
+	public static HashMap<UUID, Inventory> getPlayerConfirmInv() 
+	{
+		return playerConfirmInv;
 	}
 	
 	public static SellAllManager inst()

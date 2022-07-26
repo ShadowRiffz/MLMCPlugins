@@ -7,19 +7,18 @@ import me.ShanaChans.SellAll.SellAllManager;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
-public class SellAllCommand implements Subcommand
+public class SellAllConfirm implements Subcommand
 {
-
 	@Override
 	public String getDescription() 
 	{
-		return "Sell all your riches!";
+		return "Confirm to sell your riches!";
 	}
 
 	@Override
 	public String getKey() 
 	{
-		return "";
+		return "confirm";
 	}
 
 	@Override
@@ -38,8 +37,10 @@ public class SellAllCommand implements Subcommand
 	public void run(CommandSender sender, String[] args) 
 	{
 		Player player = (Player) sender;
-		
-		SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+		if(SellAllManager.getPlayerConfirmInv().get(player.getUniqueId()) != null)
+		{
+			SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(SellAllManager.getPlayerConfirmInv().get(player.getUniqueId()), player, true);
+			SellAllManager.getPlayerConfirmInv().remove(player.getUniqueId());
+		}
 	}
-
 }

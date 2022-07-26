@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.util.PaginatedList;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -33,16 +34,22 @@ public class SellAllPlayer
 		itemSellCap.replace(mat, newSellCap);
 	}
 	
-	public void sellAll(Inventory inv, Player player)
+	public void sellAll(Inventory inv, Player player, boolean isSelling)
 	{
 		HashMap<Material, Integer> itemAmount = new HashMap<Material, Integer>();
 		HashMap<Material, Double> itemTotal = new HashMap<Material, Double>();
+		HashMap<Material, Integer> tempAmount = new HashMap<Material, Integer>();
+		
+		if(!isSelling)
+		{
+			SellAllManager.getPlayerConfirmInv().put(player.getUniqueId(), inv);
+		}
 		
 		double totalCost = 0;
 		
     	for(ItemStack items : inv.getContents())
     	{
-    		if(items != null)
+    		if(items != null && !items.hasItemMeta())
     		{
     			Material material = items.getType();
     			double sellPriceModifier = SellAllManager.getMultiplier(player);
@@ -57,25 +64,48 @@ public class SellAllPlayer
     					{
     						itemAmount.put(material, 0);
     						itemTotal.put(material, 0.00);
+    						tempAmount.put(material, sold);
     					}
         				
-        				if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material))
-        				{
-        					int difference = (sold + items.getAmount()) - itemSellCap.get(material);
-        					itemAmountSold.put(material, sold + (items.getAmount() - difference));
-        					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
-        					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-        					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-        					inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
-        				}
+        				if(isSelling)
+    					{
+        					if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material)) 
+            				{
+        						int difference = (sold + items.getAmount()) - itemSellCap.get(material);
+            					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
+            					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+            					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
+        						itemAmountSold.put(material, sold + (items.getAmount() - difference));
+        						inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
+            				}
+            				else
+            				{
+            					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
+            					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+            					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
+        						itemAmountSold.put(material, sold + items.getAmount());
+            					inv.removeItem(new ItemStack(material, items.getAmount()));
+            				}
+    					}
         				else
         				{
-        					itemAmountSold.put(material, sold + items.getAmount());
-        					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
-        					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-        					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-        					inv.removeItem(new ItemStack(material, items.getAmount()));
+        					if(tempAmount.get(material) + itemAmount.get(material) > itemSellCap.get(material) || tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
+            				{
+            					int difference = (tempAmount.get(material) + items.getAmount()) - itemSellCap.get(material);
+            					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
+            					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+            					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
+            					tempAmount.put(material, tempAmount.get(material) + (items.getAmount() - difference));
+            				}
+            				else
+            				{
+            					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
+            					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
+            					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
+            					tempAmount.put(material, tempAmount.get(material) + items.getAmount());
+            				}
         				}
+        				
         			}
         		}
     		}
@@ -87,17 +117,23 @@ public class SellAllPlayer
     	}
     	else
     	{
-    		ComponentBuilder builder = new ComponentBuilder("§6[Sell Log]");
-        	String text = "";
-        	for(Material mat : itemAmount.keySet())
-        	{
-        		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + itemTotal.get(mat) + "g\n");
-        	}	
-        	text = text.concat("§7TOTAL - §e" + totalCost + "g");
-        	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
-        	player.spigot().sendMessage(builder.create());
-
-    		NeoCore.getEconomy().depositPlayer(player, totalCost);
+    		if(!isSelling)
+    		{
+    			ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
+            	String text = "§7§oClick to confirm or do /sellall confirm\n";
+            	for(Material mat : itemAmount.keySet())
+            	{
+            		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + itemTotal.get(mat) + "g\n");
+            	}	
+            	text = text.concat("§7TOTAL - §e" + totalCost + "g");
+            	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
+            	player.spigot().sendMessage(builder.create());
+    		}
+    		else
+    		{
+    			NeoCore.getEconomy().depositPlayer(player, totalCost);
+    			player.sendMessage("§6Riches Sold: §e" + totalCost + "g");
+    		}
     	}
     }
 	
@@ -105,13 +141,21 @@ public class SellAllPlayer
 	 * Lists out the players personal item caps
 	 * @param player
 	 */
-	public void getSellCap(Player player, Player displayPlayer)
+	public void getSellCap(Player player, Player displayPlayer, int pageNumber)
 	{
+		PaginatedList<String> list = new PaginatedList<String>();
 		player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
-		for(Material mat : itemSellCap.keySet())
+		for(Material mat : SellAllManager.getItemCaps().keySet())
 		{
-			player.sendMessage("§7" + mat.name() + ": " + itemAmountSold.get(mat) + " / " + itemSellCap.get(mat));
+			list.add("§7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
 		}
+		for(String output : list.get(pageNumber))
+		{
+			player.sendMessage(output);
+		}
+		String nextPage ="/sellall cap " + player.getName() + " " + displayPlayer.getName() + " " + (pageNumber + 1); 
+		String prevPage = "/sellall cap " + player.getName() + " " + displayPlayer.getName() + " " + (pageNumber - 1); 
+		list.displayFooter(player, pageNumber, nextPage, prevPage);
 	}
 	
 	/**
