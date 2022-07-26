@@ -35,19 +35,19 @@ public class PreviousPointsManager {
 				// Grab the top 10 for everything
 				Statement stmt = NeoCore.getStatement();
 				try {
-					ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_nations WHERE category = 'TOTAL';");
+					ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_nations WHERE category = 'TOTAL';");
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						topNations.add(new PreviousEntry(uuid, rs.getString(2), PointType.getPointType(rs.getString(3)), rs.getDouble(4)));
 					}
 
-					rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_towns WHERE category = 'TOTAL';");
+					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_towns WHERE category = 'TOTAL';");
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						topTowns.add(new PreviousEntry(uuid, rs.getString(2), PointType.getPointType(rs.getString(3)), rs.getDouble(4)));
 					}
 
-					rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_players WHERE category = 'TOTAL';");
+					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_players WHERE category = 'TOTAL';");
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						topPlayers.add(new PreviousEntry(uuid, PointType.getPointType(rs.getString(2)), rs.getDouble(3)));
@@ -55,7 +55,7 @@ public class PreviousPointsManager {
 					
 					for (NationPointType type : NationPointType.values()) {
 						topNationCategories.put(type, new TreeSet<PreviousEntry>());
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_nations WHERE category = '" + type + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_nations WHERE category = '" + type + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							topNationCategories.get(type).add(new PreviousEntry(uuid, rs.getString(2), PointType.getPointType(rs.getString(3)), rs.getDouble(4)));
@@ -67,19 +67,19 @@ public class PreviousPointsManager {
 						topTownCategories.put(type, new TreeSet<PreviousEntry>());
 						topPlayerCategories.put(type, new TreeSet<PreviousEntry>());
 						
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_nations WHERE category = '" + type + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_nations WHERE category = '" + type + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							topNationCategories.get(type).add(new PreviousEntry(uuid, rs.getString(2), PointType.getPointType(rs.getString(3)), rs.getDouble(4)));
 						}
 						
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_towns WHERE category = '" + type + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_towns WHERE category = '" + type + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							topNationCategories.get(type).add(new PreviousEntry(uuid, rs.getString(2), PointType.getPointType(rs.getString(3)), rs.getDouble(4)));
 						}
 
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_previous_players WHERE category = '" + type + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_players WHERE category = '" + type + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							topNationCategories.get(type).add(new PreviousEntry(uuid, PointType.getPointType(rs.getString(2)), rs.getDouble(3)));

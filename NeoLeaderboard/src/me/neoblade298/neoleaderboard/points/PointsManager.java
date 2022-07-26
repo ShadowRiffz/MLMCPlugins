@@ -49,7 +49,7 @@ public class PointsManager implements IOComponent {
 				try {
 					// Initialize all nations
 					Statement stmt = NeoCore.getStatement();
-					ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_nations");
+					ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_nations");
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						nationEntries.put(uuid, new NationEntry(uuid, rs.getInt(3)));
@@ -61,7 +61,7 @@ public class PointsManager implements IOComponent {
 					}
 					
 					// Initialize all towns
-					rs = stmt.executeQuery("SELECT * FROM leaderboard_towns");
+					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_towns");
 					while (rs.next()) {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						UUID nation = UUID.fromString(rs.getString(2));
@@ -70,7 +70,7 @@ public class PointsManager implements IOComponent {
 					
 					// Set items for nation entries
 					for (NationEntry n : nationEntries.values()) {
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_nationpoints WHERE uuid = '" + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_nationpoints WHERE uuid = '" + "';");
 						while (rs.next()) {
 							String type = rs.getString(2);
 							NationPointType ntype = NationPointType.valueOf(type);
@@ -82,7 +82,7 @@ public class PointsManager implements IOComponent {
 							}
 						}
 
-						rs = stmt.executeQuery("SELECT * FROM leaderboard_townpoints WHERE nation_uuid = '" + "';");
+						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_townpoints WHERE nation_uuid = '" + "';");
 						while (rs.next()) {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							n.initializeTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), uuid);
@@ -226,7 +226,7 @@ public class PointsManager implements IOComponent {
 				else {
 					try {
 						Statement stmt = NeoCore.getStatement();
-						ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+						ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 						
 						// If this was a player's first points
 						if (!rs.next()) {
@@ -342,7 +342,7 @@ public class PointsManager implements IOComponent {
 	
 	public static PlayerEntry loadPlayerEntry(UUID uuid, Statement stmt) throws SQLException {
 		PlayerEntry ppoints;
-		ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard_players WHERE uuid = '" + uuid + "';");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM neoleaderboard_players WHERE uuid = '" + uuid + "';");
 		// Return null if no points exist, since object doesn't exist until points do
 		if (!rs.next()) {
 			return null;
@@ -361,11 +361,11 @@ public class PointsManager implements IOComponent {
 			return null;
 		}
 		
-		rs = stmt.executeQuery("SELECT * FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+		rs = stmt.executeQuery("SELECT * FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
 			ppoints.setPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(2)));
 		}
-		rs = stmt.executeQuery("SELECT * FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
+		rs = stmt.executeQuery("SELECT * FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
 		while (rs.next()) {
 			ppoints.setContributedPoints(rs.getDouble(3), PlayerPointType.valueOf(rs.getString(2)));
 		}
@@ -382,9 +382,9 @@ public class PointsManager implements IOComponent {
 		try {
 			if (!playerEntries.containsKey(p.getUniqueId())) {
 				UUID uuid = p.getUniqueId();
-				delete.addBatch("DELETE FROM leaderboard_players WHERE uuid = '" + uuid + "';");
-				delete.addBatch("DELETE FROM leaderboard_playerpoints WHERE uuid = '" + uuid + "';");
-				delete.addBatch("DELETE FROM leaderboard_contributed WHERE uuid = '" + uuid + "';");
+				delete.addBatch("DELETE FROM neoleaderboard_players WHERE uuid = '" + uuid + "';");
+				delete.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
+				delete.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
 				delete.executeBatch();
 				return;
 			}
@@ -511,9 +511,9 @@ public class PointsManager implements IOComponent {
 							"'," + System.currentTimeMillis() + "," + winner.getEffectivePoints() + "," + winner.getContributors());
 					
 					// Totals
-					stmt.addBatch(prefix + "SELECT uuid, leaderboard_nations.name, 'TOTAL' AS category, SUM(points) AS points FROM leaderboard_nationpoints "
+					stmt.addBatch(prefix + "SELECT uuid, leaderboard_nations.name, 'TOTAL' AS category, SUM(points) AS points FROM neoleaderboard_nationpoints "
 							+ "JOIN leaderboard_nations ON leaderboard_nationpoints.uuid = leaderboard_nations.uuid GROUP BY uuid" + suffix);
-					stmt.addBatch(prefix + "SELECT uuid, leaderboard_towns.name, 'TOTAL' AS category, SUM(points) AS points FROM leaderboard_townpoints "
+					stmt.addBatch(prefix + "SELECT uuid, leaderboard_towns.name, 'TOTAL' AS category, SUM(points) AS points FROM neoleaderboard_townpoints "
 							+ "JOIN leaderboard_towns ON leaderboard_townpoints.uuid = leaderboard_towns.uuid GROUP BY uuid" + suffix);
 					stmt.addBatch(prefix + "SELECT uuid, 'TOTAL' AS category, SUM(points) AS points FROM Dev.leaderboard_playerpoints GROUP BY uuid" + suffix);
 					
