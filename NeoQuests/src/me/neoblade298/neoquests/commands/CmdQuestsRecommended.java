@@ -67,11 +67,16 @@ public class CmdQuestsRecommended implements Subcommand {
 				return;
 			}
 		}
+		
+		int level = 1;
+		if (SkillAPI.getPlayerData(p) != null && SkillAPI.getPlayerData(p).getMainClass() != null) {
+			level = SkillAPI.getPlayerData(p).getMainClass().getLevel();
+		}
 
 		ArrayList<QuestRecommendation> recs = challenges ? QuestsManager.getChallenges() : QuestsManager.getRecommendations();
 		PaginatedList<QuestRecommendation> pages = new PaginatedList<QuestRecommendation>();
 		for (QuestRecommendation rec : recs) {
-			int min = rec.getMin(), max = rec.getMax(), level = SkillAPI.getPlayerData(p).getMainClass().getLevel();
+			int min = rec.getMin(), max = rec.getMax();
 			if (min == -1 || min > level) continue;
 			if (max == -1 || max < level) continue;
 			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
