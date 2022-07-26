@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class PaginatedList<E> implements Iterable<E> {
@@ -105,14 +106,16 @@ public class PaginatedList<E> implements Iterable<E> {
 	
 	private void trickleDown(int pagenum) {
 		if (pages.get(pagenum).size() > pageSize) {
+			// Push the last item on current page to first item on next page
 			for (int i = pagenum; i + 1 < pages.size(); i++) {
-				pages.get(i + 1).push(pages.get(i).removeFirst());
+				pages.get(i + 1).push(pages.get(i).removeLast());
 			}
 			
 			// If the last page has more than max page size
 			if (pages.getLast().size() > pageSize) {
 				LinkedList<E> page = new LinkedList<E>();
 				page.add(pages.getLast().removeLast());
+				pages.add(page);
 			}
 		}
 	}
@@ -132,18 +135,29 @@ public class PaginatedList<E> implements Iterable<E> {
 	}
 	
 	public void displayFooter(Player p, int page, String nextCmd, String prevCmd) {
-		ComponentBuilder prev = new ComponentBuilder("§7§ ");
+		// Add a previous arrow
+		ComponentBuilder b = null;
 		if (page > 0) {
-			prev.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, prevCmd))
+			b = new ComponentBuilder("§c« ")
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, prevCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to previous page!")));
 		}
-		ComponentBuilder main = new ComponentBuilder("§7Page §f" + (page + 1) + " §7/ " + pages.size());
-		ComponentBuilder next = new ComponentBuilder("§7 §");
+		
+		// Add main
+		String mainStr = "§7Page §f" + (page + 1) + " §7/ " + pages.size();
+		if (b == null) {
+			b = new ComponentBuilder(mainStr);
+		}
+		else {
+			b.append(mainStr, FormatRetention.NONE);
+		}
+		
 		if (page < pages.size() - 1) {
-			next.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextCmd))
+			b.append(" §c»")
+			.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextCmd))
 			.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to go to next page!")));
 		}
-		p.spigot().sendMessage(prev.append(main.append(next.create()).create()).create());
+		p.spigot().sendMessage(b.create());
 	}
 	
 	public void displayFooter(Player p, int page) {
