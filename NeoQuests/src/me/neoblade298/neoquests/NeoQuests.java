@@ -14,6 +14,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import com.sk89q.worldguard.session.SessionManager;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neocore.NeoCore;
@@ -32,6 +33,7 @@ import me.neoblade298.neoquests.listeners.QuesterListener;
 import me.neoblade298.neoquests.navigation.NavigationManager;
 import me.neoblade298.neoquests.objectives.ObjectiveManager;
 import me.neoblade298.neoquests.quests.QuestsManager;
+import me.neoblade298.neoquests.worldguard.RequiredTagFlagHandler;
 
 public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 	public static Random rand = new Random();
