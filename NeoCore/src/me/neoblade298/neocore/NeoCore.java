@@ -109,6 +109,10 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCorePlayerMessage());
 		mngr.register(new CmdCoreReload());
 		mngr.register(new CmdCoreCommandSet());
+		mngr.register(new CmdCoreAddTag());
+		mngr.register(new CmdCoreRemoveTag());
+		mngr.register(new CmdCoreSetField());
+		mngr.register(new CmdCoreResetField());
 		
 		mngr = new CommandManager("bcore", this);
 		mngr.registerCommandList("");
