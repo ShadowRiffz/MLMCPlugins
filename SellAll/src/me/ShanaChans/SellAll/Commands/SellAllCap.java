@@ -14,7 +14,7 @@ import me.neoblade298.neocore.commands.SubcommandRunner;
 
 public class SellAllCap implements Subcommand
 {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player/page number", false),new CommandArgument("page number", false)));
 
 	@Override
 	public String getDescription() 
@@ -27,9 +27,9 @@ public class SellAllCap implements Subcommand
 	{
 		return "limit";
 	}
-
+	
 	@Override
-	public CommandArguments getArgs() 
+	public CommandArguments getArgs()
 	{
 		return args;
 	}
@@ -59,9 +59,23 @@ public class SellAllCap implements Subcommand
 		
 		if(args.length > 0)
 		{
-			if(Bukkit.getPlayer(args[0]) != null && Bukkit.getPlayer(args[0]).isOnline())
+			if(Bukkit.getPlayer(args[0]) != null)
 			{
-				SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), 0);
+				if(Bukkit.getPlayer(args[0]).isOnline())
+				{
+					if(args.length > 1)
+					{
+						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), Integer.parseInt(args[1]) - 1);
+					}
+					else
+					{
+						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), 0);
+					}
+				}
+			}
+			else
+			{
+				SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, Integer.parseInt(args[0]) - 1);
 			}
 		}
 		else
@@ -69,5 +83,4 @@ public class SellAllCap implements Subcommand
 			SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, 0);
 		}
 	}
-
 }
