@@ -8,8 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.RewardAction;
+import me.neoblade298.neoquests.actions.builtin.GiveMoneyAction;
 import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
@@ -130,15 +133,29 @@ public class QuestInstance {
 			final ArrayList<RewardAction> fRewards = rewards;
 			new BukkitRunnable() {
 				public void run() {
+					int account = SkillAPI.getPlayerAccountData(p).getActiveId();
 					if (fRewards.size() > 0) {
 						p.sendMessage("§6Rewards:");
 						for (RewardAction r : fRewards) {
 							if (r.getDisplay() != null || !r.isHidden()) {
+								// Check if money should be given
+								if (r instanceof GiveMoneyAction) {
+									if (NeoQuests.getGlobalPlayerTags().exists("neoquests-resetaccount-" + account, p.getUniqueId())) {
+										continue;
+									}
+								}
+								
 								p.sendMessage("§7- " + r.getDisplay());
 							}
 						}
 
 						for (RewardAction r : fRewards) {
+							// Check if money should be given
+							if (r instanceof GiveMoneyAction) {
+								if (NeoQuests.getGlobalPlayerTags().exists("neoquests-resetaccount-" + account, p.getUniqueId())) {
+									continue;
+								}
+							}
 							r.run(p);
 						}
 					}
