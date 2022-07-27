@@ -35,7 +35,6 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoAnalysis Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("analyze").setExecutor(new Commands(this));
 
 		File file = new File(getDataFolder(), "config.yml");
 
