@@ -75,8 +75,8 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		globalTags = NeoCore.createPlayerTags("questaccount_global", this, true);
 		
 		// WorldGuard
-	    //SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
-	    //sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
+	    SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+	    sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
 	}
 	
 	@Override
