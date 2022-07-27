@@ -46,6 +46,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
 	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
+	private static double moneyCap;
 	private static YamlConfiguration cfg;
 	private static SellAllManager inst;
 	
@@ -112,6 +113,9 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 		
+		sec = SellAllManager.cfg.getConfigurationSection("money-cap");
+		moneyCap = sec.getDouble("default");
+		
 		sec = SellAllManager.cfg.getConfigurationSection("item-cap");
 		
 		for(Material mat : itemPrices.keySet())
@@ -122,7 +126,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 			else
 			{
-				itemCaps.put(mat, 100);
+				int defaultValue = (int) Math.round(SellAllManager.getMoneyCap() / SellAllManager.getItemPrices().get(mat));
+				itemCaps.put(mat, defaultValue);
 			}
 		}
 		
@@ -290,5 +295,10 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	public static SellAllManager inst()
 	{
 		return inst;
+	}
+
+	public static double getMoneyCap() 
+	{
+		return moneyCap;
 	}
 }

@@ -144,18 +144,23 @@ public class SellAllPlayer
 	public void getSellCap(Player player, Player displayPlayer, int pageNumber)
 	{
 		PaginatedList<String> list = new PaginatedList<String>();
-		player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
 		for(Material mat : SellAllManager.getItemCaps().keySet())
 		{
 			list.add("§7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
 		}
-		for(String output : list.get(pageNumber))
+		if(-1 < pageNumber && pageNumber < list.pages())
 		{
-			player.sendMessage(output);
+			player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
+			for(String output : list.get(pageNumber))
+			{
+				player.sendMessage(output);
+			}
+			String nextPage ="/sellall cap " + displayPlayer.getName() + " " + (pageNumber + 2); 
+			String prevPage = "/sellall cap " + displayPlayer.getName() + " " + (pageNumber); 
+			list.displayFooter(player, pageNumber, nextPage, prevPage);
+			return;
 		}
-		String nextPage ="/sellall cap " + player.getName() + " " + displayPlayer.getName() + " " + (pageNumber + 1); 
-		String prevPage = "/sellall cap " + player.getName() + " " + displayPlayer.getName() + " " + (pageNumber - 1); 
-		list.displayFooter(player, pageNumber, nextPage, prevPage);
+		player.sendMessage("§7Invalid page");
 	}
 	
 	/**
