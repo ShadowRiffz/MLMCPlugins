@@ -9,6 +9,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import com.sk89q.worldguard.session.SessionManager;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
@@ -16,6 +17,7 @@ import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neopvp.commands.*;
 import me.neoblade298.neopvp.generators.GeneratorManager;
 import me.neoblade298.neopvp.listeners.PvpListener;
+import me.neoblade298.neopvp.worldguard.ProtectionAllowedFlag;
 import net.md_5.bungee.api.ChatColor;
 
 public class NeoPvp extends JavaPlugin {
@@ -32,8 +34,8 @@ public class NeoPvp extends JavaPlugin {
 		NeoCore.registerIOComponent(this, new PvpManager());
 		Bukkit.getPluginManager().registerEvents(new PvpListener(), this);
 		// WorldGuard
-	    //SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
-	    //sessionManager.registerHandler(RequiredTagFlagHandler.FACTORY, null);
+	    SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+	    sessionManager.registerHandler(ProtectionAllowedFlag.FACTORY, null);
 	}
 	
 	private void initCommands() {
