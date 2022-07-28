@@ -117,6 +117,9 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "isinstance":
 			condition = new IsInstanceCondition(cfg);
 			break;
+		case "hasaccounttag":
+			condition = new HasAccountTagCondition(cfg);
+			break;
 		}
 		if (condition != null) {
 			event.register(condition);
@@ -177,8 +180,8 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "flag":
 			mechanic = new FlagMechanic(cfg);
 			break;
-		case "accounttag":
-			mechanic = new AccountTagMechanic(cfg);
+		case "giveaccounttag":
+			mechanic = new GiveAccountTagMechanic(cfg);
 			break;
 		case "removeflag":
 			mechanic = new RemoveFlagMechanic(cfg);

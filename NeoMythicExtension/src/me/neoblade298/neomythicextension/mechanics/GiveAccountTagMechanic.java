@@ -11,7 +11,7 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.neoblade298.neocore.NeoCore;
 
-public class AccountTagMechanic implements ITargetedEntitySkill {
+public class GiveAccountTagMechanic implements ITargetedEntitySkill {
 
 	protected final String tag;
 
@@ -20,7 +20,7 @@ public class AccountTagMechanic implements ITargetedEntitySkill {
         return ThreadSafetyLevel.SYNC_ONLY;
     }
 
-	public AccountTagMechanic(MythicLineConfig config) {
+	public GiveAccountTagMechanic(MythicLineConfig config) {
         this.tag = config.getString(new String[] {"tag", "t"}, "none");
 	}
 	
