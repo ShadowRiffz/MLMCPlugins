@@ -50,6 +50,14 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		inst = this;
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");
 
+		// Minimized initialization if instance
+		if (NeoCore.isInstance()) {
+			for (int i = 1; i <= 12; i++) {
+				accountTags[i - 1] = NeoCore.createPlayerTags("questaccount_" + i, this, true);
+			}
+			return;
+		}
+
 		getServer().getPluginManager().registerEvents(new ConversationListener(), this);
 		getServer().getPluginManager().registerEvents(new ObjectiveListener(), this);
 		getServer().getPluginManager().registerEvents(new GeneralListener(), this);
@@ -57,6 +65,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		getServer().getPluginManager().registerEvents(new QuesterListener(), this);
 
 		initCommands();
+		
 
 		// Managers
 		try {
