@@ -26,8 +26,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	int QUEST_X_BOUND_1 = 955;
 	int QUEST_X_BOUND_2 = 992;
-	int QUEST_Z_BOUND_1 = -200;
-	int QUEST_Z_BOUND_2 = -237;
+	int QUEST_Z_BOUND_1 = -237;
+	int QUEST_Z_BOUND_2 = -200;
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoChatMod Enabled");
