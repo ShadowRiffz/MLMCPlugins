@@ -17,6 +17,7 @@ import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.quests.QuestRecommendation;
+import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -75,11 +76,13 @@ public class CmdQuestsRecommended implements Subcommand {
 
 		ArrayList<QuestRecommendation> recs = challenges ? QuestsManager.getChallenges() : QuestsManager.getRecommendations();
 		PaginatedList<QuestRecommendation> pages = new PaginatedList<QuestRecommendation>();
+		Quester q = QuestsManager.getQuester(p);
 		for (QuestRecommendation rec : recs) {
 			int min = rec.getMin(), max = rec.getMax();
 			if (min == -1 || min > level) continue;
 			if (max == -1 || max < level) continue;
 			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
+			if (!q.getActiveQuestsHashMap().containsKey(rec.getQuest().getKey().toUpperCase())) continue;
 
 			pages.add(rec);
 		}
