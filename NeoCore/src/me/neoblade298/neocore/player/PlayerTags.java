@@ -72,8 +72,6 @@ public class PlayerTags {
 				
 				// If value was set
 				if (pValues.containsKey(key)) {
-					Object value = pValues.get(key).getValue();
-					
 					// Skip and remove expired values
 					if (pValues.get(key).isExpired()) {
 						pValues.remove(key);
@@ -83,9 +81,9 @@ public class PlayerTags {
 					
 					
 					try {
-						Bukkit.getLogger().log(Level.INFO, "[NeoCore] Saving tag " + this.getKey() + "." + key + " to " + value + " for " + uuid + ".");
+						Bukkit.getLogger().log(Level.INFO, "[NeoCore] Saving tag " + this.getKey() + "." + key + " for " + uuid + ".");
 						insert.addBatch("REPLACE INTO neocore_tags VALUES ('" + uuid + "','" + this.getKey()
-						+ "','" + key + "','" + value + "'," + expiration + ");");
+						+ "','" + key + "'," + expiration + ");");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
