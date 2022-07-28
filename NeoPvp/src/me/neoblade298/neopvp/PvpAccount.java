@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neocore.util.PaginatedList;
-import me.neoblade298.neocore.util.SchedulerAPI;
-import me.neoblade298.neocore.util.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

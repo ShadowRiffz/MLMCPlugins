@@ -9,8 +9,8 @@ import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.util.ScheduleInterval;
-import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.ScheduleInterval;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import me.neoblade298.neopvp.NeoPvp;
 
 public class GeneratorManager implements Manager {

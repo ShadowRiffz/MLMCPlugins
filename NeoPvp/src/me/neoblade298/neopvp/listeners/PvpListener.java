@@ -1,10 +1,15 @@
 package me.neoblade298.neopvp.listeners;
 
+import java.util.Arrays;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -72,7 +77,19 @@ public class PvpListener implements Listener {
 	public void onDeath(PlayerDeathEvent e) {
 		Player victim = e.getEntity();
 		if (victim.getKiller() == null) return;
+		
+		// Drop skull
+		if (!e.getKeepInventory()) {
+			ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+			SkullMeta meta = (SkullMeta) head.getItemMeta();
+			meta.setOwningPlayer(victim);
+			meta.setDisplayName("§e" + victim.getName() + "'s Head");
+			meta.setLore(Arrays.asList("§7Killer: §c" + victim.getKiller().getName()));
+			head.setItemMeta(meta);
+			victim.getWorld().dropItem(victim.getLocation(), head);
+		}
 
+		// Handle all pvp stats
 		PvpManager.handleKill(victim.getKiller(), victim);
 	}
 }

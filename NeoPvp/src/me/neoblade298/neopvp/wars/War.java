@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.object.Nation;
 
-import me.neoblade298.neocore.util.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import me.neoblade298.neocore.util.Util;
 
 public class War {
