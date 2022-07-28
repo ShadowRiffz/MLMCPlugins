@@ -63,9 +63,4 @@ public class CmdCoreSetField implements Subcommand {
 	public CommandArguments getArgs() {
 		return args;
 	}
-	
-	@Override
-	public boolean isHidden() {
-		return true;
-	}
 }

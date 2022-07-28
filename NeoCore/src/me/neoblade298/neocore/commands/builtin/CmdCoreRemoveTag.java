@@ -63,9 +63,4 @@ public class CmdCoreRemoveTag implements Subcommand {
 	public CommandArguments getArgs() {
 		return args;
 	}
-	
-	@Override
-	public boolean isHidden() {
-		return true;
-	}
 }

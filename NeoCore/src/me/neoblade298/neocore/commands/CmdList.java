@@ -49,7 +49,13 @@ public class CmdList implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		if (pages == null) {
-			pages = new PaginatedList<Subcommand>(cmds.values());
+			pages = new PaginatedList<Subcommand>();
+		}
+		
+		for (Subcommand cmd : cmds.values()) {
+			if (!cmd.isHidden()) {
+				pages.add(cmd);
+			}
 		}
 		
 		if (args.length == 0) {
