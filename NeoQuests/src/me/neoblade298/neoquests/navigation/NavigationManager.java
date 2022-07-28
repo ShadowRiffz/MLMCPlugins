@@ -111,7 +111,7 @@ public class NavigationManager implements Manager {
 				try {
 					ep.loadPathways();
 				} catch (NeoIOException e) {
-					NeoQuests.showWarning("Failed to load endpoint pathway fors " + ep.getKey(), e);
+					NeoQuests.showWarning("Failed to load endpoint pathway for " + ep.getKey(), e);
 				}
 			}
 			
