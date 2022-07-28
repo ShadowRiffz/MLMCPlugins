@@ -55,7 +55,7 @@ public class Quester {
 					public void run() {
 						ConversationManager.startConversation(p, ql.getNextQuest(p).getStartConversation(), false);
 					}
-				}.runTaskLater(NeoQuests.inst(), 160L);
+				}.runTaskLater(NeoQuests.inst(), 60L);
 			}
 		}
 	}
