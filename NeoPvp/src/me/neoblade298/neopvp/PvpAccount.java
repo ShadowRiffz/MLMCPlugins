@@ -31,6 +31,7 @@ public class PvpAccount {
 	
 	private CoreRunnable cr;
 	
+	// Exclusively for first time login
 	public PvpAccount(UUID uuid) {
 		this.uuid = uuid;
 		this.protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
@@ -42,6 +43,24 @@ public class PvpAccount {
 				removeProtection();
 			}
 		});
+	}
+	
+	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
+		this.uuid = uuid;
+		killstreak = rs.getInt(2);
+		wins = rs.getInt(3);
+		losses = rs.getInt(4);
+		elo = rs.getInt(5);
+		pvpBalance = rs.getDouble(6);
+		protectionExpires = rs.getLong(7);
+		
+		if (protectionExpires > System.currentTimeMillis()) {
+			cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
+				public void run() {
+					removeProtection();
+				}
+			});
+		}
 	}
 	
 	public void loadPlayer() {
@@ -71,24 +90,6 @@ public class PvpAccount {
 				removeProtection();
 			}
 		});
-	}
-	
-	public PvpAccount(UUID uuid, ResultSet rs) throws SQLException {
-		this.uuid = uuid;
-		killstreak = rs.getInt(2);
-		wins = rs.getInt(3);
-		losses = rs.getInt(4);
-		elo = rs.getInt(5);
-		pvpBalance = rs.getDouble(6);
-		protectionExpires = rs.getLong(7);
-		
-		if (protectionExpires > System.currentTimeMillis()) {
-			cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
-				public void run() {
-					removeProtection();
-				}
-			});
-		}
 	}
 	
 	public void addElo(int amount) {

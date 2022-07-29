@@ -42,6 +42,7 @@ public class GeneratorManager implements Manager {
 	public GeneratorManager() {
 		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, new Runnable() {
 			public void run() {
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7The item generators have activated at &c/warp resource&7!");
 				for (Generator gen : generators.values()) {
 					gen.spawnItem();
 				}
