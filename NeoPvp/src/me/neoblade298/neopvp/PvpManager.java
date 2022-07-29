@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neocore.util.PaginatedList;
 
 public class PvpManager implements IOComponent {
 	private static HashMap<UUID, PvpAccount> accounts = new HashMap<UUID, PvpAccount>();
@@ -99,7 +99,7 @@ public class PvpManager implements IOComponent {
 				PvpAccount acct = new PvpAccount(p.getUniqueId(), rs);
 				accounts.put(p.getUniqueId(), acct);
 
-				PaginatedList<UUID> uniqueKills = new PaginatedList<UUID>();
+				HashSet<UUID> uniqueKills = new HashSet<UUID>();
 				rs = stmt.executeQuery("SELECT * FROM neopvp_uniquekills WHERE uuid = '" + p.getUniqueId() + "';");
 				while (rs.next()) {
 					uniqueKills.add(UUID.fromString(rs.getString(2)));

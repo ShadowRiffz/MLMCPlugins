@@ -3,6 +3,7 @@ package me.neoblade298.neopvp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class PvpAccount {
 	private UUID uuid;
 	private Player p;
-	private PaginatedList<UUID> uniqueKills;
+	private HashSet<UUID> uniqueKills;
 	private double pvpBalance;
 	private int elo, killstreak, wins, losses;
 	private long protectionExpires = -1;
@@ -36,7 +37,7 @@ public class PvpAccount {
 		this.uuid = uuid;
 		this.protectionExpires = System.currentTimeMillis() + (1000 * 60 * 60 * 24); // 24 hours
 		this.elo = 1800;
-		this.uniqueKills = new PaginatedList<UUID>();
+		this.uniqueKills = new HashSet<UUID>();
 		
 		cr = SchedulerAPI.schedule("neopvp-protectionexpires-" + uuid, protectionExpires, new Runnable() {
 			public void run() {
@@ -124,7 +125,7 @@ public class PvpAccount {
 	}
 	
 	public PaginatedList<UUID> getUniqueKills() {
-		return uniqueKills;
+		return new PaginatedList<UUID>(uniqueKills);
 	}
 	
 	public void addUniqueKill(Player p) {
@@ -155,7 +156,7 @@ public class PvpAccount {
 		losses++;
 	}
 	
-	public void setUniqueKills(PaginatedList<UUID> uniqueKills) {
+	public void setUniqueKills(HashSet<UUID> uniqueKills) {
 		this.uniqueKills = uniqueKills;
 	}
 	
@@ -217,15 +218,16 @@ public class PvpAccount {
 	}
 	
 	public void displayUniqueKills(CommandSender s, int page) {
+		PaginatedList<UUID> pagedKills = new PaginatedList<UUID>(uniqueKills);
 		if (uniqueKills.size() == 0) {
 			Util.msg(s, "&cThis player doesn't have any unique kills yet!");
 		}
-		else if (uniqueKills.pages() <= page) {
+		else if (pagedKills.pages() <= page) {
 			Util.msg(s, "&cThis page doesn't exist!");
 		}
 		else {
 			Util.msg(s, "&6Unique Kills:");
-			for (UUID uuid : uniqueKills.get(page)) {
+			for (UUID uuid : pagedKills.get(page)) {
 				Util.msg(s, "&7- &e" + Bukkit.getOfflinePlayer(uuid).getName());
 			}
 		}
