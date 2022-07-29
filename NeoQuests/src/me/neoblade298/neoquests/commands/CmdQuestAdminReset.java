@@ -76,9 +76,7 @@ public class CmdQuestAdminReset implements Subcommand {
 					quester.reset();
 				}
 				for (PlayerTags pTags : NeoQuests.getAllPlayerTags()) {
-					for (String key : pTags.getAllKeys(uuid)) {
-						pTags.reset(key, uuid);
-					}
+					pTags.resetAllTags(uuid);
 				}
 			}
 			// Has args, reset a specific account
@@ -97,9 +95,7 @@ public class CmdQuestAdminReset implements Subcommand {
 				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "' AND account = " + args[1] + ";");
 				quester.reset();
 				PlayerTags pTags = NeoQuests.getPlayerTags(acct);
-				for (String key : pTags.getAllKeys(uuid)) {
-					pTags.reset(key, uuid);
-				}
+				pTags.resetAllTags(uuid);
 			}
 			ConversationManager.endConversation(p, false);
 			Util.msg(s, "&7Successfully reset player &6" + p.getName() + ".");
