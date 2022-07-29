@@ -91,20 +91,20 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 		Quester quester = QuestsManager.getQuester(p, 1);
 		// Find latest quest
 		String q = "";
+		boolean iteratedAll = true;
 		if (quester != null) {
 			q += quester.getCompletedQuests().size() + "-";
-		}
-		boolean iteratedAll = true;
-		for (QuestInstance qi : quester.getActiveQuests()) {
-			if (q.length() + qi.getQuest().getKey().length() < 77) {
-				q += qi.getQuest().getKey() + ",";
+			for (QuestInstance qi : quester.getActiveQuests()) {
+				if (q.length() + qi.getQuest().getKey().length() < 77) {
+					q += qi.getQuest().getKey() + ",";
+				}
+				else {
+					iteratedAll = false;
+					break;
+				}
 			}
-			else {
-				iteratedAll = false;
-				break;
-			}
+			if (iteratedAll) q += "...";
 		}
-		if (iteratedAll) q += "...";
 		final String quest = q;
 		
 		new BukkitRunnable() {
