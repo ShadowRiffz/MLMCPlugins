@@ -54,4 +54,8 @@ public class CommandAction extends RewardAction {
 		}
 	}
 
+	@Override
+	public boolean isHidden() {
+		return true;
+	}
 }
