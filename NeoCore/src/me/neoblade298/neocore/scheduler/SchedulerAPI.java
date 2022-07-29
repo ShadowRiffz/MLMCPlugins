@@ -296,7 +296,15 @@ public class SchedulerAPI {
 		}
 
 		Util.msg(s, "&6-- Repeating Runnables --");
-		ArrayList<CoreRunnable> list = repeaters.get(ScheduleInterval.HOUR);
+		ArrayList<CoreRunnable> list = repeaters.get(ScheduleInterval.DAILY);
+		if (list.size() != 0) {
+			String msg = "&eDaily&f: &6" + list.get(0).getKey();
+			for (int i = 1; i < list.size(); i++) {
+				msg += "&7, &6" + list.get(i).getKey();
+			}
+			Util.msg(s, msg);
+		}
+		list = repeaters.get(ScheduleInterval.HOUR);
 		if (list.size() != 0) {
 			String msg = "&eHour&f: &6" + list.get(0).getKey();
 			for (int i = 1; i < list.size(); i++) {
