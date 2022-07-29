@@ -41,7 +41,8 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new MythicmobsPlaceholders(mobhealth).register();
 		new SkillAPIPlaceholders().register();
 		new BossMultipliersPlaceholders(mobhealth).register();
-		new NeoCorePlaceholders().register();
+		new NeoCoreFieldPlaceholders().register();
+		new NeoCoreTagPlaceholders().register();
 		new VaultPlaceholders(this).register();
 		new EtcPlaceholders(this).registerPlaceholders();
 		new NeoProfessionsPlaceholders().register();
@@ -58,6 +59,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		new ChatColorPlaceholders().register();
 		new SkillAPIPlaceholders().register();
 		new LordboardPlaceholders().register();
+		new QuestTagPlaceholders().register();
 	}
 
 	public void onDisable() {

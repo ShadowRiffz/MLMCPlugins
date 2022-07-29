@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neocore.NeoCore;
 
-public class NeoCorePlaceholders extends PlaceholderExpansion {
+public class NeoCoreFieldPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
