@@ -140,7 +140,7 @@ public class QuestInstance {
 							if (r.getDisplay() != null || !r.isHidden()) {
 								// Check if money should be given
 								if (r instanceof GiveMoneyAction) {
-									if (NeoQuests.getGlobalPlayerTags().exists("neoquests-resetaccount-" + account, p.getUniqueId())) {
+									if (NeoQuests.getGlobalPlayerTags().exists("resetaccount-" + account, p.getUniqueId())) {
 										continue;
 									}
 								}
@@ -152,7 +152,7 @@ public class QuestInstance {
 						for (RewardAction r : fRewards) {
 							// Check if money should be given
 							if (r instanceof GiveMoneyAction) {
-								if (NeoQuests.getGlobalPlayerTags().exists("neoquests-resetaccount-" + account, p.getUniqueId())) {
+								if (NeoQuests.getGlobalPlayerTags().exists("resetaccount-" + account, p.getUniqueId())) {
 									continue;
 								}
 							}

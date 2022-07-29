@@ -160,10 +160,8 @@ public class PlayerTags {
 			Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, curr, ValueChangeType.ADDED));
 		}
 		
-		if (NeoCore.isDebug()) {
-			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Set tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
-					curr.getValue() + ".");
-		}
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Set tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
+				curr.getValue() + ".");
 		return true;
 	}
 	
