@@ -107,7 +107,7 @@ public class CmdQuestsRecommended implements Subcommand {
 			ComponentBuilder text = new ComponentBuilder("§7- §6" + rec.getQuest().getDisplay());
 			if (rec.getEndpoint() == null) {
 				ComponentBuilder take = new ComponentBuilder(" §7§o[Click to take]")
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + rec.getQuest().getKey() + " true"));
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + rec.getQuest().getKey()));
 				p.spigot().sendMessage(text.append(take.create()).create());
 			}
 			else {

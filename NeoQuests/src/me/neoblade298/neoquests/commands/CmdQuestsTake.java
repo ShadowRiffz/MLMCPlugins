@@ -39,13 +39,13 @@ public class CmdQuestsTake implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
-		if (args.length == 2) {
-			if (args[1].equalsIgnoreCase("true")) {
-				QuestsManager.startQuest(p, args[0]);
-			}
-		}
 		String conv = QuestsManager.getQuest(args[0]).getStartConversation();
-		ConversationManager.startConversation(p, conv, false);
+		if (conv != null) {
+			ConversationManager.startConversation(p, conv, false);
+		}
+		else {
+			QuestsManager.startQuest(p, args[0]);
+		}
 	}
 
 	@Override
