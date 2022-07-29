@@ -16,7 +16,7 @@ public class Cull extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		new BukkitRunnable() {
 			public void run() {
-				File irMain = new File("/home/MLMC/ServerTowny/plugins/InventoryRollback/saves");
+				File irMain = new File("/home/MLMC/ServerTowny/plugins/InventoryRollbackPlus/backups");
 				Long start = System.currentTimeMillis();
 				for (File directory : irMain.listFiles()) {
 					if (directory.isDirectory()) {
