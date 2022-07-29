@@ -3,6 +3,7 @@ package me.neoblade298.neocore.player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -162,6 +163,14 @@ public class PlayerTags {
 		
 		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Set tag of " + this.getKey() + "." + key + " for " + uuid + " to " +
 				curr.getValue() + ".");
+		return true;
+	}
+	
+	public boolean resetAllTags(UUID uuid) {
+		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		for (String key : fields) {
+			reset(key, uuid);
+		}
 		return true;
 	}
 	

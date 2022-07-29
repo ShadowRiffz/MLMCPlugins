@@ -3,6 +3,7 @@ package me.neoblade298.neocore.player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -335,6 +336,14 @@ public class PlayerFields {
 		if (NeoCore.isDebug()) {
 			Bukkit.getLogger().log(Level.INFO, "[NeoCore] Added " + v + " to field " + this.getKey() + "." + key + " for " + uuid + ". Before: " +
 					original + ", after: " + curr.getValue() + ".");
+		}
+		return true;
+	}
+	
+	public boolean resetAllFields(UUID uuid) {
+		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		for (String key : fields) {
+			resetField(key, uuid);
 		}
 		return true;
 	}
