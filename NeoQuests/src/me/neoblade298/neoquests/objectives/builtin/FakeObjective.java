@@ -14,6 +14,7 @@ public class FakeObjective extends Objective {
 	public FakeObjective(LineConfig cfg) {
 		super(null, cfg);
 		this.needed = cfg.getInt("needed", 0);
+		this.line = cfg.getLine();
 	}
 
 	@Override
