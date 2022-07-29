@@ -150,7 +150,7 @@ public class Commands implements CommandExecutor {
 				for (Player target : targets) {
 					SkillAPI.saveSingle(target);
 					UUID uuid = target.getUniqueId();
-					target.sendMessage("§4[§c§lBosses§4] §7Starting boss in 3 seconds...");
+					target.sendMessage("§4[§c§lBosses§4] §7Starting boss in " + instance + " instance in 3 seconds...");
 					try {
 						// Connect
 						Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
