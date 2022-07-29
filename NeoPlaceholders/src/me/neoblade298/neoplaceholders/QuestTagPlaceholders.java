@@ -52,7 +52,7 @@ public class QuestTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (SkillAPI.getPlayerAccountData(p) != null) return "Loading...";
+		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
 		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
