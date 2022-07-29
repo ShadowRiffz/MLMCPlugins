@@ -57,7 +57,8 @@ public class CmdANavigationFrom implements Subcommand {
 		}
 		
 		EndPoint point = NavigationManager.getEndpoint(args[0]);
-		if (point.getDestinations().size() > 0) {
+		int destsize = point.getDestinations().size();
+		if (destsize > 0) {
 			Util.msg(p, "Setting start point to &6" + point.getDisplay() + "&7. Choose a destination:");
 			for (EndPoint dest : point.getDestinations().keySet()) {
 				ComponentBuilder entry = new ComponentBuilder("§7- §6" + dest.getDisplay())
@@ -65,6 +66,14 @@ public class CmdANavigationFrom implements Subcommand {
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to set destination to " + dest.getDisplay())));
 				p.spigot().sendMessage(entry.create());
 			}
+		}
+		else if (destsize == 1) {
+			String dest = null;
+			for (EndPoint ep : point.getDestinations().keySet()) {
+				dest = ep.getKey();
+				break;
+			}
+			NavigationManager.startNavigation(p, args[0], dest);
 		}
 		else {
 			Util.msg(p, "&cThis start point is not connected to any destinations!");
