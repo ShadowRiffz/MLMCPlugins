@@ -80,8 +80,9 @@ public class PvpAccount {
 			protectionExpires = System.currentTimeMillis();
 		}
 		protectionExpires += timeInMillis;
-		int timeRemaining = (int) (timeInMillis - System.currentTimeMillis());
-		Util.msg(p, "&7Your pvp protection now expires in &e" + (timeRemaining / 60000) + "m&7.");
+		double timeRemaining = protectionExpires - System.currentTimeMillis();
+		double hoursLeft = timeRemaining / 1000 / 60 / 60;
+		Util.msg(p, "&7Your pvp protection now expires in &e" + df.format(hoursLeft) + "h&7.");
 		
 		if (cr != null) {
 			cr.setCancelled(true);
