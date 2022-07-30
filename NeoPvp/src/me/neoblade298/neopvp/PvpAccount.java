@@ -192,7 +192,6 @@ public class PvpAccount {
 			s.spigot().sendMessage(b.create());
 		}
 		Util.msg(s, "&6Rating: &e" + elo, false);
-		Util.msg(s, "&6Pvp Balance: &e" + pvpBalance, false);
 		ComponentBuilder b = new ComponentBuilder("§6Pvp Balance: §e" + pvpBalance);
 		if (displayToSelf) {
 			b.append(" §7§o[Click to redeem]", FormatRetention.NONE)
