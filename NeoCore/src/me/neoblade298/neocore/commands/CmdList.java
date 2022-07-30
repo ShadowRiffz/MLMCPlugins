@@ -50,11 +50,10 @@ public class CmdList implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		if (pages == null) {
 			pages = new PaginatedList<Subcommand>();
-		}
-		
-		for (Subcommand cmd : cmds.values()) {
-			if (!cmd.isHidden()) {
-				pages.add(cmd);
+			for (Subcommand cmd : cmds.values()) {
+				if (!cmd.isHidden()) {
+					pages.add(cmd);
+				}
 			}
 		}
 		
