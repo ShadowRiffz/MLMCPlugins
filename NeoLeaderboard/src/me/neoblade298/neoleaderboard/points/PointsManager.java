@@ -275,22 +275,22 @@ public class PointsManager implements IOComponent {
 					HashMap<PlayerPointType, Double> ppoints = nent.getAllPlayerPoints();
 					HashMap<UUID, TownEntry> tpoints = nent.getAllTownPoints();
 
-					insert.addBatch("REPLACE INTO leaderboard_nations VALUES ('"
+					insert.addBatch("REPLACE INTO neoleaderboard_nations VALUES ('"
 										+ nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
 					for (Entry<NationPointType, Double> e : points.entrySet()) {
-						insert.addBatch("REPLACE INTO leaderboard_nationpoints VALUES ('"
+						insert.addBatch("REPLACE INTO neoleaderboard_nationpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (Entry<PlayerPointType, Double> e : ppoints.entrySet()) {
-						insert.addBatch("REPLACE INTO leaderboard_nationpoints VALUES ('"
+						insert.addBatch("REPLACE INTO neoleaderboard_nationpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
 					for (UUID uuid : tpoints.keySet()) {
 						String name = TownyUniverse.getInstance().getTown(uuid).getName();
-						insert.addBatch("REPLACE INTO leaderboard_towns VALUES ('"
+						insert.addBatch("REPLACE INTO neoleaderboard_towns VALUES ('"
 								+ uuid + "','" + nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
 						for (Entry<PlayerPointType, Double> e : tpoints.get(uuid).getPlayerPoints().entrySet()) {
-							insert.addBatch("REPLACE INTO leaderboard_townpoints VALUES ('"
+							insert.addBatch("REPLACE INTO neoleaderboard_townpoints VALUES ('"
 									+ uuid + "','" + nent.getUuid() + "','" + name + "','" + e.getKey() + "'," + e.getValue() + ");");
 						}
 					}
@@ -418,17 +418,17 @@ public class PointsManager implements IOComponent {
 	}
 	
 	private static void savePlayerData(PlayerEntry pentry, Statement insert) throws SQLException {
-		insert.addBatch("REPLACE INTO leaderboard_players VALUES ('"
+		insert.addBatch("REPLACE INTO neoleaderboard_players VALUES ('"
 				+ pentry.getUuid() + "','" + pentry.getDisplay() + "','"
 				+ pentry.getTown().getUUID() + "','" + pentry.getNation().getUUID() + "');");
 		
 		for (Entry<PlayerPointType, Double> e : pentry.getTotalPoints().entrySet()) {
-			insert.addBatch("REPLACE INTO leaderboard_playerpoints VALUES ('"
+			insert.addBatch("REPLACE INTO neoleaderboard_playerpoints VALUES ('"
 								+ pentry.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 		
 		for (Entry<PlayerPointType, Double> e : pentry.getContributedPoints().entrySet()) {
-			insert.addBatch("REPLACE INTO leaderboard_contributed VALUES ('"
+			insert.addBatch("REPLACE INTO neoleaderboard_contributed VALUES ('"
 								+ pentry.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 		}
 	}
@@ -503,11 +503,11 @@ public class PointsManager implements IOComponent {
 				saveAll();
 				
 				Statement stmt = NeoCore.getStatement();
-				String prefix = "INSERT INTO leaderboard_previous_nations (SELECT * FROM ";
+				String prefix = "INSERT INTO neoleaderboard_previous_nations (SELECT * FROM ";
 				String suffix = " ORDER BY points DESC LIMIT 10);";
 				
 				try {
-					stmt.addBatch("INSERT INTO leaderboard_winners VALUES ('" + n.getUUID() + "','" + n.getName() +
+					stmt.addBatch("INSERT INTO neoleaderboard_winners VALUES ('" + n.getUUID() + "','" + n.getName() +
 							"'," + System.currentTimeMillis() + "," + winner.getEffectivePoints() + "," + winner.getContributors());
 					
 					// Totals
