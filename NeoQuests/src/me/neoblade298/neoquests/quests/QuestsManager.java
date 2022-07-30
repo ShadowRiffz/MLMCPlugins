@@ -188,10 +188,9 @@ public class QuestsManager implements IOComponent, Manager {
 			for (int acct : questers.get(p.getUniqueId()).keySet()) {
 				Quester quester = questers.get(p.getUniqueId()).get(acct);
 
-				// Save user
+				// Save active quests
+				delete.addBatch("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';"); 
 				for (QuestInstance qi : quester.getActiveQuests()) {
-					// Delete existing active quests
-					delete.addBatch("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';"); 
 					for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 						// Replace with new ones
 						insert.addBatch("REPLACE INTO quests_quests VALUES('"
