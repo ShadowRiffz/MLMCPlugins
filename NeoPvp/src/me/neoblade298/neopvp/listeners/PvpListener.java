@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -75,13 +76,14 @@ public class PvpListener implements Listener {
 
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(PlayerDeathEvent e) {
 		Player victim = e.getEntity();
 		if (victim.getKiller() == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
 			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
 				e.setKeepInventory(true);
+				e.getDrops().clear();
 				double timeLeft = victim.getFirstPlayed() + ONE_DAY - System.currentTimeMillis();
 				double hoursLeft = timeLeft / 1000 / 60 / 60;
 				Util.msg(victim, "&7Your inventory was kept because you're a new player. This does not apply to PVP deaths!");
