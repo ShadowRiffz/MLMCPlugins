@@ -28,7 +28,7 @@ public class PvpAccount {
 	private double pvpBalance;
 	private int elo, killstreak, wins, losses;
 	private long protectionExpires = -1;
-	private static final DecimalFormat df = new DecimalFormat("#.##");
+	public static final DecimalFormat df = new DecimalFormat("#.##");
 	
 	private CoreRunnable cr;
 	

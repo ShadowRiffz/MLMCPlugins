@@ -25,6 +25,8 @@ import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
 
 public class PvpListener implements Listener {
+	private static final long ONE_DAY = 1000 * 60 * 60 * 24;
+	
 	@EventHandler
 	public void onPlayerKill(PlayerDeathEvent e) {
 		Player victim = e.getEntity();
@@ -76,20 +78,30 @@ public class PvpListener implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player victim = e.getEntity();
-		if (victim.getKiller() == null) return;
-		
-		// Drop skull
-		if (!e.getKeepInventory()) {
-			ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-			SkullMeta meta = (SkullMeta) head.getItemMeta();
-			meta.setOwningPlayer(victim);
-			meta.setDisplayName("§e" + victim.getName() + "'s Head");
-			meta.setLore(Arrays.asList("§7Killer: §c" + victim.getKiller().getName()));
-			head.setItemMeta(meta);
-			victim.getWorld().dropItem(victim.getLocation(), head);
+		if (victim.getKiller() == null) {
+			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
+			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
+				e.setKeepInventory(true);
+				double timeLeft = victim.getFirstPlayed() + ONE_DAY - System.currentTimeMillis();
+				double hoursLeft = timeLeft / 1000 / 60 / 60;
+				Util.msg(victim, "&7Your inventory was kept because you're a new player. This does not apply to PVP deaths!");
+				Util.msg(victim, "&7Time until inventory protection expires: &e" + PvpAccount.df.format(hoursLeft) + "&7.");
+			}
 		}
+		else {
+			// Drop skull
+			if (!e.getKeepInventory()) {
+				ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+				SkullMeta meta = (SkullMeta) head.getItemMeta();
+				meta.setOwningPlayer(victim);
+				meta.setDisplayName("§e" + victim.getName() + "'s Head");
+				meta.setLore(Arrays.asList("§7Killer: §c" + victim.getKiller().getName()));
+				head.setItemMeta(meta);
+				victim.getWorld().dropItem(victim.getLocation(), head);
+			}
 
-		// Handle all pvp stats
-		PvpManager.handleKill(victim.getKiller(), victim);
+			// Handle all pvp stats
+			PvpManager.handleKill(victim.getKiller(), victim);
+		}
 	}
 }
