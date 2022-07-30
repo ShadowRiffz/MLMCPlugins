@@ -51,6 +51,7 @@ public class NeoPvp extends JavaPlugin {
 		mngr.registerCommandList("");
 		mngr.register(new CmdAPvpAddProtection());
 		mngr.register(new CmdAPvpRemoveProtection());
+		mngr.register(new CmdAPvpReload());
 	}
 	
 	@Override
