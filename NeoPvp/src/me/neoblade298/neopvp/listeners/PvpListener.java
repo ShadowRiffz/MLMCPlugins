@@ -82,12 +82,15 @@ public class PvpListener implements Listener {
 		if (victim.getKiller() == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
 			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
-				e.setKeepInventory(true);
-				e.getDrops().clear();
-				double timeLeft = victim.getFirstPlayed() + ONE_DAY - System.currentTimeMillis();
-				double hoursLeft = timeLeft / 1000 / 60 / 60;
-				Util.msg(victim, "&7Your inventory was kept because you're a new player. This does not apply to PVP deaths!");
-				Util.msg(victim, "&7Time until inventory protection expires: &e" + PvpAccount.df.format(hoursLeft) + "&7.");
+				String world = victim.getWorld().getName();
+				if (!world.equalsIgnoreCase("Argyll") && !world.equalsIgnoreCase("ClassPVP")) {
+					e.setKeepInventory(true);
+					e.getDrops().clear();
+					double timeLeft = victim.getFirstPlayed() + ONE_DAY - System.currentTimeMillis();
+					double hoursLeft = timeLeft / 1000 / 60 / 60;
+					Util.msg(victim, "&7Your inventory was kept because you're a new player. This does not apply to PVP deaths!");
+					Util.msg(victim, "&7Time until inventory protection expires: &e" + PvpAccount.df.format(hoursLeft) + "&7.");
+				}
 			}
 		}
 		else {
