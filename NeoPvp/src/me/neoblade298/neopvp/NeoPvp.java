@@ -80,4 +80,10 @@ public class NeoPvp extends JavaPlugin {
 	public static NeoPvp inst() {
 		return inst;
 	}
+	
+	public static void reload() {
+		for (Manager mngr : mngrs) {
+			mngr.reload();
+		}
+	}
 }
