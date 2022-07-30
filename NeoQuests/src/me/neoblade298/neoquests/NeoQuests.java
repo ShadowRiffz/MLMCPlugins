@@ -165,6 +165,10 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 				new CmdANavigationClear());
 		this.getCommand(cmd).setExecutor(anavigation);
 		commands.put(cmd, anavigation);
+		
+		cmd = "conversation";
+		CommandManager cm = new CommandManager(cmd, this);
+		cm.register(new CmdConvAnswer());
 	}
 
 	public void onDisable() {

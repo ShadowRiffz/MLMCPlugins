@@ -85,13 +85,13 @@ public class ConversationResponse {
 				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text + " §6<Starts Quest>")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new Text("§oClick to select " + num + "\n§oThis starts the quest §6" + q.getDisplay())))
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/conv answer " + num));
 				p.spigot().sendMessage(builder.create());
 			}
 			else {
 				ComponentBuilder builder = new ComponentBuilder("§c§l[" + num + "] §7" + text)
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§oClick to select " + num)))
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Integer.toString(num)));
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/conv answer " + num));
 				p.spigot().sendMessage(builder.create());
 			}
 			return true;
