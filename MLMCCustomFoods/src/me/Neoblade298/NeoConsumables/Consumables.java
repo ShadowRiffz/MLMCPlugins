@@ -381,7 +381,15 @@ public class Consumables extends JavaPlugin implements Listener {
 	public void onPlayerPlace(BlockPlaceEvent e) {
 		ItemStack item = e.getItemInHand();
 		if (item.getType().equals(Material.CHEST) && new NBTItem(item).hasKey("consumable")) {
-			e.setCancelled(true);
+			if (item.getType().equals(Material.CHEST)) {
+				e.setCancelled(true);
+			}
+			else {
+				String world = e.getBlock().getWorld().getName();
+				if (world.equalsIgnoreCase("Argyll") || world.equalsIgnoreCase("ClassPVP")) {
+					e.setCancelled(true);
+				}
+			}
 		}
 	}
 	
