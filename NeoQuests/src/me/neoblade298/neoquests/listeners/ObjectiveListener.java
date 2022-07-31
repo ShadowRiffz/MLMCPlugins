@@ -16,6 +16,7 @@ import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
 import com.sucy.skill.api.event.PlayerClassChangeEvent;
 import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
+import com.sucy.skill.api.event.PlayerSkillUpgradeEvent;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Neoblade298.NeoProfessions.Events.OpenProfessionInvEvent;
@@ -176,6 +177,17 @@ public class ObjectiveListener implements Listener {
 	
 	@EventHandler
 	public void onUnlockSkill(PlayerSkillUnlockEvent e) {
+		Player p = e.getPlayerData().getPlayer();
+		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.GET_SKILL);
+		if (insts != null) {
+			for (ObjectiveInstance o : insts) {
+				((GetSkillObjective) o.getObjective()).checkEvent(e, o);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onUpgradeSkill(PlayerSkillUpgradeEvent e) {
 		Player p = e.getPlayerData().getPlayer();
 		ArrayList<ObjectiveInstance> insts = getPlayerInstances(p).get(ObjectiveEvent.GET_SKILL);
 		if (insts != null) {

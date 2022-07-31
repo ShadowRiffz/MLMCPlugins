@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.objectives.builtin;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerSkillUnlockEvent;
+import com.sucy.skill.api.event.PlayerSkillUpgradeEvent;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.neoblade298.neocore.io.LineConfig;
@@ -37,6 +38,18 @@ public class GetSkillObjective extends Objective {
 			return true;
 		}
 		else if (e.getUnlockedSkill().getData().getName().equalsIgnoreCase(skill)) {
+			o.incrementCount();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkEvent(PlayerSkillUpgradeEvent e, ObjectiveInstance o) {
+		if (skill == null) {
+			o.incrementCount();
+			return true;
+		}
+		else if (e.getUpgradedSkill().getData().getName().equalsIgnoreCase(skill)) {
 			o.incrementCount();
 			return true;
 		}
