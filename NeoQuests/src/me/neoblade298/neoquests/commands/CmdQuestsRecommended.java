@@ -79,10 +79,10 @@ public class CmdQuestsRecommended implements Subcommand {
 		Quester q = QuestsManager.getQuester(p);
 		for (QuestRecommendation rec : recs) {
 			int min = rec.getMin(), max = rec.getMax();
-			if (min == -1 || min > level) continue;
-			if (max == -1 || max < level) continue;
+			if (min != -1 && min > level) continue;
+			if (max != -1 && max < level) continue;
 			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
-			if (!q.getActiveQuestsHashMap().containsKey(rec.getQuest().getKey().toUpperCase())) continue;
+			if (q.getActiveQuestsHashMap().containsKey(rec.getQuest().getKey().toUpperCase())) continue;
 
 			pages.add(rec);
 		}
