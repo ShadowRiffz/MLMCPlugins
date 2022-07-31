@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neobossinstances.stats.PlayerStat;
+import me.neoblade298.neocore.player.PlayerDataManager;
 
 public class Commands implements CommandExecutor {
 	private BossInstances main = null;
@@ -61,10 +62,8 @@ public class Commands implements CommandExecutor {
 					e.printStackTrace();
 				}
 
-				// Only give cooldown if they've beaten the boss before or it's not a boss
-				if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) || p.hasPermission(BossInstances.getBoss(boss).getPermission())) {
-					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
-				}
+				// Always give cooldown, since this is a debug cmd
+				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 				if (main.mainSpawn.getWorld() == null) {
 					main.mainSpawn.setWorld(Bukkit.getWorld("Argyll"));
 				}
@@ -172,7 +171,9 @@ public class Commands implements CommandExecutor {
 					Bukkit.getServer().getLogger().info("[NeoBossInstances] " + target.getName() + " sent to boss " + boss + " at instance " + instance + " of level " + level + ".");
 					
 					// Only give cooldown if they've beaten the boss before or it's a raid
-					if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS)) {
+					int acct = SkillAPI.getPlayerAccountData(target).getActiveId();
+					if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) ||
+							PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + boss, target.getUniqueId())) {
 						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
 					}
 
