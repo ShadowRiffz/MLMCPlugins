@@ -313,6 +313,10 @@ public class QuestsManager implements IOComponent, Manager {
 		return quests.get(quest.toUpperCase());
 	}
 	
+	public static Collection<Quest> getQuests() {
+		return quests.values();
+	}
+	
 	public static File getDataFolder() {
 		return data;
 	}
