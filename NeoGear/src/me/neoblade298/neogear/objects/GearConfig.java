@@ -122,8 +122,8 @@ public class GearConfig {
 			double price = level * rarity.priceModifier;
 			for (int i = 1; i <= slotsCreated; i++) {
 				ScaleSet set = CreateSlotInventory.getGoldPrices().get(i);
-				price += set.getResult(level) * 0.2;
-				price += CreateSlotInventory.getEssencePrices().get(i) * level * 5;
+				price += set.getResult(level) * 0.05;
+				price += CreateSlotInventory.getEssencePrices().get(i) * level * 0.5;
 			}
 			return price;
 		}
