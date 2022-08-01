@@ -156,7 +156,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			String displayName = bossSection.getString("Display-Name");
 			BossType type = BossType.valueOf(bossSection.getString("Type", "BOSS").toUpperCase());
 			int timeLimit = bossSection.getInt("Time-Limit");
-			String permission = bossSection.getString("Permission");
+			String tag = bossSection.getString("Tag");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
@@ -164,10 +164,10 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 			if (type.equals(BossType.BOSS)) {
 				bossInfo.put(boss,
-						new Boss(boss, loc, cmd, cooldown, displayName, permission, placeholder, mythicmobs));
+						new Boss(boss, loc, cmd, cooldown, displayName, tag, placeholder, mythicmobs));
 			}
 			else {
-				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, permission, placeholder,
+				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, tag, placeholder,
 						mythicmobs);
 
 				// If the raid has extra bosses within it, add them to the boss info
@@ -662,7 +662,8 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 	public String getBossName(String boss, Player p) {
 		Boss b = bossInfo.get(boss);
-		if (p.hasPermission(b.getPermission())) {
+		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
+		if (NeoCore.getPlayerTags("questaccount_" + acct).exists(b.getTag(), p.getUniqueId())) {
 			return b.getPlaceholder();
 		}
 		return null;
@@ -670,10 +671,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 	public int getBossCooldown(String boss, Player p) {
 		if (cooldowns.containsKey(boss)) {
-			// This is covered by getBossName so essentially is not used
-			if (!p.hasPermission(bossInfo.get(boss).getPermission())) {
-				return -2;
-			}
 			int cooldown = bossInfo.get(boss).getCooldown() * 1000;
 			if (cooldowns.get(boss).containsKey(p.getUniqueId())) {
 				long lastUse = cooldowns.get(boss).get(p.getUniqueId());

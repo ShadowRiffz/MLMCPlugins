@@ -15,7 +15,7 @@ public class Boss {
 	private String displayName = null;
 	private BossType type = BossType.BOSS;
 	private int timeLimit = 0;
-	private String permission = null;
+	private String tag = null;
 	private ArrayList<RaidBoss> raidBosses = null;
 	private String placeholder = null;
 	private ArrayList<String> mythicmobs = null;
@@ -23,19 +23,19 @@ public class Boss {
 	private HashSet<String> spawnersAlive = new HashSet<String>();
 	private int totalSpawners = 0;
 
-	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String permission, String placeholder, ArrayList<String> mythicmobs) {
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String tag, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
-		this.permission = permission;
+		this.tag = tag;
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
-			String permission, String placeholder, ArrayList<String> mythicmobs) {
+			String tag, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
@@ -43,14 +43,14 @@ public class Boss {
 		this.displayName = displayName;
 		this.type = type;
 		this.timeLimit = timeLimit;
-		this.permission = permission;
+		this.tag = tag;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
-			String permission, String placeholder, ArrayList<String> mythicmobs, ArrayList<SpawnerSet> spawners) {
+			String tag, String placeholder, ArrayList<String> mythicmobs, ArrayList<SpawnerSet> spawners) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
@@ -58,7 +58,7 @@ public class Boss {
 		this.displayName = displayName;
 		this.type = type;
 		this.timeLimit = timeLimit;
-		this.permission = permission;
+		this.tag = tag;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.spawnersets = spawners;
@@ -116,12 +116,12 @@ public class Boss {
 		this.displayName = displayName;
 	}
 
-	public String getPermission() {
-		return permission;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setPermission(String permission) {
-		this.permission = permission;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public ArrayList<RaidBoss> getRaidBosses() {
