@@ -1,8 +1,6 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -69,7 +67,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 
-			// /nr spawnbook [player] [internalmob] [point amt]
+			// /nr spawnbook [player] [internalmob] [level] [point amt]
 			else if (args[0].equalsIgnoreCase("spawnbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				if (MythicBukkit.inst().getMobManager().getMythicMob(args[2]) == null) {
@@ -77,7 +75,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				String display = MythicBukkit.inst().getMobManager().getMythicMob(args[2]).get().getDisplayName().get();
-				int amt = Integer.parseInt(args[3]);
+				int amt = Integer.parseInt(args[4]);
 
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
@@ -87,9 +85,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				String sLevel = display.split(" ")[1];
-				sLevel = sLevel.substring(0, sLevel.length() - 1);
-				int level = Integer.parseInt(sLevel);
+				int level = Integer.parseInt(args[3]);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -102,15 +98,15 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			
-			// /nr spawnbookalias [player] [mobalias] [point amt] [display]
+			// /nr spawnbookalias [player] [mobalias] [level] [point amt] [display]
 			else if (args[0].equalsIgnoreCase("spawnbookalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				String display = args[4];
-				for (int i = 5; i < args.length; i++) {
+				String display = args[5];
+				for (int i = 6; i < args.length; i++) {
 					display += " " + args[i];
 				}
 				display = display.replaceAll("@", "§");
-				int amt = Integer.parseInt(args[3]);
+				int amt = Integer.parseInt(args[4]);
 
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
@@ -120,9 +116,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				String sLevel = display.split(" ")[1];
-				sLevel = sLevel.substring(0, sLevel.length() - 1);
-				int level = Integer.parseInt(sLevel);
+				int level = Integer.parseInt(args[3]);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
