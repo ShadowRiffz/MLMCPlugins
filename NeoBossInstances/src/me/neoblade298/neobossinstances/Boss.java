@@ -23,19 +23,19 @@ public class Boss {
 	private HashSet<String> spawnersAlive = new HashSet<String>();
 	private int totalSpawners = 0;
 
-	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String tag, String placeholder, ArrayList<String> mythicmobs) {
+	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
 		this.cooldown = cooldown;
 		this.displayName = displayName;
-		this.tag = tag;
+		this.tag = "Killed" + this.name;
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
-			String tag, String placeholder, ArrayList<String> mythicmobs) {
+			String placeholder, ArrayList<String> mythicmobs) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
@@ -43,14 +43,14 @@ public class Boss {
 		this.displayName = displayName;
 		this.type = type;
 		this.timeLimit = timeLimit;
-		this.tag = tag;
+		this.tag = "Killed" + this.name;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.mythicmobs = mythicmobs;
 	}
 
 	public Boss(String name, Location coords, String cmd, int cooldown, String displayName, BossType type, int timeLimit,
-			String tag, String placeholder, ArrayList<String> mythicmobs, ArrayList<SpawnerSet> spawners) {
+			String placeholder, ArrayList<String> mythicmobs, ArrayList<SpawnerSet> spawners) {
 		this.name = name;
 		this.coords = coords;
 		this.cmd = cmd;
@@ -58,7 +58,7 @@ public class Boss {
 		this.displayName = displayName;
 		this.type = type;
 		this.timeLimit = timeLimit;
-		this.tag = tag;
+		this.tag = "Killed" + this.name;
 		this.raidBosses = new ArrayList<RaidBoss>();
 		this.placeholder = placeholder.replaceAll("&", "§").replaceAll("@", "&");
 		this.spawnersets = spawners;

@@ -156,7 +156,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 			String displayName = bossSection.getString("Display-Name");
 			BossType type = BossType.valueOf(bossSection.getString("Type", "BOSS").toUpperCase());
 			int timeLimit = bossSection.getInt("Time-Limit");
-			String tag = bossSection.getString("Tag");
 			Location loc = parseLocation(bossSection.getString("Coordinates"));
 			String placeholder = bossSection.getString("Placeholder");
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
@@ -164,10 +163,10 @@ public class BossInstances extends JavaPlugin implements Listener {
 
 			if (type.equals(BossType.BOSS)) {
 				bossInfo.put(boss,
-						new Boss(boss, loc, cmd, cooldown, displayName, tag, placeholder, mythicmobs));
+						new Boss(boss, loc, cmd, cooldown, displayName, placeholder, mythicmobs));
 			}
 			else {
-				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, tag, placeholder,
+				Boss info = new Boss(boss, loc, cmd, cooldown, displayName, type, timeLimit, placeholder,
 						mythicmobs);
 
 				// If the raid has extra bosses within it, add them to the boss info
