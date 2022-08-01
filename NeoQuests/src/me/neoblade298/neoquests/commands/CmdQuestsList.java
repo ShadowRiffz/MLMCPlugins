@@ -54,7 +54,7 @@ public class CmdQuestsList implements Subcommand {
 				
 				PaginatedList<Quest> list = new PaginatedList<Quest>();
 				for (Quest q : QuestsManager.getQuests()) {
-					if (ConditionManager.getBlockingCondition(p, q.getConditions()) != null) {
+					if (ConditionManager.getBlockingCondition(p, q.getConditions()) == null) {
 						list.add(q);
 					}
 				}
@@ -71,8 +71,8 @@ public class CmdQuestsList implements Subcommand {
 					msg += q.getDisplay();
 					Util.msg(s, msg, false);
 				}
-				String nextCmd = "/quests log " + (page + 2);
-				String prevCmd = "/quests log " + page;
+				String nextCmd = "/quests list " + (page + 2);
+				String prevCmd = "/quests list " + page;
 				list.displayFooter((Player) s, page, nextCmd, prevCmd);
 			}
 		}.runTaskAsynchronously(NeoQuests.inst());
