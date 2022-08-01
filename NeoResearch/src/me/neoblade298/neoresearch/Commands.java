@@ -33,8 +33,8 @@ public class Commands implements CommandExecutor{
 			if (args.length == 0) {
 				sender.sendMessage("§c/nr reload");
 				sender.sendMessage("§c/nr debug [player]");
-				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [points] (display)");
-				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [points] (display)");
+				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [level] [points] (display)");
+				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [level] [points] (display)");
 				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [level (pts only)] [amt] (display)");
 				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [level (pts only)] [amt]");
 				sender.sendMessage("§c/nr setlevel [player] [amt]");
