@@ -26,7 +26,11 @@ public class PlayerDataManager implements IOComponent {
 	}
 
 	@Override
-	public void preloadPlayer(OfflinePlayer p, Statement stmt) {
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {}
+
+	// Load instead of preload so it has time to save from boss fights
+	@Override
+	public void loadPlayer(Player p, Statement stmt) {
 		for (PlayerFields pFields : fields.values()) {
 			pFields.load(stmt, p.getUniqueId());
 		}
@@ -34,9 +38,6 @@ public class PlayerDataManager implements IOComponent {
 			pTags.load(stmt, p.getUniqueId());
 		}
 	}
-
-	@Override
-	public void loadPlayer(Player p, Statement stmt) {}
 
 	@Override
 	public void cleanup(Statement insert, Statement delete) {}
