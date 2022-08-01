@@ -3,6 +3,7 @@ package me.neoblade298.neoquests.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +24,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class CmdQuestsRecommended implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("page", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
+			new CommandArgument("page", false)));
 
 	@Override
 	public String getDescription() {
@@ -59,9 +61,15 @@ public class CmdQuestsRecommended implements Subcommand {
 		Player p = (Player) s;
 		
 		int page = 0;
-		if (args.length == 1) {
-			if (StringUtils.isNumeric(args[0])) {
-				page = Integer.parseInt(args[0]) - 1;
+		int offset = 0;
+		if (args.length > 0 && Bukkit.getPlayer(args[0]) != null) {
+			p = Bukkit.getPlayer(args[0]);
+			offset++;
+		}
+		
+		if (args.length > offset) {
+			if (StringUtils.isNumeric(args[offset])) {
+				page = Integer.parseInt(args[offset]) - 1;
 			}
 			else {
 				Util.msg(s, "&cInvalid argument, must be a page number!");
@@ -108,14 +116,14 @@ public class CmdQuestsRecommended implements Subcommand {
 			if (rec.getEndpoint() == null) {
 				ComponentBuilder take = new ComponentBuilder(" §7§o[Click to take]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + rec.getQuest().getKey()));
-				p.spigot().sendMessage(text.append(take.create()).create());
+				s.spigot().sendMessage(text.append(take.create()).create());
 			}
 			else {
 				ComponentBuilder nav = new ComponentBuilder(" §7§o[Click for GPS]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + rec.getEndpoint()));
-				p.spigot().sendMessage(text.append(nav.create()).create());
+				s.spigot().sendMessage(text.append(nav.create()).create());
 			}
 		}
-		pages.displayFooter(p, page, "/quests recommended " + (page + 2), "/quests recommended " + page);
+		pages.displayFooter(s, page, "/quests recommended " + (page + 2), "/quests recommended " + page);
 	}
 }

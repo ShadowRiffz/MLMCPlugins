@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.commands;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,7 +18,8 @@ import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsLog implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("page", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
+			new CommandArgument("page", false)));
 
 	@Override
 	public String getDescription() {
@@ -42,6 +44,12 @@ public class CmdQuestsLog implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
+		int offset = 0;
+		if (args.length > 0 && Bukkit.getPlayer(args[0]) != null) {
+			p = Bukkit.getPlayer(args[0]);
+			offset++;
+		}
+		
 		Quester quester = QuestsManager.initializeOrGetQuester(p);
 		if (quester.getCompletedQuests().size() == 0) {
 			Util.msg(s, "&cYou don't yet have any completed quests!");
@@ -54,7 +62,7 @@ public class CmdQuestsLog implements Subcommand {
 		}
 		
 		PaginatedList<CompletedQuest> list = new PaginatedList<CompletedQuest>(quester.getCompletedQuests());
-		int page = args.length == 1 ? Integer.parseInt(args[0]) - 1 : 0;
+		int page = args.length > offset ? Integer.parseInt(args[offset]) - 1 : 0;
 		if (page < 0 || page >= list.pages()) {
 			Util.msg(s, "&cInvalid page number! Max page is " + list.pages());
 			return;
@@ -69,7 +77,7 @@ public class CmdQuestsLog implements Subcommand {
 		}
 		String nextCmd = "/quests log " + (page + 2);
 		String prevCmd = "/quests log " + page;
-		list.displayFooter((Player) s, page, nextCmd, prevCmd);
+		list.displayFooter(s, page, nextCmd, prevCmd);
 	}
 
 	@Override

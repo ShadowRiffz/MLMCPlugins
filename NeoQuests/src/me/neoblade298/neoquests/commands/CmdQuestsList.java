@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.commands;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,7 +20,8 @@ import me.neoblade298.neoquests.quests.Quest;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class CmdQuestsList implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("page", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
+			new CommandArgument("page", false)));
 
 	@Override
 	public String getDescription() {
@@ -46,8 +48,13 @@ public class CmdQuestsList implements Subcommand {
 		new BukkitRunnable() {
 			public void run() {
 				Player p = (Player) s;
+				int offset = 0;
+				if (args.length > 0 && Bukkit.getPlayer(args[0]) != null) {
+					p = Bukkit.getPlayer(args[0]);
+					offset++;
+				}
 				
-				if (args.length > 0 && !StringUtils.isNumeric(args[0])) {
+				if (args.length > offset && !StringUtils.isNumeric(args[offset])) {
 					Util.msg(s, "&cInvalid argument! Must be a page number.");
 					return;
 				}
@@ -73,7 +80,7 @@ public class CmdQuestsList implements Subcommand {
 				}
 				String nextCmd = "/quests list " + (page + 2);
 				String prevCmd = "/quests list " + page;
-				list.displayFooter((Player) s, page, nextCmd, prevCmd);
+				list.displayFooter(s, page, nextCmd, prevCmd);
 			}
 		}.runTaskAsynchronously(NeoQuests.inst());
 	}
