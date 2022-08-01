@@ -72,8 +72,8 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 				public void run() {
 					p.playSound(p.getLocation(), stage.getSound(), 1.0F, stage.getPitch());
 					ChestReward reward = stage.chooseReward();
-					reward.giveReward(p);
 					reward.sendMessage(p);
+					reward.giveReward(p);
 					if (stage.getEffect() != null) {
 						ChestConsumable.runAnimation(p, stage.getEffect());
 					}
