@@ -18,17 +18,17 @@ public class ResearchBookReward extends ChestReward {
 	}
 
 	@Override
-	public void giveReward(Player p) {
+	public void giveReward(Player p, int level) {
 		int points = 5;
 		if (!this.type.equalsIgnoreCase("normal")) {
 			points = 25;
 		}
 		
 		if (alias == null) {
-			Util.serverCommand("nr spawnbook " + p.getName() + " " + mob + " " + points);
+			Util.serverCommand("nr spawnbook " + p.getName() + " " + mob + " " + level + " " + points);
 		}
 		else {
-			Util.serverCommand("nr spawnbookalias " + p.getName() + " " + mob + " " + points + " " + alias);
+			Util.serverCommand("nr spawnbookalias " + p.getName() + " " + mob + " " + level + " " + points + " " + alias);
 		}
 	}
 

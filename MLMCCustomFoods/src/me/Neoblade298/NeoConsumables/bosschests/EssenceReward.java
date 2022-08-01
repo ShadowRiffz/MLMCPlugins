@@ -15,8 +15,8 @@ public class EssenceReward extends ChestReward {
 	}
 
 	@Override
-	public void giveReward(Player p) {
-		CurrencyManager.add(p, level, amount);
+	public void giveReward(Player p, int level) {
+		CurrencyManager.add(p, this.level, amount);
 	}
 
 	@Override

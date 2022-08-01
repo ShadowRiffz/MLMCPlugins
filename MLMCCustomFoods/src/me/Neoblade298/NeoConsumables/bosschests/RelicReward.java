@@ -14,7 +14,7 @@ public class RelicReward extends ChestReward {
 	}
 
 	@Override
-	public void giveReward(Player p) {
+	public void giveReward(Player p, int level) {
 		Util.serverCommand("mythicmobs items give -s " + p.getName() + " Relic" + mob);
 	}
 

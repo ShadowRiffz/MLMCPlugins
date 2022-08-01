@@ -30,6 +30,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	private Sound sound;
 	private ArrayList<String> lore = null;
 	private String display;
+	private int level;
 	private static HashMap<Integer, ChatColor> stageToColor = new HashMap<Integer, ChatColor>();
 	private static HashMap<Integer, Character> stageToLetter = new HashMap<Integer, Character>();
 	private static DecimalFormat df = new DecimalFormat("#.#");
@@ -45,9 +46,10 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 		stageToLetter.put(4, 'S');
 	}
 	
-	public ChestConsumable(Consumables main, String display, String key, LinkedList<ChestStage> stages, Sound sound) {
+	public ChestConsumable(Consumables main, String display, String key, int level, LinkedList<ChestStage> stages, Sound sound) {
 		super(main, key);
 		this.main = main;
+		this.level = level;
 		this.stages = stages;
 		this.sound = sound;
 		this.display = display;
@@ -73,7 +75,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 					p.playSound(p.getLocation(), stage.getSound(), 1.0F, stage.getPitch());
 					ChestReward reward = stage.chooseReward();
 					reward.sendMessage(p);
-					reward.giveReward(p);
+					reward.giveReward(p, level);
 					if (stage.getEffect() != null) {
 						ChestConsumable.runAnimation(p, stage.getEffect());
 					}

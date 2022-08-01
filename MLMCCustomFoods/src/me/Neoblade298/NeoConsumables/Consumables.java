@@ -9,7 +9,6 @@ import me.Neoblade298.NeoConsumables.bosschests.ChestReward;
 import me.Neoblade298.NeoConsumables.bosschests.ChestStage;
 import me.Neoblade298.NeoConsumables.bosschests.EssenceReward;
 import me.Neoblade298.NeoConsumables.bosschests.GearReward;
-import me.Neoblade298.NeoConsumables.bosschests.RecipeReward;
 import me.Neoblade298.NeoConsumables.bosschests.RelicReward;
 import me.Neoblade298.NeoConsumables.bosschests.ResearchBookReward;
 import me.Neoblade298.NeoConsumables.bosschests.StoredItemReward;
@@ -275,9 +274,6 @@ public class Consumables extends JavaPlugin implements Listener {
 				case "relic":
 					cr = RelicReward.parse(args, internal, bossDisplay);
 					break;
-				case "recipe":
-					cr = RecipeReward.parse(args);
-					break;
 				case "rbook":
 					cr = ResearchBookReward.parse(args, internal, bossDisplay);
 					break;
@@ -299,7 +295,7 @@ public class Consumables extends JavaPlugin implements Listener {
 			stages.add(new ChestStage(chance, sound, pitch, effect, rewards, totalWeight));
 		}
 		
-		ChestConsumable cc = new ChestConsumable(this, display, key, stages, initSound);
+		ChestConsumable cc = new ChestConsumable(this, display, key, level, stages, initSound);
 		generatableConsumables.add(key);
 		return cc;
 	}

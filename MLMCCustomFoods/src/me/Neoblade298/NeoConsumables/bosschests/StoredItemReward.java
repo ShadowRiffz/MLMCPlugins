@@ -16,7 +16,7 @@ public class StoredItemReward extends ChestReward {
 	}
 
 	@Override
-	public void giveReward(Player p) {
+	public void giveReward(Player p, int level) {
 		StorageManager.givePlayer(p, id, amount);
 	}
 

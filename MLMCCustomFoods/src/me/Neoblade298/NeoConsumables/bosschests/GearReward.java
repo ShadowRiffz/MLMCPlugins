@@ -26,8 +26,8 @@ public class GearReward extends ChestReward {
 	}
 
 	@Override
-	public void giveReward(Player p) {
-		Util.serverCommand("gear give " + p.getName() + " " + rarity + " " + type + " " + level);
+	public void giveReward(Player p, int level) {
+		Util.serverCommand("gear give " + p.getName() + " " + rarity + " " + type + " " + this.level);
 	}
 
 	@Override
