@@ -221,6 +221,10 @@ public class AugmentManager implements Listener, Manager {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return false;
 		}
+		if (p.getInventory().firstEmpty() == -1) {
+			Util.sendMessage(p, "&cMake sure your inventory has at least 1 empty space!");
+			return false;
+		}
 		else {
 			ItemStack clone = augment.clone();
 			clone.setAmount(1);
