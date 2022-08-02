@@ -93,6 +93,9 @@ public class PvpListener implements Listener {
 				}
 			}
 		}
+		else if (victim.getKiller() == victim) {
+			return;
+		}
 		else {
 			// Drop skull
 			if (!e.getKeepInventory()) {
