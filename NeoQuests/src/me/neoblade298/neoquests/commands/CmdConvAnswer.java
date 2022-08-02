@@ -8,6 +8,7 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.conversations.ConversationInstance;
 import me.neoblade298.neoquests.conversations.ConversationManager;
 
@@ -38,7 +39,10 @@ public class CmdConvAnswer implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		ConversationInstance ci = ConversationManager.getActiveConversation(p);
-		if (ci != null && StringUtils.isNumeric(args[0])) {
+		if (ci == null) {
+			Util.msg(s, "&cYou're not in a conversation!");
+		}
+		else if (StringUtils.isNumeric(args[0])) {
 			ci.chooseResponse(Integer.parseInt(args[0]) - 1);
 		}
 	}
