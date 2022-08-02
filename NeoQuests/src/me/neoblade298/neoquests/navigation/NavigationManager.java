@@ -98,7 +98,7 @@ public class NavigationManager implements Manager {
 			pointMap.clear();
 			
 			for (PathwayInstance pi : activePathways.values()) {
-				pi.cancel("navigation reloaded.");
+				pi.cancel("navigation reloaded.", true);
 			}
 			activePathways.clear();
 			
@@ -157,7 +157,7 @@ public class NavigationManager implements Manager {
 		}
 
 		if (activePathways.containsKey(p)) {
-			activePathways.get(p).cancel("started a new pathway.");
+			activePathways.get(p).cancel("started a new pathway.", false);
 		}
 		Util.msg(p, "&7Started navigation from " + startPoint.getDisplay() + " &7to &6" + endPoint.getDisplay());
 		PathwayInstance pi = new PathwayInstance(p, startPoint, endPoint);
@@ -167,7 +167,7 @@ public class NavigationManager implements Manager {
 	
 	public static void stopNavigation(Player p) {
 		if (activePathways.containsKey(p)) {
-			activePathways.get(p).cancel("cancelled by player");
+			activePathways.get(p).cancel("cancelled by player", false);
 			return;
 		}
 		Util.msg(p, "&cYou're not currently navigating anywhere!");

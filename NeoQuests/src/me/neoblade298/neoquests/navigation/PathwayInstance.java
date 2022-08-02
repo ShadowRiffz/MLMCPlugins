@@ -48,7 +48,7 @@ public class PathwayInstance {
 
 				// Check if in different world
 				if (!p.getWorld().equals(w)) {
-					pwi.cancel("no longer in same world.");
+					pwi.cancel("no longer in same world.", false);
 					return;
 				}
 				
@@ -75,10 +75,10 @@ public class PathwayInstance {
 		NavigationManager.removeActivePathway(p);
 	}
 	
-	public void cancel(String reason) {
+	public void cancel(String reason, boolean isIterating) {
 		task.cancel();
 		Util.msg(p, "Navigation from &6" + start.getDisplay() + "&7 to &6" + end.getDisplay() + "&7 was cancelled: " + reason);
-		NavigationManager.removeActivePathway(p);
+		if (!isIterating) NavigationManager.removeActivePathway(p);
 	}
 	
 	public void show(Player p) {
