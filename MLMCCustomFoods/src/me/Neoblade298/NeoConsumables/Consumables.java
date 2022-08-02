@@ -21,6 +21,7 @@ import me.Neoblade298.NeoConsumables.objects.Rarity;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
+import me.neoblade298.neocore.player.PlayerTags;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
 	public static boolean isInstance = false;
-	public PlayerFields settings;
+	public PlayerTags settings;
 	public PlayerFields hiddenSettings;
 	
 	public static boolean debug = false;
@@ -69,8 +70,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 
 		// Settings
-		settings = NeoCore.createPlayerFields("Consumables", this, false);
-		settings.initializeField("InventoryUse", false);
+		settings = NeoCore.createPlayerTags("Consumables", this, false);
 		hiddenSettings = NeoCore.createPlayerFields("Tokens", this, true);
 		hiddenSettings.initializeField("Boss", false);
 
