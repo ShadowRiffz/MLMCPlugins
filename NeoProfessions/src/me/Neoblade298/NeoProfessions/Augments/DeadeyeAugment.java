@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 
 public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
+	private static final double DAMAGE_MULTIPLIER = 0.5;
 	
 	public DeadeyeAugment() {
 		super();
@@ -57,7 +58,7 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
+		lore.add("§7Increases damage by §f" + formatPercentage(DAMAGE_MULTIPLIER) + "% §7when dealing");
 		lore.add("§7damage further than 10 blocks away.");
 		lore.add("§7Capped to §f100 §7increase.");
 		meta.setLore(lore);
