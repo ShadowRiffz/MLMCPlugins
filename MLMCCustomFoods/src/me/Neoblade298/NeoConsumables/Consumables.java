@@ -360,7 +360,7 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		// If consumable is a food, continue only if setting is set
 		if (cons instanceof FoodConsumable) {
-			if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
+			if (!((boolean) settings.exists("InventoryUse", p.getUniqueId()))) {
 				return;
 			}
 		}
