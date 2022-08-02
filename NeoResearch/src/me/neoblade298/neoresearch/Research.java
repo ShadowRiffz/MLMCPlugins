@@ -278,6 +278,8 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 							}
 						}
 	
+						int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
+						pAttrs.get(acct).applyAttributes(p);
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
