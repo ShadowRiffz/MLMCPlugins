@@ -222,6 +222,10 @@ public class DurabilityListener implements Listener {
 	}
 	
 	public static boolean fullRepairItem(Player p, ItemStack item) {
+		if (item.getAmount() > 1) {
+			return false;
+		}
+		
 		ItemMeta im = item.getItemMeta();
 		if (im.hasLore()) {
 			ArrayList<String> lore = (ArrayList<String>) im.getLore();

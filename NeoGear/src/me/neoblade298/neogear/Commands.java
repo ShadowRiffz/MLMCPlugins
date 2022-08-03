@@ -137,6 +137,9 @@ public class Commands implements CommandExecutor{
 				if (DurabilityListener.fullRepairItem(p, p.getInventory().getItemInMainHand())) {
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully repaired item");
 				}
+				else {
+					sender.sendMessage("§4[§c§lMLMC§4] §7Failed to repair item!");
+				}
 			}
 			else {
 				sender.sendMessage("§4[§c§lMLMC§4] §c/gear get/give {player} [rarity/set] [type/set/auto] [lvl/auto/range] §7- Spawns you gear");
