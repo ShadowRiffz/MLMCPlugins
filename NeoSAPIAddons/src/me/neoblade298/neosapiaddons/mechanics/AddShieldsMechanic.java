@@ -65,7 +65,11 @@ public class AddShieldsMechanic extends CustomEffectComponent {
 		double decayPeriod = parseValues(caster, "decay-period", lvl, 0, critChance);
 		int decayRepetitions = (int) parseValues(caster, "decay-repetitions", lvl, 0, critChance);
 		
-		ShieldManager.addShields((Player) caster, new Shield((Player) caster, amt, isPercent, decayDelay, decayAmount, decayPeriod, decayRepetitions));
+		for (LivingEntity target : targets) {
+			if (target instanceof Player) {
+				ShieldManager.addShields((Player) target, new Shield((Player) target, amt, isPercent, decayDelay, decayAmount, decayPeriod, decayRepetitions));
+			}
+		}
 		return true;
 	}
 
