@@ -452,8 +452,13 @@ public class AugmentManager implements Listener, Manager {
 								negmult *= (1 + mult);
 							}
 							flat += aug.getDamageDealtFlat(p, e);
+							flag = aug.setFlagAfter();
 						}
 					}
+				}
+				// basically just for sentinel
+				if (flag != null) {
+					FlagManager.addFlag(p, e.getCaster(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}
