@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -37,7 +38,7 @@ public class DurabilityListener implements Listener {
 		this.main = main;
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDamageMelee(EntityDamageByEntityEvent e) {
 		Entity cause = e.getDamager();
 		Entity target = e.getEntity();
@@ -56,14 +57,14 @@ public class DurabilityListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onShoot(EntityShootBowEvent e) {
 		if (e.getEntity() instanceof Player) {
 			reduceWeaponDurability((Player) e.getEntity());
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onSkillCast(PlayerSkillCastSuccessEvent e) {
 		reduceWeaponDurability(e.getPlayer());
 	}
