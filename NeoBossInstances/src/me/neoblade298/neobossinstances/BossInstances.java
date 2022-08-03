@@ -346,11 +346,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (b.getBossType().equals(BossType.DUNGEON)) {
 				if (e.getMob().getSpawner() != null) {
 					b.checkSpawnerKill(e.getMob().getSpawner());
+					if (b.getSpawnersAlive().size() == 0) {
+						finishDungeon(b);
+					}
 				}
 				
-				if (b.getSpawnersAlive().size() == 0) {
-					finishDungeon(b);
-				}
 			}
 		}
 		catch (Exception ex) {
