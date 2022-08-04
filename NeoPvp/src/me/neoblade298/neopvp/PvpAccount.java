@@ -173,6 +173,10 @@ public class PvpAccount {
 	}
 	
 	public void displayAccount(CommandSender s) {
+		if (p == null) {
+			loadPlayer();
+		}
+		
 		String prot = "§6Protection: ";
 		Util.msg(s, "&6===[&e" + p.getName() + "&6]===", false);
 		boolean displayToSelf = s instanceof Player && (Player) s == this.p;
@@ -237,6 +241,9 @@ public class PvpAccount {
 	}
 	
 	public Player getPlayer() {
+		if (this.p == null) {
+			loadPlayer();
+		}
 		return this.p;
 	}
 	
