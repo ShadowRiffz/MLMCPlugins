@@ -38,7 +38,7 @@ public class TownEntry implements Comparable<TownEntry> {
 						return 1;
 					}
 					else if (p1.getContributedPoints(type) < p2.getContributedPoints(type)) {
-						return 1;
+						return -1;
 					}
 					else {
 						// Since we sort in descending, this will make name ascending
