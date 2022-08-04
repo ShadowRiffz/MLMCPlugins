@@ -45,7 +45,7 @@ public class AttackChargeCondition extends CustomEffectComponent {
 
 	@Override
 	public String getKey() {
-		return "Attack Charge";
+		return "attack charge";
 	}
 
 	@Override
