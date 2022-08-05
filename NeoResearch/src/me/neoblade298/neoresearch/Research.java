@@ -38,7 +38,6 @@ import me.neoblade298.neoresearch.inventories.ResearchInventory;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -661,11 +660,6 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	// Below are situations where research should load
-	
-	@EventHandler
-	public void onLoadSQL(PlayerLoadCompleteEvent e) {
-		updateBonuses(e.getPlayer());
-	}
 	
 	@EventHandler
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
