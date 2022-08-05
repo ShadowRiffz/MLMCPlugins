@@ -43,7 +43,7 @@ public class PlayerTags {
 	
 	public boolean exists(String tag, UUID uuid) {
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get key of " + this.getKey() + " for " + uuid + ". UUID not initialized.");
+			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get key of " + this.getKey() + "." + tag + " for " + uuid + ". UUID not initialized.");
 			return false;
 		}
 		HashMap<String, Value> pValues = values.get(uuid);
