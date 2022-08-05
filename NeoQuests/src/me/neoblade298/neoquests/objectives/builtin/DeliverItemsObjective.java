@@ -47,6 +47,8 @@ public class DeliverItemsObjective extends Objective {
 	}
 
 	public boolean checkEvent(NPCRightClickEvent e, ObjectiveInstance o) {
+		if (e.getNPC().getId() != npcid) return false;
+		
 		int remaining = o.getObjective().getNeeded() - o.getCount();
 		if (remaining <= 0) return false;
 		else {
@@ -76,7 +78,7 @@ public class DeliverItemsObjective extends Objective {
 		if (npcname == null) {
 			npcname = CitizensAPI.getNPCRegistry().getById(npcid).getFullName();
 		}
-		return "Talk to NPC " + npcname;
+		return "Deliver items to NPC " + npcname;
 	}
 	
 	private boolean checkItemStack(ItemStack item) {
