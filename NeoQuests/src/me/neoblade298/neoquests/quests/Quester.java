@@ -101,7 +101,11 @@ public class Quester {
 		activeQuests.put(q.getKey().toUpperCase(), qi);
 		if (q.getQuestline() != null) addQuestline(q.getQuestline());
 		qi.setupInstances(true);
-		qi.displayObjectives(p);
+		new BukkitRunnable() {
+			public void run() {
+				qi.displayObjectives(p);
+			}
+		}.runTaskLater(NeoQuests.inst(), 40L);
 	}
 	
 	public void displayQuests(CommandSender s) {
