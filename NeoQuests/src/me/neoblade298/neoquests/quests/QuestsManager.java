@@ -101,35 +101,39 @@ public class QuestsManager implements IOComponent, Manager {
 		HashMap<Integer, Quester> accts = new HashMap<Integer, Quester>();
 		int active = SkillAPI.getPlayerAccountData(p).getActiveId();
 		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p, active));
-		questers.put(p.getUniqueId(), accts);
+		UUID uuid = p.getUniqueId();
+		questers.put(uuid, accts);
+		Statement delete = NeoCore.getStatement();
 		try {
 			// Completed quests
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE UUID = '" + p.getUniqueId() + "';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE uuid = '" + uuid + "';");
 			while (rs.next()) {
 				int account = rs.getInt(2);
 				Quester quester = initializeOrGetQuester(p, account);
 				Quest quest = QuestsManager.getQuest(rs.getString(3));
 				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account);
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account + ", deleting");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND key = '" + rs.getString(3) + "');");
 					continue;
 				}
 				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5), rs.getLong(6)));
 			}
 			
 			// Active questlines
-			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE UUID = '" + p.getUniqueId() + "';");
+			rs = stmt.executeQuery("SELECT * FROM quests_questlines WHERE uuid = '" + uuid + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
 				Questline ql = QuestsManager.getQuestline(rs.getString(3));
 				if (ql == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3));
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3)+ ", deleting");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + rs.getInt(2) + " AND questline = '" + rs.getString(3) + "');");
 					continue;
 				}
 				quester.addQuestline(ql);
 			}
 			
 			// Account info
-			rs = stmt.executeQuery("SELECT * FROM quests_accounts WHERE UUID = '" + p.getUniqueId() + "';");
+			rs = stmt.executeQuery("SELECT * FROM quests_accounts WHERE uuid = '" + uuid + "';");
 			while (rs.next()) {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
 				double x = rs.getDouble(3);
@@ -140,7 +144,7 @@ public class QuestsManager implements IOComponent, Manager {
 			}
 			
 			// Active quests
-			rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE UUID = '" + p.getUniqueId() + "';");
+			rs = stmt.executeQuery("SELECT * FROM quests_quests WHERE uuid = '" + uuid + "';");
 			while (rs.next()) {
 				int account = rs.getInt(2);
 				Quester quester = initializeOrGetQuester(p, account);
@@ -149,6 +153,13 @@ public class QuestsManager implements IOComponent, Manager {
 				int stage = rs.getInt(4);
 				String set = rs.getString(5);
 				
+				
+				Quest quest = QuestsManager.getQuest(qname);
+				if (quest == null) {
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account + ", deleting");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND quest = '" + qname + "');");
+					continue;
+				}
 				// Parse counts
 				String[] scounts = rs.getString(6).split(",");
 				ArrayList<Integer> counts = new ArrayList<Integer>(scounts.length);
@@ -156,16 +167,12 @@ public class QuestsManager implements IOComponent, Manager {
 					counts.add(Integer.parseInt(scounts[i]));
 				}
 				
-				Quest quest = QuestsManager.getQuest(qname);
-				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account);
-					continue;
-				}
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
 				qi.setupInstances(false); // Only start listening to the main account (in the finally clause)
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
+			delete.executeBatch();
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
@@ -179,22 +186,23 @@ public class QuestsManager implements IOComponent, Manager {
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
+		UUID uuid = p.getUniqueId();
 		// Save player location if they're in quest world
 		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) {
 			initializeOrGetQuester(p).setLocation(p.getLocation());
 		}
 		
 		try {
-			for (int acct : questers.get(p.getUniqueId()).keySet()) {
-				Quester quester = questers.get(p.getUniqueId()).get(acct);
+			for (int acct : questers.get(uuid).keySet()) {
+				Quester quester = questers.get(uuid).get(acct);
 
 				// Save active quests
-				delete.addBatch("DELETE FROM quests_quests WHERE uuid = '" + p.getUniqueId() + "';"); 
+				delete.addBatch("DELETE FROM quests_quests WHERE uuid = '" + uuid + "';"); 
 				for (QuestInstance qi : quester.getActiveQuests()) {
 					for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
 						// Replace with new ones
 						insert.addBatch("REPLACE INTO quests_quests VALUES('"
-								+ p.getUniqueId() + "'," + acct + ",'" + qi.getQuest().getKey() + "'," + qi.getStage()
+								+ uuid + "'," + acct + ",'" + qi.getQuest().getKey() + "'," + qi.getStage()
 								+ ",'" + osi.getKey() + "','" + osi.serializeCounts() + "');");
 					}
 				}
@@ -202,14 +210,14 @@ public class QuestsManager implements IOComponent, Manager {
 				// Save completed quests
 				for (CompletedQuest cq : quester.getCompletedQuests()) {
 					insert.addBatch("REPLACE INTO quests_completed VALUES('"
-							+ p.getUniqueId() + "'," + acct + ",'" + cq.getQuest().getKey() + "'," + cq.getStage()
+							+ uuid + "'," + acct + ",'" + cq.getQuest().getKey() + "'," + cq.getStage()
 							+ ",'" + (cq.isSuccess() ? "1" : "0") + "'," + cq.getTimestamp() + ");");
 				}
 				
 				// Save active questlines
 				for (Questline ql : quester.getActiveQuestlines()) {
 					insert.addBatch("REPLACE INTO quests_questlines VALUES ('"
-							+ p.getUniqueId() + "'," + acct + ",'" + ql.getKey() + "');");
+							+ uuid + "'," + acct + ",'" + ql.getKey() + "');");
 				}
 				
 				// Save account info
@@ -220,10 +228,10 @@ public class QuestsManager implements IOComponent, Manager {
 					double z = Math.round(loc.getZ() * 100) / 100;
 					String w = loc.getWorld().getName();
 					insert.addBatch("REPLACE INTO quests_accounts VALUES ('"
-							+ p.getUniqueId() + "'," + acct + "," + x + "," + y + "," + z + ",'" + w + "');");
+							+ uuid + "'," + acct + "," + x + "," + y + "," + z + ",'" + w + "');");
 				}
 			}
-			questers.remove(p.getUniqueId());
+			questers.remove(uuid);
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
