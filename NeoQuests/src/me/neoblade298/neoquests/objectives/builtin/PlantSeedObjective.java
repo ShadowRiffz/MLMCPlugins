@@ -29,7 +29,7 @@ public class PlantSeedObjective extends Objective {
 	}
 
 	public boolean checkEvent(ProfessionPlantSeedEvent e, ObjectiveInstance o) {
-		if (e.getSeed().getId() == seed) {
+		if (seed == -1 || e.getSeed().getId() == seed) {
 			o.incrementCount();
 			return true;
 		}
