@@ -28,19 +28,19 @@ public class RepairInventory extends ProfessionInventory {
 	private static final int essenceCost = 3;
 	
 	static {
-		goldCost.put(0, 150);
-		goldCost.put(5, 200);
-		goldCost.put(10, 300);
-		goldCost.put(15, 400);
-		goldCost.put(20, 600);
-		goldCost.put(25, 800);
-		goldCost.put(30, 1100);
-		goldCost.put(35, 1500);
-		goldCost.put(40, 1800);
-		goldCost.put(45, 2300);
-		goldCost.put(50, 2800);
-		goldCost.put(55, 3400);
-		goldCost.put(60, 4000);
+		goldCost.put(0, 50);
+		goldCost.put(5, 100);
+		goldCost.put(10, 150);
+		goldCost.put(15, 200);
+		goldCost.put(20, 250);
+		goldCost.put(25, 300);
+		goldCost.put(30, 400);
+		goldCost.put(35, 500);
+		goldCost.put(40, 600);
+		goldCost.put(45, 700);
+		goldCost.put(50, 800);
+		goldCost.put(55, 900);
+		goldCost.put(60, 1000);
 	}
 
 	public RepairInventory(Professions main, Player p) {
