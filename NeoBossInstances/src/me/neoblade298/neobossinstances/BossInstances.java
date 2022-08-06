@@ -401,14 +401,16 @@ public class BossInstances extends JavaPlugin implements Listener {
 		if (px >= 1555 && px <= 1570 && pz >= -725 && pz <= -709) {
 			p.teleport(b.getCoords());
 		}
-		
+
 		new BukkitRunnable() {
 			public void run() {
-				// Full health and mana
-				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-				PlayerData pd = SkillAPI.getPlayerData(p);
-				if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
-					pd.setMana(pd.getMaxMana());
+				for (Player fighter : activeFights.get(boss)) {
+					// Full health and mana
+					fighter.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+					PlayerData pd = SkillAPI.getPlayerData(fighter);
+					if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+						pd.setMana(pd.getMaxMana());
+					}
 				}
 			}
 		}.runTaskLater(this, 40L);
