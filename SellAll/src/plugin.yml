@@ -1,6 +1,7 @@
 name: SellAll
 main: me.ShanaChans.SellAll.SellAllManager
 author: [ShanaChans]
+depend: [NeoCore, Vault]
 version: 1.0
 api-version: 1.16
 commands:
