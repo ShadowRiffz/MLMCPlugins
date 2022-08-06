@@ -3,7 +3,7 @@ package me.ShanaChans.SellAll.Commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ShanaChans.SellAll.SellAllManager;
+import me.ShanaChans.SellAll.Inventories.SellAllInventory;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
@@ -39,7 +39,7 @@ public class SellAllCommand implements Subcommand
 	{
 		Player player = (Player) sender;
 		
-		SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+		new SellAllInventory(player);
 	}
 
 }
