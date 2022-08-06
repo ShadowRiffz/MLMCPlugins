@@ -383,12 +383,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
 
-		// Full health and mana
-		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		PlayerData pd = SkillAPI.getPlayerData(p);
-		if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
-			pd.setMana(pd.getMaxMana());
-		}
 
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
@@ -407,10 +401,22 @@ public class BossInstances extends JavaPlugin implements Listener {
 		if (px >= 1555 && px <= 1570 && pz >= -725 && pz <= -709) {
 			p.teleport(b.getCoords());
 		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				// Full health and mana
+				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				PlayerData pd = SkillAPI.getPlayerData(p);
+				if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+					pd.setMana(pd.getMaxMana());
+				}
+			}
+		}.runTaskLater(this, 40L);
 
 		// Wait 3 seconds so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
+				
 				if (!activeBosses.contains(boss)) {
 					activeBosses.add(boss);
 					if (b.getCmd() != null) {
