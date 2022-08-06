@@ -62,8 +62,8 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
-		if (SkillAPI.isLoaded(p)) return "Loading...";
 		if (p == null) return "Loading...";
+		if (!SkillAPI.isLoaded(p)) return "Loading...";
 		
 		String args[] = identifier.split("_");
 		
