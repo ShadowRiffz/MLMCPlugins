@@ -1,6 +1,8 @@
 package me.ShanaChans.SellAll;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,7 +54,9 @@ public class SellAllPlayer
     		if(items != null && !items.hasItemMeta())
     		{
     			Material material = items.getType();
-    			double sellPriceModifier = SellAllManager.getMultiplier(player);
+    			double sellMultiplier = SellAllManager.getMultiplier(player);
+    			double sellBooster = SellAllManager.getBooster(player);
+    			double sellPriceModifier = (sellMultiplier - 1) + (sellBooster - 1) + 1;
     			
         		if(SellAllManager.getItemPrices().containsKey(material))
         		{
@@ -120,19 +124,21 @@ public class SellAllPlayer
     		if(!isSelling)
     		{
     			ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
+    			DecimalFormat df = new DecimalFormat("0.00");
             	String text = "§7§oClick to confirm or do /sellall confirm\n";
             	for(Material mat : itemAmount.keySet())
             	{
-            		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + itemTotal.get(mat) + "g\n");
+            		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
             	}	
-            	text = text.concat("§7TOTAL - §e" + totalCost + "g");
+            	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
             	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
             	player.spigot().sendMessage(builder.create());
     		}
     		else
     		{
+    			DecimalFormat df = new DecimalFormat("0.00");
     			NeoCore.getEconomy().depositPlayer(player, totalCost);
-    			player.sendMessage("§6Riches Sold: §e" + totalCost + "g");
+    			player.sendMessage("§6Riches Sold: §e" + df.format(totalCost) + "g");
     		}
     	}
     }
@@ -141,10 +147,10 @@ public class SellAllPlayer
 	 * Lists out the players personal item caps
 	 * @param player
 	 */
-	public void getSellCap(Player player, Player displayPlayer, int pageNumber)
+	public void getSellCap(Player player, Player displayPlayer, int pageNumber, TreeMap<Material, Double> sort)
 	{
 		PaginatedList<String> list = new PaginatedList<String>();
-		for(Material mat : SellAllManager.getItemCaps().keySet())
+		for(Material mat : sort.keySet())
 		{
 			list.add("§7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
 		}

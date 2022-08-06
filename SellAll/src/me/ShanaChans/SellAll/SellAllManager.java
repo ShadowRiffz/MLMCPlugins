@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -31,30 +33,47 @@ import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllConfirm;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
+import me.ShanaChans.SellAll.Commands.SellAllList;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
+import me.ShanaChans.SellAll.Commands.SellAllSort;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.player.PlayerTags;
 import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.util.PaginatedList;
 
 public class SellAllManager extends JavaPlugin implements Listener, IOComponent {
-	private static HashMap<Material, Double> itemPrices = new HashMap<Material, Double>();
-	private static HashMap<Material, Integer> itemCaps = new HashMap<Material, Integer>();
+	private static TreeMap<Material, Double> itemPrices = new TreeMap<Material, Double>();
+	private static TreeMap<Material, Double> itemPricesAlphabetical;
+	private static TreeMap<Material, Integer> itemCaps = new TreeMap<Material, Integer>();
 	private static HashMap<UUID, SellAllPlayer> players = new HashMap<UUID, SellAllPlayer>();
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
+	private static TreeMap<Double, String> permBoosters = new TreeMap<Double, String>();
 	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
 	private static double moneyCap;
 	private static YamlConfiguration cfg;
+	public static PlayerTags settings;
 	private static SellAllManager inst;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("SellAll Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
+		settings = NeoCore.createPlayerTags("SellAll", this, true);
+		Comparator<Material> comp = new Comparator<Material>(){
+			@Override
+			public int compare(Material m1, Material m2)
+			{
+				return m1.name().compareTo(m2.name());
+			}
+		};
+		itemPricesAlphabetical = new TreeMap<Material, Double>(comp);
 		initCommands();
 		loadConfigs();
+		System.out.println("Sellall Scheduler");
 		SchedulerAPI.scheduleRepeating("sellall-resetcaps", ScheduleInterval.DAILY, new Runnable() {
 		    public void run() {
 		        resetPlayers();
@@ -74,6 +93,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		CommandManager value = new CommandManager("value", this);
 		sellAll.register(new SellAllCommand());
 		sellAll.register(new SellAllCap());
+		sellAll.register(new SellAllList());
+		sellAll.register(new SellAllSort());
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
 		sellAll.register(new SellAllReload());
@@ -107,6 +128,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 				else 
 				{
 					itemPrices.put(Material.valueOf(key), sec.getDouble(key));
+					itemPricesAlphabetical.put(Material.valueOf(key), sec.getDouble(key));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -135,8 +157,14 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		
 		for (String key : sec.getKeys(false)) 
 		{
-			key.replaceAll("-", ".");
-			permMultipliers.put(sec.getDouble(key), key);
+			permMultipliers.put(sec.getDouble(key), key.replace("-", "."));
+		}
+		
+		sec = SellAllManager.cfg.getConfigurationSection("boosters");
+		
+		for (String key : sec.getKeys(false)) 
+		{
+			permBoosters.put(sec.getDouble(key), key.replace("-", "."));
 		}
 	}
 
@@ -161,11 +189,11 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		return players;
 	}
 
-	public static HashMap<Material, Double> getItemPrices() {
+	public static TreeMap<Material, Double> getItemPrices() {
 		return itemPrices;
 	}
 	
-	public static HashMap<Material, Integer> getItemCaps() {
+	public static TreeMap<Material, Integer> getItemCaps() {
 		return itemCaps;
 	}
 	
@@ -183,7 +211,66 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 		return 1.0;
 	}
+	
+	public static double getBooster(Player p) 
+	{
+		Iterator<Double> iter = permBoosters.descendingKeySet().iterator();
+		while (iter.hasNext()) 
+		{
+			double mult = iter.next();
+			String perm = permBoosters.get(mult);
+			if (p.hasPermission(perm)) 
+			{
+				return mult;	
+			}
+		}
+		return 1.0;
+	}
+	
+	public static TreeMap<Material, Double> getPlayerSort(Player p)
+	{
+		if(settings.exists("SellAllSort", p.getUniqueId()))
+		{
+			return itemPricesAlphabetical;
+		}
+		
+		return itemPrices;
+	}
     
+	/**
+	 * Lists out material price list
+	 * @param player
+	 */
+	public static void getItemList(Player player, int pageNumber, TreeMap<Material, Double> sort)
+	{
+		PaginatedList<String> list = new PaginatedList<String>();
+		DecimalFormat df = new DecimalFormat("0.00");
+		double multiplier = SellAllManager.getMultiplier(player);
+		double booster = SellAllManager.getBooster(player);
+		
+		double boosterMultiplier = (multiplier - 1) + (booster - 1) + 1;
+		
+		for(Material mat : sort.keySet())
+		{
+			double price = SellAllManager.getItemPrices().get(mat);
+			list.add("§7" + mat.name() + ":§e " + df.format(price) + "g §7| §c" + df.format(price * boosterMultiplier) + "g");
+		}
+		if(-1 < pageNumber && pageNumber < list.pages())
+		{
+			player.sendMessage("§6O---={ Price List }=---O");
+			player.sendMessage("§eBase Price §7| §cMultiplier (" + multiplier + "x) + Booster (" + booster + "x)");
+			for(String output : list.get(pageNumber))
+			{
+				player.sendMessage(output);
+			}
+			String nextPage ="/sellall list " + (pageNumber + 2); 
+			String prevPage = "/sellall list " + (pageNumber); 
+			list.displayFooter(player, pageNumber, nextPage, prevPage);
+			return;
+		}
+		player.sendMessage("§7Invalid page");
+	}
+	
     public void resetPlayers()
     {
     	Statement stmt = NeoCore.getStatement();
@@ -236,7 +323,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			HashMap<Material, Integer> sold = players.get(p.getUniqueId()).getItemAmountSold();
 			try {
 				for (Entry<Material, Integer> e : sold.entrySet()) {
-						insert.addBatch("INSERT INTO sellall_players VALUES ('" + p.getUniqueId() + "','"
+						insert.addBatch("REPLACE INTO sellall_players VALUES ('" + p.getUniqueId() + "','"
 								+ e.getKey() + "'," + e.getValue() + ");");
 				}
 				insert.executeBatch();
