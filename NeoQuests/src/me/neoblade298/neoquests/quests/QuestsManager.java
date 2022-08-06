@@ -113,7 +113,7 @@ public class QuestsManager implements IOComponent, Manager {
 				Quest quest = QuestsManager.getQuest(rs.getString(3));
 				if (quest == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account + ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND key = '" + rs.getString(3) + "');");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND `key` = '" + rs.getString(3) + "';");
 					continue;
 				}
 				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5), rs.getLong(6)));
@@ -126,7 +126,7 @@ public class QuestsManager implements IOComponent, Manager {
 				Questline ql = QuestsManager.getQuestline(rs.getString(3));
 				if (ql == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3)+ ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + rs.getInt(2) + " AND questline = '" + rs.getString(3) + "');");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + rs.getInt(2) + " AND questline = '" + rs.getString(3) + "';");
 					continue;
 				}
 				quester.addQuestline(ql);
@@ -157,7 +157,7 @@ public class QuestsManager implements IOComponent, Manager {
 				Quest quest = QuestsManager.getQuest(qname);
 				if (quest == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account + ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND quest = '" + qname + "');");
+					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND quest = '" + qname + "';");
 					continue;
 				}
 				// Parse counts
