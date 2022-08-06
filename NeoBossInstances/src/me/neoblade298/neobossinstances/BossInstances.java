@@ -383,6 +383,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
 
+		// Full health and mana
+		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		PlayerData pd = SkillAPI.getPlayerData(p);
+		if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+			pd.setMana(pd.getMaxMana());
+		}
 
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
@@ -405,7 +411,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		new BukkitRunnable() {
 			public void run() {
 				for (Player fighter : activeFights.get(boss)) {
-					// Full health and mana
+					// Second heal to be safe
 					fighter.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					PlayerData pd = SkillAPI.getPlayerData(fighter);
 					if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
@@ -430,6 +436,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 								.info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						for (Player target : activeFights.get(boss)) {
 							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
+							target.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+							PlayerData pd = SkillAPI.getPlayerData(target);
+							if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+								pd.setMana(pd.getMaxMana());
+							}
 						}
 					}
 					else if (b.getBossType().equals(BossType.RAID)) {
