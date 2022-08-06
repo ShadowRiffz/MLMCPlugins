@@ -22,6 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -38,6 +41,7 @@ import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.ShanaChans.SellAll.Commands.SellAllSort;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
+import me.ShanaChans.SellAll.Inventories.CustomInventory;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
@@ -54,6 +58,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static TreeMap<Double, String> permMultipliers = new TreeMap<Double, String>();
 	private static TreeMap<Double, String> permBoosters = new TreeMap<Double, String>();
 	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
+	public static HashMap<Player, CustomInventory> viewingInventory = new HashMap<Player, CustomInventory>();
 	private static double moneyCap;
 	private static YamlConfiguration cfg;
 	public static PlayerTags settings;
@@ -387,5 +392,30 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	public static double getMoneyCap() 
 	{
 		return moneyCap;
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		Player p = (Player) e.getWhoClicked();
+		if (viewingInventory.containsKey(p)) {
+			viewingInventory.get(p).handleInventoryClick(e);
+		}
+	}
+
+	@EventHandler
+	public void onInventoryDrag(InventoryDragEvent e) {
+		Player p = (Player) e.getWhoClicked();
+		if (viewingInventory.containsKey(p)) {
+			viewingInventory.get(p).handleInventoryDrag(e);
+		}
+	}
+
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent e) {
+		Player p = (Player) e.getPlayer();
+		if (viewingInventory.containsKey(p) && e.getInventory() == viewingInventory.get(p).getInventory()) {
+			viewingInventory.get(p).handleInventoryClose(e);
+			viewingInventory.remove(p);
+		}
 	}
 }
