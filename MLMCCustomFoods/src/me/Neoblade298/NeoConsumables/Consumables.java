@@ -19,6 +19,7 @@ import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.Rarity;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
+import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
 import me.neoblade298.neocore.player.PlayerTags;
@@ -129,6 +130,10 @@ public class Consumables extends JavaPlugin implements Listener {
 					cons = loadChestConsumable(sec, key);
 					consumables.put(key, cons);
 				}
+				else if (type.equals("TOKEN")) {
+					cons = loadTokenConsumable(sec, key);
+					consumables.put(key, cons);
+				}
 				else {
 					Bukkit.getLogger().warning("[NeoConsumables] Could not load " + key + ", type does not exist");
 					continue;
@@ -227,6 +232,16 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
 		cons.generateLore();
 		generatableConsumables.add(key);
+		return cons;
+	}
+	
+	private TokenConsumable loadTokenConsumable(ConfigurationSection cfg, String key) {
+		TokenConsumable cons = new TokenConsumable(this, key);
+		cons.setCommands((ArrayList<String>) cfg.getStringList("commands"));
+		cons.setDisplay(cfg.getString("display"));
+		cons.setLore((ArrayList<String>) cfg.getStringList("lore"));
+		cons.setMaterial(Material.valueOf(cfg.getString("material", "GOLD_INGOT").toUpperCase()));
+		cons.setNegatedPerms((ArrayList<String>) cfg.getStringList("negate-perms"));
 		return cons;
 	}
 
