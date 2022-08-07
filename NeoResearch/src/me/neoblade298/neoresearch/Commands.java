@@ -130,7 +130,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 
-			// /nr createbook [player] [internalmob] [point amt]
+			// /nr createbook [player] [internalmob] [level] [point amt]
 			else if (args[0].equalsIgnoreCase("createbook")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
@@ -139,7 +139,7 @@ public class Commands implements CommandExecutor{
 					return true;
 				}
 				String display = MythicBukkit.inst().getMobManager().getMythicMob(args[2]).get().getDisplayName().get();
-				int amt = Integer.parseInt(args[3]);
+				int amt = Integer.parseInt(args[4]);
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
@@ -164,9 +164,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				String sLevel = display.split(" ")[1];
-				sLevel = sLevel.substring(0, sLevel.length() - 1);
-				int level = Integer.parseInt(sLevel);
+				int level = Integer.parseInt(args[3]);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -180,16 +178,16 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 
-			// /nr createbookalias [player] [alias] [point amt] [display]
+			// /nr createbookalias [player] [alias] [level] [point amt] [display]
 			else if (args[0].equalsIgnoreCase("createbookalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
-				String display = args[4];
+				String display = args[5];
 				for (int i = 5; i < args.length; i++) {
 					display += " " + args[i];
 				}
 				display = display.replaceAll("&", "§");
-				int amt = Integer.parseInt(args[3]);
+				int amt = Integer.parseInt(args[4]);
 				int needed = amt * 2;
 				
 				// First check if the player has enough research points
@@ -214,9 +212,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				String sLevel = display.split(" ")[1];
-				sLevel = sLevel.substring(0, sLevel.length() - 1);
-				int level = Integer.parseInt(sLevel);
+				int level = Integer.parseInt(args[3]);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
