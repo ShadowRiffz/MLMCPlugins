@@ -103,7 +103,6 @@ public class QuestsManager implements IOComponent, Manager {
 		accts.put(SkillAPI.getPlayerAccountData(p).getActiveId(), new Quester(p, active));
 		UUID uuid = p.getUniqueId();
 		questers.put(uuid, accts);
-		Statement delete = NeoCore.getStatement();
 		try {
 			// Completed quests
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quests_completed WHERE uuid = '" + uuid + "';");
@@ -112,8 +111,7 @@ public class QuestsManager implements IOComponent, Manager {
 				Quester quester = initializeOrGetQuester(p, account);
 				Quest quest = QuestsManager.getQuest(rs.getString(3));
 				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account + ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND `key` = '" + rs.getString(3) + "';");
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load completed quest for player: " + rs.getString(3) + ", account " + account);
 					continue;
 				}
 				quester.addCompletedQuest(new CompletedQuest(quest, rs.getInt(4), rs.getBoolean(5), rs.getLong(6)));
@@ -125,8 +123,7 @@ public class QuestsManager implements IOComponent, Manager {
 				Quester quester = initializeOrGetQuester(p, rs.getInt(2));
 				Questline ql = QuestsManager.getQuestline(rs.getString(3));
 				if (ql == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3)+ ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + rs.getInt(2) + " AND questline = '" + rs.getString(3) + "';");
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load questline for player: " + rs.getString(3));
 					continue;
 				}
 				quester.addQuestline(ql);
@@ -156,8 +153,7 @@ public class QuestsManager implements IOComponent, Manager {
 				
 				Quest quest = QuestsManager.getQuest(qname);
 				if (quest == null) {
-					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account + ", deleting");
-					delete.addBatch("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + " AND quest = '" + qname + "';");
+					Bukkit.getLogger().warning("[NeoQuests] Failed to load active quest for player: " + qname + ", account " + account);
 					continue;
 				}
 				// Parse counts
@@ -172,7 +168,6 @@ public class QuestsManager implements IOComponent, Manager {
 				qi.setupInstances(false); // Only start listening to the main account (in the finally clause)
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
-			delete.executeBatch();
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
