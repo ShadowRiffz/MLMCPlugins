@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -347,6 +348,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
+		if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
 		}
