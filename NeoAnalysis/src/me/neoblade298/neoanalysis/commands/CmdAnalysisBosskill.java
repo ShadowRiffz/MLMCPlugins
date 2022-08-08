@@ -52,6 +52,7 @@ public class CmdAnalysisBosskill implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		UUID uuid = p.getUniqueId();
+		int account = SkillAPI.getPlayerAccountData(p).getActiveId();
 		PlayerClass pclass = SkillAPI.getPlayerData(p).getMainClass();
 		Statement stmt = NeoCore.getStatement();
 		
@@ -59,7 +60,7 @@ public class CmdAnalysisBosskill implements Subcommand {
 			public void run() {
 				try {
 					stmt.executeUpdate("REPLACE INTO analysis_bosskills VALUES ('" + uuid + "','" + p.getName() + "','" + pclass.getData().getName() +
-							"','" + args[1] + "'," + pclass.getLevel() + ");");
+							"'," + account + ",'" + args[1] + "'," + pclass.getLevel() + ");");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
