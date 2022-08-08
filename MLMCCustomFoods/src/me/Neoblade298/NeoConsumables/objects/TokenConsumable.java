@@ -15,6 +15,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	ArrayList<String> commands, negatePerms, lore;
 	String display;
 	Material material;
+	long millisToExpire;
 	
 	public TokenConsumable(Consumables main, String key) {
 		super(main, key);
@@ -23,6 +24,15 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		negatePerms = new ArrayList<String>();
 		lore = new ArrayList<String>();
 		material = Material.GOLD_INGOT;
+	}
+	
+	public void setHoursToExpire(int hours) {
+		if (hours == -1) {
+			this.millisToExpire = -1;
+		}
+		else {
+			this.millisToExpire = hours * 60 * 60 * 1000;
+		}
 	}
 	
 	public void setMaterial(Material material) {
@@ -58,7 +68,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		
 		NBTItem nbti = new NBTItem(item);
 		long timestamp = nbti.getLong("timestamp");
-		if (timestamp + 86400000 > System.currentTimeMillis()) {
+		if (timestamp != -1 && timestamp + 86400000 > System.currentTimeMillis()) {
 			Util.msg(p, "&cThis token has already expired!");
 			p.getInventory().removeItem(item);
 			return false;
