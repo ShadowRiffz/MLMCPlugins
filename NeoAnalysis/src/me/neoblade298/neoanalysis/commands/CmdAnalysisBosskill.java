@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -35,7 +36,7 @@ public class CmdAnalysisBosskill implements Subcommand {
 
 	@Override
 	public String getPermission() {
-		return null;
+		return "mycommand.staff";
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class CmdAnalysisBosskill implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		Player p = (Player) s;
+		Player p = Bukkit.getPlayer(args[0]);
 		UUID uuid = p.getUniqueId();
 		int account = SkillAPI.getPlayerAccountData(p).getActiveId();
 		PlayerClass pclass = SkillAPI.getPlayerData(p).getMainClass();
