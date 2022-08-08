@@ -50,12 +50,20 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	public boolean canUse(Player p, ItemStack item) {
 		// negate perms
 		for (String perm : negatePerms) {
-			System.out.println(perm + " checking " + p.hasPermission(perm));
 			if (p.hasPermission(perm)) {
 				Util.msg(p, "&cThis token is currently active.");
 				return false;
 			}
 		}
+		
+		NBTItem nbti = new NBTItem(item);
+		long timestamp = nbti.getLong("timestamp");
+		if (timestamp + 86400000 > System.currentTimeMillis()) {
+			Util.msg(p, "&cThis token has already expired!");
+			p.getInventory().removeItem(item);
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -85,6 +93,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("consumable", key);
+		nbti.setLong("timestamp", System.currentTimeMillis());
 		return nbti.getItem();
 	}
 	
