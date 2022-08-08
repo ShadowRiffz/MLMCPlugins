@@ -45,7 +45,6 @@ public class PlayerFields {
 			return null;
 		}
 		if (!values.containsKey(uuid)) {
-			Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to get field " + this.getKey() + "." + key + " for " + uuid + ". UUID not initialized. Returning default.");
 			return defaults.get(key);
 		}
 		HashMap<String, Value> pValues = values.get(uuid);
