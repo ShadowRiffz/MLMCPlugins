@@ -1,14 +1,9 @@
 package me.neoblade298.neoanalysis;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +16,9 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 
+import me.neoblade298.neoanalysis.commands.CmdAnalysisBosskill;
+import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.quests.QuestInstance;
 import me.neoblade298.neoquests.quests.Quester;
@@ -29,27 +27,13 @@ import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener {
 	// SQL
-	public String url, user, pass;
 	public ArrayList<String> bosses;
+	
+	private static NeoAnalysis inst;
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoAnalysis Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-
-		File file = new File(getDataFolder(), "config.yml");
-
-		// Save config if doesn't exist
-		if (!file.exists()) {
-			saveResource("config.yml", false);
-		}
-		ConfigurationSection cfg = YamlConfiguration.loadConfiguration(file);
-
-		// SQL
-		ConfigurationSection sql = cfg.getConfigurationSection("sql");
-		url = "jdbc:mysql://" + sql.getString("host") + ":" + sql.getString("port") + "/" + 
-				sql.getString("db") + sql.getString("flags");
-		user = sql.getString("username");
-		pass = sql.getString("password");
 		
 		// Bosses
 		bosses = new ArrayList<String>();
@@ -69,6 +53,16 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 		bosses.add("KilledRhain");
 		bosses.add("KilledMaleficent");
 		bosses.add("KilledSalondeon");
+		
+		initCommands();
+		
+		inst = this;
+	}
+	
+	private void initCommands() {
+		CommandManager mngr = new CommandManager("analysis", this);
+		mngr.register(new CmdAnalysisBosskill());
+		mngr.registerCommandList("");
 	}
 	
 	public void onDisable() {
@@ -136,9 +130,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 				long now = System.currentTimeMillis();
 				
 				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection(url, user, pass);
-					Statement stmt = con.createStatement();
+					Statement stmt = NeoCore.getStatement();
 					stmt.executeUpdate("REPLACE INTO analysis_players values('" + uuid + "','" + p.getName() + "'," + joined + "," + now + ",'" + pClass + 
 							"'," + level + ",'" + quest + "','" + boss + "');");
 				}
@@ -147,6 +139,10 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 				}
 			}
 		}.runTaskAsynchronously(this);
+	}
+	
+	public static NeoAnalysis inst() {
+		return inst;
 	}
 	
 }
