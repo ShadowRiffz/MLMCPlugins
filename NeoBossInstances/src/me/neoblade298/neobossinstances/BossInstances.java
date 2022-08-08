@@ -40,6 +40,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerAfterLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
@@ -54,6 +55,7 @@ import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
+import me.neoblade298.neocore.util.Util;
 
 public class BossInstances extends JavaPlugin implements Listener {
 
@@ -383,12 +385,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
 
-		// Full health and mana
-		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		PlayerData pd = SkillAPI.getPlayerData(p);
-		if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
-			pd.setMana(pd.getMaxMana());
-		}
 
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
@@ -412,7 +408,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			public void run() {
 				for (Player fighter : activeFights.get(boss)) {
 					// Second heal to be safe
-					fighter.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+					fighter.setHealth(fighter.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 					PlayerData pd = SkillAPI.getPlayerData(fighter);
 					if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
 						pd.setMana(pd.getMaxMana());
@@ -436,11 +432,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 								.info("[NeoBossInstances] " + p.getName() + " spawned boss " + boss + ".");
 						for (Player target : activeFights.get(boss)) {
 							target.sendMessage("§4[§c§lMLMC§4] §7The boss has been spawned!");
-							target.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-							PlayerData pd = SkillAPI.getPlayerData(target);
-							if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
-								pd.setMana(pd.getMaxMana());
-							}
 						}
 					}
 					else if (b.getBossType().equals(BossType.RAID)) {
