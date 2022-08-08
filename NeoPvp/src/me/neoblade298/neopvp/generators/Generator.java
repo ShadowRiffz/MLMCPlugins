@@ -39,9 +39,11 @@ public class Generator {
 		this.loc = new Location(w, x, y, z);
 	}
 	
-	public void spawnItem() {
-		item.setAmount((int) (Bukkit.getOnlinePlayers().size() * amountPerPlayer));
+	public int spawnItem() {
+		int amount = (int) (Bukkit.getOnlinePlayers().size() * amountPerPlayer);
+		item.setAmount(amount);
 		w.dropItem(loc, item);
+		return amount;
 	}
 	
 	public String getKey() {

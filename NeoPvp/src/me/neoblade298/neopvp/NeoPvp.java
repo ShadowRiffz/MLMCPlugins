@@ -26,7 +26,9 @@ public class NeoPvp extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPvp Enabled");
 		inst = this;
-		mngrs.add(new GeneratorManager());
+		if (!NeoCore.isInstance()) {
+			mngrs.add(new GeneratorManager());
+		}
 		initCommands();
 		
 		NeoCore.registerIOComponent(this, new PvpManager());

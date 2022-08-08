@@ -42,24 +42,26 @@ public class GeneratorManager implements Manager {
 	public GeneratorManager() {
 		SchedulerAPI.scheduleRepeating("neopvp-generators", ScheduleInterval.HALF_HOUR, new Runnable() {
 			public void run() {
-				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7The item generators have activated at &c/warp resource&7!");
+				int amount = 0;
 				for (Generator gen : generators.values()) {
-					gen.spawnItem();
+					amount = gen.spawnItem();
 				}
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7The diamond generators have spawned " + amount + " diamonds each!");
 			}
 		});
 		
 		// 5 minute warning
 		SchedulerAPI.scheduleRepeating("neopvp-generators-5m-warn", ScheduleInterval.HALF_HOUR, 1500, new Runnable() {
 			public void run() {
-				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e5 &7minutes until the item generators activate at &c/warp resource&7!");
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e5 &7minutes until the diamond generators activate near &c/warp resource&7!");
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7Fight for the diamonds in the pvp areas!");
 			}
 		});
 		
 		// 1 minute warning
 		SchedulerAPI.scheduleRepeating("neopvp-generators-1m-warn", ScheduleInterval.HALF_HOUR, 1740, new Runnable() {
 			public void run() {
-				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e1 &7minute until the item generators activate at &c/warp resource&7!");
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &e1 &7minute until the diamond generators activate near &c/warp resource&7!");
 			}
 		});
 		
