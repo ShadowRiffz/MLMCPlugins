@@ -68,7 +68,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		
 		NBTItem nbti = new NBTItem(item);
 		long timestamp = nbti.getLong("timestamp");
-		if (timestamp != -1 && timestamp + 86400000 > System.currentTimeMillis()) {
+		if (timestamp != -1 && timestamp + 86400000 < System.currentTimeMillis()) {
 			Util.msg(p, "&cThis token has already expired!");
 			p.getInventory().removeItem(item);
 			return false;
