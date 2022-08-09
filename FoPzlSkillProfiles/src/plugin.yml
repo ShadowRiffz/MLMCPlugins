@@ -1,0 +1,9 @@
+name: FoPzlSkillProfiles
+main: me.fopzl.skillprofiles
+author: [FoPzl]
+depend: [SkillAPI]
+version: 1.0
+api-version: 1.19
+commands:
+   skillprofile:
+      usage: /skillprofile <save/load>
