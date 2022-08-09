@@ -6,4 +6,4 @@ version: 1.0
 api-version: 1.19
 commands:
    skillprofile:
-      usage: /skillprofile <save/load>
+      usage: /skillprofile <save/load> <1/2/3>
