@@ -94,6 +94,12 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		
 		if (e.getRawSlot() == 7) {
 			attr.unvestAll();
+			for (int i = 0; i < 5; i++) {
+				item = e.getInventory().getItem(i);
+				NBTItem nbti = new NBTItem(item);
+				String attribute = nbti.getString("attribute");
+				updateItems(item, attribute);
+			}
 			return;
 		}
 		
