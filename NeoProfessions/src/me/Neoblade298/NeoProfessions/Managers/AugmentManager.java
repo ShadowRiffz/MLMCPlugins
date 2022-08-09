@@ -686,14 +686,21 @@ public class AugmentManager implements Listener, Manager {
 	public void onCritSuccess(PlayerCriticalSuccessEvent e) {
 		PlayerData data = e.getPlayerData();
 		Player p = data.getPlayer();
+		FlagSettings flag = null;
 		if (containsAugments(p, EventType.CRIT_SUCCESS)) {
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_SUCCESS)) {
 				if (augment instanceof ModCritSuccessAugment) {
 					ModCritSuccessAugment aug = (ModCritSuccessAugment) augment;
 					if (aug.canUse(data, e)) {
 						aug.applyCritSuccessEffects(data, e.getChance());
+						if (aug.setFlag() != null) {
+							flag = aug.setFlag();
+						}
 					}
 				}
+			}
+			if (flag != null) {
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration());
 			}
 		}
 	}
