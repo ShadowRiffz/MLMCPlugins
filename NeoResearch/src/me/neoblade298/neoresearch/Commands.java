@@ -42,6 +42,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr takegoal [player] [goal]");
 				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
+				sender.sendMessage("§c/nr attrs");
 				sender.sendMessage("§c/nr update/resetattrs [player]");
 				sender.sendMessage("§c/nr convert [max]");
 				sender.sendMessage("§c/nr debug");
@@ -365,7 +366,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 		}
-		else if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
+		if (args[0].equalsIgnoreCase("attrs") && sender instanceof Player) {
 			Player p = (Player) sender;
 			int acc = SkillAPI.getPlayerAccountData(p).getActiveId();
 			StoredAttributes pAttr = Research.getPlayerAttributes(p);

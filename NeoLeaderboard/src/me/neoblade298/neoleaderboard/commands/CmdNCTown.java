@@ -109,8 +109,8 @@ public class CmdNCTown implements Subcommand {
 						double effective = PointsManager.calculateEffectivePoints(ne, e.getContributedPoints(ftype));
 						builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(effective) +
 								" §7§o(" + PointsManager.formatPoints(e.getContributedPoints(ftype)) + ")", FormatRetention.NONE)
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nl player " + name)))
-						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl player " + name));
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nl " + name)))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl " + name));
 					}
 					s.spigot().sendMessage(builder.create());
 				}

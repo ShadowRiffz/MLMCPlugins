@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.PlayerCooldowns;
@@ -117,11 +116,6 @@ public class ConsumableManager implements Listener, IOComponent {
 		if (effs != null) {
 			effs.startEffects();
 		}
-	}
-	
-	@EventHandler
-	public void onSQLLoad(PlayerLoadCompleteEvent e) {
-		startEffects(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler

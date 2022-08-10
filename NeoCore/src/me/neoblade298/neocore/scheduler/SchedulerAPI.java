@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -82,12 +83,15 @@ public class SchedulerAPI {
 	
 	private static void runRepeaters(ScheduleInterval interval) {
 		Iterator<CoreRunnable> iter = repeaters.get(interval).iterator();
+		Bukkit.getLogger().info("[NeoCore] Running " + interval + " scheduler, size of " + repeaters.get(interval).size());
 		while (iter.hasNext()) {
 			CoreRunnable cr = iter.next();
 			if (cr.isCancelled) {
+				Bukkit.getLogger().info("[NeoCore] Removing cancelled CR " + cr.getKey());
 				iter.remove();
 			}
 			else {
+				Bukkit.getLogger().info("[NeoCore] Running CR " + cr.getKey());
 				cr.runOrSchedule();
 			}
 		}

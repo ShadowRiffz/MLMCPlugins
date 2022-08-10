@@ -66,7 +66,7 @@ public class CmdQuestsList implements Subcommand {
 					}
 				}
 				
-				int page = args.length == 1 ? Integer.parseInt(args[0]) - 1 : 0;
+				int page = args.length > offset ? Integer.parseInt(args[offset]) - 1 : 0;
 				if (page < 0 || page >= list.pages()) {
 					Util.msg(s, "&cInvalid page number! Max page is " + list.pages());
 					return;

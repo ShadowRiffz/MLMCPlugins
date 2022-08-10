@@ -53,6 +53,8 @@ public class ResearchAttributesInventory implements ResearchInventory {
 				"endurance", 100008, "§7Increases §6Orange§7 values in", "§c/skills §7by 2%.",
 				"", "§7§oLeft click adds, right click removes,", "§7§oShift click for multiples of 10.",
 				"§7§oYou have §f" + remaining + " §7§opoints remaining.");
+		contents[7] = createGuiItem(Material.BARRIER, "§7[§4Reset§7]",
+				null, 0, "§7Reset all the points you've put in.");
 		contents[8] = createGuiItem(Material.BOOK, "§7[Info]",
 				null, 0, "§7You have §f" + attr.getAttribute("unused") + " §7points remaining.", "§7These attributes stack with §c/attr§7.");
 		inv.setContents(contents);
@@ -89,6 +91,18 @@ public class ResearchAttributesInventory implements ResearchInventory {
 		if (item == null || item.getType().isAir()) {
 			return;
 		}
+		
+		if (e.getRawSlot() == 7) {
+			attr.unvestAll();
+			for (int i = 0; i < 5; i++) {
+				item = e.getInventory().getItem(i);
+				NBTItem nbti = new NBTItem(item);
+				String attribute = nbti.getString("attribute");
+				updateItems(item, attribute);
+			}
+			return;
+		}
+		
 		NBTItem nbti = new NBTItem(item);
 		if (!nbti.hasKey("attribute")) 
 			return;

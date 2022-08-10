@@ -280,7 +280,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 		else if (this.health > 0) {
 			line = "§aHP +" + health;
 		}
-		if (!line.isEmpty()) {
+		if (!line.isEmpty() && this.mana > 0) {
 			line += "§7, ";
 		}
 		if (this.manaReps > 1) {

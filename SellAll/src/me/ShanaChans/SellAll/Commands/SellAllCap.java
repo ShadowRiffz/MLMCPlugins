@@ -65,22 +65,22 @@ public class SellAllCap implements Subcommand
 				{
 					if(args.length > 1)
 					{
-						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), Integer.parseInt(args[1]) - 1);
+						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), Integer.parseInt(args[1]) - 1, SellAllManager.getPlayerSort(player));
 					}
 					else
 					{
-						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), 0);
+						SellAllManager.getPlayers().get(Bukkit.getPlayer(args[0]).getUniqueId()).getSellCap(player, Bukkit.getPlayer(args[0]), 0, SellAllManager.getPlayerSort(player));
 					}
 				}
 			}
 			else
 			{
-				SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, Integer.parseInt(args[0]) - 1);
+				SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, Integer.parseInt(args[0]) - 1, SellAllManager.getPlayerSort(player));
 			}
 		}
 		else
 		{
-			SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, 0);
+			SellAllManager.getPlayers().get(player.getUniqueId()).getSellCap(player, player, 0, SellAllManager.getPlayerSort(player));
 		}
 	}
 }

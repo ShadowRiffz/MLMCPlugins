@@ -41,6 +41,9 @@ public class Tokens extends JavaPlugin implements org.bukkit.event.Listener {
 				item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(1).contains("Expires")) {
 
 			NBTItem nbti = new NBTItem(item);
+			if (!nbti.hasKey("player")) {
+				return;
+			}
 			if (!p.getName().equals(nbti.getString("player"))) {
 				p.sendMessage("§4[§c§lMLMC§4] §cYou cannot use this as you are not §e" + nbti.getString("player") + "§c!");
 				return;

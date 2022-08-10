@@ -192,6 +192,7 @@ public class ProfCommand implements CommandExecutor {
 				sender.sendMessage("§7- §4/prof reload");
 				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
 				sender.sendMessage("§7- §4/prof give item [id] [amount]");
+				sender.sendMessage("§7- §4/prof addlevel/exp [player] [type] [level/exp]");
 				sender.sendMessage("§7- §4/prof setlevel/exp [player] [type] [level/exp]");
 				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
 				sender.sendMessage("§7- §4/prof debug");
@@ -241,6 +242,32 @@ public class ProfCommand implements CommandExecutor {
 							mngr.reload();
 						}
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+					}
+					return true;
+				}
+				// prof addlevel/exp [player] [type] [level]
+				else if (args[0].equalsIgnoreCase("addlevel") || args[0].equalsIgnoreCase("addexp")) {
+					Player target = null;
+					int offset = 0;
+					if (args.length == 4) {
+						target = Bukkit.getPlayer(args[1]);
+						offset++;
+					}
+					else if (args.length == 3) {
+						target = (Player) sender;
+					}
+					int val = Integer.parseInt(args[2 + offset]);
+					
+					if (target != null) {
+						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1 + offset].toUpperCase()));
+						if (args[0].equalsIgnoreCase("addlevel")) {
+							prof.setLevel(Math.min(prof.getLevel() + val, 60));
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully added player level.");
+						}
+						else {
+							prof.addExp(p, val);
+							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully added player exp.");
+						}
 					}
 					return true;
 				}

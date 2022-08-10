@@ -56,6 +56,10 @@ public class Questline implements Comparator<Questline> {
 	public String getLastQuest() {
 		return quests.get(quests.size() - 1).getKey();
 	}
+	
+	public ArrayList<Quest> getQuests() {
+		return quests;
+	}
 
 	@Override
 	public int compare(Questline q1, Questline q2) {

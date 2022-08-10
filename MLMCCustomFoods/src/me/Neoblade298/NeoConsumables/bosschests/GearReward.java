@@ -61,7 +61,7 @@ public class GearReward extends ChestReward {
 	}
 	
 	public static GearReward parse(String args[], int level) {
-		String type = "random";
+		String type = "auto";
 		String rarity = "common";
 		int weight = 1;
 		for (String arg : args) {

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
@@ -20,12 +21,10 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	    super.onDisable();
 	}
 	
-	//@EventHandler
-	//public void onMend(PlayerItemMendEvent e) {
-		// Currently broken, literally can't use this or the event will repeat
-		// forever, may want to manually do this later on
-		// e.setRepairAmount((e.getRepairAmount() + 1) / 2);
-	//}
+	@EventHandler
+	public void onMend(PlayerItemMendEvent e) {
+		e.setCancelled(true);
+	}
 	
 	@EventHandler
 	public void onDurability(PlayerItemDamageEvent e) {

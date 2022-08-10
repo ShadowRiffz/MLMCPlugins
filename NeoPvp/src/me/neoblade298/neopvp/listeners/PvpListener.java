@@ -27,14 +27,6 @@ import me.neoblade298.neopvp.PvpManager;
 
 public class PvpListener implements Listener {
 	private static final long ONE_DAY = 1000 * 60 * 60 * 24;
-	
-	@EventHandler
-	public void onPlayerKill(PlayerDeathEvent e) {
-		Player victim = e.getEntity();
-		Player killer = victim.getKiller();
-
-		if (killer == null) return;
-	}
 
 	@EventHandler
 	public void onPvp(EntityDamageByEntityEvent e) {
@@ -78,6 +70,9 @@ public class PvpListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(PlayerDeathEvent e) {
+		// Ignore event
+		if (e.getEntity().getWorld().getName().equalsIgnoreCase("Event")) return;
+		
 		Player victim = e.getEntity();
 		if (victim.getKiller() == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
@@ -92,6 +87,9 @@ public class PvpListener implements Listener {
 					Util.msg(victim, "&7Time until inventory protection expires: &e" + PvpAccount.df.format(hoursLeft) + "&7.");
 				}
 			}
+		}
+		else if (victim.getKiller() == victim) {
+			return;
 		}
 		else {
 			// Drop skull

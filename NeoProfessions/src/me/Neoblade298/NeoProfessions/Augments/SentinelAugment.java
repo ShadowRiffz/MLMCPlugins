@@ -12,8 +12,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import com.sucy.skill.api.util.FlagManager;
 
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
+
 public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	double maxHealthMod;
+	private static FlagSettings flag = new FlagSettings("aug_sentinel", 20);
 	
 	public SentinelAugment() {
 		super();
@@ -30,11 +33,6 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	}
 
 	@Override
-	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
-		FlagManager.addFlag(user, user, "aug_sentinel", 20);
-	}
-
-	@Override
 	public double getDamageDealtFlat(LivingEntity user, PlayerCalculateDamageEvent e) {
 		return user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
 	}
@@ -48,6 +46,11 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = target.getHealth() / target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		return percentage > 0.95 && !FlagManager.hasFlag(user, "aug_sentinel");
+	}
+	
+	@Override
+	public FlagSettings setFlagAfter() {
+		return flag;
 	}
 
 	public ItemStack getItem(Player user) {

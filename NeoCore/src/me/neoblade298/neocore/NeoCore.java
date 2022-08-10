@@ -1,6 +1,7 @@
 package me.neoblade298.neocore;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -30,6 +32,7 @@ import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
+import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
 
@@ -96,6 +99,29 @@ public class NeoCore extends JavaPlugin implements Listener {
 		}.runTask(this);
 		
 		SchedulerAPI.initialize();
+		
+		// Autosave
+		SchedulerAPI.scheduleRepeating("NeoCore-Autosave", ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
+			public void run() {
+				new BukkitRunnable() {
+					public void run() {
+						Statement insert = getStatement();
+						Statement delete = getStatement();
+						for (IOComponent component : IOListener.getComponents()) {
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								component.autosavePlayer(p, insert, delete);
+							}
+						}
+						try {
+							delete.executeBatch();
+							insert.executeBatch();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+				}.runTaskAsynchronously(NeoCore.inst());
+			}
+		});
 	}
 
 	private void initCommands() {
@@ -113,6 +139,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdCoreRemoveTag());
 		mngr.register(new CmdCoreSetField());
 		mngr.register(new CmdCoreResetField());
+		mngr.register(new CmdCoreTitle());
 		
 		mngr = new CommandManager("bcore", this);
 		mngr.registerCommandList("");

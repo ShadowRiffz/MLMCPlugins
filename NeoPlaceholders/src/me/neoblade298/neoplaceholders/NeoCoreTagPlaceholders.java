@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.sucy.skill.SkillAPI;
+
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neocore.NeoCore;
 
@@ -50,6 +52,7 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
+		if (!SkillAPI.isLoaded(p)) return "Loading...";
 		
 		String args[] = identifier.split("_");
 		String key = args[0];

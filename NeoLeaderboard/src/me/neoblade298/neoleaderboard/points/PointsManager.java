@@ -116,7 +116,7 @@ public class PointsManager implements IOComponent {
 						UUID uuid = UUID.fromString(rs.getString(1));
 						stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 						stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
-						stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + uuid + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_players WHERE uuid = '" + uuid + "';");
 					}
 					stmt.executeBatch();
 				}
@@ -148,7 +148,7 @@ public class PointsManager implements IOComponent {
 							UUID uuid = UUID.fromString(rs.getString(1));
 							stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + uuid + "';");
 							stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + uuid + "';");
-							stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + uuid + "';");
+							stmt.addBatch("DELETE FROM neoleaderboard_players WHERE uuid = '" + uuid + "';");
 						}
 						stmt.executeBatch();
 					}
@@ -174,7 +174,7 @@ public class PointsManager implements IOComponent {
 						Statement stmt = NeoCore.getStatement();
 						stmt.addBatch("DELETE FROM neoleaderboard_playerpoints WHERE uuid = '" + player + "';");
 						stmt.addBatch("DELETE FROM neoleaderboard_contributed WHERE uuid = '" + player + "';");
-						stmt.addBatch("DELETE FROM neoleaderboard_player WHERE uuid = '" + player + "';");
+						stmt.addBatch("DELETE FROM neoleaderboard_players WHERE uuid = '" + player + "';");
 						stmt.executeBatch();
 					}
 					catch (Exception e) {

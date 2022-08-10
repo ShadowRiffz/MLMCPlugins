@@ -72,7 +72,7 @@ public class ValueSkillLevelMechanic extends CustomEffectComponent {
 
 	@Override
 	public String getKey() {
-		return "Value SkillLevel";
+		return "value skilllevel";
 	}
 
 	@Override

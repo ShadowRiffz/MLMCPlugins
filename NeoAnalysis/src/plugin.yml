@@ -1,6 +1,10 @@
 name: NeoAnalysis
 main: me.neoblade298.neoanalysis.NeoAnalysis
 author: [Neoblade298]
-depend: [SkillAPI, NeoQuests]
+depend: [SkillAPI, NeoQuests, NeoCore]
 version: 1.0
 api-version: 1.16
+commands:
+   analysis:
+      description: Base command for analysis
+      usage: /analysis

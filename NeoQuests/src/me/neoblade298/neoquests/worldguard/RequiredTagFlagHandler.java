@@ -40,12 +40,12 @@ public class RequiredTagFlagHandler extends FlagValueChangeHandler<String>{
         
     	String req = toSet.queryValue(player, NeoQuests.REQ_TAG_FLAG);
         if (req == null) return true;
-        if (player.hasPermission("mycommand.staff")) return true;
-        
+        if (player.hasPermission("neoquests.bypass")) return true;
+
         boolean bypass = getSession().getManager().hasBypass(player, (World) to.getExtent());
         boolean allowed = NeoQuests.getPlayerTags(Bukkit.getPlayer(player.getUniqueId())).exists(req, player.getUniqueId());
 
-        return !(bypass && !allowed && moveType.isCancellable());
+        return (bypass || allowed) && moveType.isCancellable();
     }
 
 	@Override

@@ -19,8 +19,10 @@ import me.Neoblade298.NeoConsumables.objects.FlagAction;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.Rarity;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
+import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
+import me.neoblade298.neocore.player.PlayerTags;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
 	
 	public static boolean isInstance = false;
-	public PlayerFields settings;
+	public PlayerTags settings;
 	public PlayerFields hiddenSettings;
 	
 	public static boolean debug = false;
@@ -69,8 +71,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		isInstance = new File(getDataFolder(), "instance.yml").exists();
 
 		// Settings
-		settings = NeoCore.createPlayerFields("Consumables", this, false);
-		settings.initializeField("InventoryUse", false);
+		settings = NeoCore.createPlayerTags("Consumables", this, false);
 		hiddenSettings = NeoCore.createPlayerFields("Tokens", this, true);
 		hiddenSettings.initializeField("Boss", false);
 
@@ -127,6 +128,10 @@ public class Consumables extends JavaPlugin implements Listener {
 				}
 				else if (type.equals("CHEST")) {
 					cons = loadChestConsumable(sec, key);
+					consumables.put(key, cons);
+				}
+				else if (type.equals("TOKEN")) {
+					cons = loadTokenConsumable(sec, key);
 					consumables.put(key, cons);
 				}
 				else {
@@ -227,6 +232,17 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setCooldown(config.getInt("cooldown", isDuration ? 30 : 15));
 		cons.generateLore();
 		generatableConsumables.add(key);
+		return cons;
+	}
+	
+	private TokenConsumable loadTokenConsumable(ConfigurationSection cfg, String key) {
+		TokenConsumable cons = new TokenConsumable(this, key);
+		cons.setCommands((ArrayList<String>) cfg.getStringList("commands"));
+		cons.setDisplay(cfg.getString("display"));
+		cons.setLore((ArrayList<String>) cfg.getStringList("lore"));
+		cons.setMaterial(Material.valueOf(cfg.getString("material", "GOLD_INGOT").toUpperCase()));
+		cons.setNegatedPerms((ArrayList<String>) cfg.getStringList("negate-perms"));
+		cons.setHoursToExpire(cfg.getInt("hours-to-expire", -1));
 		return cons;
 	}
 
@@ -360,7 +376,7 @@ public class Consumables extends JavaPlugin implements Listener {
 
 		// If consumable is a food, continue only if setting is set
 		if (cons instanceof FoodConsumable) {
-			if (!((boolean) settings.getValue(p.getUniqueId(), "InventoryUse"))) {
+			if (!settings.exists("InventoryUse", p.getUniqueId())) {
 				return;
 			}
 		}

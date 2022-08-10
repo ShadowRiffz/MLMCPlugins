@@ -56,7 +56,7 @@ public class CmdQuestsLog implements Subcommand {
 			return;
 		}
 		
-		if (args.length > 0 && !StringUtils.isNumeric(args[0])) {
+		if (args.length > offset && !StringUtils.isNumeric(args[offset])) {
 			Util.msg(s, "&cInvalid argument! Must be a page number.");
 			return;
 		}

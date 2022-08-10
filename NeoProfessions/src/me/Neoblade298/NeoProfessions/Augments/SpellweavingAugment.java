@@ -12,8 +12,11 @@ import com.sucy.skill.api.event.PlayerCriticalSuccessEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.util.FlagManager;
 
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
+
 public class SpellweavingAugment extends Augment implements ModCritSuccessAugment {
 	private double manaGain;
+	private static final FlagSettings flag = new FlagSettings("aug_spellweaving", 40);
 	
 	public SpellweavingAugment() {
 		super();
@@ -32,7 +35,6 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		user.giveMana(this.manaGain, ManaSource.SPECIAL);
-		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_spellweaving", 40);
 	}
 
 	@Override
@@ -42,7 +44,12 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 
 	@Override
 	public boolean canUse(PlayerData user, PlayerCriticalSuccessEvent e) {
-		return user.getClass("class").getData().getManaName().endsWith("MP") && FlagManager.hasFlag(user.getPlayer(), "aug_spellweaving");
+		return user.getMainClass().getData().getManaName().endsWith("MP") && !FlagManager.hasFlag(user.getPlayer(), "aug_spellweaving");
+	}
+	
+	@Override
+	public FlagSettings setFlag() {
+		return flag;
 	}
 
 	public ItemStack getItem(Player user) {

@@ -112,6 +112,16 @@ public class StoredAttributes {
 			stored.put(attr, 0);
 		}
 	}
+	
+	public void unvestAll() {
+		for (String attr : stored.keySet()) {
+			if (attr.equals("unused")) {
+				continue;
+			}
+			stored.put("unused", stored.getOrDefault("unused", 0) + stored.get(attr));
+			stored.put(attr, 0);
+		}
+	}
 
 	public String toString() {
 		return stored.toString();

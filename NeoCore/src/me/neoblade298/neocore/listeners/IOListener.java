@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
@@ -116,6 +117,51 @@ public class IOListener implements Listener {
 							}
 							catch (Exception ex) {
 								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
+								ex.printStackTrace();
+							}
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				finally {
+					endIOTask(type, p.getUniqueId());
+				}
+			}
+		}.runTaskAsynchronously(NeoCore.inst());
+	}
+	
+	public void autosave(Player p) {
+		if (disabledIO.contains(IOType.AUTOSAVE)) {
+			return;
+		}
+		
+		UUID uuid = p.getUniqueId();
+		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
+			// If saved less than 10 seconds ago, don't save again
+			return;
+		}
+		lastSave.put(uuid, System.currentTimeMillis());
+		IOType type = IOType.AUTOSAVE;
+		performingIO.get(type).add(uuid);
+		
+		new BukkitRunnable() {
+			public void run() {
+				try {
+					Connection con = DriverManager.getConnection(connection, properties);
+					Statement insert = con.createStatement();
+					Statement delete = con.createStatement();
+
+					// Save account
+					for (Entry<String, IOComponent> entry : components.entrySet()) {
+						if (entry.getValue().canAutosave()) {
+							try {
+								entry.getValue().autosavePlayer(p, insert, delete);
+								delete.executeBatch();
+								insert.executeBatch();
+							}
+							catch (Exception ex) {
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle autosave for component " + entry.getKey());
 								ex.printStackTrace();
 							}
 						}
@@ -276,5 +322,9 @@ public class IOListener implements Listener {
 			}
 			postIORunnables.get(type).remove(uuid);
 		}
+	}
+	
+	public static Collection<IOComponent> getComponents() {
+		return components.values();
 	}
 }

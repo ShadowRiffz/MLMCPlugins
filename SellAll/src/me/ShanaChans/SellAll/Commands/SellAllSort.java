@@ -3,23 +3,22 @@ package me.ShanaChans.SellAll.Commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ShanaChans.SellAll.Inventories.SellAllInventory;
+import me.ShanaChans.SellAll.SellAllManager;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
-public class SellAllCommand implements Subcommand
+public class SellAllSort implements Subcommand
 {
-
 	@Override
 	public String getDescription() 
 	{
-		return "Sell all your riches!";
+		return "Toggle your sort!";
 	}
 
 	@Override
 	public String getKey() 
 	{
-		return "";
+		return "sort";
 	}
 
 	@Override
@@ -39,7 +38,16 @@ public class SellAllCommand implements Subcommand
 	{
 		Player player = (Player) sender;
 		
-		new SellAllInventory(player);
+		if(!SellAllManager.settings.exists("SellAllSort", player.getUniqueId()))
+		{
+			SellAllManager.settings.set("SellAllSort", player.getUniqueId());
+			player.sendMessage("§6Sell All Sort: Alphabetical");
+		}
+		else
+		{
+			SellAllManager.settings.reset("SellAllSort", player.getUniqueId());
+			player.sendMessage("§6Sell All Sort: ID");
+		}
 	}
 
 }

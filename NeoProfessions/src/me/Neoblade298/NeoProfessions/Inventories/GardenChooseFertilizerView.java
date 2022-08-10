@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
-import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
@@ -129,16 +128,10 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 			return;
 		}
-		else if (!CurrencyManager.hasEnough(p, seedLevel, 1)) {
-			p.sendMessage("§cYou don't have 1 Level " + seedLevel + " Essence!");
-			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
-			return;
-		}
 		StorageManager.takePlayer(p, id, 1);
 		if (fertilizerId != -1) {
 			StorageManager.takePlayer(p, fertilizerId, 1);
 		}
-		CurrencyManager.subtract(p, seedLevel, 1);
 		Fertilizer fert = null;
 		if (fertilizerId != -1) {
 			fert = GardenManager.getFertilizer(fertilizerId);

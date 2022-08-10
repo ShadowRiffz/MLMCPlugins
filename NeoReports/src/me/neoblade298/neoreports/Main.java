@@ -65,27 +65,27 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		if (p.hasPermission("neoreports.admin")) {
 	    	BukkitRunnable joinTask = new BukkitRunnable() {
 				public void run() {
-					if (numUrgent > 0) {
-						try{  
-							Class.forName("com.mysql.jdbc.Driver");
-							Connection con = DriverManager.getConnection(connection, sqlUser, sqlPass);
-							Statement stmt = con.createStatement();
-							
-							ResultSet rs = stmt.executeQuery("select COUNT(*) from neoreports_bugs WHERE is_urgent = 1 AND is_resolved = 0");
-							while (rs.next()) {
-								numUrgent = rs.getInt(1);
-							}
-							con.close();
-						}
-						catch(Exception e) {
-							e.printStackTrace();
-						}
+					try{  
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection con = DriverManager.getConnection(Main.connection, Main.sqlUser, Main.sqlPass);
+						Statement stmt = con.createStatement();
+						ResultSet rs;
+						rs = stmt.executeQuery("SELECT COUNT(*) FROM neoreports_bugs WHERE is_resolved = 0 AND is_urgent = 0;");
+						rs.next();
+						int numBugs = rs.getInt(1);
+						rs = stmt.executeQuery("SELECT COUNT(*) FROM neoreports_bugs WHERE is_resolved = 0 AND is_urgent = 1;");
+						rs.next();
+						int numUrgent = rs.getInt(1);
+						p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + numBugs + "§7, # Urgent: §e" + numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+						con.close();
 						if (numUrgent > 0) {
 							// Double check that the number is urgent
 							p.sendMessage("§4[§c§lMLMC§4] §c§lThere are unfixed urgent bugs!");
 						}
 					}
-					p.sendMessage("§4[§c§lMLMC§4] §7# Bugs: §e" + Main.numBugs + "§7, # Urgent: §e" + Main.numUrgent + "§7, # Resolved today: §e" + Main.numResolved);
+					catch(Exception e) {
+						e.printStackTrace();
+					}
 
 				}
 			};

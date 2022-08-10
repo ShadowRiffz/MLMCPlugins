@@ -221,6 +221,10 @@ public class AugmentManager implements Listener, Manager {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
 			return false;
 		}
+		if (p.getInventory().firstEmpty() == -1) {
+			Util.sendMessage(p, "&cMake sure your inventory has at least 1 empty space!");
+			return false;
+		}
 		else {
 			ItemStack clone = augment.clone();
 			clone.setAmount(1);
@@ -448,8 +452,13 @@ public class AugmentManager implements Listener, Manager {
 								negmult *= (1 + mult);
 							}
 							flat += aug.getDamageDealtFlat(p, e);
+							flag = aug.setFlagAfter();
 						}
 					}
+				}
+				// basically just for sentinel
+				if (flag != null) {
+					FlagManager.addFlag(p, e.getCaster(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}
@@ -677,14 +686,21 @@ public class AugmentManager implements Listener, Manager {
 	public void onCritSuccess(PlayerCriticalSuccessEvent e) {
 		PlayerData data = e.getPlayerData();
 		Player p = data.getPlayer();
+		FlagSettings flag = null;
 		if (containsAugments(p, EventType.CRIT_SUCCESS)) {
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_SUCCESS)) {
 				if (augment instanceof ModCritSuccessAugment) {
 					ModCritSuccessAugment aug = (ModCritSuccessAugment) augment;
 					if (aug.canUse(data, e)) {
 						aug.applyCritSuccessEffects(data, e.getChance());
+						if (aug.setFlag() != null) {
+							flag = aug.setFlag();
+						}
 					}
 				}
+			}
+			if (flag != null) {
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration());
 			}
 		}
 	}

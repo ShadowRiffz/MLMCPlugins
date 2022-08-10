@@ -49,7 +49,7 @@ public class ReachTierObjective extends Objective {
 	}
 	
 	private boolean check(RPGClass c, ObjectiveInstance o) {
-		if (c != null && c.getMaxLevel() == level && o.getCount() == 0) {
+		if (c != null && c.getMaxLevel() >= level && o.getCount() == 0) {
 			o.incrementCount();
 			return true;
 		}

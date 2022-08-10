@@ -3,23 +3,28 @@ package me.ShanaChans.SellAll.Commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ShanaChans.SellAll.Inventories.SellAllInventory;
+import me.ShanaChans.SellAll.SellAllManager;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 
-public class SellAllCommand implements Subcommand
+public class SellAllQuick implements Subcommand
 {
-
 	@Override
 	public String getDescription() 
 	{
-		return "Sell all your riches!";
+		return "Sell all your riches in your inventory!";
 	}
 
 	@Override
 	public String getKey() 
 	{
-		return "";
+		return "quick";
+	}
+	
+	@Override
+	public String[] getAliases() 
+	{
+		return new String[] {"q"};
 	}
 
 	@Override
@@ -39,7 +44,7 @@ public class SellAllCommand implements Subcommand
 	{
 		Player player = (Player) sender;
 		
-		new SellAllInventory(player);
+		SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
 	}
 
 }

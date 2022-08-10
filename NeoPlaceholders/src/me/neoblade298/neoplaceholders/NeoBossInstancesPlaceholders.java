@@ -63,6 +63,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
+		if (!SkillAPI.isLoaded(p)) return "Loading...";
 		
 		String args[] = identifier.split("_");
 		
@@ -81,7 +82,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			}
 			else if (args[0].equalsIgnoreCase("display")) {
 				String boss = args[1];
-				String display = plugin.getBossName(boss, p);
+				String display = plugin.getBossName(boss);
 				return display;
 			}
 			// %bosses_partyhealth_1-5%

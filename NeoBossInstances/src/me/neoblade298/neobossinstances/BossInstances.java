@@ -40,6 +40,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerAfterLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
@@ -54,6 +55,7 @@ import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
+import me.neoblade298.neocore.util.Util;
 
 public class BossInstances extends JavaPlugin implements Listener {
 
@@ -346,11 +348,11 @@ public class BossInstances extends JavaPlugin implements Listener {
 			if (b.getBossType().equals(BossType.DUNGEON)) {
 				if (e.getMob().getSpawner() != null) {
 					b.checkSpawnerKill(e.getMob().getSpawner());
+					if (b.getSpawnersAlive().size() == 0) {
+						finishDungeon(b);
+					}
 				}
 				
-				if (b.getSpawnersAlive().size() == 0) {
-					finishDungeon(b);
-				}
 			}
 		}
 		catch (Exception ex) {
@@ -383,12 +385,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onLoad(PlayerLoadCompleteEvent e) {
 		Player p = e.getPlayer();
 
-		// Full health and mana
-		p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		PlayerData pd = SkillAPI.getPlayerData(p);
-		if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
-			pd.setMana(pd.getMaxMana());
-		}
 
 		// If last one to load, summon the boss, need to add to activebosses
 		if (!fightingBoss.containsKey(p.getUniqueId())) return;
@@ -408,9 +404,23 @@ public class BossInstances extends JavaPlugin implements Listener {
 			p.teleport(b.getCoords());
 		}
 
+		new BukkitRunnable() {
+			public void run() {
+				for (Player fighter : activeFights.get(boss)) {
+					// Second heal to be safe
+					fighter.setHealth(fighter.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+					PlayerData pd = SkillAPI.getPlayerData(fighter);
+					if (pd.getClass("class") != null && pd.getClass("class").getData().getManaName().contains("MP")) {
+						pd.setMana(pd.getMaxMana());
+					}
+				}
+			}
+		}.runTaskLater(this, 40L);
+
 		// Wait 3 seconds so everyone can reorient themselves
 		BukkitRunnable spawnBoss = new BukkitRunnable() {
 			public void run() {
+				
 				if (!activeBosses.contains(boss)) {
 					activeBosses.add(boss);
 					if (b.getCmd() != null) {
@@ -665,7 +675,12 @@ public class BossInstances extends JavaPlugin implements Listener {
 		if (NeoCore.getPlayerTags("questaccount_" + acct).exists(b.getTag(), p.getUniqueId())) {
 			return b.getPlaceholder();
 		}
-		return null;
+		return "§4???";
+	}
+
+	public String getBossName(String boss) {
+		Boss b = bossInfo.get(boss);
+		return b.getPlaceholder();
 	}
 
 	public int getBossCooldown(String boss, Player p) {
