@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -105,6 +106,14 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 		if (FlagManager.hasFlag(target, "curse") && !e.ignoresCurse()) {
 			e.setCancelled(true);
 			target.damage(e.getAmount());
+		}
+	}
+
+	// Stop nether portals from working in a skillapi area
+	@EventHandler
+	public void onPlayerPortal(PlayerPortalEvent e) {
+		if (SkillAPI.getSettings().isWorldEnabled(e.getFrom().getWorld())) {
+			e.setCancelled(true);
 		}
 	}
 	
