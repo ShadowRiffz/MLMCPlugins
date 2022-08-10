@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.sucy.skill.SkillAPI;
+
 import io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandArgument;
@@ -66,18 +68,15 @@ public class CmdQuestAdminReset implements Subcommand {
 		Statement stmt = NeoCore.getStatement();
 		UUID uuid = p.getUniqueId();
 		try {
-			// No args, reset everything
+			// No args, reset only the account you're on
 			if (args.length == offset) {
-				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + uuid + "';");
-				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + uuid + "';");
-				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + uuid + "';");
-				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "';");
-				for (Quester quester : QuestsManager.getAllAccounts(p)) {
-					quester.reset();
-				}
-				for (PlayerTags pTags : NeoQuests.getAllPlayerTags()) {
-					pTags.resetAllTags(uuid);
-				}
+				int account = SkillAPI.getPlayerAccountData(p).getActiveId();
+				stmt.execute("DELETE FROM quests_completed WHERE uuid = '" + uuid + "' AND account = " + account + ";");
+				stmt.execute("DELETE FROM quests_accounts WHERE uuid = '" + uuid + "' AND account = " +  account + ";");
+				stmt.execute("DELETE FROM quests_questlines WHERE uuid = '" + uuid + "' AND account = " + account + ";");
+				stmt.execute("DELETE FROM quests_quests WHERE uuid = '" + uuid + "' AND account = " + account + ";");
+				QuestsManager.getQuester(p).reset();
+				NeoQuests.getPlayerTags(p).resetAllTags(uuid);
 			}
 			// Has args, reset a specific account
 			else {
