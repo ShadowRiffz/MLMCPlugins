@@ -103,8 +103,6 @@ public class GardenInventory extends ProfessionInventory {
 		meta.setDisplayName("§aEmpty Plot");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7Left click to plant something!");
-		lore.add("§7Planting costs §e1 §7Essence of");
-		lore.add("§7the same level as the seed!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
