@@ -40,7 +40,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerAfterLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.SkillHealEvent;
 import com.sucy.skill.api.player.PlayerAccounts;
@@ -55,7 +54,6 @@ import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerFields;
-import me.neoblade298.neocore.util.Util;
 
 public class BossInstances extends JavaPlugin implements Listener {
 

@@ -206,7 +206,9 @@ public class Commands implements CommandExecutor {
 				
 				// Only start fight if fight hasn't been started before
 				if (!main.raidBossesFought.contains(rboss.getName())) {
-					p.teleport(rboss.getCoords());
+					for (Player fighter : main.getActiveFights().get(boss.getName())) {
+						fighter.teleport(rboss.getCoords());
+					}
 					
 					// If the boss hasn't been spawned, spawn it (cooldown of 10s)
 					if (!main.activeBosses.contains(rboss.getName())) {
