@@ -1,5 +1,6 @@
 package me.fopzl.skillprofiles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -11,11 +12,15 @@ import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
 
 public class SkillProfiles extends JavaPlugin {
-	HashMap<String, Integer>[] tempfopzl;
+	ArrayList<HashMap<String, Integer>> tempfopzl = new ArrayList<HashMap<String, Integer>>();
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Enabled");
 		this.getCommand("skillprofile").setExecutor(new Commands(this));
+		
+		tempfopzl.add(new HashMap<String, Integer>());
+		tempfopzl.add(new HashMap<String, Integer>());
+		tempfopzl.add(new HashMap<String, Integer>());
 	}
 	
 	public void onDisable() {
@@ -30,7 +35,7 @@ public class SkillProfiles extends JavaPlugin {
 		int classAccId = pad.getActiveId();
 		
 		HashMap<String, Integer> attributes = pd.getAttributes();
-		tempfopzl[classAccId] = attributes;
+		tempfopzl.set(classAccId - 1, attributes);
 	}
 	
 	public void Load(Player player, int slot) {
@@ -40,6 +45,6 @@ public class SkillProfiles extends JavaPlugin {
 		int classAccId = pad.getActiveId();
 		
 		HashMap<String, Integer> attributes = pd.getAttributeData();
-		attributes.putAll(tempfopzl[classAccId]);
+		attributes.putAll(tempfopzl.get(classAccId - 1));
 	}
 }
