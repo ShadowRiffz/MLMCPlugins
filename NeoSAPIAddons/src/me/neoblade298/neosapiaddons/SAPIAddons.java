@@ -120,12 +120,6 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
 				}
-				else {
-					double blocked = e.getDamage(DamageModifier.BLOCKING);
-					if (blocked < -15) {
-						e.setDamage(DamageModifier.BLOCKING, -15 + ((blocked + 15) * 0.5));
-					}
-				}
 			}
 		}
 	}
