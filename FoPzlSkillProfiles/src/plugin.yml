@@ -1,5 +1,5 @@
 name: FoPzlSkillProfiles
-main: me.fopzl.skillprofiles
+main: me.fopzl.skillprofiles.SkillProfiles
 author: [FoPzl]
 depend: [SkillAPI]
 version: 1.0
