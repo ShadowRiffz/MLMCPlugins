@@ -73,7 +73,7 @@ public class SellAllPlayer
         				
         				if(isSelling)
     					{
-        					if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material)) 
+        					if(sold + items.getAmount() > itemSellCap.get(material)) 
             				{
         						int difference = (sold + items.getAmount()) - itemSellCap.get(material);
             					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
@@ -93,7 +93,7 @@ public class SellAllPlayer
     					}
         				else
         				{
-        					if(tempAmount.get(material) + itemAmount.get(material) > itemSellCap.get(material) || tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
+        					if(tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
             				{
             					int difference = (tempAmount.get(material) + items.getAmount()) - itemSellCap.get(material);
             					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
@@ -123,25 +123,40 @@ public class SellAllPlayer
     	{
     		if(!isSelling)
     		{
-    			ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
-    			DecimalFormat df = new DecimalFormat("0.00");
-            	String text = "§7§oClick to confirm or do /sellall confirm\n";
-            	for(Material mat : itemAmount.keySet())
-            	{
-            		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
-            	}	
-            	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
-            	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
-            	player.spigot().sendMessage(builder.create());
+    			getSellLog(false, player, itemAmount, itemTotal, totalCost);
     		}
     		else
     		{
-    			DecimalFormat df = new DecimalFormat("0.00");
+    			getSellLog(true, player, itemAmount, itemTotal, totalCost);
     			NeoCore.getEconomy().depositPlayer(player, totalCost);
-    			player.sendMessage("§6Riches Sold: §e" + df.format(totalCost) + "g");
     		}
     	}
     }
+	
+	public void getSellLog(boolean sell, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, double totalCost)
+	{
+		ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
+		DecimalFormat df = new DecimalFormat("0.00");
+		String text = "";
+		if(!sell)
+		{
+    		text = "§7§oClick to confirm or do /sellall confirm\n";
+    	}
+    	for(Material mat : itemAmount.keySet())
+    	{
+    		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    	}	
+    	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
+    	if(sell)
+    	{
+    		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
+    	}
+    	else
+    	{
+    		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
+    	}
+    	player.spigot().sendMessage(builder.create());
+	}
 	
 	/**
 	 * Lists out the players personal item caps
