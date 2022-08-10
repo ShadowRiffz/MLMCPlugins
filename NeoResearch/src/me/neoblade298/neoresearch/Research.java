@@ -348,7 +348,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
-		if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
+		if (e.getHand() != null && e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
 		}
