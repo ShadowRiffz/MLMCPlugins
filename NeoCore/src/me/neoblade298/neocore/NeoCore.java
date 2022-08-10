@@ -109,14 +109,13 @@ public class NeoCore extends JavaPlugin implements Listener {
 						Statement delete = getStatement();
 						for (IOComponent component : IOListener.getComponents()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								component.savePlayer(p, insert, delete);
+								component.autosavePlayer(p, insert, delete);
 							}
 						}
 						try {
 							delete.executeBatch();
 							insert.executeBatch();
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
