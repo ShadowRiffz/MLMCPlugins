@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
@@ -276,5 +277,9 @@ public class IOListener implements Listener {
 			}
 			postIORunnables.get(type).remove(uuid);
 		}
+	}
+	
+	public static Collection<IOComponent> getComponents() {
+		return components.values();
 	}
 }
