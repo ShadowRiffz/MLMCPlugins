@@ -208,7 +208,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 	
 	public static void loadFiles(File load, FileLoader loader) throws NeoIOException {
 		if (!load.exists()) {
-			throw new NeoIOException("Failed to load file, doesn't exist: " + load.getParent() + "/" + load.getName());
+			Bukkit.getLogger().warning("[NeoCore] Failed to load file " + load.getPath() + ", file doesn't exist");
+			return;
 		}
 		
 		if (load.isDirectory()) {
