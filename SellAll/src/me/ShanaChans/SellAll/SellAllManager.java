@@ -44,6 +44,7 @@ import me.ShanaChans.SellAll.Commands.SellAllSort;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.ShanaChans.SellAll.Inventories.CustomInventory;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.player.PlayerTags;
@@ -286,6 +287,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
     public void resetPlayers()
     {
     	Statement stmt = NeoCore.getStatement();
+    	
+    	BungeeAPI.broadcast("§6Sell All Limits have been refreshed!");
     	
     	try {
 			stmt.executeUpdate("DELETE FROM sellall_players;");
