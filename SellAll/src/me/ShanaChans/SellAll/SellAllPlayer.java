@@ -2,6 +2,7 @@ package me.ShanaChans.SellAll;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.Material;
@@ -156,6 +157,70 @@ public class SellAllPlayer
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
     	}
     	player.spigot().sendMessage(builder.create());
+	}
+	
+	public double getTotalPrice(ItemStack item, int amount, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, Inventory inv, boolean isSelling)
+	{
+		Material mat = item.getType();
+		int currentSold = itemAmountSold.get(mat);
+		HashMap<Integer, Integer> tierLimits = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> soldPerTier = new HashMap<Integer, Integer>();
+		
+		for(int i = 1; i <= SellAllManager.getTierAmount(); i++)
+		{
+			tierLimits.put(i, (int) Math.round(i * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat)));
+		}
+		
+		for(Entry<Integer, Integer> e : tierLimits.entrySet())
+		{
+			int limit = e.getValue();
+			if(currentSold > limit)
+			{
+				continue;
+			}
+			if(amount <= 0)
+			{
+				break;
+			}
+			int remainingInTier = limit - currentSold;
+			
+			if(remainingInTier >= amount)
+			{
+				soldPerTier.put(e.getKey(), amount);
+				break;
+			}
+			else
+			{
+				soldPerTier.put(e.getKey(), remainingInTier);
+				amount -= remainingInTier;
+			}
+		}
+		
+		double sellMultiplier = SellAllManager.getMultiplier(player);
+		double sellBooster = SellAllManager.getBooster(player);
+		double sellPriceModifier = (sellMultiplier - 1) + (sellBooster - 1) + 1;
+		double price = 0;
+		int itemSold = 0;
+		for(Entry<Integer, Integer> e : soldPerTier.entrySet())
+		{
+			int amountSold = e.getValue();
+			player.sendMessage("Tier " + (e.getKey() - 1));
+			player.sendMessage("Multiplier " + SellAllManager.getTierPriceMultiplier());
+			player.sendMessage("Pow " + Math.pow(0.5, 0));
+			price += Math.pow(SellAllManager.getTierPriceMultiplier(), e.getKey() - 1) * amountSold * sellPriceModifier;
+			itemSold += amountSold;
+		}
+		if(isSelling)
+		{
+			itemAmountSold.put(mat, itemAmountSold.get(mat) + (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
+			inv.removeItem(new ItemStack(mat, itemSold));
+		}
+		else
+		{
+			itemAmount.put(mat, (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
+			itemTotal.put(mat, price);
+		}
+		return price;
 	}
 	
 	/**
