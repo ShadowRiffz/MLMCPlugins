@@ -20,6 +20,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.bungee.BungeeListener;
 import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.commands.builtin.*;
 import me.neoblade298.neocore.commandsets.CommandSetManager;
@@ -83,6 +84,7 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // Bungeecord
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
         
         // playerdata
         IOListener.register(this, new PlayerDataManager());
