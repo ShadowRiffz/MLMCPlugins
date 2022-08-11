@@ -26,6 +26,7 @@ import me.neoblade298.neocore.commandsets.CommandSetManager;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
@@ -39,9 +40,12 @@ import net.milkbowl.vault.economy.Economy;
 public class NeoCore extends JavaPlugin implements Listener {
 	private static NeoCore inst;
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
-	private static String instName = null;
 	private static Economy econ;
 	private static boolean debug;
+	
+	// Instance information
+	private static InstanceType instType = InstanceType.TOWNY;
+	private static String instName = null;
 	
 	public static Random gen = new Random();
 	
@@ -67,6 +71,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		if (instancecfg.exists()) {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
 			instName = icfg.getString("name");
+			instType = InstanceType.valueOf(icfg.getString("type").toUpperCase());
 		}
 		
 		// economy
@@ -184,8 +189,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public static boolean isInstance() {
-		return instName != null;
+	public static InstanceType getInstanceType() {
+		return instType;
 	}
 	
 	public static String getInstanceName() {
