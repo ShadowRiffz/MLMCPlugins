@@ -17,15 +17,12 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if(args.length < 2) return false;
 		
-		// TODO: verify args[1] is an int
-		int slot = Integer.parseInt(args[1]);
-		
 		switch(args[0]) {
 			case "save":
-				main.Save((Player)sender, slot);
+				main.save((Player)sender, args[1]);
 				return true;
 			case "load":
-				main.Load((Player)sender, slot);
+				main.load((Player)sender, args[1]);
 				return true;
 			default:
 				return false;

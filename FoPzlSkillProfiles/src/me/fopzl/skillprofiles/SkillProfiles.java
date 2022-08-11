@@ -2,6 +2,8 @@ package me.fopzl.skillprofiles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,15 +14,11 @@ import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
 
 public class SkillProfiles extends JavaPlugin {
-	ArrayList<HashMap<String, Integer>> tempfopzl = new ArrayList<HashMap<String, Integer>>();
+	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>(); 
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Enabled");
 		this.getCommand("skillprofile").setExecutor(new Commands(this));
-		
-		tempfopzl.add(new HashMap<String, Integer>());
-		tempfopzl.add(new HashMap<String, Integer>());
-		tempfopzl.add(new HashMap<String, Integer>());
 	}
 	
 	public void onDisable() {
@@ -28,23 +26,92 @@ public class SkillProfiles extends JavaPlugin {
 		super.onDisable();
 	}
 	
-	public void Save(Player player, int slot) {
-		PlayerData pd = SkillAPI.getPlayerData(player);
+	// TODO: check if requirements met for saving (# of profiles, clean name, etc.)
+	public void save(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
+		UUID uuid = player.getUniqueId();
 		
-		PlayerAccounts pad = SkillAPI.getPlayerAccountData(player);
-		int classAccId = pad.getActiveId();
+		PlayerProfiles profs;
+		if(!playerProfiles.containsKey(uuid)) {
+			profs = new PlayerProfiles();
+			playerProfiles.put(uuid, profs);
+		} else {
+			profs = playerProfiles.get(uuid);
+		}
 		
-		HashMap<String, Integer> attributes = pd.getAttributes();
-		tempfopzl.set(classAccId - 1, attributes);
+		profs.save(data, accId, profileName);
 	}
 	
-	public void Load(Player player, int slot) {
-		PlayerData pd = SkillAPI.getPlayerData(player);
+	// TODO: verify stuff (e.g. exists) before loading
+	public void load(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
+		UUID uuid = player.getUniqueId();
 		
-		PlayerAccounts pad = SkillAPI.getPlayerAccountData(player);
-		int classAccId = pad.getActiveId();
+		if(!playerProfiles.containsKey(uuid)) {
+			// TODO
+			return;
+		}
 		
-		HashMap<String, Integer> attributes = pd.getAttributeData();
-		attributes.putAll(tempfopzl.get(classAccId - 1));
+		playerProfiles.get(uuid).load(data, accId, profileName);
 	}
+}
+
+class PlayerProfiles {
+	HashMap<Integer, AccountProfiles> profiles = new HashMap<Integer, AccountProfiles>();
+	
+	void save(PlayerData data, int accId, String profileName) {
+		AccountProfiles profs;
+		if(!profiles.containsKey(accId)) {
+			profs = new AccountProfiles();
+			profiles.put(accId, profs);
+		} else {
+			profs = profiles.get(accId);
+		}
+		
+		profs.save(data, profileName);
+	}
+	
+	void load(PlayerData data, int accId, String profileName) {
+		if(!profiles.containsKey(accId)) {
+			// TODO
+			return;
+		}
+		
+		profiles.get(accId).load(data, profileName);
+	}
+}
+
+class AccountProfiles {
+	HashMap<String, Profile> profiles = new HashMap<String, Profile>();
+	
+	void save(PlayerData data, String profileName) {
+		Profile profile = new Profile();
+		
+		profile.attributes = data.getInvestedAttributes();
+		
+		profiles.put(profileName, profile);
+	}
+	
+	void load(PlayerData data, String profileName) {
+		if(!profiles.containsKey(profileName)) {
+			// TODO
+			return;
+		}
+		
+		Profile profile = profiles.get(profileName);
+		
+		data.refundAttributes();
+		
+		for (Map.Entry<String, Integer> kvp : profile.attributes.entrySet()) {
+			for(int i = 0; i < kvp.getValue().intValue(); i++) {
+				data.upAttribute(kvp.getKey());
+			}
+		}
+	}
+}
+
+class Profile {
+	HashMap<String, Integer> attributes;
 }
