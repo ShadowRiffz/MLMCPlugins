@@ -185,7 +185,6 @@ class Profile {
 	private HashMap<String, Integer> skillLevels;
 	private HashMap<String, Material> skillBinds;
 	private HashMap<Integer, String> skillBar;
-	private boolean skillBarEnabled;
 	
 	public Profile(PlayerData data) {
 		/* attributes */
@@ -204,7 +203,6 @@ class Profile {
 		/* skill bar */
 		skillBar = new HashMap<Integer, String>();
 		skillBar.putAll(data.getSkillBar().getData());
-		skillBarEnabled = data.getSkillBar().isEnabled();
 	}
 	
 	public void Load(PlayerData data) {
@@ -257,9 +255,5 @@ class Profile {
 		bar.getData().clear();
 		bar.getData().putAll(skillBar);
 		bar.setup(data.getPlayer());
-		
-		if(bar.isEnabled() != skillBarEnabled) {
-			bar.toggleEnabled();
-		}
 	}
 }
