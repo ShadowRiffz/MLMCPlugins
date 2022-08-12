@@ -59,6 +59,18 @@ public class SkillProfiles extends JavaPlugin {
 		
 		playerProfiles.get(uuid).load(data, accId, profileName);
 	}
+	
+	public void list(Player player) {
+		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
+		UUID uuid = player.getUniqueId();
+		
+		if(!playerProfiles.containsKey(uuid)) {
+			// TODO: notify no profiles exist
+			return;
+		}
+		
+		playerProfiles.get(uuid).list(player, accId);
+	}
 }
 
 class PlayerProfiles {
@@ -84,6 +96,15 @@ class PlayerProfiles {
 		
 		profiles.get(accId).load(data, profileName);
 	}
+	
+	void list(Player player, int accId) {
+		if(!profiles.containsKey(accId)) {
+			// TODO: notify no profiles exist
+			return;
+		}
+		
+		profiles.get(accId).list(player);
+	}
 }
 
 class AccountProfiles {
@@ -107,6 +128,20 @@ class AccountProfiles {
 		}
 		
 		profiles.get(profileName).Load(data);
+	}
+	
+	void list(Player player) {
+		if(profiles.size() == 0) {
+			// TODO: notify no profiles exist
+		}
+		
+		String msg = "";
+		for(String s : profiles.keySet()) {
+			msg += s + ", ";
+		}
+		msg = msg.substring(0, msg.length() - 2);
+		
+		player.sendMessage("§6Profiles: §f" + msg);
 	}
 }
 

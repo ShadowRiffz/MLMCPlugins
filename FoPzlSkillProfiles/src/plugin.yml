@@ -7,7 +7,7 @@ api-version: 1.19
 commands:
    skillprofile:
       aliases: [sp]
-      usage: "Usage: /<command> <save/load> [name]"
+      usage: "Usage: /<command> <save/load/list> [name]"
 permissions:
    fopzlskillprofiles.tbdpermission:
       description: User has permission to set more than 3 profiles per class account
