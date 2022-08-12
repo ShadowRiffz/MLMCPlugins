@@ -13,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.chatcontrol.api.ChatChannelEvent;
+import org.mineacademy.chatcontrol.api.ChatControlAPI;
+import org.mineacademy.chatcontrol.operator.Tag.Type;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
@@ -31,19 +33,27 @@ public class InstanceListener implements Listener {
 		new BukkitRunnable() {
 			public void run() {
 				try {
+					
+					// Towns in a nation
 					ResultSet rs = NeoCore.getStatement()
 							.executeQuery("SELECT b.uuid, c.uuid FROM MLMC.TOWNY_TOWNS as b,"
 									+ " MLMC.TOWNY_NATIONS as c WHERE b.nation = c.name;");
 					while (rs.next()) {
-						UUID tuuid = UUID.fromString(rs.getString(2));
+						UUID tuuid = UUID.fromString(rs.getString(1));
 						towns.add(tuuid);
-						if (!rs.getString(1).isEmpty()) {
-							UUID nuuid = UUID.fromString(rs.getString(1));
-							townToNation.put(tuuid, nuuid);
-							HashSet<UUID> towns = nationToTowns.getOrDefault(nuuid, new HashSet<UUID>());
-							towns.add(tuuid);
-							nationToTowns.putIfAbsent(nuuid, towns);
-						}
+						UUID nuuid = UUID.fromString(rs.getString(2));
+						townToNation.put(tuuid, nuuid);
+						HashSet<UUID> towns = nationToTowns.getOrDefault(nuuid, new HashSet<UUID>());
+						towns.add(tuuid);
+						nationToTowns.putIfAbsent(nuuid, towns);
+					}
+					
+					// Towns not in a nation
+					rs = NeoCore.getStatement()
+							.executeQuery("SELECT b.uuid FROM MLMC.TOWNY_TOWNS as b WHERE b.nation = '';");
+					while (rs.next()) {
+						UUID tuuid = UUID.fromString(rs.getString(1));
+						towns.add(tuuid);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -56,20 +66,30 @@ public class InstanceListener implements Listener {
 	public void onTownChat(ChatChannelEvent e) {
 		if (!(e.getSender() instanceof Player)) return;
 		if (!e.getChannel().getName().equalsIgnoreCase("town")) return;
+		e.setCancelled(true);
 		Player p = (Player) e.getSender();
 		if (!playerToTown.containsKey(p)) return;
+		String nick = ChatControlAPI.getPlayerCache(p).getTag(Type.NICK);
+		String display = nick != null ? "*" + nick : p.getName();
+		UUID tuuid = playerToTown.get(p);
 		
-		BungeeAPI.sendPluginMessage(p, "townchatin", e.getMessage(), playerToTown.get(p).toString());
+		handleTownChat(tuuid, display, e.getMessage());
+		BungeeAPI.sendPluginMessage(p, "townchatin", e.getMessage(), tuuid.toString(), display);
 	}
 
 	@EventHandler
 	public void onNationChat(ChatChannelEvent e) {
 		if (!(e.getSender() instanceof Player)) return;
 		if (!e.getChannel().getName().equalsIgnoreCase("nation")) return;
+		e.setCancelled(true);
 		Player p = (Player) e.getSender();
 		if (!playerToTown.containsKey(p)) return;
-		
-		BungeeAPI.sendPluginMessage(p, "nationchatin", e.getMessage(), playerToTown.get(p).toString());
+		String nick = ChatControlAPI.getPlayerCache(p).getTag(Type.NICK);
+		String display = nick != null ? "*" + nick : p.getName();
+		UUID tuuid = playerToTown.get(p);
+
+		handleNationChat(tuuid, null, display, e.getMessage());
+		BungeeAPI.sendPluginMessage(p, "nationchatin", e.getMessage(), tuuid.toString(), display);
 	}
 
 	@EventHandler
@@ -109,7 +129,6 @@ public class InstanceListener implements Listener {
 					onlinePlayers.putIfAbsent(tuuid, players);
 					playerToTown.put(p, tuuid);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -119,20 +138,39 @@ public class InstanceListener implements Listener {
 
 	private void handleTownChat(PluginMessageEvent e) {
 		UUID town = UUID.fromString(e.getMessages().get(1));
+		handleTownChat(town, e.getMessages().get(2), e.getMessages().get(0));
+	}
+	
+	private void handleTownChat(UUID town, String name, String msg) {
+		String formatted = "&f[&3TC&f] &f" + name + ": &b" + msg;
 		if (onlinePlayers.containsKey(town)) {
 			for (Player p : onlinePlayers.get(town)) {
-				Util.msg(p, e.getMessages().get(0));
+				Util.msg(p, formatted, false);
 			}
 		}
 	}
 	
 	private void handleNationChat(PluginMessageEvent e) {
 		UUID town = UUID.fromString(e.getMessages().get(1));
-		if (onlinePlayers.containsKey(town)) {
-			UUID nation = townToNation.get(town);
+		handleNationChat(town, e.getMessages().get(3), e.getMessages().get(2), e.getMessages().get(0));
+	}
+	
+	private void handleNationChat(UUID tuuid, String town, String name, String msg) {
+		String formatted;
+		if (town != null) {
+			formatted = "&f[&6NC&f] &f[&e" + town + "&f] " + name + ": &e" + msg;
+		}
+		else {
+			formatted = "&f[&6NC&f] &f" + name + ": &e" + msg;
+		}
+		
+		if (onlinePlayers.containsKey(tuuid)) {
+			UUID nation = townToNation.get(tuuid);
 			for (UUID townInNation : nationToTowns.get(nation)) {
-				for (Player p : onlinePlayers.get(townInNation)) {
-					Util.msg(p, e.getMessages().get(0));
+				if (onlinePlayers.containsKey(townInNation)) {
+					for (Player p : onlinePlayers.get(townInNation)) {
+						Util.msg(p, formatted, false);
+					}
 				}
 			}
 		}

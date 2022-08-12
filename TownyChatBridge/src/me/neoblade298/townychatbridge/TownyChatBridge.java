@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.NeoCore;
-import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.townychatbridge.other.InstanceListener;
 import me.neoblade298.townychatbridge.towny.TownyListener;
@@ -34,9 +33,11 @@ public class TownyChatBridge extends JavaPlugin implements Listener {
 	    super.onDisable();
 	}
 	
+	/*
 	private void initCommands() {
 		CommandManager mngr = new CommandManager("disenchant", this);
 	}
+	*/
 	
 	public static TownyChatBridge inst() {
 		return inst;

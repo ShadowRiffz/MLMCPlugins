@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.mineacademy.chatcontrol.api.ChatChannelEvent;
+import org.mineacademy.chatcontrol.api.ChatControlAPI;
+import org.mineacademy.chatcontrol.operator.Tag.Type;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.NationAddTownEvent;
@@ -34,8 +36,8 @@ public class TownyListener implements Listener {
 		
 		// Only send message of players with a town
 		if (t == null) return;
-		System.out.println("Sending town chat out");
-		BungeeAPI.sendPluginMessage(p, "townchatout", e.getMessage(), t.getUUID().toString());
+		String nick = ChatControlAPI.getPlayerCache(p).getTag(Type.NICK);
+		BungeeAPI.sendPluginMessage(p, "townchatout", e.getMessage(), t.getUUID().toString(), nick != null ? "*" + nick : p.getName());
 	}
 	
 	@EventHandler
@@ -51,7 +53,8 @@ public class TownyListener implements Listener {
 		
 		// Only send message of players with a town and nation
 		if (t == null || n == null) return;
-		BungeeAPI.sendPluginMessage(p, "nationchatout", e.getMessage(), t.getUUID().toString());
+		String nick = ChatControlAPI.getPlayerCache(p).getTag(Type.NICK);
+		BungeeAPI.sendPluginMessage(p, "nationchatout", e.getMessage(), t.getUUID().toString(), nick != null ? "*" + nick : p.getName(), t.getName());
 	}
 
 	@EventHandler
@@ -102,21 +105,25 @@ public class TownyListener implements Listener {
 	
 	private void handleIncomingTownChat(PluginMessageEvent e) {
 		if (api == null) api = TownyAPI.getInstance();
+		String msg = "&f[&3TC&f] &f" + e.getMessages().get(2) + ": &b" + e.getMessages().get(0);
 		
 		UUID tuuid = UUID.fromString(e.getMessages().get(1));
 		Town town = TownyAPI.getInstance().getTown(tuuid);
 		for (Player p : api.getOnlinePlayersInTown(town)) {
-			Util.msg(p, e.getMessages().get(0));
+			Util.msg(p, msg, false);
 		}
 	}
 	
 	private void handleIncomingNationChat(PluginMessageEvent e) {
 		if (api == null) api = TownyAPI.getInstance();
 		
-		UUID nuuid = UUID.fromString(e.getMessages().get(1));
-		Nation nation = TownyAPI.getInstance().getNation(nuuid);
-		for (Player p : api.getOnlinePlayersInNation(nation)) {
-			Util.msg(p, e.getMessages().get(0));
+		UUID tuuid = UUID.fromString(e.getMessages().get(1));
+		Town town = api.getTown(tuuid);
+		Nation nation = town.getNationOrNull();
+		String msg = "&f[&6NC&f] &f[&e" + town.getName() + "&f] " + e.getMessages().get(2) + ": &e" + e.getMessages().get(0);
+		
+		for (Player p : api.getOnlinePlayers(nation)) {
+			Util.msg(p, msg, false);
 		}
 	}
 }
