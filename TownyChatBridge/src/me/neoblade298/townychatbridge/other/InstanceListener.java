@@ -12,16 +12,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.mineacademy.chatcontrol.api.ChatChannelEvent;
+
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Town;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.bungee.PluginMessageEvent;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.townychatbridge.TownyChatBridge;
 
 public class InstanceListener implements Listener {
 	private HashSet<UUID> towns = new HashSet<UUID>();
 	private HashMap<UUID, UUID> townToNation = new HashMap<UUID, UUID>(); // Key town uuid, value nation uuid
-	private HashMap<UUID, HashSet<Player>> onlinePlayers = new HashMap<UUID, HashSet<Player>>(); // Key town uuid, value
-																									// player
+	private HashMap<UUID, HashSet<UUID>> nationToTowns = new HashMap<UUID, HashSet<UUID>>();
+	private HashMap<UUID, HashSet<Player>> onlinePlayers = new HashMap<UUID, HashSet<Player>>(); // Key town uuid, value player
+	private HashMap<Player, UUID> playerToTown = new HashMap<Player, UUID>();
 
 	public void initialize() {
 		new BukkitRunnable() {
@@ -32,8 +39,14 @@ public class InstanceListener implements Listener {
 									+ " MLMC.TOWNY_NATIONS as c WHERE b.nation = c.name;");
 					while (rs.next()) {
 						UUID tuuid = UUID.fromString(rs.getString(2));
-						UUID nuuid = UUID.fromString(rs.getString(1));
-						townToNation.put(tuuid, nuuid);
+						towns.add(tuuid);
+						if (!rs.getString(1).isEmpty()) {
+							UUID nuuid = UUID.fromString(rs.getString(1));
+							townToNation.put(tuuid, nuuid);
+							HashSet<UUID> towns = nationToTowns.getOrDefault(nuuid, new HashSet<UUID>());
+							towns.add(tuuid);
+							nationToTowns.putIfAbsent(nuuid, towns);
+						}
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -43,10 +56,33 @@ public class InstanceListener implements Listener {
 	}
 
 	@EventHandler
+	public void onTownChat(ChatChannelEvent e) {
+		if (!(e.getSender() instanceof Player)) return;
+		if (!e.getChannel().getName().equalsIgnoreCase("town")) return;
+		Player p = (Player) e.getSender();
+		if (!playerToTown.containsKey(p)) return;
+		
+		BungeeAPI.sendPluginMessage(p, "townchatin", e.getMessage(), playerToTown.get(p).toString());
+	}
+
+	@EventHandler
+	public void onNationChat(ChatChannelEvent e) {
+		if (!(e.getSender() instanceof Player)) return;
+		if (!e.getChannel().getName().equalsIgnoreCase("nation")) return;
+		Player p = (Player) e.getSender();
+		if (!playerToTown.containsKey(p)) return;
+		
+		BungeeAPI.sendPluginMessage(p, "nationchatin", e.getMessage(), playerToTown.get(p).toString());
+	}
+
+	@EventHandler
 	public void onPluginMessage(PluginMessageEvent e) {
 		switch (e.getChannel()) {
 		case "townchatout":
 			handleTownChat(e);
+			break;
+		case "nationchatout":
+			handleNationChat(e);
 			break;
 		case "townyevent":
 			handleTownyEvent(e);
@@ -74,6 +110,7 @@ public class InstanceListener implements Listener {
 					HashSet<Player> players = onlinePlayers.getOrDefault(tuuid, new HashSet<Player>());
 					players.add(p);
 					onlinePlayers.putIfAbsent(tuuid, players);
+					playerToTown.put(p, tuuid);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -87,7 +124,19 @@ public class InstanceListener implements Listener {
 		UUID town = UUID.fromString(e.getMessages().get(1));
 		if (onlinePlayers.containsKey(town)) {
 			for (Player p : onlinePlayers.get(town)) {
-				p.sendMessage(e.getMessages().get(0));
+				Util.msg(p, e.getMessages().get(0));
+			}
+		}
+	}
+	
+	private void handleNationChat(PluginMessageEvent e) {
+		UUID town = UUID.fromString(e.getMessages().get(1));
+		if (onlinePlayers.containsKey(town)) {
+			UUID nation = townToNation.get(town);
+			for (UUID townInNation : nationToTowns.get(nation)) {
+				for (Player p : onlinePlayers.get(townInNation)) {
+					Util.msg(p, e.getMessages().get(0));
+				}
 			}
 		}
 	}
