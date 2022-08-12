@@ -71,6 +71,19 @@ public class SkillProfiles extends JavaPlugin {
 		
 		playerProfiles.get(uuid).list(player, accId);
 	}
+	
+	public void delete(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
+		UUID uuid = player.getUniqueId();
+		
+		if(!playerProfiles.containsKey(uuid)) {
+			// TODO: notify profile doesn't exist
+			return;
+		}
+		
+		playerProfiles.get(uuid).delete(data, accId, profileName);
+	}
 }
 
 class PlayerProfiles {
@@ -104,6 +117,15 @@ class PlayerProfiles {
 		}
 		
 		profiles.get(accId).list(player);
+	}
+	
+	void delete(PlayerData data, int accId, String profileName) {
+		if(!profiles.containsKey(accId)) {
+			// TODO: notify profile doesn't exist
+			return;
+		}
+		
+		profiles.get(accId).delete(profileName);
 	}
 }
 
@@ -142,6 +164,15 @@ class AccountProfiles {
 		msg = msg.substring(0, msg.length() - 2);
 		
 		player.sendMessage("§6Profiles: §f" + msg);
+	}
+	
+	void delete(String profileName) {
+		if(!profiles.containsKey(profileName)) {
+			// TODO: notify profile doesn't exist
+			return;
+		}
+		
+		profiles.remove(profileName);
 	}
 }
 

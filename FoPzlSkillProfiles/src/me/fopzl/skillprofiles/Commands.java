@@ -27,7 +27,13 @@ public class Commands implements CommandExecutor {
 				main.load((Player)sender, args[1]);
 				return true;
 			case "list":
+			case "ls":
 				main.list((Player)sender);
+				return true;
+			case "delete":
+			case "del":
+				if(args.length < 2) return false;
+				main.delete((Player)sender, args[1]);
 				return true;
 			default:
 				return false;
