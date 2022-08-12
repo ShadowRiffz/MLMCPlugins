@@ -138,7 +138,7 @@ class AccountProfiles {
 		if(profiles.size() >= 3 &&
 		   !profiles.containsKey(profileName) &&
 		   !data.getPlayer().hasPermission("fopzlskillprofiles.tbdpermission")) {
-			// TODO: notify of too many profiles
+			data.getPlayer().sendMessage("§4[§c§lMLMC§4] §cError: §7Can't save more than 3 profiles");
 			return true;
 		}
 		
