@@ -47,7 +47,7 @@ public class SkillProfiles extends JavaPlugin {
 		}
 		
 		if(!profs.save(data, accId, profileName)) {
-			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile not saved");
+			//player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile not saved");
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §6Saved profile: §e" + profileName);
 		}
@@ -139,7 +139,7 @@ class AccountProfiles {
 		   !profiles.containsKey(profileName) &&
 		   !data.getPlayer().hasPermission("fopzlskillprofiles.tbdpermission")) {
 			data.getPlayer().sendMessage("§4[§c§lMLMC§4] §cError: §7Can't save more than 3 profiles");
-			return true;
+			return false;
 		}
 		
 		profiles.put(profileName, new Profile(data));
