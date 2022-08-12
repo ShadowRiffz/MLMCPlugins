@@ -30,7 +30,7 @@ public class SkillProfiles extends JavaPlugin {
 	}
 	
 	public boolean save(Player player, String profileName) {
-		if(!profileName.matches("[A-z0-9_]+")) {
+		if(!profileName.matches("[A-z0-9_]{1,16}")) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Invalid profile name");
 		}
 		
