@@ -53,7 +53,7 @@ public class SkillProfiles extends JavaPlugin {
 		UUID uuid = player.getUniqueId();
 		
 		if(!playerProfiles.containsKey(uuid)) {
-			// TODO
+			// TODO: notify profile doesn't exist
 			return;
 		}
 		
@@ -78,7 +78,7 @@ class PlayerProfiles {
 	
 	void load(PlayerData data, int accId, String profileName) {
 		if(!profiles.containsKey(accId)) {
-			// TODO
+			// TODO: notify profile doesn't exist
 			return;
 		}
 		
@@ -90,12 +90,19 @@ class AccountProfiles {
 	HashMap<String, Profile> profiles = new HashMap<String, Profile>();
 	
 	void save(PlayerData data, String profileName) {
+		if(profiles.size() >= 3 &&
+		   !profiles.containsKey(profileName) &&
+		   !data.getPlayer().hasPermission("fopzlskillprofiles.tbdpermission")) {
+			// TODO: notify of too many profiles
+			return;
+		}
+		
 		profiles.put(profileName, new Profile(data));
 	}
 	
 	void load(PlayerData data, String profileName) {
 		if(!profiles.containsKey(profileName)) {
-			// TODO
+			// TODO: notify profile doesn't exist
 			return;
 		}
 		
