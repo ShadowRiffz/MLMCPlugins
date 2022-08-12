@@ -29,8 +29,11 @@ public class SkillProfiles extends JavaPlugin {
 		super.onDisable();
 	}
 	
-	// TODO: check if requirements met for saving (# of profiles, clean name, etc.)
-	public void save(Player player, String profileName) {
+	public boolean save(Player player, String profileName) {
+		if(!profileName.matches("[A-z0-9_]+")) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Invalid profile name");
+		}
+		
 		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
@@ -43,53 +46,55 @@ public class SkillProfiles extends JavaPlugin {
 			profs = playerProfiles.get(uuid);
 		}
 		
-		profs.save(data, accId, profileName);
+		if(!profs.save(data, accId, profileName)) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile not saved");
+		} else {
+			player.sendMessage("§4[§c§lMLMC§4] §6Saved profile: §e" + profileName);
+		}
+		return true;
 	}
 	
-	// TODO: verify stuff (e.g. exists) before loading (IMPORTANT: check if on same class/whatever)
-	public void load(Player player, String profileName) {
+	public boolean load(Player player, String profileName) {
 		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
-		if(!playerProfiles.containsKey(uuid)) {
-			// TODO: notify profile doesn't exist
-			return;
+		if(!playerProfiles.containsKey(uuid) || !playerProfiles.get(uuid).load(data, accId, profileName)) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile §e" + profileName + " §7doesn't exist");
+		} else {
+			player.sendMessage("§4[§c§lMLMC§4] §6Loaded profile: §e" + profileName);
 		}
-		
-		playerProfiles.get(uuid).load(data, accId, profileName);
+		return true;
 	}
 	
-	public void list(Player player) {
+	public boolean list(Player player) {
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
-		if(!playerProfiles.containsKey(uuid)) {
-			// TODO: notify no profiles exist
-			return;
+		if(!playerProfiles.containsKey(uuid) || !playerProfiles.get(uuid).list(player, accId)) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7No profiles to list");
 		}
-		
-		playerProfiles.get(uuid).list(player, accId);
+		return true;
 	}
 	
-	public void delete(Player player, String profileName) {
+	public boolean delete(Player player, String profileName) {
 		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
-		if(!playerProfiles.containsKey(uuid)) {
-			// TODO: notify profile doesn't exist
-			return;
+		if(!playerProfiles.containsKey(uuid) || !playerProfiles.get(uuid).delete(data, accId, profileName)) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile §e" + profileName + " §7doesn't exist");
+		} else {
+			player.sendMessage("§4[§c§lMLMC§4] §6Profile deleted: §e" + profileName);
 		}
-		
-		playerProfiles.get(uuid).delete(data, accId, profileName);
+		return true;
 	}
 }
 
 class PlayerProfiles {
 	HashMap<Integer, AccountProfiles> profiles = new HashMap<Integer, AccountProfiles>();
 	
-	void save(PlayerData data, int accId, String profileName) {
+	boolean save(PlayerData data, int accId, String profileName) {
 		AccountProfiles profs;
 		if(!profiles.containsKey(accId)) {
 			profs = new AccountProfiles();
@@ -98,63 +103,61 @@ class PlayerProfiles {
 			profs = profiles.get(accId);
 		}
 		
-		profs.save(data, profileName);
+		return profs.save(data, profileName);
 	}
 	
-	void load(PlayerData data, int accId, String profileName) {
+	boolean load(PlayerData data, int accId, String profileName) {
 		if(!profiles.containsKey(accId)) {
-			// TODO: notify profile doesn't exist
-			return;
+			return false;
 		}
 		
-		profiles.get(accId).load(data, profileName);
+		return profiles.get(accId).load(data, profileName);
 	}
 	
-	void list(Player player, int accId) {
+	boolean list(Player player, int accId) {
 		if(!profiles.containsKey(accId)) {
-			// TODO: notify no profiles exist
-			return;
+			return false;
 		}
 		
-		profiles.get(accId).list(player);
+		return profiles.get(accId).list(player);
 	}
 	
-	void delete(PlayerData data, int accId, String profileName) {
+	boolean delete(PlayerData data, int accId, String profileName) {
 		if(!profiles.containsKey(accId)) {
-			// TODO: notify profile doesn't exist
-			return;
+			return false;
 		}
 		
-		profiles.get(accId).delete(profileName);
+		return profiles.get(accId).delete(profileName);
 	}
 }
 
 class AccountProfiles {
 	HashMap<String, Profile> profiles = new HashMap<String, Profile>();
 	
-	void save(PlayerData data, String profileName) {
+	boolean save(PlayerData data, String profileName) {
 		if(profiles.size() >= 3 &&
 		   !profiles.containsKey(profileName) &&
 		   !data.getPlayer().hasPermission("fopzlskillprofiles.tbdpermission")) {
 			// TODO: notify of too many profiles
-			return;
+			return true;
 		}
 		
 		profiles.put(profileName, new Profile(data));
+		return true;
 	}
 	
-	void load(PlayerData data, String profileName) {
+	boolean load(PlayerData data, String profileName) {
 		if(!profiles.containsKey(profileName)) {
-			// TODO: notify profile doesn't exist
-			return;
+			return false;
 		}
 		
 		profiles.get(profileName).Load(data);
+		return true;
 	}
 	
-	void list(Player player) {
+	boolean list(Player player) {
 		if(profiles.size() == 0) {
-			// TODO: notify no profiles exist
+			return false;
 		}
 		
 		String msg = "";
@@ -163,16 +166,17 @@ class AccountProfiles {
 		}
 		msg = msg.substring(0, msg.length() - 2);
 		
-		player.sendMessage("§6Profiles: §f" + msg);
+		player.sendMessage("§4[§c§lMLMC§4] §6Profiles: §e" + msg);
+		return true;
 	}
 	
-	void delete(String profileName) {
+	boolean delete(String profileName) {
 		if(!profiles.containsKey(profileName)) {
-			// TODO: notify profile doesn't exist
-			return;
+			return false;
 		}
 		
 		profiles.remove(profileName);
+		return true;
 	}
 }
 

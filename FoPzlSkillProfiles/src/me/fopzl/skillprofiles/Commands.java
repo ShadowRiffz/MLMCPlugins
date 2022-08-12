@@ -20,21 +20,17 @@ public class Commands implements CommandExecutor {
 		switch(args[0]) {
 			case "save":
 				if(args.length < 2) return false;
-				main.save((Player)sender, args[1]);
-				return true;
+				return main.save((Player)sender, args[1]);
 			case "load":
 				if(args.length < 2) return false;
-				main.load((Player)sender, args[1]);
-				return true;
+				return main.load((Player)sender, args[1]);
 			case "list":
 			case "ls":
-				main.list((Player)sender);
-				return true;
+				return main.list((Player)sender);
 			case "delete":
 			case "del":
 				if(args.length < 2) return false;
-				main.delete((Player)sender, args[1]);
-				return true;
+				return main.delete((Player)sender, args[1]);
 			default:
 				return false;
 		}
