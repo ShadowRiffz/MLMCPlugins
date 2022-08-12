@@ -147,6 +147,24 @@ class Profile {
 				data.downgradeSkill(ps.getData());
 			}
 		}
+		
+		// need to level essence first
+		PlayerSkill essence = null;
+		for(PlayerSkill ps : skills) {
+			Skill s = ps.getData();
+			if(s.getName().contains("'s Essence")) {
+				essence = ps;
+				
+				for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
+					data.upgradeSkill(s, true);
+				}
+				ps.setBind(skillBinds.get(s.getName()));
+			}
+		}
+		if(essence != null) {
+			skills.remove(essence);
+		}
+		
 		for(PlayerSkill ps : skills) {
 			Skill s = ps.getData();
 			for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
