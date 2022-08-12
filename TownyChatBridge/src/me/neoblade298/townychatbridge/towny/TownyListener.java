@@ -34,6 +34,7 @@ public class TownyListener implements Listener {
 		
 		// Only send message of players with a town
 		if (t == null) return;
+		System.out.println("Sending town chat out");
 		BungeeAPI.sendPluginMessage(p, "townchatout", e.getMessage(), t.getUUID().toString());
 	}
 	

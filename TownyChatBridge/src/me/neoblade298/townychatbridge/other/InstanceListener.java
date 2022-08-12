@@ -14,9 +14,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.chatcontrol.api.ChatChannelEvent;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Town;
-
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.bungee.PluginMessageEvent;
@@ -30,7 +27,7 @@ public class InstanceListener implements Listener {
 	private HashMap<UUID, HashSet<Player>> onlinePlayers = new HashMap<UUID, HashSet<Player>>(); // Key town uuid, value player
 	private HashMap<Player, UUID> playerToTown = new HashMap<Player, UUID>();
 
-	public void initialize() {
+	public InstanceListener() {
 		new BukkitRunnable() {
 			public void run() {
 				try {
