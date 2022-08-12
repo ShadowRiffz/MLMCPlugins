@@ -196,7 +196,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	
 	@EventHandler
 	public void onTownCreate(NewTownEvent e) {
-		e.getTown().getAccount().deposit(2500, "Starter money");
+		e.getTown().getAccount().deposit(500, "Starter money");
 	}
 	
 	@EventHandler
