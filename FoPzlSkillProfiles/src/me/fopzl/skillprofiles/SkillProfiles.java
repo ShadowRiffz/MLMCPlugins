@@ -74,7 +74,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		
 		/* attributes */
 		try {
-			ResultSet rs = stmt.executeQuery("select * from skillprofiles_attribute where uuid = '" + uuid + "';");
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
 			while(rs.next()) {
 				int accId = rs.getInt("prof_accNum");
 				String profName = rs.getString("prof_name");
@@ -92,7 +92,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		
 		/* skill levels */
 		try {
-			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillLevel where uuid = '" + uuid + "';");
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
 			while(rs.next()) {
 				int accId = rs.getInt("prof_accNum");
 				String profName = rs.getString("prof_name");
@@ -110,7 +110,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		
 		/* skill binds */
 		try {
-			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillBind where uuid = '" + uuid + "';");
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillBind where prof_uuid = '" + uuid + "';");
 			while(rs.next()) {
 				int accId = rs.getInt("prof_accNum");
 				String profName = rs.getString("prof_name");
@@ -128,7 +128,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		
 		/* skill bar */
 		try {
-			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillBarSlot where uuid = '" + uuid + "';");
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillBarSlot where prof_uuid = '" + uuid + "';");
 			while(rs.next()) {
 				int accId = rs.getInt("prof_accNum");
 				String profName = rs.getString("prof_name");
@@ -161,25 +161,25 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 					
 					Profile prof = apEntry.getValue();
 					/* attributes */
-					delete.addBatch("delete from skillprofiles_attribute where uuid = '" + uuid + "';");
+					delete.addBatch("delete from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> attrEntry : prof.attributes.entrySet()) {
 						insert.addBatch("insert into skillprofiles_attribute values (" + keyString + ", '" + attrEntry.getKey() + "', " + attrEntry.getValue() + ");");
 					}
 					
 					/* skill levels */
-					delete.addBatch("delete from skillprofiles_skillLevel where uuid = '" + uuid + "';");
+					delete.addBatch("delete from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> skillEntry : prof.skillLevels.entrySet()) {
 						insert.addBatch("insert into skillprofiles_skillLevel values (" + keyString + ", '" + skillEntry.getKey() + "', " + skillEntry.getValue() + ");");
 					}
 					
 					/* skill binds */
-					delete.addBatch("delete from skillprofiles_skillBind where uuid = '" + uuid + "';");
+					delete.addBatch("delete from skillprofiles_skillBind where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Material> bindEntry : prof.skillBinds.entrySet()) {
 						insert.addBatch("insert into skillprofiles_skillBind values (" + keyString + ", '" + bindEntry.getKey() + "', '" + bindEntry.getValue().toString() + "');");
 					}
 					
 					/* skill bar */
-					delete.addBatch("delete from skillprofiles_skillBarSlot where uuid = '" + uuid + "';");
+					delete.addBatch("delete from skillprofiles_skillBarSlot where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<Integer, String> slotEntry : prof.skillBar.entrySet()) {
 						insert.addBatch("insert into skillprofiles_skillBarSlot values (" + keyString + ", " + slotEntry.getKey() + ", '" + slotEntry.getValue() + "');");
 					}
