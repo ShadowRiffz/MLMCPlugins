@@ -169,23 +169,24 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 					/* skill levels */
 					delete.addBatch("delete from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> skillEntry : prof.skillLevels.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillLevel values (" + keyString + ", '" + skillEntry.getKey() + "', " + skillEntry.getValue() + ");");
+						insert.addBatch("insert into skillprofiles_skillLevel values (" + keyString + ", '" + Util.sqlEscape(skillEntry.getKey()) + "', " + skillEntry.getValue() + ");");
 					}
 					
 					/* skill binds */
 					delete.addBatch("delete from skillprofiles_skillBind where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Material> bindEntry : prof.skillBinds.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillBind values (" + keyString + ", '" + bindEntry.getKey() + "', '" + bindEntry.getValue().toString() + "');");
+						insert.addBatch("insert into skillprofiles_skillBind values (" + keyString + ", '" + Util.sqlEscape(bindEntry.getKey()) + "', '" + bindEntry.getValue().toString() + "');");
 					}
 					
 					/* skill bar */
 					delete.addBatch("delete from skillprofiles_skillBarSlot where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<Integer, String> slotEntry : prof.skillBar.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillBarSlot values (" + keyString + ", " + slotEntry.getKey() + ", '" + slotEntry.getValue() + "');");
+						insert.addBatch("insert into skillprofiles_skillBarSlot values (" + keyString + ", " + slotEntry.getKey() + ", '" + Util.sqlEscape(slotEntry.getValue()) + "');");
 					}
-					
 				}
 			}
+			
+			baseStmt.close();
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to save skill profiles for user " + p.getName());
 			e.printStackTrace();
@@ -434,5 +435,11 @@ class Profile {
 		bar.getData().clear();
 		bar.getData().putAll(skillBar);
 		bar.setup(data.getPlayer());
+	}
+}
+
+class Util {
+	public static String sqlEscape(String str) {
+		return str.replace("'", "''");
 	}
 }
