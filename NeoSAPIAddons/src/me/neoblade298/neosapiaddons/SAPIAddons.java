@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -107,6 +108,14 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 			target.damage(e.getAmount());
 		}
 	}
+
+	// Stop nether portals from working in a skillapi area
+	@EventHandler
+	public void onPlayerPortal(PlayerPortalEvent e) {
+		if (SkillAPI.getSettings().isWorldEnabled(e.getFrom().getWorld())) {
+			e.setCancelled(true);
+		}
+	}
 	
 	// Stop players from blocking mythicmobs
 	@EventHandler(ignoreCancelled=false)
@@ -119,12 +128,6 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				String world = p.getWorld().getName();
 				if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
-				}
-				else {
-					double blocked = e.getDamage(DamageModifier.BLOCKING);
-					if (blocked < -15) {
-						e.setDamage(DamageModifier.BLOCKING, -15 + ((blocked + 15) * 0.5));
-					}
 				}
 			}
 		}

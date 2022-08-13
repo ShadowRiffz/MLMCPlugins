@@ -14,6 +14,7 @@ import me.Neoblade298.NeoProfessions.Listeners.BoostListener;
 public class Profession {
 	ProfessionType type;
 	int exp, level;
+	private static final int START_LEVEL = 5;
 	private static final int MAX_LEVEL = 60;
 	static HashMap<Integer, Integer> nextLv= new HashMap<Integer, Integer>();
 	
@@ -26,7 +27,7 @@ public class Profession {
 	public Profession(ProfessionType prof) {
 		this.type = prof;
 		this.exp = 0;
-		this.level = 1;
+		this.level = START_LEVEL;
 	}
 
 	public ProfessionType getType() {

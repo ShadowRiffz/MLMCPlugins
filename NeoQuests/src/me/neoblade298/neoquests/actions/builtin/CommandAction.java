@@ -58,4 +58,8 @@ public class CommandAction extends RewardAction {
 	public boolean isHidden() {
 		return true;
 	}
+	
+	public String getCommand() {
+		return command;
+	}
 }

@@ -13,7 +13,7 @@ import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.util.Util;
 
 public class CmdCoreEnable implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("save/preload/load/cleanup", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("save/preload/load/cleanup/autosave", false)));
 
 	@Override
 	public String getPermission() {
@@ -32,13 +32,13 @@ public class CmdCoreEnable implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Enables an IO action: save, preload, load, cleanup";
+		return "Enables an IO action: save, preload, load, cleanup, autosave";
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
 		if (args.length == 0) {
-			Util.msg(s, "&7Valid IO actions: save, preload, load, cleanup");
+			Util.msg(s, "&7Valid IO actions: save, preload, load, cleanup, autosave");
 		}
 		else {
 			IOType type = IOType.valueOf(args[0].toUpperCase());

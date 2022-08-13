@@ -178,14 +178,9 @@ public class QuestsManager implements IOComponent, Manager {
 			QuestsManager.initializeOrGetQuester(p).startListening();
 		}
 	}
-
 	@Override
-	public void savePlayer(Player p, Statement insert, Statement delete) {
+	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
-		// Save player location if they're in quest world
-		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) {
-			initializeOrGetQuester(p).setLocation(p.getLocation());
-		}
 		
 		try {
 			for (int acct : questers.get(uuid).keySet()) {
@@ -226,12 +221,22 @@ public class QuestsManager implements IOComponent, Manager {
 							+ uuid + "'," + acct + "," + x + "," + y + "," + z + ",'" + w + "');");
 				}
 			}
-			questers.remove(uuid);
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void savePlayer(Player p, Statement insert, Statement delete) {
+		UUID uuid = p.getUniqueId();
+		// Save player location if they're in quest world
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) {
+			initializeOrGetQuester(p).setLocation(p.getLocation());
+		}
+		autosavePlayer(p, insert, delete);
+		questers.remove(uuid);
 	}
 	
 	public static Quester initializeOrGetQuester(Player p) {

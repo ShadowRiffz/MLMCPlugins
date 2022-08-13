@@ -19,6 +19,7 @@ import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neocore.player.PlayerTags;
 import me.neoblade298.neoquests.actions.ActionManager;
@@ -51,7 +52,7 @@ public class NeoQuests extends JavaPlugin implements org.bukkit.event.Listener {
 		Bukkit.getServer().getLogger().info("NeoQuests Enabled");
 
 		// Minimized initialization if instance
-		if (NeoCore.isInstance()) {
+		if (NeoCore.getInstanceType() == InstanceType.OTHER) {
 			for (int i = 1; i <= 12; i++) {
 				accountTags[i - 1] = NeoCore.createPlayerTags("questaccount_" + i, this, true);
 			}

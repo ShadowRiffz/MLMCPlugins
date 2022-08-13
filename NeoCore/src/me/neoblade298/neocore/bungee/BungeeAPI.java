@@ -37,19 +37,19 @@ public class BungeeAPI {
 		p.sendPluginMessage(NeoCore.inst(), "BungeeCord", out.toByteArray());
 	}
 	
-	public static void sendPluginMessage(String channel, Object... msgs) {
+	public static void sendPluginMessage(String channel, String... msgs) {
 		sendPluginMessage("ALL", Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
 	}
 	
-	public static void sendPluginMessage(String server, String channel, Object... msgs) {
+	public static void sendPluginMessage(String server, String channel, String... msgs) {
 		sendPluginMessage(server, Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
 	}
 	
-	public static void sendPluginMessage(Player p, String channel, Object... msgs) {
+	public static void sendPluginMessage(Player p, String channel, String... msgs) {
 		sendPluginMessage("ALL", p, channel, msgs);
 	}
 	
-	public static void sendPluginMessage(String server, Player p, String channel, Object... msgs) {
+	public static void sendPluginMessage(String server, Player p, String channel, String... msgs) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("Forward");
 		out.writeUTF(server);
@@ -58,19 +58,8 @@ public class BungeeAPI {
 		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 		DataOutputStream msgout = new DataOutputStream(msgbytes);
 		try {
-			for (Object msg : msgs) {
-				if (msg instanceof String) {
-					msgout.writeUTF((String) msg);
-				}
-				else if (msg instanceof Integer) {
-					msgout.writeInt((Integer) msg);
-				}
-				else if (msg instanceof Double) {
-					msgout.writeDouble((Double) msg);
-				}
-				else if (msg instanceof Boolean) {
-					msgout.writeBoolean((Boolean) msg);
-				}
+			for (String msg : msgs) {
+				msgout.writeUTF(msg);
 			}
 		} catch (IOException exception) {
 			exception.printStackTrace();

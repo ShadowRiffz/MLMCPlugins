@@ -2,6 +2,7 @@ package me.ShanaChans.SellAll;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.Material;
@@ -73,7 +74,7 @@ public class SellAllPlayer
         				
         				if(isSelling)
     					{
-        					if(sold + itemAmount.get(material) > itemSellCap.get(material) || sold + items.getAmount() > itemSellCap.get(material)) 
+        					if(sold + items.getAmount() > itemSellCap.get(material)) 
             				{
         						int difference = (sold + items.getAmount()) - itemSellCap.get(material);
             					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
@@ -93,7 +94,7 @@ public class SellAllPlayer
     					}
         				else
         				{
-        					if(tempAmount.get(material) + itemAmount.get(material) > itemSellCap.get(material) || tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
+        					if(tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
             				{
             					int difference = (tempAmount.get(material) + items.getAmount()) - itemSellCap.get(material);
             					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
@@ -123,25 +124,104 @@ public class SellAllPlayer
     	{
     		if(!isSelling)
     		{
-    			ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
-    			DecimalFormat df = new DecimalFormat("0.00");
-            	String text = "§7§oClick to confirm or do /sellall confirm\n";
-            	for(Material mat : itemAmount.keySet())
-            	{
-            		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
-            	}	
-            	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
-            	builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
-            	player.spigot().sendMessage(builder.create());
+    			getSellLog(false, player, itemAmount, itemTotal, totalCost);
     		}
     		else
     		{
-    			DecimalFormat df = new DecimalFormat("0.00");
+    			getSellLog(true, player, itemAmount, itemTotal, totalCost);
     			NeoCore.getEconomy().depositPlayer(player, totalCost);
-    			player.sendMessage("§6Riches Sold: §e" + df.format(totalCost) + "g");
     		}
     	}
     }
+	
+	public void getSellLog(boolean sell, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, double totalCost)
+	{
+		ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
+		DecimalFormat df = new DecimalFormat("0.00");
+		String text = "";
+		if(!sell)
+		{
+    		text = "§7§oClick to confirm or do /sellall confirm\n";
+    	}
+    	for(Material mat : itemAmount.keySet())
+    	{
+    		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    	}	
+    	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
+    	if(sell)
+    	{
+    		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
+    	}
+    	else
+    	{
+    		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text))).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sellall confirm"));
+    	}
+    	player.spigot().sendMessage(builder.create());
+	}
+	
+	public double getTotalPrice(ItemStack item, int amount, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, Inventory inv, boolean isSelling)
+	{
+		Material mat = item.getType();
+		int currentSold = itemAmountSold.get(mat);
+		HashMap<Integer, Integer> tierLimits = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> soldPerTier = new HashMap<Integer, Integer>();
+		
+		for(int i = 1; i <= SellAllManager.getTierAmount(); i++)
+		{
+			tierLimits.put(i, (int) Math.round(i * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat)));
+		}
+		
+		for(Entry<Integer, Integer> e : tierLimits.entrySet())
+		{
+			int limit = e.getValue();
+			if(currentSold > limit)
+			{
+				continue;
+			}
+			if(amount <= 0)
+			{
+				break;
+			}
+			int remainingInTier = limit - currentSold;
+			
+			if(remainingInTier >= amount)
+			{
+				soldPerTier.put(e.getKey(), amount);
+				break;
+			}
+			else
+			{
+				soldPerTier.put(e.getKey(), remainingInTier);
+				amount -= remainingInTier;
+			}
+		}
+		
+		double sellMultiplier = SellAllManager.getMultiplier(player);
+		double sellBooster = SellAllManager.getBooster(player);
+		double sellPriceModifier = (sellMultiplier - 1) + (sellBooster - 1) + 1;
+		double price = 0;
+		int itemSold = 0;
+		for(Entry<Integer, Integer> e : soldPerTier.entrySet())
+		{
+			int amountSold = e.getValue();
+			player.sendMessage("Tier " + (e.getKey() - 1));
+			player.sendMessage("Multiplier " + SellAllManager.getTierPriceMultiplier());
+			player.sendMessage("Pow " + Math.pow(0.5, 0));
+			price += Math.pow(SellAllManager.getTierPriceMultiplier(), e.getKey() - 1) * amountSold * sellPriceModifier;
+			itemSold += amountSold;
+		}
+		if(isSelling)
+		{
+			itemAmountSold.put(mat, itemAmountSold.get(mat) + (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
+			inv.removeItem(new ItemStack(mat, itemSold));
+		}
+		else
+		{
+			itemAmount.put(mat, (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
+			itemTotal.put(mat, price);
+		}
+		return price;
+	}
 	
 	/**
 	 * Lists out the players personal item caps

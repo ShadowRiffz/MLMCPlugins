@@ -37,12 +37,14 @@ import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllConfirm;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
 import me.ShanaChans.SellAll.Commands.SellAllList;
+import me.ShanaChans.SellAll.Commands.SellAllQuick;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.ShanaChans.SellAll.Commands.SellAllSort;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.ShanaChans.SellAll.Inventories.CustomInventory;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.player.PlayerTags;
@@ -60,6 +62,9 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
 	public static HashMap<Player, CustomInventory> viewingInventory = new HashMap<Player, CustomInventory>();
 	private static double moneyCap;
+	private static double tierMultiplier;
+	private static double tierPriceMultiplier;
+	private static int tierAmount;
 	private static YamlConfiguration cfg;
 	public static PlayerTags settings;
 	private static SellAllManager inst;
@@ -103,6 +108,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
 		sellAll.register(new SellAllReload());
+		sellAll.register(new SellAllQuick());
 		sellAll.register(new SellAllConfirm());
 		value.register(new SellAllValue());
 		sellAll.registerCommandList("help");
@@ -140,8 +146,10 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 		
-		sec = SellAllManager.cfg.getConfigurationSection("money-cap");
-		moneyCap = sec.getDouble("default");
+		moneyCap = SellAllManager.cfg.getDouble("money-cap");
+		tierMultiplier = SellAllManager.cfg.getDouble("tier-multiplier");
+		tierPriceMultiplier = SellAllManager.cfg.getDouble("tier-price-multiplier");
+		tierAmount = SellAllManager.cfg.getInt("tier-amount");
 		
 		sec = SellAllManager.cfg.getConfigurationSection("item-cap");
 		
@@ -280,6 +288,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
     {
     	Statement stmt = NeoCore.getStatement();
     	
+    	BungeeAPI.broadcast("§6Sell All Limits have been refreshed!");
+    	
     	try {
 			stmt.executeUpdate("DELETE FROM sellall_players;");
 		} catch (SQLException e) {
@@ -394,6 +404,21 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		return moneyCap;
 	}
 	
+	public static double getTierMultiplier() 
+	{
+		return tierMultiplier;
+	}
+	
+	public static double getTierPriceMultiplier() 
+	{
+		return tierPriceMultiplier;
+	}
+	
+	public static int getTierAmount() 
+	{
+		return tierAmount;
+	}
+	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
@@ -413,7 +438,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
-		if (viewingInventory.containsKey(p) && e.getInventory() == viewingInventory.get(p).getInventory()) {
+		if (viewingInventory.containsKey(p) && e.getInventory() != null && e.getInventory() == viewingInventory.get(p).getInventory()) {
 			viewingInventory.get(p).handleInventoryClose(e);
 			viewingInventory.remove(p);
 		}

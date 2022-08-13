@@ -50,8 +50,8 @@ public class CmdQuestAdminCompleteQL implements Subcommand {
 		Questline ql = QuestsManager.getQuestline(args[0]);
 		for (Quest q : ql.getQuests()) {
 			quester.addCompletedQuest(new CompletedQuest(q, -1, true));
-			Util.msg(s, "&7Successfully added quest &6" + q.getDisplay() + " &7to player &e" + p.getName());
 		}
+		Util.msg(s, "&7Successfully added questline &6" + ql.getDisplay() + " &7to player &e" + p.getName());
 	}
 
 	@Override

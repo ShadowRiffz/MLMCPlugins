@@ -305,7 +305,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	@Override
-	public void savePlayer(Player p, Statement insert, Statement delete) {
+	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			PlayerStats stats = playerStats.get(uuid);
@@ -339,16 +339,21 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 								key + ");");
 					}
 				}
-				playerAttrs.remove(uuid);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void savePlayer(Player p, Statement insert, Statement delete) {
+		autosavePlayer(p, insert, delete);
+		playerAttrs.remove(p.getUniqueId());
+	}
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
-		if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
+		if (e.getHand() != null && e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
 		}

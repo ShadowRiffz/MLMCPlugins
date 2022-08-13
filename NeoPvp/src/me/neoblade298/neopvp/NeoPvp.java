@@ -12,6 +12,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.interfaces.Manager;
 import me.neoblade298.neopvp.commands.*;
 import me.neoblade298.neopvp.generators.GeneratorManager;
@@ -26,7 +27,7 @@ public class NeoPvp extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPvp Enabled");
 		inst = this;
-		if (!NeoCore.isInstance()) {
+		if (NeoCore.getInstanceType() != InstanceType.OTHER) {
 			mngrs.add(new GeneratorManager());
 		}
 		initCommands();

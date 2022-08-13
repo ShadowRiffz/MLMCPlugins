@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -38,6 +39,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
@@ -401,7 +403,19 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEnchantItem(EnchantItemEvent e) {
+		ItemStack item = e.getItem();
+		if (item != null) {
+			if (isQuestGear(item)) {
+				e.setCancelled(true);
+				Util.sendMessage(e.getEnchanter(), "&cYou cannot enchant RPG items!");
+				return;
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
 		ItemStack[] contents = e.getInventory().getContents();
 		for (int i = 0; i < contents.length; i++) {

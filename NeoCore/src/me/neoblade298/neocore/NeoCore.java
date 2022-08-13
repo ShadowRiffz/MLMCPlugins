@@ -1,6 +1,7 @@
 package me.neoblade298.neocore;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -18,27 +20,33 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.bungee.BungeeListener;
 import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.commands.builtin.*;
 import me.neoblade298.neocore.commandsets.CommandSetManager;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
 import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
+import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
 	private static NeoCore inst;
 	private static HashMap<String, ArrayList<Dependant>> dependants = new HashMap<String, ArrayList<Dependant>>();
-	private static String instName = null;
 	private static Economy econ;
 	private static boolean debug;
+	
+	// Instance information
+	private static InstanceType instType = InstanceType.TOWNY;
+	private static String instName = null;
 	
 	public static Random gen = new Random();
 	
@@ -64,6 +72,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		if (instancecfg.exists()) {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
 			instName = icfg.getString("name");
+			instType = InstanceType.valueOf(icfg.getString("type").toUpperCase());
 		}
 		
 		// economy
@@ -75,6 +84,7 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // Bungeecord
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
         
         // playerdata
         IOListener.register(this, new PlayerDataManager());
@@ -96,6 +106,29 @@ public class NeoCore extends JavaPlugin implements Listener {
 		}.runTask(this);
 		
 		SchedulerAPI.initialize();
+		
+		// Autosave
+		SchedulerAPI.scheduleRepeating("NeoCore-Autosave", ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
+			public void run() {
+				new BukkitRunnable() {
+					public void run() {
+						Statement insert = getStatement();
+						Statement delete = getStatement();
+						for (IOComponent component : IOListener.getComponents()) {
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								component.autosavePlayer(p, insert, delete);
+							}
+						}
+						try {
+							delete.executeBatch();
+							insert.executeBatch();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+				}.runTaskAsynchronously(NeoCore.inst());
+			}
+		});
 	}
 
 	private void initCommands() {
@@ -158,8 +191,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public static boolean isInstance() {
-		return instName != null;
+	public static InstanceType getInstanceType() {
+		return instType;
 	}
 	
 	public static String getInstanceName() {
@@ -177,7 +210,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 	
 	public static void loadFiles(File load, FileLoader loader) throws NeoIOException {
 		if (!load.exists()) {
-			throw new NeoIOException("Failed to load file, doesn't exist: " + load.getParent() + "/" + load.getName());
+			Bukkit.getLogger().warning("[NeoCore] Failed to load file " + load.getPath() + ", file doesn't exist");
+			return;
 		}
 		
 		if (load.isDirectory()) {

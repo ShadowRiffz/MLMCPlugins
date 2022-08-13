@@ -4,6 +4,7 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.api.skills.conditions.ICasterCondition;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.instancing.InstanceType;
 
 public class IsInstanceCondition implements ICasterCondition {
 	protected boolean action;
@@ -15,10 +16,10 @@ public class IsInstanceCondition implements ICasterCondition {
 	@Override
 	public boolean check(SkillCaster c) {
 		if (action) {
-			return NeoCore.isInstance();
+			return NeoCore.getInstanceType() == InstanceType.OTHER;
 		}
 		else {
-			return !NeoCore.isInstance();
+			return NeoCore.getInstanceType() != InstanceType.OTHER;
 		}
 	}
 }

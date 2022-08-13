@@ -77,10 +77,6 @@ public class GardenManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		// Check if player exists already
-		if (gardens.containsKey(p.getUniqueId())) {
-			return;
-		}
 
 		HashMap<ProfessionType, Garden> pgardens = new HashMap<ProfessionType, Garden>();
 		gardens.put(p.getUniqueId(), pgardens);
