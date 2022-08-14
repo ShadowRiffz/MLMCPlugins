@@ -62,12 +62,19 @@ public class PhantomAugment extends Augment implements ModPotionAugment, ModDama
 	
 	@Override
 	public boolean canUse(Player user, EntityPotionEffectEvent e) {
-		return !FlagManager.hasFlag(user, "aug_phantom") && e.getAction().equals(Action.ADDED);
+		boolean canUse = !FlagManager.hasFlag(user, "aug_phantom") && e.getAction().equals(Action.ADDED);
+		if (canUse) FlagManager.addFlag(user, user, "aug_phantom", 20);
+		return canUse;
 	}
 
 	@Override
 	public String getLine() {
 		return "§7[§8§o" + name + " Lv " + level + "§7]";
+	}
+	
+	@Override
+	public boolean isPermanent() {
+		return true;
 	}
 
 	public ItemStack getItem(Player user) {
