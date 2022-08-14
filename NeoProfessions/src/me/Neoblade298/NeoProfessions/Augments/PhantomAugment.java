@@ -14,6 +14,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.sucy.skill.api.util.FlagManager;
 
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
+
 public class PhantomAugment extends Augment implements ModPotionAugment, ModDamageDealtAugment {
 	
 	public PhantomAugment() {
@@ -62,7 +64,7 @@ public class PhantomAugment extends Augment implements ModPotionAugment, ModDama
 	
 	@Override
 	public boolean canUse(Player user, EntityPotionEffectEvent e) {
-		boolean canUse = !FlagManager.hasFlag(user, "aug_phantom") && e.getAction().equals(Action.ADDED);
+		boolean canUse = !FlagManager.hasFlag(user, "aug_phantom") && e.getAction().equals(Action.ADDED) && AugmentManager.getPlayerAugments(user.getPlayer()).getCount(this) >= 4;
 		if (canUse) FlagManager.addFlag(user, user, "aug_phantom", 20);
 		return canUse;
 	}
