@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import me.Neoblade298.NeoConsumables.objects.DurationEffects;
+import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 
 
@@ -29,6 +31,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 		if (sender.hasPermission("mycommand.staff")) {
 			if (args.length == 0) {
 				sender.sendMessage("§7Permission: mycommand.staff");
+				sender.sendMessage("§c/cons check {player}");
 				sender.sendMessage("§c/cons get [food] {amount}");
 				sender.sendMessage("§c/cons give [player] boss");
 				sender.sendMessage("§c/cons debug");
@@ -79,6 +82,24 @@ public class Commands implements CommandExecutor, TabCompleter {
 				Consumables.debug = !Consumables.debug;
 				sender.sendMessage("§4[§c§lMLMC§4] §7Set debug to " + Consumables.debug);
 				return true;
+			}
+			return true;
+		}
+		if (args[0].equalsIgnoreCase("check")) {
+			Player p = (Player) sender;
+			if (args.length > 1) {
+				p = Bukkit.getPlayer(args[1]);
+			}
+			
+			DurationEffects effs = ConsumableManager.effects.get(p.getUniqueId());
+			if (effs != null) {
+				FoodConsumable cons = effs.getCons();
+				int secondsElapsed = (int) (System.currentTimeMillis() - effs.getStartTime()) / 1000;
+				int secondsLeft = cons.getTotalDuration() - secondsElapsed;
+				sender.sendMessage("§4[§c§lMLMC§4] §7Active consumable: §e" + effs.getCons().getDisplay() + " §7for §e" + secondsLeft + " §7more seconds.");
+			}
+			else {
+				sender.sendMessage("§4[§c§lMLMC§4] §cNo consumable currently active");
 			}
 			return true;
 		}
