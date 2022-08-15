@@ -51,7 +51,6 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		PlayerProfiles pp = new PlayerProfiles();
 		playerProfiles.put(uuid, pp);
 		try {
-			
 			ResultSet rs = stmt.executeQuery("select * from skillprofiles_profile where uuid = '" + uuid + "';");
 			while(rs.next()) {
 				int accId = rs.getInt("accNum");
@@ -62,6 +61,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 					ap = pp.profiles.get(accId);
 				} else {
 					ap = new AccountProfiles();
+					pp.profiles.put(accId, ap);
 				}
 				
 				ap.profiles.put(name, new Profile());
@@ -377,8 +377,12 @@ class Profile {
 		skillBinds = new HashMap<String, Material>();
 		for(PlayerSkill ps : skills) {
 			String name = ps.getData().getName();
+			
 			skillLevels.put(name, ps.getLevel());
-			skillBinds.put(name, ps.getBind());
+			
+			if(ps.getBind() != null) {
+				skillBinds.put(name, ps.getBind());
+			}
 		}
 		
 		/* skill bar */
@@ -414,6 +418,7 @@ class Profile {
 				for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
 					data.upgradeSkill(s, true);
 				}
+				
 				ps.setBind(skillBinds.get(s.getName()));
 			}
 		}
