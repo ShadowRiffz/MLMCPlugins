@@ -148,6 +148,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	@Override
 	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
+		if(!playerProfiles.containsKey(uuid)) return;
 		
 		try {
 			Statement baseStmt = NeoCore.getStatement();
