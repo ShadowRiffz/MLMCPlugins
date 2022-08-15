@@ -311,7 +311,7 @@ class AccountProfiles {
 	boolean save(PlayerData data, String profileName) {
 		if(profiles.size() >= 3 &&
 		   !profiles.containsKey(profileName) &&
-		   !data.getPlayer().hasPermission("fopzlskillprofiles.tbdpermission")) {
+		   !data.getPlayer().hasPermission("fopzlskillprofiles.poger")) {
 			data.getPlayer().sendMessage("§4[§c§lMLMC§4] §cError: §7Can't save more than 3 profiles");
 			return false;
 		}
@@ -377,6 +377,9 @@ class Profile {
 		skillBinds = new HashMap<String, Material>();
 		for(PlayerSkill ps : skills) {
 			String name = ps.getData().getName();
+			if(name.startsWith("Hidden")) {
+				continue;
+			}
 			
 			skillLevels.put(name, ps.getLevel());
 			
@@ -407,6 +410,8 @@ class Profile {
 				data.downgradeSkill(ps.getData());
 			}
 		}
+		
+		data.clearAllBinds();
 		
 		// need to level essence first
 		PlayerSkill essence = null;
