@@ -36,7 +36,6 @@ public class ConsumableManager implements Listener, IOComponent {
 
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
-		loading.add
 		UUID uuid = p.getUniqueId();
 		DurationEffects eff = ConsumableManager.effects.get(uuid);
 		if (eff != null) {
