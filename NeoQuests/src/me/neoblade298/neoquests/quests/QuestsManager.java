@@ -291,7 +291,7 @@ public class QuestsManager implements IOComponent, Manager {
 			return;
 		}
 		Quester quester = getQuester(p);
-		if (quester.getActiveQuestsHashMap().containsKey(q.getKey().toUpperCase())) {
+		if (quester.hasActiveQuest(q.getKey())) {
 			Bukkit.getLogger().warning("[NeoQuests] Failed to start quest " + quest + " for player " + p.getName() + ", quest already active.");
 			return;
 		}

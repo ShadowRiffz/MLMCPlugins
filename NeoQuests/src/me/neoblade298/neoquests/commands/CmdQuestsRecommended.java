@@ -90,7 +90,7 @@ public class CmdQuestsRecommended implements Subcommand {
 			if (min != -1 && min > level) continue;
 			if (max != -1 && max < level) continue;
 			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
-			if (q.getActiveQuestsHashMap().containsKey(rec.getQuest().getKey().toUpperCase())) continue;
+			if (q.hasActiveQuest(rec.getQuest().getKey())) continue;
 
 			pages.add(rec);
 		}

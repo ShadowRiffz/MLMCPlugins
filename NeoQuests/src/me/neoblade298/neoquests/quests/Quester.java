@@ -216,6 +216,10 @@ public class Quester {
 		return activeQuests;
 	}
 	
+	public boolean hasActiveQuest(String key) {
+		return activeQuests.containsKey(key.toUpperCase());
+	}
+	
 	public Location getLocation() {
 		return loc;
 	}
