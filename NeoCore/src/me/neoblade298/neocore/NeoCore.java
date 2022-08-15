@@ -116,7 +116,15 @@ public class NeoCore extends JavaPlugin implements Listener {
 						Statement delete = getStatement();
 						for (IOComponent component : IOListener.getComponents()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								component.autosavePlayer(p, insert, delete);
+								try {
+									component.autosavePlayer(p, insert, delete);
+								}
+								catch (Exception e) {
+									Bukkit.getLogger().warning("[NeoCore] Failed to autosave player " + p.getName() + " for component " + component.getKey()
+											+ ", aborting autosave for remaining players for this component.");
+									e.printStackTrace();
+									break;
+								}
 							}
 						}
 						try {
