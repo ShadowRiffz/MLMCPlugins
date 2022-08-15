@@ -183,6 +183,9 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "giveaccounttag":
 			mechanic = new GiveAccountTagMechanic(cfg);
 			break;
+		case "giveattribute":
+			mechanic = new GiveAttributeMechanic(cfg);
+			break;
 		case "removeflag":
 			mechanic = new RemoveFlagMechanic(cfg);
 			break;
