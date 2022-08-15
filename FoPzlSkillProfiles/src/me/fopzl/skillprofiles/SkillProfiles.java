@@ -403,40 +403,42 @@ class Profile {
 		}
 		
 		/* skills */
+		data.clearAllBinds();
+		
 		Collection<PlayerSkill> skills = data.getSkills();
+		PlayerSkill essence = null;
+		
 		for(PlayerSkill ps : skills) {
-			int level = ps.getLevel();
-			for(int i = 0; i < level; i++) {
-				data.downgradeSkill(ps.getData());
+			if(ps.getData().getName().contains("'s Essence")){
+				essence = ps;
+			} else {
+				int level = ps.getLevel();
+				for(int i = 0; i < level; i++) {
+					data.downgradeSkill(ps.getData());
+				}
 			}
 		}
 		
-		data.clearAllBinds();
-		
-		// need to level essence first
-		PlayerSkill essence = null;
+		// need to de-level essence last, and re-level first
+		int eLevel = essence.getLevel();
+		Skill eData = essence.getData();
+		for(int i = 0; i < eLevel; i++) {
+			data.downgradeSkill(eData);
+		}
+		for(int i = 0; i < skillLevels.getOrDefault(eData.getName(), 0); i++) {
+			data.upgradeSkill(eData, true);
+		}
+		essence.setBind(skillBinds.get(eData.getName()));
+
+		// now the rest		
 		for(PlayerSkill ps : skills) {
 			Skill s = ps.getData();
-			if(s.getName().contains("'s Essence")) {
-				essence = ps;
-				
+			if(!s.getName().contains("'s Essence")) {
 				for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
 					data.upgradeSkill(s, true);
 				}
-				
 				ps.setBind(skillBinds.get(s.getName()));
 			}
-		}
-		if(essence != null) {
-			skills.remove(essence);
-		}
-		
-		for(PlayerSkill ps : skills) {
-			Skill s = ps.getData();
-			for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
-				data.upgradeSkill(s, true);
-			}
-			ps.setBind(skillBinds.get(s.getName()));
 		}
 		
 		/* skill bar */
