@@ -16,7 +16,7 @@ public class RunCommandObjective extends Objective {
 
 	public RunCommandObjective(LineConfig cfg) {
 		super(ObjectiveEvent.COMMAND, cfg, true);
-		command = cfg.getString("command", null);
+		command = cfg.getLine();
 	}
 
 	@Override

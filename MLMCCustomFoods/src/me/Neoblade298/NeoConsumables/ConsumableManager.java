@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -25,6 +26,7 @@ import me.neoblade298.neocore.listeners.IOListener;
 public class ConsumableManager implements Listener, IOComponent {
 	public static HashMap<UUID, PlayerCooldowns> cds = new HashMap<UUID, PlayerCooldowns>();
 	public static HashMap<UUID, DurationEffects> effects = new HashMap<UUID, DurationEffects>();
+	private static HashSet<UUID> loading = new HashSet<UUID>();
 	private static Consumables main;
 	
 	public ConsumableManager(Consumables main) {
@@ -72,6 +74,7 @@ public class ConsumableManager implements Listener, IOComponent {
 
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
+		loading.add(p.getUniqueId());
 		UUID uuid = p.getUniqueId();
 		ConsumableManager.effects.remove(uuid);
 		if (Consumables.debug) {
@@ -87,17 +90,20 @@ public class ConsumableManager implements Listener, IOComponent {
 				if (cons.isDuration()) {
 					DurationEffects effs = new DurationEffects(main, cons, rs.getLong(3), uuid, new ArrayList<BukkitTask>());
 					if (effs.isRelevant()) {
-						// Don't start the effects until the player is actually loaded
 						if (Consumables.debug) {
 							Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Effect was placed in database");
 						}
 						ConsumableManager.effects.put(uuid, effs);
+						startEffects(uuid);
 					}
 				}
 			}
 		} catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Consumables failed to load effects for " + uuid);
 			e.printStackTrace();
+		}
+		finally {
+			loading.remove(p.getUniqueId());
 		}
 	}
 	
@@ -110,17 +116,24 @@ public class ConsumableManager implements Listener, IOComponent {
 	
 	public void startEffects(UUID uuid) {
 		DurationEffects effs = ConsumableManager.effects.get(uuid);
-		if (Consumables.debug) {
-			Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Starting effects for UUID " + uuid);
-		}
 		if (effs != null) {
+			if (Consumables.debug) {
+				Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] Starting effects for UUID " + uuid);
+			}
 			effs.startEffects();
+		}
+		else {
+			if (Consumables.debug) {
+				Bukkit.getLogger().log(Level.INFO, "[NeoConsumables] No effects for UUID " + uuid);
+			}
 		}
 	}
 	
 	@EventHandler
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {
-		startEffects(e.getPlayer().getUniqueId());
+		if (!loading.contains(e.getPlayer().getUniqueId())) {
+			startEffects(e.getPlayer().getUniqueId());
+		}
 	}
 	
 	@EventHandler

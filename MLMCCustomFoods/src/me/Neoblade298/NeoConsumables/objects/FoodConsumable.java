@@ -34,6 +34,7 @@ import me.Neoblade298.NeoConsumables.SkullCreator;
 import me.Neoblade298.NeoConsumables.runnables.AttrRemoveRunnable;
 import me.Neoblade298.NeoConsumables.runnables.HealthRunnable;
 import me.Neoblade298.NeoConsumables.runnables.ManaRunnable;
+import me.neoblade298.neocore.util.Util;
 
 public class FoodConsumable extends Consumable implements GeneratableConsumable {
 	private static int defaultCooldown = 45000;
@@ -87,12 +88,16 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 			p.sendMessage(message);
 			return false;
 		}
+		
+		if (SkillAPI.getPlayerData(p) == null || SkillAPI.getPlayerData(p).getMainClass() == null) {
+			Util.msg(p, "&cYou must have a class to use this consumable!");
+			return false;
+		}
 
 		// Check cds
 		UUID uuid = p.getUniqueId();
 		if (!ConsumableManager.cds.containsKey(uuid)) {
 			ConsumableManager.cds.put(uuid, new PlayerCooldowns());
-			return true;
 		}
 		
 		if (!isDuration) {

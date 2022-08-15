@@ -148,10 +148,10 @@ public class Quester {
 		}
 		ComponentBuilder rec = new ComponentBuilder("§e<Click to show other recommended quests!>")
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended"));
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended " + this.p.getName()));
 		ComponentBuilder side = new ComponentBuilder("§e<Click to show challenging sidequests!>")
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges"));
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
 		s.spigot().sendMessage(rec.create());
 		s.spigot().sendMessage(side.create());
 	}
