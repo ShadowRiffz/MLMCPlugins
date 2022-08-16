@@ -53,6 +53,7 @@ import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.spawning.spawners.MythicSpawner;
 import me.neoblade298.neobossinstances.stats.PlayerStat;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.player.PlayerFields;
 
 public class BossInstances extends JavaPlugin implements Listener {
@@ -63,7 +64,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	String returnCommand = null;
 	String sendCommand = null;
 	int cmdDelay = 0;
-	boolean isInstance = NeoCore.isInstance();
+	boolean isInstance = NeoCore.getInstanceType() == InstanceType.OTHER;
 	Plugin main = this;
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
