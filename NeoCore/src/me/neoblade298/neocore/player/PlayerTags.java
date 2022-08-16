@@ -99,9 +99,9 @@ public class PlayerTags {
 					}
 				}
 			}
-			values.remove(uuid);
-			changedValues.remove(uuid);
 		}
+		values.remove(uuid);
+		changedValues.remove(uuid);
 	}
 	
 	public void load(Statement stmt, UUID uuid) {

@@ -92,7 +92,7 @@ public class PlayerFields {
 		return false;
 	}
 	
-	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
+	// Only happens on logout atm
 	public void save(Statement insert, Statement delete, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
@@ -151,9 +151,9 @@ public class PlayerFields {
 					}
 				}
 			}
-			values.remove(uuid);
-			changedValues.remove(uuid);
 		}
+		values.remove(uuid);
+		changedValues.remove(uuid);
 	}
 	
 	public void load(Statement stmt, UUID uuid) {
