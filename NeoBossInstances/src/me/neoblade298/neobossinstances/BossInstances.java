@@ -63,7 +63,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	String returnCommand = null;
 	String sendCommand = null;
 	int cmdDelay = 0;
-	boolean isInstance = false;
+	boolean isInstance = NeoCore.isInstance();
 	Plugin main = this;
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
@@ -106,30 +106,34 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("boss").setExecutor(new Commands(this));
-
+		settings = NeoCore.createPlayerFields("BossMultipliers", this, false);
 		loadConfig();
+
+		// If not an instance, set up player cooldowns
+		if (!isInstance) {
+			try {
+				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
+						BossInstances.sqlPass);
+				Statement stmt = con.createStatement();
+				ResultSet rs;
+
+				rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds");
+				while (rs.next()) {
+					ConcurrentHashMap<UUID, Long> cds = cooldowns.get(rs.getString(2));
+					cds.put(UUID.fromString(rs.getString(1)), rs.getLong(3));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 
 		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
 		inst = this;
 	}
 
 	public void loadConfig() {
-		// Clear existing databases
-		cooldowns.clear();
 		bossInfo.clear();
-		activeBosses.clear();
-		activeFights.clear();
-		playerStats.clear();
-		bossMultiplier.clear();
-
-		settings = NeoCore.createPlayerFields("BossMultipliers", this, false);
-
-		// See if this is an instance
-		File instanceFile = new File(getDataFolder(), "instance.yml");
-		isInstance = instanceFile.exists();
-		if (isInstance) {
-			color = YamlConfiguration.loadConfiguration(instanceFile).getString("name", "").replaceAll("&", "§");
-		}
 
 		// Save config if doesn't exist
 		file = new File(getDataFolder(), "config.yml");
@@ -160,6 +164,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 			String placeholder = bossSection.getString("Placeholder");
 			ArrayList<String> mythicmobs = (ArrayList<String>) bossSection.getStringList("Mythicmobs");
 			settings.initializeField(boss, 1);
+			cooldowns.put(boss, new ConcurrentHashMap<UUID, Long>());
 
 			if (type.equals(BossType.BOSS)) {
 				bossInfo.put(boss,
@@ -190,27 +195,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 					info.setSpawners(spawners);
 				}
 				bossInfo.put(boss, info);
-			}
-		}
-
-		// If not an instance, set up player cooldowns
-		if (!isInstance) {
-			try {
-				Connection con = DriverManager.getConnection(BossInstances.connection, BossInstances.sqlUser,
-						BossInstances.sqlPass);
-				Statement stmt = con.createStatement();
-				ResultSet rs;
-
-				for (String boss : bosses.getKeys(false)) {
-					ConcurrentHashMap<UUID, Long> cds = new ConcurrentHashMap<UUID, Long>();
-					cooldowns.put(boss, cds);
-					rs = stmt.executeQuery("SELECT * FROM neobossinstances_cds WHERE boss = '" + boss + "';");
-					while (rs.next()) {
-						cds.put(UUID.fromString(rs.getString(1)), rs.getLong(3));
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
