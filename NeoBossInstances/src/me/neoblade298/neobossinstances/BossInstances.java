@@ -64,7 +64,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 	String returnCommand = null;
 	String sendCommand = null;
 	int cmdDelay = 0;
-	boolean isInstance = NeoCore.getInstanceType() == InstanceType.OTHER;
+	boolean isInstance = false;
 	Plugin main = this;
 	Location mainSpawn = null;
 	Location instanceSpawn = null;
@@ -108,6 +108,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("boss").setExecutor(new Commands(this));
 		settings = NeoCore.createPlayerFields("BossMultipliers", this, false);
+		isInstance = NeoCore.getInstanceType() == InstanceType.OTHER;
 		loadConfig();
 
 		// If not an instance, set up player cooldowns
@@ -129,7 +130,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		}
 
 
-		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled");
+		Bukkit.getServer().getLogger().info("[NeoBossInstances] NeoBossInstances Enabled, loaded in form: " + NeoCore.getInstanceType());
 		inst = this;
 	}
 
