@@ -1,6 +1,9 @@
 package me.Neoblade298.NeoConsumables.objects;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,17 +15,18 @@ import me.Neoblade298.NeoConsumables.Consumables;
 import me.neoblade298.neocore.util.Util;
 
 public class TokenConsumable extends Consumable implements GeneratableConsumable {
-	ArrayList<String> commands, negatePerms, lore;
+	ArrayList<String> commands, negatePerms, baselore;
 	String display;
 	Material material;
 	long millisToExpire;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd hh:mm a z");
 	
 	public TokenConsumable(Consumables main, String key) {
 		super(main, key);
 		
 		commands = new ArrayList<String>();
 		negatePerms = new ArrayList<String>();
-		lore = new ArrayList<String>();
+		baselore = new ArrayList<String>();
 		material = Material.GOLD_INGOT;
 	}
 	
@@ -53,7 +57,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	
 	public void setLore(ArrayList<String> lore) {
 		for (String line : lore) {
-			this.lore.add(correctColors(line));
+			this.baselore.add(correctColors(line));
 		}
 	}
 
@@ -96,14 +100,19 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	public ItemStack getItem(int amount) {
 		ItemStack item = new ItemStack(material);
 		item.setAmount(amount);
+		long timestamp = System.currentTimeMillis();
 		
 		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>(baselore);
+		Calendar inst = Calendar.getInstance();
+		inst.setTimeInMillis(timestamp + 86400000);
+		lore.add("§cExpires " + sdf.format(inst.getTime()));
 		meta.setLore(lore);
 		meta.setDisplayName(display);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("consumable", key);
-		nbti.setLong("timestamp", System.currentTimeMillis());
+		nbti.setLong("timestamp", timestamp);
 		return nbti.getItem();
 	}
 	

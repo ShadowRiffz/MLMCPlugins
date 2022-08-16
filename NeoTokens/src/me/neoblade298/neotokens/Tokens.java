@@ -38,7 +38,7 @@ public class Tokens extends JavaPlugin implements org.bukkit.event.Listener {
 		item.setAmount(1);
 
 		if (item.getType().equals(Material.GOLD_INGOT) && item.hasItemMeta() && 
-				item.getItemMeta().hasLore() && item.getItemMeta().getLore().get(1).contains("Expires")) {
+				item.getItemMeta().hasLore() && && item.getItemMeta().getLore().size() >= 1 && item.getItemMeta().getLore().get(1).contains("Expires")) {
 
 			NBTItem nbti = new NBTItem(item);
 			if (!nbti.hasKey("player")) {
