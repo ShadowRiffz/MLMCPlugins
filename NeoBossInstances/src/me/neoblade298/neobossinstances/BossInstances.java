@@ -820,6 +820,9 @@ public class BossInstances extends JavaPlugin implements Listener {
 				if (!fightingBoss.containsKey(p.getUniqueId())) {
 					return;
 				}
+				if (e.getFinalDamage() > 9000000) { // Ignore instakills
+					return;
+				}
 				PlayerStat stats = playerStats.get(p.getName());
 				stats.addDamageDealt(e.getFinalDamage());
 			}
