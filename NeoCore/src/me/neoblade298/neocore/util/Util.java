@@ -16,16 +16,55 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Util {
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
-	
+	private final static int CENTER_PX = 154;
+
 	public static void msg(CommandSender s, String msg) {
 		msg(s, msg, true);
 	}
-	
+
 	public static void msg(CommandSender s, String msg, boolean hasPrefix) {
 		if (hasPrefix) {
 			msg = "&4[&c&lMLMC&4] &7" + msg;
 		}
 		s.sendMessage(translateColors(msg));
+	}
+
+	public static void msgCentered(CommandSender s, String msg) {
+		s.sendMessage(center(msg));
+	}
+	
+	public static String center(String msg) {
+		msg = translateColors(msg);
+
+		int messagePxSize = 0;
+		boolean previousCode = false;
+		boolean isBold = false;
+
+		for (char c : msg.toCharArray()) {
+			if (c == '§') {
+				previousCode = true;
+			}
+			else if (previousCode) {
+				previousCode = false;
+				isBold = (c == 'l' || c == 'L');
+			}
+			else {
+				FontInfo fi = FontInfo.getFontInfo(c);
+				messagePxSize += isBold ? fi.getBoldLength() : fi.getLength();
+				messagePxSize++;
+			}
+		}
+
+		int halvedMessageSize = messagePxSize / 2;
+		int toCompensate = CENTER_PX - halvedMessageSize;
+		int spaceLength = FontInfo.SPACE.getLength() + 1;
+		int compensated = 0;
+		StringBuilder sb = new StringBuilder();
+		while (compensated < toCompensate) {
+			sb.append(" ");
+			compensated += spaceLength;
+		}
+		return sb.toString() + msg;
 	}
 
 	public static String translateColors(String textToTranslate) {
@@ -39,7 +78,7 @@ public class Util {
 
 		return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
 	}
-	
+
 	public static <T extends Comparable<T>> SortedMultiset<T> getTop(Collection<T> list, int num, boolean descending) {
 		TreeMultiset<T> sorted = TreeMultiset.create();
 		for (T item : list) {
@@ -55,7 +94,7 @@ public class Util {
 		}
 		return descending ? sorted.descendingMultiset() : sorted;
 	}
-	
+
 	public static Location stringToLoc(String loc) {
 		String args[] = loc.split(" ");
 		World w = Bukkit.getWorld(args[0]);
@@ -64,7 +103,7 @@ public class Util {
 		double z = Double.parseDouble(args[3]);
 		return new Location(w, x, y, z);
 	}
-	
+
 	public static String locToString(Location loc) {
 		return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ();
 	}
