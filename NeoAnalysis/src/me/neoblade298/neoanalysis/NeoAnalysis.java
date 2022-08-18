@@ -100,7 +100,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 					break;
 				}
 			}
-			if (iteratedAll) q += "...";
+			if (!iteratedAll) q += "...";
 		}
 		final String quest = q;
 		
