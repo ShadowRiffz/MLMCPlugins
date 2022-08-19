@@ -2,6 +2,7 @@ package me.neoblade298.neocore.commands;
 
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -61,7 +62,12 @@ public class CmdList implements Subcommand {
 			showPage(s, 1);
 		}
 		else {
-			showPage(s, Integer.parseInt(args[0]));
+			if (StringUtils.isNumeric(args[0])) {
+				Util.msg(s, "&cInvalid subcommand!");
+			}
+			else {
+				showPage(s, Integer.parseInt(args[0]));
+			}
 		}
 	}
 	
