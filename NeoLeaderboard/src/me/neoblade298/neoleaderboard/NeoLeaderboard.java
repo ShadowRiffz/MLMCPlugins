@@ -46,11 +46,11 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr.register(new CmdNLBase());
 		mngr.registerCommandList("help");
 
-		mngr = new CommandManager("nc", this);
-		mngr.register(new CmdNCBase());
-		mngr.register(new CmdNCTop());
-		mngr.register(new CmdNCNation());
-		mngr.register(new CmdNCTown());
+		mngr = new CommandManager("nlc", this);
+		mngr.register(new CmdNLCBase());
+		mngr.register(new CmdNLCTop());
+		mngr.register(new CmdNLCNation());
+		mngr.register(new CmdNLCTown());
 		mngr.registerCommandList("help");
 	}
 	

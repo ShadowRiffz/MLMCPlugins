@@ -121,10 +121,10 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 	}
 
 	public void use(final Player p, ItemStack item) {
-		// First get rid of any existing effects
+		// First get rid of any existing effects if it's a DURATION food
 		UUID uuid = p.getUniqueId();
 		ArrayList<BukkitTask> tasks = new ArrayList<BukkitTask>();
-		if (ConsumableManager.effects.containsKey(uuid)) {
+		if (ConsumableManager.effects.containsKey(uuid) && this.isDuration) {
 			ConsumableManager.effects.get(uuid).endEffects(true);
 		}
 		

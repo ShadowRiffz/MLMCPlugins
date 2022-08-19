@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +19,8 @@ public class InvCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (args.length == 0 && sender instanceof Player) {
+			Player p = (Player) sender;
+			if (p.getGameMode() == GameMode.CREATIVE) return true;
 			new StorageSelectInventory((Player) sender);
 			return true;
 		}

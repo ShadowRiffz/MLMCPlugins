@@ -17,7 +17,6 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoleaderboard.NeoLeaderboard;
-import me.neoblade298.neoleaderboard.points.NationEntry;
 import me.neoblade298.neoleaderboard.points.PlayerEntry;
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
 import me.neoblade298.neoleaderboard.points.PointsManager;
@@ -92,20 +91,17 @@ public class CmdNLBase implements Subcommand {
 					Util.msg(s, "&cThis player isn't in a nation!");
 					return;
 				}
-				NationEntry ne = PointsManager.getNationEntry(r.getNationOrNull().getUUID());
 				HashMap<PlayerPointType, Double> cpoints = pe.getContributedPoints();
 				HashMap<PlayerPointType, Double> totalPoints = pe.getTotalPoints();
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Player Contributions: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				for (Entry<PlayerPointType, Double> e : cpoints.entrySet()) {
-					double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
-					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(effective) + 
-							" §7§o(" + PointsManager.formatPoints(e.getValue()) + ")", FormatRetention.NONE);
+					// double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
+					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(e.getValue()), FormatRetention.NONE);
 				}
 				builder.append("\n§6§l>§8§m--------§c§l» §6Player Totals: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				for (Entry<PlayerPointType, Double> e : totalPoints.entrySet()) {
-					double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
-					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(effective) + 
-							" §7§o(" + PointsManager.formatPoints(e.getValue()) + ")", FormatRetention.NONE);
+					// double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
+					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(e.getValue()), FormatRetention.NONE);
 				}
 				s.spigot().sendMessage(builder.create());
 			}

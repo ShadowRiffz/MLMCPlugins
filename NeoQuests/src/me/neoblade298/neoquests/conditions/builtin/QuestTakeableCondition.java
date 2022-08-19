@@ -42,7 +42,7 @@ public class QuestTakeableCondition extends Condition {
 		Quester quester = QuestsManager.getQuester(p);
 		CompletedQuest cq = quester.getCompletedQuest(questname);
 
-		if (quester.getActiveQuestsHashMap().containsKey(questname)) {
+		if (quester.hasActiveQuest(questname)) {
 			return false;
 		}
 		if (cq == null) {
@@ -60,7 +60,7 @@ public class QuestTakeableCondition extends Condition {
 		Quester quester = QuestsManager.getQuester(p);
 		CompletedQuest cq = quester.getCompletedQuest(questname);
 
-		if (quester.getActiveQuestsHashMap().containsKey(questname)) {
+		if (quester.hasActiveQuest(questname)) {
 			return "You're already on that quest! Type /q!";
 		}
 		if (cq == null) {

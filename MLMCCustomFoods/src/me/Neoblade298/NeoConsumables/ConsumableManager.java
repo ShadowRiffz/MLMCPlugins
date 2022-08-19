@@ -17,6 +17,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
+import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
+
 import me.Neoblade298.NeoConsumables.objects.DurationEffects;
 import me.Neoblade298.NeoConsumables.objects.FoodConsumable;
 import me.Neoblade298.NeoConsumables.objects.PlayerCooldowns;
@@ -55,6 +57,9 @@ public class ConsumableManager implements Listener, IOComponent {
 				Bukkit.getLogger().log(Level.WARNING, "Consumables failed to save effects for " + uuid);
 				e.printStackTrace();
 			}
+			finally {
+				effects.remove(uuid);
+			}
 		}
 	}
 	
@@ -71,10 +76,16 @@ public class ConsumableManager implements Listener, IOComponent {
 			ex.printStackTrace();
 		}
 	}
+	
+	@EventHandler
+	public void onLoadSynchronous(PlayerLoadCompleteEvent e) {
+		// This needs to exist because loadplayer is async and
+		// attributeload event is not async so it happens before loadplayer
+		loading.add(e.getPlayer().getUniqueId());
+	}
 
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		loading.add(p.getUniqueId());
 		UUID uuid = p.getUniqueId();
 		ConsumableManager.effects.remove(uuid);
 		if (Consumables.debug) {

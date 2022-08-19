@@ -47,7 +47,7 @@ public class PhantomAugment extends Augment implements ModPotionAugment, ModDama
 		}
 		
 		if (pe != null) {
-			FlagManager.addFlag(user, user, "aug_phantom", 20);
+			FlagManager.addFlag(user, user, "aug_phantomPotion", 20);
 			user.addPotionEffect(pe);
 		}
 	}
@@ -59,14 +59,15 @@ public class PhantomAugment extends Augment implements ModPotionAugment, ModDama
 	
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		return user.hasPotionEffect(PotionEffectType.INVISIBILITY) || user.hasPotionEffect(PotionEffectType.SPEED);
+		boolean canUse = !FlagManager.hasFlag(user, "aug_phantom") && AugmentManager.getPlayerAugments(user.getPlayer()).getCount(this) >= 4 &&
+				(user.hasPotionEffect(PotionEffectType.INVISIBILITY) || user.hasPotionEffect(PotionEffectType.SPEED));
+		if (canUse) FlagManager.addFlag(user, user, "aug_phantom", 20);
+		return canUse;
 	}
 	
 	@Override
 	public boolean canUse(Player user, EntityPotionEffectEvent e) {
-		boolean canUse = !FlagManager.hasFlag(user, "aug_phantom") && e.getAction().equals(Action.ADDED) && AugmentManager.getPlayerAugments(user.getPlayer()).getCount(this) >= 4;
-		if (canUse) FlagManager.addFlag(user, user, "aug_phantom", 20);
-		return canUse;
+		return !FlagManager.hasFlag(user, "aug_phantomPotion") && e.getAction().equals(Action.ADDED);
 	}
 
 	@Override
