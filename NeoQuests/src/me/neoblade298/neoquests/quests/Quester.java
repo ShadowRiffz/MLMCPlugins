@@ -261,16 +261,21 @@ public class Quester {
 	}
 	
 	public void reloadQuests() {
-		for (QuestInstance qi : activeQuests.values()) {
-			QuestInstance reloadedqi = new QuestInstance(this, QuestsManager.getQuest(qi.getQuest().getKey()), qi.getStage());
-			addActiveQuest(reloadedqi);
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-				reloadedqi.setupInstances(false);
-				reloadedqi.getObjectiveSetInstance(osi.getKey()).setObjectiveCounts(osi.getCounts());
+		try {
+			for (QuestInstance qi : activeQuests.values()) {
+				QuestInstance reloadedqi = new QuestInstance(this, QuestsManager.getQuest(qi.getQuest().getKey()), qi.getStage());
+				addActiveQuest(reloadedqi);
+				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+					reloadedqi.setupInstances(false);
+					reloadedqi.getObjectiveSetInstance(osi.getKey()).setObjectiveCounts(osi.getCounts());
+				}
+				qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
 			}
-			qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
+			QuestsManager.initializeOrGetQuester(p).startListening();
 		}
-		QuestsManager.initializeOrGetQuester(p).startListening();
+		catch (Exception e) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to reload quester " + p.getName());
+		}
 	}
 	
 	public void setStage(String key, int stage) {
