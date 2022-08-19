@@ -54,6 +54,7 @@ public class Consumables extends JavaPlugin implements Listener {
 	private static HashSet<String> generatableConsumables = new HashSet<String>();
 	private static HashMap<String, Consumable> consumables = new HashMap<String, Consumable>();
 	private static ArrayList<String> defaultWorlds = new ArrayList<String>();
+	private static Consumables inst;
 	
 	public static boolean isInstance = false;
 	public PlayerTags settings;
@@ -81,6 +82,10 @@ public class Consumables extends JavaPlugin implements Listener {
 		getCommand("cons").setExecutor(new Commands(this, generatableConsumables));
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getPluginManager().registerEvents(new ConsumableManager(this), this);
+	}
+	
+	public static Consumables inst() {
+		return inst;
 	}
 	
 	public void onDisable() {
@@ -243,6 +248,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setMaterial(Material.valueOf(cfg.getString("material", "GOLD_INGOT").toUpperCase()));
 		cons.setNegatedPerms((ArrayList<String>) cfg.getStringList("negate-perms"));
 		cons.setHoursToExpire(cfg.getInt("hours-to-expire", -1));
+		generatableConsumables.add(key);
 		return cons;
 	}
 
