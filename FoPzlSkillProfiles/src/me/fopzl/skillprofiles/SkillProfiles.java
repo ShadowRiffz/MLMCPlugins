@@ -22,6 +22,8 @@ import com.sucy.skill.api.skills.Skill;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neoresearch.Research;
+import me.neoblade298.neoresearch.StoredAttributes;
 
 public class SkillProfiles extends JavaPlugin implements IOComponent {
 	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>();
@@ -91,6 +93,24 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 			playerProfiles.remove(uuid);
 			return;
 		}
+		
+		/* research attributes */
+		try {
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
+			while(rs.next()) {
+				int accId = rs.getInt("prof_accNum");
+				String profName = rs.getString("prof_name");
+				
+				String rattrName = rs.getString("name");
+				int rattrValue = rs.getInt("value");
+				
+				pp.profiles.get(accId).profiles.get(profName).researchAttributes.put(rattrName, rattrValue);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			playerProfiles.remove(uuid);
+			return;
+		}		
 		
 		/* skill levels */
 		try {
@@ -167,6 +187,12 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 					delete.addBatch("delete from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> attrEntry : prof.attributes.entrySet()) {
 						insert.addBatch("insert into skillprofiles_attribute values (" + keyString + ", '" + attrEntry.getKey() + "', " + attrEntry.getValue() + ");");
+					}
+					
+					/* research attributes */
+					delete.addBatch("delete from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
+					for(Map.Entry<String, Integer> rattrEntry : prof.researchAttributes.entrySet()) {
+						insert.addBatch("insert into skillprofiles_researchattribute values (" + keyString + ", '" + rattrEntry.getKey() + "', " + rattrEntry.getValue() + ");");
 					}
 					
 					/* skill levels */
@@ -368,12 +394,14 @@ class AccountProfiles {
 
 class Profile {
 	HashMap<String, Integer> attributes;
-	HashMap<String, Integer> skillLevels;
+	HashMap<String, Integer> researchAttributes;
+	HashMap<String, Integer> skillLevels; // TODO: research skills?
 	HashMap<String, Material> skillBinds;
 	HashMap<Integer, String> skillBar;
 	
 	public Profile() {
 		attributes = new HashMap<String, Integer>();
+		researchAttributes = new HashMap<String, Integer>();
 		skillLevels = new HashMap<String, Integer>();
 		skillBinds = new HashMap<String, Material>();
 		skillBar = new HashMap<Integer, String>();
@@ -382,6 +410,10 @@ class Profile {
 	public Profile(PlayerData data) {
 		/* attributes */
 		attributes = data.getInvestedAttributes();
+		
+		/* research attributes */
+		researchAttributes = Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs();
+		researchAttributes.remove("unused");
 		
 		/* skills */
 		Collection<PlayerSkill> skills = data.getSkills();
@@ -413,6 +445,14 @@ class Profile {
 				data.upAttribute(kvp.getKey());
 			}
 		}
+		
+		/* research attributes */
+		StoredAttributes sAttr = Research.getPlayerAttributes(data.getPlayer());
+		sAttr.unvestAll();
+		for(Map.Entry<String, Integer> entry : researchAttributes.entrySet()) {
+			sAttr.addAttribute(entry.getKey(), entry.getValue());
+		}
+		sAttr.applyAttributes(data.getPlayer());
 		
 		/* skills */
 		data.clearAllBinds();
