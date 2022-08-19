@@ -8,7 +8,11 @@ commands:
    skillprofile:
       aliases: [sp]
       usage: "§cUsage: §7/<command> <save/load/list/delete> [name]"
+      permission: fopzlskillprofiles.*
 permissions:
+   fopzlskillprofiles.*:
+      description: User has permission to use skill profiles
+      default: true
    fopzlskillprofiles.poger:
       description: User has permission to set more than 3 profiles per class account
       default: false
