@@ -3,7 +3,6 @@ package me.Neoblade298.NeoConsumables.objects;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -117,9 +116,14 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>(baselore);
-		Calendar inst = Calendar.getInstance();
-		inst.setTimeInMillis(timestamp + 86400000);
-		lore.add("§cExpires " + sdf.format(inst.getTime()));
+		if (boundToPlayer) {
+			lore.add("§cBound to " + p.getName());
+		}
+		if (millisToExpire != -1) {
+			Calendar inst = Calendar.getInstance();
+			inst.setTimeInMillis(timestamp + 86400000);
+			lore.add("§cExpires " + sdf.format(inst.getTime()));
+		}
 		meta.setLore(lore);
 		meta.setDisplayName(display);
 		item.setItemMeta(meta);

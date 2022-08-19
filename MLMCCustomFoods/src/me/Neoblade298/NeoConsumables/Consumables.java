@@ -248,6 +248,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		cons.setMaterial(Material.valueOf(cfg.getString("material", "GOLD_INGOT").toUpperCase()));
 		cons.setNegatedPerms((ArrayList<String>) cfg.getStringList("negate-perms"));
 		cons.setHoursToExpire(cfg.getInt("hours-to-expire", -1));
+		cons.setBoundToPlayer(cfg.getBoolean("bound", false));
 		generatableConsumables.add(key);
 		return cons;
 	}
