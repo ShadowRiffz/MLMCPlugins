@@ -24,7 +24,9 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class SkillProfiles extends JavaPlugin implements IOComponent {
-	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>(); 
+	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>();
+	HashMap<UUID, Long> cooldowns = new HashMap<UUID, Long>(); // stores time last used
+	static final int COOLDOWN = 10000; // milliseconds
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Enabled");
@@ -234,10 +236,19 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
+		/* handle cooldowns */
+		Long lastUsed = cooldowns.get(uuid);
+		if(lastUsed != null && System.currentTimeMillis() - lastUsed <= COOLDOWN) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile load on cooldown");
+			return true;
+		}
+		
+		/* actual load */
 		if(!playerProfiles.containsKey(uuid) || !playerProfiles.get(uuid).load(data, accId, profileName)) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile §e" + profileName + " §7doesn't exist");
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §6Loaded profile: §e" + profileName);
+			cooldowns.put(uuid, System.currentTimeMillis());
 		}
 		return true;
 	}
