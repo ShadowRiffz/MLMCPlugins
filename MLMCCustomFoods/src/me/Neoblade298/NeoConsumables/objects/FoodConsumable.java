@@ -248,7 +248,7 @@ public class FoodConsumable extends Consumable implements GeneratableConsumable 
 	}
 	
 	@Override
-	public ItemStack getItem(int amount) {
+	public ItemStack getItem(Player p, int amount) {
 		ItemStack item;
 		if (base64 != null) {
 			item = SkullCreator.itemFromBase64(base64);
