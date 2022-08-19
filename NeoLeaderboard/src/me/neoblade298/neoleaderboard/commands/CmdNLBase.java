@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -62,7 +63,7 @@ public class CmdNLBase implements Subcommand {
 					return;
 				}
 				
-				Player p;
+				OfflinePlayer p;
 				if (args.length == 0 && s instanceof Player) {
 					p = (Player) s;
 				}
@@ -76,7 +77,8 @@ public class CmdNLBase implements Subcommand {
 				}
 				else {
 					try {
-						pe = PointsManager.loadPlayerEntry(Bukkit.getOfflinePlayer(args[0]).getUniqueId(), NeoCore.getStatement());
+						p = Bukkit.getOfflinePlayer(args[0]);
+						pe = PointsManager.loadPlayerEntry(p.getUniqueId(), NeoCore.getStatement());
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}

@@ -12,6 +12,10 @@ commands:
    nl:
       description: Base command for nation leaderboard
       usage: /nl
+   nladmin:
+      description: Admin command for nation leaderboard
+      usage: /nla
+      aliases: [nla]
    nlc:
       description: Base command for nation leaderboard categories
       usage: /nlc
