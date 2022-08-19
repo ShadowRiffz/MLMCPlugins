@@ -23,7 +23,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class CmdNCTop implements Subcommand {
+public class CmdNLCTop implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(new CommandArgument("category"));
 
 	@Override
@@ -91,11 +91,10 @@ public class CmdNCTop implements Subcommand {
 				while (iter.hasNext() && i++ <= 10) {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
-					double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
-					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(effective) +
-							" §7§o(" + PointsManager.formatPoints(e.getPoints(type)) + ")", FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nc nation " + name)))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nc nation " + name));
+					// double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getPoints(type)), FormatRetention.NONE)
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc nation " + name)))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc nation " + name));
 				}
 				s.spigot().sendMessage(builder.create());
 			}
