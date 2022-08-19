@@ -175,10 +175,10 @@ public class NationEntry implements Comparable<NationEntry> {
 
 	@Override
 	public int compareTo(NationEntry o) {
-		if (this.getEffectivePoints() > o.getEffectivePoints()) {
+		if (this.getTotalPoints() > o.getTotalPoints()) {
 			return 1;
 		}
-		if (this.getEffectivePoints() < o.getEffectivePoints()) {
+		if (this.getTotalPoints() < o.getTotalPoints()) {
 			return -1;
 		}
 		else {
