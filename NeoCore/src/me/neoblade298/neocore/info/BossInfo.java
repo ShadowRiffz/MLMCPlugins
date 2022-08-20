@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.bukkit.MythicBukkit;
+import me.neoblade298.neocore.util.Util;
 
 public class BossInfo {
 	private String key, display, displayWithLvl;
@@ -15,7 +16,7 @@ public class BossInfo {
 	
 	public BossInfo(ConfigurationSection cfg) {
 		this.key = cfg.getName();
-		this.display = cfg.getString("display", "DEFAULT");
+		this.display = Util.translateColors(cfg.getString("display", "DEFAULT"));
 		this.level = cfg.getInt("level");
 		this.healthComponents = cfg.getStringList("health-components");
 		this.displayWithLvl = "§6[Lv " + level + "] " + display;
