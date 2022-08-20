@@ -21,6 +21,8 @@ import me.Neoblade298.NeoConsumables.objects.Rarity;
 import me.Neoblade298.NeoConsumables.objects.StoredAttributes;
 import me.Neoblade298.NeoConsumables.objects.TokenConsumable;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.player.PlayerFields;
 import me.neoblade298.neocore.player.PlayerTags;
 
@@ -255,9 +257,10 @@ public class Consumables extends JavaPlugin implements Listener {
 
 	private ChestConsumable loadChestConsumable(ConfigurationSection config, String key) {
 		String internal = config.getString("internal");
-		int level = config.getInt("level");
-		String display = config.getString("display").replaceAll("&", "§");
-		String bossDisplay = config.getString("boss-display", internal);
+		BossInfo bi = InfoAPI.getBossInfo(internal);
+		int level = bi.getLevel();
+		String display = "§6Boss Chest§e: " + bi.getDisplay(true);
+		String bossDisplay = bi.getDisplay(false);
 		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 
 		// Chest stages
