@@ -73,7 +73,13 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			if (args[0].equalsIgnoreCase("cd")) {
 				String boss = args[1];
 				BossInfo bi = InfoAPI.getBossInfo(boss);
-				String display = bi.getDisplay(true);
+				String display;
+				if (bi != null) {
+					display = bi.getDisplay(true);
+				}
+				else {
+					display = plugin.getBossName(boss, p);
+				}
 				int time = plugin.getBossCooldown(boss, p);
 				if (display == null) return "§c???";
 				else if (time <= 0) return display + "§7: " + "§aReady!";
