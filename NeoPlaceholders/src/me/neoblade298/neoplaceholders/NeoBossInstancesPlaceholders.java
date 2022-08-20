@@ -75,7 +75,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				BossInfo bi = InfoAPI.getBossInfo(boss);
 				String display;
 				if (bi != null) {
-					display = bi.getDisplay(true);
+					display = bi.getDisplayWithLevel(false);
 				}
 				else {
 					display = plugin.getBossName(boss, p);
@@ -92,7 +92,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			else if (args[0].equalsIgnoreCase("display")) {
 				String boss = args[1];
 				BossInfo bi = InfoAPI.getBossInfo(boss);
-				return bi.getDisplay(true);
+				return bi.getDisplayWithLevel(false);
 			}
 			// %bosses_partyhealth_1-5%
 			else if (args[0].equalsIgnoreCase("partyhealth")) {

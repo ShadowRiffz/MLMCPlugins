@@ -56,7 +56,7 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 		if (args.length <= 1) return "Invalid placeholder";
 		String boss = args[0];
 		// %researchkillsalias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil
-		String display = InfoAPI.getBossInfo(boss).getDisplay(true);
+		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(true);
 		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
 		if (researchPoints.containsKey(boss)) {
 			int points = researchPoints.get(boss);

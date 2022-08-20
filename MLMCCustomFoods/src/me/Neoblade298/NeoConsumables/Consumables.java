@@ -259,8 +259,8 @@ public class Consumables extends JavaPlugin implements Listener {
 		String internal = config.getString("internal");
 		BossInfo bi = InfoAPI.getBossInfo(internal);
 		int level = bi.getLevel(true);
-		String display = "§6Boss Chest§e: " + bi.getDisplay(true);
-		String bossDisplay = bi.getDisplay(false);
+		String display = "§6Boss Chest§e: " + bi.getDisplayWithLevel(false);
+		String bossDisplay = bi.getDisplay();
 		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 
 		// Chest stages

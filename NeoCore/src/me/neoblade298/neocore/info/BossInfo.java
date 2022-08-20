@@ -9,7 +9,7 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import me.neoblade298.neocore.util.Util;
 
 public class BossInfo {
-	private String key, display, displayWithLvl;
+	private String key, display, displayWithLvl, displayWithLvlRounded;
 	private int level;
 	private List<String> healthComponents;
 	private double health = 0;
@@ -18,16 +18,22 @@ public class BossInfo {
 		this.key = cfg.getName();
 		this.display = Util.translateColors("&c" + cfg.getString("display", "DEFAULT"));
 		this.level = cfg.getInt("level");
+		int levelRounded = level - (level % 5);
 		this.healthComponents = cfg.getStringList("health-components");
 		this.displayWithLvl = "§6[Lv " + level + "] " + display;
+		this.displayWithLvlRounded = "§6[Lv " + levelRounded + "] " + display;
 	}
 
 	public String getKey() {
 		return key;
 	}
 
-	public String getDisplay(boolean includeLevel) {
-		return includeLevel ? displayWithLvl : display;
+	public String getDisplay() {
+		return display;
+	}
+	
+	public String getDisplayWithLevel(boolean roundDown) {
+		return roundDown ? displayWithLvlRounded : displayWithLvl;
 	}
 
 	public int getLevel(boolean roundDown) {

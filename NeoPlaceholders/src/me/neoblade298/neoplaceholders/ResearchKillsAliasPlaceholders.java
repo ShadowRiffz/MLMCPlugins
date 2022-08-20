@@ -55,7 +55,7 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 		
 		if (args.length <= 1) return "Invalid placeholder";
 		String boss = args[0];
-		String display = InfoAPI.getBossInfo(boss).getDisplay(true);
+		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(false);
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(boss)) {
 			int kills = mobKills.get(boss);

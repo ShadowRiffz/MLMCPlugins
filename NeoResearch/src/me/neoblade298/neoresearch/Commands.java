@@ -111,7 +111,7 @@ public class Commands implements CommandExecutor{
 				meta.setDisplayName("§9Research Book");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
-				lore.add(bi.getDisplay(true));
+				lore.add(bi.getDisplayWithLevel(false));
 				
 				int level = bi.getLevel(false);
 
@@ -122,7 +122,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", bi.getKey());
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
-				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplay(true) + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplayWithLevel(false) + " §7to player §e" + p.getName());
 				return true;
 			}
 
@@ -181,7 +181,7 @@ public class Commands implements CommandExecutor{
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				String display = bi.getDisplay(true);
+				String display = bi.getDisplayWithLevel(false);
 				int amt = Integer.parseInt(args[3]);
 				int needed = amt * 2;
 				
