@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
 public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
@@ -53,17 +54,13 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		
 		if (args.length <= 1) return "Invalid placeholder";
-		String mob = args[0];
-		String name = args[1];
+		String boss = args[0];
 		// %researchkillsalias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil
-		for (int i = 2; args.length > i; i++) {
-			name += args[i];
-		}
-		name = name.replaceAll("@", "§");
+		String display = InfoAPI.getBossInfo(boss).getDisplay(true);
 		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
-		if (researchPoints.containsKey(mob)) {
-			int points = researchPoints.get(mob);
-			return name + "§7: §e" + points;
+		if (researchPoints.containsKey(boss)) {
+			int points = researchPoints.get(boss);
+			return display + "§7: §e" + points;
 		}
     	return "§c???";
 	}

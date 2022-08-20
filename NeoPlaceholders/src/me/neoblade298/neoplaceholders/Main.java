@@ -40,7 +40,7 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 		
 		new MythicmobsPlaceholders(mobhealth).register();
 		new SkillAPIPlaceholders().register();
-		new BossMultipliersPlaceholders(mobhealth).register();
+		new BossMultipliersPlaceholders().register();
 		new NeoCoreFieldPlaceholders().register();
 		new NeoCoreTagPlaceholders().register();
 		new VaultPlaceholders(this).register();

@@ -16,6 +16,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neobossinstances.Boss;
 import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neobossinstances.BossType;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 
 public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 	private BossInstances plugin;
@@ -70,7 +72,8 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 		try {
 			if (args[0].equalsIgnoreCase("cd")) {
 				String boss = args[1];
-				String display = plugin.getBossName(boss, p);
+				BossInfo bi = InfoAPI.getBossInfo(boss);
+				String display = bi.getDisplay(true);
 				int time = plugin.getBossCooldown(boss, p);
 				if (display == null) return "§c???";
 				else if (time <= 0) return display + "§7: " + "§aReady!";
@@ -82,8 +85,8 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			}
 			else if (args[0].equalsIgnoreCase("display")) {
 				String boss = args[1];
-				String display = plugin.getBossName(boss);
-				return display;
+				BossInfo bi = InfoAPI.getBossInfo(boss);
+				return bi.getDisplay(true);
 			}
 			// %bosses_partyhealth_1-5%
 			else if (args[0].equalsIgnoreCase("partyhealth")) {

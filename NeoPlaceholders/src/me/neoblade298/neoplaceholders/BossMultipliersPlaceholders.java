@@ -1,7 +1,6 @@
 package me.neoblade298.neoplaceholders;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,14 +8,11 @@ import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 
 public class BossMultipliersPlaceholders extends PlaceholderExpansion {
-	private HashMap<String, Integer> health;
 	private static DecimalFormat df = new DecimalFormat("##.##");
-
-	public BossMultipliersPlaceholders(HashMap<String, Integer> health) {
-		this.health = health;
-	}
 
 
     @Override
@@ -59,6 +55,7 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 		String args[] = identifier.split("_");
 		String boss = args[0];
 		String id = args[1];
+		BossInfo bi = InfoAPI.getBossInfo(boss);
 		if (NeoCore.getPlayerFields("BossMultipliers").getValue(p.getUniqueId(), boss) == null) {
 			return "Invalid";
 		}
@@ -94,7 +91,7 @@ public class BossMultipliersPlaceholders extends PlaceholderExpansion {
 			}
 		}
 		else if (id.equalsIgnoreCase("health")) {
-    		double oldHealth = this.health.get(boss);
+    		double oldHealth = bi.getTotalHealth();
     		double newHealth = oldHealth;
     		if (level >= 1) {
     			newHealth *= 0.5 + (Math.min(6, level) * 0.5);
