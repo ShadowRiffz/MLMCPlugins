@@ -16,7 +16,7 @@ public class BossInfo {
 	
 	public BossInfo(ConfigurationSection cfg) {
 		this.key = cfg.getName();
-		this.display = Util.translateColors(cfg.getString("display", "DEFAULT"));
+		this.display = Util.translateColors("&c" + cfg.getString("display", "DEFAULT"));
 		this.level = cfg.getInt("level");
 		this.healthComponents = cfg.getStringList("health-components");
 		this.displayWithLvl = "§6[Lv " + level + "] " + display;
