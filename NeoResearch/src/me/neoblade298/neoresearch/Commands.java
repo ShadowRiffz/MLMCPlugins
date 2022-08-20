@@ -16,6 +16,8 @@ import com.sucy.skill.SkillAPI;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.mythic.bukkit.MythicBukkit;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.inventories.ResearchAttributesInventory;
 
 
@@ -33,18 +35,16 @@ public class Commands implements CommandExecutor{
 			if (args.length == 0) {
 				sender.sendMessage("§c/nr reload");
 				sender.sendMessage("§c/nr debug [player]");
-				sender.sendMessage("§c/nr createbook(alias) [player] [mob] [level] [points] (display)");
-				sender.sendMessage("§c/nr spawnbook(alias) [player] [mob] [level] [points] (display)");
-				sender.sendMessage("§c/nr givepoints/kills(alias) [player] [mob] [level (pts only)] [amt] (display)");
+				sender.sendMessage("§c/nr create/spawnbook [player] [mob] [level] [points]");
+				sender.sendMessage("§c/nr create/spawnbookboss [player] [boss] [points]");
+				sender.sendMessage("§c/nr givepoints [player] [mob] [level] [amt]");
+				sender.sendMessage("§c/nr givepointsboss [player] [boss] [amt]");
+				sender.sendMessage("§c/nr givekills [player] [mob] [amt]");
 				sender.sendMessage("§c/nr setpoints/kills [player] [mob] [level (pts only)] [amt]");
-				sender.sendMessage("§c/nr setlevel [player] [amt]");
-				sender.sendMessage("§c/nr add/setexp [player] [amt]");
-				sender.sendMessage("§c/nr takegoal [player] [goal]");
+				sender.sendMessage("§c/nr (add/set)(level/exp) [player] [amt]");
 				sender.sendMessage("§c/nr inspect [player] (mob)");
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr attrs");
-				sender.sendMessage("§c/nr update/resetattrs [player]");
-				sender.sendMessage("§c/nr convert [max]");
 				sender.sendMessage("§c/nr debug");
 				return true;
 			}
@@ -99,15 +99,11 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			
-			// /nr spawnbookalias [player] [mobalias] [level] [point amt] [display]
-			else if (args[0].equalsIgnoreCase("spawnbookalias")) {
+			// /nr spawnbookboss [player] [boss] [point amt]
+			else if (args[0].equalsIgnoreCase("spawnbookboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				String display = args[5];
-				for (int i = 6; i < args.length; i++) {
-					display += " " + args[i];
-				}
-				display = display.replaceAll("@", "§");
-				int amt = Integer.parseInt(args[4]);
+				BossInfo bi = InfoAPI.getBossInfo(args[2]);
+				int amt = Integer.parseInt(args[3]);
 
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
@@ -115,18 +111,18 @@ public class Commands implements CommandExecutor{
 				meta.setDisplayName("§9Research Book");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
-				lore.add(display);
+				lore.add(bi.getDisplay(true));
 				
-				int level = Integer.parseInt(args[3]);
+				int level = bi.getLevel();
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
-				nbti.setString("internalmob", args[2]);
+				nbti.setString("internalmob", bi.getKey());
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
-				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + display + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplay(true) + " §7to player §e" + p.getName());
 				return true;
 			}
 
@@ -180,15 +176,12 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 
-			// /nr createbookalias [player] [alias] [point amt] [display]
+			// /nr createbookboss [player] [boss] [point amt]
 			else if (args[0].equalsIgnoreCase("createbookalias")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
-				String display = args[4];
-				for (int i = 5; i < args.length; i++) {
-					display += " " + args[i];
-				}
-				display = display.replaceAll("&", "§");
+				BossInfo bi = InfoAPI.getBossInfo(args[2]);
+				String display = bi.getDisplay(true);
 				int amt = Integer.parseInt(args[3]);
 				int needed = amt * 2;
 				
@@ -214,15 +207,13 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				String sLevel = display.split(" ")[1];
-				sLevel = sLevel.substring(0, sLevel.length() - 1);
-				int level = Integer.parseInt(sLevel);
+				int level = bi.getLevel();
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				NBTItem nbti = new NBTItem(item);
-				nbti.setString("internalmob", args[2]);
+				nbti.setString("internalmob", bi.getKey());
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
 				p.sendMessage("§4[§c§lMLMC§4] §7You created a §e" + amt + " §7point " + display + " §7research book!");
@@ -239,15 +230,13 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}
-			// /nr givepointsalias [player] [internalmob] [level] [amount] [display]
-			else if (args[0].equalsIgnoreCase("givepointsalias")) {
+			// /nr givepointsboss [player] [boss] [amount]
+			else if (args[0].equalsIgnoreCase("givepointsboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				int level = Integer.parseInt(args[3]);
-				int amount = Integer.parseInt(args[4]);
-				String display = args[5];
-				for (int i = 6; i < args.length; i++) {
-					display += " " + args[i];
-				}
+				BossInfo bi = InfoAPI.getBossInfo(args[2]);
+				int level = bi.getLevel();
+				int amount = Integer.parseInt(args[3]);
+				String display = bi.getDisplay(true);
 				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;

@@ -9,6 +9,7 @@ import me.neoblade298.neoleaderboard.commands.*;
 import me.neoblade298.neoleaderboard.listeners.PointsListener;
 import me.neoblade298.neoleaderboard.listeners.TownyListener;
 import me.neoblade298.neoleaderboard.points.PointsManager;
+import net.md_5.bungee.api.ChatColor;
 
 public class NeoLeaderboard extends JavaPlugin {
 	private static NeoLeaderboard inst;
@@ -52,6 +53,10 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr.register(new CmdNLCNation());
 		mngr.register(new CmdNLCTown());
 		mngr.registerCommandList("help");
+
+		mngr = new CommandManager("nladmin", "neoleaderboard.admin", ChatColor.DARK_RED, this);
+		mngr.registerCommandList("");
+		mngr
 	}
 	
 	public static NeoLeaderboard inst() {

@@ -5,6 +5,7 @@ public enum PlayerPointType implements PointType {
 	PLAYTIME("Time online"),
 	KILL_BOSS("Boss kills"),
 	PROFESSION_CRAFT("Profession items crafted"),
+	NORMAL_CRAFT("Point items crafted"),
 	EDIT_BLOCK("Blocks placed/broken"),
 	PLAYER_EVENT("Player event points");
 	

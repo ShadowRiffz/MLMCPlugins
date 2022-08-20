@@ -27,6 +27,7 @@ import me.neoblade298.neocore.commandsets.CommandSetManager;
 import me.neoblade298.neocore.events.NeoCoreInitEvent;
 import me.neoblade298.neocore.events.NeoPluginLoadEvent;
 import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
@@ -91,6 +92,9 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // CommandSets
         CommandSetManager.reload();
+        
+        // Info
+        InfoAPI.reload();
         
         // messaging
         try {
@@ -166,6 +170,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		try {
 			MessagingManager.reload();
 			CommandSetManager.reload();
+			InfoAPI.reload();
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}

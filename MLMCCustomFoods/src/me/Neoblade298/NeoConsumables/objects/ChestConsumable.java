@@ -203,7 +203,7 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 	}
 	
 	@Override
-	public ItemStack getItem(int amount) {
+	public ItemStack getItem(Player p, int amount) {
 		if (lore == null) {
 			generateLore();
 		}

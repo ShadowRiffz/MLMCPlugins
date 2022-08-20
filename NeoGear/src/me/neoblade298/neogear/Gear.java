@@ -465,7 +465,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
-		if (item == null)
+		if (item == null || item.getType().isAir())
 			return;
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {

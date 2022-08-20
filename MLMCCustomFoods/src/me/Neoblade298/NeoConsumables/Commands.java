@@ -63,7 +63,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					}
 					
 					if (cons != null) {
-						p.getInventory().addItem(cons.getItem(amt));
+						p.getInventory().addItem(cons.getItem(p, amt));
 						sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + cons.getDisplay() + "§7 to §e" + p.getName());
 						return true;
 					}

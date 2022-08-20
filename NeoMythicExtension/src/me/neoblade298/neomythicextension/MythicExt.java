@@ -201,6 +201,9 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "researchpoints":
 			mechanic = new ResearchPointsMechanic(cfg);
 			break;
+		case "researchpointsboss":
+			mechanic = new ResearchPointsBossMechanic(cfg);
+			break;
 		case "researchpointschance":
 			mechanic = new ResearchPointsChanceMechanic(cfg);
 			break;

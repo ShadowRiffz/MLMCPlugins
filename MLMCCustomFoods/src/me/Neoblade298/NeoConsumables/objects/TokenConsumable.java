@@ -18,6 +18,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	ArrayList<String> commands, negatePerms, baselore;
 	String display;
 	Material material;
+	boolean boundToPlayer;
 	long millisToExpire;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd hh:mm a z");
 	
@@ -37,6 +38,10 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		else {
 			this.millisToExpire = hours * 60 * 60 * 1000;
 		}
+	}
+	
+	public void setBoundToPlayer(boolean bound) {
+		this.boundToPlayer = bound;
 	}
 	
 	public void setMaterial(Material material) {
@@ -70,9 +75,16 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 			}
 		}
 		
+		
 		NBTItem nbti = new NBTItem(item);
 		long timestamp = nbti.getLong("timestamp");
-		if (timestamp != -1 && timestamp + 86400000 < System.currentTimeMillis()) {
+		String player = nbti.getString("player");
+		if (boundToPlayer && player.equalsIgnoreCase(p.getName())) {
+			Util.msg(p, "&cThis token is bound to " + player + "!");
+			return false;
+		}
+		
+		if (millisToExpire != -1 && timestamp + millisToExpire < System.currentTimeMillis()) {
 			Util.msg(p, "&cThis token has already expired!");
 			p.getInventory().removeItem(item);
 			return false;
@@ -97,22 +109,30 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 	}
 	
 	@Override
-	public ItemStack getItem(int amount) {
+	public ItemStack getItem(Player p, int amount) {
 		ItemStack item = new ItemStack(material);
 		item.setAmount(amount);
 		long timestamp = System.currentTimeMillis();
 		
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>(baselore);
-		Calendar inst = Calendar.getInstance();
-		inst.setTimeInMillis(timestamp + 86400000);
-		lore.add("§cExpires " + sdf.format(inst.getTime()));
+		if (boundToPlayer) {
+			lore.add("§cBound to " + p.getName());
+		}
+		if (millisToExpire != -1) {
+			Calendar inst = Calendar.getInstance();
+			inst.setTimeInMillis(timestamp + 86400000);
+			lore.add("§cExpires " + sdf.format(inst.getTime()));
+		}
 		meta.setLore(lore);
 		meta.setDisplayName(display);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("consumable", key);
 		nbti.setLong("timestamp", timestamp);
+		if (boundToPlayer) {
+			nbti.setString("player", p.getName());
+		}
 		return nbti.getItem();
 	}
 	
