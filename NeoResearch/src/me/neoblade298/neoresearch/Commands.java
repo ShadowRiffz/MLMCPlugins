@@ -113,7 +113,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(bi.getDisplay(true));
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -207,7 +207,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -234,7 +234,7 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("givepointsboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 				int amount = Integer.parseInt(args[3]);
 				String display = bi.getDisplay(true);
 				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);

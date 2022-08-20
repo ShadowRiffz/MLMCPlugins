@@ -34,7 +34,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 
 	public ScaleChestMechanic(MythicLineConfig config) {
         String key = config.getString("i", "mi_sewerzombie");
-        this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(1);
+        this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(null, 1);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 0.25);
         this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "§");
         this.boss = config.getString("boss", "Ratface");
