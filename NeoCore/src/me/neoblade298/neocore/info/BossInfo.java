@@ -30,8 +30,8 @@ public class BossInfo {
 		return includeLevel ? displayWithLvl : display;
 	}
 
-	public int getLevel() {
-		return level;
+	public int getLevel(boolean roundDown) {
+		return roundDown ? level - (level % 5) : level;
 	}
 
 	public double getTotalHealth() {
