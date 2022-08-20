@@ -177,7 +177,7 @@ public class Commands implements CommandExecutor{
 			}
 
 			// /nr createbookboss [player] [boss] [point amt]
-			else if (args[0].equalsIgnoreCase("createbookalias")) {
+			else if (args[0].equalsIgnoreCase("createbookboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
@@ -236,8 +236,7 @@ public class Commands implements CommandExecutor{
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
 				int level = bi.getLevel(false);
 				int amount = Integer.parseInt(args[3]);
-				String display = bi.getDisplay(true);
-				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
+				main.giveResearchPoints(p, amount, args[2], level, true, "admin");
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}
