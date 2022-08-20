@@ -14,11 +14,9 @@ public class InfoAPI {
 	static {
 		bossLoader = (cfg, file) -> {
 			for (String key : cfg.getKeys(false)) {
-				System.out.println("Key: " + key);
 				BossInfo bi = new BossInfo(cfg.getConfigurationSection(key));
 				bossInfo.put(bi.getKey(), bi);
 			}
-			System.out.println(bossInfo);
 		};
 	}
 	
