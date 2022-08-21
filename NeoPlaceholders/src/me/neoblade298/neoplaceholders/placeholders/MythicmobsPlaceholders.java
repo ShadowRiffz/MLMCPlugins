@@ -1,6 +1,5 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -11,11 +10,6 @@ import io.lumine.mythic.core.items.MythicItem;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class MythicmobsPlaceholders extends PlaceholderExpansion {
-	private HashMap<String, Integer> health;
-	
-	public MythicmobsPlaceholders(HashMap<String, Integer> health) {
-		this.health = health;
-	}
 
     @Override
     public boolean canRegister(){
@@ -58,13 +52,6 @@ public class MythicmobsPlaceholders extends PlaceholderExpansion {
 		if (p == null) return "Loading...";
 		
 		String args[] = identifier.split("_");
-		
-		if (args[0].equalsIgnoreCase("mhealth")) {
-			if (health.containsKey(args[1])) {
-				return "" + health.get(args[1]);
-			}
-			return "§cHealth not defined!";
-		}
 		if (args[0].equalsIgnoreCase("name")) {
 			try {
 				return MythicBukkit.inst().getMobManager().getMythicMob(args[1]).get().getDisplayName().get();

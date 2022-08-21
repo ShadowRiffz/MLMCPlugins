@@ -1,6 +1,7 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchNamePlaceholder extends PlaceholderExpansion {
+public class ResearchPointsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -35,7 +36,7 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchname";
+		return "researchpoints";
 	}
 
     @Override
@@ -56,14 +57,15 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 		
 		if (args.length != 1) return "Invalid placeholder";
 		String mob = args[0];
-		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-		if (mm == null) {
+		Optional<MythicMob> mm = MythicBukkit.inst().getMobManager().getMythicMob(mob);
+		if (mm.isEmpty()) {
 			return "Invalid placeholder";
 		}
-		String name = mm.getDisplayName().get();
-		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(mob)) {
-			return name;
+		String name = mm.get().getDisplayName().get();
+		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
+		if (researchPoints.containsKey(mob)) {
+			int points = researchPoints.get(mob);
+			return name + "§7: §e" + points;
 		}
     	return "§c???";
 	}

@@ -8,13 +8,11 @@ public class ResearchBookReward extends ChestReward {
 	private String mob;
 	private String display;
 	private String type;
-	private String alias;
 	
 	public ResearchBookReward(String mob, String display) {
 		this.mob = mob;
 		this.type = "normal";
 		this.display = display;
-		alias = null;
 	}
 
 	@Override
@@ -24,12 +22,7 @@ public class ResearchBookReward extends ChestReward {
 			points = 25;
 		}
 		
-		if (alias == null) {
-			Util.serverCommand("nr spawnbook " + p.getName() + " " + mob + " " + level + " " + points);
-		}
-		else {
-			Util.serverCommand("nr spawnbookalias " + p.getName() + " " + mob + " " + level + " " + points + " " + alias);
-		}
+		Util.serverCommand("nr spawnbookboss " + p.getName() + " " + mob + " " + points);
 	}
 
 	@Override
@@ -66,18 +59,9 @@ public class ResearchBookReward extends ChestReward {
 	public void setDisplay(String display) {
 		this.display = display;
 	}
-
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
 	
 	public static ResearchBookReward parse(String args[], String mob, String display) {
 		String type = "normal";
-		String alias = null;
 		int weight = 1;
 		for (String arg : args) {
 			if (arg.startsWith("mob")) {
@@ -89,16 +73,12 @@ public class ResearchBookReward extends ChestReward {
 			else if (arg.startsWith("type")) {
 				type = arg.substring(arg.indexOf(":") + 1);
 			}
-			else if (arg.startsWith("alias")) {
-				alias = arg.substring(arg.indexOf(":") + 1);
-			}
 			else if (arg.startsWith("weight")) {
 				weight = Integer.parseInt(arg.substring(arg.indexOf(":") + 1));
 			}
 		}
 		ResearchBookReward r = new ResearchBookReward(mob, display);
 		r.setType(type);
-		r.setAlias(alias);;
 		r.setWeight(weight);
 		return r;
 	}

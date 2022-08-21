@@ -1,14 +1,16 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
+public class ResearchNamePlaceholder extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -33,7 +35,7 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchkillsalias";
+		return "researchname";
 	}
 
     @Override
@@ -52,18 +54,16 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length <= 1) return "Invalid placeholder";
+		if (args.length != 1) return "Invalid placeholder";
 		String mob = args[0];
-		String name = args[1];
-		// %researchkillsalias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil
-		for (int i = 2; args.length > i; i++) {
-			name += args[i];
+		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
+		if (mm == null) {
+			return "Invalid placeholder";
 		}
-		name = name.replaceAll("@", "§");
+		String name = mm.getDisplayName().get();
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(mob)) {
-			int kills = mobKills.get(mob);
-			return name + "§7: §e" + kills;
+			return name;
 		}
     	return "§c???";
 	}

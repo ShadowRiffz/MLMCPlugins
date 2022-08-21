@@ -98,6 +98,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		for (Sound s : this.getSounds()) {
 			p.playSound(p.getLocation(), s, 1.0F, 1.0F);
 		}
+		p.sendMessage("§4[§c§lMLMC§4] §7You used " + item.getItemMeta().getDisplayName() + "§7. Check §c/boosts §7if applicable!");
 		executeCommands(p);
 		item.setAmount(item.getAmount() - 1);
 	}

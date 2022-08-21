@@ -1,23 +1,26 @@
-package me.neoblade298.neoplaceholders;
-
-import java.util.HashMap;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import com.sucy.skill.SkillAPI;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neoresearch.Research;
+import me.neoblade298.neocore.NeoCore;
 
-public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
+public class QuestTagPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoResearch") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoQuests") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoQuests");
+    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -33,12 +36,12 @@ public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchnamealias";
+		return "questtags";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoResearch";
+        return "NeoQuests";
     }
     
 	@Override
@@ -49,21 +52,12 @@ public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
+		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
+		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
+		String subkey = args[0];
 		
-		if (args.length <= 1) return "Invalid placeholder";
-		String mob = args[0];
-		String name = args[1];
-		// %researchnamealias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil
-		for (int i = 2; args.length > i; i++) {
-			name += args[i];
-		}
-		name = name.replaceAll("@", "§");
-		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(mob)) {
-			return name;
-		}
-    	return "§c???";
+		return "" + NeoCore.getPlayerTags("questaccount_" + acct).exists(subkey, p.getUniqueId());
 	}
 }

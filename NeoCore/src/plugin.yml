@@ -9,6 +9,7 @@ commands:
    core:
       description: NeoCore command
       usage: /core
+      aliases: [ncore]
    bcore:
       description: NeoCore bungee command
       usage: /bcore

@@ -71,13 +71,13 @@ public class PvpListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(PlayerDeathEvent e) {
 		// Ignore event
-		if (e.getEntity().getWorld().getName().equalsIgnoreCase("Event")) return;
+		String world = e.getEntity().getWorld().getName();
+		if (world.equalsIgnoreCase("Event") || world.equalsIgnoreCase("ClassPVP")) return;
 		
 		Player victim = e.getEntity();
 		if (victim.getKiller() == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
 			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
-				String world = victim.getWorld().getName();
 				if (!world.equalsIgnoreCase("Argyll") && !world.equalsIgnoreCase("ClassPVP")) {
 					e.setKeepInventory(true);
 					e.getDrops().clear();

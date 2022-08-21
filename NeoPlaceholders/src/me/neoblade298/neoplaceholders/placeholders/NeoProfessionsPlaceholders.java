@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

@@ -111,9 +111,9 @@ public class Commands implements CommandExecutor{
 				meta.setDisplayName("§9Research Book");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
-				lore.add(bi.getDisplay(true));
+				lore.add(bi.getDisplayWithLevel(false));
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -122,7 +122,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", bi.getKey());
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
-				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplay(true) + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplayWithLevel(false) + " §7to player §e" + p.getName());
 				return true;
 			}
 
@@ -177,11 +177,11 @@ public class Commands implements CommandExecutor{
 			}
 
 			// /nr createbookboss [player] [boss] [point amt]
-			else if (args[0].equalsIgnoreCase("createbookalias")) {
+			else if (args[0].equalsIgnoreCase("createbookboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				String display = bi.getDisplay(true);
+				String display = bi.getDisplayWithLevel(false);
 				int amt = Integer.parseInt(args[3]);
 				int needed = amt * 2;
 				
@@ -207,7 +207,7 @@ public class Commands implements CommandExecutor{
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -234,10 +234,9 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("givepointsboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 				int amount = Integer.parseInt(args[3]);
-				String display = bi.getDisplay(true);
-				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
+				main.giveResearchPoints(p, amount, args[2], level, true, "admin");
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}

@@ -1,26 +1,25 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
+
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import com.sucy.skill.SkillAPI;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
+import me.neoblade298.neoresearch.Research;
 
-public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
+public class ResearchNameBossPlaceholder extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoCore") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoResearch") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
-    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -36,12 +35,12 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "playertags";
+		return "researchnameboss";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoCore";
+        return "NeoResearch";
     }
     
 	@Override
@@ -52,12 +51,18 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (!SkillAPI.isLoaded(p)) return "Loading...";
 		
 		String args[] = identifier.split("_");
-		String key = args[0];
-		String subkey = args[1];
 		
-		return "" + NeoCore.getPlayerTags(key).exists(subkey, p.getUniqueId());
+		if (args.length > 1) return "Invalid placeholder";
+		String boss = args[0];
+		BossInfo bi = InfoAPI.getBossInfo(boss);
+		if (bi == null) return "Invalid boss";
+		String display = bi.getDisplayWithLevel(false);
+		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
+		if (mobKills.containsKey(boss)) {
+			return display;
+		}
+    	return "§c???";
 	}
 }
