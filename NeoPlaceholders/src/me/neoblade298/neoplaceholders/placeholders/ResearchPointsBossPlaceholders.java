@@ -1,26 +1,24 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
+
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import com.sucy.skill.SkillAPI;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.info.InfoAPI;
+import me.neoblade298.neoresearch.Research;
 
-public class QuestTagPlaceholders extends PlaceholderExpansion {
+public class ResearchPointsBossPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoQuests") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoResearch") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoQuests");
-    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -36,12 +34,12 @@ public class QuestTagPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "questtags";
+		return "researchpointsboss";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoQuests";
+        return "NeoResearch";
     }
     
 	@Override
@@ -52,12 +50,17 @@ public class QuestTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
-		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
-		String subkey = args[0];
 		
-		return "" + NeoCore.getPlayerTags("questaccount_" + acct).exists(subkey, p.getUniqueId());
+		if (args.length <= 1) return "Invalid placeholder";
+		String boss = args[0];
+		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(true);
+		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
+		if (researchPoints.containsKey(boss)) {
+			int points = researchPoints.get(boss);
+			return display + "§7: §e" + points;
+		}
+    	return "§c???";
 	}
 }

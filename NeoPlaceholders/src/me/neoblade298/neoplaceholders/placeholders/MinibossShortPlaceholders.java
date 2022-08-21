@@ -1,26 +1,21 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import com.sucy.skill.SkillAPI;
-
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.NeoCore;
 
-public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
+public class MinibossShortPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoCore") != null;
+        return Bukkit.getPluginManager().getPlugin("MythicMobs") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
-    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -36,12 +31,12 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "playertags";
+		return "mbs";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoCore";
+        return "MythicMobs";
     }
     
 	@Override
@@ -52,12 +47,16 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (!SkillAPI.isLoaded(p)) return "Loading...";
 		
 		String args[] = identifier.split("_");
-		String key = args[0];
-		String subkey = args[1];
 		
-		return "" + NeoCore.getPlayerTags(key).exists(subkey, p.getUniqueId());
+		if (args.length != 2) return "Invalid placeholder";
+		if (!args[0].equalsIgnoreCase("cd")) return "Invalid placeholder";
+		String mbs = args[1];
+		int time = MythicBukkit.inst().getSpawnerManager().getSpawnerByName(mbs).getRemainingCooldownSeconds();
+		int minutes = time / 60;
+		int seconds = time % 60;
+		if (time > 0) return String.format("§c%d:%02d", minutes, seconds);
+    	return "§aReady!";
 	}
 }

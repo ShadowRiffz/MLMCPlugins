@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.text.DecimalFormat;
 
@@ -8,12 +8,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sucy.skill.SkillAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neoplaceholders.NeoPlaceholders;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultPlaceholders extends PlaceholderExpansion {
-	Main main;
+	NeoPlaceholders main;
 	Economy econ;
-	public VaultPlaceholders(Main main) {
+	public VaultPlaceholders(NeoPlaceholders main) {
 		this.main = main;
 	}
 

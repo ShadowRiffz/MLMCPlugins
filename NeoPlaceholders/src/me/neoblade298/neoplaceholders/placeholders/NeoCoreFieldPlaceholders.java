@@ -1,24 +1,24 @@
-package me.neoblade298.neoplaceholders;
-
-import java.util.HashMap;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.info.InfoAPI;
-import me.neoblade298.neoresearch.Research;
+import me.neoblade298.neocore.NeoCore;
 
-public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
+public class NeoCoreFieldPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoResearch") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoCore") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
+    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -34,12 +34,12 @@ public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchnamealias";
+		return "playerfields";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoResearch";
+        return "NeoCore";
     }
     
 	@Override
@@ -52,14 +52,9 @@ public class ResearchNameAliasPlaceholder extends PlaceholderExpansion {
 		if (p == null) return "Loading...";
 		
 		String args[] = identifier.split("_");
+		String key = args[0];
+		String subkey = args[1];
 		
-		if (args.length <= 1) return "Invalid placeholder";
-		String boss = args[0];
-		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(false);
-		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(boss)) {
-			return display;
-		}
-    	return "§c???";
+		return "" + NeoCore.getPlayerFields(key).getValue(p.getUniqueId(), subkey);
 	}
 }

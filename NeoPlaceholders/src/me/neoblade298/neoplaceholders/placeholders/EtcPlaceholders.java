@@ -1,15 +1,16 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.bukkit.entity.Player;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
+import me.neoblade298.neoplaceholders.NeoPlaceholders;
 
 public class EtcPlaceholders {
-	private Main main;
+	private NeoPlaceholders main;
 	
-	public EtcPlaceholders (Main main) {
+	public EtcPlaceholders (NeoPlaceholders main) {
 		this.main = main;
 	}
 

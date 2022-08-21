@@ -1,15 +1,16 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
+public class ResearchNamePlaceholder extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -34,7 +35,7 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchpointsalias";
+		return "researchname";
 	}
 
     @Override
@@ -53,14 +54,16 @@ public class ResearchPointsAliasPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length <= 1) return "Invalid placeholder";
-		String boss = args[0];
-		// %researchkillsalias_Hamvil_$4[$6Lv 40$4] $cHammer & Anvil
-		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(true);
-		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
-		if (researchPoints.containsKey(boss)) {
-			int points = researchPoints.get(boss);
-			return display + "§7: §e" + points;
+		if (args.length != 1) return "Invalid placeholder";
+		String mob = args[0];
+		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
+		if (mm == null) {
+			return "Invalid placeholder";
+		}
+		String name = mm.getDisplayName().get();
+		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
+		if (mobKills.containsKey(mob)) {
+			return name;
 		}
     	return "§c???";
 	}

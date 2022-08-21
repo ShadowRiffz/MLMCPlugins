@@ -1,21 +1,26 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-import io.lumine.mythic.bukkit.MythicBukkit;
+import com.sucy.skill.SkillAPI;
+
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neocore.NeoCore;
 
-public class MinibossShortPlaceholders extends PlaceholderExpansion {
+public class QuestTagPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("MythicMobs") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoQuests") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoQuests");
+    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -31,12 +36,12 @@ public class MinibossShortPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "mbs";
+		return "questtags";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "MythicMobs";
+        return "NeoQuests";
     }
     
 	@Override
@@ -47,16 +52,12 @@ public class MinibossShortPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
+		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
+		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
+		String subkey = args[0];
 		
-		if (args.length != 2) return "Invalid placeholder";
-		if (!args[0].equalsIgnoreCase("cd")) return "Invalid placeholder";
-		String mbs = args[1];
-		int time = MythicBukkit.inst().getSpawnerManager().getSpawnerByName(mbs).getRemainingCooldownSeconds();
-		int minutes = time / 60;
-		int seconds = time % 60;
-		if (time > 0) return String.format("§c%d:%02d", minutes, seconds);
-    	return "§aReady!";
+		return "" + NeoCore.getPlayerTags("questaccount_" + acct).exists(subkey, p.getUniqueId());
 	}
 }

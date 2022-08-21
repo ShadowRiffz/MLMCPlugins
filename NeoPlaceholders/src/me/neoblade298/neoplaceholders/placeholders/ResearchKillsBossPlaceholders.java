@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders;
+package me.neoblade298.neoplaceholders.placeholders;
 
 import java.util.HashMap;
 
@@ -9,7 +9,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
+public class ResearchKillsBossPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -34,7 +34,7 @@ public class ResearchKillsAliasPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchkillsalias";
+		return "researchkillsboss";
 	}
 
     @Override
