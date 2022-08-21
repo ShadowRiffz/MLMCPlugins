@@ -75,6 +75,7 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 				BossInfo bi = InfoAPI.getBossInfo(boss);
 				String display;
 				if (bi != null) {
+					if (!bi.hasFought(p)) return "§c???";
 					display = bi.getDisplayWithLevel(false);
 				}
 				else {
