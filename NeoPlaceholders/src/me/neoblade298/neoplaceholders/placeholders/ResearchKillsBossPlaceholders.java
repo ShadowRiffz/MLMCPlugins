@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neocore.info.BossInfo;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
@@ -53,9 +54,11 @@ public class ResearchKillsBossPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length <= 1) return "Invalid placeholder";
+		if (args.length > 1) return "Invalid placeholder";
 		String boss = args[0];
-		String display = InfoAPI.getBossInfo(boss).getDisplayWithLevel(false);
+		BossInfo bi = InfoAPI.getBossInfo(boss);
+		if (bi == null) return "Invalid boss";
+		String display = bi.getDisplayWithLevel(false);
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
 		if (mobKills.containsKey(boss)) {
 			int kills = mobKills.get(boss);
