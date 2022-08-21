@@ -41,7 +41,6 @@ public class SellAllPlayer
 	{
 		HashMap<Material, Integer> itemAmount = new HashMap<Material, Integer>();
 		HashMap<Material, Double> itemTotal = new HashMap<Material, Double>();
-		HashMap<Material, Integer> tempAmount = new HashMap<Material, Integer>();
 		
 		if(!isSelling)
 		{
@@ -54,64 +53,10 @@ public class SellAllPlayer
     	{
     		if(items != null && !items.hasItemMeta())
     		{
-    			Material material = items.getType();
-    			double sellMultiplier = SellAllManager.getMultiplier(player);
-    			double sellBooster = SellAllManager.getBooster(player);
-    			double sellPriceModifier = (sellMultiplier - 1) + (sellBooster - 1) + 1;
-    			
+    			Material material = items.getType();	
         		if(SellAllManager.getItemPrices().containsKey(material))
         		{
-        			int sold = itemAmountSold.getOrDefault(material, 0);
-        			itemSellCap.put(material, itemSellCap.getOrDefault(material, SellAllManager.getItemCaps().get(material)));
-        			if(sold < itemSellCap.get(material))
-        			{
-        				if(!itemAmount.containsKey(material))
-    					{
-    						itemAmount.put(material, 0);
-    						itemTotal.put(material, 0.00);
-    						tempAmount.put(material, sold);
-    					}
-        				
-        				if(isSelling)
-    					{
-        					if(sold + items.getAmount() > itemSellCap.get(material)) 
-            				{
-        						int difference = (sold + items.getAmount()) - itemSellCap.get(material);
-            					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
-            					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-            					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-        						itemAmountSold.put(material, sold + (items.getAmount() - difference));
-        						inv.removeItem(new ItemStack(material, (items.getAmount() - difference)));
-            				}
-            				else
-            				{
-            					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
-            					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-            					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-        						itemAmountSold.put(material, sold + items.getAmount());
-            					inv.removeItem(new ItemStack(material, items.getAmount()));
-            				}
-    					}
-        				else
-        				{
-        					if(tempAmount.get(material) + items.getAmount() > itemSellCap.get(material))
-            				{
-            					int difference = (tempAmount.get(material) + items.getAmount()) - itemSellCap.get(material);
-            					itemAmount.put(material, itemAmount.get(material) + (items.getAmount() - difference));
-            					itemTotal.put(material, itemTotal.get(material) + ((items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-            					totalCost += (items.getAmount() - difference) * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-            					tempAmount.put(material, tempAmount.get(material) + (items.getAmount() - difference));
-            				}
-            				else
-            				{
-            					itemAmount.put(material, itemAmount.get(material) + items.getAmount());
-            					itemTotal.put(material, itemTotal.get(material) + (items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier));
-            					totalCost += items.getAmount() * SellAllManager.getItemPrices().get(material) * sellPriceModifier;
-            					tempAmount.put(material, tempAmount.get(material) + items.getAmount());
-            				}
-        				}
-        				
-        			}
+        			totalCost += getTotalPrice(items, items.getAmount(), player, itemAmount, itemTotal, inv, isSelling);
         		}
     		}
     	}
@@ -143,9 +88,17 @@ public class SellAllPlayer
 		{
     		text = "§7§oClick to confirm or do /sellall confirm\n";
     	}
+		text = text.concat("§c§oRed§7§o item amounts = reduced item value & over soft cap\n");
     	for(Material mat : itemAmount.keySet())
     	{
-    		text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    		if(itemAmountSold.getOrDefault(mat, 0) > SellAllManager.getItemCaps().get(mat))
+    		{
+    			text = text.concat("§6" + mat.name() + " §c(" + itemAmount.get(mat) + "x)§7 - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    		}
+    		else
+    		{
+    			text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    		}
     	}	
     	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
     	if(sell)
@@ -160,40 +113,69 @@ public class SellAllPlayer
 	}
 	
 	public double getTotalPrice(ItemStack item, int amount, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, Inventory inv, boolean isSelling)
-	{
+	{	
 		Material mat = item.getType();
-		int currentSold = itemAmountSold.get(mat);
+		int cap = SellAllManager.getItemCaps().get(mat);
+		int tierAmount = SellAllManager.getTierAmount();
+		double tierMultiplier = SellAllManager.getTierMultiplier();
+		double tierPriceMultiplier = SellAllManager.getTierPriceMultiplier();
+		
+		int currentSold;
+		if(isSelling)
+		{
+			currentSold = itemAmountSold.getOrDefault(mat,0);
+		}
+		else
+		{
+			currentSold = itemAmount.getOrDefault(mat, 0);
+		}
+	
 		HashMap<Integer, Integer> tierLimits = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> soldPerTier = new HashMap<Integer, Integer>();
 		
-		for(int i = 1; i <= SellAllManager.getTierAmount(); i++)
+		for(int i = 1; i <= tierAmount + 1; i++)
 		{
-			tierLimits.put(i, (int) Math.round(i * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat)));
-		}
-		
-		for(Entry<Integer, Integer> e : tierLimits.entrySet())
-		{
-			int limit = e.getValue();
-			if(currentSold > limit)
+			if(i == 1)
 			{
-				continue;
-			}
-			if(amount <= 0)
-			{
-				break;
-			}
-			int remainingInTier = limit - currentSold;
-			
-			if(remainingInTier >= amount)
-			{
-				soldPerTier.put(e.getKey(), amount);
-				break;
+				tierLimits.put(i, cap);
 			}
 			else
 			{
-				soldPerTier.put(e.getKey(), remainingInTier);
-				amount -= remainingInTier;
+				tierLimits.put(i, (int) Math.round((i - 1) * tierMultiplier * cap));
 			}
+		}
+		
+		int i = 1;
+		
+		while(i <= tierAmount && currentSold >= tierLimits.get(i))
+		{
+			i++;
+		}
+		
+		int limit = tierLimits.get(i);
+		
+		if(currentSold > limit)
+		{
+			return 0;
+		}
+		
+		if(amount <= 0)
+		{
+			return 0;
+		}
+		
+		int remainingInTier = limit - currentSold;
+		
+		if(remainingInTier >= amount)
+		{
+			soldPerTier.put(i, amount);
+			currentSold += amount;
+		}
+		else
+		{
+			soldPerTier.put(i, remainingInTier);
+			amount -= remainingInTier;
+			currentSold += remainingInTier;
 		}
 		
 		double sellMultiplier = SellAllManager.getMultiplier(player);
@@ -201,24 +183,24 @@ public class SellAllPlayer
 		double sellPriceModifier = (sellMultiplier - 1) + (sellBooster - 1) + 1;
 		double price = 0;
 		int itemSold = 0;
+		
 		for(Entry<Integer, Integer> e : soldPerTier.entrySet())
 		{
 			int amountSold = e.getValue();
-			player.sendMessage("Tier " + (e.getKey() - 1));
-			player.sendMessage("Multiplier " + SellAllManager.getTierPriceMultiplier());
-			player.sendMessage("Pow " + Math.pow(0.5, 0));
-			price += Math.pow(SellAllManager.getTierPriceMultiplier(), e.getKey() - 1) * amountSold * sellPriceModifier;
+			price += Math.pow(tierPriceMultiplier, e.getKey() - 1) * amountSold * sellPriceModifier * SellAllManager.getItemPrices().get(mat);
 			itemSold += amountSold;
 		}
 		if(isSelling)
 		{
-			itemAmountSold.put(mat, itemAmountSold.get(mat) + (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
+			itemAmountSold.put(mat, itemAmountSold.getOrDefault(mat,0) + (int) Math.min(tierAmount * tierMultiplier * cap, itemSold));
+			itemAmount.put(mat, itemAmount.getOrDefault(mat,0) + (int) Math.min(tierAmount * tierMultiplier * cap, itemSold));
+			itemTotal.put(mat, itemTotal.getOrDefault(mat, 0.0) + price);
 			inv.removeItem(new ItemStack(mat, itemSold));
 		}
 		else
 		{
-			itemAmount.put(mat, (int) Math.min(SellAllManager.getTierAmount() * SellAllManager.getTierMultiplier() * SellAllManager.getItemCaps().get(mat), itemSold));
-			itemTotal.put(mat, price);
+			itemAmount.put(mat, itemAmount.getOrDefault(mat, 0) + (int) Math.min(tierAmount * tierMultiplier * cap, itemSold));
+			itemTotal.put(mat, itemTotal.getOrDefault(mat, 0.0) + price);
 		}
 		return price;
 	}
@@ -236,7 +218,8 @@ public class SellAllPlayer
 		}
 		if(-1 < pageNumber && pageNumber < list.pages())
 		{
-			player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
+			player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Soft Limits }=---O");
+			player.sendMessage("§eGoing over the soft cap will cause item values to be worth less up until the hard cap");
 			for(String output : list.get(pageNumber))
 			{
 				player.sendMessage(output);

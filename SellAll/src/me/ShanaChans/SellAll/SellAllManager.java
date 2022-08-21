@@ -36,6 +36,7 @@ import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllConfirm;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
+import me.ShanaChans.SellAll.Commands.SellAllItemCap;
 import me.ShanaChans.SellAll.Commands.SellAllList;
 import me.ShanaChans.SellAll.Commands.SellAllQuick;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
@@ -101,6 +102,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private void initCommands() {
 		CommandManager sellAll = new CommandManager("sellall", this);
 		CommandManager value = new CommandManager("value", this);
+		CommandManager cap = new CommandManager("cap", this);
 		sellAll.register(new SellAllCommand());
 		sellAll.register(new SellAllCap());
 		sellAll.register(new SellAllList());
@@ -111,9 +113,11 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		sellAll.register(new SellAllQuick());
 		sellAll.register(new SellAllConfirm());
 		value.register(new SellAllValue());
+		cap.register(new SellAllItemCap());
 		sellAll.registerCommandList("help");
 		this.getCommand("sellall").setExecutor(sellAll);
 		this.getCommand("value").setExecutor(value);
+		this.getCommand("cap").setExecutor(cap);
 	}
 
 	public void loadConfigs() 
@@ -387,6 +391,19 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
         }
         
         p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+	}
+	
+	public static void getCap(Player p)
+	{
+		ItemStack items = p.getInventory().getItemInMainHand();
+		if(items != null && !items.hasItemMeta())
+		{
+			Material material = items.getType();	
+    		if(SellAllManager.getItemPrices().containsKey(material))
+    		{
+    			p.sendMessage("§6Cap of §7" + material.name() + "§7: §e" + itemCaps.get(material));
+    		}
+		}
 	}
 	
 	public static HashMap<UUID, Inventory> getPlayerConfirmInv() 
