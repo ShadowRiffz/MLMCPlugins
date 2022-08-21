@@ -232,12 +232,18 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
 	
 	public boolean save(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		if(!profileName.matches("[A-z0-9_]{1,16}")) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Invalid profile name");
 			return true;
 		}
 		
-		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
@@ -259,6 +265,12 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	
 	public boolean load(Player player, String profileName) {
 		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
@@ -407,12 +419,13 @@ class Profile {
 		skillBar = new HashMap<Integer, String>();
 	}
 	
+	@SuppressWarnings("unchecked") // annoying
 	public Profile(PlayerData data) {
 		/* attributes */
 		attributes = data.getInvestedAttributes();
 		
 		/* research attributes */
-		researchAttributes = Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs();
+		researchAttributes = (HashMap<String, Integer>)Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs().clone();
 		researchAttributes.remove("unused");
 		
 		/* skills */
@@ -450,7 +463,7 @@ class Profile {
 		StoredAttributes sAttr = Research.getPlayerAttributes(data.getPlayer());
 		sAttr.unvestAll();
 		for(Map.Entry<String, Integer> entry : researchAttributes.entrySet()) {
-			sAttr.addAttribute(entry.getKey(), entry.getValue());
+			sAttr.investAttribute(entry.getKey(), entry.getValue());
 		}
 		sAttr.applyAttributes(data.getPlayer());
 		
