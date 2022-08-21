@@ -74,7 +74,15 @@ public class AugmentManager implements Listener, Manager {
 	
 	public AugmentManager(Professions main) {
 		AugmentManager.main = main;
-
+		
+		// Droptables and augments
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
+		augmentMap.clear();
 		augmentMap.put("barrier", new BarrierAugment());
 		augmentMap.put("brace", new BraceAugment());
 		augmentMap.put("brawler", new BrawlerAugment());
@@ -143,13 +151,6 @@ public class AugmentManager implements Listener, Manager {
 			augmentMap.put(set.toLowerCase(), new BossRelic(set));
 		}
 		
-		// Droptables
-		reload();
-	}
-	
-	@Override
-	public void reload() {
-		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 		AugmentManager.droptables.clear();
 		try {
 			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
