@@ -17,6 +17,7 @@ import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 import me.neoblade298.neocore.bungee.BungeeAPI;
+import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ScaleChestMechanic implements ITargetedEntitySkill {
@@ -76,6 +77,9 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 				Bukkit.getPluginManager().callEvent(e);
 				double moddedChance = e.getChance();
 				dropType = e.getDropType();
+				if (MythicExt.debug) {
+					Bukkit.getLogger().info("[NeoMythicExt] Generated chest chance: " + chance + ", cutoff: " + e.getChance() + ", drop type: " + dropType);
+				}
 				
 				// Check for successful drop
 				if (rand <= moddedChance) {
