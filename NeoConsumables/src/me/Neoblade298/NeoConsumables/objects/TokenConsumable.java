@@ -122,7 +122,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		}
 		if (millisToExpire != -1) {
 			Calendar inst = Calendar.getInstance();
-			inst.setTimeInMillis(timestamp + 86400000);
+			inst.setTimeInMillis(timestamp + millisToExpire);
 			lore.add("§cExpires " + sdf.format(inst.getTime()));
 		}
 		meta.setLore(lore);
