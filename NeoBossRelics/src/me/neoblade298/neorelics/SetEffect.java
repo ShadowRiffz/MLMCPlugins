@@ -1,4 +1,4 @@
-package me.neoblade298.neobossrelics;
+package me.neoblade298.neorelics;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

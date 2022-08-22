@@ -1,14 +1,11 @@
-package me.neoblade298.neobossrelics;
+package me.neoblade298.neorelics;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,17 +22,29 @@ import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.exceptions.NeoIOException;
+import me.neoblade298.neocore.io.FileLoader;
 
-public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listener {
-	public HashMap<String, Set> sets;
-	public HashMap<UUID, PlayerSet> playersets;
-	private ArrayList<String> enabledWorlds;
-	private HashSet<Player> disableRecalculate;
-	private File file;
-	public boolean debug;
+public class NeoRelics extends JavaPlugin implements org.bukkit.event.Listener {
+	public static HashMap<String, Relic> relics;
+	public static HashMap<UUID, PlayerSet> playersets;
+	private static HashSet<Player> disableRecalculate;
+	private static File file;
+	public static boolean debug;
+	private static FileLoader relicLoader;
+	
+	static {
+		relicLoader = (cfg, file) -> {
+			for (String key : cfg.getKeys(false)) {
+				Relic relic = new Relic(cfg.getConfigurationSection(key));
+				relics.put(key, relic);
+			}
+		};
+	}
 	
 	public void onEnable() {
-		Bukkit.getServer().getLogger().info("NeoBossRelics Enabled");
+		Bukkit.getServer().getLogger().info("NeoRelics Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
 	    this.getCommand("relic").setExecutor(new Commands(this));
 
@@ -43,57 +52,33 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		if (!file.exists()) {
 			saveResource("config.yml", false);
 		}
-	    sets = new HashMap<String, Set>();
+		relics = new HashMap<String, Relic>();
 	    disableRecalculate = new HashSet<Player>();
 	    playersets = new HashMap<UUID, PlayerSet>();
-	    enabledWorlds = new ArrayList<String>();
-	    loadConfig();
+	    reload();
 	}
 	
 	public void onDisable() {
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoBossRelics Disabled");
+	    org.bukkit.Bukkit.getServer().getLogger().info("NeoRelics Disabled");
 	    super.onDisable();
 	}
 	
-	public void loadConfig() {
-		// Load sets
-		sets.clear();
+	public static void reload() {
+		relics.clear();
 		disableRecalculate.clear();
-		YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
-		
-		ConfigurationSection setSection = conf.getConfigurationSection("sets");
-		for (String setName : setSection.getKeys(false)) {
-			HashMap<Integer, SetEffect> setEffects = new HashMap<Integer, SetEffect>();
-			ConfigurationSection currentSet = setSection.getConfigurationSection(setName);
-			
-			// Get each number for the set
-			for (String numString : currentSet.getKeys(false)) {
-				ConfigurationSection currentSetNum = currentSet.getConfigurationSection(numString);
-				int num = Integer.parseInt(numString);
-				String flag = currentSetNum.getString("flag");
-				ArrayList<String> attrs = (ArrayList<String>) currentSetNum.getStringList("attributes");
-				HashMap<String, Integer> attrMap = new HashMap<String, Integer>();
-				for (String attr : attrs) {
-					String[] attrSplit = attr.split(":");
-					attrMap.put(attrSplit[0], Integer.parseInt(attrSplit[1]));
-				}
-				SetEffect eff = new SetEffect(attrMap, flag);
-				setEffects.put(num, eff);
-			}
-			Set set = new Set(setName, setEffects);
-			sets.put(setName, set);
+		try {
+			NeoCore.loadFiles(file, relicLoader);
+		} catch (NeoIOException e) {
+			e.printStackTrace();
 		}
-		
-		// Load enabled worlds
-		enabledWorlds.clear();
-		enabledWorlds = (ArrayList<String>) conf.getStringList("enabled-worlds");
 	}
 	
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e) {
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 
 		recalculateSetEffect(p);
 	}
@@ -107,7 +92,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	public void onAttributeUnload(PlayerAttributeUnloadEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
-		this.playersets.remove(uuid);
+		playersets.remove(uuid);
 	}
 	
 	@EventHandler
@@ -115,7 +100,7 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		Player p = e.getPlayer();
 		disableRecalculate.add(p);
 		UUID uuid = p.getUniqueId();
-		this.playersets.remove(uuid);
+		playersets.remove(uuid);
 	}
 	
 	@EventHandler
@@ -123,43 +108,43 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		Player p = e.getPlayer();
 		disableRecalculate.add(p);
 		UUID uuid = p.getUniqueId();
-		this.playersets.remove(uuid);
+		playersets.remove(uuid);
 	}
 	
 	@EventHandler
 	public void onItemBreak(PlayerItemBreakEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
-		if (this.playersets.containsKey(uuid)) {
-			if (checkRelic(p, e.getBrokenItem())) this.playersets.get(uuid).decrementNum();
+		if (playersets.containsKey(uuid)) {
+			if (checkRelic(p, e.getBrokenItem())) playersets.get(uuid).decrementNum();
 		}
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChangeSlot(PlayerItemHeldEvent e) {
 		Player p = e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
 		ItemStack oldItem = p.getInventory().getContents()[e.getPreviousSlot()];
 		ItemStack newItem = p.getInventory().getContents()[e.getNewSlot()];
 		
 		if (checkRelic(p, newItem) && !checkRelic(p, oldItem)) {
-			this.playersets.get(p.getUniqueId()).incrementNum();
+			playersets.get(p.getUniqueId()).incrementNum();
 		}
 		else if (!checkRelic(p, newItem) && checkRelic(p, oldItem)) {
-			this.playersets.get(p.getUniqueId()).decrementNum();
+			playersets.get(p.getUniqueId()).decrementNum();
 		}
 	}
 	
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
 		Player p = e.getPlayer();
-		if (!enabledWorlds.contains(p.getWorld().getName())) return;
+		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
 		ItemStack item = e.getItemDrop().getItemStack();
-		if (checkRelic(p, item)) this.playersets.get(p.getUniqueId()).decrementNum();
+		if (checkRelic(p, item)) playersets.get(p.getUniqueId()).decrementNum();
 	}
 	
 	// Used to calculate a set effect from scratch
@@ -174,8 +159,8 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 		ItemStack off = p.getInventory().getItemInOffHand();
 		ItemStack[] armor = p.getInventory().getArmorContents();
 		
-		if (this.playersets.containsKey(p.getUniqueId())) {
-			this.playersets.remove(p.getUniqueId()).remove();
+		if (playersets.containsKey(p.getUniqueId())) {
+			playersets.remove(p.getUniqueId()).remove();
 		}
 		
 		int num = 0;
@@ -185,12 +170,12 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 			if (checkRelic(p, item)) num++;
 		}
 		
-		if (num > 0) this.playersets.get(p.getUniqueId()).setNumRelics(num);
+		if (num > 0) playersets.get(p.getUniqueId()).setNumRelics(num);
 	}
 	
 	private boolean checkRelic(Player p, ItemStack item) {
-		if (this.playersets.containsKey(p.getUniqueId())) {
-			return hasRelic(p, item, this.playersets.get(p.getUniqueId()).getSet());
+		if (playersets.containsKey(p.getUniqueId())) {
+			return hasRelic(p, item, playersets.get(p.getUniqueId()).getSet());
 		}
 		else {
 			return hasRelic(p, item);
@@ -198,13 +183,13 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 	}
 	
 	// Checks if the given item has the provided relic in it
-	private boolean hasRelic(Player p, ItemStack item, Set set) {
+	private boolean hasRelic(Player p, ItemStack item, Relic relic) {
 		if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
 		if (item != null && !item.getType().isAir()) {
 			NBTItem nbti = new NBTItem(item);
 			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
-				if (augmentName.equals(set.getName())) {
+				if (augmentName.equals(relic.getKey())) {
 					return true;
 				}
 			}
@@ -219,8 +204,8 @@ public class NeoBossRelics extends JavaPlugin implements org.bukkit.event.Listen
 			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
 				if (augmentName.startsWith("Relic")) {
-					if (sets.containsKey(augmentName)) {
-						PlayerSet pSet = new PlayerSet(this, sets.get(augmentName), 0, p);
+					if (relics.containsKey(augmentName)) {
+						PlayerSet pSet = new PlayerSet(relics.get(augmentName), 0, p);
 						playersets.put(p.getUniqueId(), pSet);
 						return true;
 					}
