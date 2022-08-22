@@ -1,6 +1,7 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -46,6 +47,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr attrs");
 				sender.sendMessage("§c/nr debug");
+				sender.sendMessage("§c/nr check [player] [research]");
 				return true;
 			}
 
@@ -294,6 +296,18 @@ public class Commands implements CommandExecutor{
 				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
 						" §7with §e" + stats.getExp() + " / " + Research.getNextLevel().get(stats.getLevel()) + " §7exp.");
+				return true;
+			}
+			// /nr check [player] [researchgoal]
+			else if (args[0].equalsIgnoreCase("check") && args.length == 3) {
+				Player p = Bukkit.getPlayer(args[1]);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
+				ResearchItem ri = Research.getResearchItems().get(args[2]);
+				for (Entry<String, Integer> e : ri.getGoals().entrySet()) {
+					int points = stats.getResearchPoints().getOrDefault(e.getKey(), 0);
+					int pointsReq = e.getValue();
+					sender.sendMessage("§c" + e.getKey() + "§7: §f" + points + " / " + pointsReq);
+				}
 				return true;
 			}
 			// /nr inspect [player] [internalmob]
