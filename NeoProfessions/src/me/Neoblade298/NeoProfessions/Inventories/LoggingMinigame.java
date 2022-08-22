@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
@@ -194,6 +195,7 @@ public class LoggingMinigame extends ProfessionInventory {
 				if (p.getOpenInventory().getTopInventory() == inv) {
 					p.closeInventory();
 				}
+				GardenManager.tryReturnToGarden(p, ProfessionType.LOGGER);
 			}
 		}.runTaskLater(main, 40);
 	}
