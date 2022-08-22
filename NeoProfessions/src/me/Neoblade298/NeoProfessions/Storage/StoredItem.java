@@ -43,25 +43,25 @@ public class StoredItem {
 		this.baseLore = new ArrayList<String>();
 		this.name = name;
 		this.value = level * this.rarity.getPriceModifier();
-		this.display = "§6[Lv " + level + "] " + this.rarity.getCode() + name;
-		this.baseLore.add("§6Rarity§7: " + this.rarity.getDisplay());
-		this.baseLore.add("§6Value§7: §e" + String.format("%.2f", this.value));
-		this.baseLore.add("§7§m---");
+		this.display = "Â§6[Lv " + level + "] " + this.rarity.getCode() + name;
+		this.baseLore.add("Â§6RarityÂ§7: " + this.rarity.getDisplay());
+		this.baseLore.add("Â§6ValueÂ§7: Â§e" + String.format("%.2f", this.value));
+		this.baseLore.add("Â§7Â§m---");
 		if (lore != null) {
 			for (String line : lore) {
-				this.baseLore.add("§7§o" + line);
+				this.baseLore.add("Â§7Â§o" + line);
 			}
 		}
 		this.mat = mat;
 		this.relevantRecipes = new TreeSet<String>();
 		this.storageLore = new ArrayList<String>(baseLore);
-		this.storageLore.add(SOURCES_POS, "§6Sources§7:");
+		this.storageLore.add(SOURCES_POS, "Â§6SourcesÂ§7:");
 		this.level = level;
 		// Sources added as more things are loaded
 		this.sources = new ArrayList<StoredItemSource>();
 		this.sourceLore = new ArrayList<String>();
-		this.sourceLore.add("§6Rarity§7: " + this.rarity.getDisplay());
-		this.sourceLore.add("§6Sources§7:");
+		this.sourceLore.add("Â§6RarityÂ§7: " + this.rarity.getDisplay());
+		this.sourceLore.add("Â§6SourcesÂ§7:");
 		
 		this.defaultExp = (int) (level * Professions.getExpMultiplier(this.rarity));
 	}
@@ -103,7 +103,7 @@ public class StoredItem {
 	}
 	
 	public void addSource(String source, boolean isMob) {
-		source = source.replaceAll("&", "§");
+		source = source.replaceAll("&", "Â§");
 		StoredItemSource src = new StoredItemSource(source, isMob);
 		if (sources.contains(src)) {
 			return;
@@ -116,8 +116,8 @@ public class StoredItem {
 				source = mm.getDisplayName().get();
 			}
 		}
-		this.storageLore.add(SOURCES_POS + 1, "§7- " + source);
-		this.sourceLore.add("§7- " + source);
+		this.storageLore.add(SOURCES_POS + 1, "Â§7- " + source);
+		this.sourceLore.add("Â§7- " + source);
 	}
 	
 	public ArrayList<StoredItemSource> getSources() {
@@ -143,7 +143,7 @@ public class StoredItem {
 		if (amount <= 0) {
 			return null;
 		}
-		meta.setDisplayName(display + " §fx" + amount);
+		meta.setDisplayName(display + " Â§fx" + amount);
 		item.setItemMeta(meta);
 		item.setAmount(amount > 64 ? 64 : amount);
 		return item;
@@ -170,7 +170,7 @@ public class StoredItem {
 		if (amount <= 0) {
 			return null;
 		}
-		meta.setDisplayName(display + " §fx" + amount);
+		meta.setDisplayName(display + " Â§fx" + amount);
 		item.setItemMeta(meta);
 		item.setAmount(amount > 64 ? 64 : amount);
 		return item;
@@ -180,7 +180,7 @@ public class StoredItem {
 		ItemStack item = getItem();
 		ItemMeta meta = item.getItemMeta();
 		int playerHas = StorageManager.getAmount(p, id);
-		String display = playerHas >= compare ? "§a" : "§c";
+		String display = playerHas >= compare ? "Â§a" : "Â§c";
 		display += ChatColor.stripColor(this.display) + " " + playerHas + " / " + compare;
 		meta.setDisplayName(display);
 		meta.setLore(sourceLore);
@@ -193,7 +193,7 @@ public class StoredItem {
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(storageLore);
 		int playerHas = StorageManager.getAmount(p, id);
-		String display = playerHas >= compare ? "§a" : "§c";
+		String display = playerHas >= compare ? "Â§a" : "Â§c";
 		display += ChatColor.stripColor(this.display) + " " + playerHas + " / " + compare;
 		meta.setDisplayName(display);
 		item.setItemMeta(meta);

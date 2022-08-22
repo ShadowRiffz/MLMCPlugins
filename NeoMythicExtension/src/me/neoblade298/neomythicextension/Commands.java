@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neomythicextension.objects.SpawnerDefinition;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 
@@ -34,19 +35,19 @@ public class Commands implements CommandExecutor{
 				Player p = (Player) sender;
 				UUID uuid = p.getUniqueId();
 				if (args.length == 0) { 
-					p.sendMessage("§4/nme create §7- Starts spawner maker");
-					p.sendMessage("§4/nme cancel §7- Cancels spawner maker");
-					p.sendMessage("§4/nme view §7- Views current spawner maker");
-					p.sendMessage("§4/nme location [world] [x,y,z pos1] [x,y,z pos2] §7- Sets corners of spawner maker");
-					p.sendMessage("§4/nme add [MythicMob] [SpawnerName] [Group] [Block] §7- Sets a spawner definition");
-					p.sendMessage("§4/nme remove # §7- Removes a spawner definition");
-					p.sendMessage("§4/nme start §7- Completes the setup and generates the spawners");
+					p.sendMessage("Â§4/nme create Â§7- Starts spawner maker");
+					p.sendMessage("Â§4/nme cancel Â§7- Cancels spawner maker");
+					p.sendMessage("Â§4/nme view Â§7- Views current spawner maker");
+					p.sendMessage("Â§4/nme location [world] [x,y,z pos1] [x,y,z pos2] Â§7- Sets corners of spawner maker");
+					p.sendMessage("Â§4/nme add [MythicMob] [SpawnerName] [Group] [Block] Â§7- Sets a spawner definition");
+					p.sendMessage("Â§4/nme remove # Â§7- Removes a spawner definition");
+					p.sendMessage("Â§4/nme start Â§7- Completes the setup and generates the spawners");
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("create")) {
 					if (main.spawnermakers.containsKey(uuid)) {
-						p.sendMessage("§4[§c§lMLMC§4] §7You are already creating a spawner maker! Do " +
-								"§c/nme view §7or §c/nme cancel§7!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already creating a spawner maker! Do " +
+								"Â§c/nme view Â§7or Â§c/nme cancelÂ§7!");
 					}
 					else {
 						SpawnerMaker sm = new SpawnerMaker();
@@ -58,10 +59,10 @@ public class Commands implements CommandExecutor{
 				else if (args[0].equalsIgnoreCase("cancel")) {
 					if (main.spawnermakers.containsKey(uuid)) {
 						main.spawnermakers.remove(uuid);
-						p.sendMessage("§4[§c§lMLMC§4] §7SpawnerMaker successfully cancelled.");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7SpawnerMaker successfully cancelled.");
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You do not have a spawner maker to cancel!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You do not have a spawner maker to cancel!");
 					}
 					return true;
 				}
@@ -70,7 +71,7 @@ public class Commands implements CommandExecutor{
 						main.spawnermakers.get(uuid).display(p);
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You do not have a spawner maker to view!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You do not have a spawner maker to view!");
 					}
 					return true;
 				}
@@ -113,7 +114,7 @@ public class Commands implements CommandExecutor{
 						sm.display(p);
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You must first do §c/nme create§7!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You must first do Â§c/nme createÂ§7!");
 					}
 					return true;
 				}
@@ -122,17 +123,17 @@ public class Commands implements CommandExecutor{
 					if (main.spawnermakers.containsKey(uuid)) {
 						MythicBukkit mm = MythicBukkit.inst();
 						if (mm.getMobManager().getMythicMob(args[1]) == null) {
-							p.sendMessage("§4[§c§lMLMC§4] §cInvalid MythicMob!");
+							p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInvalid MythicMob!");
 							return true;
 						}
 						
 						if (mm.getSpawnerManager().getSpawnerByName(args[2] + "1") != null) {
-							p.sendMessage("§4[§c§lMLMC§4] §cSpawner already exists!");
+							p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSpawner already exists!");
 							return true;
 						}
 						
 						if (Material.getMaterial(args[4].toUpperCase()) == null) {
-							p.sendMessage("§4[§c§lMLMC§4] §cInvalid block type!");
+							p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cInvalid block type!");
 							return true;
 						}
 						
@@ -146,7 +147,7 @@ public class Commands implements CommandExecutor{
 						main.spawnermakers.get(uuid).display(p);
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You must first do §c/nme create§7!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You must first do Â§c/nme createÂ§7!");
 					}
 					return true;
 				}
@@ -156,7 +157,7 @@ public class Commands implements CommandExecutor{
 						main.spawnermakers.get(uuid).display(p);
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You must first do §c/nme create§7!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You must first do Â§c/nme createÂ§7!");
 					}
 					return true;
 				}
@@ -167,14 +168,20 @@ public class Commands implements CommandExecutor{
 						}
 					}
 					else {
-						p.sendMessage("§4[§c§lMLMC§4] §7You must first do §c/nme create§7!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You must first do Â§c/nme createÂ§7!");
 					}
 					return true;
 				}
 			}
 			
-			if(args.length == 2 && args[0].equalsIgnoreCase("debug")) {
-		    	sender.sendMessage("Global score of " + args[1] + " is " + main.globalscores.get(args[1]));
+			if(args[0].equalsIgnoreCase("debug")) {
+				MythicExt.debug = !MythicExt.debug;
+				if (MythicExt.debug) {
+					Util.msg(sender, "&7Debug set to &etrue");
+				}
+				else {
+					Util.msg(sender, "&7Debug set to &efalse");
+				}
 		    	return true;
 		    }
 		    else if (args.length > 1 && args[0].equalsIgnoreCase("nbc")) {

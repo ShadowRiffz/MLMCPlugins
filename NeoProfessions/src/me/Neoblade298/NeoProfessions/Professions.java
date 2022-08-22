@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Neoblade298.NeoProfessions.Commands.*;
 import me.Neoblade298.NeoProfessions.Inventories.ProfessionInventory;
+import me.Neoblade298.NeoProfessions.Listeners.BoostListener;
 import me.Neoblade298.NeoProfessions.Listeners.InventoryListeners;
 import me.Neoblade298.NeoProfessions.Listeners.PartyListeners;
 import me.Neoblade298.NeoProfessions.Managers.*;
@@ -72,6 +73,7 @@ public class Professions extends JavaPlugin implements Listener {
 		// Set up required listeners
 		getServer().getPluginManager().registerEvents(new InventoryListeners(this), this); // Repairs
 		getServer().getPluginManager().registerEvents(new AugmentManager(this), this); // Working augments
+		getServer().getPluginManager().registerEvents(new BoostListener(), this); // Exp mults
 		if (Bukkit.getPluginManager().isPluginEnabled("mcMMO")) {
 			getServer().getPluginManager().registerEvents(new PartyListeners(this), this);
 		}
@@ -104,7 +106,6 @@ public class Professions extends JavaPlugin implements Listener {
 			IOListener.register(this, gm);
 	
 			// Command listeners for all classes
-			this.getCommand("value").setExecutor(new ValueCommand(this));
 			this.getCommand("ebal").setExecutor(new EssenceBalanceCommand(this));
 			this.getCommand("epay").setExecutor(new EssencePayCommand(this));
 			this.getCommand("evouch").setExecutor(new EssenceVouchCommand(this));
@@ -125,7 +126,7 @@ public class Professions extends JavaPlugin implements Listener {
 		}
 		
 		// general
-		lvlupMsg = cfg.getString("levelup").replaceAll("&", "ง");
+		lvlupMsg = cfg.getString("levelup").replaceAll("&", "ยง");
 		
 		// exp multipliers
 		rarityExpMults.clear();

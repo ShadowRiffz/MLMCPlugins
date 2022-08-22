@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -107,6 +108,14 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 			target.damage(e.getAmount());
 		}
 	}
+
+	// Stop nether portals from working in a skillapi area
+	@EventHandler
+	public void onPlayerPortal(PlayerPortalEvent e) {
+		if (SkillAPI.getSettings().isWorldEnabled(e.getFrom().getWorld())) {
+			e.setCancelled(true);
+		}
+	}
 	
 	// Stop players from blocking mythicmobs
 	@EventHandler(ignoreCancelled=false)
@@ -119,12 +128,6 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				String world = p.getWorld().getName();
 				if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 					e.setDamage(DamageModifier.BLOCKING, e.getDamage(DamageModifier.BLOCKING) * 0.2);
-				}
-				else {
-					double blocked = e.getDamage(DamageModifier.BLOCKING);
-					if (blocked < -15) {
-						e.setDamage(DamageModifier.BLOCKING, -15 + ((blocked + 15) * 0.5));
-					}
 				}
 			}
 		}
@@ -151,7 +154,7 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 			if (e.getItem().getType().equals(Material.GOLDEN_APPLE) ||
 					e.getItem().getType().equals(Material.ENCHANTED_GOLDEN_APPLE)) {
 				e.setCancelled(true);
-				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §cGolden apples are restricted in the quest world.");
+				e.getPlayer().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cGolden apples are restricted in the quest world.");
 				return;
 			}
 		}
@@ -211,11 +214,11 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				}
 			}
 			pc.setPoints(pc.getPoints() - (currSP - expectedSP));
-			p.sendMessage("§cNote: /skills points have been adjusted lower. You may want to double check them.");
+			p.sendMessage("Â§cNote: /skills points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currSP < expectedSP) {
 			data.givePoints(expectedSP - currSP, ExpSource.MOB);
-			p.sendMessage("§cNote: /skills points have been adjusted higher. You may want to double check them.");
+			p.sendMessage("Â§cNote: /skills points have been adjusted higher. You may want to double check them.");
 		}
 		
 		if (currAP > expectedAP) {
@@ -226,11 +229,11 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
 				data.resetAttribs();
 				data.setAttribPoints(expectedAP);
 			}
-			p.sendMessage("§cNote: /attr points have been adjusted lower. You may want to double check them.");
+			p.sendMessage("Â§cNote: /attr points have been adjusted lower. You may want to double check them.");
 		}
 		else if (currAP < expectedAP){
 			data.setAttribPoints(data.getAttributePoints() + (expectedAP - currAP));
-			p.sendMessage("§cNote: /attr points have been adjusted higher. You may want to double check them.");
+			p.sendMessage("Â§cNote: /attr points have been adjusted higher. You may want to double check them.");
 		}
 	}
 	

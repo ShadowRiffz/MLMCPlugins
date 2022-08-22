@@ -51,12 +51,17 @@ public class ProfessionManager implements IOComponent, Manager {
 		return -1;
 	}
 	
-	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
-		// Check if player exists already
+	public static void giveExp(Player p, ProfessionType prof, int exp) {
 		if (accounts.containsKey(p.getUniqueId())) {
-			return;
+			accounts.get(p.getUniqueId()).get(prof).addExp(p, exp);
 		}
+	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
+	
+	@Override
+	public void loadPlayer(Player p, Statement stmt) {
 
 		HashMap<ProfessionType, Profession> profs = new HashMap<ProfessionType, Profession>();
 		for (ProfessionType prof : ProfessionType.values()) {
@@ -80,7 +85,7 @@ public class ProfessionManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		if (!accounts.containsKey(p.getUniqueId())) {
 			return;
@@ -89,7 +94,7 @@ public class ProfessionManager implements IOComponent, Manager {
 		try {
 			for (Entry<ProfessionType, Profession> entry : accounts.get(uuid).entrySet()) {
 				Profession prof = entry.getValue();
-				stmt.addBatch("REPLACE INTO professions_accounts "
+				insert.addBatch("REPLACE INTO professions_accounts "
 						+ "VALUES ('" + uuid + "', '" + entry.getKey() + "'," + prof.getLevel() + "," +
 						prof.getExp()  +");");
 			}
@@ -101,10 +106,10 @@ public class ProfessionManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}

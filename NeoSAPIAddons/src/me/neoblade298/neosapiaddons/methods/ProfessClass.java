@@ -25,7 +25,7 @@ public class ProfessClass {
 		}
 
 		s.sendMessage(
-				"ง7Professed the class of งe" + p.getName() + " ง7from ง6" + classname + " ง7to ง6" + classAfter + "ง7.");
+				"ยง7Professed the class of ยงe" + p.getName() + " ยง7from ยง6" + classname + " ยง7to ยง6" + classAfter + "ยง7.");
 	}
 	
 	private static void professTier1(Player p, String afterClass) {
@@ -53,7 +53,6 @@ public class ProfessClass {
 		PlayerClass pclass = data.getClass("class");
 		
 		// Skill up the essence
-		data.upgradeSkill(SkillAPI.getSkill(afterClass + "'s Essence"), true);
 
 		int currentLv = 30;
 		int maxLv = pclass.getData().getMaxLevel();

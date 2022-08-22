@@ -31,7 +31,7 @@ public class Commands implements CommandExecutor {
 		if (args.length == 1 && args[0].equalsIgnoreCase("sweep") && p.hasPermission("tdeleter.admin")) {
 			main.sweepTowns();
 			if (this.main.deletableTowns.size() > 0) {
-				String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+				String msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7The following towns can be deleted: Â§e";
 				for (Town town : main.deletableTowns) {
 					msg += town.getName() + " ";
 				}
@@ -45,12 +45,12 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			else {
-				p.sendMessage("§4[§c§lMLMC§4] §7No towns can currently be deleted! Try §e/tdelete sweep§7?");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7No towns can currently be deleted! Try Â§e/tdelete sweepÂ§7?");
 				return true;
 			}
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("list") && p.hasPermission("tdeleter.admin")) {
-			String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+			String msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7The following towns can be deleted: Â§e";
 			for (Town town : main.deletableTowns) {
 				msg += town.getName() + " ";
 			}
@@ -59,7 +59,7 @@ public class Commands implements CommandExecutor {
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("debug") && p.hasPermission("tdeleter.admin")) {
 			main.debug = !main.debug;
-			String msg = "§4[§c§lMLMC§4] §7Debug is now §e" + main.debug;
+			String msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Debug is now Â§e" + main.debug;
 			p.sendMessage(msg);
 			return true;
 		}
@@ -67,10 +67,10 @@ public class Commands implements CommandExecutor {
 			try {
 				Town town = TownyAPI.getInstance().getDataSource().getTown(args[1]);
 				if (main.checkTownInactive(town, p)) {
-					p.sendMessage("§4[§c§lMLMC§4] §7Town can be deleted.");
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Town can be deleted.");
 				}
 			} catch (NotRegisteredException e) {
-				String error = "§4[§c§lMLMC§4] §7Town not registered.";
+				String error = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Town not registered.";
 				p.sendMessage(error);
 			}
 			return true;
@@ -82,11 +82,11 @@ public class Commands implements CommandExecutor {
 					town.getAccount().setBalance(0, "Town deleted");
 					TownyAPI.getInstance().getDataSource().removeTown(town);
 					main.deletableTowns.remove(town);
-					Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
+					Bukkit.broadcastMessage("Â§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
 				}
 			}
 			catch (Exception e) {
-				String error = "§4[§c§lMLMC§4] §7Town not registered.";
+				String error = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Town not registered.";
 				p.sendMessage(error);
 			}
 			return true;

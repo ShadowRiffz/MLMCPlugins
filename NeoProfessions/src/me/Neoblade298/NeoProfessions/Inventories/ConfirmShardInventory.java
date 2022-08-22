@@ -32,7 +32,7 @@ public class ConfirmShardInventory extends ProfessionInventory {
 		this.item = item;
 		this.editor = new ItemEditor(item);
 		
-		inv = Bukkit.createInventory(p, 9, "§cAre you sure?");
+		inv = Bukkit.createInventory(p, 9, "Â§cAre you sure?");
 
 		inv.addItem(item);
 		NBTItem nbti = new NBTItem(item);
@@ -41,9 +41,9 @@ public class ConfirmShardInventory extends ProfessionInventory {
 		inv.addItem(shard);
 		ItemStack[] contents = inv.getContents();
 		for (int i = 2; i < 7; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo");
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "Â§cNo");
 		}
-		contents[8] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes");
+		contents[8] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aYes");
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);
@@ -63,10 +63,10 @@ public class ConfirmShardInventory extends ProfessionInventory {
 		final ItemMeta meta = item.getItemMeta();
 		list.add(0, line);
 		if (isReplace) {
-			list.add(0, "§cCurrent augment will be destroyed!");
+			list.add(0, "Â§cCurrent augment will be destroyed!");
 		}
 		if (aug.isPermanent()) {
-			meta.setDisplayName("§cThis augment cannot be swapped");
+			meta.setDisplayName("Â§cThis augment cannot be swapped");
 			item.setType(Material.RED_STAINED_GLASS_PANE);
 		}
 		else {

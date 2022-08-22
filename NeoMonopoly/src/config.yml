@@ -257,7 +257,7 @@ communitychest:
     amount: 20
   '9':
     type: 'takemoney'
-    name: 'It’s your birthday. Collect $10 from every player.'
+    name: 'ItÂ§s your birthday. Collect $10 from every player.'
     amount: 10
   '10':
     type: 'gainmoney'

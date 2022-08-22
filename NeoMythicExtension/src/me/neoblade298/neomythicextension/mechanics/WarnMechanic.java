@@ -19,7 +19,7 @@ public class WarnMechanic implements ITargetedEntitySkill {
 
 	public WarnMechanic(MythicLineConfig config) {
         this.radius = config.getInteger(new String[] {"radius", "r"}, 30);
-        this.msg = config.getString(new String[] {"message", "msg", "m"}, "Default message").replaceAll("<&sp>", " ").replaceAll("<&cm>", ",").replaceAll("<&sq>", "'").replaceAll("&", "ง");
+        this.msg = config.getString(new String[] {"message", "msg", "m"}, "Default message").replaceAll("<&sp>", " ").replaceAll("<&cm>", ",").replaceAll("<&sq>", "'").replaceAll("&", "ยง");
         this.msg = msg.substring(1, msg.length() - 1);
         this.warnTarget = config.getBoolean(new String[] {"warntarget", "wt"}, false);
 	}

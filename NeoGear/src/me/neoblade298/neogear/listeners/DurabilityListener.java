@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -28,7 +29,7 @@ import me.neoblade298.neogear.Gear;
 public class DurabilityListener implements Listener {
 	Gear main;
 	private final static Random gen = new Random();
-	private final static String DURABILITYSTRING = "§7Durability ";
+	private final static String DURABILITYSTRING = "Â§7Durability ";
 	private final static String WEAPONCD = "WeaponDurability";
 	private final static String ARMORCD = "ArmorDurability";
 	private final static int CDTIME = 20;
@@ -37,7 +38,7 @@ public class DurabilityListener implements Listener {
 		this.main = main;
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDamageMelee(EntityDamageByEntityEvent e) {
 		Entity cause = e.getDamager();
 		Entity target = e.getEntity();
@@ -56,14 +57,14 @@ public class DurabilityListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onShoot(EntityShootBowEvent e) {
 		if (e.getEntity() instanceof Player) {
 			reduceWeaponDurability((Player) e.getEntity());
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onSkillCast(PlayerSkillCastSuccessEvent e) {
 		reduceWeaponDurability(e.getPlayer());
 	}
@@ -158,7 +159,7 @@ public class DurabilityListener implements Listener {
 			double dM = Integer.parseInt(numbers[1].trim());
 			
 			if (d == 25 && p.hasPermission("donator.warndurability")) {
-				p.sendMessage("§4[§c§lMLMC§4] §4WARNING: Your item, " + item.getItemMeta().getDisplayName() + "§4, is at 25 durability!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§4WARNING: Your item, " + item.getItemMeta().getDisplayName() + "Â§4, is at 25 durability!");
 			}
 
 			d -= 1;
@@ -221,6 +222,10 @@ public class DurabilityListener implements Listener {
 	}
 	
 	public static boolean fullRepairItem(Player p, ItemStack item) {
+		if (item.getAmount() > 1) {
+			return false;
+		}
+		
 		ItemMeta im = item.getItemMeta();
 		if (im.hasLore()) {
 			ArrayList<String> lore = (ArrayList<String>) im.getLore();
@@ -298,11 +303,11 @@ public class DurabilityListener implements Listener {
 		int itemLevel = nbti.getInteger("level");
 		
 		if (itemLevel > repairLevel) {
-			p.sendMessage("§4[§c§lMLMC§4] §cThis repair kit's level is too low!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThis repair kit's level is too low!");
 			return;
 		}
 		if (item.getAmount() != 1) {
-			p.sendMessage("§4[§c§lMLMC§4] §cCannot repair more than one item at a time!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cCannot repair more than one item at a time!");
 			return;
 		}
 		
@@ -314,10 +319,10 @@ public class DurabilityListener implements Listener {
 			p.getOpenInventory().close();
 			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
-			p.sendMessage("§4[§c§lMLMC§4] §7Successfully repaired item!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully repaired item!");
 		}
 		else {
-			p.sendMessage("§4[§c§lMLMC§4] §c" + result);
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§c" + result);
 		}
 	}
 }

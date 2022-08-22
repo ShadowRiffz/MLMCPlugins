@@ -34,13 +34,13 @@ public class ConversationInstance {
 	}
 	
 	public boolean chooseResponse(int num) {
-		ConversationResponse resp = conv.getStage(stage).getResponse(num);
+		ConversationResponse resp = conv.getStage(stage).getValidResponses(p).get(num);
 		if (resp != null) {
 			if (resp.tryResponse(p)) {
 				// Successfully choose response
 				new BukkitRunnable() {
 					public void run() {
-						Bukkit.getPluginManager().callEvent(new ConversationEvent(conv, conv.getStage(stage), resp));
+						Bukkit.getPluginManager().callEvent(new ConversationEvent(p, conv, conv.getStage(stage), resp));
 						int runtime = resp.getActions().run(p);
 						
 						// If no next, try stage + 1, else just stay the same

@@ -66,7 +66,7 @@ public class GameCommands {
 			}.runTaskLater(main, 80L);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 
@@ -93,7 +93,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -114,7 +114,7 @@ public class GameCommands {
 			gp.message("&cCould not find that property!");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 
@@ -130,7 +130,7 @@ public class GameCommands {
 			game.endTurn(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -169,7 +169,7 @@ public class GameCommands {
 			game.giveMoney(prop.getPrice() / 2, gp, "&e" + gp + "&7 mortgaged " + prop.getShorthand(gp) + "&7 for &a+$" + (prop.getPrice() / 2) + "&7.", true);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 		
@@ -208,7 +208,7 @@ public class GameCommands {
 			game.takeMoney(prop.getPrice(), gp, "&e" + gp + "&7 unmortgaged " + prop.getShorthand(gp) + "&7 for &c-$" + prop.getPrice() + "&7.", true);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -229,7 +229,7 @@ public class GameCommands {
 			gp.message("&e" + gpView + " &7is at: " + game.board.get(gpView.getPosition()).getShorthand(gpView));
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -240,7 +240,7 @@ public class GameCommands {
 			gp.message("&7There are currently &e" + game.getHouses() + " &7 and &e" + game.getHotels() + " &7left.");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -284,7 +284,7 @@ public class GameCommands {
 			gp.message("&7Money: &a$" + gpView.getMoney() + "&7, Get out of jail free cards: &e" + gpView.getNumJailFree());
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -336,7 +336,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -352,7 +352,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -439,7 +439,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -514,7 +514,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -562,7 +562,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -632,7 +632,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -654,7 +654,7 @@ public class GameCommands {
 			game.startAuction(gp, prop);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -670,7 +670,7 @@ public class GameCommands {
 			game.auction.bid(gp, amount);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -686,7 +686,7 @@ public class GameCommands {
 			game.auction.dropPlayer(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -702,7 +702,7 @@ public class GameCommands {
 			game.auction.display(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -725,7 +725,7 @@ public class GameCommands {
 			game.buyProperty(gp, prop);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -767,7 +767,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -783,7 +783,7 @@ public class GameCommands {
 			game.payBill(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -809,7 +809,7 @@ public class GameCommands {
 			game.broadcast("&e" + gp + " &7used a get out of jail free card! They may now roll the dice to move.");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -835,7 +835,7 @@ public class GameCommands {
 			game.requiredActions.get(gp).add("ROLL_MOVE");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -881,7 +881,7 @@ public class GameCommands {
 			game.main.ingame.remove(sender);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 

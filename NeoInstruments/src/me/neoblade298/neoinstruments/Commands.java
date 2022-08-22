@@ -69,10 +69,10 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			else {
-				p.sendMessage("งc/music edit - ง7Edit a signed sheet music owned by you");
-				p.sendMessage("งc/music tempo [2-20] - ง7Sets tick delay between notes, recommended 4");
-				p.sendMessage("งc/music sync [player] - ง7Requests syncing sheet music with a player");
-				p.sendMessage("งc/music unsync [player] - ง7Unsyncs");
+				p.sendMessage("ยงc/music edit - ยง7Edit a signed sheet music owned by you");
+				p.sendMessage("ยงc/music tempo [2-20] - ยง7Sets tick delay between notes, recommended 4");
+				p.sendMessage("ยงc/music sync [player] - ยง7Requests syncing sheet music with a player");
+				p.sendMessage("ยงc/music unsync [player] - ยง7Unsyncs");
 				return true;
 			}
 		}

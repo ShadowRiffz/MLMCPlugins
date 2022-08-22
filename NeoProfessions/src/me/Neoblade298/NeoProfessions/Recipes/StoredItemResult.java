@@ -27,7 +27,7 @@ public class StoredItemResult implements RecipeResult {
 		}
 		
 		// Add to source
-		item.addSource("ง7Crafted", false);
+		item.addSource("ยง7Crafted", false);
 		item.addRelevantRecipe(key);
 		display = item.getDisplay();
 	}
@@ -41,13 +41,13 @@ public class StoredItemResult implements RecipeResult {
 	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = this.item.getStorageView(amount, true);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName((canCraft ? "งa" : "งc") + ChatColor.stripColor(meta.getDisplayName()));
+		meta.setDisplayName((canCraft ? "ยงa" : "ยงc") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
 		return item;
 	}
 	
 	@Override
-	public String getDisplay() {
+	public String getDisplay(Player p) {
 		return display;
 	}
 }

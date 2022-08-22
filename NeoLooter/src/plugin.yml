@@ -1,0 +1,15 @@
+name: NeoLooter
+main: me.neoblade298.neolooter.Main
+author: [Neoblade298]
+version: 1.0
+api-version: 1.14
+commands:
+   loot:
+      description: Toggle looting
+      usage: /loot
+   sethome:
+      description: Sets home
+      usage: /sethome
+   home:
+      description: Goes home
+      usage: /home

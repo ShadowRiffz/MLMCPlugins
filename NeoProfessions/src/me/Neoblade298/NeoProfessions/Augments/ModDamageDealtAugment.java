@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 
+import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
+
 public interface ModDamageDealtAugment {
 	
 	public default void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
@@ -20,4 +22,8 @@ public interface ModDamageDealtAugment {
 	}
 	
 	public abstract boolean canUse(Player user, LivingEntity target);
+	
+	public default FlagSettings setFlagAfter() {
+		return null;
+	}
 }

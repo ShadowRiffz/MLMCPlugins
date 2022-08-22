@@ -51,16 +51,16 @@ public class RecipeView extends ProfessionInventory {
 	public static final int HOME_BUTTON = 46;
 	
 	static {
-		info.add("§9§oLeft/Shift click §7§oto craft 1x/10x");
-		info.add("§9§oRight click §7§oto view components");
-		info.add("§9§oPress 1 §7§ofor crafting mode (Current)");
-		info.add("§9§oPress 2 §7§ofor result mode");
-		info.add("§9§oPress 3 §7§ofor augment mode");
+		info.add("Â§9Â§oLeft/Shift click Â§7Â§oto craft 1x/10x");
+		info.add("Â§9Â§oRight click Â§7Â§oto view components");
+		info.add("Â§9Â§oPress 1 Â§7Â§ofor crafting mode (Current)");
+		info.add("Â§9Â§oPress 2 Â§7Â§ofor result mode");
+		info.add("Â§9Â§oPress 3 Â§7Â§ofor augment mode");
 	}
 	
 	public RecipeView(Player p, String name, List<String> recipeList, String returnTo) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + name + " Recipes");
+		this.inv = Bukkit.createInventory(p, 54, "Â§9Recipe View: " + name + " Recipes");
 		this.name = name;
 		this.returnTo = returnTo;
 		this.recipeList = recipeList;
@@ -84,7 +84,7 @@ public class RecipeView extends ProfessionInventory {
 	
 	public RecipeView(Player p, StoredItem base, int min, int max, String returnTo) {
 		this.p = p;
-		this.inv = Bukkit.createInventory(p, 54, "§9Recipe View: " + base.getDisplay());
+		this.inv = Bukkit.createInventory(p, 54, "Â§9Recipe View: " + base.getDisplay());
 		this.returnTo = returnTo;
 		p.openInventory(inv);
 		this.base = base;
@@ -158,7 +158,7 @@ public class RecipeView extends ProfessionInventory {
 					}
 				}
 				if (lore.isEmpty()) {
-					lore.add("§7This item has no augments.");
+					lore.add("Â§7This item has no augments.");
 				}
 				meta.setLore(lore);
 				item.setItemMeta(meta);
@@ -185,16 +185,16 @@ public class RecipeView extends ProfessionInventory {
 	private ItemStack createInfoItem() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.INFO_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Info");
+		meta.setDisplayName("Â§9Info");
 		ArrayList<String> lore = new ArrayList<String>();
 		if (base != null) {
-			lore.add("§7Recipes with: " + base.getDisplay());
+			lore.add("Â§7Recipes with: " + base.getDisplay());
 		}
-		lore.add("§9§oLeft/Shift click §7§oto craft 1x/10x");
-		lore.add("§9§oRight click §7§oto view components");
-		lore.add("§9§oPress 1 §7§ofor crafting mode");
-		lore.add("§9§oPress 2 §7§ofor result mode");
-		lore.add("§9§oPress 3 §7§ofor augment mode");
+		lore.add("Â§9Â§oLeft/Shift click Â§7Â§oto craft 1x/10x");
+		lore.add("Â§9Â§oRight click Â§7Â§oto view components");
+		lore.add("Â§9Â§oPress 1 Â§7Â§ofor crafting mode");
+		lore.add("Â§9Â§oPress 2 Â§7Â§ofor result mode");
+		lore.add("Â§9Â§oPress 3 Â§7Â§ofor augment mode");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -205,9 +205,9 @@ public class RecipeView extends ProfessionInventory {
 	private ItemStack createHomeItem() {
 		ItemStack item = SkullCreator.itemFromBase64(HOUSE_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Back");
+		meta.setDisplayName("Â§9Back");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§oPrevious Menu");
+		lore.add("Â§7Â§oPrevious Menu");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -218,7 +218,7 @@ public class RecipeView extends ProfessionInventory {
 	private ItemStack createPreviousButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Previous Page");
+		meta.setDisplayName("Â§9Previous Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "previous");
@@ -228,7 +228,7 @@ public class RecipeView extends ProfessionInventory {
 	private ItemStack createNextButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.NEXT_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Next Page");
+		meta.setDisplayName("Â§9Next Page");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("type", "next");

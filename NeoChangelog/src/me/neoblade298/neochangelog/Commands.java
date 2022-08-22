@@ -221,7 +221,7 @@ public class Commands implements CommandExecutor {
 		sender.sendMessage("" + ChatColor.RED + ChatColor.STRIKETHROUGH + "---------------");
 		for (int entry = 1; entry < days.get(day).size(); entry++) {
 			sender.sendMessage(ChatColor.GOLD + "" + entry + ": " + ChatColor.GRAY
-					+ ((String) days.get(day).get(entry)).replaceAll("&", "ง"));
+					+ ((String) days.get(day).get(entry)).replaceAll("&", "ยง"));
 		}
 	}
 }

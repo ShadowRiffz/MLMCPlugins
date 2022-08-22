@@ -30,13 +30,13 @@ public class Commands implements CommandExecutor{
 					p.teleport(loc);
 				}
 				else {
-					sender.sendMessage("§4[§c§lMLMC§4] §cError: Player not found");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError: Player not found");
 				}
 			} catch (WarpNotFoundException e) {
-				sender.sendMessage("§4[§c§lMLMC§4] §cError: Warp not found");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError: Warp not found");
 				e.printStackTrace();
 			} catch (InvalidWorldException e) {
-				sender.sendMessage("§4[§c§lMLMC§4] §cError: Invalid world");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError: Invalid world");
 				e.printStackTrace();
 			}
 	    	return true;

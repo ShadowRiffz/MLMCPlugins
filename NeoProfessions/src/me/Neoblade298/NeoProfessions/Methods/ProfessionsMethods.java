@@ -58,7 +58,7 @@ public class ProfessionsMethods {
 			
 			// Refresh meta for after nbt
 			ItemMeta meta = item.getItemMeta();
-			lore.add(newLine, "§8[Empty Slot]");
+			lore.add(newLine, "Â§8[Empty Slot]");
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
@@ -68,7 +68,7 @@ public class ProfessionsMethods {
 			nbti.setInteger("slot" + newSlot + "Line", newLine);
 			nbti.applyNBT(item);
 
-			lore.add(newLine, "§8[Empty Slot]");
+			lore.add(newLine, "Â§8[Empty Slot]");
 			ItemMeta meta = item.getItemMeta();
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -80,11 +80,11 @@ public class ProfessionsMethods {
 	public static void givePaint(Player p, String red, String blue, String green) {
 		ItemStack item = new ItemStack(Material.POTION);
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
-		meta.setDisplayName("§nDye");
+		meta.setDisplayName("Â§nDye");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§c§lRed: §f" + red);
-		lore.add("§a§lGreen: §f" + blue);
-		lore.add("§9§lBlue: §f" + green);
+		lore.add("Â§cÂ§lRed: Â§f" + red);
+		lore.add("Â§aÂ§lGreen: Â§f" + blue);
+		lore.add("Â§9Â§lBlue: Â§f" + green);
 		meta.setLore(lore);
 		Color color = Color.fromRGB(Integer.parseInt(red), Integer.parseInt(blue), Integer.parseInt(green));
 		meta.setColor(color);
@@ -121,13 +121,13 @@ public class ProfessionsMethods {
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
 		
 		// Display name color change only if it had the default legendary color
-		if (meta.getDisplayName().startsWith("§4")) {
-			meta.setDisplayName("§b" + ChatColor.stripColor(meta.getDisplayName()));
+		if (meta.getDisplayName().startsWith("Â§4")) {
+			meta.setDisplayName("Â§b" + ChatColor.stripColor(meta.getDisplayName()));
 		}
 		
 		// Replace item tier
-		lore.set(2, "§7Rarity: §bArtifact");
-		lore.set(4, "§7Max Slots: " + slotsMax);
+		lore.set(2, "Â§7Rarity: Â§bArtifact");
+		lore.set(4, "Â§7Max Slots: " + slotsMax);
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		
@@ -158,6 +158,6 @@ public class ProfessionsMethods {
 		// Change nbt rarity
 		DurabilityListener.fullRepairItem(p, item);
 		
-		Bukkit.broadcastMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7has converted their item into an §bArtifact§7!");
+		Bukkit.broadcastMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§e" + p.getName() + " Â§7has converted their item into an Â§bArtifactÂ§7!");
 	}
 }

@@ -30,7 +30,7 @@ public class Commands implements CommandExecutor{
 			for (int i = 2; i < args.length; i++) {
 				tag += args[i] + " ";
 			}
-			String internalTag = tag.replaceAll("&", "§").replaceAll(" ", "").toLowerCase();
+			String internalTag = tag.replaceAll("&", "Â§").replaceAll(" ", "").toLowerCase();
 			internalTag = ChatColor.stripColor(internalTag);
 			File file = new File("/home/MLMC/ServerTowny/plugins/DeluxeTags/config.yml");
 			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -75,7 +75,7 @@ public class Commands implements CommandExecutor{
 			ConfigurationSection newTag = tags.createSection(internalTag + version);
 			Bukkit.getLogger().log(Level.INFO, "[AutoTag] Gave player " + args[0] + " new tag " + internalTag + version);
 			newTag.set("order", order);
-			newTag.set("tag", tag.replaceAll("§", "&"));
+			newTag.set("tag", tag.replaceAll("Â§", "&"));
 			newTag.set("description", "&7Donated for a custom tag!");
 			cfg.set("order", order + 1);
 			try {
@@ -87,7 +87,7 @@ public class Commands implements CommandExecutor{
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tags reload");
 			
 			if (Bukkit.getPlayer(args[0]) != null) {
-				Bukkit.getPlayer(args[0]).sendMessage("§4[§c§lMLMC§4] §7Successfully gave " + tag.replaceAll("&", "§") + "§7tag! Do §c/tags§7!");
+				Bukkit.getPlayer(args[0]).sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully gave " + tag.replaceAll("&", "Â§") + "Â§7tag! Do Â§c/tagsÂ§7!");
 			}
 		}
 		return true;

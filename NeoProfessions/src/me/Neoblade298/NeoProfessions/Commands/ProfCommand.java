@@ -45,7 +45,7 @@ public class ProfCommand implements CommandExecutor {
 	private static ArrayList<String> voucherLore = new ArrayList<String>();
 	
 	static {
-		voucherLore.add("§7§oRight click to claim!");
+		voucherLore.add("Â§7Â§oRight click to claim!");
 	}
 
 	public ProfCommand(Professions main) {
@@ -63,9 +63,9 @@ public class ProfCommand implements CommandExecutor {
 		if (args.length == 0) {
 			// /prof storage [min] [max]
 			// /prof recipes [menu name] [recipe list]
-			sender.sendMessage("§7- §c/prof convert §7- Converts item in mainhand to new gear system");
-			sender.sendMessage("§7- §c/prof inspect §7- Checks your mainhand item's augments");
-			sender.sendMessage("§7- §c/prof update §7- Updates lore of old augments");
+			sender.sendMessage("Â§7- Â§c/prof convert Â§7- Converts item in mainhand to new gear system");
+			sender.sendMessage("Â§7- Â§c/prof inspect Â§7- Checks your mainhand item's augments");
+			sender.sendMessage("Â§7- Â§c/prof update Â§7- Updates lore of old augments");
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("convert")) {
 			ItemStack main = p.getInventory().getItemInMainHand();
@@ -189,19 +189,20 @@ public class ProfCommand implements CommandExecutor {
 
 		if (sender.hasPermission("neoprofessions.admin") || sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage("§7- §4/prof reload");
-				sender.sendMessage("§7- §4/prof give [repair/augment] <aug> [level] [amount]");
-				sender.sendMessage("§7- §4/prof give item [id] [amount]");
-				sender.sendMessage("§7- §4/prof setlevel/exp [player] [type] [level/exp]");
-				sender.sendMessage("§7- §4/prof vouch knowledge [key] [displayname]");
-				sender.sendMessage("§7- §4/prof debug");
+				sender.sendMessage("Â§7- Â§4/prof reload");
+				sender.sendMessage("Â§7- Â§4/prof give [repair/augment] <aug> [level] [amount]");
+				sender.sendMessage("Â§7- Â§4/prof give item [id] [amount]");
+				sender.sendMessage("Â§7- Â§4/prof addlevel/exp [player] [type] [level/exp]");
+				sender.sendMessage("Â§7- Â§4/prof setlevel/exp [player] [type] [level/exp]");
+				sender.sendMessage("Â§7- Â§4/prof vouch knowledge [key] [displayname]");
+				sender.sendMessage("Â§7- Â§4/prof debug");
 				// prof sell
-				// sender.sendMessage("§7- §4/prof start [minigame] [playername]");
-				// sender.sendMessage("§7- §4/prof repair [playername]");
-				// sender.sendMessage("§7- §4/prof checkaugments [playername]");
-				sender.sendMessage("§7- §4/prof createslot [playername]");
-				sender.sendMessage("§7- §4/prof artifact <playername>");
-				// sender.sendMessage("§7- §4/prof givepaint [playername] R G B");
+				// sender.sendMessage("Â§7- Â§4/prof start [minigame] [playername]");
+				// sender.sendMessage("Â§7- Â§4/prof repair [playername]");
+				// sender.sendMessage("Â§7- Â§4/prof checkaugments [playername]");
+				sender.sendMessage("Â§7- Â§4/prof createslot [playername]");
+				sender.sendMessage("Â§7- Â§4/prof artifact <playername>");
+				// sender.sendMessage("Â§7- Â§4/prof givepaint [playername] R G B");
 				return true;
 			}
 			else {
@@ -222,12 +223,12 @@ public class ProfCommand implements CommandExecutor {
 						p = Bukkit.getPlayer(args[1]);
 						ItemStack item = p.getInventory().getItemInMainHand();
 						if (item == null || item.getType().isAir()) {
-							Util.sendMessage(p, "§cYou're not holding anything in your hand!");
+							Util.sendMessage(p, "Â§cYou're not holding anything in your hand!");
 							return true;
 						}
 						NBTItem nbti = new NBTItem(item);
 						if (!nbti.hasKey("gear") || !nbti.hasKey("level")) {
-							Util.sendMessage(p, "§cThis item cannot be repaired! It may be outdated.");
+							Util.sendMessage(p, "Â§cThis item cannot be repaired! It may be outdated.");
 							return true;
 						}
 						new RepairInventory(main, p);
@@ -240,7 +241,33 @@ public class ProfCommand implements CommandExecutor {
 						for (Manager mngr : Professions.managers) {
 							mngr.reload();
 						}
-						sender.sendMessage("§4[§c§lMLMC§4] §7Successful reload.");
+						sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successful reload.");
+					}
+					return true;
+				}
+				// prof addlevel/exp [player] [type] [level]
+				else if (args[0].equalsIgnoreCase("addlevel") || args[0].equalsIgnoreCase("addexp")) {
+					Player target = null;
+					int offset = 0;
+					if (args.length == 4) {
+						target = Bukkit.getPlayer(args[1]);
+						offset++;
+					}
+					else if (args.length == 3) {
+						target = (Player) sender;
+					}
+					int val = Integer.parseInt(args[2 + offset]);
+					
+					if (target != null) {
+						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1 + offset].toUpperCase()));
+						if (args[0].equalsIgnoreCase("addlevel")) {
+							prof.setLevel(Math.min(prof.getLevel() + val, 60));
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully added player level.");
+						}
+						else {
+							prof.addExp(p, val);
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully added player exp.");
+						}
 					}
 					return true;
 				}
@@ -261,11 +288,11 @@ public class ProfCommand implements CommandExecutor {
 						Profession prof = ProfessionManager.getAccount(target.getUniqueId()).get(ProfessionType.valueOf(args[1 + offset].toUpperCase()));
 						if (args[0].equalsIgnoreCase("setlevel")) {
 							prof.setLevel(val);
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set player level.");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully set player level.");
 						}
 						else {
 							prof.setLevel(val);
-							sender.sendMessage("§4[§c§lMLMC§4] §7Successfully set player exp.");
+							sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully set player exp.");
 						}
 					}
 					return true;
@@ -279,12 +306,12 @@ public class ProfCommand implements CommandExecutor {
 						p = Bukkit.getPlayer(args[1]);
 						ItemStack item = p.getInventory().getItemInMainHand();
 						if (item == null || item.getType().isAir()) {
-							Util.sendMessage(p, "§cYou're not holding anything in your hand!");
+							Util.sendMessage(p, "Â§cYou're not holding anything in your hand!");
 							return true;
 						}
 						NBTItem nbti = new NBTItem(item);
 						if (!nbti.hasKey("gear") || !nbti.hasKey("level")) {
-							Util.sendMessage(p, "§cThis item cannot be repaired! It may be outdated.");
+							Util.sendMessage(p, "Â§cThis item cannot be repaired! It may be outdated.");
 							return true;
 						}
 						new CreateSlotInventory(main, p);
@@ -366,7 +393,7 @@ public class ProfCommand implements CommandExecutor {
 						ItemStack item = augment.getItem(p);
 						item.setAmount(amt);
 						p.getInventory().addItem(item);
-						Util.sendMessage(sender, "&7Successfully gave " + augment.getLine() + " §7to " + p.getName() + "!");
+						Util.sendMessage(sender, "&7Successfully gave " + augment.getLine() + " Â§7to " + p.getName() + "!");
 					}
 					else if (type.equalsIgnoreCase("repair")) {
 						ItemStack item = BlacksmithItems.getRepairItem(lv);
@@ -384,10 +411,10 @@ public class ProfCommand implements CommandExecutor {
 				// /prof vouch knowledge [key] [display]
 				else if (args[0].equalsIgnoreCase("vouch") && args[1].equalsIgnoreCase("knowledge") && args.length == 4) {
 					String key = args[2];
-					String display = args[3].replaceAll("_", " ").replaceAll("&", "§");
+					String display = args[3].replaceAll("_", " ").replaceAll("&", "Â§");
 					ItemStack item = new ItemStack(Material.PAPER);
 					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName("§7Recipe: " + display);
+					meta.setDisplayName("Â§7Recipe: " + display);
 					meta.setLore(voucherLore);
 					item.setItemMeta(meta);
 					NBTItem nbti = new NBTItem(item);

@@ -37,7 +37,7 @@ public class ProfsCommand implements CommandExecutor {
 		HashMap<ProfessionType, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
 		for (ProfessionType prof : ProfessionType.values()) {
 			String line = "&7-- " + getProfessionBlock(account.get(prof)) + "&7 --";
-			viewer.sendMessage(line.replaceAll("&", "ง"));
+			viewer.sendMessage(line.replaceAll("&", "ยง"));
 		}
 	}
 	

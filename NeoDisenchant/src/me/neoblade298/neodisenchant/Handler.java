@@ -30,12 +30,12 @@ public class Handler implements CommandExecutor {
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
 		if (cmd.getName().equalsIgnoreCase("disreload")) {
 			if (player.hasPermission("disenchant.reload")) {
-				player.sendMessage("ง3[Disenchant]งf Reloaded Config File!");
+				player.sendMessage("ยง3[Disenchant]ยงf Reloaded Config File!");
 				this.config.reloadCustomConfig();
 				this.levelCost = Integer.parseInt(this.config.getCustomConfig().getString("levelCost"));
 				return true;
 			}
-			player.sendMessage("ง3[Disenchant]งf You don't have permission for this");
+			player.sendMessage("ยง3[Disenchant]ยงf You don't have permission for this");
 
 			return true;
 		}
@@ -45,7 +45,7 @@ public class Handler implements CommandExecutor {
 				if (player.hasPermission("disenchant.true")) {
 					if (player.getLevel() < this.levelCost) {
 						player.sendMessage(
-								"ง3[Disenchant]งf You don't have enough levels for this, you need " + this.levelCost);
+								"ยง3[Disenchant]ยงf You don't have enough levels for this, you need " + this.levelCost);
 					}
 					else {
 
@@ -66,19 +66,19 @@ public class Handler implements CommandExecutor {
 						for (Enchantment ench : toRemove) {
 							itemInHand.removeEnchantment(ench);
 						}
-						player.sendMessage("ง3[Disenchant]งf Your item has been disenchanted!");
+						player.sendMessage("ยง3[Disenchant]ยงf Your item has been disenchanted!");
 					}
 				}
 				else {
-					player.sendMessage("ง3[Disenchant]งf You do not have the correct permissions for this");
+					player.sendMessage("ยง3[Disenchant]ยงf You do not have the correct permissions for this");
 				}
 			}
 			else {
-				player.sendMessage("ง3[Disenchant]งf You cannot disenchant quest gear");
+				player.sendMessage("ยง3[Disenchant]ยงf You cannot disenchant quest gear");
 			}
 			return true;
 		}
-		player.sendMessage("ง3[Disenchant]งf Please only disenchant armour or weapons");
+		player.sendMessage("ยง3[Disenchant]ยงf Please only disenchant armour or weapons");
 
 		return false;
 	}

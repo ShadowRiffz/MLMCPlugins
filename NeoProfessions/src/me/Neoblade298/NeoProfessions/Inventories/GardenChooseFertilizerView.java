@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Events.ProfessionPlantSeedEvent;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
-import me.Neoblade298.NeoProfessions.Managers.CurrencyManager;
 import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
@@ -35,7 +34,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		this.max = max;
 		this.id = id;
 		this.slot = slot;
-		inv = Bukkit.createInventory(p, 54, "§9Choose a Fertilizer");
+		inv = Bukkit.createInventory(p, 54, "Â§9Choose a Fertilizer");
 		this.p = p;
 
 		ItemStack[] contents = inv.getContents();
@@ -68,7 +67,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	protected ItemStack createNoFertilizerButton() {
 		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Don't use Fertilizer");
+		meta.setDisplayName("Â§9Don't use Fertilizer");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setInteger("id", -1);
@@ -78,7 +77,7 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	protected ItemStack createBackButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Return");
+		meta.setDisplayName("Â§9Return");
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -114,23 +113,18 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		
 		// Make sure the level of the fertilizer is high enough
 		if (fertilizerId != -1 && StorageManager.getItem(fertilizerId).getLevel() < seedLevel) {
-			p.sendMessage("§cThis fertilizer is not high enough level!");
+			p.sendMessage("Â§cThis fertilizer is not high enough level!");
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 			return;
 		}
 		// Make sure the player has enough
 		else if (!StorageManager.playerHas(p, id, 1)) {
-			p.sendMessage("§cYou don't have enough of this seed!");
+			p.sendMessage("Â§cYou don't have enough of this seed!");
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 			return;
 		}
 		else if (!StorageManager.playerHas(p, fertilizerId, 1) && fertilizerId != -1) {
-			p.sendMessage("§cYou don't have enough of this fertilizer!");
-			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
-			return;
-		}
-		else if (!CurrencyManager.hasEnough(p, seedLevel, 1)) {
-			p.sendMessage("§cYou don't have 1 Level " + seedLevel + " Essence!");
+			p.sendMessage("Â§cYou don't have enough of this fertilizer!");
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, HarvestingMinigame.ERROR);
 			return;
 		}
@@ -138,7 +132,6 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 		if (fertilizerId != -1) {
 			StorageManager.takePlayer(p, fertilizerId, 1);
 		}
-		CurrencyManager.subtract(p, seedLevel, 1);
 		Fertilizer fert = null;
 		if (fertilizerId != -1) {
 			fert = GardenManager.getFertilizer(fertilizerId);

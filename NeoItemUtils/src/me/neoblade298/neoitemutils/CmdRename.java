@@ -27,7 +27,7 @@ public class CmdRename implements CommandExecutor {
 		if (sender.hasPermission("neoitemutils.rename") && sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou can't have a blank rename!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou can't have a blank rename!");
 				return true;
 			}
 
@@ -46,21 +46,21 @@ public class CmdRename implements CommandExecutor {
 					rename = main.translateHexCodes(rename);
 					
 					if (ChatColor.stripColor(rename).length() > 30 && !p.hasPermission("mycommand.staff")) {
-						p.sendMessage("§4[§c§lMLMC§4] §cName must be less than 30 characters!");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cName must be less than 30 characters!");
 						return true;
 					}
 					
 					meta.setDisplayName(rename);
 					item.setItemMeta(meta);
 					econ.withdrawPlayer(p, RENAME_PRICE);
-					p.sendMessage("§4[§c§lMLMC§4] §7Successfully renamed item!");
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully renamed item!");
 				}
 				else {
-					p.sendMessage("§4[§c§lMLMC§4] §cYou're not holding anything in your mainhand!");
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not holding anything in your mainhand!");
 				}
 			}
 			else {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou don't have enough gold for this!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou don't have enough gold for this!");
 			}
 		}
 		return true;

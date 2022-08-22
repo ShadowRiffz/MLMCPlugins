@@ -3,12 +3,17 @@ package me.neoblade298.base;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin implements org.bukkit.event.Listener {
+import me.neoblade298.neocore.commands.CommandManager;
+
+public class Main extends JavaPlugin {
+	private static Main inst;
 	
 	public void onEnable() {
+		inst = this;
 		Bukkit.getServer().getLogger().info("NeoPPRs Enabled");
-		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("cmd").setExecutor(new Commands(this));
+		// Bukkit.getPluginManager().registerEvents(this, this);
+		initCommands();
+		
 	}
 	
 	public void onDisable() {
@@ -16,4 +21,11 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 	    super.onDisable();
 	}
 	
+	private void initCommands() {
+		CommandManager mngr = new CommandManager("disenchant", this);
+	}
+	
+	public static Main inst() {
+		return inst;
+	}
 }

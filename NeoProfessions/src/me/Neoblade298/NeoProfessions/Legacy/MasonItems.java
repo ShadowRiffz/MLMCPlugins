@@ -11,11 +11,11 @@ public class MasonItems {
 		ItemMeta meta = item.getItemMeta();
 		int level = 30;
 		if(isAdvanced) {
-			meta.setDisplayName("§4[Lv 40] §cAdvanced Exp Charm");
+			meta.setDisplayName("Â§4[Lv 40] Â§cAdvanced Exp Charm");
 			level = 40;
 		}
 		else {
-			meta.setDisplayName("§4[Lv 30] §cExp Charm");
+			meta.setDisplayName("Â§4[Lv 30] Â§cExp Charm");
 		}
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
@@ -27,11 +27,11 @@ public class MasonItems {
 		ItemMeta meta = item.getItemMeta();
 		int level = 30;
 		if(isAdvanced) {
-			meta.setDisplayName("§4[Lv 40] §cAdvanced Looting Charm");
+			meta.setDisplayName("Â§4[Lv 40] Â§cAdvanced Looting Charm");
 			level = 40;
 		}
 		else {
-			meta.setDisplayName("§4[Lv 30] §cLooting Charm");
+			meta.setDisplayName("Â§4[Lv 30] Â§cLooting Charm");
 		}
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
@@ -43,11 +43,11 @@ public class MasonItems {
 		ItemMeta meta = item.getItemMeta();
 		int level = 40;
 		if(isAdvanced) {
-			meta.setDisplayName("§4[Lv 50] §cAdvanced Drop Charm");
+			meta.setDisplayName("Â§4[Lv 50] Â§cAdvanced Drop Charm");
 			level = 50;
 		}
 		else {
-			meta.setDisplayName("§4[Lv 40] §cDrop Charm");
+			meta.setDisplayName("Â§4[Lv 40] Â§cDrop Charm");
 		}
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
@@ -58,7 +58,7 @@ public class MasonItems {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		int level = 20;
-		meta.setDisplayName("§4[Lv 20] §cTraveler's Charm");
+		meta.setDisplayName("Â§4[Lv 20] Â§cTraveler's Charm");
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -68,7 +68,7 @@ public class MasonItems {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		int level = 30;
-		meta.setDisplayName("§4[Lv 30] §cRecovery Charm");
+		meta.setDisplayName("Â§4[Lv 30] Â§cRecovery Charm");
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -78,7 +78,7 @@ public class MasonItems {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		int level = 50;
-		meta.setDisplayName("§4[Lv 50] §cHunger Charm");
+		meta.setDisplayName("Â§4[Lv 50] Â§cHunger Charm");
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -88,7 +88,7 @@ public class MasonItems {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		int level = 40;
-		meta.setDisplayName("§4[Lv 40] §cSecond Chance Charm");
+		meta.setDisplayName("Â§4[Lv 40] Â§cSecond Chance Charm");
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;
@@ -98,7 +98,7 @@ public class MasonItems {
 		ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
 		ItemMeta meta = item.getItemMeta();
 		int level = 40;
-		meta.setDisplayName("§4[Lv 40] §cQuick Eat Charm");
+		meta.setDisplayName("Â§4[Lv 40] Â§cQuick Eat Charm");
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, level);
 		return item;

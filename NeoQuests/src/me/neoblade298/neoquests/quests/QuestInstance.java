@@ -1,60 +1,170 @@
 package me.neoblade298.neoquests.quests;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import com.sucy.skill.SkillAPI;
+
+import me.neoblade298.neoquests.NeoQuests;
 import me.neoblade298.neoquests.actions.RewardAction;
+import me.neoblade298.neoquests.actions.builtin.GiveMoneyAction;
+import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSet;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
+import me.neoblade298.neoquests.objectives.builtin.FakeObjectiveInstance;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class QuestInstance {
 	private Quester q;
 	private Quest quest;
 	private int stage;
-	private ArrayList<ObjectiveSetInstance> sets;
+	private LinkedHashMap<String, ObjectiveSetInstance> sets;
 	
-	public void completeObjectiveSet(ObjectiveSetInstance set) {
-		if (set.getNext() == -1 || set.getNext() == -2) {
-			endQuest(set, set.getNext() == -1, stage);
-			return;
+	// Used only when starting a new quest
+	public QuestInstance(Quester quester, Quest quest) {
+		this(quester, quest, 0);
+		this.getQuest().getStages().get(0).runActions(q.getPlayer());
+	}
+	
+	// Used only on loading in
+	public QuestInstance(Quester quester, Quest quest, int stage) {
+		this.q = quester;
+		this.quest = quest;
+		this.stage = stage;
+		this.sets = new LinkedHashMap<String, ObjectiveSetInstance>();
+	}
+	
+	// Used anytime new objectives show up
+	public void cleanupInstances() {
+		for (ObjectiveSetInstance i : sets.values()) {
+			i.stopListening();
 		}
-		else if (set.getNext() == -3) {
-			stage = stage + 1 >= quest.getStages().size() ? stage : stage + 1; // Next stage if one exists
-		}
-		else {
-			stage = set.getNext();
-		}
-		
-		for (ObjectiveSetInstance i : sets) {
-			i.cleanup();
-		}
-		
-		// Setup new stage
 		sets.clear();
-		for (ObjectiveSet os : quest.getStages().get(stage).getObjectives()) {
-			sets.add(new ObjectiveSetInstance(q.getPlayer(), this, os));
+	}
+	
+	public boolean setupInstances(boolean startListening) {
+		cleanupInstances();
+		for (ObjectiveSet set : quest.getStages().get(stage).getObjectives()) {
+			ObjectiveSetInstance osi = new ObjectiveSetInstance(q.getPlayer(), this, set);
+			sets.put(set.getKey(), osi);
+			if (startListening) {
+				osi.startListening();
+			}
+		}
+		return false;
+	}
+	
+	public void startListening() {
+		for (ObjectiveSetInstance osi : sets.values()) {
+			osi.startListening();
 		}
 	}
 	
-	public void endQuest(ObjectiveSetInstance si, boolean success, int stage) {
+	public void completeObjectiveSet(ObjectiveSetInstance set) {
+		set.finalizeObjectives();
+		int ticks = set.getSet().getActions().run(q.getPlayer());
+		if (set.getNext() == -1 || set.getNext() == -2) {
+			endQuest(set, true, stage, ticks);
+			return;
+		}
+		else if (set.getNext() == -3) {
+			if (stage + 1 < quest.getStages().size()) {
+				setStage(++stage);
+			}
+			else {
+				endQuest(set, true, stage, ticks);
+				return;
+			}
+		}
+		else {
+			setStage(set.getNext());
+		}
+	}
+	
+	public void setStage(int stage) {
+		quest.getStages().get(stage).runActions(q.getPlayer());
+		setupInstances(true);
+		displayObjectives(q.getPlayer());
+	}
+	
+	public void displayObjectives(CommandSender s) {
+		for (ObjectiveSetInstance osi : sets.values()) {
+			s.sendMessage("Â§e" + osi.getSet().getDisplay() + ":");
+			for (ObjectiveInstance oi : osi.getObjectives()) {
+				// Special handling for fake objectives
+				String msg;
+				if (oi instanceof FakeObjectiveInstance) {
+					msg = "Â§7- " + ((FakeObjectiveInstance) oi).getDisplay();
+				}
+				else if (oi.getObjective().isHidden()) {
+					continue;
+				}
+				else {
+					msg = "Â§7- " + oi.getObjective().getDisplay() + "Â§f: " + oi.getCount() + " / " + oi.getObjective().getNeeded();
+				}
+				if (oi.getObjective().getEndpoint() != null) {
+					ComponentBuilder builder = new ComponentBuilder(msg);
+					ComponentBuilder nav = new ComponentBuilder(" Â§7Â§o[Click for GPS]")
+							.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nav to " + oi.getObjective().getEndpoint()));
+					s.spigot().sendMessage(builder.append(nav.create()).create());
+				}
+				else {
+					s.sendMessage(msg);
+				}
+			}
+		}
+	}
+	
+	public void endQuest(ObjectiveSetInstance si, boolean success, int stage, int ticks) {
 		Player p = q.getPlayer();
 		if (success) {
+			q.completeQuest(this, stage, success);
+			
 			ArrayList<RewardAction> rewards = quest.getRewards();
 			if (si.getSet().hasAlternateRewards()) {
 				rewards = si.getSet().getAlternateRewards();
 			}
-			p.sendMessage("§7You completed §e" + quest.getName() + "§7!");
-			if (rewards.size() > 0) {
-				p.sendMessage("§6Rewards:");
-				for (RewardAction r : rewards) {
-					r.run(p);
-					p.sendMessage("§7- " + r.getMessage());
+			final ArrayList<RewardAction> fRewards = rewards;
+			new BukkitRunnable() {
+				public void run() {
+					int account = SkillAPI.getPlayerAccountData(p).getActiveId();
+					if (fRewards.size() > 0) {
+						p.sendMessage("Â§6Rewards:");
+						for (RewardAction r : fRewards) {
+							if (r.getDisplay() != null || !r.isHidden()) {
+								// Check if money should be given
+								if (r instanceof GiveMoneyAction) {
+									if (NeoQuests.getGlobalPlayerTags().exists("resetaccount-" + account, p.getUniqueId())) {
+										continue;
+									}
+								}
+								
+								p.sendMessage("Â§7- " + r.getDisplay());
+							}
+						}
+
+						for (RewardAction r : fRewards) {
+							// Check if money should be given
+							if (r instanceof GiveMoneyAction) {
+								if (NeoQuests.getGlobalPlayerTags().exists("resetaccount-" + account, p.getUniqueId())) {
+									continue;
+								}
+							}
+							r.run(p);
+						}
+					}
 				}
-			}
+			}.runTaskLater(NeoQuests.inst(), ticks);
 		}
 		else {
-			p.sendMessage("§cYou failed §e" + quest.getName() + "§c!");
+			q.cancelQuest(quest.getKey());
+			p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou failed Â§6" + quest.getDisplay() + "Â§c!");
 		}
 	}
 	
@@ -62,9 +172,21 @@ public class QuestInstance {
 		return quest;
 	}
 	
-	public void cleanup() {
-		for (ObjectiveSetInstance si : sets) {
-			si.cleanup();
+	public void stopListening() {
+		for (ObjectiveSetInstance si : sets.values()) {
+			si.stopListening();
 		}
+	}
+	
+	public ObjectiveSetInstance getObjectiveSetInstance(String key) {
+		return sets.get(key);
+	}
+	
+	public Collection<ObjectiveSetInstance> getObjectiveSetInstances() {
+		return sets.values();
+	}
+	
+	public int getStage() {
+		return stage;
 	}
 }

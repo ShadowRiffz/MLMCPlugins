@@ -150,7 +150,7 @@ public class Main extends JavaPlugin implements Listener {
 						contents[8] = instrm;
 						inv.setContents(contents);
 						e.getPlayer().sendMessage(
-								"§4[§c§lMLMC§4] §7You begin playing your instrument freehand! Right click again to stop!");
+								"Â§4[Â§cÂ§lMLMCÂ§4] Â§7You begin playing your instrument freehand! Right click again to stop!");
 					}
 				}
 			}
@@ -158,7 +158,7 @@ public class Main extends JavaPlugin implements Listener {
 			// If playing instrument
 			else if (this.freePlaying.contains(e.getPlayer()) || bookPlaying.contains(e.getPlayer())) {
 				stopPlaying(e.getPlayer());
-				e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7You stopped playing your instrument!");
+				e.getPlayer().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You stopped playing your instrument!");
 			}
 		}
 		
@@ -218,7 +218,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (e.isSigning() && e.getPreviousBookMeta().hasLore()
 				&& e.getPreviousBookMeta().getLore().get(0).contains("Sheet Music")) {
 			List<String> lore = new ArrayList<String>();
-			lore.add("§eSheet Music");
+			lore.add("Â§eSheet Music");
 			BookMeta newMeta = e.getNewBookMeta();
 			newMeta.setLore(lore);
 			e.setNewBookMeta(newMeta);
@@ -252,7 +252,7 @@ public class Main extends JavaPlugin implements Listener {
 					if (pitches.get(note) == null) {
 						cancel();
 						stopPlaying(player);
-						player.sendMessage("§4[§c§lMLMC§4] §7There was a syntax error in your music at note: §e" + chords[cnt] + "§7! Playing stopped.");
+						player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7There was a syntax error in your music at note: Â§e" + chords[cnt] + "Â§7! Playing stopped.");
 					}
 					else
 					{
@@ -265,7 +265,7 @@ public class Main extends JavaPlugin implements Listener {
 			else {
 				cancel();
 				stopPlaying(player);
-				player.sendMessage("§4[§c§lMLMC§4] §7You finished playing your sheet music!");
+				player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You finished playing your sheet music!");
 			}
 		}
 	}
@@ -291,7 +291,7 @@ public class Main extends JavaPlugin implements Listener {
 		bookPlaying.add(p);
 
 		if (!this.syncedPlayers.contains(p)) { // if playing solo
-			p.sendMessage("§4[§c§lMLMC§4] §7You begin playing your sheet music! Right click again to stop!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You begin playing your sheet music! Right click again to stop!");
 			playingMusic.add(p);
 			new MusicRunnable(p, notesArr, sounds.get(instrument.get(p))).runTaskTimer(this, 0L, getNoteDelay(p));
 		}
@@ -301,16 +301,16 @@ public class Main extends JavaPlugin implements Listener {
 			if (bookPlaying.containsAll(syncSet) && canPlaySync(syncSet)) {
 				for (Player currPlayer : syncSet) {
 					currPlayer.sendMessage(
-							"§4[§c§lMLMC§4] §7You are playing your sheet music synced! Right click again to stop!");
+							"Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are playing your sheet music synced! Right click again to stop!");
 					playingMusic.add(currPlayer);
 					new MusicRunnable(currPlayer, this.noteArrs.get(currPlayer), sounds.get(instrument.get(currPlayer))).runTaskTimer(this, 0L, getNoteDelay(p));
 				}
 			}
 			else {
-				p.sendMessage("§4[§c§lMLMC§4] §7Waiting for synced players to begin playing.");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Waiting for synced players to begin playing.");
 				for (Player syncer : syncSet) {
 					if (!bookPlaying.contains(syncer)) {
-						syncer.sendMessage("§4[§c§lMLMC§4] §7" + p.getName() + " wants to start playing! Waiting for you to begin playing.");
+						syncer.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7" + p.getName() + " wants to start playing! Waiting for you to begin playing.");
 					}
 				}
 			}
@@ -337,14 +337,14 @@ public class Main extends JavaPlugin implements Listener {
 			player.getInventory().setItemInMainHand(newItem);
 		}
 		else {
-			player.sendMessage("§4[§c§lMLMC§4] §7You cannot edit that!");
+			player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You cannot edit that!");
 		}
 	}
 
 	public void getBook(Player player) {
 		ItemStack book = new ItemStack(Material.WRITABLE_BOOK);
 		List<String> lore = new ArrayList<String>();
-		lore.add("§eSheet Music");
+		lore.add("Â§eSheet Music");
 		ItemMeta meta = book.getItemMeta();
 		meta.setLore(lore);
 		book.setItemMeta(meta);
@@ -362,18 +362,18 @@ public class Main extends JavaPlugin implements Listener {
 		else {
 			this.noteDelays.replace(player, noteDelay);
 		}
-		player.sendMessage("§4[§c§lMLMC§4] §7Tempo set to " + bpm + ".");
+		player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Tempo set to " + bpm + ".");
 	}
 
 	public void askSync(Player asker, Player asked) {
 		if (asked == null) {
-			asker.sendMessage("§4[§c§lMLMC§4] §7" + asked + " unavailable.");
+			asker.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7" + asked + " unavailable.");
 			return;
 		}
 
-		asker.sendMessage("§4[§c§lMLMC§4] §7Sync with " + asked.getName() + " requested.");
-		asked.sendMessage("§4[§c§lMLMC§4] §7" + asker.getName()
-				+ " is requesting to sync. Confirm with §c/music confirm " + asker.getName() + ".");
+		asker.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Sync with " + asked.getName() + " requested.");
+		asked.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7" + asker.getName()
+				+ " is requesting to sync. Confirm with Â§c/music confirm " + asker.getName() + ".");
 		if (syncRequests.containsKey(asker)) {
 			ArrayList<Player> list = syncRequests.get(asker);
 			list.add(asked);
@@ -389,7 +389,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (syncRequests.containsKey(asker)) {
 			ArrayList<Player> list = syncRequests.get(asker);
 			if (list.contains(asked)) {
-				asked.sendMessage("§4[§c§lMLMC§4] §7Confirmed sync with "
+				asked.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Confirmed sync with "
 						+ asker.getName() + ".");
 				list.remove(asked);
 				sync(asker, asked);
@@ -402,9 +402,9 @@ public class Main extends JavaPlugin implements Listener {
 			ArrayList<Player> list = syncRequests.get(asker);
 			if (list.contains(asked)) {
 				list.remove(asked);
-				asked.sendMessage("§4[§c§lMLMC§4] §7Denied sync with "
+				asked.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Denied sync with "
 						+ asker.getName() + ".");
-				asker.sendMessage("§4[§c§lMLMC§4] §7Sync with "
+				asker.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Sync with "
 						+ asker.getName() + " denied.");
 			}
 		}
@@ -422,7 +422,7 @@ public class Main extends JavaPlugin implements Listener {
 					this.syncSets.remove(syncTossyncSet);
 				}
 				else {
-					player.sendMessage("§4[§c§lMLMC§4] §7You are already synced with " + syncTo.getName() + "!");
+					player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already synced with " + syncTo.getName() + "!");
 					return;
 				}
 			}
@@ -448,7 +448,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 
-		player.sendMessage("§4[§c§lMLMC§4] §7Synced with " + syncTo.getName() + ".");
+		player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Synced with " + syncTo.getName() + ".");
 	}
 
 	public void unsync(Player player) {
@@ -458,14 +458,14 @@ public class Main extends JavaPlugin implements Listener {
 		if (!this.syncedPlayers.contains(player)) {
 			return;
 		}
-		player.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
+		player.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Unsynced.");
 		syncedPlayers.remove(player);
 
 		HashSet<Player> syncSet = getsyncSet(player);
 		if (syncSet.size() < 3) { // if updated syncSet will have nobody synced to each other
 			for (Player p : syncSet) {
 				if (syncedPlayers.contains(p)) {
-					p.sendMessage("§4[§c§lMLMC§4] §7Unsynced.");
+					p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Unsynced.");
 				}
 				syncedPlayers.remove(p);
 			}

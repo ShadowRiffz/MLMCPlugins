@@ -73,20 +73,20 @@ public class Sorter {
 		}
 		ItemMeta meta = item.getItemMeta();
 		switch (sortType) {
-		case NAME_SORT: meta.setDisplayName("§9Sort by Name");
+		case NAME_SORT: meta.setDisplayName("Â§9Sort by Name");
 		break;
-		case LEVEL_SORT: meta.setDisplayName("§9Sort by Level");
+		case LEVEL_SORT: meta.setDisplayName("Â§9Sort by Level");
 		break;
-		case RARITY_SORT: meta.setDisplayName("§9Sort by Rarity");
+		case RARITY_SORT: meta.setDisplayName("Â§9Sort by Rarity");
 		break;
-		case AMOUNT_SORT: meta.setDisplayName("§9Sort by Amount");
+		case AMOUNT_SORT: meta.setDisplayName("Â§9Sort by Amount");
 		break;
 		}
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Priority: §e" + priority);
-		lore.add("§7Order: §e" + (reverse ? "Ascending" : "Descending"));
-		lore.add("§7§oPress 1-4 to set sort priority");
-		lore.add("§7§oLeft click to set ascending/descending");
+		lore.add("Â§7Priority: Â§e" + priority);
+		lore.add("Â§7Order: Â§e" + (reverse ? "Ascending" : "Descending"));
+		lore.add("Â§7Â§oPress 1-4 to set sort priority");
+		lore.add("Â§7Â§oLeft click to set ascending/descending");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);

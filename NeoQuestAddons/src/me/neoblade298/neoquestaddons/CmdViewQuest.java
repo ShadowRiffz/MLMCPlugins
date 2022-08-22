@@ -26,7 +26,7 @@ public class CmdViewQuest implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		// /viewquest [player]
 		if (args.length == 0) {
-			sender.sendMessage("งc/viewquest [player]");
+			sender.sendMessage("ยงc/viewquest [player]");
 		}
 		if (args.length == 1) {
 			Player viewed = Bukkit.getPlayer(args[0]);
@@ -34,7 +34,7 @@ public class CmdViewQuest implements CommandExecutor{
 				Quester quester = main.getQuests().getQuester(viewed.getUniqueId());
 				ConcurrentHashMap<Quest, Integer> map = quester.getCurrentQuests();
 				for (Quest q : map.keySet()) {
-					sender.sendMessage("ง6---(" + q.getName() + ")---");
+					sender.sendMessage("ยง6---(" + q.getName() + ")---");
 					for (String line : quester.getCurrentObjectives(q, false)) {
 						sender.sendMessage(line);
 					}

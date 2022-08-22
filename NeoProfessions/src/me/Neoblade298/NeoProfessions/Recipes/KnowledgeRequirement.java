@@ -23,11 +23,11 @@ public class KnowledgeRequirement implements RecipeRequirement {
 	}
 
 	public String failMessage(Player p) {
-		return "§4[§c§lMLMC§4] §cYou lack the recipe!";
+		return "Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou lack the recipe!";
 	}
 	
 	public String getLoreString(Player p) {
-		String msg = passesReq(p, 1) ? "§a" : "§c";
+		String msg = passesReq(p, 1) ? "Â§a" : "Â§c";
 		msg += "- Recipe knowledge";
 		return msg;
 	}

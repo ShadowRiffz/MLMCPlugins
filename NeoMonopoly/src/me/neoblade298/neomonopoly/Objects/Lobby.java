@@ -23,8 +23,8 @@ public class Lobby {
 	public String getPlayerList() {
 		String msg = new String();
 		for (int i = 0; i < players.size(); i++) {
-			msg += "งe" + players.get(i).getName();
-			if (i != players.size() - 1) msg += "ง7, ";
+			msg += "ยงe" + players.get(i).getName();
+			if (i != players.size() - 1) msg += "ยง7, ";
 		}
 		return msg;
 	}
@@ -32,7 +32,7 @@ public class Lobby {
 	public void broadcast(String msg) {
 		for (Player p : players) {
 			String message = "&4[&c&lMLMC&4] &7" + msg;
-			p.sendMessage(message.replaceAll("&", "ง"));
+			p.sendMessage(message.replaceAll("&", "ยง"));
 		}
 	}
 

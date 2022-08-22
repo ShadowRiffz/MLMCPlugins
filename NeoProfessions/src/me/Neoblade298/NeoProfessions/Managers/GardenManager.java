@@ -23,9 +23,9 @@ import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class GardenManager implements IOComponent, Manager {
@@ -36,7 +36,7 @@ public class GardenManager implements IOComponent, Manager {
 	private static FileLoader fertilizerLoader;
 	
 	static {
-		fertilizerLoader = yaml -> {
+		fertilizerLoader = (yaml, file) -> {
 			for (String key : yaml.getKeys(false)) {
 				ConfigurationSection cfg = yaml.getConfigurationSection(key);
 				int id = Integer.parseInt(key);
@@ -66,18 +66,17 @@ public class GardenManager implements IOComponent, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Garden manager...");
 		fertilizers.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "fertilizers"), fertilizerLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "fertilizers"), fertilizerLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
-		// Check if player exists already
-		if (gardens.containsKey(p.getUniqueId())) {
-			return;
-		}
+	public void loadPlayer(Player p, Statement stmt) {
 
 		HashMap<ProfessionType, Garden> pgardens = new HashMap<ProfessionType, Garden>();
 		gardens.put(p.getUniqueId(), pgardens);
@@ -118,7 +117,7 @@ public class GardenManager implements IOComponent, Manager {
 					public void run() {
 						Player online = Bukkit.getPlayer(p.getUniqueId());
 						if (online != null) {
-							online.sendMessage("§4[§c§lMLMC§4] §7Your §6/gardens §7have harvestable crops!");
+							online.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Your Â§6/gardens Â§7have harvestable crops!");
 						}
 					}
 				}.runTaskLaterAsynchronously(main, 100L);
@@ -131,14 +130,14 @@ public class GardenManager implements IOComponent, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		HashMap<ProfessionType, Garden> pgardens = gardens.get(uuid);
 		try {
 			for (ProfessionType type : pgardens.keySet()) {
 				Garden garden = pgardens.get(type);
 				// Save garden size
-				stmt.addBatch("REPLACE INTO professions_gardens "
+				insert.addBatch("REPLACE INTO professions_gardens "
 						+ "VALUES ('" + uuid + "', '" + type + "', " + pgardens.get(type).getSize() + ");");
 				
 				// Save garden slots
@@ -146,12 +145,12 @@ public class GardenManager implements IOComponent, Manager {
 					GardenSlot gslot = garden.getSlots().get(slot);
 					if (gslot != null) {
 						int fid = gslot.getFertilizer() != null ? gslot.getFertilizer().getId() : -1;
-						stmt.addBatch("REPLACE INTO professions_gardenslots "
+						insert.addBatch("REPLACE INTO professions_gardenslots "
 								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + "," + gslot.getId() + "," +
 								gslot.getEndTime() + "," + fid +");");
 					}
 					else {
-						stmt.addBatch("REPLACE INTO professions_gardenslots "
+						insert.addBatch("REPLACE INTO professions_gardenslots "
 								+ "VALUES ('" + uuid + "', '" + type + "'," + slot + ",-1,-1,-1);");
 					}
 				}
@@ -175,7 +174,7 @@ public class GardenManager implements IOComponent, Manager {
 			public void run() {
 				Player online = Bukkit.getPlayer(uuid);
 				if (online != null) {
-					online.sendMessage("§4[§c§lMLMC§4] §7Your " + StorageManager.getItem(gs.getId()).getDisplay() + " §7can now be harvested!");
+					online.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Your " + StorageManager.getItem(gs.getId()).getDisplay() + " Â§7can now be harvested!");
 				}
 			}
 		}.runTaskLater(main, gs.getTicksRemaining());
@@ -191,10 +190,10 @@ public class GardenManager implements IOComponent, Manager {
 	}
 	
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}

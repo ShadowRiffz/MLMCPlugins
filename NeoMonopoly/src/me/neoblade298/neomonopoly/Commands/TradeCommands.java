@@ -33,7 +33,7 @@ public class TradeCommands {
 			game.startTrade(gp, gpView);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class TradeCommands {
 			game.trade.privateDisplay(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class TradeCommands {
 			game.trade.setConfirm(gp, confirm);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class TradeCommands {
 			game.trade.cancel(gp);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class TradeCommands {
 			game.trade.requestProperty(gp, prefix);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class TradeCommands {
 			game.trade.offerProperty(gp, prefix);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class TradeCommands {
 			game.trade.requestMoney(gp, amount);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class TradeCommands {
 			game.trade.offerMoney(gp, amount);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class TradeCommands {
 			game.trade.requestJailFree(gp, amount);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -193,7 +193,7 @@ public class TradeCommands {
 			game.trade.offerJailFree(gp, amount);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	

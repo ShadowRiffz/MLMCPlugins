@@ -29,20 +29,20 @@ public class Commands implements CommandExecutor {
 				if(args[0].equalsIgnoreCase("debug")) {
 					main.debug = !main.debug;
 					if(main.debug) {
-						sender.sendMessage("ง7Debug enabled");
+						sender.sendMessage("ยง7Debug enabled");
 					}
 					else {
-						sender.sendMessage("ง7Debug disabled");
+						sender.sendMessage("ยง7Debug disabled");
 					}
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("report")) {
 					main.report = !main.report;
 					if(main.report) {
-						sender.sendMessage("ง7Reports enabled");
+						sender.sendMessage("ยง7Reports enabled");
 					}
 					else {
-						sender.sendMessage("ง7Reports disabled");
+						sender.sendMessage("ยง7Reports disabled");
 					}
 					return true;
 				}

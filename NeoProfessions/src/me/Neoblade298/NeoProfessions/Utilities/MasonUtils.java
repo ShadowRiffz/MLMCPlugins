@@ -46,9 +46,9 @@ public class MasonUtils {
 			}
 		}
 
-		lore.add(slotLine, "ง8(Lv " + level + " Slot)");
+		lore.add(slotLine, "ยง8(Lv " + level + " Slot)");
 		if (!hasBonus) {
-			lore.add(slotLine, "ง9[Bonus Attributes]");
+			lore.add(slotLine, "ยง9[Bonus Attributes]");
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);

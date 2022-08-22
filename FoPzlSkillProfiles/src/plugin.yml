@@ -1,0 +1,18 @@
+name: FoPzlSkillProfiles
+main: me.fopzl.skillprofiles.SkillProfiles
+author: [FoPzl]
+depend: [SkillAPI, NeoCore, NeoResearch]
+version: 1.1
+api-version: 1.19
+commands:
+   skillprofile:
+      aliases: [sprof, sp]
+      usage: "§cUsage: §7/<command> <save/load/list/delete> [name]"
+      permission: fopzlskillprofiles.*
+permissions:
+   fopzlskillprofiles.*:
+      description: User has permission to use skill profiles
+      default: true
+   fopzlskillprofiles.poger:
+      description: User has permission to set more than 3 profiles per class account
+      default: false

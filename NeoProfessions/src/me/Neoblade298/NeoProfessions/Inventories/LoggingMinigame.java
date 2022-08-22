@@ -52,7 +52,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		this.difficulty = difficulty;
 		this.tickrate = 9 - (difficulty / 4);
 		baseSpawnChance += difficulty * 0.15;
-		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
+		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "Â§"));
 		
 		ItemStack[] contents = inv.getContents();
 		for (int i = 11; i <= 15; i++) {
@@ -68,12 +68,12 @@ public class LoggingMinigame extends ProfessionInventory {
 	private ItemStack generateStartButton() {
 		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aClick to start!");
+		meta.setDisplayName("Â§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§l§nInstructions");
-		lore.add("§e" + drops.size() + " §7items will drop from the");
-		lore.add("§7top. Click them to get them, but don't");
-		lore.add("§7click any of the beehives!");
+		lore.add("Â§7Â§lÂ§nInstructions");
+		lore.add("Â§e" + drops.size() + " Â§7items will drop from the");
+		lore.add("Â§7top. Click them to get them, but don't");
+		lore.add("Â§7click any of the beehives!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -82,9 +82,9 @@ public class LoggingMinigame extends ProfessionInventory {
 	private ItemStack generateBeehive() {
 		ItemStack item = new ItemStack(Material.BEE_NEST);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§cDon't click me!");
+		meta.setDisplayName("Â§cDon't click me!");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§cBzzzz");
+		lore.add("Â§cBzzzz");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -93,7 +93,7 @@ public class LoggingMinigame extends ProfessionInventory {
 	private ItemStack generateGameOver() {
 		ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§7Game over!");
+		meta.setDisplayName("Â§7Game over!");
 		item.setItemMeta(meta);
 		return item;
 	}

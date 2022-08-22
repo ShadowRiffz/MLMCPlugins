@@ -28,11 +28,11 @@ public class Main extends JavaPlugin implements Listener {
   	public void onEnchant(EnchantItemEvent e) {
   		Map<Enchantment, Integer> enchs = e.getEnchantsToAdd();
   		if (enchs.containsKey(Enchantment.RIPTIDE)) {
-  			e.getEnchanter().sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
+  			e.getEnchanter().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eRiptide Â§7enchantment is disabled.");
   			e.setCancelled(true);
   		}
   		if (enchs.containsKey(Enchantment.CHANNELING)) {
-  			e.getEnchanter().sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
+  			e.getEnchanter().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eChanneling Â§7enchantment is disabled.");
   			e.setCancelled(true);
   		}
   	}
@@ -41,11 +41,11 @@ public class Main extends JavaPlugin implements Listener {
   	public void onAnvilPrep(PrepareAnvilEvent e) {
   		if (e.getResult() == null) return;
   		if (e.getResult().containsEnchantment(Enchantment.RIPTIDE)) {
-  			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
+  			e.getViewers().get(0).sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eRiptide Â§7enchantment is disabled.");
   			e.getViewers().get(0).closeInventory();
   		}
   		if (e.getResult().containsEnchantment(Enchantment.CHANNELING)) {
-  			e.getViewers().get(0).sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
+  			e.getViewers().get(0).sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eChanneling Â§7enchantment is disabled.");
   			e.getViewers().get(0).closeInventory();
   		}
   	}
@@ -55,11 +55,11 @@ public class Main extends JavaPlugin implements Listener {
   		ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
   		Map<Enchantment, Integer> enchs = item.getEnchantments();
   		if (enchs.containsKey(Enchantment.RIPTIDE)) {
-  			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7The §eRiptide §7enchantment is disabled.");
+  			e.getPlayer().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eRiptide Â§7enchantment is disabled.");
   			item.removeEnchantment(Enchantment.RIPTIDE);
   		}
   		if (enchs.containsKey(Enchantment.CHANNELING)) {
-  			e.getPlayer().sendMessage("§4[§c§lMLMC§4] §7The §eChanneling §7enchantment is disabled.");
+  			e.getPlayer().sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The Â§eChanneling Â§7enchantment is disabled.");
   			item.removeEnchantment(Enchantment.CHANNELING);
   		}
   	}

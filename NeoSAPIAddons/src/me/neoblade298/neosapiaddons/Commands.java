@@ -21,24 +21,24 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (sender.hasPermission("neosapiaddons.use")) {
 			if (args.length == 0) {
-				sender.sendMessage("§8neosapiaddons.use");
-				sender.sendMessage("§c/nsapi debug");
-				sender.sendMessage("§c/nsapi skillup [player] [skill] - increase a skill");
-				sender.sendMessage("§c/nsapi refresh [player] - update equips");
-				sender.sendMessage("§c/nsapi profess [player] [class] - safely profess player to next tier");
-				sender.sendMessage("§c/nsapi reset [player] - reset player to previous tier");
-				sender.sendMessage("§c/nsapi attr [attr] - check attributes, even hidden ones");
-				sender.sendMessage("§c/nsapi flag <player> [flag] - check if player has flag");
-				sender.sendMessage("§c/nsapi update [player] - Fixes AP and SP");
+				sender.sendMessage("Â§8neosapiaddons.use");
+				sender.sendMessage("Â§c/nsapi debug");
+				sender.sendMessage("Â§c/nsapi skillup [player] [skill] - increase a skill");
+				sender.sendMessage("Â§c/nsapi refresh [player] - update equips");
+				sender.sendMessage("Â§c/nsapi profess [player] [class] - safely profess player to next tier");
+				sender.sendMessage("Â§c/nsapi reset [player] - reset player to previous tier");
+				sender.sendMessage("Â§c/nsapi attr [attr] - check attributes, even hidden ones");
+				sender.sendMessage("Â§c/nsapi flag <player> [flag] - check if player has flag");
+				sender.sendMessage("Â§c/nsapi update [player] - Fixes AP and SP");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("debug")) {
 				SAPIAddons.debug = !SAPIAddons.debug;
 				if (SAPIAddons.debug) {
-					sender.sendMessage("§4[§c§lMLMC§4] §7Debug mode enabled");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Debug mode enabled");
 				}
 				else {
-					sender.sendMessage("§4[§c§lMLMC§4] §7Debug mode disabled");
+					sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Debug mode disabled");
 				}
 				return true;
 			}
@@ -53,7 +53,7 @@ public class Commands implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("skillup")) {
 				Skill skill = SkillAPI.getSkill(args[2].replaceAll("_", " "));
 				SkillAPI.getPlayerData(Bukkit.getPlayer(args[1])).upgradeSkill(skill, true);
-				sender.sendMessage("§4[§c§lMLMC§4] §7Skill upgraded.");
+				sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Skill upgraded.");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("refresh")) {
@@ -63,18 +63,18 @@ public class Commands implements CommandExecutor {
 			}
 			else if (args[0].equalsIgnoreCase("attr")) {
 	            Player p = (Player) sender;
-                sender.sendMessage("§4[§c§lMLMC§4] §7Attribute has: " + SkillAPI.getPlayerData(p).getAttribute(args[1]) + ".");
+                sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Attribute has: " + SkillAPI.getPlayerData(p).getAttribute(args[1]) + ".");
                 return true;
 			}
 			else if (args[0].equalsIgnoreCase("flag")) {
 				if (args.length == 2) {
 		            Player p = (Player) sender;
-	                sender.sendMessage("§4[§c§lMLMC§4] §7Flag " + args[1] + ": " + FlagManager.hasFlag(p, args[1]));
+	                sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Flag " + args[1] + ": " + FlagManager.hasFlag(p, args[1]));
 	                return true;
 				}
 				else {
 		            Player p = Bukkit.getPlayer(args[1]);
-	                sender.sendMessage("§4[§c§lMLMC§4] §7Flag " + args[2] + ": " + FlagManager.hasFlag(p, args[2]));
+	                sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Flag " + args[2] + ": " + FlagManager.hasFlag(p, args[2]));
 	                return true;
 				}
 			}

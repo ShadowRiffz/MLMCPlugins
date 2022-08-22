@@ -34,12 +34,12 @@ public class GardenInventory extends ProfessionInventory {
 		this.type = type;
 		String display;
 		switch (type) {
-		case HARVESTER: display = "§9Your Garden";
+		case HARVESTER: display = "Â§9Your Garden";
 		break;
-		case LOGGER: display = "§9Your Arbor";
+		case LOGGER: display = "Â§9Your Arbor";
 		break;
-		case STONECUTTER: display = "§9Your Quarry";
-		default: display = "§9Your Area";
+		case STONECUTTER: display = "Â§9Your Quarry";
+		default: display = "Â§9Your Area";
 		break;
 		}
 		garden = GardenManager.getGarden(p, type);
@@ -100,11 +100,9 @@ public class GardenInventory extends ProfessionInventory {
 	private ItemStack createEmptySlot() {
 		ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aEmpty Plot");
+		meta.setDisplayName("Â§aEmpty Plot");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7Left click to plant something!");
-		lore.add("§7Planting costs §e1 §7Essence of");
-		lore.add("§7the same level as the seed!");
+		lore.add("Â§7Left click to plant something!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
@@ -115,7 +113,7 @@ public class GardenInventory extends ProfessionInventory {
 	private ItemStack createHomeButton() {
 		ItemStack item = SkullCreator.itemFromBase64(RecipeView.HOUSE_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Back to Gardens");
+		meta.setDisplayName("Â§9Back to Gardens");
 		item.setItemMeta(meta);
 		return item;
 	}

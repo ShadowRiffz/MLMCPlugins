@@ -28,7 +28,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 		this.min = min;
 		this.max = max;
 		this.slot = slot;
-		inv = Bukkit.createInventory(p, 54, "ง9Choose a Seed");
+		inv = Bukkit.createInventory(p, 54, "ยง9Choose a Seed");
 		this.p = p;
 
 		ItemStack[] contents = inv.getContents();
@@ -80,7 +80,7 @@ public class GardenChooseSeedView extends ProfessionInventory {
 	protected ItemStack createBackButton() {
 		ItemStack item = SkullCreator.itemFromBase64(StorageView.PREV_HEAD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("ง9Return");
+		meta.setDisplayName("ยง9Return");
 		item.setItemMeta(meta);
 		return item;
 	}

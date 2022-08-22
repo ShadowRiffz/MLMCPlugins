@@ -117,20 +117,20 @@ public class Main extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 			else {
 				if (!creatingPPR) {
-					s.sendMessage("§4[§c§lMLMC§4] §7Could not find user's UUID.");
+					s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Could not find user's UUID.");
 					noError = true;
 				}
 			}
 			if (!noError) {
 				if (!creatingPPR) {
-					s.sendMessage("§4[§c§lMLMC§4] §7User not found in database.");
+					s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7User not found in database.");
 				}
 			}
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	

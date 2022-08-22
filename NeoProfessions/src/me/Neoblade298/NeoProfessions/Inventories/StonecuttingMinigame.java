@@ -52,7 +52,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 		this.drops = drops;
 		this.difficulty = difficulty;
 		this.flashTime = 20 - difficulty;
-		inv = Bukkit.createInventory(p, 45, name.replaceAll("&", "§"));
+		inv = Bukkit.createInventory(p, 45, name.replaceAll("&", "Â§"));
 		
 		ItemStack[] contents = inv.getContents();
 		for (int i = 11; i <= 15; i++) {
@@ -68,13 +68,13 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	private ItemStack generateStartButton() {
 		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aClick to start!");
+		meta.setDisplayName("Â§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("§7§l§nInstructions");
-		lore.add("§7The screen will flash 5 times.");
-		lore.add("§7During this, up to §e" + drops.size() + " §7drops");
-		lore.add("§7will show up. Click them! If you miss");
-		lore.add("§7and click a glass pane, it's game over.");
+		lore.add("Â§7Â§lÂ§nInstructions");
+		lore.add("Â§7The screen will flash 5 times.");
+		lore.add("Â§7During this, up to Â§e" + drops.size() + " Â§7drops");
+		lore.add("Â§7will show up. Click them! If you miss");
+		lore.add("Â§7and click a glass pane, it's game over.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -83,7 +83,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	private ItemStack generateSuccess() {
 		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aSuccess!");
+		meta.setDisplayName("Â§aSuccess!");
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -99,7 +99,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	private ItemStack generateGameOver() {
 		ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§7Game Over!");
+		meta.setDisplayName("Â§7Game Over!");
 		item.setItemMeta(meta);
 		return item;
 	}

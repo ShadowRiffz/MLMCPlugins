@@ -11,10 +11,10 @@ public class Util {
 	public final static Random gen = new Random();
 	public static void sendMessage(CommandSender p, String m) {
 		String message = "&4[&c&lMLMC&4] " + m;
-		p.sendMessage(message.replaceAll("&", "ง"));
+		p.sendMessage(message.replaceAll("&", "ยง"));
 	}
 	public static void sendMessageNoPrefix(CommandSender p, String m) {
-		p.sendMessage(m.replaceAll("&", "ง"));
+		p.sendMessage(m.replaceAll("&", "ยง"));
 	}
 
 	public ItemStack setAmount(ItemStack item, int amount) {

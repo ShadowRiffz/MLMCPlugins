@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.event.BonusBlockPurchaseCostCalculationEvent;
 import com.palmergames.bukkit.towny.event.NewTownEvent;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -94,13 +95,13 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 							List<String> ranks = res.getTownRanks();
 							if (ranks.contains("assistant")) {
 								if (!checkPlayerInactive(res)) {
-									sendError(p, "§e" + res.getName() + " §7(Assistant) is not inactive.");
+									sendError(p, "Â§e" + res.getName() + " Â§7(Assistant) is not inactive.");
 									return false;
 								}
 							}
 							else if (ranks.contains("advisor")) {
 								if (!checkPlayerInactive(res)) {
-									sendError(p, "§e" + res.getName() + " §7(Advisor) is not inactive.");
+									sendError(p, "Â§e" + res.getName() + " Â§7(Advisor) is not inactive.");
 									return false;
 								}
 							}
@@ -120,7 +121,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 			}
 		}
 		else {
-			sendError(p, "§e" + town.getMayor() + " §7(Mayor) is not inactive.");
+			sendError(p, "Â§e" + town.getMayor() + " Â§7(Mayor) is not inactive.");
 		}
 		return false;
 	}
@@ -154,7 +155,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	public void deleteTowns() {
 		for (Town town : deletableTowns) {
 		    org.bukkit.Bukkit.getServer().getLogger().info("NeoTownDeleter deleted " + town.getName());
-			Bukkit.broadcastMessage("§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
+			Bukkit.broadcastMessage("Â§bThe town of " + town.getName() + " fell into ruin due to inactivity!");
 			town.getAccount().setBalance(0, "Town deleted");
 			TownyAPI.getInstance().getDataSource().removeTown(town);
 		}
@@ -162,7 +163,7 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	public void sendError(Player p, String msg) {
-		String error = "§4[§c§lMLMC§4] §7Town not inactive: " + msg;
+		String error = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7Town not inactive: " + msg;
 		p.sendMessage(error);
 	}
 	
@@ -180,12 +181,12 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 			public void run() {
 				if (p.hasPermission("tdeleter.admin")) {
 					if (deletableTowns.size() > 0) {
-						String msg = "§4[§c§lMLMC§4] §7The following towns can be deleted: §e";
+						String msg = "Â§4[Â§cÂ§lMLMCÂ§4] Â§7The following towns can be deleted: Â§e";
 						for (Town town : deletableTowns) {
 							msg += town.getName() + " ";
 						}
 						p.sendMessage(msg);
-						p.sendMessage("§4[§c§lMLMC§4] §7Type §e/tdelete confirm §7to delete all listed towns.");
+						p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Type Â§e/tdelete confirm Â§7to delete all listed towns.");
 					}
 				}
 			}
@@ -194,7 +195,17 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	}
 	
 	@EventHandler
-	public void onTownCreate(NewTownEvent e) {
-		e.getTown().getAccount().deposit(2500, "Starter money");
+	public void onBonusBlockCostCalculation(BonusBlockPurchaseCostCalculationEvent e) {
+		int blocks = e.getAlreadyPurchasedBlocksAmount();
+		int numPurchased = e.getAmountOfPurchasingBlocksRequest();
+		double cost = 0;
+		for (int i = 0; i < numPurchased; i++) {
+			cost += getBonusBlockPrice(blocks + i);
+		}
+		e.setPrice(cost);
+	}
+	
+	private double getBonusBlockPrice(int previousBlocks) {
+		return 1000 + (2 * previousBlocks) + (Math.pow(previousBlocks, 2) / 200);
 	}
 }

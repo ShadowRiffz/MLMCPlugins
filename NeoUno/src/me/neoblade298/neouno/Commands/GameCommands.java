@@ -30,7 +30,7 @@ public class GameCommands {
 			
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class GameCommands {
 			
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class GameCommands {
 			game.nextTurn();
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -163,7 +163,7 @@ public class GameCommands {
 			gp.message("&cYou can't call uno when you have this many cards!");
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -199,7 +199,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -216,7 +216,7 @@ public class GameCommands {
 			game.drawCard(gp, 1);
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class GameCommands {
 			}
 		}
 		else {
-			sender.sendMessage("§4[§c§lMLMC§4] §cYou're not in a game!");
+			sender.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou're not in a game!");
 		}
 	}
 	

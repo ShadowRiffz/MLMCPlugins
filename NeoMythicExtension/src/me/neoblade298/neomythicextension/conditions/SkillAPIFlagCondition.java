@@ -112,7 +112,7 @@ public class SkillAPIFlagCondition implements IEntityCondition {
 								if (am.getEntity().getName() != null) {
 									msg = msg.replace("<mob.name>", am.getEntity().getName());
 								}
-								msg = msg.replace("&", "ง");
+								msg = msg.replace("&", "ยง");
 								msg = msg.replace("_", " ");
 								Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 									public void run() {

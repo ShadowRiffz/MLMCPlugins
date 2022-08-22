@@ -47,7 +47,7 @@ public class BlockListener implements Listener {
 			return;
 		}
 		if (event.getHand() == EquipmentSlot.OFF_HAND) {
-			player.sendMessage("§cTractors do not work with offhand!");
+			player.sendMessage("Â§cTractors do not work with offhand!");
 			return;
 		}
 		GameMode gameMode = player.getGameMode();

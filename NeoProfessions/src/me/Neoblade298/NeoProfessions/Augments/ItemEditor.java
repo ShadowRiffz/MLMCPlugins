@@ -78,7 +78,7 @@ public class ItemEditor {
 
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) meta.getLore();
-		lore.set(nbti.getInteger("slot" + i + "Line"), "ง8[Empty Slot]");
+		lore.set(nbti.getInteger("slot" + i + "Line"), "ยง8[Empty Slot]");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		nbti = new NBTItem(item);
@@ -197,11 +197,11 @@ public class ItemEditor {
 						meta.addEnchant(Enchantment.LUCK, 1, true);
 					}
 					iter.remove();
-					iter.add("ง7Rarity: " + args[1]);
+					iter.add("ยง7Rarity: " + args[1]);
 				}
 				else if (line.contains("Base Attr")) {
 					iter.remove();
-					iter.add("ง8งm-----");
+					iter.add("ยง8ยงm-----");
 					onAttributes = true;
 				}
 				else if (line.contains("Vitality") || line.contains("Perception") || line.contains("Regen")) {
@@ -211,19 +211,19 @@ public class ItemEditor {
 				else if (line.contains("Level")) {
 					itemLevel = Integer.parseInt(line.split(" ")[2]);
 					iter.remove();
-					iter.add("ง7Level: " + itemLevel);
-					iter.add("ง7Max Slots: " + slotsMax);
+					iter.add("ยง7Level: " + itemLevel);
+					iter.add("ยง7Max Slots: " + slotsMax);
 					hasLevel = true;
 				}
 				else if (line.contains("Bonus Attributes")) {
 					iter.remove();
-					iter.add("ง8งm-----");
+					iter.add("ยง8ยงm-----");
 					onAttributes = false;
 					hasBonus = true;
 				}
 				else if (line.contains("Durability")) {
 					iter.previous();
-					iter.add("ง8งm-----");
+					iter.add("ยง8ยงm-----");
 					break;
 				}
 				
@@ -238,7 +238,7 @@ public class ItemEditor {
 				if (line.contains("Slot")) {
 					iter.remove();
 					if (slots < slotsMax) {
-						iter.add("ง8[Empty Slot]");
+						iter.add("ยง8[Empty Slot]");
 						slots++;
 					}
 				}
@@ -248,7 +248,7 @@ public class ItemEditor {
 				else {
 					iter.remove();
 					if (slots < slotsMax) {
-						iter.add("ง8[Empty Slot]");
+						iter.add("ยง8[Empty Slot]");
 						slots++;
 					}
 					// Turn the string into an old augment
@@ -288,8 +288,8 @@ public class ItemEditor {
 			return "item is not eligible for conversion!";
 		}
 
-		lore.set(0, "ง7Title: Standard " + displayname);
-		lore.set(1, "ง7Type: " + displayname);
+		lore.set(0, "ยง7Title: Standard " + displayname);
+		lore.set(1, "ยง7Type: " + displayname);
 		
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -3,11 +3,11 @@ package me.Neoblade298.NeoProfessions.Objects;
 import org.bukkit.Material;
 
 public enum Rarity {
-	LEGENDARY("§4", Material.RED_DYE, "§4Legendary", 4, 15),
-	EPIC("§6", Material.ORANGE_DYE, "§6Epic", 3, 10),
-	RARE("§9", Material.LIGHT_BLUE_DYE, "§9Rare", 2, 4),
-	UNCOMMON("§a", Material.LIME_DYE, "§aUncommon", 1, 1),
-	COMMON("§7", Material.LIGHT_GRAY_DYE, "§7Common", 0, 0.25);
+	LEGENDARY("Â§4", Material.RED_DYE, "Â§4Legendary", 4, 15),
+	EPIC("Â§6", Material.ORANGE_DYE, "Â§6Epic", 3, 10),
+	RARE("Â§9", Material.LIGHT_BLUE_DYE, "Â§9Rare", 2, 4),
+	UNCOMMON("Â§a", Material.LIME_DYE, "Â§aUncommon", 1, 1),
+	COMMON("Â§7", Material.LIGHT_GRAY_DYE, "Â§7Common", 0, 0.25);
 	
 	private final String colorcode;
 	private final Material mat;

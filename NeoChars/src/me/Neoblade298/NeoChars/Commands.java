@@ -25,10 +25,10 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("all")) {
-				sender.sendMessage("§7Searching for broken classes...");
+				sender.sendMessage("Â§7Searching for broken classes...");
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (SkillAPI.getPlayerData(p) == null) {
-						sender.sendMessage("§cNull data detected: " + p.getName());
+						sender.sendMessage("Â§cNull data detected: " + p.getName());
 					}
 				}
 			}

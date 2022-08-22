@@ -29,40 +29,40 @@ public class CmdItems implements CommandExecutor{
 			ItemStack item = p.getInventory().getItemInMainHand();
 			ItemMeta meta = item.getItemMeta();
 			if (item == null || item.getType().equals(Material.AIR)) {
-				p.sendMessage("§cYou must be holding an item in your hand!");
+				p.sendMessage("Â§cYou must be holding an item in your hand!");
 				return true;
 			}
 			
 			if (args.length == 0) {
-				p.sendMessage("§c/nitem lore set/add/rem/get");
-				p.sendMessage("§c/nitem name set/get");
-				p.sendMessage("§c/nitem model set/get");
-				p.sendMessage("§c/nitem nbt set/get [int/double/string] [key] [value]");
-				p.sendMessage("§c/nitem nbt getkeys");
+				p.sendMessage("Â§c/nitem lore set/add/rem/get");
+				p.sendMessage("Â§c/nitem name set/get");
+				p.sendMessage("Â§c/nitem model set/get");
+				p.sendMessage("Â§c/nitem nbt set/get [int/double/string] [key] [value]");
+				p.sendMessage("Â§c/nitem nbt getkeys");
 			}
 			else if (args[0].equalsIgnoreCase("nbt")) {
 				NBTItem nbti = new NBTItem(item);
 				if (args.length == 1) {
-					p.sendMessage("§c/nitem nbt set [int/double/string] [key] [value]");
-					p.sendMessage("§c/nitem nbt get [int/double/string] [key]");
-					p.sendMessage("§c/nitem nbt getkeys");
+					p.sendMessage("Â§c/nitem nbt set [int/double/string] [key] [value]");
+					p.sendMessage("Â§c/nitem nbt get [int/double/string] [key]");
+					p.sendMessage("Â§c/nitem nbt getkeys");
 				}
 				else {
 					if (args[1].equalsIgnoreCase("set")) {
 						if (args[2].equalsIgnoreCase("int")) {
 							nbti.setInteger(args[3], Integer.parseInt(args[4]));
 							nbti.applyNBT(item);
-							p.sendMessage("§7Successfully set NBT");
+							p.sendMessage("Â§7Successfully set NBT");
 						}
 						else if (args[2].equalsIgnoreCase("double")) {
 							nbti.setDouble(args[3], Double.parseDouble(args[4]));
 							nbti.applyNBT(item);
-							p.sendMessage("§7Successfully set NBT");
+							p.sendMessage("Â§7Successfully set NBT");
 						}
 						else if (args[2].equalsIgnoreCase("string")) {
 							nbti.setString(args[3], args[4]);
 							nbti.applyNBT(item);
-							p.sendMessage("§7Successfully set NBT");
+							p.sendMessage("Â§7Successfully set NBT");
 						}
 					}
 					else if (args[1].equalsIgnoreCase("get")) {
@@ -85,11 +85,11 @@ public class CmdItems implements CommandExecutor{
 			}
 			else if (args[0].equalsIgnoreCase("lore")) {
 				if (args.length == 1) {
-					p.sendMessage("§c/nitem lore set # [lore]");
-					p.sendMessage("§c/nitem lore get #");
-					p.sendMessage("§c/nitem lore add [lore]");
-					p.sendMessage("§c/nitem lore insert # [lore]");
-					p.sendMessage("§c/nitem lore rem #");
+					p.sendMessage("Â§c/nitem lore set # [lore]");
+					p.sendMessage("Â§c/nitem lore get #");
+					p.sendMessage("Â§c/nitem lore add [lore]");
+					p.sendMessage("Â§c/nitem lore insert # [lore]");
+					p.sendMessage("Â§c/nitem lore rem #");
 				}
 				else {
 					ArrayList<String> lore = new ArrayList<String>();
@@ -101,7 +101,7 @@ public class CmdItems implements CommandExecutor{
 					if (args[1].equalsIgnoreCase("set")) {
 						int num = Integer.parseInt(args[2]);
 						if (lore.size() <= num) {
-							p.sendMessage("§cLore is smaller than #!");
+							p.sendMessage("Â§cLore is smaller than #!");
 							return true;
 						}
 						
@@ -113,17 +113,17 @@ public class CmdItems implements CommandExecutor{
 						
 						lore.set(num, main.translateHexCodes(line));
 						meta.setLore(lore);
-						p.sendMessage("§7Successfully set lore");
+						p.sendMessage("Â§7Successfully set lore");
 						item.setItemMeta(meta);
 					}
 					else if (args[1].equalsIgnoreCase("get")) {
 						int num = Integer.parseInt(args[2]);
 						if (lore.size() <= num) {
-							p.sendMessage("§cLore is smaller than #!");
+							p.sendMessage("Â§cLore is smaller than #!");
 							return true;
 						}
 						
-						p.sendMessage(lore.get(num).replaceAll("§", "&"));
+						p.sendMessage(lore.get(num).replaceAll("Â§", "&"));
 					}
 					else if (args[1].equalsIgnoreCase("add")) {
 						// Piece together the lore
@@ -135,7 +135,7 @@ public class CmdItems implements CommandExecutor{
 						lore.add(main.translateHexCodes(line));
 						meta.setLore(lore);
 						item.setItemMeta(meta);
-						p.sendMessage("§7Successfully added lore");
+						p.sendMessage("Â§7Successfully added lore");
 					}
 					// nitem lore insert # [line]
 					else if (args[1].equalsIgnoreCase("insert")) {
@@ -148,26 +148,26 @@ public class CmdItems implements CommandExecutor{
 						lore.add(Integer.parseInt(args[2]), main.translateHexCodes(line));
 						meta.setLore(lore);
 						item.setItemMeta(meta);
-						p.sendMessage("§7Successfully added lore");
+						p.sendMessage("Â§7Successfully added lore");
 					}
 					else if (args[1].equalsIgnoreCase("rem")) {
 						int num = Integer.parseInt(args[2]);
 						if (lore.size() <= num) {
-							p.sendMessage("§cLore is smaller than #!");
+							p.sendMessage("Â§cLore is smaller than #!");
 							return true;
 						}
 						
 						lore.remove(num);
 						meta.setLore(lore);
 						item.setItemMeta(meta);
-						p.sendMessage("§7Successfully removed lore");
+						p.sendMessage("Â§7Successfully removed lore");
 					}
 				}
 			}
 			else if (args[0].equalsIgnoreCase("name")) {
 				if (args.length == 1) {
-					p.sendMessage("§c/nitem name set [name]");
-					p.sendMessage("§c/nitem name get [name]");
+					p.sendMessage("Â§c/nitem name set [name]");
+					p.sendMessage("Â§c/nitem name get [name]");
 				}
 				else {
 					if (args[1].equalsIgnoreCase("set")) {
@@ -178,22 +178,22 @@ public class CmdItems implements CommandExecutor{
 						}
 						meta.setDisplayName(main.translateHexCodes(line));
 						item.setItemMeta(meta);
-						p.sendMessage("§7Successfully set name");
+						p.sendMessage("Â§7Successfully set name");
 					}
 					else if (args[1].equalsIgnoreCase("get")) {
 						if (!meta.hasDisplayName()) {
-							p.sendMessage("§cItem does not have a display name!");
+							p.sendMessage("Â§cItem does not have a display name!");
 						}
 						else {
-							p.sendMessage(meta.getDisplayName().replaceAll("§", "&"));
+							p.sendMessage(meta.getDisplayName().replaceAll("Â§", "&"));
 						}
 					}
 				}
 			}
 			else if (args[0].equalsIgnoreCase("model")) {
 				if (args.length == 1) {
-					p.sendMessage("§c/nitem model set [model]");
-					p.sendMessage("§c/nitem model get [model]");
+					p.sendMessage("Â§c/nitem model set [model]");
+					p.sendMessage("Â§c/nitem model get [model]");
 				}
 				else {
 					if (args[1].equalsIgnoreCase("set")) {
@@ -201,11 +201,11 @@ public class CmdItems implements CommandExecutor{
 						
 						meta.setCustomModelData(num);
 						item.setItemMeta(meta);
-						p.sendMessage("§cSuccessfully set custom model data!");
+						p.sendMessage("Â§cSuccessfully set custom model data!");
 					}
 					else if (args[1].equalsIgnoreCase("get")) {
 						if (!meta.hasCustomModelData()) {
-							p.sendMessage("§cItem does not have custom model data!");
+							p.sendMessage("Â§cItem does not have custom model data!");
 						}
 						else {
 							p.sendMessage("" + meta.getCustomModelData());

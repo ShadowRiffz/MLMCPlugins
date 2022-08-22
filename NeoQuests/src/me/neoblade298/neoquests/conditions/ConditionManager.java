@@ -9,6 +9,7 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neocore.io.LineConfigManager;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.conditions.builtin.*;
 
 public class ConditionManager {
 	private static LineConfigManager<Condition> mngr;
@@ -17,6 +18,14 @@ public class ConditionManager {
 		mngr = new LineConfigManager<Condition>(NeoQuests.inst(), "conditions");
 		
 		mngr.register(new ClassLevelCondition());
+		mngr.register(new CopyQuestConditionsCondition());
+		mngr.register(new HasTagCondition());
+		mngr.register(new HasTownCondition());
+		mngr.register(new IsMayorCondition());
+		mngr.register(new HasGlobalTagCondition());
+		mngr.register(new QuestCompletedCondition());
+		mngr.register(new QuestSuccessfulCondition());
+		mngr.register(new QuestTakeableCondition());
 	}
 	
 	public static ArrayList<Condition> parseConditions(List<String> conditionLines) throws NeoIOException {
@@ -26,7 +35,7 @@ public class ConditionManager {
 				conds.add(mngr.get(new LineConfig(line)));
 			}
 			catch (Exception e) {
-				throw new NeoIOException("Failed to load condition line: " + line);
+				NeoQuests.showWarning("Failed to parse condition " + line, e);
 			}
 		}
 		return conds;

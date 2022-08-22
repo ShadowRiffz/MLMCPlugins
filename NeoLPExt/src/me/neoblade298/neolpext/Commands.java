@@ -35,18 +35,18 @@ public class Commands implements CommandExecutor{
 		
 		// lpext removecontains 
 		if (args.length == 0) {
-			sender.sendMessage("§cNeoLPExt (lpext.admin)");
-			sender.sendMessage("§c/lpext debug - Sends debug to system");
-			sender.sendMessage("§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
-			sender.sendMessage("§c/lpext switch [player] [perm prefix] [new perm] - Removes all other prefixes, then adds new perm");
-			sender.sendMessage("§c/lpext removelength [player] [perm prefix] [minlen:maxlen] - Same as removeall but perm must be specified length. Min-max of length separated by :");
-			sender.sendMessage("§c/lpext switchlength [player] [perm prefix] [minlen:maxlen] [new perm] - Same as switch but for specified length");
+			sender.sendMessage("Â§cNeoLPExt (lpext.admin)");
+			sender.sendMessage("Â§c/lpext debug - Sends debug to system");
+			sender.sendMessage("Â§c/lpext removeall [player] [perm prefix] - Removes all perms that start with perm prefix from player");
+			sender.sendMessage("Â§c/lpext switch [player] [perm prefix] [new perm] - Removes all other prefixes, then adds new perm");
+			sender.sendMessage("Â§c/lpext removelength [player] [perm prefix] [minlen:maxlen] - Same as removeall but perm must be specified length. Min-max of length separated by :");
+			sender.sendMessage("Â§c/lpext switchlength [player] [perm prefix] [minlen:maxlen] [new perm] - Same as switch but for specified length");
 			return true;
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 			debug = !debug;
-			sender.sendMessage("§cDebug: " + debug);
+			sender.sendMessage("Â§cDebug: " + debug);
 		}
 		
 		if (args.length == 3) {
@@ -59,7 +59,7 @@ public class Commands implements CommandExecutor{
 					
 					for (Node perm : removables) {
 						user.data().remove(perm);
-						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+						if (debug) sender.sendMessage("Â§7Removed perm: Â§c" + perm.getKey());
 					}
 					mngr.saveUser(user);
 				}};
@@ -83,7 +83,7 @@ public class Commands implements CommandExecutor{
 					
 					for (Node perm : removables) {
 						user.data().remove(perm);
-						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+						if (debug) sender.sendMessage("Â§7Removed perm: Â§c" + perm.getKey());
 					}
 					mngr.saveUser(user);
 				}};
@@ -99,7 +99,7 @@ public class Commands implements CommandExecutor{
 					
 					for (Node perm : removables) {
 						user.data().remove(perm);
-						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+						if (debug) sender.sendMessage("Â§7Removed perm: Â§c" + perm.getKey());
 					}
 					
 					user.data().add(Node.builder(args[3]).build());
@@ -125,7 +125,7 @@ public class Commands implements CommandExecutor{
 					
 					for (Node perm : removables) {
 						user.data().remove(perm);
-						if (debug) sender.sendMessage("§7Removed perm: §c" + perm.getKey());
+						if (debug) sender.sendMessage("Â§7Removed perm: Â§c" + perm.getKey());
 					}
 					user.data().add(Node.builder(args[4]).build());
 					mngr.saveUser(user);

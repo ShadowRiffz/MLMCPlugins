@@ -26,7 +26,7 @@ public class EssenceGiveCommand implements CommandExecutor {
 		}
 
 		if (args.length != 3) {
-			sender.sendMessage("ง4/egive [player] [level] [amount]");
+			sender.sendMessage("ยง4/egive [player] [level] [amount]");
 		}
 		else {
 			Player recipient = Bukkit.getPlayer(args[0]);

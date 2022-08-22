@@ -26,7 +26,7 @@ public class EssenceSetCommand implements CommandExecutor {
 		}
 
 		if (args.length != 3) {
-			sender.sendMessage("ง4/eset [player] [level] [amount]");
+			sender.sendMessage("ยง4/eset [player] [level] [amount]");
 		}
 		else {
 			Player recipient = Bukkit.getPlayer(args[0]);

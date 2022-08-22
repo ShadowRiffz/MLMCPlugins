@@ -103,48 +103,48 @@ public class PPR {
 	}
 	
 	public void preview(CommandSender s) {
-		s.sendMessage("§7-- §c" + user + " §7--");
+		s.sendMessage("Â§7-- Â§c" + user + " Â§7--");
 		if (offense == null) {
-			s.sendMessage("§cOffense§7: Not set");
+			s.sendMessage("Â§cOffenseÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cOffense§7: " + getOffense());
+			s.sendMessage("Â§cOffenseÂ§7: " + getOffense());
 		}
 		if (action == null) {
-			s.sendMessage("§cAction§7: Not set");
+			s.sendMessage("Â§cActionÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cAction§7: " + getAction());
+			s.sendMessage("Â§cActionÂ§7: " + getAction());
 		}
 		if (description == null) {
-			s.sendMessage("§cDescription§7: Not set");
+			s.sendMessage("Â§cDescriptionÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cDescription§7: " + getDescription());
+			s.sendMessage("Â§cDescriptionÂ§7: " + getDescription());
 		}
 	}
 	
 	public void show(CommandSender s) {
-		s.sendMessage("§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
+		s.sendMessage("Â§cPPR #" + id + " " + user + " (Author: " + author +") [" + date + "]");
 		if (offense == null) {
-			s.sendMessage("§cOffense§7: Not set");
+			s.sendMessage("Â§cOffenseÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cOffense§7: " + getOffense());
+			s.sendMessage("Â§cOffenseÂ§7: " + getOffense());
 		}
 		if (action == null) {
-			s.sendMessage("§cAction§7: Not set");
+			s.sendMessage("Â§cActionÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cAction§7: " + getAction());
+			s.sendMessage("Â§cActionÂ§7: " + getAction());
 		}
 		if (description == null) {
-			s.sendMessage("§cDescription§7: Not set");
+			s.sendMessage("Â§cDescriptionÂ§7: Not set");
 		}
 		else {
-			s.sendMessage("§cDescription§7: " + getDescription());
+			s.sendMessage("Â§cDescriptionÂ§7: " + getDescription());
 		}
-		s.sendMessage("§7§m----------");
+		s.sendMessage("Â§7Â§m----------");
 	}
 	
 	public void post(CommandSender s) {
@@ -163,7 +163,7 @@ public class PPR {
 			}
 			
 			// Show all relevant PPRs
-			s.sendMessage("§7§m----------");
+			s.sendMessage("Â§7Â§m----------");
 			for (String account : accounts) {
 				rs = stmt.executeQuery("SELECT * FROM neopprs_pprs WHERE uuid = '" + account + "';");
 				while (rs.next()) {
@@ -171,12 +171,12 @@ public class PPR {
 					temp.show(s);
 				}
 			}
-			s.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully posted PPR!");
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	public void postConsole(CommandSender s) {
@@ -193,12 +193,12 @@ public class PPR {
 			while (rs.next()) {
 				accounts.add(rs.getString(6));
 			}
-			s.sendMessage("§4[§c§lMLMC§4] §7Successfully posted PPR!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully posted PPR!");
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 	public void modify(CommandSender s) {
@@ -208,12 +208,12 @@ public class PPR {
 			// Post the PPR to SQL
 			stmt.executeUpdate("UPDATE neopprs_pprs SET username = '" + user + "', uuid = '" + uuid + "', offense = '" + offense + "', action = '" + action + "', description = '"
 			+ description + "' WHERE id = " + id + ";");
-			s.sendMessage("§4[§c§lMLMC§4] §7Successfully modified PPR!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully modified PPR!");
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			s.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 }

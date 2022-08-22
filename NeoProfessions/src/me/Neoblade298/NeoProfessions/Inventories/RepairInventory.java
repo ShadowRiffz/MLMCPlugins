@@ -28,19 +28,19 @@ public class RepairInventory extends ProfessionInventory {
 	private static final int essenceCost = 3;
 	
 	static {
-		goldCost.put(0, 150);
-		goldCost.put(5, 200);
-		goldCost.put(10, 300);
-		goldCost.put(15, 400);
-		goldCost.put(20, 600);
-		goldCost.put(25, 800);
-		goldCost.put(30, 1100);
-		goldCost.put(35, 1500);
-		goldCost.put(40, 1800);
-		goldCost.put(45, 2300);
-		goldCost.put(50, 2800);
-		goldCost.put(55, 3400);
-		goldCost.put(60, 4000);
+		goldCost.put(0, 50);
+		goldCost.put(5, 100);
+		goldCost.put(10, 150);
+		goldCost.put(15, 200);
+		goldCost.put(20, 250);
+		goldCost.put(25, 300);
+		goldCost.put(30, 400);
+		goldCost.put(35, 500);
+		goldCost.put(40, 600);
+		goldCost.put(45, 700);
+		goldCost.put(50, 800);
+		goldCost.put(55, 900);
+		goldCost.put(60, 1000);
 	}
 
 	public RepairInventory(Professions main, Player p) {
@@ -48,17 +48,17 @@ public class RepairInventory extends ProfessionInventory {
 		this.item = p.getInventory().getItemInMainHand();
 		p.getInventory().removeItem(item);
 		level = new NBTItem(item).getInteger("level");
-		inv = Bukkit.createInventory(p, 9, "§cRepair this item?");
+		inv = Bukkit.createInventory(p, 9, "Â§cRepair this item?");
 		
 		ItemStack[] contents = inv.getContents();
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
 		for (int i = 2; i < REPAIR_ICON; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo",
-					"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "Â§cNo",
+					"Â§7Gold cost: Â§e" + goldCost.get(level) + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		}
-		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
-				"§7Gold cost: §e" + goldCost.get(level) + "g", "§7Essence cost: §e" + essenceCost);
+		contents[REPAIR_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aYes",
+				"Â§7Gold cost: Â§e" + goldCost.get(level) + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

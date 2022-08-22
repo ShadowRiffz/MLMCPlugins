@@ -87,7 +87,7 @@ public class Recipe {
 		}
 		for (StoredItemInstance component : components) {
 			if (!StorageManager.playerHas(p, component.getItem().getId(), component.getAmount() * amount)) {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou lack the component: " + component.getItem().getDisplay());
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou lack the component: " + component.getItem().getDisplay());
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, ERROR);
 				return false;
 			}
@@ -104,7 +104,7 @@ public class Recipe {
 		result.giveResult(p, amount);
 		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp * amount);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
-		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay());
+		p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You successfully crafted: " + result.getDisplay(p));
 		Bukkit.getPluginManager().callEvent(new ProfessionCraftSuccessEvent(p, this));
 		return true;
 	}
@@ -115,14 +115,14 @@ public class Recipe {
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(result.getResultItem(p, canCraft).getItemMeta().getDisplayName());
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add("§6Requirements§7:");
+			lore.add("Â§6RequirementsÂ§7:");
 			for (RecipeRequirement req : reqs) {
 				lore.add(req.getLoreString(p));
 			}
-			lore.add("§6Components§7:");
+			lore.add("Â§6ComponentsÂ§7:");
 			for (StoredItemInstance component : components) {
 				int playerHas = StorageManager.getAmount(p, component.getItem().getId());
-				String line = playerHas >= component.getAmount() ? "§a" : "§c";
+				String line = playerHas >= component.getAmount() ? "Â§a" : "Â§c";
 				line += "- " + playerHas + " / " + component.getAmount() + " " + ChatColor.stripColor(component.getItem().getDisplay());
 				lore.add(line);
 			}

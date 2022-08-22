@@ -27,7 +27,7 @@ public class Commands implements CommandExecutor{
 			}
 			// /vp perms
 			else if (args.length == 1 && args[0].equalsIgnoreCase("perms")) {
-				sender.sendMessage("ง7neovoteparty.use");
+				sender.sendMessage("ยง7neovoteparty.use");
 			}
 			// /vp reload
 			else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
@@ -36,16 +36,16 @@ public class Commands implements CommandExecutor{
 		}
 		if (sender.hasPermission("neovoteparty.use")) {
 			if (args.length == 0) {
-				sender.sendMessage("งc/vp status ง7- Check # of votes till vote party");
+				sender.sendMessage("ยงc/vp status ยง7- Check # of votes till vote party");
 				if (sender.hasPermission("mycommand.staff")) {
-					sender.sendMessage("งc/vp add [player] ง7- Increments votes by 1");
-					sender.sendMessage("งc/vp set ง7- Sets vote number");
-					sender.sendMessage("งc/vp reload ง7- Reloads config");
-					sender.sendMessage("งc/vp perms ง7- Check what permission this plugin uses");
+					sender.sendMessage("ยงc/vp add [player] ยง7- Increments votes by 1");
+					sender.sendMessage("ยงc/vp set ยง7- Sets vote number");
+					sender.sendMessage("ยงc/vp reload ยง7- Reloads config");
+					sender.sendMessage("ยงc/vp perms ยง7- Check what permission this plugin uses");
 				}
 			}
 			else if (args.length == 1 && args[0].equalsIgnoreCase("status")) {
-				sender.sendMessage("ง4[งcงlMLMCง4] งe" + main.count + " / " + main.voteparty + "ง7 votes for a vote party to commence!");
+				sender.sendMessage("ยง4[ยงcยงlMLMCยง4] ยงe" + main.count + " / " + main.voteparty + "ยง7 votes for a vote party to commence!");
 			}
 		}
 		return true;

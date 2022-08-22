@@ -8,11 +8,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.LineConfig;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.actions.builtin.StartQuestAction;
 
 public class ActionSequence {
 	private ArrayList<ActionSet> sets = new ArrayList<ActionSet>();
-	ActionSet curr = new ActionSet();
-	int runtime = 0;
+	private ActionSet curr = new ActionSet();
+	private int runtime = 0;
+	private String quest = null;
 	
 	// Used to avoid having to look for nulls
 	public ActionSequence() {}
@@ -24,6 +26,10 @@ public class ActionSequence {
 			
 			Action action = ActionManager.get(cfg);
 			
+			if (action instanceof StartQuestAction) {
+				quest = ((StartQuestAction) action).getQuest();
+			}
+			
 			if (!(action instanceof EmptyAction)) { // DelayAction is empty
 				addAction(action, runtime);
 				delay = 0;
@@ -34,6 +40,7 @@ public class ActionSequence {
 				runtime += dl;
 				delay += dl;
 			}
+			
 		}
 		
 		if (!curr.isEmpty()) {
@@ -59,12 +66,16 @@ public class ActionSequence {
 		int tick = delay;
 		for (ActionSet set : sets) {
 			if (!set.isEmpty()) {
-				BukkitRunnable task = new BukkitRunnable() {
-					public void run() {
-						set.run(p);
-					}
-				};
-				task.runTaskLater(NeoQuests.inst(), tick);
+				if (tick != 0) {
+					new BukkitRunnable() {
+						public void run() {
+							set.run(p);
+						}
+					}.runTaskLater(NeoQuests.inst(), tick);
+				}
+				else {
+					set.run(p);
+				}
 			}
 			tick += set.getPostDelay();
 		}
@@ -77,5 +88,19 @@ public class ActionSequence {
 	
 	public int getRuntime() {
 		return runtime;
+	}
+	
+	public String getQuest() {
+		return quest;
+	}
+	
+	public String toString() {
+		String ts = "";
+		for (ActionSet set : sets) {
+			for (Action action : set.getActions()) {
+				ts += action.getKey() + " ";
+			}
+		}
+		return ts;
 	}
 }

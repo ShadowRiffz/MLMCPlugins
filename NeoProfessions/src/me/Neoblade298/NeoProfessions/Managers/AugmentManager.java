@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ import com.sucy.skill.api.util.FlagManager;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
+import me.Neoblade298.NeoProfessions.Augments.builtin.*;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
@@ -41,11 +43,12 @@ import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import me.neoblade298.neobossrelics.NeoBossRelics;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
+import me.neoblade298.neorelics.NeoRelics;
+import me.neoblade298.neorelics.Relic;
 
 public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
@@ -65,7 +68,7 @@ public class AugmentManager implements Listener, Manager {
 		enabledWorlds.add("Argyll");
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
-		droptableLoader = (cfg) -> {
+		droptableLoader = (cfg, file) -> {
 			for (String table : cfg.getKeys(false)) {
 				AugmentManager.droptables.put(table, (ArrayList<String>) cfg.getStringList(table));
 			}
@@ -74,7 +77,15 @@ public class AugmentManager implements Listener, Manager {
 	
 	public AugmentManager(Professions main) {
 		AugmentManager.main = main;
-
+		
+		// Droptables and augments
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
+		augmentMap.clear();
 		augmentMap.put("barrier", new BarrierAugment());
 		augmentMap.put("brace", new BraceAugment());
 		augmentMap.put("brawler", new BrawlerAugment());
@@ -138,21 +149,13 @@ public class AugmentManager implements Listener, Manager {
 		augmentMap.put("weightless", new WeightlessAugment());
 		augmentMap.put("woodcutter", new WoodcutterAugment());
 		
-		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
-		for (String set : relics.sets.keySet()) {
-			augmentMap.put(set.toLowerCase(), new BossRelic(set));
+		for (Entry<String, Relic> e : NeoRelics.getRelics().entrySet()) {
+			augmentMap.put(e.getKey().toLowerCase(), new BossRelic(e.getValue()));
 		}
 		
-		// Droptables
-		reload();
-	}
-	
-	@Override
-	public void reload() {
-		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 		AugmentManager.droptables.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "droptables"), droptableLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -219,6 +222,10 @@ public class AugmentManager implements Listener, Manager {
 		}
 		if (nbti.getInteger("level") < nbtaug.getInteger("level")) {
 			Util.sendMessage(p, "&cItem level must be greater than or equal to augment level!");
+			return false;
+		}
+		if (p.getInventory().firstEmpty() == -1) {
+			Util.sendMessage(p, "&cMake sure your inventory has at least 1 empty space!");
 			return false;
 		}
 		else {
@@ -448,8 +455,13 @@ public class AugmentManager implements Listener, Manager {
 								negmult *= (1 + mult);
 							}
 							flat += aug.getDamageDealtFlat(p, e);
+							flag = aug.setFlagAfter();
 						}
 					}
+				}
+				// basically just for sentinel
+				if (flag != null) {
+					FlagManager.addFlag(p, e.getCaster(), flag.getFlag(), flag.getDuration());
 				}
 			}
 		}
@@ -677,14 +689,21 @@ public class AugmentManager implements Listener, Manager {
 	public void onCritSuccess(PlayerCriticalSuccessEvent e) {
 		PlayerData data = e.getPlayerData();
 		Player p = data.getPlayer();
+		FlagSettings flag = null;
 		if (containsAugments(p, EventType.CRIT_SUCCESS)) {
 			for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.CRIT_SUCCESS)) {
 				if (augment instanceof ModCritSuccessAugment) {
 					ModCritSuccessAugment aug = (ModCritSuccessAugment) augment;
 					if (aug.canUse(data, e)) {
 						aug.applyCritSuccessEffects(data, e.getChance());
+						if (aug.setFlag() != null) {
+							flag = aug.setFlag();
+						}
 					}
 				}
+			}
+			if (flag != null) {
+				FlagManager.addFlag(p, p, flag.getFlag(), flag.getDuration());
 			}
 		}
 	}

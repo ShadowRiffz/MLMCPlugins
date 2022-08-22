@@ -3,8 +3,8 @@ author: Neoblade298
 main: me.Neoblade298.NeoProfessions.Professions
 version: 1.0
 api-version: 1.16
-depend: [MythicMobs, SkillAPI, NeoGear, Vault]
-softdepend: [NeoBossRelics, NeoMythicExtension, mcMMO, NeoResearch, Multiverse-Core, NeoConsumables]
+depend: [MythicMobs, SkillAPI, NeoGear, NeoCore, Vault]
+softdepend: [NeoRelics, NeoMythicExtension, mcMMO, NeoResearch, Multiverse-Core, NeoConsumables]
 commands:
   prof:
     description: Main command
@@ -12,9 +12,6 @@ commands:
   profs:
     description: View exp command
     usage: /profs [args]
-  value:
-    description: Value command
-    usage: /value
   evouch:
     description: Evouch command
     usage: /evouch [args]

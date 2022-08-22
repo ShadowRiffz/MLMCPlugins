@@ -34,7 +34,7 @@ public class BlockingCondition extends CustomEffectComponent {
 
 	@Override
 	public String getKey() {
-		return "Blocking";
+		return "blocking";
 	}
 
 	@Override

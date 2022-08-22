@@ -16,6 +16,7 @@ import me.neoblade298.neoquests.actions.DialogueAction;
 public class ConversationStage {
 	private int num;
 	private String text;
+	private DialogueAction textAction;
 	private ActionSequence actions = new ActionSequence();
 	private ArrayList<ConversationResponse> responses = new ArrayList<ConversationResponse>();
 	
@@ -24,7 +25,7 @@ public class ConversationStage {
 		String text = cfg.getString("text");
 		LineConfig tcfg = new LineConfig(text);
 		if (ActionManager.isDialogueAction(tcfg.getKey())) {
-			this.text = ((DialogueAction) ActionManager.get(tcfg)).parseDialogue(tcfg);
+			this.textAction = (DialogueAction) ActionManager.get(tcfg);
 		}
 		else {
 			this.text = text;
@@ -47,12 +48,12 @@ public class ConversationStage {
 		return responses.size() > num ? responses.get(num) : null;
 	}
 	
-	public ActionSequence getActions() {
-		return actions;
+	public ArrayList<ConversationResponse> getResponses() {
+		return responses;
 	}
 	
-	public String getText() {
-		return this.text;
+	public ActionSequence getActions() {
+		return actions;
 	}
 	
 	public void run(Player p) {
@@ -69,12 +70,27 @@ public class ConversationStage {
 	}
 	
 	public void show(Player p) {
-		p.sendMessage(text);
+		if (textAction != null) {
+			textAction.run(p);
+		}
+		else {
+			p.sendMessage(text);
+		}
 		int num = 1;
 		for (ConversationResponse resp : responses) {
 			if (resp.showResponse(p, num)) {
 				num++;
 			}
 		}
+	}
+	
+	public ArrayList<ConversationResponse> getValidResponses(Player p) {
+		ArrayList<ConversationResponse> resps = new ArrayList<ConversationResponse>();
+		for (ConversationResponse resp : responses) {
+			if (resp.isValidResponse(p)) {
+				resps.add(resp);
+			}
+		}
+		return resps;
 	}
 }

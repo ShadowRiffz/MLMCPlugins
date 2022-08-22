@@ -1,6 +1,7 @@
 package me.Neoblade298.NeoProfessions.PlayerProfessions;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.bukkit.Sound;
@@ -8,10 +9,12 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Listeners.BoostListener;
 
 public class Profession {
 	ProfessionType type;
 	int exp, level;
+	private static final int START_LEVEL = 5;
 	private static final int MAX_LEVEL = 60;
 	static HashMap<Integer, Integer> nextLv= new HashMap<Integer, Integer>();
 	
@@ -24,7 +27,7 @@ public class Profession {
 	public Profession(ProfessionType prof) {
 		this.type = prof;
 		this.exp = 0;
-		this.level = 1;
+		this.level = START_LEVEL;
 	}
 
 	public ProfessionType getType() {
@@ -65,10 +68,20 @@ public class Profession {
 		
 		exp *= Professions.getExpMultiplier(this.type);
 		
+		// Boosts
+		Iterator<Double> iter = BoostListener.profExpMultipliers.descendingKeySet().iterator();
+		while (iter.hasNext()) {
+			double mult = iter.next();
+			if (p.hasPermission(BoostListener.profExpMultipliers.get(mult))) {
+				exp *= mult;
+				break;
+			}
+		}
+		
 		int newExp = exp + this.exp;
 		
 		// If next level exists, check that the player can reach it
-		p.sendMessage("งa+" + exp + " ง7(งf" + newExp + " / " + nextLv.get(this.level) + "ง7) ง6" + type.getDisplay() + " ง7exp");
+		p.sendMessage("ยงa+" + exp + " ยง7(ยงf" + newExp + " / " + nextLv.get(this.level) + "ยง7) ยง6" + type.getDisplay() + " ยง7exp");
 		boolean levelup = false;
 		while (nextLv.containsKey(this.level) && newExp >= nextLv.get(this.level) && this.level < MAX_LEVEL) {
 			newExp -= nextLv.get(this.level);

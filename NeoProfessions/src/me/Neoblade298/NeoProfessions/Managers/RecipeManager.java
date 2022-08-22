@@ -45,9 +45,9 @@ import me.Neoblade298.NeoProfessions.Recipes.ResearchRequirement;
 import me.Neoblade298.NeoProfessions.Recipes.ShardResult;
 import me.Neoblade298.NeoProfessions.Recipes.StoredItemResult;
 import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
-import me.neoblade298.neocore.io.FileReader;
 import me.neoblade298.neocore.io.IOComponent;
 
 public class RecipeManager implements IOComponent, Listener, Manager {
@@ -58,7 +58,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	private static FileLoader recipeLoader;
 	
 	static  {
-		recipeLoader = yaml -> {
+		recipeLoader = (yaml, file) -> {
 			for (String key : yaml.getKeys(false)) {
 				try {
 					ConfigurationSection sec = yaml.getConfigurationSection(key);
@@ -159,7 +159,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Recipe manager...");
 		recipes.clear();
 		try {
-			FileReader.loadRecursive(new File(main.getDataFolder(), "recipes"), recipeLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "recipes"), recipeLoader);
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
@@ -192,14 +192,12 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 		}
 		recipeLists.put("all", allList);
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
-		// Check if player exists already
-		if (knowledge.containsKey(p.getUniqueId())) {
-			return;
-		}
-
+	public void loadPlayer(Player p, Statement stmt) {
 		HashSet<String> keys = new HashSet<String>();
 		knowledge.put(p.getUniqueId(), keys);
 		
@@ -230,11 +228,11 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			for (String key : knowledge.get(uuid)) {
-				stmt.addBatch("REPLACE INTO professions_knowledge "
+				insert.addBatch("REPLACE INTO professions_knowledge "
 						+ "VALUES ('" + uuid + "', '" + key + "');");
 			}
 		}
@@ -245,10 +243,10 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		if (!Professions.isInstance) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		}
 	}
@@ -308,7 +306,7 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 			String display = nbti.getString("knowledge-display");
 			p.getInventory().removeItem(clone);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You acquired knowledge of §f" + display + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You acquired knowledge of Â§f" + display + "Â§7!");
 			RecipeManager.giveKnowledge(p, key);
 		}
 	}

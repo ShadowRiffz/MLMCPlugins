@@ -43,37 +43,37 @@ public class Commands implements CommandExecutor {
 		if (s.hasPermission("neopprs.admin")) {
 			String author = s.getName();
 			if (args.length == 0) {
-				s.sendMessage("§7--- §cNeoPPRs §7(1/2) ---");
+				s.sendMessage("Â§7--- Â§cNeoPPRs Â§7(1/2) ---");
 				s.sendMessage(
-						"§c/ppr create [name] {xray/racism} §7- Creates PPR, optionally use the xray/racism shortcut");
-				s.sendMessage("§c/ppr auto [name] banned-word §7- Automatically creates and posts banned word PPR");
-				s.sendMessage("§c/ppr offense §7- Sets offense for PPR");
-				s.sendMessage("§c/ppr action §7- Sets action for PPR");
-				s.sendMessage("§c/ppr desc §7- Sets description for PPR");
-				s.sendMessage("§c/ppr view §7- Shows a preview of the PPR");
-				s.sendMessage("§c/ppr post §7- Saves and posts PPR");
-				s.sendMessage("§c/ppr cancel §7- Exits PPR creation mode");
+						"Â§c/ppr create [name] {xray/racism} Â§7- Creates PPR, optionally use the xray/racism shortcut");
+				s.sendMessage("Â§c/ppr auto [name] banned-word Â§7- Automatically creates and posts banned word PPR");
+				s.sendMessage("Â§c/ppr offense Â§7- Sets offense for PPR");
+				s.sendMessage("Â§c/ppr action Â§7- Sets action for PPR");
+				s.sendMessage("Â§c/ppr desc Â§7- Sets description for PPR");
+				s.sendMessage("Â§c/ppr view Â§7- Shows a preview of the PPR");
+				s.sendMessage("Â§c/ppr post Â§7- Saves and posts PPR");
+				s.sendMessage("Â§c/ppr cancel Â§7- Exits PPR creation mode");
 			}
 			else {
 				if (args.length == 1 && args[0].equals("2")) {
-					s.sendMessage("§7--- §cNeoPPRs §7(2/2) ---");
-					s.sendMessage("§c/ppr view [player] §7- View all PPRs of player (and alts)");
+					s.sendMessage("Â§7--- Â§cNeoPPRs Â§7(2/2) ---");
+					s.sendMessage("Â§c/ppr view [player] Â§7- View all PPRs of player (and alts)");
 					s.sendMessage(
-							"§c/ppr modify [PPR ID] §7- Puts the PPR into creation mode, allowing you to modify it");
-					s.sendMessage("§c/ppr remove [PPR ID] §7- Deletes the specified PPR");
-					s.sendMessage("§c/ppr rename [oldname] [newname] §7- Used for name changes out of convenience");
-					s.sendMessage("§c/ppr alts add [main account] [alt] §7- Declares an alt for a player");
-					s.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
-					s.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
+							"Â§c/ppr modify [PPR ID] Â§7- Puts the PPR into creation mode, allowing you to modify it");
+					s.sendMessage("Â§c/ppr remove [PPR ID] Â§7- Deletes the specified PPR");
+					s.sendMessage("Â§c/ppr rename [oldname] [newname] Â§7- Used for name changes out of convenience");
+					s.sendMessage("Â§c/ppr alts add [main account] [alt] Â§7- Declares an alt for a player");
+					s.sendMessage("Â§c/ppr alts remove [main account] [alt] Â§7- Removes an alt from a player");
+					s.sendMessage("Â§c/ppr alts list [main account]Â§7- Lists all known alts of a player");
 				}
 				if (args.length > 1 && args[0].equalsIgnoreCase("create")) {
 					if (args.length == 2) {
 						if (Main.pprs.containsKey(author)) {
-							s.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already creating a PPR! Â§c/ppr view");
 						}
 						else {
 							main.viewPlayer(s, args[1], true);
-							s.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You entered PPR creation mode!");
 							PPR ppr = new PPR(Main.nextPPR, author);
 							Main.nextPPR++;
 							Main.pprs.put(author, ppr);
@@ -84,11 +84,11 @@ public class Commands implements CommandExecutor {
 					}
 					else if (args.length == 3 && args[2].equalsIgnoreCase("xray")) {
 						if (Main.pprs.containsKey(author)) {
-							s.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already creating a PPR! Â§c/ppr view");
 						}
 						else {
 							main.viewPlayer(s, args[1], true);
-							s.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You entered PPR creation mode!");
 							PPR ppr = new PPR(Main.nextPPR, author);
 							Main.nextPPR++;
 							Main.pprs.put(author, ppr);
@@ -101,11 +101,11 @@ public class Commands implements CommandExecutor {
 					}
 					else if (args.length == 3 && args[2].equalsIgnoreCase("racism")) {
 						if (Main.pprs.containsKey(author)) {
-							s.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already creating a PPR! Â§c/ppr view");
 						}
 						else {
 							main.viewPlayer(s, args[1], true);
-							s.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You entered PPR creation mode!");
 							PPR ppr = new PPR(Main.nextPPR, author);
 							Main.nextPPR++;
 							Main.pprs.put(author, ppr);
@@ -129,7 +129,7 @@ public class Commands implements CommandExecutor {
 						ppr.preview(s);
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length > 1 && args[0].equalsIgnoreCase("action")) {
@@ -143,7 +143,7 @@ public class Commands implements CommandExecutor {
 						ppr.preview(s);
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length > 1
@@ -158,7 +158,7 @@ public class Commands implements CommandExecutor {
 						ppr.preview(s);
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("view")) {
@@ -167,17 +167,17 @@ public class Commands implements CommandExecutor {
 						ppr.preview(s);
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("cancel")) {
 					if (Main.pprs.containsKey(author)) {
-						s.sendMessage("§4[§c§lMLMC§4] §7You exited PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You exited PPR creation mode!");
 						Main.pprs.remove(author);
 						Main.isModifying.remove(author);
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length == 1 && args[0].equalsIgnoreCase("post")) {
@@ -194,11 +194,11 @@ public class Commands implements CommandExecutor {
 							Main.isModifying.remove(author);
 						}
 						else {
-							s.sendMessage("§4[§c§lMLMC§4] §7You must fill every part of the PPR to post!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You must fill every part of the PPR to post!");
 						}
 					}
 					else {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are not in PPR creation mode!");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are not in PPR creation mode!");
 					}
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("view")) {
@@ -206,7 +206,7 @@ public class Commands implements CommandExecutor {
 				}
 				else if (args.length == 2 && args[0].equalsIgnoreCase("modify") && StringUtils.isNumeric(args[1])) {
 					if (Main.pprs.containsKey(author)) {
-						s.sendMessage("§4[§c§lMLMC§4] §7You are already creating a PPR! §c/ppr view");
+						s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You are already creating a PPR! Â§c/ppr view");
 					}
 					else {
 						int id = Integer.parseInt(args[1]);
@@ -223,16 +223,16 @@ public class Commands implements CommandExecutor {
 						} catch (Exception e) {
 							e.printStackTrace();
 							s.sendMessage(
-									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+									"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 						if (ppr != null) {
-							s.sendMessage("§4[§c§lMLMC§4] §7You entered PPR creation mode!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You entered PPR creation mode!");
 							Main.pprs.put(author, ppr);
 							Main.isModifying.put(author, true);
 							ppr.preview(s);
 						}
 						else {
-							s.sendMessage("§4[§c§lMLMC§4] §7Could not find that PPR id!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Could not find that PPR id!");
 						}
 					}
 				}
@@ -243,16 +243,16 @@ public class Commands implements CommandExecutor {
 						Statement stmt = con.createStatement();
 						int deleted = stmt.executeUpdate("delete from neopprs_pprs WHERE id = " + id + ";");
 						if (deleted > 0) {
-							s.sendMessage("§4[§c§lMLMC§4] §7Successfully removed PPR!");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully removed PPR!");
 						}
 						else {
-							s.sendMessage("§4[§c§lMLMC§4] §7No PPRs matching this id were found.");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7No PPRs matching this id were found.");
 						}
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 						s.sendMessage(
-								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+								"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
 				else if (args.length == 3 && args[0].equalsIgnoreCase("rename")) {
@@ -262,16 +262,16 @@ public class Commands implements CommandExecutor {
 						int renamed = stmt.executeUpdate("update neopprs_pprs set username = '" + args[2]
 								+ "' WHERE upper(username) = '" + args[1].toUpperCase() + "';");
 						if (renamed > 0) {
-							s.sendMessage("§4[§c§lMLMC§4] §7Successful renaming! " + renamed + " PPRs renamed.");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successful renaming! " + renamed + " PPRs renamed.");
 						}
 						else {
-							s.sendMessage("§4[§c§lMLMC§4] §7No users matching this name found.");
+							s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7No users matching this name found.");
 						}
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 						s.sendMessage(
-								"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+								"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 					}
 				}
 				else if (args[0].equalsIgnoreCase("alts")) {
@@ -325,20 +325,20 @@ public class Commands implements CommandExecutor {
 							rs = stmt.executeQuery("SELECT * FROM neopprs_alts WHERE uuid = '" + mainuuid
 									+ "' AND altuuid = '" + altuuid + "';");
 							if (rs.next()) {
-								s.sendMessage("§4[§c§lMLMC§4] §cThis alt account was already added!");
+								s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cThis alt account was already added!");
 							}
 							else {
 								stmt.executeUpdate("INSERT INTO neopprs_alts VALUES (" + Main.nextAlt + ",'"
 										+ s.getName() + "','" + mainAcc + "','" + mainuuid + "','" + altAcc + "','"
 										+ altuuid + "','" + dateformat.format(new Date()) + "')");
 								Main.nextAlt++;
-								s.sendMessage("§4[§c§lMLMC§4] §7Successfully added alt account!");
+								s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully added alt account!");
 							}
 							con.close();
 						} catch (Exception e) {
 							e.printStackTrace();
 							s.sendMessage(
-									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+									"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
@@ -351,16 +351,16 @@ public class Commands implements CommandExecutor {
 							int deleted = stmt.executeUpdate("delete from neopprs_alts WHERE upper(username) = '"
 									+ mainAcc.toUpperCase() + "' AND upper(altname) = '" + altAcc.toUpperCase() + "';");
 							if (deleted > 0) {
-								s.sendMessage("§4[§c§lMLMC§4] §7Successfully removed alt account!");
+								s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully removed alt account!");
 							}
 							else {
-								s.sendMessage("§4[§c§lMLMC§4] §7No alt accounts matching this were found.");
+								s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7No alt accounts matching this were found.");
 							}
 							con.close();
 						} catch (Exception e) {
 							e.printStackTrace();
 							s.sendMessage(
-									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+									"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else if (args.length == 3 && args[1].equalsIgnoreCase("list")) {
@@ -396,7 +396,7 @@ public class Commands implements CommandExecutor {
 								alts.add(rs.getString(5));
 							}
 
-							String message = new String("§4[§c§lMLMC§4] §7Known alts: ");
+							String message = new String("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Known alts: ");
 							if (alts.isEmpty()) {
 								message += " None";
 							}
@@ -410,18 +410,18 @@ public class Commands implements CommandExecutor {
 						} catch (Exception e) {
 							e.printStackTrace();
 							s.sendMessage(
-									"§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+									"Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 						}
 					}
 					else {
-						s.sendMessage("§7--- §cNeoPPRs §7---");
-						s.sendMessage("§c/ppr alts add [main account] [alt] §7- Declares an alt for a player");
-						s.sendMessage("§c/ppr alts remove [main account] [alt] §7- Removes an alt from a player");
-						s.sendMessage("§c/ppr alts list [main account]§7- Lists all known alts of a player");
+						s.sendMessage("Â§7--- Â§cNeoPPRs Â§7---");
+						s.sendMessage("Â§c/ppr alts add [main account] [alt] Â§7- Declares an alt for a player");
+						s.sendMessage("Â§c/ppr alts remove [main account] [alt] Â§7- Removes an alt from a player");
+						s.sendMessage("Â§c/ppr alts list [main account]Â§7- Lists all known alts of a player");
 					}
 				}
 				else {
-					s.sendMessage("§4[§c§lMLMC§4] §7Invalid commands!");
+					s.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Invalid commands!");
 					return true;
 				}
 			}

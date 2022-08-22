@@ -28,9 +28,9 @@ import me.Neoblade298.NeoProfessions.Events.ReceiveStoredItemEvent;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.StoredItemSource;
 import me.Neoblade298.NeoProfessions.Storage.StoredItem;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neosettings.NeoSettings;
-import me.neoblade298.neosettings.objects.Settings;
+import me.neoblade298.neocore.player.PlayerFields;
 
 public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<UUID, HashMap<Integer, Integer>> storages = new HashMap<UUID, HashMap<Integer, Integer>>();
@@ -40,7 +40,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	static HashMap<Integer, Integer> limits = new HashMap<Integer, Integer>();
 	static boolean itemsLoaded = false;
 
-	public static Settings settings;
+	public static PlayerFields settings;
 	
 	public StorageManager(Professions main) {
 		StorageManager.main = main;
@@ -48,17 +48,16 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		// Load in items
 		reload();
 		
-		// Load settings
-		NeoSettings nsettings = (NeoSettings) Bukkit.getPluginManager().getPlugin("NeoSettings");
-		settings = nsettings.createSettings("Professions-StorageSort", main, false);
-		settings.addSetting("level-priority", 1);
-		settings.addSetting("rarity-priority", 2);
-		settings.addSetting("amount-priority", 3);
-		settings.addSetting("name-priority", 4);
-		settings.addSetting("level-order", true);
-		settings.addSetting("rarity-order", false);
-		settings.addSetting("amount-order", false);
-		settings.addSetting("name-order", true);
+		// Load setting
+		settings = NeoCore.createPlayerFields("Professions-StorageSort", main, false);
+		settings.initializeField("level-priority", 1);
+		settings.initializeField("rarity-priority", 2);
+		settings.initializeField("amount-priority", 3);
+		settings.initializeField("name-priority", 4);
+		settings.initializeField("level-order", true);
+		settings.initializeField("rarity-order", false);
+		settings.initializeField("amount-order", false);
+		settings.initializeField("name-order", true);
 	}
 	
 	@Override
@@ -80,7 +79,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) + amount;
 			storage.put(id, total);
-			p.sendMessage("§a+" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
+			p.sendMessage("Â§a+" + amount + " Â§7(Â§f" + total + "Â§7) " + items.get(id).getDisplay() + " Â§7(Â§c/invÂ§7)");
 			Bukkit.getPluginManager().callEvent(new ReceiveStoredItemEvent(p, id));
 			return true;
 		}
@@ -92,7 +91,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			HashMap<Integer, Integer> storage = storages.get(p.getUniqueId());
 			int total = storage.getOrDefault(id, 0) - amount;
 			storage.put(id, storage.get(id) - amount);
-			p.sendMessage("§c-" + amount + " §7(§f" + total + "§7) " + items.get(id).getDisplay());
+			p.sendMessage("Â§c-" + amount + " Â§7(Â§f" + total + "Â§7) " + items.get(id).getDisplay() + " Â§7(Â§c/invÂ§7)");
 			return true;
 		}
 		return false;
@@ -158,9 +157,12 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		}
 		itemsLoaded = true;
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		HashMap<Integer, Integer> items = new HashMap<Integer, Integer>();
 		storages.put(p.getUniqueId(), items);
 		
@@ -177,7 +179,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void savePlayer(Player p, Statement stmt) {
+	public void savePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		if (!storages.containsKey(p.getUniqueId())) {
 			return;
@@ -185,7 +187,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 		
 		try {
 			for (Entry<Integer, Integer> entry : storages.get(uuid).entrySet()) {
-				stmt.addBatch("REPLACE INTO professions_items "
+				insert.addBatch("REPLACE INTO professions_items "
 						+ "VALUES ('" + uuid + "', " + entry.getKey() + "," + entry.getValue() + ");");
 			}
 		}
@@ -196,14 +198,14 @@ public class StorageManager implements IOComponent, Listener, Manager {
 	}
 
 	@Override
-	public void cleanup(Statement stmt) {
+	public void cleanup(Statement insert, Statement delete) {
 		try {
 			if (!Professions.isInstance) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
-					savePlayer(p, stmt);
+					savePlayer(p, insert, delete);
 				}
 			}
-			stmt.addBatch("DELETE FROM professions_items WHERE amount <= 0");
+			delete.addBatch("DELETE FROM professions_items WHERE amount <= 0");
 		}
 		catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "Professions failed to cleanup storage");
@@ -242,7 +244,7 @@ public class StorageManager implements IOComponent, Listener, Manager {
 			givePlayer(p, nbti.getInteger("id"), nbti.getInteger("amount") * item.getAmount());
 			p.getInventory().removeItem(item);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
-			p.sendMessage("§4[§c§lMLMC§4] §7You claimed §f" + (amount * item.getAmount()) + " " + si.getDisplay() + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You claimed Â§f" + (amount * item.getAmount()) + " " + si.getDisplay() + "Â§7! (Â§c/invÂ§7)");
 		}
 	}
 	

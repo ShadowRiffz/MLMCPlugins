@@ -31,19 +31,19 @@ public class CreateSlotInventory extends ProfessionInventory {
 	private static final HashMap<Integer, Integer> essencePrices = new HashMap<Integer, Integer>();
 	
 	static {
-		goldPrices.put(1, new ScaleSet(500, 500));
-		goldPrices.put(2, new ScaleSet(750, 750));
-		goldPrices.put(3, new ScaleSet(1000, 1000));
-		goldPrices.put(4, new ScaleSet(1500, 1500));
-		goldPrices.put(5, new ScaleSet(2500, 2500));
-		goldPrices.put(6, new ScaleSet(4000, 4000));
+		goldPrices.put(1, new ScaleSet(200, 200));
+		goldPrices.put(2, new ScaleSet(400, 400));
+		goldPrices.put(3, new ScaleSet(600, 600));
+		goldPrices.put(4, new ScaleSet(800, 800));
+		goldPrices.put(5, new ScaleSet(1000, 1000));
+		goldPrices.put(6, new ScaleSet(1200, 1200));
 		
-		essencePrices.put(1, 4);
-		essencePrices.put(2, 12);
-		essencePrices.put(3, 24);
-		essencePrices.put(4, 36);
-		essencePrices.put(5, 48);
-		essencePrices.put(6, 60);
+		essencePrices.put(1, 2);
+		essencePrices.put(2, 4);
+		essencePrices.put(3, 8);
+		essencePrices.put(4, 16);
+		essencePrices.put(5, 24);
+		essencePrices.put(6, 40);
 	}
 
 	public CreateSlotInventory(Professions main, Player p) {
@@ -52,7 +52,7 @@ public class CreateSlotInventory extends ProfessionInventory {
 		p.getInventory().removeItem(item);
 		level = new NBTItem(item).getInteger("level");
 		int nextSlot = new NBTItem(item).getInteger("slotsCreated") + 1;
-		inv = Bukkit.createInventory(p, 9, "§cAdd slot " + nextSlot + "?");
+		inv = Bukkit.createInventory(p, 9, "Â§cAdd slot " + nextSlot + "?");
 		
 		goldCost = goldPrices.get(nextSlot).getResult(level);
 		essenceCost = essencePrices.get(nextSlot);
@@ -61,10 +61,10 @@ public class CreateSlotInventory extends ProfessionInventory {
 		contents[0] = item;
 		contents[1] = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
 		for (int i = 2; i < CREATESLOT_ICON; i++) {
-			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "§cNo");
+			contents[i] = createGuiItem(Material.RED_STAINED_GLASS_PANE, "Â§cNo");
 		}
-		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "§aYes",
-				"§7Gold cost: §e" + goldCost + "g", "§7Essence cost: §e" + essenceCost);
+		contents[CREATESLOT_ICON] = createGuiItem(Material.LIME_STAINED_GLASS_PANE, "Â§aYes",
+				"Â§7Gold cost: Â§e" + goldCost + "g", "Â§7Essence cost: Â§e" + essenceCost);
 		inv.setContents(contents);
 
 		setupInventory(p, inv, this);

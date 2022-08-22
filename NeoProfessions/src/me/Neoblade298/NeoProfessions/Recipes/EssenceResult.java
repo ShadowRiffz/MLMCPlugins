@@ -33,13 +33,13 @@ public class EssenceResult implements RecipeResult {
 	public ItemStack getResultItem(Player p, boolean canCraft) {
 		ItemStack item = new ItemStack(Material.QUARTZ);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName((canCraft ? "§a" : "§c") + "[Lv " + level + "] Essence");
+		meta.setDisplayName((canCraft ? "Â§a" : "Â§c") + "[Lv " + level + "] Essence");
 		item.setItemMeta(meta);
 		return item;
 	}
 	
 	@Override
-	public String getDisplay() {
+	public String getDisplay(Player p) {
 		return "[Lv " + level + "] Essence";
 	}
 }

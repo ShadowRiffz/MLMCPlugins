@@ -69,7 +69,7 @@ public class Conversations extends JavaPlugin implements org.bukkit.event.Listen
 									.replaceAll("<player>", p.getName()));
 						}
 						else {
-							p.sendMessage(finalPiece.replaceAll("<player>", p.getName()).replaceAll("&", "ง"));
+							p.sendMessage(finalPiece.replaceAll("<player>", p.getName()).replaceAll("&", "ยง"));
 						}
 					}
 				}

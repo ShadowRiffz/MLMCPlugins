@@ -34,14 +34,14 @@ public class Commands implements CommandExecutor{
 		
 		if (!main.inlobby.containsKey(name) && !main.ingame.containsKey(name)) {
 			if (args.length == 0) {
-				p.sendMessage("ง4[งcงlUnoง4]");
-				p.sendMessage("งc/uno create [name] ง7- Create a lobby");
-				p.sendMessage("งc/uno join [name] ง7- Join a lobby");
-				p.sendMessage("งc/uno spectate [name] ง7- Spectate a game");
+				p.sendMessage("ยง4[ยงcยงlUnoยง4]");
+				p.sendMessage("ยงc/uno create [name] ยง7- Create a lobby");
+				p.sendMessage("ยงc/uno join [name] ยง7- Join a lobby");
+				p.sendMessage("ยงc/uno spectate [name] ยง7- Spectate a game");
 				if (p.hasPermission("neouno.admin")) {
-					p.sendMessage("ง4/uno endgame [name] ง7- End a game");
-					p.sendMessage("ง4/uno forcequit [player] ง7- Forces a player in the game to quit");
-					p.sendMessage("ง4/uno games ง7- Lists all games and player");
+					p.sendMessage("ยง4/uno endgame [name] ยง7- End a game");
+					p.sendMessage("ยง4/uno forcequit [player] ยง7- Forces a player in the game to quit");
+					p.sendMessage("ยง4/uno games ยง7- Lists all games and player");
 				}
 				return true;
 			}
@@ -61,18 +61,18 @@ public class Commands implements CommandExecutor{
 		else if (main.inlobby.containsKey(name)) {
 			Lobby lobby = main.inlobby.get(name);
 			if (args.length == 0) {
-				p.sendMessage("ง4[งcงlUnoง4]");
-				p.sendMessage("ง7Lobby name: งe" + lobby.getName());
-				p.sendMessage("ง7Players: งe" + lobby.getPlayerList());
-				p.sendMessage("งc/uno leave ง7- Leave the lobby you're in");
-				p.sendMessage("งc/uno start ง7- Start the game (host only)");
-				p.sendMessage("งc/uno invite [player] ง7- Invite a player to the lobby (host only)");
-				p.sendMessage("งc/uno kick [player] ง7- Kick player from lobby (host only)");
-				p.sendMessage("งc/uno set points [amt] ง7- Set game points to win (host only)");
+				p.sendMessage("ยง4[ยงcยงlUnoยง4]");
+				p.sendMessage("ยง7Lobby name: ยงe" + lobby.getName());
+				p.sendMessage("ยง7Players: ยงe" + lobby.getPlayerList());
+				p.sendMessage("ยงc/uno leave ยง7- Leave the lobby you're in");
+				p.sendMessage("ยงc/uno start ยง7- Start the game (host only)");
+				p.sendMessage("ยงc/uno invite [player] ยง7- Invite a player to the lobby (host only)");
+				p.sendMessage("ยงc/uno kick [player] ยง7- Kick player from lobby (host only)");
+				p.sendMessage("ยงc/uno set points [amt] ยง7- Set game points to win (host only)");
 				if (p.hasPermission("neouno.admin")) {
-					p.sendMessage("ง4/uno endgame [name] ง7- End a game");
-					p.sendMessage("ง4/uno forcequit [player] ง7- Forces a player in the game to quit");
-					p.sendMessage("ง4/uno games ง7- Lists all games and player");
+					p.sendMessage("ยง4/uno endgame [name] ยง7- End a game");
+					p.sendMessage("ยง4/uno forcequit [player] ยง7- Forces a player in the game to quit");
+					p.sendMessage("ยง4/uno games ยง7- Lists all games and player");
 				}
 				return true;
 			}
@@ -95,20 +95,20 @@ public class Commands implements CommandExecutor{
 		}
 		else if (main.ingame.containsKey(name)) {
 			if (args.length == 0) {
-				p.sendMessage("ง4[งcงlUno ง7(1/2)ง4]");
-				p.sendMessage("ง7[] = Required, {} = Optional");
-				p.sendMessage("งc/uno hand ง7- Shows you your hand");
-				p.sendMessage("งc/uno play #[r/g/b/y] ง7- Plays card. Example, play blue 3: /uno play 3b");
-				p.sendMessage("งc/uno draw ง7- Draw a card instead of playing one.");
-				p.sendMessage("งc/uno call ง7- Call uno when you have 1 card left!");
-				p.sendMessage("งc/uno color [r/g/b/y] ง7- Set the color when you use a wildcard!");
-				p.sendMessage("งc/uno challenge [player] ง7- If someone fails to call uno, use this!");
-				p.sendMessage("งc/uno players ง7- View players and order of players");
-				p.sendMessage("งc/uno quit ง7- Quit the game you're in");
+				p.sendMessage("ยง4[ยงcยงlUno ยง7(1/2)ยง4]");
+				p.sendMessage("ยง7[] = Required, {} = Optional");
+				p.sendMessage("ยงc/uno hand ยง7- Shows you your hand");
+				p.sendMessage("ยงc/uno play #[r/g/b/y] ยง7- Plays card. Example, play blue 3: /uno play 3b");
+				p.sendMessage("ยงc/uno draw ยง7- Draw a card instead of playing one.");
+				p.sendMessage("ยงc/uno call ยง7- Call uno when you have 1 card left!");
+				p.sendMessage("ยงc/uno color [r/g/b/y] ยง7- Set the color when you use a wildcard!");
+				p.sendMessage("ยงc/uno challenge [player] ยง7- If someone fails to call uno, use this!");
+				p.sendMessage("ยงc/uno players ยง7- View players and order of players");
+				p.sendMessage("ยงc/uno quit ยง7- Quit the game you're in");
 				if (p.hasPermission("neouno.admin")) {
-					p.sendMessage("ง4/uno endgame [name] ง7- End a game");
-					p.sendMessage("ง4/uno forcequit [player] ง7- Forces a player in the game to quit");
-					p.sendMessage("ง4/uno games ง7- Lists all games and player");
+					p.sendMessage("ยง4/uno endgame [name] ยง7- End a game");
+					p.sendMessage("ยง4/uno forcequit [player] ยง7- Forces a player in the game to quit");
+					p.sendMessage("ยง4/uno games ยง7- Lists all games and player");
 				}
 				return true;
 			}
@@ -165,7 +165,7 @@ public class Commands implements CommandExecutor{
 		}
 		
 		
-		p.sendMessage("ง4[งcงlMLMCง4] ง7Unknown command!");
+		p.sendMessage("ยง4[ยงcยงlMLMCยง4] ยง7Unknown command!");
 		return true;
 	}
 }

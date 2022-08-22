@@ -20,7 +20,7 @@ public class Commands implements CommandExecutor{
 			main.toggle((Player) sender);
 		}
 		if (sender.hasPermission("mycommand.staff") && args.length > 0) {
-			sender.sendMessage("§cPermission: neoinfinitewater.use");
+			sender.sendMessage("Â§cPermission: neoinfinitewater.use");
 		}
 		return true;
 	}

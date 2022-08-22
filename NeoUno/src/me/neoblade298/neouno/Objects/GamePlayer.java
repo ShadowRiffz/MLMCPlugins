@@ -28,7 +28,7 @@ public class GamePlayer {
 	}
 
 	public void message(String msg) {
-		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "ง");
+		String message = new String("&4[&c&lMLMC&4] &7" + msg).replaceAll("&", "ยง");
 		Player p = Bukkit.getPlayer(player);
 		if (p != null) {
 			p.sendMessage(message);

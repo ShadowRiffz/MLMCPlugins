@@ -63,7 +63,7 @@ public class Minigame {
 	
 	public boolean startMinigame(Player p, MinigameParameters params) {
 		if (ProfessionManager.getLevel(p, type) < level) {
-			p.sendMessage("§cYour §6" + type.getDisplay() + " §clevel is too low! It must be at least level §e" + level);
+			p.sendMessage("Â§cYour Â§6" + type.getDisplay() + " Â§clevel is too low! It must be at least level Â§e" + level);
 			return false;
 		}
 		

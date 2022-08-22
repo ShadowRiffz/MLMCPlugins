@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,7 +39,6 @@ import me.neoblade298.neoresearch.inventories.ResearchInventory;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAttributeLoadEvent;
 import com.sucy.skill.api.event.PlayerAttributeUnloadEvent;
-import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import de.tr7zw.nbtapi.NBTItem;
 import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -108,8 +108,8 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 
 		// General
 		ConfigurationSection general = cfg.getConfigurationSection("general");
-		broadcast = general.getString("research_complete_command").replaceAll("&", "§");
-		levelup = general.getString("research_levelup").replaceAll("&", "§");
+		broadcast = general.getString("research_complete_command").replaceAll("&", "Â§");
+		levelup = general.getString("research_levelup").replaceAll("&", "Â§");
 		discovery = general.getString("discovery");
 
 		// Exp
@@ -189,9 +189,12 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			converter.put(perm, mobValues);
 		}
 	}
+
+	@Override
+	public void preloadPlayer(OfflinePlayer p, Statement stmt) {	}
 	
 	@Override
-	public void loadPlayer(OfflinePlayer p, Statement stmt) {
+	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		
 		// Add them to attrs
@@ -275,6 +278,8 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 							}
 						}
 	
+						int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
+						pAttrs.get(acct).applyAttributes(p);
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
@@ -288,59 +293,67 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		load.runTaskAsynchronously(this);
 	}
 	
-	public void cleanup(Statement stmt) {
+	@Override
+	public void cleanup(Statement insert, Statement delete) {
 		try {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				savePlayer(p, stmt);
+				savePlayer(p, insert, delete);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public void savePlayer(Player p, Statement stmt) {
+	@Override
+	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			PlayerStats stats = playerStats.get(uuid);
 			if (playerStats.containsKey(uuid)) {
 	
 				// Save account
-				stmt.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
+				insert.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
 				+ "','" + stats.getExp() + "');");
 	
 				// Save research points
 	
 				HashMap<String, Integer> mobKills = stats.getMobKills();
 				for (String mob : mobKills.keySet()) {
-					stmt.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
+					insert.addBatch("REPLACE INTO research_kills values('" + uuid + "','" + mob + "'," + mobKills.get(mob) + ");");
 				}
 				HashMap<String, Integer> researchPoints = stats.getResearchPoints();
 				for (String mob : researchPoints.keySet()) {
-					stmt.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
+					insert.addBatch("REPLACE INTO research_points values('" + uuid + "','" + mob + "'," + researchPoints.get(mob) + ");");
 				}
 	
 				for (Entry<String, ResearchItem> entry : stats.getCompletedResearchItems().entrySet()) {
 					String name = entry.getValue().getId();
-					stmt.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + name + "');");
+					insert.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + name + "');");
 				}
 			
 				// Save attrs
 				for (Integer key : playerAttrs.get(uuid).keySet()) {
 					StoredAttributes pAttrs = playerAttrs.get(uuid).get(key);
 					for (String attr : StoredAttributes.attrs) {
-						stmt.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
+						insert.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
 								key + ");");
 					}
 				}
-				playerAttrs.remove(uuid);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void savePlayer(Player p, Statement insert, Statement delete) {
+		autosavePlayer(p, insert, delete);
+		playerAttrs.remove(p.getUniqueId());
+	}
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
+		if (e.getHand() != null && e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 		if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
 		}
@@ -357,7 +370,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			String display = main.getItemMeta().getLore().get(1);
 
 			if (!playerStats.containsKey(p.getUniqueId())) {
-				p.sendMessage("§4[§c§lMLMC§4] §cError, player stats not found.");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cError, player stats not found.");
 				return;
 			}
 			NBTItem nbti = new NBTItem(main);
@@ -369,7 +382,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			int pLevel = pStat.getLevel();
 			
 			if (level > pLevel) {
-				p.sendMessage("§4[§c§lMLMC§4] §cYou are too low level to research this mob!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cYou are too low level to research this mob!");
 				return;
 			}
 			
@@ -384,7 +397,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			researchPoints.put(mob, points);
 			p.getInventory().removeItem(main);
 			p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.BLOCKS, 1, 1);
-			p.sendMessage("§4[§c§lMLMC§4] §7You gained §e" + amount + " §7research points for " + display + "§7!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7You gained Â§e" + amount + " Â§7research points for " + display + "Â§7!");
 			checkItemCompletion(mob, p, points, display);
 		}
 	}
@@ -436,35 +449,6 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			}
 		}
 	}
-	
-	public void checkItemCompletionSilent(String mob, Player p, int totalPoints) {
-		// Check if new discovery
-		PlayerStats stats = playerStats.get(p.getUniqueId());
-		HashMap<String, Integer> researchPoints = stats.getResearchPoints();
-		
-		// Check for research goals that need it
-		HashMap<String, ResearchItem> completedItems = stats.getCompletedResearchItems();
-		if (mobMap.containsKey(mob)) {
-			for (ResearchItem researchItem : mobMap.get(mob)) { // For each relevant research item
-				if (!completedItems.containsKey(researchItem.getId())) { // If the player hasn't completed it
-					// Check if research goal is completed for specific mob
-					HashMap<String, Integer> goals = researchItem.getGoals();
-					if (goals.get(mob) <= totalPoints) {
-						for (String rMob : goals.keySet()) { // Check every objective
-							if (!researchPoints.containsKey(rMob) || researchPoints.get(rMob) < goals.get(rMob)) {
-								return; // Haven't completed every item
-							}
-						}
-	
-						// Completed a research item
-						completedItems.put(researchItem.getId(), researchItem);
-						stats.addExp(p, researchItem.getExp());
-						updateBonuses(p);
-					}
-				}
-			}
-		}
-	}
 
 	// Strictly for taking away research points/kills
 	public void checkItemDecompletion(String mob, Player p, int totalPoints) {
@@ -496,7 +480,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			
 			// New discovery
 			if (!researchPoints.containsKey(mob)) {
-				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
+				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "Â§"));
 				researchPoints.put(mob, 0);
 			}
 			if (!mobKills.containsKey(mob)) {
@@ -513,10 +497,10 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 						msg += " &7via " + via;
 					}
 					msg += "&7!";
-					msg = msg.replaceAll("&", "§");
+					msg = msg.replaceAll("&", "Â§");
 					p.sendMessage(msg);
 				}
-				String msg = display + " - §e" + points + " Research Pts";
+				String msg = display + " - Â§e" + points + " Research Pts";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
@@ -533,7 +517,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 			
 			// Discovery
 			if (!researchPoints.containsKey(mob)) {
-				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
+				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "Â§"));
 				researchPoints.put(mob, 0);
 			}
 			if (!mobKills.containsKey(mob)) {
@@ -545,32 +529,17 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 				researchPoints.put(mob, points);
 				if (announce) {
 					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
-					msg = msg.replaceAll("&", "§");
+					msg = msg.replaceAll("&", "Â§");
 					p.sendMessage(msg);
 				}
-				String msg = display + " - §e" + points + " Research Pts";
+				String msg = display + " - Â§e" + points + " Research Pts";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 				checkItemCompletion(mob, p, points, display);
 			}
 			else {
-				String msg = display + " - §cResearch level too low!";
+				String msg = display + " - Â§cResearch level too low!";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
 			}
-		}
-	}
-	
-	public void giveResearchPointsBypass(Player p, int amount, String mob) {
-		UUID uuid = p.getUniqueId();
-		if (playerStats.containsKey(uuid)) {
-			PlayerStats pStats = playerStats.get(uuid);
-			HashMap<String, Integer> mobKills = pStats.getMobKills();
-			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
-			int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-			researchPoints.put(mob, points);
-			if (!mobKills.containsKey(mob)) {
-				mobKills.put(mob, 0);
-			}
-			checkItemCompletionSilent(mob, p, points);
 		}
 	}
 
@@ -698,11 +667,6 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	// Below are situations where research should load
-	
-	@EventHandler
-	public void onLoadSQL(PlayerLoadCompleteEvent e) {
-		updateBonuses(e.getPlayer());
-	}
 	
 	@EventHandler
 	public void onAttributeLoad(PlayerAttributeLoadEvent e) {

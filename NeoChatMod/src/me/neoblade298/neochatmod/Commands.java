@@ -18,13 +18,13 @@ public class Commands implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if (args.length == 0 && sender.hasPermission("mycommand.staff")) {
 			if (this.main.getMute()) {
-				Bukkit.broadcastMessage("§4[§c§lMLMC§4] §7The server chat has been unmuted!");
+				Bukkit.broadcastMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The server chat has been unmuted!");
 			}
 			else {
 				for (int i = 0; i < 15; i++) {
 					Bukkit.broadcastMessage("");
 				}
-				Bukkit.broadcastMessage("§4[§c§lMLMC§4] §7The server chat has been muted!");
+				Bukkit.broadcastMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7The server chat has been muted!");
 			}
 			this.main.toggleMute();
 			return true;

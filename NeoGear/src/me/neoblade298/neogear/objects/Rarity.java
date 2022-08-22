@@ -10,8 +10,8 @@ public class Rarity {
 	
 	public Rarity(String key, String colorCode, String displayName, double priceModifier, boolean isEnchanted, int priority) {
 		this.key = key;
-		this.colorCode = colorCode.replaceAll("&", "ง");
-		this.displayName = displayName.replaceAll("&", "ง");
+		this.colorCode = colorCode.replaceAll("&", "ยง");
+		this.displayName = displayName.replaceAll("&", "ยง");
 		this.priceModifier = priceModifier;
 		this.isEnchanted = isEnchanted;
 		this.priority = priority;

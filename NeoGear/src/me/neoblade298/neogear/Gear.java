@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -38,6 +39,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.Neoblade298.NeoProfessions.Utilities.Util;
 import me.neoblade298.neogear.listeners.DurabilityListener;
 import me.neoblade298.neogear.objects.AttributeSet;
 import me.neoblade298.neogear.objects.Enchant;
@@ -401,7 +403,19 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEnchantItem(EnchantItemEvent e) {
+		ItemStack item = e.getItem();
+		if (item != null) {
+			if (isQuestGear(item)) {
+				e.setCancelled(true);
+				Util.sendMessage(e.getEnchanter(), "&cYou cannot enchant RPG items!");
+				return;
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
 		ItemStack[] contents = e.getInventory().getContents();
 		for (int i = 0; i < contents.length; i++) {
@@ -432,12 +446,12 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 							inv.addItem(armor[i]);
 							armor[i] = null;
 							p.sendMessage(
-									"§c[§4§lMLMC§4] §cYour quest gear was removed, as it cannot be used in this world!");
+									"Â§c[Â§4Â§lMLMCÂ§4] Â§cYour quest gear was removed, as it cannot be used in this world!");
 						}
 						else {
 							e.setCancelled(true);
 							p.sendMessage(
-									"§c[§4§lMLMC§4] §cYou must take off your quest armor before changing worlds!");
+									"Â§c[Â§4Â§lMLMCÂ§4] Â§cYou must take off your quest armor before changing worlds!");
 							break;
 						}
 					}
@@ -451,20 +465,20 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
-		if (item == null)
+		if (item == null || item.getType().isAir())
 			return;
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
 			if (isQuestGear(item)) {
 				e.setUseItemInHand(Result.DENY);
-				p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+				p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot use quest gear in this world!");
 			}
 		}
 		else {
 			if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if (isArmor(item)) {
 					e.setUseItemInHand(Result.DENY);
-					p.sendMessage("§c[§4§lMLMC§4] §cEquipping armor via right click is disabled in quest worlds!");
+					p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cEquipping armor via right click is disabled in quest worlds!");
 				}
 			}
 		}
@@ -480,7 +494,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				for (ItemStack item : weapons) {
 					if (item != null && !item.getType().isAir() && isQuestGear(item)) {
 						e.setCancelled(true);
-						p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+						p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot use quest gear in this world!");
 						break;
 					}
 				}
@@ -497,7 +511,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 				ItemStack item = e.getBow();
 				if (isQuestGear(item)) {
 					e.setCancelled(true);
-					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+					p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot use quest gear in this world!");
 				}
 			}
 		}
@@ -568,7 +582,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			SmithingInventory smith = (SmithingInventory) e.getView().getTopInventory();
 			if (isQuestGear(smith.getContents()[0]) && e.getSlot() == 2) {
 				e.setCancelled(true);
-				e.getView().getPlayer().sendMessage("§c[§4§lMLMC§4] §cYou cannot apply netherite to quest gear!");
+				e.getView().getPlayer().sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot apply netherite to quest gear!");
 				return true;
 			}
 		}
@@ -618,7 +632,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (e.getTargetEntity() instanceof Player) {
 				if (isQuestGear(e.getItem())) {
 					e.setCancelled(true);
-					e.getTargetEntity().sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+					e.getTargetEntity().sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot use quest gear in this world!");
 				}
 			}
 		}
@@ -633,7 +647,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 				if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
 					e.setCancelled(true);
-					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot throw tridents in this world!");
+					p.sendMessage("Â§c[Â§4Â§lMLMCÂ§4] Â§cYou cannot throw tridents in this world!");
 				}
 			}
 		}

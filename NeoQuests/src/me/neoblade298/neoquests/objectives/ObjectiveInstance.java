@@ -14,46 +14,63 @@ public class ObjectiveInstance {
 		this.p = p;
 		this.obj = obj;
 		this.set = set;
-		
-		ObjectiveListener.addObjective(this);
 	}
 
 	public Objective getObjective() {
 		return obj;
 	}
 
-	public boolean samePlayer(Player p) {
-		return this.p.equals(p);
+	public Player getPlayer() {
+		return p;
 	}
 
 	public int getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public boolean setCount(int count) {
 		this.count = Math.min(obj.getNeeded(), count);
 		if (isComplete()) {
 			set.checkCompletion();
+			return true;
 		}
+		return false;
 	}
 
-	public void incrementCount() {
+	public boolean addCount(int count) {
+		this.count += count;
+		this.count = Math.min(obj.getNeeded(), this.count);
+		if (isComplete()) {
+			set.checkCompletion();
+			return true;
+		}
+		return false;
+	}
+
+	public boolean incrementCount() {
 		if (this.count < obj.getNeeded()) {
 			this.count++;
 		}
 		if (isComplete()) {
 			set.checkCompletion();
+			return true;
 		}
+		return false;
 	}
 
 	public boolean isComplete() {
-		updateCount();
 		return count >= obj.getNeeded();
 	}
 	
-	public void cleanup() {
-		ObjectiveListener.removeObjective(this);
+	public void finalize(Player p) {
+		obj.finalize(p);
 	}
-
-	public void updateCount() {}
+	
+	public void stopListening() {
+		ObjectiveListener.stopListening(this);
+	}
+	
+	public void startListening() {
+		ObjectiveListener.startListening(this);
+	}
 }

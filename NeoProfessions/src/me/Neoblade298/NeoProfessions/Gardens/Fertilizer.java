@@ -18,15 +18,15 @@ public class Fertilizer {
 		this.timeMultiplier = timeMultiplier;
 		
 		effects = new ArrayList<String>();
-		effects.add("ง6Fertilizer Effects:");
+		effects.add("ยง6Fertilizer Effects:");
 		if (timeMultiplier != 1) {
-			effects.add("ง7- Harvest Time งe" + df.format(timeMultiplier) + "x");
+			effects.add("ยง7- Harvest Time ยงe" + df.format(timeMultiplier) + "x");
 		}
 		if (params.getAmountMultiplier() != 1) {
-			effects.add("ง7- Harvest Amount งe" + df.format(params.getAmountMultiplier()) + "x");
+			effects.add("ยง7- Harvest Amount ยงe" + df.format(params.getAmountMultiplier()) + "x");
 		}
 		for (Rarity rarity : params.getModdedRarities()) {
-			effects.add("ง7- Droprate of " + rarity.getDisplay() + " งe" + df.format(params.getRarityWeightMultiplier(rarity)) + "x");
+			effects.add("ยง7- Droprate of " + rarity.getDisplay() + " ยงe" + df.format(params.getRarityWeightMultiplier(rarity)) + "x");
 		}
 	}
 	public int getId() {

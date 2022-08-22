@@ -98,16 +98,16 @@ public class Report {
 	}
 	
 	public void list(CommandSender p) {
-		String prefix = "§4";
+		String prefix = "Â§4";
 		if (is_urgent) {
-			prefix = "§4§l";
+			prefix = "Â§4Â§l";
 		}
 		if (is_resolved) {
-			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + getDescription());
-			p.sendMessage("§c" + resolver + " " + fixdate + "§7 - " + getComment());
+			p.sendMessage(prefix + "#" + id + ": Â§c" + user + " " + date + "Â§7 - " + getDescription());
+			p.sendMessage("Â§c" + resolver + " " + fixdate + "Â§7 - " + getComment());
 		}
 		else {
-			p.sendMessage(prefix + "#" + id + ": §c" + user + " " + date + "§7 - " + getDescription());
+			p.sendMessage(prefix + "#" + id + ": Â§c" + user + " " + date + "Â§7 - " + getDescription());
 		}
 	}
 	
@@ -126,13 +126,13 @@ public class Report {
 			int post = stmt.executeUpdate("INSERT INTO neoreports_bugs VALUES (" + id + ",'" + date + "','" + user + "','" + description +
 					"','" + comment + "','" + resolver + "','" + fixdate + "','" +  resolved + "','" + urgent +"')");
 			if (post > 0) {
-				p.sendMessage("§4[§c§lMLMC§4] §7Successfully posted report!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Successfully posted report!");
 				Main.nextReport++;
 				if(is_urgent) {
 					Main.numUrgent++;
 					for (Player staff : Bukkit.getOnlinePlayers()) {
 						if (staff.hasPermission("neoreports.admin")) {
-							staff.sendMessage("§4[§c§lMLMC§4] §c§lAn urgent bug report was just posted!");
+							staff.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cÂ§lAn urgent bug report was just posted!");
 						}
 					}
 				}
@@ -141,13 +141,13 @@ public class Report {
 				}
 			}
 			else {
-				p.sendMessage("§4[§c§lMLMC§4] §7Failed to post report!");
+				p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§7Failed to post report!");
 			}
 			con.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			p.sendMessage("§4[§c§lMLMC§4] §cSomething went wrong! Report to neo and don't use the plugin anymore!");
+			p.sendMessage("Â§4[Â§cÂ§lMLMCÂ§4] Â§cSomething went wrong! Report to neo and don't use the plugin anymore!");
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
         this.level = config.getInteger("l", 0);
         this.amount = config.getInteger("a");
         this.alias = config.getString("alias", "default");
-        this.display = config.getString("d", "default").replaceAll("_", " ").replaceAll("&", "ง").replaceAll("@", "&");
+        this.display = config.getString("d", "default").replaceAll("_", " ").replaceAll("&", "ยง").replaceAll("@", "&");
         
         nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 	}
