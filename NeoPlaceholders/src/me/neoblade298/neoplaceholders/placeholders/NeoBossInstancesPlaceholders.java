@@ -93,7 +93,14 @@ public class NeoBossInstancesPlaceholders extends PlaceholderExpansion {
 			else if (args[0].equalsIgnoreCase("display")) {
 				String boss = args[1];
 				BossInfo bi = InfoAPI.getBossInfo(boss);
+				if (bi == null) return "Invalid Placeholder";
 				return bi.getDisplayWithLevel(false);
+			}
+			else if (args[0].equalsIgnoreCase("health")) {
+				String boss = args[1];
+				BossInfo bi = InfoAPI.getBossInfo(boss);
+				if (bi == null) return "Invalid Placeholder";
+				return "" + bi.getTotalHealth();
 			}
 			// %bosses_partyhealth_1-5%
 			else if (args[0].equalsIgnoreCase("partyhealth")) {
