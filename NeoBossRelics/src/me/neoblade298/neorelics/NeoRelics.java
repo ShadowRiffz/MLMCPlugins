@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -26,8 +27,8 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.io.FileLoader;
 
-public class NeoRelics extends JavaPlugin implements org.bukkit.event.Listener {
-	public static HashMap<String, Relic> relics;
+public class NeoRelics extends JavaPlugin implements Listener {
+	private static HashMap<String, Relic> relics;
 	public static HashMap<UUID, PlayerSet> playersets;
 	private static HashSet<Player> disableRecalculate;
 	private static File file;
@@ -71,6 +72,10 @@ public class NeoRelics extends JavaPlugin implements org.bukkit.event.Listener {
 		} catch (NeoIOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static HashMap<String, Relic> getRelics() {
+		return relics;
 	}
 	
 	@EventHandler

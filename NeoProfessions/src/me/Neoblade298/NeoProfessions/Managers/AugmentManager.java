@@ -41,11 +41,11 @@ import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
+import me.neoblade298.neorelics.NeoRelics;
 
 public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
@@ -146,9 +146,8 @@ public class AugmentManager implements Listener, Manager {
 		augmentMap.put("weightless", new WeightlessAugment());
 		augmentMap.put("woodcutter", new WoodcutterAugment());
 		
-		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
-		for (String set : relics.sets.keySet()) {
-			augmentMap.put(set.toLowerCase(), new BossRelic(set));
+		for (String key : NeoRelics.getRelics().keySet()) {
+			augmentMap.put(key.toLowerCase(), new BossRelic(key));
 		}
 		
 		AugmentManager.droptables.clear();

@@ -47,7 +47,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 			else {
 				p = (Player) sender;
 			}
-			ItemStack relic = NeoRelics.relics.get(args[1 + offset]).getItem();
+			ItemStack relic = NeoRelics.getRelics().get(args[1 + offset]).getItem();
 			Bukkit.getLogger().info("[NeoRelics] Gave relic " + args[1 + offset] + " to player " + p.getName());
 			HashMap<Integer, ItemStack> failed = p.getInventory().addItem(relic);
 			if (!failed.isEmpty()) {
@@ -94,10 +94,10 @@ public class Commands implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (args[0].equalsIgnoreCase("get") && args.length == 2) {
-			return NeoRelics.relics.keySet().stream().filter(relic -> relic.startsWith(args[1])).collect(Collectors.toList());
+			return NeoRelics.getRelics().keySet().stream().filter(relic -> relic.startsWith(args[1])).collect(Collectors.toList());
 		}
 		else if (args[0].equalsIgnoreCase("give") && args.length == 3) {
-			return NeoRelics.relics.keySet().stream().filter(relic -> relic.startsWith(args[2])).collect(Collectors.toList());
+			return NeoRelics.getRelics().keySet().stream().filter(relic -> relic.startsWith(args[2])).collect(Collectors.toList());
 		}
 		return null;
 	}
