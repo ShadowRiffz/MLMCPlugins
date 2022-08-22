@@ -20,6 +20,7 @@ import me.neoblade298.neocore.util.Util;
 
 public class Relic {
 	private HashMap<Integer, SetEffect> effects = new HashMap<Integer, SetEffect>();
+	private BossInfo bi;
 	private String key, display = "Incorrectly loaded";
 	private ArrayList<String> lore;
 	private int level = 1;
@@ -29,7 +30,7 @@ public class Relic {
 		this.lore = parseLore(cfg.getStringList("lore"));
 		
 		String bossname = this.key.substring(5); // Remove Relic from key
-		BossInfo bi = InfoAPI.getBossInfo(bossname);
+		bi = InfoAPI.getBossInfo(bossname);
 		if (bi == null) {
 			Bukkit.getLogger().warning("[NeoRelics] Failed to load relic " + key + ", boss info for " + bossname + " was null");
 		}
@@ -97,5 +98,25 @@ public class Relic {
 	
 	public String getKey() {
 		return this.key;
+	}
+	
+	public String getDisplay() {
+		return this.display;
+	}
+	
+	public int getLevel() {
+		return this.level;
+	}
+	
+	public ArrayList<String> getLore() {
+		return this.lore;
+	}
+	
+	public HashMap<Integer, SetEffect> getEffects() {
+		return effects;
+	}
+	
+	public BossInfo getBossInfo() {
+		return bi;
 	}
 }

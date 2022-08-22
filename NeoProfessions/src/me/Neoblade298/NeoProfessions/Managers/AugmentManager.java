@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ import com.sucy.skill.api.util.FlagManager;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
+import me.Neoblade298.NeoProfessions.Augments.builtin.*;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
@@ -46,6 +48,7 @@ import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 import me.neoblade298.neorelics.NeoRelics;
+import me.neoblade298.neorelics.Relic;
 
 public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
@@ -146,8 +149,8 @@ public class AugmentManager implements Listener, Manager {
 		augmentMap.put("weightless", new WeightlessAugment());
 		augmentMap.put("woodcutter", new WoodcutterAugment());
 		
-		for (String key : NeoRelics.getRelics().keySet()) {
-			augmentMap.put(key.toLowerCase(), new BossRelic(key));
+		for (Entry<String, Relic> e : NeoRelics.getRelics().entrySet()) {
+			augmentMap.put(e.getKey().toLowerCase(), new BossRelic(e.getValue()));
 		}
 		
 		AugmentManager.droptables.clear();

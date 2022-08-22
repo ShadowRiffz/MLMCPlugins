@@ -4,14 +4,15 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.mythic.bukkit.MythicBukkit;
+import me.neoblade298.neorelics.Relic;
 
 public class BossRelic extends Augment{
+	private Relic relic;
 	
-	public BossRelic(String name) {
+	public BossRelic(Relic relic) {
 		this.level = 5;
-		this.name = name;
+		this.name = "Relic of " + relic.getBossInfo().getDisplay();
+		this.relic = relic;
 		this.etypes = new ArrayList<EventType>();
 	}
 	
@@ -23,25 +24,12 @@ public class BossRelic extends Augment{
 
 	@Override
 	public String getLine() {
-		ItemStack item = MythicBukkit.inst().getItemManager().getItemStack(this.name);
-		
-		String[] relicStrings = item.getItemMeta().getLore().get(0).split(" ");
-		String display = relicStrings[2];
-		for (int i = 3; i < relicStrings.length; i++) {
-			display += " " + relicStrings[i];
-		}
-		
-		return "§7[" + display + " Lv " + level + "]";
+		return "§7[§c" + name + " §7Lv " + level + "]";
 	}
 	
 	@Override
 	public ItemStack getItem(Player user) {
-		ItemStack item = MythicBukkit.inst().getItemManager().getItemStack(this.name);
-		NBTItem nbti = new NBTItem(item);
-		
-		nbti.setInteger("level", level);
-		nbti.setString("augment", name);
-		return nbti.getItem();
+		return relic.getItem();
 	}
 	
 	public boolean isPermanent() {
