@@ -236,9 +236,8 @@ public class Commands implements CommandExecutor{
 			else if (args[0].equalsIgnoreCase("givepointsboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				int level = bi.getLevel(false);
 				int amount = Integer.parseInt(args[3]);
-				main.giveResearchPoints(p, amount, args[2], level, true, "admin");
+				main.giveResearchPointsBoss(p, amount, args[2], true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}
