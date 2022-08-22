@@ -22,9 +22,13 @@ import com.sucy.skill.api.skills.Skill;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neoresearch.Research;
+import me.neoblade298.neoresearch.StoredAttributes;
 
 public class SkillProfiles extends JavaPlugin implements IOComponent {
-	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>(); 
+	HashMap<UUID, PlayerProfiles> playerProfiles = new HashMap<UUID, PlayerProfiles>();
+	HashMap<UUID, Long> cooldowns = new HashMap<UUID, Long>(); // stores time last used
+	static final int COOLDOWN = 10000; // milliseconds
 	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Enabled");
@@ -90,6 +94,24 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 			return;
 		}
 		
+		/* research attributes */
+		try {
+			ResultSet rs = stmt.executeQuery("select * from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
+			while(rs.next()) {
+				int accId = rs.getInt("prof_accNum");
+				String profName = rs.getString("prof_name");
+				
+				String rattrName = rs.getString("name");
+				int rattrValue = rs.getInt("value");
+				
+				pp.profiles.get(accId).profiles.get(profName).researchAttributes.put(rattrName, rattrValue);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			playerProfiles.remove(uuid);
+			return;
+		}		
+		
 		/* skill levels */
 		try {
 			ResultSet rs = stmt.executeQuery("select * from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
@@ -148,6 +170,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	@Override
 	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
+		if(!playerProfiles.containsKey(uuid)) return;
 		
 		try {
 			Statement baseStmt = NeoCore.getStatement();
@@ -164,6 +187,12 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 					delete.addBatch("delete from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> attrEntry : prof.attributes.entrySet()) {
 						insert.addBatch("insert into skillprofiles_attribute values (" + keyString + ", '" + attrEntry.getKey() + "', " + attrEntry.getValue() + ");");
+					}
+					
+					/* research attributes */
+					delete.addBatch("delete from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
+					for(Map.Entry<String, Integer> rattrEntry : prof.researchAttributes.entrySet()) {
+						insert.addBatch("insert into skillprofiles_researchattribute values (" + keyString + ", '" + rattrEntry.getKey() + "', " + rattrEntry.getValue() + ");");
 					}
 					
 					/* skill levels */
@@ -203,12 +232,18 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
 	
 	public boolean save(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		if(!profileName.matches("[A-z0-9_]{1,16}")) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Invalid profile name");
 			return true;
 		}
 		
-		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
@@ -230,13 +265,28 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	
 	public boolean load(Player player, String profileName) {
 		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
+		/* handle cooldowns */
+		Long lastUsed = cooldowns.get(uuid);
+		if(lastUsed != null && System.currentTimeMillis() - lastUsed <= COOLDOWN) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile load on cooldown");
+			return true;
+		}
+		
+		/* actual load */
 		if(!playerProfiles.containsKey(uuid) || !playerProfiles.get(uuid).load(data, accId, profileName)) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Profile §e" + profileName + " §7doesn't exist");
 		} else {
 			player.sendMessage("§4[§c§lMLMC§4] §6Loaded profile: §e" + profileName);
+			cooldowns.put(uuid, System.currentTimeMillis());
 		}
 		return true;
 	}
@@ -356,20 +406,27 @@ class AccountProfiles {
 
 class Profile {
 	HashMap<String, Integer> attributes;
-	HashMap<String, Integer> skillLevels;
+	HashMap<String, Integer> researchAttributes;
+	HashMap<String, Integer> skillLevels; // TODO: research skills?
 	HashMap<String, Material> skillBinds;
 	HashMap<Integer, String> skillBar;
 	
 	public Profile() {
 		attributes = new HashMap<String, Integer>();
+		researchAttributes = new HashMap<String, Integer>();
 		skillLevels = new HashMap<String, Integer>();
 		skillBinds = new HashMap<String, Material>();
 		skillBar = new HashMap<Integer, String>();
 	}
 	
+	@SuppressWarnings("unchecked") // annoying
 	public Profile(PlayerData data) {
 		/* attributes */
 		attributes = data.getInvestedAttributes();
+		
+		/* research attributes */
+		researchAttributes = (HashMap<String, Integer>)Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs().clone();
+		researchAttributes.remove("unused");
 		
 		/* skills */
 		Collection<PlayerSkill> skills = data.getSkills();
@@ -402,41 +459,51 @@ class Profile {
 			}
 		}
 		
+		/* research attributes */
+		StoredAttributes sAttr = Research.getPlayerAttributes(data.getPlayer());
+		sAttr.unvestAll();
+		for(Map.Entry<String, Integer> entry : researchAttributes.entrySet()) {
+			sAttr.investAttribute(entry.getKey(), entry.getValue());
+		}
+		sAttr.applyAttributes(data.getPlayer());
+		
 		/* skills */
+		data.clearAllBinds();
+		
 		Collection<PlayerSkill> skills = data.getSkills();
+		PlayerSkill essence = null;
+		
 		for(PlayerSkill ps : skills) {
-			int level = ps.getLevel();
-			for(int i = 0; i < level; i++) {
-				data.downgradeSkill(ps.getData());
+			if(ps.getData().getName().contains("'s Essence")){
+				essence = ps;
+			} else {
+				int level = ps.getLevel();
+				for(int i = 0; i < level; i++) {
+					data.downgradeSkill(ps.getData());
+				}
 			}
 		}
 		
-		data.clearAllBinds();
-		
-		// need to level essence first
-		PlayerSkill essence = null;
+		// need to de-level essence last, and re-level first
+		int eLevel = essence.getLevel();
+		Skill eData = essence.getData();
+		for(int i = 0; i < eLevel; i++) {
+			data.downgradeSkill(eData);
+		}
+		for(int i = 0; i < skillLevels.getOrDefault(eData.getName(), 0); i++) {
+			data.upgradeSkill(eData, true);
+		}
+		essence.setBind(skillBinds.get(eData.getName()));
+
+		// now the rest		
 		for(PlayerSkill ps : skills) {
 			Skill s = ps.getData();
-			if(s.getName().contains("'s Essence")) {
-				essence = ps;
-				
+			if(!s.getName().contains("'s Essence")) {
 				for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
 					data.upgradeSkill(s, true);
 				}
-				
 				ps.setBind(skillBinds.get(s.getName()));
 			}
-		}
-		if(essence != null) {
-			skills.remove(essence);
-		}
-		
-		for(PlayerSkill ps : skills) {
-			Skill s = ps.getData();
-			for(int i = 0; i < skillLevels.getOrDefault(s.getName(), 0); i++) {
-				data.upgradeSkill(s, true);
-			}
-			ps.setBind(skillBinds.get(s.getName()));
 		}
 		
 		/* skill bar */

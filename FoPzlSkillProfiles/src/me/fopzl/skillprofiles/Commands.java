@@ -15,7 +15,7 @@ public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if(args.length < 1) return false;
+		if(args.length < 1 || !(sender instanceof Player)) return false;
 		
 		switch(args[0]) {
 			case "save":
