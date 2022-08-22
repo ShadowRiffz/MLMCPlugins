@@ -83,7 +83,7 @@ public class NeoRelics extends JavaPlugin implements Listener {
 		if (!(e.getPlayer() instanceof Player)) return;
 		Player p = (Player) e.getPlayer();
 		
-		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
+		if (!SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 
 		recalculateSetEffect(p);
 	}
@@ -120,7 +120,7 @@ public class NeoRelics extends JavaPlugin implements Listener {
 	public void onItemBreak(PlayerItemBreakEvent e) {
 		Player p = e.getPlayer();
 		UUID uuid = p.getUniqueId();
-		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
+		if (!SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
 		if (playersets.containsKey(uuid)) {
 			if (checkRelic(p, e.getBrokenItem())) playersets.get(uuid).decrementNum();
@@ -130,7 +130,7 @@ public class NeoRelics extends JavaPlugin implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChangeSlot(PlayerItemHeldEvent e) {
 		Player p = e.getPlayer();
-		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
+		if (!SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
 		ItemStack oldItem = p.getInventory().getContents()[e.getPreviousSlot()];
 		ItemStack newItem = p.getInventory().getContents()[e.getNewSlot()];
@@ -146,7 +146,7 @@ public class NeoRelics extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
 		Player p = e.getPlayer();
-		if (SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
+		if (!SkillAPI.getSettings().isWorldEnabled(p.getWorld())) return;
 		
 		ItemStack item = e.getItemDrop().getItemStack();
 		if (checkRelic(p, item)) playersets.get(p.getUniqueId()).decrementNum();
@@ -194,7 +194,7 @@ public class NeoRelics extends JavaPlugin implements Listener {
 			NBTItem nbti = new NBTItem(item);
 			for (int i = 1; i <= nbti.getInteger("slotsCreated"); i++) {
 				String augmentName = nbti.getString("slot" + i + "Augment");
-				if (augmentName.equals(relic.getKey())) {
+				if (augmentName.equalsIgnoreCase(relic.getKey())) {
 					return true;
 				}
 			}
