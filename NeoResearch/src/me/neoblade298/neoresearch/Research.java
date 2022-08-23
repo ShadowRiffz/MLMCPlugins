@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -282,6 +283,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	
 						int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 						pAttrs.get(acct).applyAttributes(p);
+						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
