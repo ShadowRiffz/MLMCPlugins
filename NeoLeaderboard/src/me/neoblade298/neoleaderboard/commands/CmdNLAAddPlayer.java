@@ -18,7 +18,7 @@ public class CmdNLAAddPlayer implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return null;
+		return "Add player points to a player";
 	}
 
 	@Override
@@ -43,17 +43,20 @@ public class CmdNLAAddPlayer implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		PlayerPointType type = PlayerPointType.valueOf(args[1].toUpperCase());
-		Player p = Bukkit.getPlayer(args[0]);
-		if (p == null) {
-			Util.msg(s, "&cPlayer is not currently online!");
-			return;
+		PlayerPointType type = null;
+		try {
+			type = PlayerPointType.valueOf(args[1].toUpperCase());
 		}
-		if (type == null) {
+		catch (IllegalArgumentException ex) {
 			Util.msg(s, "&cInvalid type! Valid types are:");
 			for (PlayerPointType t : PlayerPointType.values()) {
 				Util.msg(s, "&7- &c" + t);
 			}
+			return;
+		}
+		Player p = Bukkit.getPlayer(args[0]);
+		if (p == null) {
+			Util.msg(s, "&cPlayer is not currently online!");
 			return;
 		}
 		
