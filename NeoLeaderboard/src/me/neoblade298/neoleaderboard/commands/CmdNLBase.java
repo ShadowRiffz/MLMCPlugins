@@ -94,7 +94,6 @@ public class CmdNLBase implements Subcommand {
 					return;
 				}
 				HashMap<PlayerPointType, Double> cpoints = pe.getContributedPoints();
-				HashMap<PlayerPointType, Double> totalPoints = pe.getTotalPoints();
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Player Contributions: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				builder.append("\n§6TOTAL: §f" + PointsManager.formatPoints(pe.getContributed()), FormatRetention.NONE);
 				for (Entry<PlayerPointType, Double> e : cpoints.entrySet()) {
