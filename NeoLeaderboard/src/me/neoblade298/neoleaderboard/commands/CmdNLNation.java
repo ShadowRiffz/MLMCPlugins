@@ -81,7 +81,7 @@ public class CmdNLNation implements Subcommand {
 	}
 	
 	private String buildTownHover(TownEntry e) {
-		String hovertext = "Click for details: §e/nl town " + e.getNation().getName() + "\n";
+		String hovertext = "Click for details: §e/nl town " + e.getTown().getName() + "\n";
 		hovertext += "§6Top town contributors:";
 		
 		TreeSet<PlayerEntry> playerOrder = e.getTopPlayers();
@@ -89,7 +89,7 @@ public class CmdNLNation implements Subcommand {
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
 			PlayerEntry pe = iter.next();
 			// double effective = PointsManager.calculateEffectivePoints(PointsManager.getNationEntry(e.getNation().getUUID()), pe.getContributed());
-			hovertext += "\n§6§l" + i + ". §e" + pe.getDisplay() + " §7- §f" + PointsManager.formatPoints(e.getTotalPoints());
+			hovertext += "\n§6§l" + i + ". §e" + pe.getDisplay() + " §7- §f" + PointsManager.formatPoints(pe.getContributed());
 		}
 		return hovertext;
 	}
