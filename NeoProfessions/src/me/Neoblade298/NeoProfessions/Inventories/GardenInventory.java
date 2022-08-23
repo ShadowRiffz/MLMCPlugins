@@ -143,6 +143,7 @@ public class GardenInventory extends ProfessionInventory {
 				return;
 			}
 			else if (nbti.getInteger("type") == MATURE) {
+				GardenManager.addPlayerGardening(p, type);
 				GardenManager.getGarden(p, type).harvestSeed(p, slot);
 				return;
 			}
