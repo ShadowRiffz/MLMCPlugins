@@ -216,10 +216,10 @@ public class NationEntry implements Comparable<NationEntry> {
 	
 	public double getPoints(PointType type) {
 		if (type instanceof PlayerPointType) {
-			return playerPoints.get((PlayerPointType) type);
+			return playerPoints.getOrDefault((PlayerPointType) type, 0D);
 		}
 		else {
-			return nationPoints.get((NationPointType) type);
+			return nationPoints.getOrDefault((NationPointType) type, 0D);
 		}
 	}
 }	

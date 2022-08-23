@@ -74,7 +74,7 @@ public class CmdNLCTop implements Subcommand {
 						if (n1.getPoints(type) > n2.getPoints(type)) {
 							return 1;
 						}
-						else if (n1.getPoints(type) > n2.getPoints(type)) {
+						else if (n1.getPoints(type) < n2.getPoints(type)) {
 							return -1;
 						}
 						else {
@@ -93,8 +93,8 @@ public class CmdNLCTop implements Subcommand {
 					String name = e.getNation().getName();
 					// double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
 					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getPoints(type)), FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc nation " + name)))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc nation " + name));
+					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc nation " + name + " " + type)))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc nation " + name + " " + type));
 				}
 				s.spigot().sendMessage(builder.create());
 			}
