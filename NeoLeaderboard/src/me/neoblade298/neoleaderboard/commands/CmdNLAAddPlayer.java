@@ -10,10 +10,11 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
+import me.neoblade298.neoleaderboard.points.PointsManager;
 
 public class CmdNLAAddPlayer implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"),
-			new CommandArgument("point type")));
+			new CommandArgument("point type"), new CommandArgument("amount")));
 
 	@Override
 	public String getDescription() {
@@ -55,5 +56,9 @@ public class CmdNLAAddPlayer implements Subcommand {
 			}
 			return;
 		}
+		
+		int amount = Integer.parseInt(args[2]);
+		PointsManager.addPlayerPoints(p.getUniqueId(), amount, type);
+		Util.msg(s, "&7Successfully added &e" + amount + " &6" + type + " &7points to player &c" + p.getName());
 	}
 }
