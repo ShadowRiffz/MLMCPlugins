@@ -100,7 +100,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public HashSet<String> joiningPlayers = new HashSet<String>();
 	public HashSet<String> leavingPlayers = new HashSet<String>();
 	public PlayerFields settings;
-	public static String color;
 	
 	private static BossInstances inst;
 

@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neobossinstances.stats.PlayerStat;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerDataManager;
 
 public class Commands implements CommandExecutor {
@@ -582,7 +583,7 @@ public class Commands implements CommandExecutor {
 	        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 	        }
 		}
-		messages.add("§cBoss Stats §7[" + BossInstances.color + "§7] (§4§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
+		messages.add("§cBoss Stats §7[" + NeoCore.getInstanceDisplay() + "§7] (§4§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
 		messages.add("§7----- ");
 		messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 		
