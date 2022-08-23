@@ -79,7 +79,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		NBTItem nbti = new NBTItem(item);
 		long timestamp = nbti.getLong("timestamp");
 		String player = nbti.getString("player");
-		if (boundToPlayer && player.equalsIgnoreCase(p.getName())) {
+		if (boundToPlayer && !player.equalsIgnoreCase(p.getName())) {
 			Util.msg(p, "&cThis token is bound to " + player + "!");
 			return false;
 		}
