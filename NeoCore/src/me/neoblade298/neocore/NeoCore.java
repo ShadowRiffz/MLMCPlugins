@@ -47,7 +47,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 	
 	// Instance information
 	private static InstanceType instType = InstanceType.TOWNY;
-	private static String instName = null;
+	private static String instKey = null;
+	private static String instDisplay = null;
 	
 	public static Random gen = new Random();
 	
@@ -72,7 +73,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 		File instancecfg = new File(this.getDataFolder(), "instance.yml");
 		if (instancecfg.exists()) {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
-			instName = icfg.getString("name");
+			instKey = icfg.getString("key");
+			instDisplay = icfg.getString("display");
 			instType = InstanceType.valueOf(icfg.getString("type").toUpperCase());
 		}
 		
@@ -208,8 +210,12 @@ public class NeoCore extends JavaPlugin implements Listener {
 		return instType;
 	}
 	
-	public static String getInstanceName() {
-		return instName;
+	public static String getInstanceKey() {
+		return instKey;
+	}
+	
+	public static String getInstanceDisplay() {
+		return instDisplay;
 	}
 	
 	public static IOComponent registerIOComponent(JavaPlugin plugin, IOComponent component) {
