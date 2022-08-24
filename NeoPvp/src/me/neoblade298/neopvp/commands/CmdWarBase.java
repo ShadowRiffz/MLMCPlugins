@@ -5,19 +5,21 @@ import org.bukkit.command.CommandSender;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
+import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
 
-public class CmdAWarCreate implements Subcommand {
+public class CmdWarBase implements Subcommand {
 	private static final CommandArguments args = new CommandArguments();
 
 	@Override
 	public String getDescription() {
-		return "Views current war creator status";
+		return "Views current war status";
 	}
 
 	@Override
 	public String getKey() {
-		return "create";
+		return "";
 	}
 
 	@Override
@@ -32,7 +34,15 @@ public class CmdAWarCreate implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		WarManager.completeWarCreation(s);
+		if (WarManager.getOngoingWars().size() > 0) {
+			Util.msg(s, "&7Ongoing Wars:", false);
+			for (War war : WarManager.getOngoingWars().values()) {
+				war.displayCreator(s);
+			}
+		}
+		else {
+			Util.msg(s, "&7There are currently no ongoing wars. Scheduled wars:", false);
+		}
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.Util;
@@ -15,6 +16,8 @@ public class WarManager {
 	private static HashMap<String, War> wars = new HashMap<String, War>();
 	private static HashMap<String, War> ongoingWars = new HashMap<String, War>();
 	private static HashMap<CommandSender, War> creatingWar = new HashMap<CommandSender, War>();
+	
+	private static final int KILL_POINTS = 5;
 	
 	public static void initialize() {
 		Statement stmt = NeoCore.getStatement();
@@ -50,11 +53,11 @@ public class WarManager {
 	}
 	
 	public static void displayWarCreation(CommandSender s) {
-		if (creatingWar.containsKey(s)) {
+		if (!creatingWar.containsKey(s)) {
 			Util.msg(s, "&cYou aren't currently creating a war!");
 			return;
 		}
-		creatingWar.get(s).display(s);
+		creatingWar.get(s).displayCreator(s);
 	}
 	
 	public static War getWarCreator(CommandSender s) {
@@ -121,5 +124,25 @@ public class WarManager {
 		}
 		
 		return true;
+	}
+	
+	public static HashMap<String, War> getOngoingWars() {
+		return ongoingWars;
+	}
+	
+	public static void handleKill(Player killer, Player victim) {
+		for (War war : ongoingWars.values()) {
+			if (!war.getWorld().equals(killer.getWorld())) continue;
+			
+			WarTeam teams[] = war.getTeams();
+			if (teams[0].isMember(killer) && teams[1].isMember(victim)) {
+				teams[0].addPoints(KILL_POINTS);
+				teams[1].addPoints(-KILL_POINTS);
+			}
+			else if (teams[1].isMember(killer) && teams[0].isMember(victim)) {
+				teams[1].addPoints(KILL_POINTS);
+				teams[0].addPoints(-KILL_POINTS);
+			}
+		}
 	}
 }

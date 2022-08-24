@@ -6,9 +6,11 @@ import java.sql.Statement;
 import java.util.HashSet;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -74,6 +76,10 @@ public class WarTeam {
 	public int getPoints() {
 		return points;
 	}
+	
+	public void addPoints(int amount) {
+		points += amount;
+	}
 
 	public Location getSpawn() {
 		return spawn;
@@ -93,5 +99,36 @@ public class WarTeam {
 	
 	public ActiveMob getMascot() {
 		return mascot;
+	}
+	
+	public void addWhitelistedTown(Town town) {
+		whitelistedTowns.add(town);
+	}
+	
+	public void removeWhitelistedTown(Town town) {
+		whitelistedTowns.remove(town);
+	}
+	
+	public void addWhitelistedPlayer(String name) {
+		whitelistedPlayers.add(name.toUpperCase());
+	}
+	
+	public void removeWhitelistedPlayer(String name) {
+		whitelistedPlayers.remove(name.toUpperCase());
+	}
+	
+	public boolean isMember(Player p) {
+		TownyAPI api = TownyAPI.getInstance();
+		Resident r = api.getResident(p);
+		Town t = api.getResidentTownOrNull(r);
+		Nation n = api.getResidentNationOrNull(r);
+		
+		if (n != null && nations.contains(n)) {
+			return true;
+		}
+		if (t != null && whitelistedTowns.contains(t)) {
+			return true;
+		}
+		return whitelistedPlayers.contains(p.getName().toUpperCase());
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -21,6 +22,8 @@ public class War {
 	private int maxPlayers;
 	private Calendar date = Calendar.getInstance();
 	private WarTeam[] teams = new WarTeam[2];
+	private World w;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd hh:mm a z");
 	
 	private static final int DEFAULT_WAR_HOUR = 14;
 	
@@ -101,19 +104,30 @@ public class War {
 		this.display = display;
 	}
 	
+	public void displayCreator(CommandSender s) {
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
+		Util.msg(s, "&6Date&7: " + sdf.format(date.getTime()), false);
+		Util.msg(s, "&6World&7: " + w == null ? "Not set" : w.getName());
+		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers, false);
+		
+		displayTeam(1, s);
+		displayTeam(2, s);
+	}
+	
 	public void display(CommandSender s) {
-		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<");
-		Util.msg(s, "&6Date&7: " + date);
-		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers);
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
+		Util.msg(s, "&6Date&7: " + sdf.format(date.getTime()), false);
+		Util.msg(s, "&6World&7: " + w == null ? "Not set" : w.getName());
+		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers, false);
 		
 		displayTeam(1, s);
 		displayTeam(2, s);
 	}
 	
 	private void displayTeam(int num, CommandSender s) {
-		if (teams[num + 1] != null) {
-			WarTeam team = teams[num + 1];
-			String msg = "&6Team " + num + " &7(&c" + teams[0].getDisplay() + "&7) - ";
+		if (teams[num - 1] != null) {
+			WarTeam team = teams[num - 1];
+			String msg = "&6Team " + num + " &7(&c" + teams[num - 1].getDisplay() + "&7) - ";
 			Iterator<Nation> iter = team.getNations().iterator();
 			while (iter.hasNext()) {
 				msg += "&e" + iter.next().getName();
@@ -123,8 +137,8 @@ public class War {
 			}
 			Util.msg(s, msg);
 			
-			Util.msg(s, "&7- &6Spawn&7: &e" + Util.locToString(team.getSpawn()));
-			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + Util.locToString(team.getMascotSpawn()));
+			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn())));
+			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn())));
 		}
 		else {
 			Util.msg(s, "&6Team " + num + "&7: null");
@@ -149,5 +163,13 @@ public class War {
 
 	public WarTeam[] getTeams() {
 		return teams;
+	}
+	
+	public World getWorld() {
+		return w;
+	}
+	
+	public void setWorld(World w) {
+		this.w = w;
 	}
 }
