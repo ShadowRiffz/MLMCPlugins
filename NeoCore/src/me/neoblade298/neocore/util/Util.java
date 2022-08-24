@@ -104,7 +104,13 @@ public class Util {
 		return new Location(w, x, y, z);
 	}
 
-	public static String locToString(Location loc) {
-		return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ();
+	public static String locToString(Location loc, boolean round) {
+		double x = loc.getX(), y = loc.getY(), z = loc.getZ();
+		if (round) {
+			x = Math.round(x);
+			y = Math.round(y);
+			z = Math.round(z);
+		}
+		return loc.getWorld().getName() + " " + x + " " + y + " " + z;
 	}
 }
