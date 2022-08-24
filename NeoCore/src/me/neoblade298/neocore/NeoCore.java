@@ -37,6 +37,7 @@ import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
 import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.teleport.TeleportAPI;
 import me.neoblade298.neocore.util.Util;
 import net.milkbowl.vault.economy.Economy;
 
@@ -68,7 +69,6 @@ public class NeoCore extends JavaPlugin implements Listener {
 		properties.setProperty("useSSL", "false");
 		properties.setProperty("user",  sql.getString("username"));
 		properties.setProperty("password", sql.getString("password"));
-		getServer().getPluginManager().registerEvents(new IOListener(connection, properties), this);
 		
 		// is instance
 		File instancecfg = new File(this.getDataFolder(), "instance.yml");
@@ -91,7 +91,12 @@ public class NeoCore extends JavaPlugin implements Listener {
 	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
         
         // playerdata
+		getServer().getPluginManager().registerEvents(new IOListener(connection, properties), this);
         IOListener.register(this, new PlayerDataManager());
+        
+        // teleports
+        getServer().getPluginManager().registerEvents(new TeleportAPI(), this);
+        
         
         // CommandSets
         CommandSetManager.reload();
