@@ -174,7 +174,9 @@ public class Commands implements CommandExecutor {
 					int acct = SkillAPI.getPlayerAccountData(target).getActiveId();
 					if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) ||
 							PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + boss, target.getUniqueId())) {
-						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						if (level >= 0) {
+							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						}
 					}
 
 					BukkitRunnable teleport = new BukkitRunnable() {
