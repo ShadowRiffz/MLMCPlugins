@@ -1,6 +1,7 @@
 package me.neoblade298.neopvp.commands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
@@ -8,6 +9,7 @@ import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
+import me.neoblade298.neopvp.wars.WarTeam;
 
 public class CmdWarSpawn implements Subcommand {
 	private static final CommandArguments args = new CommandArguments();
@@ -29,32 +31,28 @@ public class CmdWarSpawn implements Subcommand {
 
 	@Override
 	public SubcommandRunner getRunner() {
-		return SubcommandRunner.BOTH;
+		return SubcommandRunner.PLAYER_ONLY;
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
+		Player p = (Player) s;
 		if (WarManager.getOngoingWars().size() > 0) {
 			Util.msg(s, "&7Ongoing Wars:", false);
 			for (War war : WarManager.getOngoingWars().values()) {
-				war.display(s);
+				WarTeam t1 = war.getTeams()[0];
+				WarTeam t2 = war.getTeams()[1];
+				if (t1.isMember(p)) {
+					return;
+				}
+				else if (t2.isMember(p)) {
+					return;
+				}
 			}
 		}
-		else {
-			Util.msg(s, "&7There are currently no ongoing wars.", false);
-		}
-
-		if (WarManager.getWars().size() > 0) {
-			Util.msg(s, "&7Scheduled Wars:", false);
-			for (War war : WarManager.getWars().values()) {
-				war.displayCreator(s);
-			}
-		}
-		else {
-			Util.msg(s, "&7There are currently no scheduled wars.", false);
-		}
+		Util.msg(s, "&cYou're not part of any ongoing war!");
 	}
-	
+
 	@Override
 	public CommandArguments getArgs() {
 		return args;
