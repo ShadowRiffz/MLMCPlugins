@@ -55,7 +55,6 @@ public class Commands implements CommandExecutor {
 								"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','"
 								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					}
-					stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 					stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
 							+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
 					con.close();
