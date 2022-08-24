@@ -37,6 +37,7 @@ import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
 import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.util.Util;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
@@ -74,7 +75,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		if (instancecfg.exists()) {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
 			instKey = icfg.getString("key");
-			instDisplay = icfg.getString("display");
+			instDisplay = Util.translateColors(icfg.getString("display"));
 			instType = InstanceType.valueOf(icfg.getString("type").toUpperCase());
 		}
 		
