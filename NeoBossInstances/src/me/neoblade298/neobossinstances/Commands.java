@@ -159,11 +159,11 @@ public class Commands implements CommandExecutor {
 						if (main.isDebug) {
 							Bukkit.getLogger().log(Level.INFO,
 									"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('"
-									+ uuid + "','" + boss + "','" + instance + "'," + level + "','" + NeoCore.getInstanceKey() + ");");
+									+ uuid + "','" + boss + "','" + instance + "'," + level + ",'" + NeoCore.getInstanceKey() + "');");
 						}
 						// Add boss level here
 						stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-								+ "','" + instance + "'," + level + "','" + NeoCore.getInstanceKey() + ");");
+								+ "','" + instance + "'," + level + ",'" + NeoCore.getInstanceKey() + "');");
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
