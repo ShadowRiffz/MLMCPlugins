@@ -20,7 +20,7 @@ import me.neoblade298.neocore.util.Util;
 
 public class WarTeam {
 	private String key, display;
-	private int points;
+	private int points, kills, deaths;
 	private ActiveMob mascot;
 	private Location spawn, mascotSpawn;
 	private HashSet<Nation> nations = new HashSet<Nation>();
@@ -77,6 +77,26 @@ public class WarTeam {
 		return points;
 	}
 	
+	public int getKills() {
+		return kills;
+	}
+	
+	public void addKill() {
+		kills++;
+	}
+	
+	public int getDeaths() {
+		return deaths;
+	}
+	
+	public void addDeath() {
+		deaths++;
+	}
+	
+	public int getMascotHealthLost() {
+		return (int) (mascot.getEntity().getHealth() - mascot.getEntity().getMaxHealth());
+	}
+	
 	public void addPoints(int amount) {
 		points += amount;
 	}
@@ -91,6 +111,14 @@ public class WarTeam {
 
 	public HashSet<Nation> getNations() {
 		return nations;
+	}
+	
+	public HashSet<Town> getWhitelistedTowns() {
+		return whitelistedTowns;
+	}
+	
+	public HashSet<String> getWhitelistedPlayers() {
+		return whitelistedPlayers;
 	}
 	
 	public void startWar() {

@@ -9,17 +9,17 @@ import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
 
-public class CmdWarBase implements Subcommand {
+public class CmdWarSpawn implements Subcommand {
 	private static final CommandArguments args = new CommandArguments();
 
 	@Override
 	public String getDescription() {
-		return "Views current war status";
+		return "Teleport to the current war if you're a fighter";
 	}
 
 	@Override
 	public String getKey() {
-		return "";
+		return "spawn";
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class NeoPvp extends JavaPlugin {
 				new CmdAWarTeam2());
 		
 		mngr = new CommandManager("pvp", this);
-		mngr.registerCommandList("?");
+		mngr.registerCommandList("help");
 		mngr.register(new CmdPvpBase());
 		mngr.register(new CmdPvpBuyProtection());
 		mngr.register(new CmdPvpRemoveProtection());
@@ -56,6 +56,10 @@ public class NeoPvp extends JavaPlugin {
 		mngr.register(new CmdAPvpAddProtection());
 		mngr.register(new CmdAPvpRemoveProtection());
 		mngr.register(new CmdAPvpReload());
+		
+		mngr = new CommandManager("war", this);
+		mngr.registerCommandList("help");
+		mngr.register(new CmdWarBase());
 	}
 	
 	@Override

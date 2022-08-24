@@ -126,6 +126,10 @@ public class WarManager {
 		return true;
 	}
 	
+	public static HashMap<String, War> getWars() {
+		return wars;
+	}
+	
 	public static HashMap<String, War> getOngoingWars() {
 		return ongoingWars;
 	}
