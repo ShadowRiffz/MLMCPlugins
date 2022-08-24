@@ -14,7 +14,7 @@ public class BuffAction {
 	
 	static {
 		display.put(BuffType.DAMAGE, "Damage");
-		display.put(BuffType.DEFENSE, "Defense");
+		display.put(BuffType.DEFENSE, "Damage Taken");
 		display.put(BuffType.SKILL_DAMAGE, "Skill damage");
 		display.put(BuffType.HEALING, "Healing");
 	}
