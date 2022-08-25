@@ -52,7 +52,7 @@ public class TeleportAPI implements Listener {
 							cancelTeleport(p);
 						}
 					}
-				}.runTaskLater(NeoCore.inst(), TELEPORT_DELAY * 20));
+				}.runTaskLater(NeoCore.inst(), i * 20));
 		}
 		teleports.put(p, tasks);
 	}
