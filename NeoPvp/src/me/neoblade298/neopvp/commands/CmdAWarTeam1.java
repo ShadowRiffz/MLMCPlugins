@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
 import me.neoblade298.neocore.commands.Subcommand;
@@ -49,6 +50,7 @@ public class CmdAWarTeam1 implements Subcommand {
 		War war = WarManager.getWarCreator(s);
 		TownyAPI api = TownyAPI.getInstance();
 		Town t = null;
+		Nation n = null;
 		
 		switch (arg1) {
 		case "create":
@@ -61,14 +63,22 @@ public class CmdAWarTeam1 implements Subcommand {
 				Util.msg(s, "&cYou must first create the team with /awar team" + team + " create [name]");
 				return;
 			}
-			war.addTeamNation(team, TownyAPI.getInstance().getNation(args[1]));
+			n = TownyAPI.getInstance().getNation(args[1]);
+			if (n == null) {
+				Util.msg(s, "&cThat nation doesn't exist");
+			}
+			war.addTeamNation(team, n);
 			break;
 		case "-nation":
 			if (war.getTeams()[team - 1] == null) {
 				Util.msg(s, "&cYou must first create the team with /awar team" + team + " create [name]");
 				return;
 			}
-			war.removeTeamNation(team, TownyAPI.getInstance().getNation(args[1]));
+			n = TownyAPI.getInstance().getNation(args[1]);
+			if (n == null) {
+				Util.msg(s, "&cThat nation doesn't exist");
+			}
+			war.removeTeamNation(team, n);
 			break;
 		case "+town":
 			if (war.getTeams()[team - 1] == null) {

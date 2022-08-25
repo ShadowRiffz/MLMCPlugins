@@ -40,6 +40,7 @@ public class NeoPvp extends JavaPlugin {
 		CommandManager mngr = new CommandManager("adminwar", "mycommand.staff", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
 		mngr.register(new CmdAWarCreate());
+		mngr.register(new CmdAWarClear());
 		mngr.register(new CmdAWarDisplay());
 		mngr.register(new CmdAWarInfo());
 		mngr.register(new CmdAWarInfo());
@@ -49,6 +50,7 @@ public class NeoPvp extends JavaPlugin {
 		mngr.register(new CmdAWarTeam2());
 		mngr.register(new CmdAWarSetWorld());
 		mngr.register(new CmdAWarStart());
+		mngr.register(new CmdAWarEnd());
 		
 		mngr = new CommandManager("pvp", this);
 		mngr.registerCommandList("help");

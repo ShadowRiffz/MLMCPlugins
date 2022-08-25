@@ -73,16 +73,12 @@ public class PvpListener implements Listener {
 		for (War war : WarManager.getOngoingWars().values()) {
 			if (!war.getWorld().equals(pa.getWorld())) continue;
 			
-			WarTeam teams[] = war.getTeams();
-			if (teams[0].isMember(pa) && teams[0].isMember(pv)) {
-				Util.msg(pa, "&cYou're on the same war team!");
-				e.setCancelled(true);
-				return;
-			}
-			else if (teams[1].isMember(pa) && teams[1].isMember(pv)) {
-				Util.msg(pa, "&cYou're on the same war team!");
-				e.setCancelled(true);
-				return;
+			for (int i = 0; i <= 1; i++) {
+				if (teams[i].isMember(pa) && teams[i].isMember(pv)) {
+					Util.msg(pa, "&cYou're on the same war team!");
+					e.setCancelled(true);
+					return;
+				}
 			}
 		}
 		

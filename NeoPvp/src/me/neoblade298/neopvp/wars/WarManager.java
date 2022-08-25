@@ -72,6 +72,11 @@ public class WarManager {
 			return false;
 		}
 		
+		if (war.getWorld() == null) {
+			Util.msg(s, "&cYou must first set a world!");
+			return false;
+		}
+		
 		if (war.getMaxPlayers() <= 1) {
 			Util.msg(s, "&cYou must set a max # of players above 1!");
 			return false;
@@ -104,12 +109,34 @@ public class WarManager {
 		try {
 			stmt.addBatch("DELETE FROM neopvp_wars WHERE war = '" + key + "';");
 			stmt.addBatch("DELETE FROM neopvp_warteams WHERE war = '" + key + "';");
+			stmt.addBatch("DELETE FROM neopvp_warwhitelists WHERE war = '" + key + "';");
 			stmt.executeBatch();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public static void endWar(String key) {
+		War war = ongoingWars.remove(key);
+		war.end();
+	}
+	
+	public static void clearWars() {
+		wars.clear();
+		Statement stmt = NeoCore.getStatement();
+		try {
+			stmt.addBatch("DELETE FROM neopvp_wars;");
+			stmt.addBatch("DELETE FROM neopvp_warteams;");
+			stmt.addBatch("DELETE FROM neopvp_warwhitelists;");
+			stmt.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		for (War war : ongoingWars.values()) {
+			war.end();
+		}
+		ongoingWars.clear();
+	}
 	
 	private static boolean validateTeam(CommandSender s, War war, int num) {
 		WarTeam team = war.getTeams()[num - 1];
@@ -156,12 +183,14 @@ public class WarManager {
 			WarTeam teams[] = war.getTeams();
 			if (teams[0].isMember(killer) && teams[1].isMember(victim)) {
 				teams[0].addPoints(KILL_POINTS);
-				teams[1].addPoints(-KILL_POINTS);
+				teams[0].addKill();
+				teams[1].addDeath();
 				return true;
 			}
 			else if (teams[1].isMember(killer) && teams[0].isMember(victim)) {
 				teams[1].addPoints(KILL_POINTS);
-				teams[0].addPoints(-KILL_POINTS);
+				teams[1].addKill();
+				teams[0].addDeath();
 				return true;
 			}
 		}

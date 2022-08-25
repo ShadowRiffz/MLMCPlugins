@@ -238,7 +238,7 @@ public class PvpAccount {
 			for (UUID uuid : pagedKills.get(page)) {
 				Util.msg(s, "&7- &e" + Bukkit.getOfflinePlayer(uuid).getName());
 			}
-			pagedKills.displayFooter(s, page, "/pvp uniquekills " + p + " " + (page + 1), "/pvp uniquekills " + p + " " + (page - 1));
+			pagedKills.displayFooter(s, page, "/pvp uniquekills " + p.getName() + " " + (page + 1), "/pvp uniquekills " + p.getName() + " " + (page - 1));
 		}
 	}
 	

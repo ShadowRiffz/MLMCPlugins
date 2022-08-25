@@ -216,8 +216,9 @@ public class War {
 	private void displayTeam(int num, CommandSender s) {
 		WarTeam team = teams[num - 1];
 		int healthLost = team.getMascotHealthLost() / 100;
-		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7): &f" +
-				team.getPoints() + " - " + healthLost;
+		int points = team.getPoints();
+		int total = points - healthLost;
+		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7): &f" + total;
 
 		ComponentBuilder builder = new ComponentBuilder(Util.translateColors(msg))
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTeamHover(team))));
