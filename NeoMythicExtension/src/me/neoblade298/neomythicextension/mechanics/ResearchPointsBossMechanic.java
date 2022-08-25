@@ -44,7 +44,7 @@ public class ResearchPointsBossMechanic implements ITargetedEntitySkill {
 					return SkillResult.CONDITION_FAILED;
 				}
 				Player p = (Player) target.getBukkitEntity();
-				nr.giveResearchPoints(p, this.amount, bi.getKey(), bi.getLevel(false), false, null);
+				nr.giveResearchPointsBoss(p, this.amount, bi.getKey(), false);
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;
