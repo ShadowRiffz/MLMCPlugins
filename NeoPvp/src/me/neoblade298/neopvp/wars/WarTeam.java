@@ -19,6 +19,7 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.Util;
 
 public class WarTeam {
+	private War war;
 	private String key, display;
 	private int points, kills, deaths;
 	private ActiveMob mascot;
@@ -36,6 +37,7 @@ public class WarTeam {
 		}
 		this.spawn = Util.stringToLoc(team.getString(4));
 		this.mascotSpawn = Util.stringToLoc(team.getString(5));
+		// TODO: remake
 
 		Statement stmt = NeoCore.getStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM neopvp_warwhitelists WHERE war = '" + war + "' AND team = '" + this.key + "';");
@@ -49,7 +51,9 @@ public class WarTeam {
 		}
 	}
 	
-	public WarTeam(String display) {
+	public WarTeam(War war, String key, String display) {
+		this.war = war;
+		this.key = key;
 		this.display = display;
 	}
 	
@@ -162,5 +166,10 @@ public class WarTeam {
 			return true;
 		}
 		return whitelistedPlayers.contains(p.getName().toUpperCase());
+	}
+	
+	public void serialize(Statement stmt) throws SQLException {
+		stmt.addBatch("INSERT INTO neopvp_warteams VALUES('" + war.getKey() + "','" + key + "','" + display + "','" +
+				Util.locToString(spawn, true) + "','" + Util.locToString(mascotSpawn, true) + ");");
 	}
 }

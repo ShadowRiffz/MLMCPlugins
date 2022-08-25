@@ -2,6 +2,7 @@ package me.neoblade298.neopvp.wars;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -288,5 +289,9 @@ public class War {
 	
 	public long getTimeToEnd() {
 		return this.endTime;
+	}
+	
+	public void serialize(Statement stmt) throws SQLException {
+		stmt.addBatch("INSERT INTO neopvp_wars VALUES('" + key + "','" + display +"'," + maxPlayers + "," + date.getTimeInMillis() + ");");
 	}
 }
