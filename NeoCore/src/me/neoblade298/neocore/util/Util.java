@@ -107,9 +107,9 @@ public class Util {
 	public static String locToString(Location loc, boolean round) {
 		double x = loc.getX(), y = loc.getY(), z = loc.getZ();
 		if (round) {
-			x = Math.round(x);
-			y = Math.round(y);
-			z = Math.round(z);
+			x = Math.round(x) + 0.5;
+			y = Math.round(y) + 0.5;
+			z = Math.round(z) + 0.5;
 		}
 		return loc.getWorld().getName() + " " + x + " " + y + " " + z;
 	}
