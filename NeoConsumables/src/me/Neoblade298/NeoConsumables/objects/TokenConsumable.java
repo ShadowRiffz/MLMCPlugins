@@ -118,7 +118,7 @@ public class TokenConsumable extends Consumable implements GeneratableConsumable
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>(baselore);
 		if (boundToPlayer) {
-			lore.add("§cBound to " + p.getName());
+			lore.add("§6Bound to " + p.getName());
 		}
 		if (millisToExpire != -1) {
 			Calendar inst = Calendar.getInstance();

@@ -32,34 +32,33 @@ public class Commands implements CommandExecutor, TabCompleter {
 			if (args.length == 0) {
 				sender.sendMessage("§7Permission: mycommand.staff");
 				sender.sendMessage("§c/cons check {player}");
-				sender.sendMessage("§c/cons get [food] {amount}");
-				sender.sendMessage("§c/cons give [player] boss");
+				sender.sendMessage("§c/cons give/get {player} [key] {amount}");
 				sender.sendMessage("§c/cons debug");
 				sender.sendMessage("§c/cons reload");
 			}
-			// /cons give [player] boss/[key] [amount]
+			// /cons give {player} [key] [amount]
 			else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("get")) {
 				Player p = null;
 				int offset = 0;
 				int amt = 1;
-				if (Bukkit.getPlayer(args[1]) != null) {
-					p = Bukkit.getPlayer(args[1]);
+				if (Bukkit.getPlayer(args[0]) != null) {
+					p = Bukkit.getPlayer(args[0]);
 					offset++;
 				}
 				else {
 					p = (Player) sender;
 				}
 				
-				if (args[1 + offset].equalsIgnoreCase("boss")) {
+				if (args[0 + offset].equalsIgnoreCase("boss")) {
 					p.getInventory().addItem(Items.getBossChestToken(p, System.currentTimeMillis()));
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
 					return true;
 				}
 				else {
-					GeneratableConsumable cons = (GeneratableConsumable) Consumables.getConsumable(args[1 + offset]);
+					GeneratableConsumable cons = (GeneratableConsumable) Consumables.getConsumable(args[0 + offset]);
 					
-					if (args.length > 2 + offset) {
-						amt = Integer.parseInt(args[2 + offset]);
+					if (args.length > 1 + offset) {
+						amt = Integer.parseInt(args[1 + offset]);
 					}
 					
 					if (cons != null) {
