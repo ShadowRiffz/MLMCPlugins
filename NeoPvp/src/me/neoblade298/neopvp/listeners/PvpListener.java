@@ -24,7 +24,9 @@ import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.NeoPvp;
 import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
+import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
+import me.neoblade298.neopvp.wars.WarTeam;
 
 public class PvpListener implements Listener {
 	private static final long ONE_DAY = 1000 * 60 * 60 * 24;
@@ -66,6 +68,24 @@ public class PvpListener implements Listener {
 				return;
 			}
 		}
+		
+		// war protection
+		for (War war : WarManager.getOngoingWars().values()) {
+			if (!war.getWorld().equals(pa.getWorld())) continue;
+			
+			WarTeam teams[] = war.getTeams();
+			if (teams[0].isMember(pa) && teams[0].isMember(pv)) {
+				Util.msg(pa, "&cYou're on the same war team!");
+				e.setCancelled(true);
+				return;
+			}
+			else if (teams[1].isMember(pa) && teams[1].isMember(pv)) {
+				Util.msg(pa, "&cYou're on the same war team!");
+				e.setCancelled(true);
+				return;
+			}
+		}
+		
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -73,9 +93,13 @@ public class PvpListener implements Listener {
 		// Ignore event
 		String world = e.getEntity().getWorld().getName();
 		if (world.equalsIgnoreCase("Event") || world.equalsIgnoreCase("ClassPVP")) return;
-		
 		Player victim = e.getEntity();
-		if (victim.getKiller() == null) {
+		Player killer = victim.getKiller();
+		
+		// War logic takes priority, ignores /pvp
+		if (WarManager.handleKill(killer, victim)) return;
+		
+		if (killer == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
 			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
 				if (!world.equalsIgnoreCase("Argyll") && !world.equalsIgnoreCase("ClassPVP")) {
@@ -88,7 +112,7 @@ public class PvpListener implements Listener {
 				}
 			}
 		}
-		else if (victim.getKiller() == victim) {
+		else if (killer == victim) {
 			return;
 		}
 		else {
@@ -104,10 +128,7 @@ public class PvpListener implements Listener {
 			}
 
 			// Handle all pvp stats
-			PvpManager.handleKill(victim.getKiller(), victim);
-			
-			// Handle all war kills
-			WarManager.handleKill(victim.getKiller(), victim);
+			PvpManager.handleKill(killer, victim);
 		}
 	}
 }

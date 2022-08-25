@@ -134,7 +134,8 @@ public class WarManager {
 		return ongoingWars;
 	}
 	
-	public static void handleKill(Player killer, Player victim) {
+	public static boolean handleKill(Player killer, Player victim) {
+		if (killer == null) return false;
 		for (War war : ongoingWars.values()) {
 			if (!war.getWorld().equals(killer.getWorld())) continue;
 			
@@ -142,11 +143,14 @@ public class WarManager {
 			if (teams[0].isMember(killer) && teams[1].isMember(victim)) {
 				teams[0].addPoints(KILL_POINTS);
 				teams[1].addPoints(-KILL_POINTS);
+				return true;
 			}
 			else if (teams[1].isMember(killer) && teams[0].isMember(victim)) {
 				teams[1].addPoints(KILL_POINTS);
 				teams[0].addPoints(-KILL_POINTS);
+				return true;
 			}
 		}
+		return false;
 	}
 }

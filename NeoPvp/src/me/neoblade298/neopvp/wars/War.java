@@ -136,6 +136,8 @@ public class War {
 		if (teams[num - 1] != null) {
 			WarTeam team = teams[num - 1];
 			String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7) - ";
+			
+			// nations
 			Iterator<Nation> iter = team.getNations().iterator();
 			while (iter.hasNext()) {
 				msg += "&e" + iter.next().getName();
@@ -144,9 +146,31 @@ public class War {
 				}
 			}
 			Util.msg(s, msg);
+
+			// Towns
+			Iterator<Town> itertown = team.getWhitelistedTowns().iterator();
+			msg = "&7Towns: ";
+			while (itertown.hasNext()) {
+				msg += itertown.next().getName();
+				if (itertown.hasNext()) {
+					msg += ", ";
+				}
+			}
+			Util.msg(s, msg);
 			
-			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn())));
-			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn())));
+			// Players
+			msg = "&7Players: ";
+			Iterator<String> iterplayer = team.getWhitelistedPlayers().iterator();
+			while (iterplayer.hasNext()) {
+				msg += iterplayer.next();
+				if (iterplayer.hasNext()) {
+					msg += ", ";
+				}
+			}
+			Util.msg(s, msg);
+			
+			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn(), true)));
+			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn(), true)));
 		}
 		else {
 			Util.msg(s, "&6Team " + num + "&7: null");

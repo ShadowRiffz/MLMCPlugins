@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.teleport.TeleportAPI;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
@@ -43,9 +44,11 @@ public class CmdWarSpawn implements Subcommand {
 				WarTeam t1 = war.getTeams()[0];
 				WarTeam t2 = war.getTeams()[1];
 				if (t1.isMember(p)) {
+					TeleportAPI.teleportPlayer(p, t1.getSpawn());
 					return;
 				}
 				else if (t2.isMember(p)) {
+					TeleportAPI.teleportPlayer(p, t2.getSpawn());
 					return;
 				}
 			}
