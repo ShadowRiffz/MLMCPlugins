@@ -26,7 +26,6 @@ import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
 import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
-import me.neoblade298.neopvp.wars.WarTeam;
 
 public class PvpListener implements Listener {
 	private static final long ONE_DAY = 1000 * 60 * 60 * 24;
@@ -74,7 +73,7 @@ public class PvpListener implements Listener {
 			if (!war.getWorld().equals(pa.getWorld())) continue;
 			
 			for (int i = 0; i <= 1; i++) {
-				if (teams[i].isMember(pa) && teams[i].isMember(pv)) {
+				if (war.getTeams()[i].isMember(pa) && war.getTeams()[i].isMember(pv)) {
 					Util.msg(pa, "&cYou're on the same war team!");
 					e.setCancelled(true);
 					return;
