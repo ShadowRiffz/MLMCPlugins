@@ -41,24 +41,24 @@ public class Commands implements CommandExecutor, TabCompleter {
 				Player p = null;
 				int offset = 0;
 				int amt = 1;
-				if (Bukkit.getPlayer(args[0]) != null) {
-					p = Bukkit.getPlayer(args[0]);
+				if (Bukkit.getPlayer(args[1]) != null) {
+					p = Bukkit.getPlayer(args[1]);
 					offset++;
 				}
 				else {
 					p = (Player) sender;
 				}
 				
-				if (args[0 + offset].equalsIgnoreCase("boss")) {
+				if (args[1 + offset].equalsIgnoreCase("boss")) {
 					p.getInventory().addItem(Items.getBossChestToken(p, System.currentTimeMillis()));
 					sender.sendMessage("§4[§c§lMLMC§4] §7Successfully gave boss token to §e" + p.getName());
 					return true;
 				}
 				else {
-					GeneratableConsumable cons = (GeneratableConsumable) Consumables.getConsumable(args[0 + offset]);
+					GeneratableConsumable cons = (GeneratableConsumable) Consumables.getConsumable(args[1 + offset]);
 					
-					if (args.length > 1 + offset) {
-						amt = Integer.parseInt(args[1 + offset]);
+					if (args.length > 2 + offset) {
+						amt = Integer.parseInt(args[2 + offset]);
 					}
 					
 					if (cons != null) {
