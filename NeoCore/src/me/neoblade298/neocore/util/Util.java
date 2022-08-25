@@ -126,7 +126,7 @@ public class Util {
 		String connected = "";
 		for (int i = start; i < end; i++) {
 			connected += args[i];
-			if (i != end) {
+			if (i + 1 != end) {
 				connected += " ";
 			}
 		}
