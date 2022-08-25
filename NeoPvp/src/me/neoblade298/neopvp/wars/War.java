@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -29,6 +32,7 @@ public class War {
 	private WarTeam[] teams = new WarTeam[2];
 	private World w;
 	private boolean isOngoing = false;
+	private CoreRunnable endTask;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd hh:mm a z");
 	
 	private static final int DEFAULT_WAR_HOUR = 14;
@@ -64,10 +68,39 @@ public class War {
 	}
 	
 	public void start() {
+		if (isOngoing) return;
 		isOngoing = true;
 		endTime = System.currentTimeMillis() + (1000 * 60 * 60); // 1 hr
 		for (WarTeam team : teams) {
 			team.startWar();
+		}
+		BungeeAPI.broadcast("&7&lA war has started &7(&c" + this.display + "&7)&7&l! &4/war");
+		endTask = SchedulerAPI.schedule("WarEnd-" + this.key, endTime, new Runnable() {
+			public void run() {
+				end();
+			}
+		});
+	}
+	
+	public void end() {
+		if (!isOngoing) return;
+		BungeeAPI.broadcast("&7&lA war has ended &7(&c" + this.display + "&7)&7&l!");
+		int t1 = teams[0].calculateTotalPoints();
+		int t2 = teams[1].calculateTotalPoints();
+		BungeeAPI.broadcast("&7Final score:");
+		BungeeAPI.broadcast("&6" + teams[0].getDisplay() + "&7: &e" + t1);
+		BungeeAPI.broadcast("&6" + teams[1].getDisplay() + "&7: &e" + t2);
+		if (t1 > t2) {
+			BungeeAPI.broadcast("&a&lWinner: " + teams[0].getDisplay());
+			Bukkit.getLogger().info("[NeoPvp] War winner for " + this.key + " was " + teams[0].getDisplay());
+		}
+		else if (t2 > t1) {
+			BungeeAPI.broadcast("&a&lWinner: " + teams[1].getDisplay());
+			Bukkit.getLogger().info("[NeoPvp] War winner for " + this.key + " was " + teams[1].getDisplay());
+		}
+		else {
+			BungeeAPI.broadcast("&e&lTie!");
+			Bukkit.getLogger().info("[NeoPvp] War " + this.key + " was a tie");
 		}
 	}
 	
@@ -179,8 +212,9 @@ public class War {
 	
 	private void displayTeam(int num, CommandSender s) {
 		WarTeam team = teams[num - 1];
+		int healthLost = team.getMascotHealthLost() / 100;
 		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7) - &f" +
-				team.getPoints();
+				team.getPoints() + " - " + healthLost;
 
 		ComponentBuilder builder = new ComponentBuilder(Util.translateColors(msg))
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTeamHover(team))));

@@ -81,6 +81,10 @@ public class WarTeam {
 		return kills;
 	}
 	
+	public int calculateTotalPoints() {
+		return points - (getMascotHealthLost() / 100);
+	}
+	
 	public void addKill() {
 		kills++;
 	}

@@ -83,6 +83,11 @@ public class WarManager {
 		
 		creatingWar.remove(s);
 		wars.put(war.getKey(), war);
+		
+		Statement stmt = NeoCore.getStatement();
+		try {
+			stmt.addBatch("INSERT INTO neopvp_wars VALUES ('" + );
+		}
 	}
 	
 	public static void startWar(String key) {

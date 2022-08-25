@@ -1,23 +1,27 @@
 package me.neoblade298.neopvp.commands;
 
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neopvp.wars.WarManager;
 
-public class CmdAWarCreate implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+public class CmdAWarStart implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("key")));
 
 	@Override
 	public String getDescription() {
-		return "Completes war creation and schedules it";
+		return "Starts the war";
 	}
 
 	@Override
 	public String getKey() {
-		return "create";
+		return "start";
 	}
 
 	@Override
@@ -32,7 +36,7 @@ public class CmdAWarCreate implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		WarManager.completeWarCreation(s);
+		WarManager.getWars().get(args[0]).start();
 	}
 	
 	@Override
