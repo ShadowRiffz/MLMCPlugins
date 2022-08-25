@@ -18,7 +18,7 @@ public class BungeeAPI {
 	public static void broadcast(String msg) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("Message");
-		out.writeUTF("ALL");
+		out.writeUTF("ONLINE");
 		out.writeUTF(Util.translateColors(msg));
 
 		Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
@@ -38,7 +38,7 @@ public class BungeeAPI {
 	}
 	
 	public static void sendPluginMessage(String channel, String... msgs) {
-		sendPluginMessage("ALL", Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
+		sendPluginMessage("ONLINE", Iterables.getFirst(Bukkit.getOnlinePlayers(), null), channel, msgs);
 	}
 	
 	public static void sendPluginMessage(String server, String channel, String... msgs) {
@@ -46,7 +46,7 @@ public class BungeeAPI {
 	}
 	
 	public static void sendPluginMessage(Player p, String channel, String... msgs) {
-		sendPluginMessage("ALL", p, channel, msgs);
+		sendPluginMessage("ONLINE", p, channel, msgs);
 	}
 	
 	public static void sendPluginMessage(String server, Player p, String channel, String... msgs) {
