@@ -64,21 +64,21 @@ public class WarManager {
 		return creatingWar.get(s);
 	}
 	
-	public static void completeWarCreation(CommandSender s) {
+	public static boolean completeWarCreation(CommandSender s) {
 		War war = creatingWar.get(s);
 		
 		if (war.getDate() == null) {
 			Util.msg(s, "&cYou must first set a date!");
-			return;
+			return false;
 		}
 		
 		if (war.getMaxPlayers() <= 1) {
 			Util.msg(s, "&cYou must set a max # of players above 1!");
-			return;
+			return false;
 		}
 		
 		if (!validateTeam(s, war, 1) || !validateTeam(s, war, 2)) {
-			return;
+			return false;
 		}
 		
 		creatingWar.remove(s);
@@ -86,8 +86,13 @@ public class WarManager {
 		
 		Statement stmt = NeoCore.getStatement();
 		try {
-			stmt.addBatch("INSERT INTO neopvp_wars VALUES ('" + );
+			war.serialize(stmt);
+			stmt.executeBatch();
 		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	public static void startWar(String key) {

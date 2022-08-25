@@ -36,7 +36,7 @@ public class CmdAWarTeam1 implements Subcommand {
 	
 	@Override
 	public String getArgOverride() {
-		return "[create [name]/+nation [nation]/-nation [nation]/setspawn/setmascotspawn]";
+		return "[create [name] [display] / +-[nation/town/player] [name] / setspawn / setmascotspawn]";
 	}
 
 	@Override
@@ -52,11 +52,9 @@ public class CmdAWarTeam1 implements Subcommand {
 		
 		switch (arg1) {
 		case "create":
-			String name = args[1];
-			for (int i = 2; i < args.length; i++) {
-				name += " " + args[i];
-			}
-			war.setTeam(team, name);
+			String key = args[1];
+			String name = Util.translateColors(Util.connectArgs(args, 2));
+			war.createTeam(team, key, name);
 			break;
 		case "+nation":
 			if (war.getTeams()[team - 1] == null) {

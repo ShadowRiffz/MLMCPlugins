@@ -38,8 +38,9 @@ public class War {
 	
 	private static final int DEFAULT_WAR_HOUR = 14;
 	
-	public War(String key) {
+	public War(String key, String display) {
 		this.key = key;
+		this.display = display;
 	}
 	
 	public War(ResultSet war, ResultSet teams) {
@@ -85,6 +86,7 @@ public class War {
 	
 	public void end() {
 		if (!isOngoing) return;
+		endTask.setCancelled(true);
 		BungeeAPI.broadcast("&7&lA war has ended &7(&c" + this.display + "&7)&7&l!");
 		int t1 = teams[0].calculateTotalPoints();
 		int t2 = teams[1].calculateTotalPoints();
@@ -126,8 +128,8 @@ public class War {
 		this.maxPlayers = maxPlayers;
 	}
 	
-	public void setTeam(int num, String team) {
-		teams[num - 1] = new WarTeam(team);
+	public void createTeam(int num, String key, String display) {
+		teams[num - 1] = new WarTeam(this, key, display);
 	}
 	
 	public void addTeamNation(int num, Nation n) {
@@ -153,7 +155,7 @@ public class War {
 	public void displayCreator(CommandSender s) {
 		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
 		Util.msg(s, "&6Date&7: " + sdf.format(date.getTime()), false);
-		Util.msg(s, "&6World&7: " + w == null ? "Not set" : w.getName());
+		Util.msg(s, "&6World&7: " + (w == null ? "Not set" : w.getName()), false);
 		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers, false);
 		
 		displayTeamCreator(1, s);
@@ -161,7 +163,7 @@ public class War {
 	}
 	
 	public void display(CommandSender s) {
-		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + "&c&l «§8§m--------§6§l<", false);
 		displayTeam(1, s);
 		displayTeam(2, s);
 	}
@@ -179,7 +181,7 @@ public class War {
 					msg += "&7, ";
 				}
 			}
-			Util.msg(s, msg);
+			Util.msg(s, msg, false);
 
 			// Towns
 			Iterator<Town> itertown = team.getWhitelistedTowns().iterator();
@@ -190,7 +192,7 @@ public class War {
 					msg += ", ";
 				}
 			}
-			Util.msg(s, msg);
+			Util.msg(s, msg, false);
 			
 			// Players
 			msg = "&7Players: ";
@@ -201,20 +203,20 @@ public class War {
 					msg += ", ";
 				}
 			}
-			Util.msg(s, msg);
+			Util.msg(s, msg, false);
 			
-			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn(), true)));
-			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn(), true)));
+			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn(), true)), false);
+			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn(), true)), false);
 		}
 		else {
-			Util.msg(s, "&6Team " + num + "&7: null");
+			Util.msg(s, "&6Team " + num + "&7: null", false);
 		}
 	}
 	
 	private void displayTeam(int num, CommandSender s) {
 		WarTeam team = teams[num - 1];
 		int healthLost = team.getMascotHealthLost() / 100;
-		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7) - &f" +
+		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7): &f" +
 				team.getPoints() + " - " + healthLost;
 
 		ComponentBuilder builder = new ComponentBuilder(Util.translateColors(msg))
@@ -256,7 +258,7 @@ public class War {
 		msg += "\n";
 		
 		msg += "&6Kills&7: &e" + team.getKills() + "\n&6Deaths&7: &e" + team.getDeaths() + "\n&6Mascot Health Lost&7: &e" + team.getMascotHealthLost();
-		return msg;
+		return Util.translateColors(msg);
 	}
 	
 	public String getKey() {
@@ -293,5 +295,8 @@ public class War {
 	
 	public void serialize(Statement stmt) throws SQLException {
 		stmt.addBatch("INSERT INTO neopvp_wars VALUES('" + key + "','" + display +"'," + maxPlayers + "," + date.getTimeInMillis() + ");");
+		for (WarTeam team : teams) {
+			team.serialize(stmt);
+		}
 	}
 }

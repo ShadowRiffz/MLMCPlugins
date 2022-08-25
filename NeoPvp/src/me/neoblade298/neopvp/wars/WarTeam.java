@@ -120,7 +120,7 @@ public class WarTeam {
 	}
 	
 	public int getMascotHealthLost() {
-		return (int) (mascot.getEntity().getHealth() - mascot.getEntity().getMaxHealth());
+		return (int) (mascot.getEntity().getMaxHealth() - mascot.getEntity().getHealth());
 	}
 	
 	public void addPoints(int amount) {

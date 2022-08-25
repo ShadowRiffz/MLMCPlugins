@@ -2,7 +2,6 @@ package me.neoblade298.neopvp.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import me.neoblade298.neocore.commands.CommandArgument;
@@ -36,7 +35,7 @@ public class CmdAWarStart implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		WarManager.getWars().get(args[0]).start();
+		WarManager.startWar(args[0]);
 	}
 	
 	@Override

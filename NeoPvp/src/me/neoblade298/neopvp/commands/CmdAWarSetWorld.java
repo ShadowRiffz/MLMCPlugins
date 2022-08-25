@@ -11,7 +11,7 @@ import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neopvp.wars.WarManager;
 
-public class CmdAWarWorld implements Subcommand {
+public class CmdAWarSetWorld implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("world")));
 
 	@Override
@@ -21,7 +21,7 @@ public class CmdAWarWorld implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "world";
+		return "setworld";
 	}
 
 	@Override
