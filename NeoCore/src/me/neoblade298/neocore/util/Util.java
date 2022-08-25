@@ -113,4 +113,23 @@ public class Util {
 		}
 		return loc.getWorld().getName() + " " + x + " " + y + " " + z;
 	}
+	
+	public static String connectArgs(String args[]) {
+		return connectArgs(args, 0, args.length);
+	}
+	
+	public static String connectArgs(String args[], int start) {
+		return connectArgs(args, start, args.length);
+	}
+	
+	public static String connectArgs(String args[], int start, int end) {
+		String connected = "";
+		for (int i = start; i < end; i++) {
+			connected += args[i];
+			if (i != end) {
+				connected += " ";
+			}
+		}
+		return connected;
+	}
 }
