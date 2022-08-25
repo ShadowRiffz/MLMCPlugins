@@ -131,6 +131,10 @@ public class WarManager {
 		return true;
 	}
 	
+	public static War getWar(String key) {
+		return wars.get(key);
+	}
+	
 	public static HashMap<String, War> getWars() {
 		return wars;
 	}
