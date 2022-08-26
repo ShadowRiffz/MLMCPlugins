@@ -309,6 +309,11 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	@Override
+	public int getPriority() {
+		return 5;
+	}
+	
+	@Override
 	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
