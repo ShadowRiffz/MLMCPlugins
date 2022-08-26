@@ -174,6 +174,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 
 		mngr = new CommandManager("io", "neocore.admin", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
+		mngr.register(new CmdIODebug());
 		mngr.register(new CmdIOEnable());
 		mngr.register(new CmdIODisable());
 		mngr.register(new CmdIOList());

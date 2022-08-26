@@ -2,7 +2,6 @@ package me.neoblade298.neocore.commands.builtin;
 
 import org.bukkit.command.CommandSender;
 
-import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
