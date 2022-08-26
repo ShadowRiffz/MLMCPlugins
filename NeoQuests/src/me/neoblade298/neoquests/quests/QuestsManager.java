@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.quests;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,7 +170,7 @@ public class QuestsManager implements IOComponent, Manager {
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
 			e.printStackTrace();
 		}
@@ -222,7 +223,7 @@ public class QuestsManager implements IOComponent, Manager {
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
