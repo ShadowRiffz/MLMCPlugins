@@ -1,14 +1,14 @@
-package me.neoblade298.neocore.listeners;
+package me.neoblade298.neocore.io;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
-import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -27,34 +27,54 @@ import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.neoblade298.neocore.NeoCore;
-import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neocore.io.IOType;
-import me.neoblade298.neocore.io.PostIOTask;
+import me.neoblade298.neocore.bungee.BungeeAPI;
+import me.neoblade298.neocore.bungee.PluginMessageEvent;
 
-public class IOListener implements Listener {
+public class IOManager implements Listener {
+	private static final String IO_CHANNEL = "neocore_io", START_SAVE_ID = "startsave", END_SAVE_ID = "endsave";
+	private static final int SAVE_TIMEOUT = 10000; // Time before we throw out a save start msg and don't count it for performance
 	private static String connection;
 	private static Properties properties;
 	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
+	private static TreeSet<IOComponent> orderedComponents;
 	private static HashSet<IOType> disabledIO = new HashSet<IOType>();
 	private static HashMap<IOType, HashSet<UUID>> performingIO = new HashMap<IOType, HashSet<UUID>>();
 	private static HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>> postIORunnables = new HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>>();
+	private static HashSet<UUID> isSaving = new HashSet<UUID>();
 	
 	static {
 		for (IOType type : IOType.values()) {
 			performingIO.put(type, new HashSet<UUID>());
 			postIORunnables.put(type, new HashMap<UUID, ArrayList<PostIOTask>>());
 		}
+		
+
+		Comparator<IOComponent> comp = new Comparator<IOComponent>() {
+			@Override
+			public int compare(IOComponent i1, IOComponent i2) {
+				if (i1.getPriority() > i2.getPriority()) {
+					return -1;
+				}
+				else if (i1.getPriority() < i2.getPriority()) {
+					return 1;
+				}
+				else {
+					return 0;
+				}
+			}
+		};
+		orderedComponents = new TreeSet<IOComponent>(comp);
 	}
 	
-	public IOListener(String connection, Properties properties) {
+	public IOManager(String connection, Properties properties) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		IOListener.connection = connection;
-		IOListener.properties = properties;
+		IOManager.connection = connection;
+		IOManager.properties = properties;
 	}
 	
 	public static void register(JavaPlugin plugin, IOComponent component) {
@@ -86,16 +106,37 @@ public class IOListener implements Listener {
 		load(e.getPlayer());
 	}
 	
+	@EventHandler
+	public void onPluginMessage(PluginMessageEvent e) {
+		if (!e.getChannel().equals(IO_CHANNEL)) return;
+		ArrayList<String> msgs = e.getMessages();
+		long timestamp = Long.parseLong(msgs.get(2));
+		if (timestamp + SAVE_TIMEOUT < System.currentTimeMillis()) return;
+		UUID uuid = UUID.fromString(msgs.get(1));
+		
+		if (msgs.get(0).equals(START_SAVE_ID)) {
+			isSaving.add(uuid);
+		}
+		else if (msgs.get(0).equals(END_SAVE_ID)) {
+			isSaving.remove(uuid);
+		}
+	}
+	
 	private void save(Player p) {
 		if (disabledIO.contains(IOType.SAVE)) {
 			return;
 		}
 		
 		UUID uuid = p.getUniqueId();
+		// If somehow the person is already saving, don't try saving again
+		if (isSaving.contains(uuid)) return;
 		if (lastSave.getOrDefault(uuid, 0L) + 10000 >= System.currentTimeMillis()) {
 			// If saved less than 10 seconds ago, don't save again
 			return;
 		}
+		
+		BungeeAPI.sendPluginMessage(IO_CHANNEL, new String[] { START_SAVE_ID, uuid.toString(), Long.toString(System.currentTimeMillis()) });
+		isSaving.add(uuid);
 		lastSave.put(uuid, System.currentTimeMillis());
 		IOType type = IOType.SAVE;
 		performingIO.get(type).add(uuid);
@@ -108,15 +149,15 @@ public class IOListener implements Listener {
 					Statement delete = con.createStatement();
 
 					// Save account
-					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						if (entry.getValue().canSave()) {
+					for (IOComponent io : orderedComponents) {
+						if (io.canSave()) {
 							try {
-								entry.getValue().savePlayer(p, insert, delete);
+								io.savePlayer(p, insert, delete);
 								delete.executeBatch();
 								insert.executeBatch();
 							}
 							catch (Exception ex) {
-								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + entry.getKey());
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + io.getKey());
 								ex.printStackTrace();
 							}
 						}
@@ -126,6 +167,8 @@ public class IOListener implements Listener {
 				}
 				finally {
 					endIOTask(type, p.getUniqueId());
+					BungeeAPI.sendPluginMessage(IO_CHANNEL, new String[] { END_SAVE_ID, uuid.toString(), Long.toString(System.currentTimeMillis()) });
+					isSaving.remove(uuid);
 				}
 			}
 		}.runTaskAsynchronously(NeoCore.inst());
@@ -153,15 +196,15 @@ public class IOListener implements Listener {
 					Statement delete = con.createStatement();
 
 					// Save account
-					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						if (entry.getValue().canAutosave()) {
+					for (IOComponent io : orderedComponents) {
+						if (io.canAutosave()) {
 							try {
-								entry.getValue().autosavePlayer(p, insert, delete);
+								io.autosavePlayer(p, insert, delete);
 								delete.executeBatch();
 								insert.executeBatch();
 							}
 							catch (Exception ex) {
-								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle autosave for component " + entry.getKey());
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle autosave for component " + io.getKey());
 								ex.printStackTrace();
 							}
 						}
@@ -190,14 +233,14 @@ public class IOListener implements Listener {
 					Statement stmt = con.createStatement();
 
 					// Save account
-					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						if (entry.getValue().canPreload()) {
+					for (IOComponent io : orderedComponents) {
+						if (io.canPreload()) {
 							try {
-								entry.getValue().preloadPlayer(p, stmt);
+								io.preloadPlayer(p, stmt);
 								stmt.executeBatch();
 							}
 							catch (Exception ex) {
-								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + entry.getKey());
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle preload for component " + io.getKey());
 								ex.printStackTrace();
 							}
 						}
@@ -220,24 +263,36 @@ public class IOListener implements Listener {
 		performingIO.get(type).add(p.getUniqueId());
 		
 		new BukkitRunnable() {
+			int count = 0;
 			public void run() {
 				try {
+					if (isSaving.contains(p.getUniqueId())) {
+						Bukkit.getLogger().warning("[NeoCore] Player " + p.getName() + " is still saving, skipping attempt " + count);
+						return;
+					}
+					if (++count > 5) {
+						this.cancel();
+						endIOTask(type, p.getUniqueId());
+						Bukkit.getLogger().warning("[NeoCore] Failed to load player " + p.getName());
+						return;
+					}
 					Connection con = DriverManager.getConnection(connection, properties);
 					Statement stmt = con.createStatement();
 
 					// Save account
-					for (Entry<String, IOComponent> entry : components.entrySet()) {
-						if (entry.getValue().canLoad()) {
+					for (IOComponent io : orderedComponents) {
+						if (io.canLoad()) {
 							try {
-								entry.getValue().loadPlayer(p, stmt);
+								io.loadPlayer(p, stmt);
 								stmt.executeBatch();
 							}
 							catch (Exception ex) {
-								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + entry.getKey());
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle load for component " + io.getKey());
 								ex.printStackTrace();
 							}
 						}
 					}
+					Bukkit.getLogger().info("[NeoCore] Successfully loaded player " + p.getName() + " in " + count + " attempts");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -245,7 +300,7 @@ public class IOListener implements Listener {
 					endIOTask(type, p.getUniqueId());
 				}
 			}
-		}.runTaskAsynchronously(NeoCore.inst());
+		}.runTaskTimerAsynchronously(NeoCore.inst(), 0L, 20L);
 	}
 	
 	public static void handleDisable() {
@@ -259,21 +314,21 @@ public class IOListener implements Listener {
 			Statement delete = con.createStatement();
 			
 			// Any final cleanup
-			for (Entry<String, IOComponent> entry : components.entrySet()) {
-				if (entry.getValue().canCleanup()) {
+			for (IOComponent io : orderedComponents) {
+				if (io.canCleanup()) {
 					try {
-						Bukkit.getLogger().info("[NeoCore] Cleaning up component " + entry.getKey());
-						entry.getValue().cleanup(insert, delete);
+						Bukkit.getLogger().info("[NeoCore] Cleaning up component " + io.getKey());
+						io.cleanup(insert, delete);
 						delete.executeBatch();
 						insert.executeBatch();
 					}
 					catch (Exception ex) {
-						Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + entry.getKey());
+						Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle cleanup for component " + io.getKey());
 						ex.printStackTrace();
 					}
 				}
 				else {
-					Bukkit.getLogger().info("[NeoCore] Skipping cleanup for component " + entry.getKey());
+					Bukkit.getLogger().info("[NeoCore] Skipping cleanup for component " + io.getKey());
 				}
 			}
 		} catch (Exception ex) {
@@ -324,7 +379,16 @@ public class IOListener implements Listener {
 		}
 	}
 	
-	public static Collection<IOComponent> getComponents() {
-		return components.values();
+	public static TreeSet<IOComponent> getComponents() {
+		return orderedComponents;
+	}
+	
+	// Applies to cross-server saves, unlike isPerformingIO. Use to make sure you load AFTER save is complete
+	public static boolean isSaving(Player p) {
+		return isSaving.contains(p.getUniqueId());
+	}
+	
+	public static HashSet<UUID> getSavingUsers() {
+		return isSaving;
 	}
 }
