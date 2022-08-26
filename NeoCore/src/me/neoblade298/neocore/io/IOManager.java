@@ -165,12 +165,13 @@ public class IOManager implements Listener {
 										(System.currentTimeMillis() - timestamp) + "ms");
 							}
 							catch (Exception ex) {
-								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + io.getKey());
+								Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle save for component " + io.getKey() + " for player " + uuid);
 								ex.printStackTrace();
 							}
 						}
 					}
 				} catch (Exception ex) {
+					Bukkit.getLogger().log(Level.WARNING, "[NeoCore] Failed to handle saving for player " + uuid);
 					ex.printStackTrace();
 				}
 				finally {

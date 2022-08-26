@@ -167,6 +167,7 @@ public class PlayerTags {
 	
 	public boolean resetAllTags(UUID uuid) {
 		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Resetting all tags of " + this.getKey() + " for " + uuid + ".");
 		for (String key : fields) {
 			reset(key, uuid);
 		}
@@ -180,7 +181,7 @@ public class PlayerTags {
 		}
 		changedValues.get(uuid).add(key);
 		Value removed = values.get(uuid).remove(key);
-		Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.EXPIRED));
+		Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.REMOVED));
 		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Reset tag of " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}
