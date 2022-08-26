@@ -31,6 +31,9 @@ public class Commands implements CommandExecutor {
 			case "del":
 				if(args.length < 2) return false;
 				return main.delete((Player)sender, args[1]);
+			case "debug":
+				if(!sender.hasPermission("fopzlskillprofiles.admin")) return false;
+				return main.toggleDebug(sender);
 			default:
 				return false;
 		}
