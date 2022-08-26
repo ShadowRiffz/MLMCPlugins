@@ -39,6 +39,7 @@ import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import me.neoblade298.neocore.teleport.TeleportAPI;
 import me.neoblade298.neocore.util.Util;
+import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
@@ -171,7 +172,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdBCoreSend());
 		mngr.register(new CmdBCoreBroadcast());
 
-		mngr = new CommandManager("io", this);
+		mngr = new CommandManager("io", "neocore.admin", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
 		mngr.register(new CmdIOEnable());
 		mngr.register(new CmdIODisable());
