@@ -62,7 +62,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		UUID uuid = p.getUniqueId();
 		
 		if(debug) {
-			Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Starting loading player " + p.getName() + "(uuid=" + uuid + ")");
+			Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Starting loading player " + p.getName() + "(uuid=" + uuid + ")");
 		}
 		
 		/* base profiles */
@@ -75,7 +75,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				String name = rs.getString("name");
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading profile: accId = " + accId + ", profileName = " + name == null ? "(NULL)" : name);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading profile: accId = " + accId + ", profileName = " + name == null ? "(NULL)" : name);
 				}
 				
 				AccountProfiles ap;
@@ -105,8 +105,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				int attrValue = rs.getInt("value");
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading attribute: name = " + attrName == null ? "(NULL)" : attrName + ", value = " + attrValue);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading attribute: name = " + attrName == null ? "(NULL)" : attrName + ", value = " + attrValue);
 				}
 				
 				pp.profiles.get(accId).profiles.get(profName).attributes.put(attrName, attrValue);
@@ -128,8 +128,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				int rattrValue = rs.getInt("value");
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading research attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading research attribute: name = " + rattrName == null ? "(NULL)" : rattrName + ", value = " + rattrValue);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading research attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading research attribute: name = " + rattrName == null ? "(NULL)" : rattrName + ", value = " + rattrValue);
 				}
 				
 				pp.profiles.get(accId).profiles.get(profName).researchAttributes.put(rattrName, rattrValue);
@@ -151,8 +151,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				int skillLevel = rs.getInt("value");
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill level for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill level: skill = " + skillName == null ? "(NULL)" : skillName + ", level = " + skillLevel);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill level for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill level: skill = " + skillName == null ? "(NULL)" : skillName + ", level = " + skillLevel);
 				}
 				
 				pp.profiles.get(accId).profiles.get(profName).skillLevels.put(skillName, skillLevel);
@@ -174,8 +174,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				Material material = Material.valueOf(rs.getString("material"));
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill bind for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill bind: skill = " + skillName == null ? "(NULL)" : skillName + ", material = " + material == null ? "(NULL)" : material.toString());
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bind for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bind: skill = " + skillName == null ? "(NULL)" : skillName + ", material = " + material == null ? "(NULL)" : material.toString());
 				}
 				
 				pp.profiles.get(accId).profiles.get(profName).skillBinds.put(skillName, material);
@@ -197,8 +197,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				String skillName = rs.getString("name");
 				
 				if(debug) {
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill bar slot for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
-					Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Loading skill bar slot: slot = " + slot + ", skill = " + skillName == null ? "(NULL)" : skillName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bar slot for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bar slot: slot = " + slot + ", skill = " + skillName == null ? "(NULL)" : skillName);
 				}
 				
 				pp.profiles.get(accId).profiles.get(profName).skillBar.put(slot, skillName);
@@ -210,7 +210,7 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		}
 		
 		if(debug) {
-			Bukkit.getLogger().log(Level.FINE, "[FoPzlSkillProfiles] Finished loading player " + p.getName() + "(uuid=" + uuid + ")");
+			Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Finished loading player " + p.getName() + "(uuid=" + uuid + ")");
 		}
 	}
 	
