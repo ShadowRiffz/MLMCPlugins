@@ -149,6 +149,11 @@ public class WarTeam {
 	
 	public void startWar() {
 		mascot = MythicBukkit.inst().getMobManager().spawnMob(MASCOT_NAME, mascotSpawn);
+		mascot.getEntity().setCustomName(display);
+	}
+	
+	public void endWar() {
+		mascot.despawn();
 	}
 	
 	public ActiveMob getMascot() {
