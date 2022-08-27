@@ -99,7 +99,7 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			// /gear get/giveshard {player} [type] --rarity:[rarity] --level:[level]
-			else if (args.length == 4 && (args[0].equalsIgnoreCase("getshard") || args[0].equalsIgnoreCase("giveshard"))) {
+			else if (args.length >= 4 && (args[0].equalsIgnoreCase("getshard") || args[0].equalsIgnoreCase("giveshard"))) {
 				Player p = (Player) sender;
 				int offset = 0;
 				if (Bukkit.getPlayer(args[1]) != null) {
