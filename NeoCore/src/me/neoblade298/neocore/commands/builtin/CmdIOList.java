@@ -35,7 +35,7 @@ public class CmdIOList implements Subcommand {
 	@Override
 	public void run(CommandSender s, String[] args) {
 		for (IOComponent io : IOManager.getComponents()) {
-			Util.msg(s, "&7- &6" + io.getKey() + " (&e" + io.getPriority() + "&7)", false);
+			Util.msg(s, "&7- &6" + io.getKey() + " (&e" + io.getPriority() + "&6)", false);
 		}
 	}
 
