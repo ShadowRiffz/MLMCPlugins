@@ -273,7 +273,9 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void cleanup(Statement insert, Statement delete) {}
 	
 	@Override
-	public String getKey() {return null;}
+	public String getKey() {
+		return "SkillProfiles";
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
