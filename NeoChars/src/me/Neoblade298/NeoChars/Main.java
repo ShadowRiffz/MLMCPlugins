@@ -82,6 +82,7 @@ public class Main extends JavaPlugin implements Listener {
 				|| !(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll"))) {
 			return;
 		}
+		Player clicked = (Player) e.getRightClicked();
 
 		// Only let it happen once
 		if (!(e.getHand() == EquipmentSlot.HAND)) {
@@ -89,7 +90,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		// Make sure the player being clicked is not an NPC
-		if (Bukkit.getPlayer(e.getRightClicked().getName()) == null) {
+		if (clicked.hasMetadata("NPC")) {
 			return;
 		}
 
@@ -97,7 +98,6 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 
-		Player clicked = (Player) e.getRightClicked();
 		sendPlayerCard(e.getPlayer(), clicked);
 	}
 
