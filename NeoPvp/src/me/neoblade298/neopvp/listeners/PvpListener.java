@@ -36,7 +36,7 @@ public class PvpListener implements Listener {
 		if (!(e.getEntity() instanceof Player)) return;
 		Player pv = (Player) e.getEntity();
 		
-		if (e.getEntity() instanceof Player) {
+		if (e.getDamager() instanceof Player) {
 			handlePvpDamage((Player) e.getDamager(), pv, e);
 		}
 		else if (e.getEntity() instanceof Arrow) {
