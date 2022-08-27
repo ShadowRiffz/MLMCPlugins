@@ -25,6 +25,7 @@ import me.neoblade298.neocore.info.BossInfo;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.player.PlayerFields;
 import me.neoblade298.neocore.player.PlayerTags;
+import net.md_5.bungee.api.ChatColor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -260,7 +261,7 @@ public class Consumables extends JavaPlugin implements Listener {
 		BossInfo bi = InfoAPI.getBossInfo(internal);
 		int level = bi.getLevel(true);
 		String display = "§6Boss Chest§e: " + bi.getDisplayWithLevel(true);
-		String bossDisplay = bi.getDisplay();
+		String bossDisplay = ChatColor.stripColor(bi.getDisplay());
 		Sound initSound = Sound.valueOf(config.getString("sound-effects"));
 
 		// Chest stages
