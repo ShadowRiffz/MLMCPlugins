@@ -40,7 +40,7 @@ public class PointsManager implements IOComponent {
 	public static void initialize() {
 		// Ground rules:
 		// PlayerPoints only exists once a player gets their first points, but it is created even if the player gets them while offline
-		// PlayerPoints does not persist on logout
+		// PlayerPoints persists forever
 		// Nationent exists on startup, listens to nation create and delete
 		// Nationent only increments numContributors if PlayerPoints was 0
 		
@@ -68,29 +68,31 @@ public class PointsManager implements IOComponent {
 						nationEntries.get(nation).initializeTown(uuid, rs.getInt(4));
 					}
 					
-					// Set items for nation entries
+					// Set nationwide points
 					for (NationEntry n : nationEntries.values()) {
 						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_nationpoints WHERE uuid = '" + "';");
 						while (rs.next()) {
 							String type = rs.getString(2);
 							NationPointType ntype = NationPointType.valueOf(type);
-							if (ntype == null) {
-								n.setPlayerPoints(rs.getDouble(3), PlayerPointType.valueOf(type));
-							}
-							else {
-								n.setNationPoints(rs.getDouble(3), ntype);
-							}
-						}
-
-						rs = stmt.executeQuery("SELECT * FROM neoleaderboard_townpoints WHERE nation_uuid = '" + "';");
-						while (rs.next()) {
-							UUID uuid = UUID.fromString(rs.getString(1));
-							n.initializeTownPoints(rs.getDouble(5), PlayerPointType.valueOf(rs.getString(4)), uuid);
+							n.setNationPoints(rs.getDouble(3), ntype);
 						}
 					}
+					
+					// Initialize all players
+					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_players");
+					while (rs.next()) {
+						UUID uuid = UUID.fromString(rs.getString(1));
+						PlayerEntry pentry = loadPlayerEntry(uuid, NeoCore.getStatement());
+						if (pentry != null) {
+							playerEntries.put(uuid, pentry);
+						}
+					}
+					
+					// Calculate player points
+					calculatePoints();
 				}
 				catch (Exception e) {
-					Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to initialize nations");
+					Bukkit.getLogger().log(Level.WARNING, "[NeoLeaderboard] Failed to initialize leaderboard");
 					e.printStackTrace();
 				}
 			}
@@ -127,6 +129,8 @@ public class PointsManager implements IOComponent {
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}
 	
+	
+	// deleteFromSql false whenever a bigger delete (IE nation entry) happens that makes it redundant
 	public static void deleteTownEntry(UUID nation, UUID town, boolean deleteFromSql) {
 		NationEntry ne = nationEntries.get(nation);
 		deleteTownEntry(ne.getTownEntry(town), deleteFromSql);
@@ -541,5 +545,15 @@ public class PointsManager implements IOComponent {
 				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
+	}
+	
+	// Normally only called on startup, if you want it called for other reasons
+	// make sure to first clear the points for town and nation
+	private static void calculatePoints() {
+		for (PlayerEntry pe : playerEntries.values()) {
+			for (Entry<PlayerPointType, Double> e : pe.getContributedPoints().entrySet()) {
+				pe.getNationEntry().addPlayerPoints(e.getValue(), e.getKey(), pe.getTown(), pe.getUuid());
+			}
+		}
 	}
 }

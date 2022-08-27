@@ -77,6 +77,9 @@ public class NationEntry implements Comparable<NationEntry> {
 		if (townPoints.containsKey(uuid)) {
 			return false;
 		}
+		if (TownyAPI.getInstance().getTown(uuid) == null) {
+			return false;
+		}
 		TownEntry te = new TownEntry(uuid, this.getNation().getUUID(), contributors);
 		townPoints.put(uuid, te);
 		return true;
