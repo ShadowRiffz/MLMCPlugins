@@ -132,7 +132,7 @@ public class PlayerTags {
 				}
 				count++;
 			}
-			if (count > 0) Bukkit.getLogger().info("[NeoCore] Loaded " + count + " tags, " + expired + " expired for key " + this.getKey());
+			if (count > 0) Bukkit.getLogger().info("[NeoCore] Loaded " + count + " tags, " + expired + " expired for key " + this.getKey() + " for player " + uuid);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
