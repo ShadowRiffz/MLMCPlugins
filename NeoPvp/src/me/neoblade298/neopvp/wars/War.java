@@ -153,7 +153,7 @@ public class War {
 	}
 	
 	public void displayCreator(CommandSender s) {
-		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + "&c&l «§8§m--------§6§l<", false);
 		Util.msg(s, "&6Date&7: " + sdf.format(date.getTime()), false);
 		Util.msg(s, "&6World&7: " + (w == null ? "Not set" : w.getName()), false);
 		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers, false);
