@@ -12,7 +12,7 @@ commands:
 permissions:
    fopzlskillprofiles.general:
       description: User has permission to use skill profiles
-      default: true
+      default: false
    fopzlskillprofiles.poger:
       description: User has permission to set more than 3 profiles per class account
       default: false
