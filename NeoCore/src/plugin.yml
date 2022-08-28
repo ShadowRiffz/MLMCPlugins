@@ -13,12 +13,6 @@ commands:
    bcore:
       description: NeoCore bungee command
       usage: /bcore
-   help:
-      description: Base help command
-      usage: /help
-   features:
-      description: Base features command
-      usage: /features
-   commands:
-      description: Base commands command
-      usage: /commands
+   io:
+      description: NeoCore IO command
+      usage: /io

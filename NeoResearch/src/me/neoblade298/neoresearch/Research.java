@@ -34,7 +34,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.neoblade298.neocore.info.BossInfo;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.io.IOManager;
 import me.neoblade298.neoresearch.ResearchItem;
 import me.neoblade298.neoresearch.inventories.InventoryListeners;
 import me.neoblade298.neoresearch.inventories.ResearchInventory;
@@ -77,7 +77,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
 		enabledWorlds.add("Argyll");
-		IOListener.register(this, this);
+		IOManager.register(this, this);
 
 		loadConfig();
 	}
@@ -306,6 +306,11 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	@Override
+	public int getPriority() {
+		return 5;
 	}
 	
 	@Override

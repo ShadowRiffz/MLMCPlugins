@@ -105,6 +105,9 @@ public class War {
 			BungeeAPI.broadcast("&e&lTie!");
 			Bukkit.getLogger().info("[NeoPvp] War " + this.key + " was a tie");
 		}
+		for (WarTeam team : teams) {
+			team.endWar();
+		}
 	}
 	
 	public boolean isOngoing() {
@@ -153,7 +156,7 @@ public class War {
 	}
 	
 	public void displayCreator(CommandSender s) {
-		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + " «§8§m--------§6§l<", false);
+		Util.msg(s, "§6§l>§8§m--------§c§l» " + this.display + "&c&l «§8§m--------§6§l<", false);
 		Util.msg(s, "&6Date&7: " + sdf.format(date.getTime()), false);
 		Util.msg(s, "&6World&7: " + (w == null ? "Not set" : w.getName()), false);
 		Util.msg(s, "&6Max Players per Team&7: &e" + maxPlayers, false);
@@ -215,17 +218,18 @@ public class War {
 	
 	private void displayTeam(int num, CommandSender s) {
 		WarTeam team = teams[num - 1];
-		int healthLost = team.getMascotHealthLost() / 100;
+		WarTeam enemy = teams[num == 1 ? 1 : 0];
+		int healthLost = enemy.getMascotHealthLost() / 100;
 		int points = team.getPoints();
-		int total = points - healthLost;
+		int total = points + healthLost;
 		String msg = "&6Team " + num + " &7(&c" + team.getDisplay() + "&7): &f" + total;
 
 		ComponentBuilder builder = new ComponentBuilder(Util.translateColors(msg))
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTeamHover(team))));
+				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTeamHover(team, enemy))));
 		s.spigot().sendMessage(builder.create());
 	}
 	
-	private String buildTeamHover(WarTeam team) {
+	private String buildTeamHover(WarTeam team, WarTeam enemy) {
 		String msg = "";
 		
 		// Nations
@@ -258,7 +262,7 @@ public class War {
 		}
 		msg += "\n";
 		
-		msg += "&6Kills&7: &e" + team.getKills() + "\n&6Deaths&7: &e" + team.getDeaths() + "\n&6Mascot Health Lost&7: &e" + team.getMascotHealthLost();
+		msg += "&6Kills&7: &e" + team.getKills() + "\n&6Deaths&7: &e" + team.getDeaths() + "\n&6Enemy Mascot Damage&7: &e" + enemy.getMascotHealthLost();
 		return Util.translateColors(msg);
 	}
 	

@@ -3,6 +3,7 @@ package me.neoblade298.neopvp.listeners;
 import java.util.Arrays;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,13 +33,23 @@ public class PvpListener implements Listener {
 
 	@EventHandler
 	public void onPvp(EntityDamageByEntityEvent e) {
-		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
-			return;
+		if (!(e.getEntity() instanceof Player)) return;
+		Player pv = (Player) e.getEntity();
+		
+		if (e.getDamager() instanceof Player) {
+			handlePvpDamage((Player) e.getDamager(), pv, e);
+		}
+		else if (e.getEntity() instanceof Arrow) {
+			Arrow a = (Arrow) e.getEntity();
+			if (a.getShooter() instanceof Player) {
+				handlePvpDamage((Player) a.getShooter(), pv, e);
+			}
 		}
 
-		Player pa = (Player) e.getDamager();
-		Player pv = (Player) e.getEntity();
-
+		
+	}
+	
+	private void handlePvpDamage(Player pa, Player pv, EntityDamageByEntityEvent e) {
 		PvpAccount attacker = PvpManager.getAccount(pa);
 		PvpAccount victim = PvpManager.getAccount(pv);
 
@@ -80,7 +91,6 @@ public class PvpListener implements Listener {
 				}
 			}
 		}
-		
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)

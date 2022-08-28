@@ -71,7 +71,7 @@ public class TownEntry implements Comparable<TownEntry> {
 	}
 	
 	public double getPlayerPoints(PlayerPointType type) {
-		return playerPoints.get(type);
+		return playerPoints.getOrDefault(type, 0D);
 	}
 	
 	public int getContributors() {

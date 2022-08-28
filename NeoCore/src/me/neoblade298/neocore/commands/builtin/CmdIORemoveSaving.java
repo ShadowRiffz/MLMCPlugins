@@ -1,23 +1,21 @@
 package me.neoblade298.neocore.commands.builtin;
 
-import java.util.Arrays;
-
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neocore.io.IOType;
-import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.io.IOManager;
 import me.neoblade298.neocore.util.Util;
 
-public class CmdCoreDisable implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("save/preload/load/cleanup", false)));
+public class CmdIORemoveSaving implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(new CommandArgument("player", false));
 
 	@Override
 	public String getPermission() {
-		return "neocore.admin";
+		return null;
 	}
 
 	@Override
@@ -27,23 +25,23 @@ public class CmdCoreDisable implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "disable";
+		return "removesaving";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Disables an IO action: save, preload, load, cleanup";
+		return "Removes a player or everyone from isSaving list";
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		if (args.length == 0) {
-			Util.msg(s, "&7Valid IO actions: save, preload, load, cleanup");
+		if (args.length == 1) {
+			IOManager.getSavingUsers().remove(Bukkit.getPlayer(args[0]).getUniqueId());
+			Util.msg(s, "Cleared user from saving list!");
 		}
 		else {
-			IOType type = IOType.valueOf(args[0].toUpperCase());
-			IOListener.disableIO(type);
-			Util.msg(s, "Successfully set " + type + " to disabled.");
+			IOManager.getSavingUsers().clear();
+			Util.msg(s, "Cleared saving list!");
 		}
 	}
 

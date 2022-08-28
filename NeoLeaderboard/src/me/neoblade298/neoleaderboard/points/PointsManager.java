@@ -321,6 +321,11 @@ public class PointsManager implements IOComponent {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public int getPriority() {
+		return -1;
+	}
 
 	@Override
 	public String getKey() {

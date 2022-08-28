@@ -31,14 +31,15 @@ import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.io.IOManager;
 import me.neoblade298.neocore.io.IOType;
-import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.player.*;
 import me.neoblade298.neocore.scheduler.ScheduleInterval;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;
 import me.neoblade298.neocore.teleport.TeleportAPI;
 import me.neoblade298.neocore.util.Util;
+import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class NeoCore extends JavaPlugin implements Listener {
@@ -91,8 +92,8 @@ public class NeoCore extends JavaPlugin implements Listener {
 	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
         
         // playerdata
-		getServer().getPluginManager().registerEvents(new IOListener(connection, properties), this);
-        IOListener.register(this, new PlayerDataManager());
+		getServer().getPluginManager().registerEvents(new IOManager(connection, properties), this);
+        IOManager.register(this, new PlayerDataManager());
         
         // teleports
         getServer().getPluginManager().registerEvents(new TeleportAPI(), this);
@@ -126,7 +127,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 					public void run() {
 						Statement insert = getStatement();
 						Statement delete = getStatement();
-						for (IOComponent component : IOListener.getComponents()) {
+						for (IOComponent component : IOManager.getComponents()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								try {
 									component.autosavePlayer(p, insert, delete);
@@ -154,8 +155,6 @@ public class NeoCore extends JavaPlugin implements Listener {
 	private void initCommands() {
 		CommandManager mngr = new CommandManager("core", this);
 		mngr.registerCommandList("");
-		mngr.register(new CmdCoreEnable());
-		mngr.register(new CmdCoreDisable());
 		mngr.register(new CmdCoreDebug());
 		mngr.register(new CmdCoreSchedule());
 		mngr.register(new CmdCoreMessage());
@@ -172,6 +171,15 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.registerCommandList("");
 		mngr.register(new CmdBCoreSend());
 		mngr.register(new CmdBCoreBroadcast());
+
+		mngr = new CommandManager("io", "neocore.admin", ChatColor.DARK_RED, this);
+		mngr.registerCommandList("");
+		mngr.register(new CmdIODebug());
+		mngr.register(new CmdIOEnable());
+		mngr.register(new CmdIODisable());
+		mngr.register(new CmdIOList());
+		mngr.register(new CmdIORemoveSaving());
+		mngr.register(new CmdIOViewSaving());
 	}
 	
 	public static void reload() {
@@ -185,7 +193,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 	}
 	
 	public void onDisable() {
-		IOListener.handleDisable();
+		IOManager.handleDisable();
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoCore Disabled");
 	    this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
 	    super.onDisable();
@@ -225,12 +233,12 @@ public class NeoCore extends JavaPlugin implements Listener {
 	}
 	
 	public static IOComponent registerIOComponent(JavaPlugin plugin, IOComponent component) {
-		IOListener.register(plugin, component);
+		IOManager.register(plugin, component);
 		return component;
 	}
 	
 	public static Statement getStatement() {
-		return IOListener.getStatement();
+		return IOManager.getStatement();
 	}
 	
 	public static void loadFiles(File load, FileLoader loader) throws NeoIOException {
@@ -279,11 +287,15 @@ public class NeoCore extends JavaPlugin implements Listener {
 		return debug;
 	}
 	
+	public static boolean isSaving(Player p) {
+		return IOManager.isSaving(p);
+	}
+	
 	public static boolean isPerformingIO(UUID uuid, IOType type) {
-		return IOListener.isPerformingIO(uuid, type);
+		return IOManager.isPerformingIO(uuid, type);
 	}
 	
 	public static void addPostIORunnable(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
-		IOListener.addPostIORunnable(task, type, uuid, async);
+		IOManager.addPostIORunnable(task, type, uuid, async);
 	}
 }

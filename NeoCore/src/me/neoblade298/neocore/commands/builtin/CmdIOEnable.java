@@ -8,16 +8,16 @@ import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.io.IOManager;
 import me.neoblade298.neocore.io.IOType;
-import me.neoblade298.neocore.listeners.IOListener;
 import me.neoblade298.neocore.util.Util;
 
-public class CmdCoreEnable implements Subcommand {
+public class CmdIOEnable implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("save/preload/load/cleanup/autosave", false)));
 
 	@Override
 	public String getPermission() {
-		return "neocore.admin";
+		return null;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CmdCoreEnable implements Subcommand {
 		}
 		else {
 			IOType type = IOType.valueOf(args[0].toUpperCase());
-			IOListener.enableIO(type);
+			IOManager.enableIO(type);
 			Util.msg(s, "Successfully set " + type + " to enabled.");
 		}
 	}
