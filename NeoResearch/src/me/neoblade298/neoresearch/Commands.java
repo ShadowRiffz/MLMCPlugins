@@ -83,7 +83,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + display + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
@@ -110,7 +110,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + bi.getDisplayWithLevel(false) + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(bi.getDisplayWithLevel(false));
@@ -157,7 +157,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + display + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
@@ -204,7 +204,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + bi.getDisplayWithLevel(false) + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
