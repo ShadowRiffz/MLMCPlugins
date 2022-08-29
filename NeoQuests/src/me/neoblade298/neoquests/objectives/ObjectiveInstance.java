@@ -8,8 +8,8 @@ import me.neoblade298.neoquests.listeners.ObjectiveListener;
 
 public class ObjectiveInstance {
 	private Player p;
-	private Objective obj;
-	private ObjectiveSetInstance set;
+	protected Objective obj;
+	protected ObjectiveSetInstance set;
 	private int count;
 	private String barPrefix;
 

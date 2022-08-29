@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.objectives.builtin.FakeBarObjective;
+import me.neoblade298.neoquests.objectives.builtin.FakeBarObjectiveInstance;
 import me.neoblade298.neoquests.objectives.builtin.FakeObjective;
 import me.neoblade298.neoquests.objectives.builtin.FakeObjectiveInstance;
 import me.neoblade298.neoquests.quests.QuestInstance;
@@ -28,6 +30,9 @@ public class ObjectiveSetInstance {
 		for (Objective o : set.getObjectives()) {
 			if (o instanceof FakeObjective) {
 				objs.add(new FakeObjectiveInstance(p, o, this));
+			}
+			else if (o instanceof FakeBarObjective) {
+				objs.add(new FakeBarObjectiveInstance(p, o, this, ((FakeBarObjective) o).getConnection()));
 			}
 			else {
 				objs.add(new ObjectiveInstance(p, o, this));
