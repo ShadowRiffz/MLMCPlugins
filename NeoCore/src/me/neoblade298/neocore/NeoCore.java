@@ -20,6 +20,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.bar.BarAPI;
 import me.neoblade298.neocore.bungee.BungeeListener;
 import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.commands.builtin.*;
@@ -94,6 +95,9 @@ public class NeoCore extends JavaPlugin implements Listener {
         // playerdata
 		getServer().getPluginManager().registerEvents(new IOManager(connection, properties), this);
         IOManager.register(this, new PlayerDataManager());
+        
+        // CoreBar
+		getServer().getPluginManager().registerEvents(new BarAPI(), this);
         
         // teleports
         getServer().getPluginManager().registerEvents(new TeleportAPI(), this);
