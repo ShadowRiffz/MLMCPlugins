@@ -74,7 +74,7 @@ public class ObjectiveInstance {
 		}
 		else {
 			if (!cb.getTopic().equals("" + obj.hashCode()) && !obj.getDisplay().startsWith("Hide")) {
-				cb.setTitle("§7(§c/q§7)" + obj.getDisplay());
+				cb.setTitle("§7(§c/q§7) " + obj.getDisplay());
 			}
 			cb.setProgress((double) this.count / (double) obj.getNeeded());
 			cb.setTopic("" + obj.hashCode());
