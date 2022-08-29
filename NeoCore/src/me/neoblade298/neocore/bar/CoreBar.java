@@ -94,7 +94,7 @@ public class CoreBar {
 		}
 	}
 	
-	public boolean getEnabled() {
+	public boolean isEnabled() {
 		return enabled;
 	}
 }
