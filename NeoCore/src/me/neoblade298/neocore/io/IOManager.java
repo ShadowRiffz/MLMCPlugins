@@ -28,6 +28,7 @@ import com.sucy.skill.api.event.PlayerSaveEvent;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
+import me.neoblade298.neocore.player.PlayerTags;
 
 public class IOManager implements Listener {
 	private static final String IO_CHANNEL = "neocore_io", START_SAVE_ID = "startsave", END_SAVE_ID = "endsave";
@@ -159,8 +160,16 @@ public class IOManager implements Listener {
 						if (io.canSave()) {
 							try {
 								io.savePlayer(p, insert, delete);
-								delete.executeBatch();
-								insert.executeBatch();
+								int deleted = 0, inserted = 0;
+								for (int i : delete.executeBatch()) {
+									deleted += i;
+								}
+								for (int i : insert.executeBatch()) {
+									inserted += i;
+								}
+								if (io instanceof PlayerTags) {
+									Bukkit.getLogger().info("[NeoCore Debug] Inserted " + inserted + " and deleted " + deleted);
+								}
 								if (debug) Bukkit.getLogger().info("[NeoCore Debug] Component " + io.getKey() + " saved player " + uuid + " in " + 
 										(System.currentTimeMillis() - timestamp) + "ms");
 							}
