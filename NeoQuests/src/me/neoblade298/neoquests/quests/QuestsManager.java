@@ -166,7 +166,7 @@ public class QuestsManager implements IOComponent, Manager {
 				
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
-				qi.setupInstances(false); // Only start listening to the main account (in the finally clause)
+				qi.setupInstances(false); // False to only start listening to the main account (in the finally clause)
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 		}

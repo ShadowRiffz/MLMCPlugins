@@ -11,11 +11,13 @@ public class ObjectiveInstance {
 	private Objective obj;
 	private ObjectiveSetInstance set;
 	private int count;
+	private String barPrefix;
 
 	public ObjectiveInstance(Player p, Objective obj, ObjectiveSetInstance set) {
 		this.p = p;
 		this.obj = obj;
 		this.set = set;
+		this.barPrefix = "Q-" + set.getKey() + "-";
 	}
 
 	public Objective getObjective() {
@@ -63,21 +65,21 @@ public class ObjectiveInstance {
 		return false;
 	}
 	
-	private void updateBar() {
+	public void updateBar() {
 		CoreBar cb = BarAPI.getBar(p);
 		if (!cb.isEnabled()) return;
 		if (isComplete()) {
 			// Only increment progress bar if we're already following it
-			if (cb.getTopic().equals("" + obj.hashCode())) {
+			if (cb.getTopic().equals(barPrefix + obj.hashCode())) {
 				cb.setProgress(1);
 			}
 		}
 		else {
-			if (!cb.getTopic().equals("" + obj.hashCode()) && !obj.getDisplay().startsWith("Hide")) {
+			if (!cb.getTopic().equals(barPrefix + obj.hashCode()) && !obj.getDisplay().startsWith("Hide")) {
 				cb.setTitle("§7(§c/q§7) " + obj.getDisplay());
+				cb.setTopic(barPrefix + obj.hashCode());
 			}
 			cb.setProgress((double) this.count / (double) obj.getNeeded());
-			cb.setTopic("" + obj.hashCode());
 		}
 	}
 
