@@ -58,7 +58,7 @@ public class ResearchPointsBossPlaceholders extends PlaceholderExpansion {
 		String boss = args[0];
 		BossInfo bi = InfoAPI.getBossInfo(boss);
 		if (bi == null) return "Invalid boss";
-		String display = bi.getDisplayWithLevel(true);
+		String display = bi.getDisplayWithLevel(false);
 		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
 		if (researchPoints.containsKey(boss)) {
 			int points = researchPoints.get(boss);
