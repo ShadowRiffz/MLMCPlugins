@@ -93,4 +93,8 @@ public class CoreBar {
 			topic = "";
 		}
 	}
+	
+	public boolean getEnabled() {
+		return enabled;
+	}
 }
