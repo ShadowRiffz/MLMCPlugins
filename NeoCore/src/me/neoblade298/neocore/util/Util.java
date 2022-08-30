@@ -101,17 +101,27 @@ public class Util {
 		double x = Double.parseDouble(args[1]);
 		double y = Double.parseDouble(args[2]);
 		double z = Double.parseDouble(args[3]);
-		return new Location(w, x, y, z);
+		float yaw = 0;
+		float pitch = 0;
+		if (args.length > 4) {
+			yaw = Float.parseFloat(args[4]);
+			pitch = Float.parseFloat(args[5]);
+		}
+		return new Location(w, x, y, z, yaw, pitch);
 	}
 
-	public static String locToString(Location loc, boolean round) {
+	public static String locToString(Location loc, boolean round, boolean includePitch) {
 		double x = loc.getX(), y = loc.getY(), z = loc.getZ();
+		String str = loc.getWorld().getName() + " " + x + " " + y + " " + z;
 		if (round) {
 			x = Math.round(x) + 0.5;
 			y = Math.round(y) + 0.5;
 			z = Math.round(z) + 0.5;
 		}
-		return loc.getWorld().getName() + " " + x + " " + y + " " + z;
+		if (includePitch) {
+			str += " " + loc.getYaw() + " " + loc.getPitch();
+		}
+		return str;
 	}
 	
 	public static String connectArgs(String args[]) {
