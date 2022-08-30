@@ -11,6 +11,7 @@ import me.neoblade298.neoquests.objectives.builtin.FakeBarObjective;
 import me.neoblade298.neoquests.objectives.builtin.FakeBarObjectiveInstance;
 import me.neoblade298.neoquests.objectives.builtin.FakeObjective;
 import me.neoblade298.neoquests.objectives.builtin.FakeObjectiveInstance;
+import me.neoblade298.neoquests.quests.Quest;
 import me.neoblade298.neoquests.quests.QuestInstance;
 
 public class ObjectiveSetInstance {
@@ -92,7 +93,7 @@ public class ObjectiveSetInstance {
 			Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
 					"counts.length " + counts.size() + " != objs.size " + objs.size());
 			for (ObjectiveInstance oi : objs) {
-				oi.setCount(0);
+				oi.setCount(0, true);
 			}
 			return;
 		}
@@ -103,7 +104,7 @@ public class ObjectiveSetInstance {
 				Bukkit.getLogger().warning("[NeoQuests] Player " + p.getName() + " failed to load objective set " + key + " for quest " + quest.getQuest().getKey() + ", " +
 						"objective " + oi.getObjective().getKey() + " needed " + oi.getObjective().getNeeded() + " < counts[i] " + counts.get(i));
 				for (ObjectiveInstance obi : objs) {
-					obi.setCount(0);
+					obi.setCount(0, true);
 				}
 				return;
 			}
@@ -111,7 +112,7 @@ public class ObjectiveSetInstance {
 		
 		i = 0;
 		for (ObjectiveInstance oi : objs) {
-			oi.setCount(counts.get(i++));
+			oi.setCount(counts.get(i++), true);
 		}
 	}
 	
@@ -137,5 +138,9 @@ public class ObjectiveSetInstance {
 			counts += "," + objs.get(i).getCount();
 		}
 		return counts;
+	}
+	
+	public Quest getQuest() {
+		return quest.getQuest();
 	}
 }

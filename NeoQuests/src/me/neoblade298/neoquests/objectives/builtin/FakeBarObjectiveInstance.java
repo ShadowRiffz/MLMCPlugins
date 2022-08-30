@@ -9,15 +9,15 @@ import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class FakeBarObjectiveInstance extends ObjectiveInstance {
-	private String barPrefix;
 
 	public FakeBarObjectiveInstance(Player p, Objective obj, ObjectiveSetInstance set, int connection) {
 		super(p, obj, set);
-		this.barPrefix = "Q-" + set.getKey() + "-";
 		
 		CoreBar cb = BarAPI.getBar(p);
 		Objective connected = set.getSet().getObjectives().get(connection);
-		cb.setTitle(connected.getDisplay());
-		cb.setTopic(barPrefix + connected.hashCode());
+		String topic = "Q-" + set.getQuest().getKey() + "-" + set.getKey() + "-" + connected.hashCode();
+		cb.setTitle("§7(§c/q§7) " + obj.getDisplay());
+		cb.setTopic(topic);
+		cb.setProgress(0);
 	}
 }

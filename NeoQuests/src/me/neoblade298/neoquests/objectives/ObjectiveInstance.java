@@ -17,7 +17,7 @@ public class ObjectiveInstance {
 		this.p = p;
 		this.obj = obj;
 		this.set = set;
-		this.barPrefix = "Q-" + set.getKey() + "-";
+		this.barPrefix = "Q-" + set.getQuest().getKey() + "-" + set.getKey() + "-";
 	}
 
 	public Objective getObjective() {
@@ -32,9 +32,9 @@ public class ObjectiveInstance {
 		return count;
 	}
 
-	public boolean setCount(int count) {
+	public boolean setCount(int count, boolean loading) {
 		this.count = Math.min(obj.getNeeded(), count);
-		updateBar();
+		if (!loading) updateBar(); // Only update bar if not initializing player
 		if (isComplete()) {
 			set.checkCompletion();
 			return true;

@@ -9,10 +9,12 @@ public class FakeBarObjective extends Objective {
 	
 	public FakeBarObjective() {
 		super();
+		this.needed = 0;
 	}
 
 	public FakeBarObjective(LineConfig cfg) {
 		super(null, cfg);
+		this.needed = 0;
 		this.line = cfg.getLine();
 		this.connection = cfg.getInt("connection", 0);
 	}
