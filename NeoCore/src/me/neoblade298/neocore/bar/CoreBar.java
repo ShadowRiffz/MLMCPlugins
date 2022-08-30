@@ -1,5 +1,7 @@
 package me.neoblade298.neocore.bar;
 
+import java.util.ArrayList;
+
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -13,6 +15,8 @@ public class CoreBar {
 	private BossBar bar;
 	private String topic = "";
 	private boolean enabled;
+	private boolean isProgressing = false;
+	private ArrayList<Runnable> runAfterProgressing = new ArrayList<Runnable>();
 	
 	public CoreBar(Player p, BossBar bar, PlayerTags ptags) {
 		this.bar = bar;
@@ -23,24 +27,62 @@ public class CoreBar {
 	
 	public void setTitle(String title) {
 		if (!enabled) return;
-		if (!bar.isVisible()) bar.setVisible(true);
-		bar.setTitle(title);
+		
+		if (isProgressing) {
+			runAfterProgressing.add(new Runnable() {
+				public void run() {
+					if (!bar.isVisible()) bar.setVisible(true);
+					bar.setTitle(title);
+				}
+			});
+		}
+		else {
+			if (!bar.isVisible()) bar.setVisible(true);
+			bar.setTitle(title);
+		}
 	}
 	
 	public void setColor(BarColor color) {
-		bar.setColor(color);
+		if (isProgressing) {
+			runAfterProgressing.add(new Runnable() {
+				public void run() {
+					bar.setColor(color);
+				}
+			});
+		}
+		else {
+			bar.setColor(color);
+		}
 	}
 	
 	public void setProgress(double progress) {
-		bar.setProgress(progress);
-		if (progress == 1) {
+		// Make other bar changes wait until this completes
+		if (isProgressing) {
+			runAfterProgressing.add(new Runnable() {
+				public void run() {
+					bar.setProgress(progress);
+				}
+			});
+		}
+		else {
+			bar.setProgress(progress);
+			isProgressing = true;
 			new BukkitRunnable() {
 				public void run() {
-					if (progress == 1) {
+					if (bar.getProgress() == 1) {
 						setVisible(false);
+						topic = "";
+						bar.setProgress(0);
+					}
+					isProgressing = false; // Must be before so there's no array comodification
+					if (runAfterProgressing.size() > 0) {
+						for (Runnable r : runAfterProgressing) {
+							r.run();
+						}
+						runAfterProgressing.clear();
 					}
 				}
-			}.runTaskLaterAsynchronously(NeoCore.inst(), 20L);
+			}.runTaskLater(NeoCore.inst(), 20L);
 		}
 	}
 	
@@ -50,7 +92,30 @@ public class CoreBar {
 	}
 	
 	public void setStyle(BarStyle style) {
-		bar.setStyle(style);
+		if (isProgressing) {
+			runAfterProgressing.add(new Runnable() {
+				public void run() {
+					bar.setStyle(style);
+				}
+			});
+		}
+		else {
+			bar.setStyle(style);
+		}
+	}
+	
+	public void setTopic(String topic) {
+		CoreBar cb = this;
+		if (isProgressing) {
+			runAfterProgressing.add(new Runnable() {
+				public void run() {
+					cb.topic = topic;
+				}
+			});
+		}
+		else {
+			this.topic = topic;
+		}
 	}
 	
 	public BarColor getColor() {
@@ -75,10 +140,6 @@ public class CoreBar {
 	
 	public String getTopic() {
 		return topic;
-	}
-	
-	public void setTopic(String topic) {
-		this.topic = topic;
 	}
 	
 	public boolean toggleEnabled() {
