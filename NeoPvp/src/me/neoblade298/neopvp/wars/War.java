@@ -208,8 +208,8 @@ public class War {
 			}
 			Util.msg(s, msg, false);
 			
-			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn(), true)), false);
-			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn(), true)), false);
+			Util.msg(s, "&7- &6Spawn&7: &e" + (team.getSpawn() == null ? "Not set" : Util.locToString(team.getSpawn(), true, false)), false);
+			Util.msg(s, "&7- &6Mascot Spawn&7: &e" + (team.getMascotSpawn() == null ? "Not set" : Util.locToString(team.getMascotSpawn(), true, false)), false);
 		}
 		else {
 			Util.msg(s, "&6Team " + num + "&7: null", false);

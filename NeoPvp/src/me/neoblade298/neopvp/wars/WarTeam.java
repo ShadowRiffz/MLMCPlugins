@@ -193,7 +193,7 @@ public class WarTeam {
 	
 	public void serialize(Statement stmt) throws SQLException {
 		stmt.addBatch("INSERT INTO neopvp_warteams VALUES('" + war.getKey() + "','" + key + "','" + display + "','" +
-				Util.locToString(spawn, true) + "','" + Util.locToString(mascotSpawn, true) + ");");
+				Util.locToString(spawn, true, false) + "','" + Util.locToString(mascotSpawn, true, false) + ");");
 		
 		for (Nation n : nations) {
 			stmt.addBatch("INSERT INTO neopvp_warwhitelists VALUES ('" + war.getKey() + "','" + key + "'," +
