@@ -21,8 +21,9 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.instancing.InstanceType;
 
 public class SessionManager implements Listener {
-	private static HashMap<Player, SessionPlayer> players;
-	private static HashMap<String, Session> sessions;
+	private static HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
+	private static HashMap<String, Session> sessions = new HashMap<String, Session>();
+	private static HashMap<String, SessionInfo> info = new HashMap<String, SessionInfo>();
 	private static boolean isSession = NeoCore.getInstanceType() == InstanceType.OTHER;
 	
 	public SessionManager() {
@@ -52,31 +53,27 @@ public class SessionManager implements Listener {
 						
 						String sessionKey = rs.getString(2);
 						SessionPlayer sp = new SessionPlayer(p, sessionKey);
+						SessionInfo si = info.get(sessionKey);
+						
+						rs = stmt.executeQuery("SELECT * FROM neosessions_sessions WHERE `key` = '" + sessionKey +
+								"' AND instance = '" + NeoCore.getInstanceKey() + "';");
+						if (!rs.next()) {
+							p.teleport(instanceSpawn);
+							return;
+						}
+						String from = rs.getString("from");
+						int numPlayers = rs.getInt("numplayers");
+						int multiplier = rs.getInt("multiplier");
 
 						// Check if session exists, if not, create it
-						if (sessions.containsKey(sessionKey)) {
-							
-						}
-						Boss b = bossInfo.get(boss);
-						p.teleport(b.getCoords());
+						Session s = sessions.getOrDefault(sessionKey, info.get(sessionKey).createSession(from, numPlayers, multiplier));
+						sessions.putIfAbsent(sessionKey, s);
+						s.addPlayer(sp);
+						p.teleport(si.getPlayerSpawn());
 
 						// Set up databases
 						Bukkit.getServer().getLogger()
-								.info("[NeoBossInstances] " + p.getName() + " sent to boss " + boss + ".");
-						bossMultiplier.put(boss, multiplier);
-						if (!activeFights.containsKey(boss)) {
-							ArrayList<Player> activeFightsPlayers = new ArrayList<Player>();
-							ArrayList<Player> inBossPlayers = new ArrayList<Player>();
-							activeFightsPlayers.add(p);
-							inBossPlayers.add(p);
-							activeFights.put(boss, activeFightsPlayers);
-							inBoss.put(boss, inBossPlayers);
-						}
-						else {
-							activeFights.get(boss).add(p);
-							inBoss.get(boss).add(p);
-						}
-						fightingBoss.put(p.getUniqueId(), boss);
+								.info("[NeoSessions] " + p.getName() + " sent to session " + sessionKey + ".");
 
 						// Recalculate everyone's health bars every time someone joins
 						for (Player partyMember : activeFights.get(boss)) {
