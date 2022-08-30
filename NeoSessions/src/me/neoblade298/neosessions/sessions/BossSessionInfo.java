@@ -1,10 +1,11 @@
 package me.neoblade298.neosessions.sessions;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.neoblade298.neocore.info.BossInfo;
 
-public class BossSessionInfo implements SessionInfo {
+public class BossSessionInfo extends SessionInfo {
 	private String key;
 	private BossInfo bi;
 	private long cooldown;
@@ -14,9 +15,15 @@ public class BossSessionInfo implements SessionInfo {
 	}
 
 	@Override
-	public Session createSession(SessionPlayer first) {
+	public Session createSession(String from, int numPlayers, int multiplier) {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+	@Override
+	public Location getPlayerSpawn() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

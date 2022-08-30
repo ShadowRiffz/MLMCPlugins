@@ -2,7 +2,11 @@ package me.neoblade298.neosessions.sessions;
 
 import me.neoblade298.neocore.info.BossInfo;
 
-public class BossSession implements Session {
+public class BossSession extends Session {
+	public BossSession(int multiplier) {
+		super(multiplier);
+	}
+
 	private BossSessionInfo info;
 	
 

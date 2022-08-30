@@ -8,8 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.neoblade298.neocore.commands.CommandManager;
 import me.neoblade298.neosessions.sessions.SessionInfo;
 
-public class Main extends JavaPlugin {
-	private static Main inst;
+public class NeoSessions extends JavaPlugin {
+	private static NeoSessions inst;
 	private static HashMap<String, SessionInfo> sessionInfo;
 	
 	public void onEnable() {
@@ -29,7 +29,7 @@ public class Main extends JavaPlugin {
 		CommandManager mngr = new CommandManager("session", this);
 	}
 	
-	public static Main inst() {
+	public static NeoSessions inst() {
 		return inst;
 	}
 }
