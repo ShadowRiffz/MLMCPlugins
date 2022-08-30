@@ -24,7 +24,7 @@ public class SessionManager implements Listener {
 	private static HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
 	private static HashMap<String, Session> sessions = new HashMap<String, Session>();
 	private static HashMap<String, SessionInfo> info = new HashMap<String, SessionInfo>();
-	private static boolean isSession = NeoCore.getInstanceType() == InstanceType.OTHER;
+	private static boolean isSessionHost = NeoCore.getInstanceType() == InstanceType.SESSIONS;
 	
 	private static Location spawn;
 	

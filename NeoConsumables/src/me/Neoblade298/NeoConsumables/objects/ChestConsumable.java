@@ -164,8 +164,8 @@ public class ChestConsumable extends Consumable implements GeneratableConsumable
 
 	@Override
 	public boolean canUse(Player p, ItemStack item) {
-		if (NeoCore.getInstanceType() == InstanceType.OTHER) {
-			p.sendMessage("&cYou cannot open chests in a boss fight!".replaceAll("&", "§"));
+		if (NeoCore.getInstanceType() == InstanceType.SESSIONS) {
+			p.sendMessage("&cYou cannot open chests in a session!".replaceAll("&", "§"));
 			return false;
 		}
 		return true;
