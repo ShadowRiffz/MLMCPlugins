@@ -1,5 +1,7 @@
 package me.neoblade298.neosessions.sessions;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 public class SessionPlayer {
@@ -11,5 +13,13 @@ public class SessionPlayer {
 		this.p = p;
 		this.sessionKey = sessionKey;
 		this.status = PlayerStatus.JOINING;
+	}
+	
+	public Player getPlayer() {
+		return p;
+	}
+	
+	public UUID getUUID() {
+		return p.getUniqueId();
 	}
 }
