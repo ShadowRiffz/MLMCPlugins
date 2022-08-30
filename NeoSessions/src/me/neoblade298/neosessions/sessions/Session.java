@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class Session {
+	private SessionInfo info;
 	private int multiplier;
 	private HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
-	public Session(int multiplier) {
+	public Session(SessionInfo info, int multiplier) {
+		this.info = info;
 		this.multiplier = multiplier;
 	}
 	
@@ -15,6 +17,7 @@ public abstract class Session {
 	
 	public void addPlayer(SessionPlayer sp) {
 		players.put(sp.getUUID(), sp);
+		sp.setSession(this);
 	}
 	
 	public void removePlayer(SessionPlayer sp) {
@@ -27,5 +30,18 @@ public abstract class Session {
 	
 	public int getMultiplier() {
 		return multiplier;
+	}
+	
+	public SessionInfo getSessionInfo() {
+		return info;
+	}
+	
+	public boolean canStart() {
+		for (SessionPlayer sp : players.values()) {
+			if (sp.getStatus() != PlayerStatus.AWAITING_PLAYERS) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
