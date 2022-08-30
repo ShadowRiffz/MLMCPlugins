@@ -100,8 +100,8 @@ public class CmdNLCTown implements Subcommand {
 				// Chose a category
 				else {
 					Iterator<PlayerEntry> iter = te.getTopPlayers(ftype).descendingIterator();
-					
-					ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
+
+					ComponentBuilder builder = new ComponentBuilder("§c§lTop Players in " + t.getName() + ": §e" + ftype.getDisplay());
 					int i = 1;
 					while (iter.hasNext() && i++ <= 10) {
 						PlayerEntry e = iter.next();

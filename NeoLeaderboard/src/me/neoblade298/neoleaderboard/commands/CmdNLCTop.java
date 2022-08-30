@@ -86,7 +86,7 @@ public class CmdNLCTop implements Subcommand {
 				sorted.addAll(PointsManager.getNationEntries());
 				Iterator<NationEntry> iter = sorted.descendingIterator();
 				
-				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m----§c§l» Top Nations: §e" + type.getDisplay() + " §6§l«§8§m----§6§l<");
+				ComponentBuilder builder = new ComponentBuilder("§c§lTop Nations: §e" + type.getDisplay());
 				int i = 0;
 				while (iter.hasNext() && i++ <= 10) {
 					NationEntry e = iter.next();
