@@ -39,7 +39,6 @@ public class CmdWarSpawn implements Subcommand {
 	public void run(CommandSender s, String[] args) {
 		Player p = (Player) s;
 		if (WarManager.getOngoingWars().size() > 0) {
-			Util.msg(s, "&7Ongoing Wars:", false);
 			for (War war : WarManager.getOngoingWars().values()) {
 				WarTeam t1 = war.getTeams()[0];
 				WarTeam t2 = war.getTeams()[1];

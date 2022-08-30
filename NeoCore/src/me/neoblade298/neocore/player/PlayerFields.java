@@ -341,6 +341,7 @@ public class PlayerFields {
 	
 	public boolean resetAllFields(UUID uuid) {
 		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Resetting all fields of " + this.getKey() + " for " + uuid + ".");
 		for (String key : fields) {
 			resetField(key, uuid);
 		}

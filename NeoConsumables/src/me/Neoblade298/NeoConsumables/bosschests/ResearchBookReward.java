@@ -82,7 +82,7 @@ public class ResearchBookReward extends ChestReward {
 		r.setWeight(weight);
 		return r;
 	}
-	
+
 	@Override
 	public String toString() {
 		if (!this.type.equalsIgnoreCase("normal")) {

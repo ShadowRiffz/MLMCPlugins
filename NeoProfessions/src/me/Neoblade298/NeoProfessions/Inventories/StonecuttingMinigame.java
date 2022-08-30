@@ -35,7 +35,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	HashMap<Integer, MinigameDrop> hiddenItems;
 	ArrayList<MinigameDrop> rewards = new ArrayList<MinigameDrop>();
 	
-	private static int NUM_FLASHES = 5;
+	private static int NUM_FLASHES = 3;
 	private int flashTime = 20;
 	private static int DELAY_AFTER_FLASH = 20;
 	
