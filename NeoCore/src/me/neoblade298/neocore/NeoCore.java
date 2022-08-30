@@ -72,7 +72,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		properties.setProperty("user",  sql.getString("username"));
 		properties.setProperty("password", sql.getString("password"));
 		
-		// is instance
+		// Instance config
 		File instancecfg = new File(this.getDataFolder(), "instance.yml");
 		if (instancecfg.exists()) {
 			YamlConfiguration icfg = YamlConfiguration.loadConfiguration(instancecfg);
