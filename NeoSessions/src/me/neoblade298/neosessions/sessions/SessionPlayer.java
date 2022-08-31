@@ -39,4 +39,8 @@ public class SessionPlayer {
 	public PlayerStatus getStatus() {
 		return status;
 	}
+	
+	public void setStatus(PlayerStatus status) {
+		this.status = status;
+	}
 }

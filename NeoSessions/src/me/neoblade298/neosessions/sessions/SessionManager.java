@@ -112,6 +112,7 @@ public class SessionManager implements Listener {
 			+ ", sessionplayer doesn't belong to a session.");
 			return;
 		}
+		sp.setStatus(PlayerStatus.AWAITING_PLAYERS);
 		Session s = sp.getSession();
 
 		// If last one to load, start the session
@@ -151,9 +152,10 @@ public class SessionManager implements Listener {
 		new BukkitRunnable() {
 			public void run() {
 				Player p = e.getPlayer();
-				if (joiningPlayers.contains(p.getName())) return; // If a player logged in already dead
-				if (leavingPlayers.contains(p.getName())) return; // Don't let a newly respawned player spectate an
-																	// empty boss
+				if (!players.containsKey(p.getUniqueId())) return; // The session player doesn't exist
+				SessionPlayer sp = players.get(p.getUniqueId());
+				if (sp.getStatus() == PlayerStatus.JOINING) return; // If a player logged in already dead
+				if (sp.getStatus() == PlayerStatus.LEAVING) return; // If last dead, don't make them spectate
 
 				// If everyone in the fight is dead, return everyone
 				if (spectatingBoss.containsKey(p.getUniqueId())) {
