@@ -1,8 +1,11 @@
 package me.neoblade298.neosessions.sessions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -15,7 +18,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sucy.skill.SkillAPI;
@@ -24,6 +30,7 @@ import com.sucy.skill.api.player.PlayerAccounts;
 import com.sucy.skill.api.player.PlayerData;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neosessions.NeoSessions;
 
@@ -32,8 +39,9 @@ public class SessionManager implements Listener {
 	private static HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
 	private static HashMap<String, Session> sessions = new HashMap<String, Session>();
 	private static HashMap<String, SessionInfo> info = new HashMap<String, SessionInfo>();
-	
 	private static Location spawn;
+	
+	private static final String DEFAULT_DIRECTOR = "Towny";
 	
 	public SessionManager(ConfigurationSection cfg) {
 		spawn = Util.stringToLoc(cfg.getString("spawn"));
@@ -88,7 +96,7 @@ public class SessionManager implements Listener {
 					
 					// Add and send player to session
 					s.addPlayer(sp);
-					p.teleport(si.getPlayerSpawn());
+					p.teleport(si.getSpawn());
 					Bukkit.getServer().getLogger()
 					.info("[NeoSessions] " + p.getName() + " sent to session " + sessionKey + ".");
 				} catch (Exception ex) {
@@ -142,37 +150,97 @@ public class SessionManager implements Listener {
 	}
 
 	@EventHandler
-	public void onDeath(PlayerDeathEvent e) {
-		Player p = e.getEntity();
-		handleLeaveFight(p);
-	}
-
-	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		new BukkitRunnable() {
 			public void run() {
 				Player p = e.getPlayer();
 				if (!players.containsKey(p.getUniqueId())) return; // The session player doesn't exist
 				SessionPlayer sp = players.get(p.getUniqueId());
-				if (sp.getStatus() == PlayerStatus.JOINING) return; // If a player logged in already dead
-				if (sp.getStatus() == PlayerStatus.LEAVING) return; // If last dead, don't make them spectate
-
-				// If everyone in the fight is dead, return everyone
-				if (spectatingBoss.containsKey(p.getUniqueId())) {
-					p.teleport(spectatingBoss.get(p.getUniqueId()).getCoords()); // Tp after death to boss
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "vanish " + p.getName() + " on");
-					p.setGameMode(GameMode.ADVENTURE);
-					p.setInvulnerable(true);
-					PlayerAccounts accs = SkillAPI.getPlayerAccountData(p);
-					spectatorAcc.put(p.getUniqueId(), accs.getActiveId());
-					SkillAPI.getPlayerAccountData(p).setAccount(13);
-					p.sendMessage(
-							"§4[§c§lMLMC§4] §7You died! You can now spectate, or leave with §c/boss return§7.");
-				}
-				else {
-					p.teleport(instanceSpawn);
+				// If a player logged in already dead
+				if (sp.getStatus() == PlayerStatus.JOINING) {
+					sp.getPlayer().spigot().respawn();
 				}
 			}
-		}.runTaskLater(this, 20L);
+		}.runTaskLater(NeoSessions.inst(), 20L);
+	}
+
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+		UUID uuid = p.getUniqueId();
+		SessionPlayer sp = players.get(uuid);
+		if (sp == null) return;
+
+		// Remove player from fight, add to spectate
+		if (sp.getStatus() == PlayerStatus.PARTICIPATING) {
+			sp.setStatus(PlayerStatus.SPECTATING);
+			sp.getPlayer().spigot().respawn();
+			Bukkit.getServer().getLogger()
+			.info("[NeoSessions] " + p.getName() + " switched from fighting to spectating " + sp.getSessionKey() + ".");
+		}
+		if (!sp.getSession().isEmpty()) {
+			sp.getPlayer().teleport(sp.getSession().getLastCheckpoint());
+		}
+		
+		handleParticipantLeave(sp);
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	private void handleLeave(Player p) {
+		SkillAPI.saveSingle(p);
+		if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
+			SkillAPI.getPlayerData(p).getSkillBar().toggleEnabled();
+		}
+		
+		if (players.containsKey(p.getUniqueId())) {
+			SessionPlayer sp = players.get(p.getUniqueId());
+			switch (sp.getStatus()) {
+			case PARTICIPATING:
+				handleParticipantLeave(sp);
+				break;
+			case SPECTATING:
+				sp.setStatus(PlayerStatus.LEAVING);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	// Called whenever a participant is lost, aka leave server or die
+	private void handleParticipantLeave(SessionPlayer sp) {
+		Session s = sp.getSession();
+		// Session is empty, end it
+		if (s.isEmpty()) {
+			Bukkit.getServer().getLogger().info(
+					"[NeoSessions] Session " + s.getSessionInfo().getKey() + " ended.");
+			sp.getPlayer().teleport(spawn);
+			s.end();
+			sessions.remove(s.getSessionInfo().getKey());
+		}
+	}
+	
+	public static void returnPlayer(Player p) {
+		SkillAPI.saveSingle(p);
+		
+		SessionPlayer sp = players.get(p.getUniqueId());
+		sp.setStatus(PlayerStatus.LEAVING);
+		String from = sp == null ? DEFAULT_DIRECTOR : sp.getSession().getFrom();
+		Util.msg(p, "Sending you back in 3 seconds...");
+		
+		new BukkitRunnable() {
+			public void run() {
+				BungeeAPI.sendPlayer(p, from);
+			}
+		}.runTaskLater(NeoSessions.inst(), 60L);
 	}
 }

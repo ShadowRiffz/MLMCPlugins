@@ -6,12 +6,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import me.neoblade298.neocore.info.BossInfo;
 
 public class BossSessionInfo extends SessionInfo {
-	private String key;
 	private BossInfo bi;
 	private long cooldown;
 	
 	public BossSessionInfo(ConfigurationSection cfg) {
-		this.key = cfg.getName();
+		super(cfg.getName(), new Location(null, 1, 1, 1)); // TODO: Location
 	}
 
 	@Override
@@ -21,15 +20,8 @@ public class BossSessionInfo extends SessionInfo {
 	}
 
 	@Override
-	public Location getPlayerSpawn() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void cleanupSession() {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
