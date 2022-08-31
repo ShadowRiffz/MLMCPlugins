@@ -49,6 +49,8 @@ public class SellAllPlayer
 		
 		double totalCost = 0;
 		
+		HashMap<Material, Integer> tempItemAmount = new HashMap<Material, Integer>();
+		
     	for(ItemStack items : inv.getContents())
     	{
     		if(items != null && !items.hasItemMeta())
@@ -56,10 +58,16 @@ public class SellAllPlayer
     			Material material = items.getType();	
         		if(SellAllManager.getItemPrices().containsKey(material))
         		{
-        			totalCost += getTotalPrice(items, items.getAmount(), player, itemAmount, itemTotal, inv, isSelling);
+        			tempItemAmount.put(material, tempItemAmount.getOrDefault(material, 0) + items.getAmount());
         		}
     		}
     	}
+    	
+    	for(Entry<Material, Integer> mat : tempItemAmount.entrySet())
+    	{
+    		totalCost += getTotalPrice(mat.getKey(), mat.getValue(), player, itemAmount, itemTotal, inv, isSelling);
+    	}
+    	
     	
     	if(totalCost == 0)
     	{
@@ -81,13 +89,9 @@ public class SellAllPlayer
 	
 	public void getSellLog(boolean sell, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, double totalCost)
 	{
-		ComponentBuilder builder = new ComponentBuilder("§6[Hover For Sell Log]");
+		ComponentBuilder builder = new ComponentBuilder(sell ? "§6[Hover For Sell Log]" : "§6[Click to Confirm]");
 		DecimalFormat df = new DecimalFormat("0.00");
 		String text = "";
-		if(!sell)
-		{
-    		text = "§7§oClick to confirm or do /sellall confirm\n";
-    	}
 		text = text.concat("§c§oRed§7§o item amounts = reduced item value & over soft cap\n");
     	for(Material mat : itemAmount.keySet())
     	{
@@ -112,23 +116,15 @@ public class SellAllPlayer
     	player.spigot().sendMessage(builder.create());
 	}
 	
-	public double getTotalPrice(ItemStack item, int amount, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, Inventory inv, boolean isSelling)
+	public double getTotalPrice(Material mat, int amount, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, Inventory inv, boolean isSelling)
 	{	
-		Material mat = item.getType();
 		int cap = SellAllManager.getItemCaps().get(mat);
 		int tierAmount = SellAllManager.getTierAmount();
 		double tierMultiplier = SellAllManager.getTierMultiplier();
 		double tierPriceMultiplier = SellAllManager.getTierPriceMultiplier();
 		
 		int currentSold;
-		if(isSelling)
-		{
-			currentSold = itemAmountSold.getOrDefault(mat,0);
-		}
-		else
-		{
-			currentSold = itemAmount.getOrDefault(mat, 0);
-		}
+		currentSold = itemAmountSold.getOrDefault(mat,0);
 	
 		HashMap<Integer, Integer> tierLimits = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> soldPerTier = new HashMap<Integer, Integer>();
@@ -219,7 +215,8 @@ public class SellAllPlayer
 		if(-1 < pageNumber && pageNumber < list.pages())
 		{
 			player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Soft Limits }=---O");
-			player.sendMessage("§eGoing over the soft cap will cause item values to be worth less up until the hard cap");
+			player.sendMessage("§eWarning: Going over the soft cap will cause item values to be");
+			player.sendMessage("§ediminished. At hard cap can no longer sell.");
 			for(String output : list.get(pageNumber))
 			{
 				player.sendMessage(output);

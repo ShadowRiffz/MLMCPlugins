@@ -40,8 +40,10 @@ import me.ShanaChans.SellAll.Commands.SellAllItemCap;
 import me.ShanaChans.SellAll.Commands.SellAllList;
 import me.ShanaChans.SellAll.Commands.SellAllQuick;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
+import me.ShanaChans.SellAll.Commands.SellAllReset;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
 import me.ShanaChans.SellAll.Commands.SellAllSort;
+import me.ShanaChans.SellAll.Commands.SellAllTiers;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.ShanaChans.SellAll.Inventories.CustomInventory;
 import me.neoblade298.neocore.NeoCore;
@@ -84,7 +86,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		itemPricesAlphabetical = new TreeMap<Material, Double>(comp);
 		initCommands();
 		loadConfigs();
-		System.out.println("Sellall Scheduler");
 		SchedulerAPI.scheduleRepeating("sellall-resetcaps", ScheduleInterval.DAILY, new Runnable() {
 		    public void run() {
 		        resetPlayers();
@@ -112,6 +113,8 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		sellAll.register(new SellAllReload());
 		sellAll.register(new SellAllQuick());
 		sellAll.register(new SellAllConfirm());
+		sellAll.register(new SellAllTiers());
+		sellAll.register(new SellAllReset());
 		value.register(new SellAllValue());
 		cap.register(new SellAllItemCap());
 		sellAll.registerCommandList("help");
@@ -288,10 +291,10 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		player.sendMessage("§7Invalid page");
 	}
 	
-    public void resetPlayers()
+    public static void resetPlayers()
     {
     	Statement stmt = NeoCore.getStatement();
-    	
+    	Bukkit.getLogger().warning("[Sellall] Reset all players!");
     	BungeeAPI.broadcast("§6Sell All Limits have been refreshed!");
     	
     	try {
@@ -304,6 +307,19 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
     	{
     		players.get(uuid).resetSold();
     	}
+    }
+    
+    public static void resetPlayer(Player p)
+    {
+    	Statement stmt = NeoCore.getStatement();
+    	
+    	try {
+    		stmt.executeUpdate("DELETE FROM sellall_players WHERE uuid = '" + p.getUniqueId() + "';");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    	players.get(p.getUniqueId()).resetSold();
     }
 
 	@Override
@@ -349,7 +365,30 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			players.remove(p.getUniqueId());
 		}
+	}
+	
+	public static void getTier(Player p)
+	{
+		ItemStack item = p.getInventory().getItemInMainHand();
+        
+        if (item == null || item.getType().isAir()) 
+        {
+            p.sendMessage("§6You're not holding anything!");
+            return;
+        }
+			
+        Material mat = item.getType();
+        
+        if(itemCaps.containsKey(mat))
+        {
+        	p.sendMessage("§7Base Limit: §6" + itemCaps.get(mat) + " §7Multiplier: §61.0x");
+    		for(int i=1; i <= SellAllManager.getTierAmount(); i++)
+    		{
+    			p.sendMessage("§7Tier " + i + " Limit: §6" + (int)(itemCaps.get(mat) * tierMultiplier * i) + " §7Multiplier: §6" + Math.pow(tierPriceMultiplier, i) + "x");
+    		}
+        }
 	}
 	
 	public static void getValue(Player p)
