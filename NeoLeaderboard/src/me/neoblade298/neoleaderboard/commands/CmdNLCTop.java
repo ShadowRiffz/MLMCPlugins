@@ -92,9 +92,11 @@ public class CmdNLCTop implements Subcommand {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
 					// double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
-					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getPoints(type)), FormatRetention.NONE)
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc nation " + name + " " + type)))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc nation " + name + " " + type));
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getPoints(type)), FormatRetention.NONE);
+					if (type instanceof PlayerPointType) {
+						builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc nation " + name + " " + type)))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc nation " + name + " " + type));
+					}
 				}
 				s.spigot().sendMessage(builder.create());
 			}
