@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -276,7 +278,6 @@ public class PointsManager implements IOComponent {
 				
 				try {
 					HashMap<NationPointType, Double> points = nent.getAllNationPoints();
-					HashMap<PlayerPointType, Double> ppoints = nent.getAllPlayerPoints();
 					HashMap<UUID, TownEntry> tpoints = nent.getAllTownPoints();
 
 					insert.addBatch("REPLACE INTO neoleaderboard_nations VALUES ('"
@@ -285,18 +286,9 @@ public class PointsManager implements IOComponent {
 						insert.addBatch("REPLACE INTO neoleaderboard_nationpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
-					for (Entry<PlayerPointType, Double> e : ppoints.entrySet()) {
-						insert.addBatch("REPLACE INTO neoleaderboard_nationpoints VALUES ('"
-											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
-					}
 					for (UUID uuid : tpoints.keySet()) {
-						String name = TownyUniverse.getInstance().getTown(uuid).getName();
 						insert.addBatch("REPLACE INTO neoleaderboard_towns VALUES ('"
 								+ uuid + "','" + nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
-						for (Entry<PlayerPointType, Double> e : tpoints.get(uuid).getPlayerPoints().entrySet()) {
-							insert.addBatch("REPLACE INTO neoleaderboard_townpoints VALUES ('"
-									+ uuid + "','" + nent.getUuid() + "','" + name + "','" + e.getKey() + "'," + e.getValue() + ");");
-						}
 					}
 					insert.executeBatch();
 				}
@@ -508,36 +500,29 @@ public class PointsManager implements IOComponent {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(comp);
 				NationEntry winner = sorted.last();
 				Nation n = winner.getNation();
-				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + winner.getNation().getName() + "&7!");
+				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + n.getName() + "&7!");
 				saveAll();
 				
+				List<String> dbs = Arrays.asList("neoleaderboard_nations", "neoleaderboard_contributed", "neoleaderboard_nationpoints",
+						"neoleaderboard_players", "neoleaderboard_towns");
+				
+				
 				Statement stmt = NeoCore.getStatement();
-				String prefix = "INSERT INTO neoleaderboard_previous_nations (SELECT * FROM ";
-				String suffix = " ORDER BY points DESC LIMIT 10);";
 				
 				try {
-					stmt.addBatch("INSERT INTO neoleaderboard_winners VALUES ('" + n.getUUID() + "','" + n.getName() +
-							"'," + System.currentTimeMillis() + "," + winner.getEffectivePoints() + "," + winner.getContributors());
-					
-					// Totals
-					stmt.addBatch(prefix + "SELECT uuid, leaderboard_nations.name, 'TOTAL' AS category, SUM(points) AS points FROM neoleaderboard_nationpoints "
-							+ "JOIN leaderboard_nations ON leaderboard_nationpoints.uuid = leaderboard_nations.uuid GROUP BY uuid" + suffix);
-					stmt.addBatch(prefix + "SELECT uuid, leaderboard_towns.name, 'TOTAL' AS category, SUM(points) AS points FROM neoleaderboard_townpoints "
-							+ "JOIN leaderboard_towns ON leaderboard_townpoints.uuid = leaderboard_towns.uuid GROUP BY uuid" + suffix);
-					stmt.addBatch(prefix + "SELECT uuid, 'TOTAL' AS category, SUM(points) AS points FROM Dev.leaderboard_playerpoints GROUP BY uuid" + suffix);
-					
-					for (NationPointType type : NationPointType.values()) {
-						stmt.addBatch(prefix + "leaderboard_nationpoints WHERE category = '" + type + "'" + suffix);
-					}
-					for (PlayerPointType type : PlayerPointType.values()) {
-						stmt.addBatch(prefix + "leaderboard_nationpoints WHERE category = '" + type + "'" + suffix);
-						stmt.addBatch(prefix + "leaderboard_townpoints WHERE category = '" + type + "'" + suffix);
-						stmt.addBatch(prefix + "leaderboard_playerpoints WHERE category = '" + type + "'" + suffix);
+					for (String db : dbs) {
+						stmt.addBatch(createCopyQuery(db));
 					}
 					stmt.executeBatch();
-
 					playerEntries.clear();
 					nationEntries.clear();
+					
+
+					Statement delete = NeoCore.getStatement();
+					for (String db : dbs) {
+						delete.addBatch("DELETE FROM " + db + ";");
+					}
+					delete.executeBatch();
 					
 					for (Nation nation : TownyUniverse.getInstance().getNations()) {
 						nationEntries.putIfAbsent(nation.getUUID(), new NationEntry(nation.getUUID()));
@@ -550,6 +535,12 @@ public class PointsManager implements IOComponent {
 				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
+	}
+	
+	private static String createCopyQuery(String db) {
+		String[] args = db.split("_");
+		String prevDb = args[0] + "_previous_" + args[1];
+		return "INSERT INTO " + prevDb + " (SELECT * FROM " + db + ");"; 
 	}
 	
 	// Normally only called on startup, if you want it called for other reasons
