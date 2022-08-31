@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
@@ -34,7 +35,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 	HashMap<Integer, MinigameDrop> hiddenItems;
 	ArrayList<MinigameDrop> rewards = new ArrayList<MinigameDrop>();
 	
-	private static int NUM_FLASHES = 5;
+	private static int NUM_FLASHES = 3;
 	private int flashTime = 20;
 	private static int DELAY_AFTER_FLASH = 20;
 	
@@ -305,6 +306,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 				if (p.getOpenInventory().getTopInventory() == inv) {
 					p.closeInventory();
 				}
+				GardenManager.tryReturnToGarden(p, ProfessionType.STONECUTTER);
 			}
 		}.runTaskLater(main, 40);
 	}

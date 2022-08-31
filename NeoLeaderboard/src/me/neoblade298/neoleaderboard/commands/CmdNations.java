@@ -75,8 +75,7 @@ public class CmdNations implements Subcommand {
 				while (iter.hasNext() && i++ <= 10) {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
-					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getEffectivePoints()) +
-							" §7§o(" + PointsManager.formatPoints(e.getTotalPoints()) + ")", FormatRetention.NONE)
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getTotalPoints()), FormatRetention.NONE)
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildNationHover(e))))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl nation " + name));
 				}
@@ -93,9 +92,8 @@ public class CmdNations implements Subcommand {
 		Iterator<TownEntry> iter = townOrder.descendingIterator();
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
 			TownEntry te = iter.next();
-			double effective = PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
-			hovertext += "\n§6§l" + i + ". §e" + te.getTown().getName() + " §7- §f" + PointsManager.formatPoints(effective) +
-					 " §7§o(" + PointsManager.formatPoints(te.getTotalPoints()) + ")";
+			// double effective = PointsManager.calculateEffectivePoints(e, te.getTotalPoints());
+			hovertext += "\n§6§l" + i + ". §e" + te.getTown().getName() + " §7- §f" + PointsManager.formatPoints(te.getTotalPoints());
 		}
 		return hovertext;
 	}

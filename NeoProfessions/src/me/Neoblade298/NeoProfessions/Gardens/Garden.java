@@ -34,6 +34,9 @@ public class Garden {
 	
 	public void plantSeed(UUID uuid, int slot, int plantId, Fertilizer fert) {
 		long growTime = DEFAULT_GROW_TIME;
+		if (fert != null) {
+			growTime *= fert.getTimeMultiplier();
+		}
 		GardenSlot gs = new GardenSlot(plantId, fert, System.currentTimeMillis() + growTime);
 		this.slots.put(slot, gs);
 		GardenManager.addGardenMessage(uuid, gs);
