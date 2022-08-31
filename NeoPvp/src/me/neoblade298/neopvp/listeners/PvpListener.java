@@ -3,8 +3,8 @@ package me.neoblade298.neopvp.listeners;
 import java.util.Arrays;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,10 +39,10 @@ public class PvpListener implements Listener {
 		if (e.getDamager() instanceof Player) {
 			handlePvpDamage((Player) e.getDamager(), pv, e);
 		}
-		else if (e.getEntity() instanceof Arrow) {
-			Arrow a = (Arrow) e.getEntity();
-			if (a.getShooter() instanceof Player) {
-				handlePvpDamage((Player) a.getShooter(), pv, e);
+		else if (e.getDamager() instanceof Projectile) {
+			Projectile proj = (Projectile) e.getDamager();
+			if (proj.getShooter() instanceof Player) {
+				handlePvpDamage((Player) proj.getShooter(), pv, e);
 			}
 		}
 
