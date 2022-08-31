@@ -20,17 +20,14 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
 		
-		if (NeoCore.getInstanceType() == InstanceType.TOWNY) {
+		if (NeoCore.getInstanceType() != InstanceType.TOWNY) {
 			NeoCore.registerIOComponent(this, new PointsManager());
 
 			PointsManager.initialize();
 			initCommands();
 			
-			PointsListener pl = new PointsListener();
-			Bukkit.getPluginManager().registerEvents(pl, this);
+			Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
 			Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
-			
-		    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pl);
 		}
 		else if (NeoCore.getInstanceType() == InstanceType.OTHER) {
 			Bukkit.getPluginManager().registerEvents(new InstanceListener(), this);
