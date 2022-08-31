@@ -256,4 +256,20 @@ public class PvpAccount {
 	public long getProtectionExpiration() {
 		return protectionExpires;
 	}
+
+	public void setPvpBalance(double pvpBalance) {
+		this.pvpBalance = pvpBalance;
+	}
+
+	public void setElo(int elo) {
+		this.elo = elo;
+	}
+
+	public void setWins(int wins) {
+		this.wins = wins;
+	}
+
+	public void setLosses(int losses) {
+		this.losses = losses;
+	}
 }
