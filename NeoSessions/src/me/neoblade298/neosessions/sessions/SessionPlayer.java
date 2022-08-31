@@ -12,19 +12,28 @@ import com.sucy.skill.SkillAPI;
 public class SessionPlayer {
 	private Player p;
 	private PlayerStatus status;
-	private String sessionKey;
+	private String sessionKey, name, playerClass;
 	private Session session;
 	private int activeId;
-	private HashMap<String, PlayerStats> stats = new HashMap<String, PlayerStats>();
+	private HashMap<String, StatsPlayer> stats = new HashMap<String, StatsPlayer>();
 
 	public SessionPlayer(Player p, String sessionKey) {
 		this.p = p;
+		this.name = p.getName();
 		this.sessionKey = sessionKey;
 		this.status = PlayerStatus.JOINING;
 	}
 
 	public Player getPlayer() {
 		return p;
+	}
+	
+	public String getName() {
+		return this.getName();
+	}
+	
+	public String getClassName() {
+		return playerClass;
 	}
 
 	public UUID getUUID() {
@@ -56,6 +65,7 @@ public class SessionPlayer {
 			break;
 		case AWAITING_PLAYERS:
 			activeId = SkillAPI.getPlayerAccountData(p).getActiveId();
+			playerClass = SkillAPI.getPlayerData(p).getMainClass().getData().getName();
 			break;
 		case PARTICIPATING:
 			break;
@@ -74,15 +84,15 @@ public class SessionPlayer {
 		}
 	}
 
-	public HashMap<String, PlayerStats> getStats() {
+	public HashMap<String, StatsPlayer> getStats() {
 		return stats;
 	}
 
-	public void startStats(String key, String display) {
-		stats.put(key, new PlayerStats(key, display));
+	public void startStats(String key) {
+		stats.put(key, new StatsPlayer(key));
 	}
 	
-	public PlayerStats stopStats(String key) {
+	public StatsPlayer stopStats(String key) {
 		return stats.remove(key);
 	}
 }

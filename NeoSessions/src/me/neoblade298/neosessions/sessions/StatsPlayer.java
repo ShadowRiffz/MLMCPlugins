@@ -1,35 +1,15 @@
 package me.neoblade298.neosessions.sessions;
 
-public class PlayerStats {
-	private String key, display;
+public class StatsPlayer {
 	private double damageDealt, damageTaken, selfHealed, allyHealed;
-	private long startTime;
 	
-	public PlayerStats(String key, String display) {
-		this.key = key;
-		this.display = display;
+	public StatsPlayer() {
 		damageDealt = 0;
 		damageTaken = 0;
 		selfHealed = 0;
 		allyHealed = 0;
 	}
 
-	public String getKey() {
-		return key;
-	}
-	
-	public String getDisplay() {
-		return display;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-	
 	public void addDamageDealt(double amount) {
 		damageDealt += amount;
 	}

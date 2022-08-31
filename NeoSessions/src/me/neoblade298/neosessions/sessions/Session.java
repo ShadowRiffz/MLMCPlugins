@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neosessions.NeoSessions;
 
@@ -17,6 +18,7 @@ public abstract class Session {
 	private int numPlayers, multiplier;
 	private String from;
 	private HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
+	private HashMap<String, Stats> stats = new HashMap<String, Stats>();
 
 	public Session(SessionInfo info, String from, int numPlayers, int multiplier) {
 		this.info = info;
@@ -106,15 +108,19 @@ public abstract class Session {
 		return from;
 	}
 	
-	public void startStats(String key) {
+	public void startStats(String key, String display) {
+		statDisplays.put(key, display);
 		for (SessionPlayer sp : players.values()) {
 			sp.startStats(key);
 		}
 	}
 	
 	public void finalizeStats(String key) {
+		// Create display
+		String stats = "§cBoss Stats §7[" + NeoCore.getInstanceDisplay() +
+				"§7] (§4§l" + info.get + " x" + multiplier + "§7) [Time:§c" + timer + "§7]";
 		for (SessionPlayer sp : players.values()) {
-			sp.stats
+			sp.stopStats(key);
 		}
 	}
 }
