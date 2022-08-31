@@ -78,7 +78,11 @@ public class SessionPlayer {
 		return stats;
 	}
 
-	public void startStats(String key) {
-		stats.put(key, new PlayerStats(key));
+	public void startStats(String key, String display) {
+		stats.put(key, new PlayerStats(key, display));
+	}
+	
+	public PlayerStats stopStats(String key) {
+		return stats.remove(key);
 	}
 }

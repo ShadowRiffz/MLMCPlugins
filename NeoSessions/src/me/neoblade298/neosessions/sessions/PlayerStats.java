@@ -1,12 +1,13 @@
 package me.neoblade298.neosessions.sessions;
 
 public class PlayerStats {
-	private String key;
+	private String key, display;
 	private double damageDealt, damageTaken, selfHealed, allyHealed;
 	private long startTime;
 	
-	public PlayerStats(String key) {
+	public PlayerStats(String key, String display) {
 		this.key = key;
+		this.display = display;
 		damageDealt = 0;
 		damageTaken = 0;
 		selfHealed = 0;
@@ -15,6 +16,10 @@ public class PlayerStats {
 
 	public String getKey() {
 		return key;
+	}
+	
+	public String getDisplay() {
+		return display;
 	}
 
 	public long getStartTime() {

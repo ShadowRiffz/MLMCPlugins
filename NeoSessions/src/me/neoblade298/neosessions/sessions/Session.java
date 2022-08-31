@@ -1,10 +1,7 @@
 package me.neoblade298.neosessions.sessions;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -77,6 +74,9 @@ public abstract class Session {
 	}
 
 	public boolean canStart() {
+		if (players.size() < numPlayers) {
+			return false;
+		}
 		for (SessionPlayer sp : players.values()) {
 			if (sp.getStatus() != PlayerStatus.AWAITING_PLAYERS) {
 				return false;
@@ -104,5 +104,17 @@ public abstract class Session {
 	
 	public String getFrom() {
 		return from;
+	}
+	
+	public void startStats(String key) {
+		for (SessionPlayer sp : players.values()) {
+			sp.startStats(key);
+		}
+	}
+	
+	public void finalizeStats(String key) {
+		for (SessionPlayer sp : players.values()) {
+			sp.stats
+		}
 	}
 }
