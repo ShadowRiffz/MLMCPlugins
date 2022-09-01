@@ -23,6 +23,8 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.player.PlayerData;
 
+import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.util.Util;
@@ -189,6 +191,18 @@ public class SessionManager implements Listener {
 		handleLeave(e.getPlayer());
 	}
 	
+	@EventHandler
+	public void onMythicDespawn(MythicMobDespawnEvent e) {
+		for (Session s : sessions.values()) {
+			if (s instanceof BossSession) {
+				ActiveMob comp = ((BossSession) s).getBossSpawn();
+				if (comp != null && comp == e.getMob()) {
+					Bukkit.getLogger().warning("[NeoSessions] Spawn mob of " + s.getSessionInfo().getKey() + " was despawned.");
+				}
+			}
+		}
+	}
+	
 	private void handleLeave(Player p) {
 		SkillAPI.saveSingle(p);
 		if (SkillAPI.getPlayerData(p).getSkillBar().isEnabled()) {
@@ -239,6 +253,6 @@ public class SessionManager implements Listener {
 	}
 	
 	public static SessionPlayer getPlayer(Player p) {
-		return players.get(p);
+		return players.get(p.getUniqueId());
 	}
 }

@@ -1,6 +1,5 @@
 package me.neoblade298.neosessions.sessions;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -8,8 +7,6 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
-
-import me.neoblade298.neosessions.sessions.stats.StatsPlayer;
 
 public class SessionPlayer {
 	private Player p;

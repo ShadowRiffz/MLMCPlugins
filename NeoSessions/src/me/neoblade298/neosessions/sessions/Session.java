@@ -16,6 +16,7 @@ import me.neoblade298.neosessions.sessions.stats.Stats;
 public abstract class Session {
 	private Location lastCheckpoint;
 	private int numPlayers, multiplier;
+	private SessionInfo info;
 	private String from;
 	private HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
 	private HashMap<String, Stats> stats = new HashMap<String, Stats>();
@@ -24,6 +25,7 @@ public abstract class Session {
 		this.from = from;
 		this.numPlayers = numPlayers;
 		this.multiplier = multiplier;
+		this.info = info;
 		this.lastCheckpoint = info.getSpawn();
 	}
 

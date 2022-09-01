@@ -10,7 +10,6 @@ public abstract class SessionInfo {
 		this.spawn = spawn;
 	}
 	public abstract Session createSession(String from, int numPlayers, int multiplier);
-	public abstract void cleanupSession();
 	
 	public Location getSpawn() {
 		return spawn;
