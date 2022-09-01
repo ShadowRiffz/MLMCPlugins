@@ -286,9 +286,10 @@ public class PointsManager implements IOComponent {
 						insert.addBatch("REPLACE INTO neoleaderboard_nationpoints VALUES ('"
 											+ nent.getUuid() + "','" + e.getKey() + "'," + e.getValue() + ");");
 					}
-					for (UUID uuid : tpoints.keySet()) {
+					for (Entry<UUID, TownEntry> e : tpoints.entrySet()) {
+						TownEntry te = e.getValue();
 						insert.addBatch("REPLACE INTO neoleaderboard_towns VALUES ('"
-								+ uuid + "','" + nent.getUuid() + "','" + n.getName() + "'," + nent.getContributors() + ");");
+								+ e.getKey() + "','" + nent.getUuid() + "','" + te.getTown().getName() + "'," + te.getContributors() + ");");
 					}
 					insert.executeBatch();
 				}

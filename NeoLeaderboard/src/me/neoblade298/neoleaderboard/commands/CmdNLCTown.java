@@ -90,7 +90,7 @@ public class CmdNLCTown implements Subcommand {
 				if (args.length == 1) {
 					ComponentBuilder builder = new ComponentBuilder("\n§6§l>§8§m--------§c§l» Player Categories «§8§m--------§6§l<");
 					for (PlayerPointType type : PlayerPointType.values()) {
-						builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
+						builder.append("\n §6§l» §e" + type.getExtendedDisplay(), FormatRetention.NONE)
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc town " + args[0] + " " + type)))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc town " + args[0] + " " + type));
 					}
