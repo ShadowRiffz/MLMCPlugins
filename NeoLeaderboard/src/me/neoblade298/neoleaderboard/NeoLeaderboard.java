@@ -20,7 +20,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
 		
-		if (NeoCore.getInstanceType() != InstanceType.TOWNY) {
+		if (NeoCore.getInstanceType() != InstanceType.OTHER) {
 			NeoCore.registerIOComponent(this, new PointsManager());
 
 			PointsManager.initialize();
@@ -36,7 +36,6 @@ public class NeoLeaderboard extends JavaPlugin {
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoLeaderboard Disabled");
-	    this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
 	    super.onDisable();
 	}
 	
