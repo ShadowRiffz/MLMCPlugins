@@ -140,11 +140,11 @@ public class PlayerFields {
 					try {
 						if (def instanceof String || def instanceof Boolean) {
 							delete.addBatch("DELETE FROM neocore_fields_strings WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
-							"';");
+							"' AND uuid = '" + uuid + "';");
 						}
 						else if (def instanceof Integer) {
 							delete.addBatch("DELETE FROM neocore_fields_integers WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
-							"';");
+							"' AND uuid = '" + uuid + "';");
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -94,7 +94,7 @@ public class PlayerTags {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Removing tag " + this.getKey() + "." + key + " for " + uuid + ".");
 					try {
 						delete.addBatch("DELETE FROM neocore_tags WHERE `key` = '" + this.getKey() + "' AND tag = '" + key +
-						"';");
+						"' AND uuid = '" + uuid + "';");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
