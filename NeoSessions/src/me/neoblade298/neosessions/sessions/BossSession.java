@@ -1,8 +1,10 @@
 package me.neoblade298.neosessions.sessions;
 
 public class BossSession extends Session {
-	public BossSession(SessionInfo info, String from, int numPlayers, int multiplier) {
+	private BossSessionInfo info;
+	public BossSession(BossSessionInfo info, String from, int numPlayers, int multiplier) {
 		super(info, from, numPlayers, multiplier);
+		this.info = info;
 	}
 	
 
@@ -17,4 +19,8 @@ public class BossSession extends Session {
 		
 	}
 
+	@Override
+	public BossSessionInfo getSessionInfo() {
+		return info;
+	}
 }

@@ -14,7 +14,6 @@ import me.neoblade298.neosessions.NeoSessions;
 import me.neoblade298.neosessions.sessions.stats.Stats;
 
 public abstract class Session {
-	private SessionInfo info;
 	private Location lastCheckpoint;
 	private int numPlayers, multiplier;
 	private String from;
@@ -22,7 +21,6 @@ public abstract class Session {
 	private HashMap<String, Stats> stats = new HashMap<String, Stats>();
 
 	public Session(SessionInfo info, String from, int numPlayers, int multiplier) {
-		this.info = info;
 		this.from = from;
 		this.numPlayers = numPlayers;
 		this.multiplier = multiplier;
@@ -30,7 +28,9 @@ public abstract class Session {
 	}
 
 	public void start() {
-
+		for (SessionPlayer sp : players.values()) {
+			sp.setStatus(PlayerStatus.PARTICIPATING);
+		}
 	}
 
 	public void end() {
@@ -72,9 +72,7 @@ public abstract class Session {
 		return multiplier;
 	}
 
-	public SessionInfo getSessionInfo() {
-		return info;
-	}
+	public abstract SessionInfo getSessionInfo();
 
 	public boolean canStart() {
 		if (players.size() < numPlayers) {
