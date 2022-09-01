@@ -499,6 +499,9 @@ public class PointsManager implements IOComponent {
 		new BukkitRunnable() {
 			public void run() {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(comp);
+				for (NationEntry ne : nationEntries.values()) {
+					sorted.add(ne);
+				}
 				NationEntry winner = sorted.last();
 				Nation n = winner.getNation();
 				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + n.getName() + "&7!");

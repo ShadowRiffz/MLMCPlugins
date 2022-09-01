@@ -60,6 +60,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr = new CommandManager("nladmin", "neoleaderboard.admin", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
 		mngr.register(new CmdNLAAddPlayer());
+		mngr.register(new CmdNLAReset());
 	}
 	
 	public static NeoLeaderboard inst() {

@@ -60,7 +60,7 @@ public class CmdNations implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		String temp = "testNation";
+		String temp = "N/A";
 		
 		new BukkitRunnable() {
 			public void run() {
