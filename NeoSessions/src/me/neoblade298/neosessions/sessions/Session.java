@@ -1,6 +1,7 @@
 package me.neoblade298.neosessions.sessions;
 
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -8,9 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.neoblade298.neobossinstances.BossInstances;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neosessions.NeoSessions;
+import me.neoblade298.neosessions.sessions.stats.Stats;
 
 public abstract class Session {
 	private SessionInfo info;
@@ -109,18 +110,18 @@ public abstract class Session {
 	}
 	
 	public void startStats(String key, String display) {
-		statDisplays.put(key, display);
-		for (SessionPlayer sp : players.values()) {
-			sp.startStats(key);
-		}
+		stats.put(key, new Stats(key, display, multiplier, players.values()));
 	}
 	
-	public void finalizeStats(String key) {
-		// Create display
-		String stats = "§cBoss Stats §7[" + NeoCore.getInstanceDisplay() +
-				"§7] (§4§l" + info.get + " x" + multiplier + "§7) [Time:§c" + timer + "§7]";
-		for (SessionPlayer sp : players.values()) {
-			sp.stopStats(key);
-		}
+	public Stats stopStats(String key) {
+		return stats.remove(key);
+	}
+	
+	public Stats getStats(String key) {
+		return stats.get(key);
+	}
+	
+	public Collection<Stats> getStats() {
+		return stats.values();
 	}
 }

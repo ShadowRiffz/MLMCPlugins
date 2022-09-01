@@ -9,13 +9,14 @@ import org.bukkit.entity.Player;
 
 import com.sucy.skill.SkillAPI;
 
+import me.neoblade298.neosessions.sessions.stats.StatsPlayer;
+
 public class SessionPlayer {
 	private Player p;
 	private PlayerStatus status;
 	private String sessionKey, name, playerClass;
 	private Session session;
 	private int activeId;
-	private HashMap<String, StatsPlayer> stats = new HashMap<String, StatsPlayer>();
 
 	public SessionPlayer(Player p, String sessionKey) {
 		this.p = p;
@@ -29,7 +30,7 @@ public class SessionPlayer {
 	}
 	
 	public String getName() {
-		return this.getName();
+		return name;
 	}
 	
 	public String getClassName() {
@@ -82,17 +83,5 @@ public class SessionPlayer {
 		default:
 			break;
 		}
-	}
-
-	public HashMap<String, StatsPlayer> getStats() {
-		return stats;
-	}
-
-	public void startStats(String key) {
-		stats.put(key, new StatsPlayer(key));
-	}
-	
-	public StatsPlayer stopStats(String key) {
-		return stats.remove(key);
 	}
 }

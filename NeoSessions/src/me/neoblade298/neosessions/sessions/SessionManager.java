@@ -237,4 +237,8 @@ public class SessionManager implements Listener {
 			}
 		}.runTaskLater(NeoSessions.inst(), 60L);
 	}
+	
+	public static SessionPlayer getPlayer(Player p) {
+		return players.get(p);
+	}
 }
