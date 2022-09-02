@@ -30,7 +30,7 @@ public class InitiatorAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.05 * (level / 5);
+		return 0.04 * (level / 5);
 	}
 
 	@Override
