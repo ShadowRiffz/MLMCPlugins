@@ -181,7 +181,7 @@ public class PvpAccount {
 		Util.msg(s, "&6===[&e" + p.getName() + "&6]===", false);
 		boolean displayToSelf = s instanceof Player && (Player) s == this.p;
 		if (protectionExpires < System.currentTimeMillis()) {
-			ComponentBuilder b = new ComponentBuilder("§4N/A ");
+			ComponentBuilder b = new ComponentBuilder(prot + "§4N/A ");
 			if (displayToSelf) {
 				b.append("§7§o[Click to buy (§e5000g §7/ §e30m§7)]")
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp buyprotection"))
